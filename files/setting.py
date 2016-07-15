@@ -4,6 +4,7 @@
 from setting_ui import Setting_Ui
 import ast , os
 from PyQt5 import QtWidgets
+from PyQt5.QtWidgets import QFileDialog 
 from PyQt5.QtGui import QFont
 from newopen import Open
 
@@ -137,17 +138,6 @@ class PreferencesWindow(Setting_Ui):
         self.download_folder_lineEdit.setText(str(self.setting_dict['download_path']))
         self.temp_download_lineEdit.setText(str(self.setting_dict['download_path_temp']))
 
-#this section  creates temporary download folder and download folder and download sub folders if they did not existed.
-        download_path_temp  = self.setting_dict ['download_path_temp']
-        download_path = self.setting_dict [ 'download_path']
-        folder_list = [download_path_temp , download_path]
-        for folder in [ 'Audios' , 'Videos', 'Others','Documents','Compressed' ]:
-            folder_list.append(download_path + '/' + folder )
-
-        for folder in folder_list :
-            if os.path.isdir(folder) == False :
-                os.mkdir(folder)
-
 
         
         self.volume_label.setText('Volume : ' + str(self.setting_dict['sound-volume']) )
@@ -190,6 +180,18 @@ class PreferencesWindow(Setting_Ui):
         self.setting_dict['color-scheme'] = self.color_comboBox.currentText()
         self.setting_dict['icons'] = self.icon_comboBox.currentText()
         self.setting_dict['font-size'] = self.font_size_spinBox.value()
+#this section  creates temporary download folder and download folder and download sub folders if they did not existed.
+        download_path_temp  = self.setting_dict ['download_path_temp']
+        download_path = self.setting_dict [ 'download_path']
+        folder_list = [download_path_temp , download_path]
+        for folder in [ 'Audios' , 'Videos', 'Others','Documents','Compressed' ]:
+            folder_list.append(download_path + '/' + folder )
+
+        for folder in folder_list :
+            if os.path.isdir(folder) == False :
+                os.mkdir(folder)
+
+
         if self.enable_notifications_checkBox.isChecked() == True :
             self.setting_dict['sound'] = 'yes'
         else:
