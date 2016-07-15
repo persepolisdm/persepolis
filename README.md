@@ -34,7 +34,7 @@ for uninstall,
     $ cd
     $ cd /tmp
     $ wget -O persepolis.tar.gz https://github.com/alireza-amirsamimi/persepolis/archive/master.tar.gz
-    $ tar  --overwrite --overwrite-dir -xf persepolis.tar.gz
+    $ tar  --overwrite-dir -xf persepolis.tar.gz
     $ cd persepolis-master
     $ sh install
 
