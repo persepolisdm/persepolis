@@ -1,0 +1,19 @@
+#!/bin/bash
+echo "***********************************"
+echo "***********************************"
+echo "****Persepolis Download Manager****"
+echo "****  Version : 2.0.0 Unstable ****"
+echo "***********************************"
+echo "***********************************"
+
+run_times=`ps -A|grep "persepolis-down"|wc -l`
+echo $run_times
+cd "/usr/share/persepolis"
+if [ "$run_times" -eq "0" ];then
+    exec ./persepolis-download-manager "$@" --execute yes  
+else
+    exec ./persepolis-download-manager "$@" --execute no 
+fi
+exit 
+
+

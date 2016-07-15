@@ -1,0 +1,68 @@
+#!/bin/bash
+#install Persepolis Download Manager
+clear screen
+echo "############################################################"
+echo "#### Welcome to Persepolis Download Manager installation ###"
+echo "################## Version 2.0.0 Unstable ##################"
+echo "############################################################"
+
+echo "Checking dependencies"
+aria2c --version 1>/dev/null
+if [ "$?" -ne "0" ];then
+    echo "aria2c not installed"
+    echo "Installation Failed!"
+    exit
+fi
+python3 --version 1>/dev/null
+if [ "$?" -ne "0" ];then
+    echo "python3 not installed"
+    echo "Installation Failed!"
+    exit
+fi
+
+install_path=`pwd`
+chmod +x "$install_path/checkpyqt.py"
+
+./checkpyqt.py
+if [ "$?" -ne "0" ];then
+    echo "pyqt5 not installed"
+    echo "Installation Failed!"
+    exit
+fi
+
+notify-send --version 1>/dev/null
+if [ "$?" -ne "0" ];then
+    echo "libnotify-bin not installed"
+    echo "Installation Failed!"
+    exit
+fi
+
+paplay --version 1>/dev/null
+if [ "$?" -ne "0" ];then
+    echo "vorbis-tools not installed"
+    echo "Installation Failed!"
+    exit
+fi
+
+
+
+
+program_path="/usr/share/persepolis"
+exec_path='/usr/bin/'
+chmod +x "$install_path/files/persepolis-download-manager"
+chmod +x "$install_path/persepolis"
+chmod +x "$install_path/Persepolis Download Manager.desktop"
+sudo rm -rf "$program_path"
+sudo mkdir -p "$program_path"
+sudo cp -rf  $install_path/files/* "$program_path/"
+sudo cp -rf "$install_path/persepolis" "$exec_path"
+sudo cp -rf "$install_path/Persepolis Download Manager.desktop" "/usr/share/applications/"
+if [ "$?" -eq "0" ];then
+    echo "Installation compeleted!"
+else
+    echo "Installation Failed"
+fi
+exit
+
+
+

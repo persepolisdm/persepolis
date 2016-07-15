@@ -1,0 +1,13 @@
+[Desktop Entry]
+Name=Persepolis Download Manager
+Name[fa]=پرسپولیس
+Comment=Download Manager
+GenericName=Download Manager
+GenericName[fa]=نرم افزار مدیریت بارگیری
+Keywords=Internet;WWW;Web;
+Terminal=false
+Type=Application
+Categories=GNOME;GTK;Network;
+StartupNotify=true
+Exec=persepolis
+Icon=/usr/share/persepolis/icon.png

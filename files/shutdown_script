@@ -1,0 +1,16 @@
+#!/bin/bash
+gid="$1"
+shutdown_notification_file="/tmp/persepolis/shutdown/$gid"
+echo "wait" > $shutdown_notification_file
+shutdown_notification="wait"
+while [ "$shutdown_notification" == "wait" ];do
+    sleep 0.5 
+    shutdown_notification=`cat "$shutdown_notification_file"`
+done
+
+if [ "$shutdown_notification" == "shutdown" ];then
+    echo "shutdown"
+    poweroff
+else
+    exit
+fi

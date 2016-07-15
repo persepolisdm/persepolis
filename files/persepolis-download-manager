@@ -1,0 +1,160 @@
+#!/usr/bin/python3
+# -*- coding: utf-8 -*-
+
+import sys , os , time
+import argparse , ast , shutil 
+from newopen import Open
+
+
+
+# initialization
+home_address = os.path.expanduser("~")
+
+# ~/.config/persepolis_download_manager/ is download manager config folder
+config_folder = str(home_address) + "/.config/persepolis_download_manager"
+
+#download information (Percentage , Estimate time left , size of file , ... ) saved in download_info folder. 
+#Persepolis creates one file for every download . 
+#Persepolis uses download's GID for the name of the file
+download_info_folder = config_folder + "/download_info"
+#persepolis tmp folder in /tmp
+persepolis_tmp = '/tmp/persepolis'
+#user's preferences will saved in setting file
+setting_file = config_folder + '/setting'
+#perseolis_shutdown
+perseolis_shutdown = '/tmp/persepolis/shutdown'
+shutil.rmtree(perseolis_shutdown, ignore_errors=True, onerror=None)
+#creating folders
+folder_list = [ config_folder , download_info_folder ,persepolis_tmp , perseolis_shutdown ]
+for folder in folder_list :
+    if os.path.isdir(folder) == False :
+        os.mkdir(folder)
+
+#lock files perventing to access a file simultaneously
+
+#removing lock files in starting persepolis
+os.system("rm " + config_folder +"/*.lock" + "  2>/dev/null" )
+os.system("rm " + download_info_folder + "/*.lock" + "   2>/dev/null" )
+
+
+#this section checks setting file existed or not !and if it is not existed , exists a default setting file
+if os.path.isfile(setting_file) == False :
+    download_path_temp = str(home_address) + '/.persepolis'
+    download_path = str(home_address) + '/Downloads/Persepolis'
+    default_setting = {'max-tries' : 5 , 'retry-wait': 0 , 'timeout' : 60 , 'connections' : 16 , 'download_path_temp' : download_path_temp , 'download_path':download_path , 'sound' : 'yes' , 'sound-volume':90 , 'style':'Fusion' , 'color-scheme' : 'Persepolis Dark Red' , 'icons':'Archdroid-Red','font' : 'Ubuntu' , 'font-size' : 9  }
+    f = Open(setting_file , 'w')
+    f.writelines(str(default_setting))
+    f.close()
+
+f = Open(setting_file)
+setting_file_lines = f.readlines()
+f.close()
+setting_dict_str = str(setting_file_lines[0].strip())
+setting_dict = ast.literal_eval(setting_dict_str) 
+#this section  creates temporary download folder and download folder and download sub folders if they did not existed.
+download_path_temp  = setting_dict ['download_path_temp']
+download_path = setting_dict [ 'download_path']
+folder_list = [download_path_temp , download_path]
+for folder in [ 'Audios' , 'Videos', 'Others','Documents','Compressed' ]:
+    folder_list.append(download_path + '/' + folder )
+
+for folder in folder_list :
+    if os.path.isdir(folder) == False :
+        os.mkdir(folder)
+
+
+#getting user's desired font and style , ... from setting file
+font = setting_dict['font']
+font_size = int(setting_dict['font-size'])
+style = setting_dict['style']
+color_scheme = setting_dict['color-scheme']
+
+
+from mainwindow import MainWindow
+from PyQt5.QtWidgets import QApplication  
+from PyQt5.QtGui import QFont   
+from palettes import DarkRedPallete , DarkBluePallete
+from bubble import notifySend
+#creating  terminal arguments  
+
+parser = argparse.ArgumentParser(description='Persepolis Download Manager')
+parser.add_argument('--link',action='store',nargs = 1 , help='download link' )
+parser.add_argument('--referer',action='store',nargs = 1 , help='referer URL' )
+parser.add_argument('--cookie',action='store',nargs = 1 , help='Cookie' )
+parser.add_argument('--agent',action='store',nargs = 1 , help='User Agent' )
+parser.add_argument('--headers',action='store',nargs = 1 , help='Extra request headers' )
+parser.add_argument('--name',action='store',nargs = 1 , help='Requested file name' )
+parser.add_argument('--execute',action='store',nargs=1, help='execute or not!' )
+
+args = parser.parse_args()
+
+#Mozilla firefox flashgot will send download information whith terminal arguments(link , referer , cookie , agent , headers , name )
+
+#if --execute >> yes  >>> persepolis main window  will starts 
+#if --execute >> no >>> persepolis started before!
+
+
+add_link_dictionary = {}
+
+if args.link :
+    add_link_dictionary ['link'] = "".join(args.link)
+
+if args.referer :
+    add_link_dictionary['referer'] = "".join(args.referer)
+
+if args.cookie :
+    add_link_dictionary['load-cookies'] = "".join(args.cookie)
+
+if args.agent :
+    add_link_dictionary['user-agent'] = "".join(args.agent)
+
+if args.headers :
+    add_link_dictionary['header'] = "".join(args.headers)
+
+if args.name :
+    add_link_dictionary ['out'] = "".join(args.name)
+#when flashgot calls persepolis  then persepolis is creating a request file in /tmp folder . this file contains download informations
+#persepolis mainwindow checks /tmp for flashgot request file every 2 seconds ( see CheckFlashgot class in mainwindow.py )
+#when requset received by CheckFlashgot, a popup window (AddLinkWindow) is coming up and window is getting additional download informations from user (port , proxy , ...) and download starts and request file deleted
+if ('link' in add_link_dictionary):   
+#this section is checking validation of flashgot request file in /tmp . if request file is existed , it means that download manager didn't consider past requset, or consideration is still continuing
+#so this loop is waiting 0.5 seconds and trying again
+    while os.path.isfile("/tmp/persepolis-flashgot") == True :
+        time.sleep(0.5)
+    f = open("/tmp/persepolis-flashgot","w")
+    f.writelines(str(add_link_dictionary))
+    f.close()
+
+if "".join(args.execute) == "yes": 
+#setting color_scheme and style
+#see palettes.py and setting.py
+    if __name__ == "__main__":
+        persepolis_download_manager = QApplication(sys.argv)
+        persepolis_download_manager.setFont(QFont(font , font_size ))
+        persepolis_download_manager.setStyle(style)
+
+        if color_scheme == 'Persepolis Dark Red':
+            persepolis_dark_red = DarkRedPallete()
+            persepolis_download_manager.setPalette(persepolis_dark_red)
+            persepolis_download_manager.setStyleSheet("QToolTip { color: #ffffff; background-color: #353535; border: 1px solid white; }")
+        elif color_scheme == 'Persepolis Dark Blue':
+            persepolis_dark_blue = DarkBluePallete()
+            persepolis_download_manager.setPalette(persepolis_dark_blue)
+            persepolis_download_manager.setStyleSheet("QToolTip { color: #ffffff; background-color: #353535; border: 1px solid white; }")
+
+
+
+
+        mainwindow = MainWindow()
+        mainwindow.show()
+        sys.exit(persepolis_download_manager.exec_())
+    else:
+         sys.exit(0)
+else:
+# (--execute no) and no link finded in --link
+#this section warns user that program is still running and no need to run it again
+    if not('link' in add_link_dictionary):
+        notifySend('Persepolis Download Manager','is still running!',10000 ,'warning' )
+    sys.exit(0)
+
+
