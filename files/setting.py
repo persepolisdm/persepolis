@@ -102,14 +102,16 @@ class PreferencesWindow(Setting_Ui):
     def downloadFolderPushButtonClicked(self,button):
         download_path = str(self.setting_dict['download_path'])
         fname = QFileDialog.getExistingDirectory(self,'Open f', download_path )
-        self.download_folder_lineEdit.setText(fname)
-        self.setting_dict['download_path'] = str(fname)
+        if fname:
+            self.download_folder_lineEdit.setText(fname)
+            self.setting_dict['download_path'] = str(fname)
 
     def tempDownloadPushButtonClicked(self , button):
         download_path_temp = str(self.setting_dict['download_path_temp'])
         fname = QFileDialog.getExistingDirectory(self,'Open f', download_path_temp )
-        self.temp_download_lineEdit.setText(fname)
-        self.setting_dict['download_path_temp'] = str(fname)
+        if fname:
+            self.temp_download_lineEdit.setText(fname)
+            self.setting_dict['download_path_temp'] = str(fname)
 
     def fontChanged(self,combo):
         current_font = self.fontComboBox.currentFont()
@@ -128,7 +130,7 @@ class PreferencesWindow(Setting_Ui):
         download_path_temp_default = str(home_address) + '/.persepolis'
         download_path_default = str(home_address) + '/Downloads/Persepolis'
  
-        self.setting_dict = {'max-tries' : 5 , 'retry-wait': 0 , 'timeout' : 60 , 'connections' : 16 , 'download_path_temp' : download_path_temp_default , 'download_path':download_path_default , 'sound' : 'yes' , 'sound-volume':100 , 'style':'fusion' , 'color-scheme' : 'Persepolis-Dark-Red' , 'icons':'Archdroid-Red','font' : 'Ubuntu' , 'font-size' : 9  }
+        self.setting_dict = {'max-tries' : 5 , 'retry-wait': 0 , 'timeout' : 60 , 'connections' : 16 , 'download_path_temp' : download_path_temp_default , 'download_path':download_path_default , 'sound' : 'yes' , 'sound-volume':100 , 'style':'Fusion' , 'color-scheme' : 'Persepolis Dark Red' , 'icons':'Archdroid-Red','font' : 'Ubuntu' , 'font-size' : 9  }
 
         self.tries_spinBox.setValue(int(self.setting_dict['max-tries']))
         self.wait_spinBox.setValue(int(self.setting_dict['retry-wait']))

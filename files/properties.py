@@ -22,20 +22,22 @@ config_folder = str(home_address) + "/.config/persepolis_download_manager"
 
 #setting
 setting_file = config_folder + '/setting'
-f = Open(setting_file)
-setting_file_lines = f.readlines()
-f.close()
-setting_dict_str = str(setting_file_lines[0].strip())
-setting_dict = ast.literal_eval(setting_dict_str) 
-
-connections = int(setting_dict['connections'])
-
 
 class PropertiesWindow(AddLinkWindow_Ui):
     def __init__(self,callback,gid):
         super().__init__()
         self.callback = callback
         self.gid = gid
+        
+        f = Open(setting_file)
+        setting_file_lines = f.readlines()
+        f.close()
+        setting_dict_str = str(setting_file_lines[0].strip())
+        setting_dict = ast.literal_eval(setting_dict_str) 
+
+        connections = int(setting_dict['connections'])
+
+
 #connect folder_pushButton
         self.folder_pushButton.clicked.connect(self.changeFolder)
         self.download_folder_lineEdit.setEnabled(False)
@@ -194,7 +196,8 @@ class PropertiesWindow(AddLinkWindow_Ui):
 
     def changeFolder(self,button):
         fname = QFileDialog.getExistingDirectory(self,'Open f', '/home')
-        self.download_folder_lineEdit.setText(fname)
+        if os.path.isdir(fname):
+            self.download_folder_lineEdit.setText(fname)
 
     def linkLineChanged(self,lineEdit):
         if str(self.link_lineEdit.text()) == '' :

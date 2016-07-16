@@ -14,15 +14,6 @@ config_folder = str(home_address) + "/.config/persepolis_download_manager"
 
 #setting
 setting_file = config_folder + '/setting'
-f = Open(setting_file)
-setting_file_lines = f.readlines()
-f.close()
-setting_dict_str = str(setting_file_lines[0].strip())
-setting_dict = ast.literal_eval(setting_dict_str) 
-
-connections = int(setting_dict['connections'])
-download_path = str(setting_dict['download_path'])
-
 
 class AddLinkWindow(AddLinkWindow_Ui):
     def __init__(self , callback,flashgot_add_link_dictionary = {}):
@@ -30,7 +21,17 @@ class AddLinkWindow(AddLinkWindow_Ui):
         self.callback = callback
         self.flashgot_add_link_dictionary = flashgot_add_link_dictionary
 #entry initialization            
-        home_address = os.path.expanduser("~")
+
+        f = Open(setting_file)
+        setting_file_lines = f.readlines()
+        f.close()
+        setting_dict_str = str(setting_file_lines[0].strip())
+        setting_dict = ast.literal_eval(setting_dict_str) 
+
+        connections = int(setting_dict['connections'])
+        download_path = str(setting_dict['download_path'])
+
+
         global init_file
         init_file = str(home_address) + "/.config/persepolis_download_manager/addlink_init_file"
         os.system("mkdir -p  $HOME/.config/persepolis_download_manager")
@@ -148,7 +149,8 @@ class AddLinkWindow(AddLinkWindow_Ui):
 
     def changeFolder(self,button):
         fname = QFileDialog.getExistingDirectory(self,'Open f', download_path )
-        self.download_folder_lineEdit.setText(fname)
+        if os.path.isdir(fname):
+            self.download_folder_lineEdit.setText(fname)
 
     def linkLineChanged(self,lineEdit):
         if str(self.link_lineEdit.text()) == '' :
