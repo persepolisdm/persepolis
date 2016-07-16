@@ -95,18 +95,6 @@ class CheckSelectedRowThread(QThread):
             self.CHECKSELECTEDROWSIGNAL.emit()
 
 
-# class StartUpThread(QThread):
-#     STARTUPSIGNAL= pyqtSignal()
-#     def __init__(self):
-#         QThread.__init__(self)
-# 
-#     def run(self):
-#         global shutdown_notification
-#         sleep(10)
-#         if shutdown_notification != 1:
-#             self.STARTUPSIGNAL.emit()
-# 
-
 
 
 class CheckDownloadInfoThread(QThread):
@@ -243,7 +231,6 @@ class MainWindow(MainWindow_Ui):
         self.progress_window_list = []
         self.progress_window_list_dict = {}
 
-        self.statusbar.showMessage('Please wait ...')
         check_download_info = CheckDownloadInfoThread()
         self.threadPool.append(check_download_info)
         self.threadPool[1].start()
@@ -259,11 +246,7 @@ class MainWindow(MainWindow_Ui):
         self.threadPool[3].start()
         self.threadPool[3].CHECKFLASHGOTSIGNAL.connect(self.checkFlashgot)
 
-#         start_up_wait = StartUpThread()
-#         self.threadPool.append(start_up_wait)
-#         self.threadPool[4].start()
-#         self.threadPool[4].STARTUPSIGNAL.connect(self.changeStatus)
-# 
+ 
 
         self.system_tray_icon = QSystemTrayIcon() 
         self.system_tray_icon.setIcon(QIcon('icon'))
