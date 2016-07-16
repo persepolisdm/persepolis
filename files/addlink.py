@@ -27,14 +27,14 @@ class AddLinkWindow(AddLinkWindow_Ui):
         f.close()
         setting_dict_str = str(setting_file_lines[0].strip())
         setting_dict = ast.literal_eval(setting_dict_str) 
-
+        global connections
         connections = int(setting_dict['connections'])
+        global download_path
         download_path = str(setting_dict['download_path'])
 
 
         global init_file
         init_file = str(home_address) + "/.config/persepolis_download_manager/addlink_init_file"
-        os.system("mkdir -p  $HOME/.config/persepolis_download_manager")
         os.system("touch " + init_file)
         f = Open(init_file)
         init_file_lines = f.readlines()

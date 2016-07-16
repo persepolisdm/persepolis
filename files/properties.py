@@ -35,6 +35,7 @@ class PropertiesWindow(AddLinkWindow_Ui):
         setting_dict_str = str(setting_file_lines[0].strip())
         setting_dict = ast.literal_eval(setting_dict_str) 
 
+        global connections
         connections = int(setting_dict['connections'])
 
 
