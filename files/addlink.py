@@ -148,7 +148,7 @@ class AddLinkWindow(AddLinkWindow_Ui):
 
 
     def changeFolder(self,button):
-        fname = QFileDialog.getExistingDirectory(self,'Open f', download_path )
+        fname = QFileDialog.getExistingDirectory(self,'Open f', download_path)
         if os.path.isdir(fname):
             self.download_folder_lineEdit.setText(fname)
 

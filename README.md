@@ -23,7 +23,7 @@ You must install `aria2` , `vorbis-tools` , `libnotify-bin` , `python 3` , `pyqt
 
 ## Dependencies for Fedora
 
-    $ sudo dnf install aria2 vorbis-tools libnotify python3-q5
+    $ sudo dnf install aria2 vorbis-tools libnotify python3-qt5
 
 After installing dependencies, change your directory with cd command and run install file
 
