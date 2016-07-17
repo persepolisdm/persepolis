@@ -372,7 +372,9 @@ def downloadStop(gid):
     if status != 'scheduled':
         try :
             answer = server.aria2.remove(gid)
-            server.aria2.removeDownloadResult(gid)
+            if status == 'downloading':
+                server.aria2.removeDownloadResult(gid)
+ 
         except :
             answer = str ("None")
         print(answer + " stopped")
