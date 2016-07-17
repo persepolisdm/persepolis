@@ -15,7 +15,7 @@ You must install `aria2` , `vorbis-tools` , `libnotify-bin` , `python 3` , `pyqt
 
 ## Dependencies for Archlinux
 
-    $ sudo pacman -S aria2 vorbis-tools libnotify python-pyq5
+    $ sudo pacman -S aria2 vorbis-tools libnotify python-pyqt5
 
 ## Dependencies for Debian and Deabian base distro.s (ubuntu 16.04 , ... )
 
