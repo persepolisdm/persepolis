@@ -11,3 +11,4 @@ Categories=GNOME;GTK;Network;
 StartupNotify=true
 Exec=persepolis
 Icon=/usr/share/persepolis/icon.png
+StartupWMClass=persepolis-download-manager
