@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 import sys , ast
 from PyQt5 import QtCore, QtGui, QtWidgets  
-from PyQt5.QtWidgets import QMessageBox , QSystemTrayIcon , QMenu , QTableWidgetItem ,QAbstractItemView , QApplication , QToolBar , QMenuBar , QStatusBar, QTableWidget , QAction , QMainWindow , QWidget , QFrame , QAbstractItemView
+from PyQt5.QtWidgets import QSystemTrayIcon , QMenu , QTableWidgetItem ,QAbstractItemView , QApplication , QToolBar , QMenuBar , QStatusBar, QTableWidget , QAction , QMainWindow , QWidget , QFrame , QAbstractItemView
 from PyQt5.QtGui import QIcon , QColor , QPalette 
 from PyQt5.QtCore import QCoreApplication , QRect , QSize , QThread , pyqtSignal  , Qt
 import os
@@ -56,30 +56,22 @@ setting_dict = ast.literal_eval(setting_dict_str)
 #finding icons folder path
 icons = str(setting_dict['icons']) + '/'
 
-#adding a sound notification to QMessageBox
-class QMessageBox(QMessageBox):
-    def __init__(self):
-        super().__init__()
-        playNotification('notifications/fail.ogg')
-
-
 
 #start aria2 when Persepolis starts
 class StartAria2Thread(QThread):
+    ARIA2RESPONDSIGNAL = pyqtSignal(str)
     def __init__(self):
         QThread.__init__(self)
         
     def run(self):
         answer = download.startAria()
-        #if Aria2 doesn't respond to Persepolis , a message box wil appeared
+        #if Aria2 doesn't respond to Persepolis ,ARIA2RESPONDSIGNAL is emitting no  
         if answer == 'did not respond':
-            msgBox = QMessageBox()
-            msgBox.setWindowTitle("Error")
-            msgBox.setText("<b>Aria2 did not respond!</b>\n<b>1.</b>Make sure that Aria2 installed before!\n<b>2.</b>Check your internet connection!\n<b>3.</b>Restart Persepolis!")
-            msgBox.setWindowIcon(QtGui.QIcon.fromTheme("error"))
-            msgBox.setIcon(QMessageBox.Critical)
-            msgBox.exec()
+            signal_str = 'no'
+        else :
+            signal_str = 'yes'
 
+        self.ARIA2RESPONDSIGNAL.emit(signal_str)
 
 
 
@@ -141,13 +133,7 @@ class DownloadLink(QThread):
     def run(self):
         answer = download.downloadAria(self.gid)
         if answer == 'None':
-            msgBox = QMessageBox()
-            msgBox.setWindowTitle("Error")
-            msgBox.setText("Aria2 did not respond!\nTry again!")
-            msgBox.setWindowIcon(QtGui.QIcon.fromTheme("error"))
-            msgBox.setIcon(QMessageBox.Critical)
-            msgBox.exec()
-
+            notifySend('Aria2 did not respond' , 'Try again' , 5000 , 'critical')
 
         
 
@@ -169,6 +155,7 @@ class CheckFlashgot(QThread):
 class MainWindow(MainWindow_Ui):
     def __init__(self):
         super().__init__()
+        self.statusbar.showMessage('Please Wait ...')
 
 #threads     
         self.threadPool=[]
@@ -176,6 +163,7 @@ class MainWindow(MainWindow_Ui):
         start_aria = StartAria2Thread()
         self.threadPool.append(start_aria)
         self.threadPool[0].start() 
+        self.threadPool[0].ARIA2RESPONDSIGNAL.connect(self.startAriaMessage)
 
 #initializing    
 #add downloads to the download_table
@@ -246,6 +234,8 @@ class MainWindow(MainWindow_Ui):
         self.threadPool[3].start()
         self.threadPool[3].CHECKFLASHGOTSIGNAL.connect(self.checkFlashgot)
 
+        
+
  
 
         self.system_tray_icon = QSystemTrayIcon() 
@@ -260,8 +250,13 @@ class MainWindow(MainWindow_Ui):
         self.system_tray_icon.activated.connect(self.systemTrayPressed)
         self.system_tray_icon.show()
 
-    def changeStatus(self):
-        self.statusbar.showMessage('Ready...')
+    def startAriaMessage(self,message):
+        if message == 'yes':
+            sleep (2)
+            self.statusbar.showMessage('Ready...')
+        else:
+            self.statusbar.showMessage('Error...')
+            notifySend('Persepolis can not connect to Aria2' , 'Restart Persepolis' ,10000,'critical' )
 
     def checkDownloadInfo(self,gid):
         try:
