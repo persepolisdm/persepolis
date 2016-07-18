@@ -41,9 +41,13 @@ class ProgressWindow(ProgressWindow_Ui):
         
         self.after_pushButton.clicked.connect(self.afterPushButtonPressed)
 #check if limit speed actived by user or not
-        f = Open(download_info_folder + "/" + self.gid) 
-        download_info_file_lines = f.readlines()
-        f.close()
+        download_info_file_lines_len = 1
+        while download_info_file_lines_len != 10 :
+            f = Open(download_info_folder + "/" + self.gid) 
+            download_info_file_lines = f.readlines()
+            f.close()
+            download_info_file_lines_len = len(download_info_file_lines)
+
         add_link_dictionary_str = str(download_info_file_lines[9].strip())
         add_link_dictionary = ast.literal_eval(add_link_dictionary_str) 
         limit = add_link_dictionary['limit']  
