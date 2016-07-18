@@ -321,7 +321,7 @@ class MainWindow(MainWindow_Ui):
                 progress_window.save_label.setText(save_as)
                 file_name = str(download_info_file_lines[0].strip())
                 if file_name != "***":
-                    progress_window.setWindowTitle('Persepolis Download Manager-'+ file_name ) 
+                    progress_window.setWindowTitle(file_name ) 
 
                 #status
                 progress_window.status = download_info_file_lines[1].strip()
