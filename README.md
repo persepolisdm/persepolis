@@ -17,7 +17,7 @@ You must install `aria2` , `vorbis-tools` , `libnotify-bin` , `python 3` , `pyqt
 
     $ sudo pacman -S aria2 vorbis-tools libnotify python-pyqt5
 
-## Dependencies for Debian and Deabian base distro.s (ubuntu 16.04 , ... )
+## Dependencies for Debian and Debian base distro.s (ubuntu 16.04 , ... )
 
     $ sudo apt-get install aria2 vorbis-tools libnotify-bin python3-pyqt5
 
@@ -42,7 +42,7 @@ for uninstall,
     $ cd persepolis-master
     $ sh install
 
-##Alternative way for installing in ArchLinxu
+##Alternative way for installing in ArchLinux
 
     $ yaourt -S persepolis-git
 
