@@ -42,7 +42,9 @@ for uninstall,
     $ cd persepolis-master
     $ sh install
 
+##Alternative way for installing in ArchLinxu
 
+    $ yaourt -S persepolis-git
 
 ##Configuring PersepolisDM to use with FlashGot
 open firefox
