@@ -64,6 +64,8 @@ class StartAria2Thread(QThread):
         QThread.__init__(self)
         
     def run(self):
+        global aria_startup_answer
+        aria_startup_answer = 'None'
         answer = download.startAria()
         #if Aria2 doesn't respond to Persepolis ,ARIA2RESPONDSIGNAL is emitting no  
         if answer == 'did not respond':
@@ -144,6 +146,8 @@ class CheckFlashgot(QThread):
 
     def run(self):
         global shutdown_notification
+        while shutdown_notification == 0 and aria_startup_answer != 'ready':
+            sleep (2)
         while shutdown_notification != 1:
             sleep(2)
             if os.path.isfile("/tmp/persepolis-flashgot")  == True and os.path.isfile("/tmp/persepolis-flashgot.lock") == False:
@@ -166,6 +170,7 @@ class MainWindow(MainWindow_Ui):
         self.threadPool[0].ARIA2RESPONDSIGNAL.connect(self.startAriaMessage)
 
 #initializing    
+
 #add downloads to the download_table
         f_download_list_file = Open(download_list_file)
         download_list_file_lines = f_download_list_file.readlines()
@@ -251,9 +256,11 @@ class MainWindow(MainWindow_Ui):
         self.system_tray_icon.show()
 
     def startAriaMessage(self,message):
+        global aria_startup_answer
         if message == 'yes':
             sleep (2)
             self.statusbar.showMessage('Ready...')
+            aria_startup_answer = 'ready'
         else:
             self.statusbar.showMessage('Error...')
             notifySend('Persepolis can not connect to Aria2' , 'Restart Persepolis' ,10000,'critical' )
