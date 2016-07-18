@@ -64,9 +64,9 @@ write Persepolis Download Manager and select this file for executble path
 
 then in the white field copy/paste the following codes
 
-	$  [--link URL][--name FNAME][--referer REFERER][--cookie COOKIE][--headers HEADERS][--agent UA]
+	$  [--link URL][--name FNAME][--cookie CFILE][--referer REFERER][--headers HEADERS][--agent UA]
 
-![ScreenShot](http://s7.picofile.com/file/8259833218/flashgot2.jpg)
+![ScreenShot](http://s2.picofile.com/file/8260186350/flashgot2.jpg)
 
 then at the end click on the advance tab and uncheck automatic download manager detection
 
