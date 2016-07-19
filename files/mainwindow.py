@@ -344,6 +344,8 @@ class MainWindow(MainWindow_Ui):
                     progress_window.stop_pushButton.setEnabled(True)
                     progress_window.pause_pushButton.setEnabled(False)
                 elif progress_window.status == "stopped" or progress_window.status == "error" or progress_window.status == "complete" :
+                    if self.isVisible() == False:
+                        self.minMaxTray(progress_window)
                     progress_window.close()
                     self.progress_window_list[member_number] = []
                     del self.progress_window_list_dict[gid]
