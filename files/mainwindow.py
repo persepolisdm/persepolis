@@ -730,11 +730,12 @@ class MainWindow(MainWindow_Ui):
         selected_row_return = self.selectedRow()
         if selected_row_return != None:
             gid = self.download_table.item(selected_row_return , 8 ).text()
-            member_number = self.progress_window_list_dict[gid]
-            if self.progress_window_list[member_number].isVisible() == False:
-                self.progress_window_list[member_number].show()
-            else :
-                self.progress_window_list[member_number].hide()
+            if gid in self.progress_window_list_dict :
+                member_number = self.progress_window_list_dict[gid]
+                if self.progress_window_list[member_number].isVisible() == False:
+                    self.progress_window_list[member_number].show()
+                else :
+                    self.progress_window_list[member_number].hide()
 
     def progressBarOpen(self,gid):
             progress_window = ProgressWindow(gid)
