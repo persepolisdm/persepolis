@@ -3,7 +3,7 @@
 clear screen
 echo "############################################################"
 echo "#### Welcome to Persepolis Download Manager installation ###"
-echo "################## Version 2.0.0 Unstable ##################"
+echo "################## Version 2.0.1 Unstable ##################"
 echo "############################################################"
 
 echo "Checking dependencies"
