@@ -8,6 +8,7 @@ from PyQt5.QtGui import QIcon
 from PyQt5.QtCore import QCoreApplication , QRect , QSize  
 import ast , os
 from newopen import Open
+import icons_resource
 
 home_address = os.path.expanduser("~")
 config_folder = str(home_address) + "/.config/persepolis_download_manager"
@@ -20,7 +21,7 @@ f.close()
 setting_dict_str = str(setting_file_lines[0].strip())
 setting_dict = ast.literal_eval(setting_dict_str) 
 
-icons = str(setting_dict['icons']) + '/'
+icons = ':/' + str(setting_dict['icons']) + '/'
 
 
 class MainWindow_Ui(QMainWindow):
@@ -31,7 +32,7 @@ class MainWindow_Ui(QMainWindow):
         self.setMinimumSize(QSize(600, 400))
         self.setMaximumSize(QSize(16777215, 16777215))
         self.setWindowTitle("Persepolis Download Manager")
-        self.setWindowIcon(QIcon('icon'))
+        self.setWindowIcon(QIcon(':/icon'))
         
         self.centralwidget = QWidget(self)
         self.verticalLayout = QVBoxLayout(self.centralwidget)

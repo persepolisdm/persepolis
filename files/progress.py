@@ -4,7 +4,6 @@
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import QWidget , QSizePolicy ,  QInputDialog
-from PyQt5.QtGui import QIcon
 from progress_ui import ProgressWindow_Ui
 import os , time , ast
 from newopen import Open

@@ -11,6 +11,7 @@ from PyQt5.QtWidgets import QWidget
 from PyQt5.QtGui import QIcon
 import ast , os
 from newopen import Open
+import icons_resource
 
 home_address = os.path.expanduser("~")
 config_folder = str(home_address) + "/.config/persepolis_download_manager"
@@ -23,7 +24,7 @@ f.close()
 setting_dict_str = str(setting_file_lines[0].strip())
 setting_dict = ast.literal_eval(setting_dict_str) 
 
-icons = str(setting_dict['icons']) + '/'
+icons = ':/' + str(setting_dict['icons']) + '/'
 
 
 class AboutWindow(QWidget):
@@ -33,7 +34,7 @@ class AboutWindow(QWidget):
         self.resize(363, 157)
         self.setMinimumSize(QtCore.QSize(363, 157))
         self.setMaximumSize(QtCore.QSize(363, 157))
-        self.setWindowIcon(QIcon('icon'))
+        self.setWindowIcon(QIcon(':/icon'))
         self.setLayoutDirection(QtCore.Qt.LeftToRight)
         self.gridLayout = QtWidgets.QGridLayout(self)
         self.verticalLayout_2 = QtWidgets.QVBoxLayout()
@@ -42,7 +43,7 @@ class AboutWindow(QWidget):
         self.icon_label.setMaximumSize(QtCore.QSize(100, 100))
         self.icon_label.setFrameShape(QtWidgets.QFrame.NoFrame)
         self.icon_label.setText("")
-        self.icon_label.setPixmap(QtGui.QPixmap("icon.png"))
+        self.icon_label.setPixmap(QtGui.QPixmap(":/icon.png"))
         self.icon_label.setScaledContents(True)
         self.icon_label.setAlignment(QtCore.Qt.AlignCenter)
         self.horizontalLayout_2.addWidget(self.icon_label)

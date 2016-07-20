@@ -18,7 +18,7 @@ from play import playNotification
 from bubble import notifySend
 from setting import PreferencesWindow
 from about import AboutWindow
-
+import icons_resource
 
 
 #shutdown_notification = 0 >> persepolis running , 1 >> persepolis is ready for close(closeEvent called) , 2 >> OK, let's close application!
@@ -54,7 +54,7 @@ f.close()
 setting_dict_str = str(setting_file_lines[0].strip())
 setting_dict = ast.literal_eval(setting_dict_str) 
 #finding icons folder path
-icons = str(setting_dict['icons']) + '/'
+icons = ':/' + str(setting_dict['icons']) + '/'
 
 
 #start aria2 when Persepolis starts
@@ -83,7 +83,8 @@ class CheckSelectedRowThread(QThread):
         QThread.__init__(self)
 
     def run(self):
-        global shutdown_notification
+        while shutdown_notification == 0 and aria_startup_answer != 'ready':
+            sleep (1)
         while shutdown_notification != 1:
             sleep(0.2)
             self.CHECKSELECTEDROWSIGNAL.emit()
@@ -99,6 +100,10 @@ class CheckDownloadInfoThread(QThread):
     def run(self):
         global shutdown_notification
         while True:
+
+            while shutdown_notification == 0 and aria_startup_answer != 'ready':
+                sleep (1)
+
             while shutdown_notification != 1:
                 sleep(0.2)
                 f = Open(download_list_file_active) 
@@ -244,7 +249,7 @@ class MainWindow(MainWindow_Ui):
  
 
         self.system_tray_icon = QSystemTrayIcon() 
-        self.system_tray_icon.setIcon(QIcon('icon'))
+        self.system_tray_icon.setIcon(QIcon(':/icon'))
         system_tray_menu = QMenu()
         system_tray_menu.addAction(self.addlinkAction)
         system_tray_menu.addAction(self.pauseAllAction)

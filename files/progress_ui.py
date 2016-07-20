@@ -20,7 +20,7 @@ f.close()
 setting_dict_str = str(setting_file_lines[0].strip())
 setting_dict = ast.literal_eval(setting_dict_str) 
 
-icons = str(setting_dict['icons']) + '/'
+icons = ':/' + str(setting_dict['icons']) + '/'
 
 
 class ProgressWindow_Ui(QWidget):
@@ -37,7 +37,7 @@ class ProgressWindow_Ui(QWidget):
         self.setMinimumSize(QtCore.QSize(595, 284))
         self.setMaximumSize(QtCore.QSize(16777215, 16777215))
 
-        self.setWindowIcon(QIcon('icon'))
+        self.setWindowIcon(QIcon(':/icon'))
         self.setWindowTitle("Persepolis Download Manager")
 
 

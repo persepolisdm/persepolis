@@ -113,7 +113,6 @@ def downloadAria(gid):
     download_path_temp = setting_dict ['download_path_temp' ] 
 
 
-
     if start_time_status != 'stopped':
 #send download request to aria2
         aria_dict = {'gid':gid ,'max-tries' : str(setting_dict['max-tries']) , 'retry-wait': int(setting_dict['retry-wait']) , 'timeout' : int(setting_dict['timeout']) , 'header': header ,'out': out , 'user-agent': user_agent , 'load-cookies': cookies , 'referer': referer ,  'all-proxy': ip_port , 'max-download-limit': limit , 'all-proxy-user':str(proxy_user), 'all-proxy-passwd':str(proxy_passwd), 'http-user':str(download_user), 'http-passwd':str(download_passwd) , 'split':'16', 'max-connection-per-server':str(connections) , 'min-split-size':'1M', 'continue':'true', 'dir':str(download_path_temp) } 
@@ -284,6 +283,7 @@ def downloadStatus(gid):
     if (status_str == "None"):
         status_str = None
 
+
     download_info = [file_name , status_str , size_str , downloaded_str ,  percent_str , connections_str , download_speed_str ,estimate_time_left_str , None , str(add_link_dictionary) ]
 
    
@@ -374,7 +374,6 @@ def downloadStop(gid):
             answer = server.aria2.remove(gid)
             if status == 'downloading':
                 server.aria2.removeDownloadResult(gid)
- 
         except :
             answer = str ("None")
         print(answer + " stopped")

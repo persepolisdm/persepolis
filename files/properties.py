@@ -4,7 +4,6 @@
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import QWidget , QPushButton , QComboBox , QSpinBox ,QVBoxLayout, QHBoxLayout , QLabel , QApplication , QWidget , QFileDialog, QSizePolicy , QGridLayout , QCheckBox , QFrame , QLineEdit , QPushButton
-from PyQt5.QtGui import QIcon
 import os , string , ast
 from newopen import Open
 from addlink_ui import AddLinkWindow_Ui
