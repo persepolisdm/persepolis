@@ -345,7 +345,7 @@ def startAria():
         answer = server.aria2.getVersion()
         print("Aria2 Version : " + str(answer['version']))
     except :
-        print("aria2 Error Version")
+        print("aria2 not respond!")
         answer = "did not respond"
     return answer
 
