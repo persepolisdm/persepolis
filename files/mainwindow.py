@@ -34,17 +34,8 @@ temp_download_folder = str(home_address) + "/.persepolis"
 
 #download_list_file contains GID of all downloads
 download_list_file = config_folder + "/download_list_file"
-#touch download_list_file
-if not(os.path.isfile(download_list_file)):
-    f = Open(download_list_file , 'w')
-    f.close()
-
 #download_list_file_active for active downloads
 download_list_file_active = config_folder + "/download_list_file_active"
-#touch download_list_file_active
-if not(os.path.isfile(download_list_file_active)):
-    f = Open(download_list_file_active , 'w')
-    f.close()
 
 #setting
 setting_file = config_folder + '/setting'
@@ -165,6 +156,24 @@ class MainWindow(MainWindow_Ui):
     def __init__(self):
         super().__init__()
         self.statusbar.showMessage('Please Wait ...')
+
+#touch download_list_file
+        if not(os.path.isfile(download_list_file)):
+            f = Open(download_list_file , 'w')
+            f.close()
+
+#touch download_list_file_active
+        if not(os.path.isfile(download_list_file_active)):
+            f = Open(download_list_file_active , 'w')
+            f.close()
+
+
+#lock files perventing to access a file simultaneously
+
+#removing lock files in starting persepolis
+        os.system("rm " + config_folder +"/*.lock" + "  2>/dev/null" )
+        os.system("rm " + download_info_folder + "/*.lock" + "   2>/dev/null" )
+
 
 #threads     
         self.threadPool=[]
