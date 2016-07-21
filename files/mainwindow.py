@@ -620,6 +620,7 @@ class MainWindow(MainWindow_Ui):
 
         
     def resumeButtonPressed(self,button):
+        self.resumeAction.setEnabled(False)
         selected_row_return = self.selectedRow()
         if selected_row_return != None:
             gid = self.download_table.item(selected_row_return , 8 ).text()
@@ -642,11 +643,13 @@ class MainWindow(MainWindow_Ui):
 
 
 
+
         else:
             self.statusbar.showMessage("Please select an item first!")
 
 
     def stopButtonPressed(self,button):
+        self.stopAction.setEnabled(False)
         selected_row_return = self.selectedRow()
         if selected_row_return != None:
             gid = self.download_table.item(selected_row_return , 8 ).text()
@@ -662,6 +665,7 @@ class MainWindow(MainWindow_Ui):
             self.statusbar.showMessage("Please select an item first!")
 
     def pauseButtonPressed(self,button):
+        self.pauseAction.setEnabled(False)
         selected_row_return = self.selectedRow()
         if selected_row_return != None:
             gid = self.download_table.item(selected_row_return , 8 ).text()
@@ -719,6 +723,7 @@ class MainWindow(MainWindow_Ui):
         self.selectedRow()
 
     def propertiesButtonPressed(self,button):
+        self.propertiesAction.setEnabled(False)
         selected_row_return = self.selectedRow()
         if selected_row_return != None :
             add_link_dictionary_str = self.download_table.item(selected_row_return , 9).text() 
