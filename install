@@ -57,6 +57,7 @@ sudo mkdir -p "$program_path"
 sudo cp -rf  $install_path/files/* "$program_path/"
 sudo cp -rf "$install_path/persepolis" "$exec_path"
 sudo cp -rf "$install_path/Persepolis Download Manager.desktop" "/usr/share/applications/"
+rm -rf "$HOME/.config/persepolis_download_manager/setting"
 if [ "$?" -eq "0" ];then
     echo "Installation compeleted!"
 else

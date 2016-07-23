@@ -193,6 +193,10 @@ class Setting_Ui(QtWidgets.QWidget):
         self.horizontalLayout = QtWidgets.QHBoxLayout()
         spacerItem = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
         self.horizontalLayout.addItem(spacerItem)
+#Enable system tray icon
+        self.enable_system_tray_checkBox = QtWidgets.QCheckBox(self.layoutWidget3)
+        self.verticalLayout_3.addWidget(self.enable_system_tray_checkBox)
+        
 #defaults_pushButton
         self.defaults_pushButton = QtWidgets.QPushButton(self)
         self.horizontalLayout.addWidget(self.defaults_pushButton)
@@ -237,6 +241,7 @@ class Setting_Ui(QtWidgets.QWidget):
         self.icon_label.setText( "Icons : ")
         self.font_label.setText( "Font : ")
         self.font_size_label.setText( "Size : ")
+        self.enable_system_tray_checkBox.setText("Enable system tray icon")
         self.setting_tabWidget.setTabText(self.setting_tabWidget.indexOf(self.style_tab),  "Appearance")
         self.defaults_pushButton.setText( "Defaults")
         self.cancel_pushButton.setText( "Cancel")

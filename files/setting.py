@@ -87,10 +87,19 @@ class PreferencesWindow(Setting_Ui):
         self.volume_dial.setNotchesVisible(True)
         self.volume_dial.valueChanged.connect(self.dialChanged)
 
+#tray icon
+       
+        if str(self.setting_dict['tray-icon']) == 'yes':
+            self.enable_system_tray_checkBox.setChecked(True)
+        else:
+            self.enable_notifications_checkBox.setChecked(False)
+            
+
 #ok cancel default button
         self.cancel_pushButton.clicked.connect(self.cancelButtonPressed)
         self.defaults_pushButton.clicked.connect(self.defaultsPushButtonPressed)
         self.ok_pushButton.clicked.connect(self.okPushButtonPressed)
+
 
     def soundFrame(self,checkBox):
         if self.enable_notifications_checkBox.isChecked() == True :
@@ -130,7 +139,7 @@ class PreferencesWindow(Setting_Ui):
         download_path_temp_default = str(home_address) + '/.persepolis'
         download_path_default = str(home_address) + '/Downloads/Persepolis'
  
-        self.setting_dict = {'max-tries' : 5 , 'retry-wait': 0 , 'timeout' : 60 , 'connections' : 16 , 'download_path_temp' : download_path_temp_default , 'download_path':download_path_default , 'sound' : 'yes' , 'sound-volume':100 , 'style':'Fusion' , 'color-scheme' : 'Persepolis Dark Red' , 'icons':'Archdroid-Red','font' : 'Ubuntu' , 'font-size' : 9  }
+        self.setting_dict = {'tray-icon':'yes', 'max-tries' : 5 , 'retry-wait': 0 , 'timeout' : 60 , 'connections' : 16 , 'download_path_temp' : download_path_temp_default , 'download_path':download_path_default , 'sound' : 'yes' , 'sound-volume':100 , 'style':'Fusion' , 'color-scheme' : 'Persepolis Dark Red' , 'icons':'Archdroid-Red','font' : 'Ubuntu' , 'font-size' : 9  }
 
         self.tries_spinBox.setValue(int(self.setting_dict['max-tries']))
         self.wait_spinBox.setValue(int(self.setting_dict['retry-wait']))
@@ -170,6 +179,14 @@ class PreferencesWindow(Setting_Ui):
         else:
             self.enable_notifications_checkBox(False)
 
+#tray icon
+       
+        if str(self.setting_dict['tray-icon']) == 'yes':
+            self.enable_system_tray_checkBox.setChecked(True)
+        else:
+            self.enable_notifications_checkBox.setChecked(False)
+ 
+
     def okPushButtonPressed(self,button):
         self.setting_dict['max-tries'] = self.tries_spinBox.value()
         self.setting_dict['retry-wait'] = self.wait_spinBox.value()
@@ -182,6 +199,12 @@ class PreferencesWindow(Setting_Ui):
         self.setting_dict['color-scheme'] = self.color_comboBox.currentText()
         self.setting_dict['icons'] = self.icon_comboBox.currentText()
         self.setting_dict['font-size'] = self.font_size_spinBox.value()
+
+        if self.enable_system_tray_checkBox.isChecked() == True :
+            self.setting_dict['tray-icon'] = 'yes'
+        else:
+            self.setting_dict['tray-icon'] = 'no'
+
 #this section  creates temporary download folder and download folder and download sub folders if they did not existed.
         download_path_temp  = self.setting_dict ['download_path_temp']
         download_path = self.setting_dict [ 'download_path']

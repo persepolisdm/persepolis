@@ -52,14 +52,18 @@ class AddLinkWindow_Ui(QWidget):
 
         self.horizontalLayout_2 = QHBoxLayout(self.link_frame)
 
-        self.link_horizontalLayout = QHBoxLayout()
+        self.link_verticalLayout = QVBoxLayout()
 #link
+        self.link_horizontalLayout = QHBoxLayout() 
         self.link_label = QLabel(self.link_frame)
         self.link_horizontalLayout.addWidget(self.link_label)
 
         self.link_lineEdit = QLineEdit(self.link_frame)
         self.link_horizontalLayout.addWidget(self.link_lineEdit)
-        self.horizontalLayout_2.addLayout(self.link_horizontalLayout)
+
+        self.link_verticalLayout.addLayout(self.link_horizontalLayout)
+
+        self.horizontalLayout_2.addLayout(self.link_verticalLayout)
         self.addlink_verticalLayout.addWidget(self.link_frame)
 
 #proxy

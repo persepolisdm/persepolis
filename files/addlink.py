@@ -20,6 +20,20 @@ class AddLinkWindow(AddLinkWindow_Ui):
         super().__init__()
         self.callback = callback
         self.flashgot_add_link_dictionary = flashgot_add_link_dictionary
+
+#add change_name field
+        self.change_name_horizontalLayout = QHBoxLayout() 
+        self.change_name_checkBox = QCheckBox(self.link_frame)
+        self.change_name_checkBox.setText('Change File Name : ')
+        self.change_name_horizontalLayout.addWidget(self.change_name_checkBox)
+
+
+
+        self.change_name_lineEdit = QLineEdit(self.link_frame)
+        self.change_name_horizontalLayout.addWidget(self.change_name_lineEdit)
+
+        self.link_verticalLayout.addLayout(self.change_name_horizontalLayout)
+
 #entry initialization            
 
         f = Open(setting_file)
@@ -59,7 +73,6 @@ class AddLinkWindow(AddLinkWindow_Ui):
                     self.link_lineEdit.setText(str(text))
             except:
                 pass
-
 #ip_lineEdit initialization 
         try:
             self.ip_lineEdit.setText(init_file_lines[0].strip())
@@ -107,8 +120,17 @@ class AddLinkWindow(AddLinkWindow_Ui):
         self.end_frame.setEnabled(False)
         self.end_checkBox.toggled.connect(self.endFrame)
 
-       
-        self.show()
+
+        self.change_name_lineEdit.setEnabled(False)
+        self.change_name_checkBox.toggled.connect(self.changeName)
+
+#check name of flashgot link 
+        if 'out' in self.flashgot_add_link_dictionary:
+            self.change_name_lineEdit.setText(str(self.flashgot_add_link_dictionary['out']))
+            self.change_name_checkBox.setChecked(True)
+            del self.flashgot_add_link_dictionary['out']
+
+      
            
 #activate frames if checkBoxes checked
     def proxyFrame(self,checkBox):
@@ -157,6 +179,12 @@ class AddLinkWindow(AddLinkWindow_Ui):
             self.ok_pushButton.setEnabled(False)
         else :
             self.ok_pushButton.setEnabled(True)
+
+    def changeName(self,checkBoxes):
+        if self.change_name_checkBox.isChecked() == True:
+            self.change_name_lineEdit.setEnabled(True)
+        else:
+            self.change_name_lineEdit.setEnabled(False)
 
 
 #close window if cancelButton Pressed
@@ -222,6 +250,11 @@ class AddLinkWindow(AddLinkWindow_Ui):
         else :
             end_hour = str(self.end_hour_spinBox.value())
             end_minute = str(self.end_minute_spinBox.value())
+
+        if self.change_name_checkBox.isChecked() == False:
+            out = None
+        else:
+            out = str(self.change_name_lineEdit.text())
             
 
         link = self.link_lineEdit.text()
@@ -235,8 +268,6 @@ class AddLinkWindow(AddLinkWindow_Ui):
         if not ('header' in self.flashgot_add_link_dictionary):
             self.flashgot_add_link_dictionary['header'] = None
 
-        if not ('out' in self.flashgot_add_link_dictionary):
-            self.flashgot_add_link_dictionary['out'] = None
 
         if not('user-agent' in self.flashgot_add_link_dictionary):
             self.flashgot_add_link_dictionary['user-agent'] = None
@@ -245,10 +276,12 @@ class AddLinkWindow(AddLinkWindow_Ui):
             self.flashgot_add_link_dictionary['load-cookies'] = None
 
         final_download_path = None
-        self.add_link_dictionary = {'final_download_path':final_download_path , 'start_hour':start_hour ,'start_minute' : start_minute ,'end_hour' : end_hour ,'end_minute':end_minute , 'link':link , 'ip':ip , 'port':port , 'proxy_user':proxy_user , 'proxy_passwd' : proxy_passwd , 'download_user':download_user , 'download_passwd': download_passwd ,'connections':connections , 'limit':limit, 'download_path':download_path }
+        self.add_link_dictionary = {'out' :out , 'final_download_path':final_download_path , 'start_hour':start_hour ,'start_minute' : start_minute ,'end_hour' : end_hour ,'end_minute':end_minute , 'link':link , 'ip':ip , 'port':port , 'proxy_user':proxy_user , 'proxy_passwd' : proxy_passwd , 'download_user':download_user , 'download_passwd': download_passwd ,'connections':connections , 'limit':limit, 'download_path':download_path }
         for i in self.flashgot_add_link_dictionary.keys():
             self.add_link_dictionary[i] = self.flashgot_add_link_dictionary[i]
 
+
+        del self.flashgot_add_link_dictionary
         self.callback(self.add_link_dictionary)
 
 

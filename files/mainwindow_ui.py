@@ -125,7 +125,7 @@ class MainWindow_Ui(QMainWindow):
         self.stopAction = QAction(QIcon(icons + 'stop') , 'Stop Download' , self , shortcut = "Ctrl+S" , statusTip = "Stop/Cancel Download" , triggered = self.stopButtonPressed)
         downloadMenu.addAction(self.stopAction)
 
-        self.removeAction = QAction(QIcon(icons + 'trash') , 'Remove Download' , self , shortcut = "Ctrl+D" , statusTip = "Remove Download" , triggered = self.removeButtonPressed)
+        self.removeAction = QAction(QIcon(icons + 'remove') , 'Remove Download' , self , shortcut = "Ctrl+D" , statusTip = "Remove Download" , triggered = self.removeButtonPressed)
         downloadMenu.addAction(self.removeAction)
 
         self.propertiesAction = QAction(QIcon(icons + 'setting') , 'Properties' , self , shortcut = "Ctrl+P" , statusTip = "Properties" , triggered = self.propertiesButtonPressed )
@@ -134,8 +134,20 @@ class MainWindow_Ui(QMainWindow):
         self.progressAction = QAction(QIcon(icons + 'window') , 'Progress' , self , shortcut = "Ctrl+Z" , statusTip = "Progress" , triggered = self.progressButtonPressed )
         downloadMenu.addAction(self.progressAction)
 
+        self.openFileAction = QAction(QIcon(icons + 'file') , 'Open file' , self , statusTip = 'Open file', triggered = self.openFile )
+        fileMenu.addAction(self.openFileAction)
 
-        self.exitAction = QAction(QIcon(icons + 'exit') , 'Exit' , self , shortcut = "Ctrl+Q" , statusTip = "Exit" , triggered = self.close)
+        self.openDownloadFolderAction = QAction(QIcon(icons + 'folder') , 'Open download folder' , self , statusTip = 'Open download folder', triggered = self.openDownloadFolder )
+        fileMenu.addAction(self.openDownloadFolderAction)
+
+        self.deleteFileAction = QAction(QIcon(icons + 'trash') , 'delete file' , self , statusTip = 'delete file', triggered = self.deleteFile )
+        fileMenu.addAction(self.deleteFileAction)
+ 
+
+        self.openDefaultDownloadFolderAction = QAction(QIcon(icons + 'folder') , 'Open default download folder' , self , statusTip = 'Open default download folder', triggered = self.openDefaultDownloadFolder )
+        fileMenu.addAction(self.openDefaultDownloadFolderAction)
+   
+        self.exitAction = QAction(QIcon(icons + 'exit') , 'Exit' , self , shortcut = "Ctrl+Q" , statusTip = "Exit" , triggered = self.closeEvent)
         fileMenu.addAction(self.exitAction)
 
         self.preferencesAction = QAction(QIcon(icons + 'preferences') , 'Preferences' , self , statusTip = 'Preferences' , triggered = self.openPreferences)
@@ -143,6 +155,8 @@ class MainWindow_Ui(QMainWindow):
 
         self.aboutAction = QAction(QIcon(icons + 'about') , 'About' , self , statusTip = 'About' , triggered = self.openAbout)
         helpMenu.addAction(self.aboutAction)
+     
+
 
         
 

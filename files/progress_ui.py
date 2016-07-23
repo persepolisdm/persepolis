@@ -95,6 +95,8 @@ class ProgressWindow_Ui(QWidget):
         self.horizontalLayout = QtWidgets.QHBoxLayout()
 #limit_spinBox
         self.limit_spinBox = QtWidgets.QSpinBox(self.widget1)
+        self.limit_spinBox.setMinimum(1)
+        self.limit_spinBox.setMaximum(1023)
         self.horizontalLayout.addWidget(self.limit_spinBox)
 #limit_comboBox
         self.limit_comboBox = QtWidgets.QComboBox(self.widget1)
@@ -119,7 +121,6 @@ class ProgressWindow_Ui(QWidget):
  
         self.after_comboBox = QtWidgets.QComboBox(self.after_frame)
         self.after_comboBox.setGeometry(QtCore.QRect(73, 46, 111, 26))
-        self.after_comboBox.addItem("")
         self.after_comboBox.addItem("")
         self.after_comboBox.addItem("")
 

@@ -272,13 +272,21 @@ def downloadStatus(gid):
     if (status_str == "complete"):
         if final_download_path != None :
             download_path = final_download_path
-        downloadCompleteAction(path , download_path ,file_name)
+        file_path = downloadCompleteAction(path , download_path ,file_name)
+        add_link_dictionary [ 'file_path'] = file_path
+        file_path_split = file_path.split('/')
+        file_name = str(file_path_split[-1])
 #rename active status to downloading
     if (status_str == "active"):
         status_str = "downloading"
 #rename removed status to stopped
     if (status_str == "removed" ):
         status_str = "stopped"
+
+    if (status_str == "error"):
+        add_link_dictionary["error"] = str(download_status['errorMessage'])
+
+        
 
     if (status_str == "None"):
         status_str = None
@@ -315,6 +323,8 @@ def downloadCompleteAction( path ,download_path , file_name):
         shutil.move(str(path) ,str(file_path) )
     except:
         print('Persepolis can not move file')
+
+    return str(file_path)
     
 def findDownloadPath(file_name , download_path):
     file_name_split = file_name.split('.')

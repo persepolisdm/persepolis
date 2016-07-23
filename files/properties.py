@@ -154,7 +154,6 @@ class PropertiesWindow(AddLinkWindow_Ui):
         
             
 
-        self.show()
        
            
 #activate frames if checkBoxes checked

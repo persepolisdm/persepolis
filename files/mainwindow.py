@@ -7,7 +7,7 @@ from PyQt5.QtGui import QIcon , QColor , QPalette
 from PyQt5.QtCore import QCoreApplication , QRect , QSize , QThread , pyqtSignal  , Qt
 import os
 from time import sleep
-import random
+import random  
 from addlink import AddLinkWindow
 from properties import PropertiesWindow
 from progress import ProgressWindow
@@ -76,7 +76,7 @@ class CheckSelectedRowThread(QThread):
     def run(self):
         while shutdown_notification == 0 and aria_startup_answer != 'ready':
             sleep (1)
-        while shutdown_notification != 1:
+        while shutdown_notification == 0:
             sleep(0.2)
             self.CHECKSELECTEDROWSIGNAL.emit()
 
@@ -144,7 +144,7 @@ class CheckFlashgot(QThread):
         global shutdown_notification
         while shutdown_notification == 0 and aria_startup_answer != 'ready':
             sleep (2)
-        while shutdown_notification != 1:
+        while shutdown_notification == 0:
             sleep(2)
             if os.path.isfile("/tmp/persepolis-flashgot")  == True and os.path.isfile("/tmp/persepolis-flashgot.lock") == False:
                 self.CHECKFLASHGOTSIGNAL.emit()
@@ -253,10 +253,8 @@ class MainWindow(MainWindow_Ui):
         self.threadPool[3].start()
         self.threadPool[3].CHECKFLASHGOTSIGNAL.connect(self.checkFlashgot)
 
+        self.download_table.itemDoubleClicked.connect(self.openFile)
         
-
- 
-
         self.system_tray_icon = QSystemTrayIcon() 
         self.system_tray_icon.setIcon(QIcon(':/icon'))
         system_tray_menu = QMenu()
@@ -268,6 +266,15 @@ class MainWindow(MainWindow_Ui):
         self.system_tray_icon.setContextMenu(system_tray_menu)
         self.system_tray_icon.activated.connect(self.systemTrayPressed)
         self.system_tray_icon.show()
+
+        f = Open(setting_file)
+        setting_file_lines = f.readlines()
+        f.close()
+        setting_dict_str = str(setting_file_lines[0].strip())
+        setting_dict = ast.literal_eval(setting_dict_str) 
+        if setting_dict['tray-icon'] != 'yes': 
+            self.minimizeAction.setEnabled(False)
+            self.system_tray_icon.hide()
 
     def startAriaMessage(self,message):
         global aria_startup_answer
@@ -369,7 +376,7 @@ class MainWindow(MainWindow_Ui):
                         notifySend("Download Stopped" , str(download_info_file_lines[0]) , 10000 , 'no')
 
                     elif progress_window.status == "error":
-                        notifySend("Download Error" , str(download_info_file_lines[0]) , 10000 , 'fail')
+                        notifySend("Error - " + add_link_dictionary['error'] , str(download_info_file_lines[0]) , 10000 , 'fail')
                
                         add_link_dictionary['start_hour'] = None
                         add_link_dictionary['start_minute'] = None
@@ -433,10 +440,13 @@ class MainWindow(MainWindow_Ui):
 #contex menu
     def contextMenuEvent(self, event):
         self.tablewidget_menu = QMenu(self)
+        self.tablewidget_menu.addAction(self.openFileAction)
+        self.tablewidget_menu.addAction(self.openDownloadFolderAction)
         self.tablewidget_menu.addAction(self.resumeAction)
         self.tablewidget_menu.addAction(self.pauseAction)
         self.tablewidget_menu.addAction(self.stopAction)
         self.tablewidget_menu.addAction(self.removeAction)
+        self.tablewidget_menu.addAction(self.deleteFileAction)
         self.tablewidget_menu.addAction(self.propertiesAction)
         self.tablewidget_menu.addAction(self.progressAction)
         self.tablewidget_menu.popup(QtGui.QCursor.pos())
@@ -503,6 +513,10 @@ class MainWindow(MainWindow_Ui):
                 self.removeAction.setEnabled(False)
                 self.propertiesAction.setEnabled(False)
                 self.progressAction.setEnabled(True)
+                self.openDownloadFolderAction.setEnabled(False)
+                self.openFileAction.setEnabled(False)            
+                self.deleteFileAction.setEnabled(False)
+
             elif status == "stopped" or status == "error" :
                 self.stopAction.setEnabled(False)
                 self.pauseAction.setEnabled(False)
@@ -510,6 +524,12 @@ class MainWindow(MainWindow_Ui):
                 self.removeAction.setEnabled(True)
                 self.propertiesAction.setEnabled(True)
                 self.progressAction.setEnabled(False)
+                self.openDownloadFolderAction.setEnabled(False)
+                self.openFileAction.setEnabled(False)            
+                self.deleteFileAction.setEnabled(False)
+
+
+
             elif status == "downloading":
                 self.resumeAction.setEnabled(False)
                 self.pauseAction.setEnabled(True)
@@ -517,6 +537,12 @@ class MainWindow(MainWindow_Ui):
                 self.removeAction.setEnabled(False)
                 self.propertiesAction.setEnabled(False)
                 self.progressAction.setEnabled(True)
+                self.openDownloadFolderAction.setEnabled(False)
+                self.openFileAction.setEnabled(False)            
+                self.deleteFileAction.setEnabled(False)
+
+
+
             elif status == "waiting": 
                 self.stopAction.setEnabled(False)
                 self.resumeAction.setEnabled(False)
@@ -524,6 +550,12 @@ class MainWindow(MainWindow_Ui):
                 self.removeAction.setEnabled(False)
                 self.propertiesAction.setEnabled(False)
                 self.progressAction.setEnabled(True)
+                self.openDownloadFolderAction.setEnabled(False)
+                self.openFileAction.setEnabled(False)            
+                self.deleteFileAction.setEnabled(False)
+
+
+
             elif status == "complete":
                 self.stopAction.setEnabled(False)
                 self.resumeAction.setEnabled(False)
@@ -531,6 +563,12 @@ class MainWindow(MainWindow_Ui):
                 self.removeAction.setEnabled(True)
                 self.propertiesAction.setEnabled(True)
                 self.progressAction.setEnabled(False)
+                self.openDownloadFolderAction.setEnabled(True)
+                self.openFileAction.setEnabled(True)            
+                self.deleteFileAction.setEnabled(True)
+
+
+
             elif status == "paused":
                 self.stopAction.setEnabled(True)
                 self.resumeAction.setEnabled(True)
@@ -538,19 +576,35 @@ class MainWindow(MainWindow_Ui):
                 self.removeAction.setEnabled(False)
                 self.propertiesAction.setEnabled(False)
                 self.progressAction.setEnabled(True)
-                
+                self.openDownloadFolderAction.setEnabled(False)
+                self.openFileAction.setEnabled(False)            
+                self.deleteFileAction.setEnabled(False)
+
+
+              
  
             else:
                 self.resumeAction.setEnabled(True)
                 self.stopAction.setEnabled(True)
                 self.pauseAction.setEnabled(True)
                 self.propertiesAction.setEnabled(True)
+                self.openDownloadFolderAction.setEnabled(False)
+                self.openFileAction.setEnabled(False)            
+                self.deleteFileAction.setEnabled(False)
+
+
+
         else:
             self.resumeAction.setEnabled(True)
             self.stopAction.setEnabled(True)
             self.pauseAction.setEnabled(True)
             self.removeAction.setEnabled(True)
             self.propertiesAction.setEnabled(True)
+            self.openDownloadFolderAction.setEnabled(False)
+            self.openFileAction.setEnabled(False)            
+            self.deleteFileAction.setEnabled(False)
+
+
 
            
     def checkFlashgot(self):
@@ -759,13 +813,12 @@ class MainWindow(MainWindow_Ui):
                     self.progress_window_list[member_number].hide()
 
     def progressBarOpen(self,gid):
-            progress_window = ProgressWindow(gid)
-            self.progress_window_list.append(progress_window)
-            member_number = len(self.progress_window_list) - 1
-            self.progress_window_list_dict[gid] = member_number 
-            self.progress_window_list[member_number].show()
+        progress_window = ProgressWindow(gid)
+        self.progress_window_list.append(progress_window)
+        member_number = len(self.progress_window_list) - 1
+        self.progress_window_list_dict[gid] = member_number 
+        self.progress_window_list[member_number].show()
  
-
 #close event
     def closeEvent(self, event):
         self.hide()
@@ -790,6 +843,9 @@ class MainWindow(MainWindow_Ui):
 
         QCoreApplication.instance().quit
         print("Persepolis Closed")
+        sys.exit(0)
+
+
 
     def systemTrayPressed(self,click):
         if click == 3 :
@@ -854,6 +910,74 @@ class MainWindow(MainWindow_Ui):
     def openAbout(self,menu):
         self.about_window = AboutWindow()
         self.about_window.show()
+
+
+    def openDefaultDownloadFolder(self,menu):
+        f = Open(setting_file)
+        setting_file_lines = f.readlines()
+        f.close()
+        setting_dict_str = str(setting_file_lines[0].strip())
+        setting_dict = ast.literal_eval(setting_dict_str) 
+        download_path = setting_dict ['download_path']
+        if os.path.isdir(download_path):
+            os.system("xdg-open '" + download_path + "'" )
+        else:
+            notifySend(str(download_path) ,'Not Found' , 5000 , 'warning' )
+
+
+
+
+    def openDownloadFolder(self,menu):
+        selected_row_return = self.selectedRow()
+        if selected_row_return != None:
+            gid = self.download_table.item(selected_row_return , 8 ).text()
+            download_status = self.download_table.item(selected_row_return , 1).text()
+            if download_status == 'complete':
+                add_link_dictionary_str = self.download_table.item(selected_row_return , 9).text() 
+                add_link_dictionary = ast.literal_eval(add_link_dictionary_str) 
+                if 'file_path' in add_link_dictionary :
+                    file_path = add_link_dictionary ['file_path']
+                    file_path_split = file_path.split('/')
+                    del file_path_split[-1]
+                    download_path = '/'.join(file_path_split)
+                    if os.path.isdir(download_path):
+                        os.system("xdg-open '" + download_path + "'" )
+                    else:
+                        notifySend(str(download_path) ,'Not Found' , 5000 , 'warning' )
+
+
+
+    def openFile(self,menu):
+        selected_row_return = self.selectedRow()
+        if selected_row_return != None:
+            gid = self.download_table.item(selected_row_return , 8 ).text()
+            download_status = self.download_table.item(selected_row_return , 1).text()
+            if download_status == 'complete':
+                add_link_dictionary_str = self.download_table.item(selected_row_return , 9).text() 
+                add_link_dictionary = ast.literal_eval(add_link_dictionary_str) 
+                if 'file_path' in add_link_dictionary:
+                    file_path = add_link_dictionary['file_path']
+                    if os.path.isfile(file_path):
+                        os.system("xdg-open '" + file_path  + "'" )
+                    else:
+                        notifySend(str(file_path) ,'Not Found' , 5000 , 'warning' )
+
+    def deleteFile(self,menu):
+        selected_row_return = self.selectedRow()
+        if selected_row_return != None:
+            gid = self.download_table.item(selected_row_return , 8 ).text()
+            download_status = self.download_table.item(selected_row_return , 1).text()
+            if download_status == 'complete':
+                add_link_dictionary_str = self.download_table.item(selected_row_return , 9).text() 
+                add_link_dictionary = ast.literal_eval(add_link_dictionary_str) 
+                if 'file_path' in add_link_dictionary:
+                    file_path = add_link_dictionary['file_path']
+                    if os.path.isfile(file_path):
+                        os.system("rm '" + file_path  + "'" )
+                    else:
+                        notifySend(str(file_path) ,'Not Found' , 5000 , 'warning' )
+
+                    self.removeButtonPressed(menu)
 
 
 
