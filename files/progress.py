@@ -22,8 +22,9 @@ os.system("mkdir -p  $HOME/.config/persepolis_download_manager/download_info")
 
 
 class ProgressWindow(ProgressWindow_Ui):
-    def __init__(self,gid ):
+    def __init__(self, parent ,gid ):
         super().__init__()
+        self.parent = parent
         self.gid = gid
         self.status = None
         self.resume_pushButton.clicked.connect(self.resumePushButtonPressed)
@@ -66,7 +67,12 @@ class ProgressWindow(ProgressWindow_Ui):
             
  
     def closeEvent(self, event):
+        if self.parent.isVisible() == False:
+            self.parent.minMaxTray(event)
+
         self.hide()
+        
+
     def resumePushButtonPressed(self,button):
         if self.status == "paused":
             answer = download.downloadUnpause(self.gid)

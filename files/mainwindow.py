@@ -365,8 +365,6 @@ class MainWindow(MainWindow_Ui):
                     progress_window.stop_pushButton.setEnabled(True)
                     progress_window.pause_pushButton.setEnabled(False)
                 elif progress_window.status == "stopped" or progress_window.status == "error" or progress_window.status == "complete" :
-                    if self.isVisible() == False:
-                        self.minMaxTray(progress_window)
                     progress_window.close()
                     self.progress_window_list[member_number] = []
                     del self.progress_window_list_dict[gid]
@@ -813,7 +811,7 @@ class MainWindow(MainWindow_Ui):
                     self.progress_window_list[member_number].hide()
 
     def progressBarOpen(self,gid):
-        progress_window = ProgressWindow(gid)
+        progress_window = ProgressWindow(parent = self,gid = gid)
         self.progress_window_list.append(progress_window)
         member_number = len(self.progress_window_list) - 1
         self.progress_window_list_dict[gid] = member_number 
@@ -854,15 +852,15 @@ class MainWindow(MainWindow_Ui):
 
     def minMaxTray(self,menu):
         if self.isVisible() == False:
+            self.show()
             self.minimizeAction.setText('Minimize to system tray')
             self.minimizeAction.setIcon(QIcon(icons + 'minimize'))
-            self.show()
+        
 
         else :
-            self.hide()
             self.minimizeAction.setText('Show main Window')
             self.minimizeAction.setIcon(QIcon(icons + 'window'))
-
+            self.hide()
     def stopAllDownloads(self,menu):
         active_gids = []
         for i in range(self.download_table.rowCount()):
