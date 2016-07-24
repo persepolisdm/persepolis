@@ -331,7 +331,7 @@ class MainWindow(MainWindow_Ui):
                 add_link_dictionary = ast.literal_eval(add_link_dictionary_str) 
                 link = "<b>Link</b> : " +  str(add_link_dictionary ['link'])
                 progress_window.link_label.setText(link)
-                progress_window.setToolTip(link)
+                progress_window.link_label.setToolTip(link)
 
                 #Save as
                 final_download_path = add_link_dictionary['final_download_path']
