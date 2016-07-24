@@ -234,7 +234,6 @@ class MainWindow(MainWindow_Ui):
 
                 f.close()
         self.addlinkwindows_list = []
-        self.preferences_list = []
         self.propertieswindows_list = []
         self.progress_window_list = []
         self.progress_window_list_dict = {}
@@ -902,9 +901,8 @@ class MainWindow(MainWindow_Ui):
             
 
     def openPreferences(self,menu):
-        preferenceswindow = PreferencesWindow()
-        self.preferences_list.append(preferenceswindow)
-        self.preferences_list[len(self.preferences_list) - 1].show()
+        self.preferenceswindow = PreferencesWindow()
+        self.preferenceswindow.show()
 
 
 
