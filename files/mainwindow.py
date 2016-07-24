@@ -492,6 +492,7 @@ class MainWindow(MainWindow_Ui):
 
         except :
             selected_row_return = None
+            notifySend('No item Selected','Select an item first!',4000,'warning')
 
         return selected_row_return 
 

@@ -18,7 +18,7 @@ setting_file = config_folder + '/setting'
 class PreferencesWindow(Setting_Ui):
     def __init__(self,parent):
         super().__init__(parent)
-
+        self.parent = parent
         f = Open(setting_file)
         setting_file_lines = f.readlines()
         f.close()
@@ -101,6 +101,10 @@ class PreferencesWindow(Setting_Ui):
         self.ok_pushButton.clicked.connect(self.okPushButtonPressed)
 
 
+    def closeEvent(self,event):
+        if self.parent.isVisible() == False:
+            self.parent.minMaxTray(event)
+        self.close()
     def soundFrame(self,checkBox):
         if self.enable_notifications_checkBox.isChecked() == True :
             self.sound_frame.setEnabled(True)

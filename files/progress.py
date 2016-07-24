@@ -70,6 +70,7 @@ class ProgressWindow(ProgressWindow_Ui):
         if self.parent.isVisible() == False:
             self.parent.minMaxTray(event)
 
+
         self.hide()
         
 
