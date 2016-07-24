@@ -93,7 +93,7 @@ class ProgressWindow(ProgressWindow_Ui):
     def limitCheckBoxToggled(self,checkBoxes): 
         if self.limit_checkBox.isChecked() == True :
             self.limit_frame.setEnabled(True)
-            self.after_pushButton.setEnabled(True)
+            self.limit_pushButton.setEnabled(True)
         else :
             self.limit_frame.setEnabled(False)
             if self.status != 'scheduled':
