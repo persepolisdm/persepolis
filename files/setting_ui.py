@@ -24,7 +24,7 @@ icons = ':/' +  str(setting_dict['icons']) + '/'
 
 
 class Setting_Ui(QtWidgets.QWidget):
-    def __init__(self):
+    def __init__(self,parent=None):
         super().__init__()
         self.resize(578, 465)
         icon = QtGui.QIcon()

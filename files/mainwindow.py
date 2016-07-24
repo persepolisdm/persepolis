@@ -901,7 +901,7 @@ class MainWindow(MainWindow_Ui):
             
 
     def openPreferences(self,menu):
-        self.preferenceswindow = PreferencesWindow()
+        self.preferenceswindow = PreferencesWindow(self)
         self.preferenceswindow.show()
 
 
@@ -957,7 +957,7 @@ class MainWindow(MainWindow_Ui):
                 if 'file_path' in add_link_dictionary:
                     file_path = add_link_dictionary['file_path']
                     if os.path.isfile(file_path):
-                        os.system("xdg-open '" + file_path  + "'" )
+                        os.system("xdg-open '" + file_path  + "' &" )
                     else:
                         notifySend(str(file_path) ,'Not Found' , 5000 , 'warning' )
 

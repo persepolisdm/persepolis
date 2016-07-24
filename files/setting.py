@@ -16,8 +16,8 @@ setting_file = config_folder + '/setting'
 
 
 class PreferencesWindow(Setting_Ui):
-    def __init__(self):
-        super().__init__()
+    def __init__(self,parent):
+        super().__init__(parent)
 
         f = Open(setting_file)
         setting_file_lines = f.readlines()
