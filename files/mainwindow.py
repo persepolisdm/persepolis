@@ -156,6 +156,7 @@ class MainWindow(MainWindow_Ui):
     def __init__(self):
         super().__init__()
         self.statusbar.showMessage('Please Wait ...')
+        self.checkSelectedRow()
 
 #touch download_list_file
         if not(os.path.isfile(download_list_file)):
@@ -301,8 +302,12 @@ class MainWindow(MainWindow_Ui):
                     break
 
             for i in range(10):
+#check flag of download!
+                if i == 0 :
+                    flag = int(self.download_table.item(row , i).flags())
+
 #remove gid of completed download from active downloads list file
-                if i == 1 :
+                elif i == 1 :
                     status = download_info_file_lines[i].strip()
                     status = str(status)
                     status_download_table = str(self.download_table.item(row , 1 ) . text())
@@ -319,6 +324,12 @@ class MainWindow(MainWindow_Ui):
                     
 #update download_table cells
                 item = QTableWidgetItem(download_info_file_lines[i].strip())
+#48 means item is checkable and enabled
+                if i == 0 and flag == 48:
+                    item.setFlags(QtCore.Qt.ItemIsUserCheckable | QtCore.Qt.ItemIsEnabled)
+                    if self.download_table.item(row,0).isChecked()  == False:
+                        item_num.setCheckState(QtCore.Qt.Unchecked)
+
                 self.download_table.setItem(row , i , item)
                 self.download_table.viewport().update()
 #update progresswindow
@@ -492,7 +503,6 @@ class MainWindow(MainWindow_Ui):
 
         except :
             selected_row_return = None
-            notifySend('No item Selected','Select an item first!',4000,'warning')
 
         return selected_row_return 
 
@@ -583,10 +593,12 @@ class MainWindow(MainWindow_Ui):
               
  
             else:
-                self.resumeAction.setEnabled(True)
-                self.stopAction.setEnabled(True)
-                self.pauseAction.setEnabled(True)
-                self.propertiesAction.setEnabled(True)
+                self.progressAction.setEnabled(False)
+                self.resumeAction.setEnabled(False)
+                self.stopAction.setEnabled(False)
+                self.pauseAction.setEnabled(False)
+                self.removeAction.setEnabled(False)
+                self.propertiesAction.setEnabled(False)
                 self.openDownloadFolderAction.setEnabled(False)
                 self.openFileAction.setEnabled(False)            
                 self.deleteFileAction.setEnabled(False)
@@ -594,11 +606,12 @@ class MainWindow(MainWindow_Ui):
 
 
         else:
-            self.resumeAction.setEnabled(True)
-            self.stopAction.setEnabled(True)
-            self.pauseAction.setEnabled(True)
-            self.removeAction.setEnabled(True)
-            self.propertiesAction.setEnabled(True)
+            self.progressAction.setEnabled(False)
+            self.resumeAction.setEnabled(False)
+            self.stopAction.setEnabled(False)
+            self.pauseAction.setEnabled(False)
+            self.removeAction.setEnabled(False)
+            self.propertiesAction.setEnabled(False)
             self.openDownloadFolderAction.setEnabled(False)
             self.openFileAction.setEnabled(False)            
             self.deleteFileAction.setEnabled(False)
@@ -735,10 +748,7 @@ class MainWindow(MainWindow_Ui):
         selected_row_return = self.selectedRow()
         if selected_row_return != None:
             gid = self.download_table.item(selected_row_return , 8 ).text()
-            try:
-                file_name = self.download_table.item(selected_row_return , 0).text()
-            except:
-                file_name = None 
+            file_name = self.download_table.item(selected_row_return , 0).text()
             sleep(0.5)
             self.download_table.removeRow(selected_row_return)
 
@@ -766,7 +776,7 @@ class MainWindow(MainWindow_Ui):
             f.close()
             f.remove()
 #remove file of download form download temp folder
-            if file_name != None :
+            if file_name != '***' and status != 'complete' :
                 file_name_path = temp_download_folder + "/" +  str(file_name)
                 os.system('rm "' + str(file_name_path) +'"')
                 file_name_aria = file_name_path + str('.aria2')
@@ -979,5 +989,146 @@ class MainWindow(MainWindow_Ui):
 
                     self.removeButtonPressed(menu)
 
+    def selectDownloads(self,menu):
+        if self.selectAction.isChecked() == True:
+            for i in range(self.download_table.rowCount()):
+                item = self.download_table.item(i , 0)
+                item.setFlags(QtCore.Qt.ItemIsUserCheckable | QtCore.Qt.ItemIsEnabled)
+                item.setCheckState(QtCore.Qt.Unchecked)
+                self.selectAllAction.setEnabled(True)
+                self.removeSelectedAction.setEnabled(True)
+                self.deleteSelectedAction.setEnabled(True)
+        else:
+            for i in range(self.download_table.rowCount()):
+                item_text = self.download_table.item(i , 0).text()
+                item = QTableWidgetItem(item_text) 
+                self.download_table.setItem(i , 0 , item)
+                self.selectAllAction.setEnabled(False)
+                self.removeSelectedAction.setEnabled(False)
+                self.deleteSelectedAction.setEnabled(False)
+                
+ 
+
+    def selectAll(self,menu):
+        for i in range(self.download_table.rowCount()):
+            item = self.download_table.item(i , 0)
+            item.setCheckState(QtCore.Qt.Checked)
+ 
+    def removeSelected(self,menu):
+        gid_list = []
+        for row in range(self.download_table.rowCount()):
+            status = self.download_table.item(row , 1).text() 
+            item = self.download_table.item(row , 0)
+            if (item.checkState() == 2) and (status == 'complete' or status == 'error' or status == 'stopped' ):
+                gid = self.download_table.item(row , 8 ).text()
+                gid_list.append(gid)
+
+
+        for gid in gid_list:        
+            for i in range(self.download_table.rowCount()):
+                row_gid = self.download_table.item(i , 8).text()
+                if gid == row_gid :
+                    row = i 
+                    break
+
+           
+            file_name = self.download_table.item(row , 0).text()
+            sleep(0.5)
+            self.download_table.removeRow(row)
+
+#remove gid of download from download list file
+            f = Open(download_list_file)
+            download_list_file_lines = f.readlines()
+            f.close()
+            f = Open(download_list_file , "w")
+            for i in download_list_file_lines:
+                if i.strip() != gid:
+                    f.writelines(i.strip() + "\n")
+            f.close()
+#remove gid of download from active download list file
+            f = Open(download_list_file_active)
+            download_list_file_active_lines = f.readlines()
+            f.close()
+            f = Open(download_list_file_active , "w")
+            for i in download_list_file_active_lines:
+                if i.strip() != gid:
+                    f.writelines(i.strip() + "\n")
+            f.close()
+#remove download_info_file
+            download_info_file = download_info_folder + "/" + gid
+            f = Open(download_info_file)
+            f.close()
+            f.remove()
+#remove file of download form download temp folder
+            if file_name != '***' and status != 'complete' :
+                file_name_path = temp_download_folder + "/" +  str(file_name)
+                os.system('rm "' + str(file_name_path) +'"')
+                file_name_aria = file_name_path + str('.aria2')
+                os.system('rm "' + str(file_name_aria) +'"')
+
+    def deleteSelected(self,menu):
+        gid_list = []
+        for row in range(self.download_table.rowCount()):
+            status = self.download_table.item(row , 1).text() 
+            item = self.download_table.item(row , 0)
+            if (item.checkState() == 2) and (status == 'complete' or status == 'error' or status == 'stopped' ):
+                gid = self.download_table.item(row , 8 ).text()
+                gid_list.append(gid)
+
+
+        for gid in gid_list:        
+            for i in range(self.download_table.rowCount()):
+                row_gid = self.download_table.item(i , 8).text()
+                if gid == row_gid :
+                    row = i 
+                    break
+            file_name = self.download_table.item(row , 0).text()
+            add_link_dictionary_str = self.download_table.item(row , 9).text() 
+            add_link_dictionary = ast.literal_eval(add_link_dictionary_str) 
+
+
+            sleep(0.5)
+            self.download_table.removeRow(row)
+#remove gid of download from download list file
+            f = Open(download_list_file)
+            download_list_file_lines = f.readlines()
+            f.close()
+            f = Open(download_list_file , "w")
+            for i in download_list_file_lines:
+                if i.strip() != gid:
+                    f.writelines(i.strip() + "\n")
+            f.close()
+#remove gid of download from active download list file
+            f = Open(download_list_file_active)
+            download_list_file_active_lines = f.readlines()
+            f.close()
+            f = Open(download_list_file_active , "w")
+            for i in download_list_file_active_lines:
+                if i.strip() != gid:
+                    f.writelines(i.strip() + "\n")
+            f.close()
+
+
+#remove download_info_file
+            download_info_file = download_info_folder + "/" + gid
+            f = Open(download_info_file)
+            f.close()
+            f.remove()
+
+#remove file of download form download temp folder
+            if file_name != '***' and status != 'complete' :
+                file_name_path = temp_download_folder + "/" +  str(file_name)
+                os.system('rm "' + str(file_name_path) +'"')
+                file_name_aria = file_name_path + str('.aria2')
+                os.system('rm "' + str(file_name_aria) +'"')
+
+#remove download file
+            if status == 'complete':
+                if 'file_path' in add_link_dictionary:
+                    file_path = add_link_dictionary['file_path']
+                    if os.path.isfile(file_path):
+                        os.system("rm '" + file_path  + "'" )
+                    else:
+                        notifySend(str(file_path) ,'Not Found' , 5000 , 'warning' )
 
 

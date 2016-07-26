@@ -54,6 +54,7 @@ class MainWindow_Ui(QMainWindow):
         self.download_table.setSelectionBehavior(QAbstractItemView.SelectRows)
         self.download_table.setEditTriggers(QAbstractItemView.NoEditTriggers)
         self.download_table.verticalHeader().hide()
+#hide gid and download dictioanry section
         self.download_table.setColumnHidden(8 , True)
         self.download_table.setColumnHidden(9 , True)
 
@@ -150,12 +151,31 @@ class MainWindow_Ui(QMainWindow):
         self.exitAction = QAction(QIcon(icons + 'exit') , 'Exit' , self , shortcut = "Ctrl+Q" , statusTip = "Exit" , triggered = self.closeEvent)
         fileMenu.addAction(self.exitAction)
 
+        self.selectAction = QAction('Enable selectection mode' , self , statusTip = 'Select Downloads' , triggered = self.selectDownloads)
+        self.selectAction.setCheckable(True)
+        editMenu.addAction(self.selectAction)
+
+        self.selectAllAction = QAction(QIcon(icons + 'select_all') , 'Select All' , self , statusTip = 'Select All' , triggered = self.selectAll)
+        editMenu.addAction(self.selectAllAction)
+        self.selectAllAction.setEnabled(False)
+
+        self.removeSelectedAction = QAction(QIcon(icons + 'multi_remove') , 'Remove selected downloads form list' , self , statusTip = 'Remove selected downloads form list' , triggered = self.removeSelected)
+        editMenu.addAction(self.removeSelectedAction)
+        self.removeSelectedAction.setEnabled(False)
+
+        self.deleteSelectedAction = QAction(QIcon(icons + 'multi_trash') , 'Delete selected download files' , self , statusTip = 'Delete selected download files' , triggered = self.deleteSelected)
+        editMenu.addAction(self.deleteSelectedAction)
+        self.deleteSelectedAction.setEnabled(False)
+
+
+
+
         self.preferencesAction = QAction(QIcon(icons + 'preferences') , 'Preferences' , self , statusTip = 'Preferences' , triggered = self.openPreferences)
         editMenu.addAction(self.preferencesAction)
 
         self.aboutAction = QAction(QIcon(icons + 'about') , 'About' , self , statusTip = 'About' , triggered = self.openAbout)
         helpMenu.addAction(self.aboutAction)
-     
+        
 
 
         
