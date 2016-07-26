@@ -275,6 +275,7 @@ class MainWindow(MainWindow_Ui):
         setting_dict = ast.literal_eval(setting_dict_str) 
         if setting_dict['tray-icon'] != 'yes': 
             self.minimizeAction.setEnabled(False)
+            self.trayAction.setChecked(False)
             self.system_tray_icon.hide()
 
     def startAriaMessage(self,message):
@@ -662,8 +663,15 @@ class MainWindow(MainWindow_Ui):
         
         self.download_table.insertRow(0)
         j = 0
+
         for i in download_info_file_list :
             item = QTableWidgetItem(i)
+            if self.selectAction.isChecked() == True:
+                item = self.download_table.item(i , 0)
+                item.setFlags(QtCore.Qt.ItemIsUserCheckable | QtCore.Qt.ItemIsEnabled)
+                item.setCheckState(QtCore.Qt.Unchecked)
+ 
+
             self.download_table.setItem(0,j,item)
             j = j + 1
 
@@ -857,7 +865,13 @@ class MainWindow(MainWindow_Ui):
         print("Persepolis Closed")
         sys.exit(0)
 
-
+    def showTray(self,menu):
+        if self.trayAction.isChecked() == True :
+            self.system_tray_icon.show()
+            self.minimizeAction.setEnabled(True)
+        else:
+            self.system_tray_icon.hide()
+            self.minimizeAction.setEnabled(False)
 
     def systemTrayPressed(self,click):
         if click == 3 :

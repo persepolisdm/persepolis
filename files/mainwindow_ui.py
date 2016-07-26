@@ -104,6 +104,12 @@ class MainWindow_Ui(QMainWindow):
         self.pauseAllAction = QAction(QIcon(icons + 'pause_all') , 'Pause all active downloads' , self , statusTip = 'Pause all active downloads', triggered = self.pauseAllDownloads )
         downloadMenu.addAction(self.pauseAllAction)
 
+        self.trayAction = QAction('Show system tray icon' , self  , statusTip = "Show/Hide system tray icon" , triggered = self.showTray) 
+        self.trayAction.setCheckable(True)
+        self.trayAction.setChecked(True)
+        viewMenu.addAction(self.trayAction)
+
+
 
         self.minimizeAction = QAction(QIcon(icons + 'minimize') , 'Minimize to system tray' , self , shortcut = "Ctrl+W" , statusTip = "Minimize to system tray" , triggered = self.minMaxTray) 
         viewMenu.addAction(self.minimizeAction)
