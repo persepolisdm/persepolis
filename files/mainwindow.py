@@ -327,8 +327,11 @@ class MainWindow(MainWindow_Ui):
 #48 means item is checkable and enabled
                 if i == 0 and flag == 48:
                     item.setFlags(QtCore.Qt.ItemIsUserCheckable | QtCore.Qt.ItemIsEnabled)
-                    if self.download_table.item(row,0).isChecked()  == False:
-                        item_num.setCheckState(QtCore.Qt.Unchecked)
+                    if self.download_table.item(row , i).checkState() == 2:
+                        item.setCheckState(QtCore.Qt.Checked)
+                    else:
+                        item.setCheckState(QtCore.Qt.Unchecked)
+
 
                 self.download_table.setItem(row , i , item)
                 self.download_table.viewport().update()
