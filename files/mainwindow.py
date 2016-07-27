@@ -760,6 +760,7 @@ class MainWindow(MainWindow_Ui):
         if selected_row_return != None:
             gid = self.download_table.item(selected_row_return , 8 ).text()
             file_name = self.download_table.item(selected_row_return , 0).text()
+            status = self.download_table.item(selected_row_return , 1).text()
             sleep(0.5)
             self.download_table.removeRow(selected_row_return)
 
