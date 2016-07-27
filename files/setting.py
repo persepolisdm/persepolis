@@ -206,8 +206,14 @@ class PreferencesWindow(Setting_Ui):
 
         if self.enable_system_tray_checkBox.isChecked() == True :
             self.setting_dict['tray-icon'] = 'yes'
+            self.parent.system_tray_icon.show()
+            self.parent.minimizeAction.setEnabled(True)
+            self.parent.trayAction.setChecked(True)
         else:
             self.setting_dict['tray-icon'] = 'no'
+            self.parent.system_tray_icon.hide()
+            self.parent.minimizeAction.setEnabled(False)
+            self.parent.trayAction.setChecked(False)
 
 #this section  creates temporary download folder and download folder and download sub folders if they did not existed.
         download_path_temp  = self.setting_dict ['download_path_temp']
