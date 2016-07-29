@@ -390,7 +390,7 @@ def downloadStop(gid):
     else :
         answer = 'stopped'
 
-    if answer != 'None':
+    if answer != 'None' or (answer == 'None' and status == 'waiting'):
         add_link_dictionary_str = str(download_info_file_lines[9].strip())
         add_link_dictionary = ast.literal_eval(add_link_dictionary_str) 
         add_link_dictionary['start_hour'] = None

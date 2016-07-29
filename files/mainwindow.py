@@ -137,6 +137,7 @@ class DownloadLink(QThread):
 
 class CheckFlashgot(QThread):
     CHECKFLASHGOTSIGNAL = pyqtSignal()
+    SHOWMAINWINDOWSIGNAL = pyqtSignal()
     def __init__(self):
         QThread.__init__(self)
 
@@ -145,7 +146,10 @@ class CheckFlashgot(QThread):
         while shutdown_notification == 0 and aria_startup_answer != 'ready':
             sleep (2)
         while shutdown_notification == 0:
-            sleep(2)
+            if os.path.isfile("/tmp/persepolis/show-window") == True:
+                os.system('rm /tmp/persepolis/show-window ' )
+                self.SHOWMAINWINDOWSIGNAL.emit()
+            sleep(1)
             if os.path.isfile("/tmp/persepolis-flashgot")  == True and os.path.isfile("/tmp/persepolis-flashgot.lock") == False:
                 self.CHECKFLASHGOTSIGNAL.emit()
 
@@ -253,6 +257,7 @@ class MainWindow(MainWindow_Ui):
         self.threadPool.append(check_flashgot)
         self.threadPool[3].start()
         self.threadPool[3].CHECKFLASHGOTSIGNAL.connect(self.checkFlashgot)
+        self.threadPool[3].SHOWMAINWINDOWSIGNAL.connect(self.showMainWindow)
 
         self.download_table.itemDoubleClicked.connect(self.openFile)
         
@@ -557,7 +562,7 @@ class MainWindow(MainWindow_Ui):
 
 
             elif status == "waiting": 
-                self.stopAction.setEnabled(False)
+                self.stopAction.setEnabled(True)
                 self.resumeAction.setEnabled(False)
                 self.pauseAction.setEnabled(False)
                 self.removeAction.setEnabled(False)
@@ -882,6 +887,13 @@ class MainWindow(MainWindow_Ui):
             self.minimizeAction.setText('Show main Window')
             self.minimizeAction.setIcon(QIcon(icons + 'window'))
             self.hide()
+
+    def showMainWindow(self):
+        self.show()
+        self.minimizeAction.setText('Minimize to system tray')
+        self.minimizeAction.setIcon(QIcon(icons + 'minimize'))
+ 
+
     def stopAllDownloads(self,menu):
         active_gids = []
         for i in range(self.download_table.rowCount()):

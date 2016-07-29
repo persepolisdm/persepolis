@@ -16,5 +16,5 @@ def notifySend(message1,message2,time,sound):
     time = str(time)
     message1 = str(message1)
     message2 = str(message2)
-    os.system("notify-send --icon='/usr/share/persepolis/icon_notification.png' --app-name='Persepolis Download Manager' --expire-time='" + time + "' '" +  message1 +  "' \ '" + message2 +  "' "  )
+    os.system("notify-send --icon='/usr/share/persepolis/icon.svg' --app-name='Persepolis Download Manager' --expire-time='" + time + "' '" +  message1 +  "' \ '" + message2 +  "' "  )
 

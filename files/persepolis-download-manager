@@ -8,7 +8,7 @@ import os , sys , time , ast , argparse
 from mainwindow import MainWindow
 from PyQt5.QtWidgets import QApplication  
 from PyQt5.QtGui import QFont   
-from palettes import DarkRedPallete , DarkBluePallete
+from palettes import DarkRedPallete , DarkBluePallete , ArcDarkRedPallete , ArcDarkBluePallete
 from bubble import notifySend
 
 # initialization
@@ -99,6 +99,15 @@ if "".join(args.execute) == "yes":
             persepolis_dark_blue = DarkBluePallete()
             persepolis_download_manager.setPalette(persepolis_dark_blue)
             persepolis_download_manager.setStyleSheet("QToolTip { color: #ffffff; background-color: #353535; border: 1px solid white; }")
+        elif color_scheme == 'Persepolis ArcDark Red':
+            persepolis_arcdark_red = ArcDarkRedPallete()
+            persepolis_download_manager.setPalette(persepolis_arcdark_red)
+            persepolis_download_manager.setStyleSheet("QToolTip { color: #ffffff; background-color: #353535; border: 1px solid white; }")
+        elif color_scheme == 'Persepolis ArcDark Blue':
+            persepolis_arcdark_blue = ArcDarkBluePallete()
+            persepolis_download_manager.setPalette(persepolis_arcdark_blue)
+            persepolis_download_manager.setStyleSheet("QToolTip { color: #ffffff; background-color: #353535; border: 1px solid white; }")
+
 
 
 
@@ -111,8 +120,11 @@ if "".join(args.execute) == "yes":
 else:
 # (--execute no) and no link finded in --link
 #this section warns user that program is still running and no need to run it again
+#and creating a file to notify mainwindow for showing
     if not('link' in add_link_dictionary):
-        notifySend('Persepolis Download Manager','is still running!',10000 ,'warning' )
+        notifySend('Persepolis Download Manager','is still running!',3000 ,'warning' )
+        f = open("/tmp/persepolis/show-window" , 'w')
+        f.close()
 
     sys.exit(0)
 

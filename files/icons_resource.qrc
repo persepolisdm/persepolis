@@ -1,7 +1,7 @@
 <!DOCTYPE RCC><RCC version="1.0">
 	<qresource prefix="/">
 
-                <file>icon.png</file>
+                <file>icon.svg</file>
                 
 		<file>Archdroid-Blue/about.svg</file>		
 		<file>Archdroid-Blue/add.svg</file>		
