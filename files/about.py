@@ -43,7 +43,7 @@ class AboutWindow(QWidget):
         self.icon_label.setMaximumSize(QtCore.QSize(100, 100))
         self.icon_label.setFrameShape(QtWidgets.QFrame.NoFrame)
         self.icon_label.setText("")
-        self.icon_label.setPixmap(QtGui.QPixmap(":/icon.png"))
+        self.icon_label.setPixmap(QtGui.QPixmap(":/icon.svg"))
         self.icon_label.setScaledContents(True)
         self.icon_label.setAlignment(QtCore.Qt.AlignCenter)
         self.horizontalLayout_2.addWidget(self.icon_label)
