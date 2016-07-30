@@ -47,28 +47,30 @@ class ProgressWindow_Ui(QWidget):
         self.progress_tabWidget = QtWidgets.QTabWidget(self)
 #informations_tab
         self.informations_tab = QtWidgets.QWidget()
+        self.informations_verticalLayout = QtWidgets.QVBoxLayout(self.informations_tab)
 #link_label
         self.link_label = QtWidgets.QLabel(self.informations_tab)
-        self.link_label.setGeometry(QtCore.QRect(20, 10, 8000 , 16))
+        self.informations_verticalLayout.addWidget(self.link_label)
         
 #status_label
         self.status_label = QtWidgets.QLabel(self.informations_tab)
-        self.status_label.setGeometry(QtCore.QRect(20, 50, 500 , 16))
+        self.informations_verticalLayout.addWidget(self.status_label)
 #downloaded_label
         self.downloaded_label = QtWidgets.QLabel(self.informations_tab)
-        self.downloaded_label.setGeometry(QtCore.QRect(20, 70, 5000 , 16))
+        self.informations_verticalLayout.addWidget(self.downloaded_label)
 #save_label
         self.save_label = QtWidgets.QLabel(self.informations_tab)
-        self.save_label.setGeometry(QtCore.QRect(20, 30, 5000 , 16))
+        self.informations_verticalLayout.addWidget(self.save_label)
 #rate_label
         self.rate_label = QtWidgets.QLabel(self.informations_tab)
-        self.rate_label.setGeometry(QtCore.QRect(20, 90, 5000 , 16))
+        self.informations_verticalLayout.addWidget(self.rate_label)
 #time_label
         self.time_label = QtWidgets.QLabel(self.informations_tab)
-        self.time_label.setGeometry(QtCore.QRect(20, 110, 5000 , 16))
+        self.informations_verticalLayout.addWidget(self.time_label)
 
         self.connections_label = QtWidgets.QLabel(self.informations_tab)
-        self.connections_label.setGeometry(QtCore.QRect(20, 130, 141, 16))
+        self.informations_verticalLayout.addWidget(self.connections_label)
+
         self.progress_tabWidget.addTab(self.informations_tab, "")
 #options_tab
         self.options_tab = QtWidgets.QWidget()
