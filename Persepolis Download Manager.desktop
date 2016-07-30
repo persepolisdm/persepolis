@@ -10,5 +10,5 @@ Type=Application
 Categories=GNOME;GTK;Network;
 StartupNotify=true
 Exec=persepolis 
-Icon=/usr/share/persepolis/icon.svg
+Icon=persepolis
 StartupWMClass=persepolis-download-manager
