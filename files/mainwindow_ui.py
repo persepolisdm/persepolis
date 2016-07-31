@@ -32,8 +32,8 @@ class MainWindow_Ui(QMainWindow):
         self.setMinimumSize(QSize(600, 400))
         self.setMaximumSize(QSize(16777215, 16777215))
         self.setWindowTitle("Persepolis Download Manager")
-        self.setWindowIcon(QIcon(':/icon'))
-        
+        self.setWindowIcon(QIcon.fromTheme('persepolis',QIcon(':/icon.svg') ))
+       
         self.centralwidget = QWidget(self)
         self.verticalLayout = QVBoxLayout(self.centralwidget)
 #enable drag and drop 

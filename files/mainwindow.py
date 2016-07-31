@@ -262,7 +262,7 @@ class MainWindow(MainWindow_Ui):
         self.download_table.itemDoubleClicked.connect(self.openFile)
         
         self.system_tray_icon = QSystemTrayIcon() 
-        self.system_tray_icon.setIcon(QIcon(':/icon'))
+        self.system_tray_icon.setIcon(QIcon.fromTheme('persepolis',QIcon(':/icon.svg') ))
         system_tray_menu = QMenu()
         system_tray_menu.addAction(self.addlinkAction)
         system_tray_menu.addAction(self.pauseAllAction)

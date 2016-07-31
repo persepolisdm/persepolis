@@ -37,7 +37,7 @@ class ProgressWindow_Ui(QWidget):
         self.setMinimumSize(QtCore.QSize(595, 284))
         self.setMaximumSize(QtCore.QSize(16777215, 16777215))
 
-        self.setWindowIcon(QIcon(':/icon'))
+        self.setWindowIcon(QIcon.fromTheme('persepolis' ,QIcon(':/icon.svg')))
         self.setWindowTitle("Persepolis Download Manager")
 
 

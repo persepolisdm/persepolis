@@ -28,7 +28,7 @@ class Setting_Ui(QtWidgets.QWidget):
         super().__init__()
         self.resize(578, 465)
         icon = QtGui.QIcon()
-        self.setWindowIcon(QIcon(':/icon'))
+        self.setWindowIcon(QIcon.fromTheme('persepolis',QIcon(':/icon.svg') ))
         self.setWindowTitle('Preferences')
 
         self.verticalLayout_2 = QtWidgets.QVBoxLayout(self)

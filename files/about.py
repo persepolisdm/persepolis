@@ -34,7 +34,7 @@ class AboutWindow(QWidget):
         self.resize(363, 157)
         self.setMinimumSize(QtCore.QSize(363, 157))
         self.setMaximumSize(QtCore.QSize(363, 157))
-        self.setWindowIcon(QIcon(':/icon'))
+        self.setWindowIcon(QIcon.fromTheme('persepolis',QIcon(':/icon.svg')))
         self.setLayoutDirection(QtCore.Qt.LeftToRight)
         self.gridLayout = QtWidgets.QGridLayout(self)
         self.verticalLayout_2 = QtWidgets.QVBoxLayout()

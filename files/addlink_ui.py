@@ -36,7 +36,7 @@ class AddLinkWindow_Ui(QWidget):
         self.setSizePolicy(sizePolicy)
         self.setMinimumSize(QtCore.QSize(475, 465))
         self.setMaximumSize(QtCore.QSize(16777215, 16777215))
-        self.setWindowIcon(QIcon(':/icon'))
+        self.setWindowIcon(QIcon.fromTheme('persepolis' ,QIcon(':/icon.svg')))
 
         self.widget = QWidget(self)
         self.widget.setGeometry(QtCore.QRect(9, 9, 454, 442))
