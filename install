@@ -21,7 +21,8 @@ if [ "$?" -ne "0" ];then
 fi
 
 install_path=`pwd`
-chmod +x "$install_path/checkpyqt.py"
+cd "$install_path"
+chmod +x "./checkpyqt.py"
 
 ./checkpyqt.py
 if [ "$?" -ne "0" ];then
@@ -49,15 +50,15 @@ fi
 
 program_path="/usr/share/persepolis"
 exec_path='/usr/bin/'
-chmod +x "$install_path/files/persepolis-download-manager"
-chmod +x "$install_path/persepolis"
-chmod +x "$install_path/Persepolis Download Manager.desktop"
+chmod +x "./files/persepolis-download-manager"
+chmod +x "./persepolis"
+chmod +x "./Persepolis Download Manager.desktop"
 sudo rm -rf "$program_path"
 sudo mkdir -p "$program_path"
-sudo cp -rf  $install_path/files/* "$program_path/"
-sudo cp -rf "$install_path/persepolis" "$exec_path"
-sudo cp -rf "$install_path/Persepolis Download Manager.desktop" "/usr/share/applications/"
-sudo cp -rf "$install_path/files/icon.svg" "/usr/share/pixmaps/persepolis.svg"
+sudo cp -rf  ./files/* "$program_path/"
+sudo cp -rf "./persepolis" "$exec_path"
+sudo cp -rf "./Persepolis Download Manager.desktop" "/usr/share/applications/"
+sudo cp -rf "./files/icon.svg" "/usr/share/pixmaps/persepolis.svg"
 rm -rf "$HOME/.config/persepolis_download_manager/setting"
 if [ "$?" -eq "0" ];then
     echo "Installation compeleted!"
