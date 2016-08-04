@@ -378,7 +378,7 @@ class MainWindow(MainWindow_Ui):
                     progress_window.pause_pushButton.setEnabled(False)
                 elif progress_window.status == "waiting":
                     progress_window.resume_pushButton.setEnabled(False)
-                    progress_window.stop_pushButton.setEnabled(False)
+                    progress_window.stop_pushButton.setEnabled(True)
                     progress_window.pause_pushButton.setEnabled(False)
                 elif progress_window.status == "scheduled":
                     progress_window.resume_pushButton.setEnabled(False)
