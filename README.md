@@ -11,19 +11,19 @@ Persepolis Download Manager
 ![ScreenShot](http://s6.picofile.com/file/8259824992/persepolis2.jpg)
 
 ### Before running install file make sure that all dependencies are installed on your system!
-You must install `aria2` , `vorbis-tools` , `libnotify-bin` , `python 3` , `pyqt5`
+You must install `aria2` , `vorbis-tools` , `libnotify-bin` , `python 3` , `pyqt5` , `qt5-svg`
 
 ## Dependencies for Archlinux
 
-    $ sudo pacman -S aria2 vorbis-tools libnotify python-pyqt5
+    $ sudo pacman -S aria2 vorbis-tools libnotify python-pyqt5 qt5-svg
 
 ## Dependencies for Debian and Debian base distro.s (ubuntu 16.04 , ... )
 
-    $ sudo apt-get install aria2 vorbis-tools libnotify-bin python3-pyqt5
+    $ sudo apt-get install aria2 vorbis-tools libnotify-bin python3-pyqt5 libqt5svg5
 
 ## Dependencies for Fedora
 
-    $ sudo dnf install aria2 vorbis-tools libnotify python3-qt5
+    $ sudo dnf install aria2 vorbis-tools libnotify python3-qt5 qt5-qtsvg
 
 After installing dependencies, change your directory with cd command and run install file
 
