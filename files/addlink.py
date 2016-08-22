@@ -2,8 +2,8 @@
 # -*- coding: utf-8 -*-
 
 
-from PyQt5 import QtCore, QtGui, QtWidgets
-from PyQt5.QtWidgets import QWidget , QPushButton , QComboBox , QSpinBox ,QVBoxLayout, QHBoxLayout , QLabel , QApplication , QWidget , QFileDialog,  QSizePolicy , QGridLayout , QCheckBox , QFrame , QLineEdit , QPushButton
+from PyQt5 import QtWidgets
+from PyQt5.QtWidgets import QHBoxLayout ,  QApplication ,  QFileDialog,  QCheckBox , QLineEdit  
 import os , string , ast
 from addlink_ui import AddLinkWindow_Ui
 from newopen import Open

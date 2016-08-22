@@ -32,8 +32,8 @@ class DarkRedPallete(QPalette):
 
         self.setColor(QPalette.Disabled,QPalette.Window, QColor(51,51,51))
         self.setColor(QPalette.Disabled , QPalette.ButtonText , QColor(51,51,51))
-        self.setColor(QPalette.Disabled , QPalette.Text , QColor(51,51,51))
-        self.setColor(QPalette.Disabled , QPalette.WindowText , QColor(51,51,51))
+        self.setColor(QPalette.Disabled , QPalette.Text , QColor(122,118,113))
+        self.setColor(QPalette.Disabled , QPalette.WindowText , QColor(122,118,113))
         self.setColor(QPalette.Disabled , QPalette.Base , QColor(32 , 32 , 32))
 
 
@@ -57,8 +57,8 @@ class DarkBluePallete(QPalette):
 
         self.setColor(QPalette.Disabled,QPalette.Window, QColor(51,51,51))
         self.setColor(QPalette.Disabled , QPalette.ButtonText , QColor(51,51,51))
-        self.setColor(QPalette.Disabled , QPalette.Text , QColor(51,51,51))
-        self.setColor(QPalette.Disabled , QPalette.WindowText , QColor(51,51,51))
+        self.setColor(QPalette.Disabled , QPalette.Text , QColor(122,118,113))
+        self.setColor(QPalette.Disabled , QPalette.WindowText , QColor(122,118,113))
         self.setColor(QPalette.Disabled , QPalette.Base , QColor(32 , 32 , 32))
 
 class ArcDarkRedPallete(QPalette):
@@ -90,8 +90,8 @@ class ArcDarkRedPallete(QPalette):
 
         self.setColor(QPalette.Disabled,QPalette.Window, QColor(51,51,51))
         self.setColor(QPalette.Disabled , QPalette.ButtonText , QColor(51,51,51))
-        self.setColor(QPalette.Disabled , QPalette.Text , QColor(51,51,51))
-        self.setColor(QPalette.Disabled , QPalette.WindowText , QColor(51,51,51))
+        self.setColor(QPalette.Disabled , QPalette.Text , QColor(120,133,148))
+        self.setColor(QPalette.Disabled , QPalette.WindowText , QColor(120,133,148))
         self.setColor(QPalette.Disabled , QPalette.Base , QColor(32 , 32 , 32))
 
 class ArcDarkBluePallete(QPalette):
@@ -123,8 +123,8 @@ class ArcDarkBluePallete(QPalette):
 
         self.setColor(QPalette.Disabled,QPalette.Window, QColor(51,51,51))
         self.setColor(QPalette.Disabled , QPalette.ButtonText , QColor(51,51,51))
-        self.setColor(QPalette.Disabled , QPalette.Text , QColor(51,51,51))
-        self.setColor(QPalette.Disabled , QPalette.WindowText , QColor(51,51,51))
+        self.setColor(QPalette.Disabled , QPalette.Text , QColor(120,133,148))
+        self.setColor(QPalette.Disabled , QPalette.WindowText , QColor(120,133,148))
         self.setColor(QPalette.Disabled , QPalette.Base , QColor(32 , 32 , 32))
 
    

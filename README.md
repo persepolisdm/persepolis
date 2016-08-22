@@ -1,14 +1,12 @@
 Persepolis Download Manager 
 =============
-+ version : 2.0.2 Unstable
++ version : 2.1.0 Unstable
 + Persepolis Download Manager is a GUI for aria2.
 + Persepolis written in PYQT5.
 
-![ScreenShot](http://s7.picofile.com/file/8259824642/persepolis1.jpg)
 
-![ScreenShot](http://s6.picofile.com/file/8259824918/persepolis3.jpg)
+![ScreenShot](http://s1.picofile.com/file/8264685926/persepolis.jpg)
 
-![ScreenShot](http://s6.picofile.com/file/8259824992/persepolis2.jpg)
 
 ### Before running install file make sure that all dependencies are installed on your system!
 You must install `aria2` , `vorbis-tools` , `libnotify-bin` , `python 3` , `pyqt5` , `qt5-svg`
@@ -66,21 +64,21 @@ write Persepolis Download Manager and select this file for executble path
 
 then in the white field copy/paste the following codes
 
-	$  [--link URL][--name FNAME][--cookie CFILE][--referer REFERER][--headers HEADERS][--agent UA]
+	$  [--link URL][--name FNAME][--referer REFERER][--headers HEADERS][--agent UA][--cookie COOKIE]
 
-![ScreenShot](http://s2.picofile.com/file/8260186350/flashgot2.jpg)
+![ScreenShot](http://s1.picofile.com/file/8264685818/flashgot1.png)
 
 then at the end click on the advance tab and uncheck automatic download manager detection
 
-![ScreenShot](http://s6.picofile.com/file/8259833276/flashgot5.jpg)
+![ScreenShot](http://s2.picofile.com/file/8264685876/flashgot4.png)
 
 and on media tab select Persepolis Download Manager
 
-![ScreenShot](http://s6.picofile.com/file/8259833242/flashgot4.jpg)
+![ScreenShot](http://s1.picofile.com/file/8264685868/flashgot3.png)
 
 uncheck this too!
 
-![ScreenShot](http://s6.picofile.com/file/8259833226/flashgot3.jpg)
+![ScreenShot](http://s2.picofile.com/file/8264685834/flashgot2.png)
 
 then Click OK and enjoy!!
 
@@ -92,15 +90,23 @@ you can use flashgot for download from youtube , ...
 
 
 
-## Contact me
-Me on twiter:
-https://twitter.com/AR_AmirSamimi
-
-My website:
-http://amirsamimi.ir
-
-My email adress:
+## Contact us
+Persepolis code developer : Alireza Amirsamimi
+https://github.com/alireza-amirsamimi
 alireza.amirsamimi@ubuntu.ir
+
+Arch repository maintainer : Mohammadreza Abdollahzadeh
+https://github.com/morealaz
+morealaz@gmail.com
+
+Persepolis website developer : Sadegh Alirezaei
+https://github.com/Alirezaies
+Alirezaie.Sadegh@gmail.Com
+
+
+Persepolis persian website:
+http://amirsamimi.ir/persepolis2
+
 
 PersepolisDM Telegram Channel:
 https://telegram.me/persepolisdm

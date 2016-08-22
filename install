@@ -3,7 +3,7 @@
 clear screen
 echo "############################################################"
 echo "#### Welcome to Persepolis Download Manager installation ###"
-echo "################## Version 2.0.2 Unstable ##################"
+echo "################## Version 2.1.0 Unstable ##################"
 echo "############################################################"
 
 echo "Checking dependencies"
@@ -46,13 +46,12 @@ if [ "$?" -ne "0" ];then
 fi
 
 
-
-
 program_path="/usr/share/persepolis"
 exec_path='/usr/bin/'
 chmod +x "./files/persepolis-download-manager"
 chmod +x "./persepolis"
 chmod +x "./Persepolis Download Manager.desktop"
+chmod +x "./compatibility.py"
 sudo rm -rf "$program_path"
 sudo mkdir -p "$program_path"
 sudo cp -rf  ./files/* "$program_path/"
@@ -61,6 +60,7 @@ sudo cp -rf "./Persepolis Download Manager.desktop" "/usr/share/applications/"
 sudo cp -rf "./files/icon.svg" "/usr/share/pixmaps/persepolis.svg"
 rm -rf "$HOME/.config/persepolis_download_manager/setting"
 if [ "$?" -eq "0" ];then
+    ./compatibility.py
     echo "Installation compeleted!"
 else
     echo "Installation Failed"

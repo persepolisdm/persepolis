@@ -1,10 +1,4 @@
 #!/bin/bash
-echo "***********************************"
-echo "***********************************"
-echo "****Persepolis Download Manager****"
-echo "****  Version : 2.0.2 Unstable ****"
-echo "***********************************"
-echo "***********************************"
 
 run_times=`ps -A|grep "persepolis-down"|wc -l`
 echo $run_times

@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 import sys , ast
 from PyQt5 import QtCore, QtGui, QtWidgets  
-from PyQt5.QtWidgets import QSystemTrayIcon , QMenu , QTableWidgetItem ,QAbstractItemView , QApplication , QToolBar , QMenuBar , QStatusBar, QTableWidget , QAction , QMainWindow , QWidget , QFrame , QAbstractItemView
+from PyQt5.QtWidgets import QSystemTrayIcon , QMenu , QTableWidgetItem , QApplication  
 from PyQt5.QtGui import QIcon , QColor , QPalette 
 from PyQt5.QtCore import QCoreApplication , QRect , QSize , QThread , pyqtSignal  , Qt
 import os
@@ -13,7 +13,7 @@ from properties import PropertiesWindow
 from progress import ProgressWindow
 import download
 from mainwindow_ui import MainWindow_Ui
-from newopen import Open
+from newopen import Open , writeList , readList
 from play import playNotification
 from bubble import notifySend
 from setting import PreferencesWindow
@@ -24,6 +24,12 @@ import icons_resource
 #shutdown_notification = 0 >> persepolis running , 1 >> persepolis is ready for close(closeEvent called) , 2 >> OK, let's close application!
 global shutdown_notification
 shutdown_notification = 0
+
+# remove_flag : 0 >> normal situation ; 1 >> remove button or delete button pressed by user ; 2 >> check_download_info function is stopping until remove operation done ; 3 >> deleteFileAction is done it's job and It is called removeButtonPressed function
+global remove_flag
+remove_flag = 0
+
+
 
 home_address = os.path.expanduser("~")
 config_folder = str(home_address) + "/.config/persepolis_download_manager"
@@ -87,8 +93,8 @@ class CheckDownloadInfoThread(QThread):
     DOWNLOAD_INFO_SIGNAL = pyqtSignal(str)
     def __init__(self):
         QThread.__init__(self)
-
     def run(self):
+        global remove_flag
         global shutdown_notification
         while True:
 
@@ -96,6 +102,11 @@ class CheckDownloadInfoThread(QThread):
                 sleep (1)
 
             while shutdown_notification != 1:
+            #if remove_flag is equal to 1, it means that user pressed remove or delete button . so checking download information must stop until removing done!
+                if remove_flag == 1 :
+                    remove_flag = 2
+                    while remove_flag != 0 :
+                        sleep(0.2)
                 sleep(0.2)
                 f = Open(download_list_file_active) 
                 download_list_file_active_lines = f.readlines()
@@ -180,6 +191,7 @@ class MainWindow(MainWindow_Ui):
         os.system("rm " + download_info_folder + "/*.lock" + "   2>/dev/null" )
 
 
+
 #threads     
         self.threadPool=[]
 #starting aria
@@ -189,7 +201,6 @@ class MainWindow(MainWindow_Ui):
         self.threadPool[0].ARIA2RESPONDSIGNAL.connect(self.startAriaMessage)
 
 #initializing    
-
 #add downloads to the download_table
         f_download_list_file = Open(download_list_file)
         download_list_file_lines = f_download_list_file.readlines()
@@ -199,11 +210,9 @@ class MainWindow(MainWindow_Ui):
             gid = line.strip()
             self.download_table.insertRow(0)
             download_info_file = download_info_folder + "/" + gid
-            f = Open(download_info_file)
-            download_info_file_lines = f.readlines()
-            f.close()
+            download_info_file_list = readList(download_info_file,'string')
             for i in range(10):
-                item = QTableWidgetItem(download_info_file_lines[i].strip())
+                item = QTableWidgetItem(download_info_file_list[i])
                 self.download_table.setItem(0 , i , item)
 
         row_numbers = self.download_table.rowCount()
@@ -220,24 +229,16 @@ class MainWindow(MainWindow_Ui):
                 add_link_dictionary['after_download'] = 'None'
 
                 download_info_file = download_info_folder + "/" + gid
-                f = Open(download_info_file)
-                download_info_file_lines = f.readlines()
-                f.close()
+                download_info_file_list = readList(download_info_file,'string')
 
-                f = Open(download_info_file , "w")
                 for i in range(10):
                     if i == 1 :
-                        f.writelines("stopped" + "\n")
+                        download_info_file_list[i] = 'stopped'
                         item = QTableWidgetItem('stopped')
                         self.download_table.setItem(row , i , item )
-                    elif i == 9 :
-                        f.writelines(str(add_link_dictionary) + "\n")
-                        item = QTableWidgetItem(str(add_link_dictionary))
-                        self.download_table.setItem(row,i , item)
-                    else:
-                        f.writelines(download_info_file_lines[i].strip() + "\n")
+                download_info_file_list[9] = add_link_dictionary
+                writeList(download_info_file , download_info_file_list)
 
-                f.close()
         self.addlinkwindows_list = []
         self.propertieswindows_list = []
         self.progress_window_list = []
@@ -295,11 +296,11 @@ class MainWindow(MainWindow_Ui):
 
     def checkDownloadInfo(self,gid):
         try:
+
 #get download information from download_info_file according to gid and write them in download_table cells
             download_info_file = config_folder + "/download_info/" + gid
-            f = Open(download_info_file)
-            download_info_file_lines = f.readlines()
-            f.close()
+            download_info_file_list = readList(download_info_file)
+            download_info_file_list_string = readList(download_info_file ,'string')
 #finding row of this gid!
             for i in range(self.download_table.rowCount()):
                 row_gid = self.download_table.item(i , 8).text()
@@ -309,15 +310,14 @@ class MainWindow(MainWindow_Ui):
 
             for i in range(10):
 #check flag of download!
+#It's showing that selection mode is active or not!
                 if i == 0 :
                     flag = int(self.download_table.item(row , i).flags())
 
 #remove gid of completed download from active downloads list file
                 elif i == 1 :
-                    status = download_info_file_lines[i].strip()
-                    status = str(status)
+                    status = str(download_info_file_list[i])
                     status_download_table = str(self.download_table.item(row , 1 ) . text())
-
                     if status == "complete":
                         f = Open(download_list_file_active)
                         download_list_file_active_lines = f.readlines()
@@ -329,8 +329,8 @@ class MainWindow(MainWindow_Ui):
                         f.close()
                     
 #update download_table cells
-                item = QTableWidgetItem(download_info_file_lines[i].strip())
-#48 means item is checkable and enabled
+                item = QTableWidgetItem(download_info_file_list_string[i])
+#48 means that item is checkable and enabled
                 if i == 0 and flag == 48:
                     item.setFlags(QtCore.Qt.ItemIsUserCheckable | QtCore.Qt.ItemIsEnabled)
                     if self.download_table.item(row , i).checkState() == 2:
@@ -343,12 +343,12 @@ class MainWindow(MainWindow_Ui):
                 self.download_table.viewport().update()
 #update progresswindow
             try :
-            
+
+#finding progress_window for gid            
                 member_number = self.progress_window_list_dict[gid]
                 progress_window = self.progress_window_list[member_number]
                 #link
-                add_link_dictionary_str = str(download_info_file_lines[9].strip())
-                add_link_dictionary = ast.literal_eval(add_link_dictionary_str) 
+                add_link_dictionary = download_info_file_list[9]
                 link = "<b>Link</b> : " +  str(add_link_dictionary ['link'])
                 progress_window.link_label.setText(link)
                 progress_window.link_label.setToolTip(link)
@@ -358,14 +358,14 @@ class MainWindow(MainWindow_Ui):
                 if final_download_path == None :
                     final_download_path = str(add_link_dictionary['download_path'])
                         
-                save_as = "<b>Save as</b> : " + final_download_path + "/" + str(download_info_file_lines[0].strip())
+                save_as = "<b>Save as</b> : " + final_download_path + "/" + str(download_info_file_list[0])
                 progress_window.save_label.setText(save_as)
-                file_name = str(download_info_file_lines[0].strip())
+                file_name = str(download_info_file_list[0])
                 if file_name != "***":
                     progress_window.setWindowTitle(file_name ) 
 
                 #status
-                progress_window.status = download_info_file_lines[1].strip()
+                progress_window.status = download_info_file_list[1]
                 status = "<b>status</b> : " + progress_window.status 
                 progress_window.status_label.setText(status)
                 if progress_window.status == "downloading":
@@ -385,16 +385,17 @@ class MainWindow(MainWindow_Ui):
                     progress_window.stop_pushButton.setEnabled(True)
                     progress_window.pause_pushButton.setEnabled(False)
                 elif progress_window.status == "stopped" or progress_window.status == "error" or progress_window.status == "complete" :
+#close progress_window if download status is stopped or completed or error
                     progress_window.close()
                     self.progress_window_list[member_number] = []
                     del self.progress_window_list_dict[gid]
                     if progress_window.status == "complete":
-                        notifySend("Download Complete" ,str(download_info_file_lines[0])  , 10000 , 'ok' )
+                        notifySend("Download Complete" ,str(download_info_file_list[0])  , 10000 , 'ok' )
                     elif progress_window.status == "stopped":
-                        notifySend("Download Stopped" , str(download_info_file_lines[0]) , 10000 , 'no')
+                        notifySend("Download Stopped" , str(download_info_file_list[0]) , 10000 , 'no')
 
                     elif progress_window.status == "error":
-                        notifySend("Error - " + add_link_dictionary['error'] , str(download_info_file_lines[0]) , 10000 , 'fail')
+                        notifySend("Error - " + add_link_dictionary['error'] , str(download_info_file_list[0]) , 10000 , 'fail')
                
                         add_link_dictionary['start_hour'] = None
                         add_link_dictionary['start_minute'] = None
@@ -402,17 +403,18 @@ class MainWindow(MainWindow_Ui):
                         add_link_dictionary['end_minute'] = None
                         add_link_dictionary['after_download'] = 'None'
 
-                        f = Open(download_info_file , "w")
                         for i in range(10):
                             if i == 9 :
-                                f.writelines(str(add_link_dictionary) + "\n")
-                            else:
-                                f.writelines(download_info_file_lines[i].strip() + "\n")
+                                download_info_file_list[i] = add_link_dictionary
+                                
+                        download_info_file_list[9] = add_link_dictionary 
+                        writeList(download_info_file , download_info_file_list )
 
-                        f.close()
-                    
+
+#this section is sending shutdown signal to the shutdown script(if user select shutdown for after download)
                     if os.path.isfile('/tmp/persepolis/shutdown/' + gid ) == True and progress_window.status != 'stopped':
                         answer = download.shutDown()
+#KILL aria2c if didn't respond
                         if answer == 'error':
                             os.system('killall aria2c')
                         f = Open('/tmp/persepolis/shutdown/' + gid , 'w')
@@ -427,28 +429,29 @@ class MainWindow(MainWindow_Ui):
 
              
                 #downloaded
-                downloaded = "<b>Downloaded</b> : " + str(download_info_file_lines[3].strip()) + "/" + str(download_info_file_lines[2].strip())
+                downloaded = "<b>Downloaded</b> : " + str(download_info_file_list[3]) + "/" + str(download_info_file_list[2])
                 progress_window.downloaded_label.setText(downloaded)
 
                 #Transfer rate
-                rate = "<b>Transfer rate</b> : " + str(download_info_file_lines[6].strip())
+                rate = "<b>Transfer rate</b> : " + str(download_info_file_list[6])
                 progress_window.rate_label.setText(rate)
 
                 #Estimate time left
-                estimate_time_left = "<b>Estimate time left</b> : " + str(download_info_file_lines[7].strip()) 
+                estimate_time_left = "<b>Estimate time left</b> : " + str(download_info_file_list[7]) 
                 progress_window.time_label.setText(estimate_time_left)
 
                 #Connections
-                connections = "<b>Connections</b> : " + str(download_info_file_lines[5].strip())
+                connections = "<b>Connections</b> : " + str(download_info_file_list[5])
                 progress_window.connections_label.setText(connections)
 
 
                 #progressbar
-                value = download_info_file_lines[4].strip()
+                value = download_info_file_list[4]
                 value = value[:-1]
                 progress_window.download_progressBar.setValue(int(value))
             except :
                 pass
+
         except:
             pass
                    
@@ -657,18 +660,15 @@ class MainWindow(MainWindow_Ui):
     def callBack(self , add_link_dictionary):
         gid = self.gidGenerator()
 
-        download_info_file_list = ['***','waiting','***','***','***','***','***','***',gid , str(add_link_dictionary)]
+        download_info_file_list = ['***','waiting','***','***','***','***','***','***',gid , add_link_dictionary]
         download_info_file = config_folder + "/download_info/" + gid
         os.system("touch " + download_info_file )
-        f = Open(download_info_file , "w")
-        for i in range(10):
-            f.writelines(download_info_file_list[i] + "\n")
-
-        f.close()
+         
+        writeList(download_info_file , download_info_file_list)
         
         self.download_table.insertRow(0)
         j = 0
-
+        download_info_file_list[9] = str(download_info_file_list[9])
         for i in download_info_file_list :
             item = QTableWidgetItem(i)
             if self.selectAction.isChecked() == True:
@@ -761,6 +761,11 @@ class MainWindow(MainWindow_Ui):
 
     def removeButtonPressed(self,button):
         self.removeAction.setEnabled(False)
+        global remove_flag
+        if remove_flag !=3 :
+            remove_flag = 1
+            while remove_flag != 2 :
+                sleep(0.1)
         selected_row_return = self.selectedRow()
         if selected_row_return != None:
             gid = self.download_table.item(selected_row_return , 8 ).text()
@@ -800,6 +805,7 @@ class MainWindow(MainWindow_Ui):
                 os.system('rm "' + str(file_name_aria) +'"')
         else:
             self.statusbar.showMessage("Please select an item first!")
+        remove_flag = 0
         self.selectedRow()
 
     def propertiesButtonPressed(self,button):
@@ -815,17 +821,9 @@ class MainWindow(MainWindow_Ui):
 
     def propertiesCallback(self,add_link_dictionary , gid ):
         download_info_file = download_info_folder + "/" + gid
-        f = Open(download_info_file)
-        download_info_file_lines = f.readlines()
-        f.close()
-        f = Open(download_info_file , "w")
-        for i in range(10):
-            if i == 9 :
-                f.writelines(str(add_link_dictionary) + "\n")
-            else:
-                f.writelines(download_info_file_lines[i].strip() + "\n")
-
-        f.close()
+        download_info_file_list = readList(download_info_file )
+        download_info_file_list [9] = add_link_dictionary
+        writeList(download_list_file , download_info_file_list)
             
     def progressButtonPressed(self,button):
         selected_row_return = self.selectedRow()
@@ -996,6 +994,11 @@ class MainWindow(MainWindow_Ui):
 
     def deleteFile(self,menu):
         selected_row_return = self.selectedRow()
+        global remove_flag
+        remove_flag = 1
+        while remove_flag != 2 :
+            sleep(0.1)
+#This section is checking the download status , if download was completed then download file is removing
         if selected_row_return != None:
             gid = self.download_table.item(selected_row_return , 8 ).text()
             download_status = self.download_table.item(selected_row_return , 1).text()
@@ -1008,7 +1011,7 @@ class MainWindow(MainWindow_Ui):
                         os.system("rm '" + file_path  + "'" )
                     else:
                         notifySend(str(file_path) ,'Not Found' , 5000 , 'warning' )
-
+                    remove_flag = 3
                     self.removeButtonPressed(menu)
 
     def selectDownloads(self,menu):
@@ -1037,6 +1040,11 @@ class MainWindow(MainWindow_Ui):
             item.setCheckState(QtCore.Qt.Checked)
  
     def removeSelected(self,menu):
+        global remove_flag
+        remove_flag = 1
+        while remove_flag != 2 :
+            sleep(0.1)
+
         gid_list = []
         for row in range(self.download_table.rowCount()):
             status = self.download_table.item(row , 1).text() 
@@ -1088,7 +1096,14 @@ class MainWindow(MainWindow_Ui):
                 file_name_aria = file_name_path + str('.aria2')
                 os.system('rm "' + str(file_name_aria) +'"')
 
+        remove_flag = 0
+
     def deleteSelected(self,menu):
+        global remove_flag
+        remove_flag = 1
+        while remove_flag != 2 :
+            sleep(0.1)
+
         gid_list = []
         for row in range(self.download_table.rowCount()):
             status = self.download_table.item(row , 1).text() 
@@ -1153,4 +1168,5 @@ class MainWindow(MainWindow_Ui):
                     else:
                         notifySend(str(file_path) ,'Not Found' , 5000 , 'warning' )
 
+        remove_flag = 0
 

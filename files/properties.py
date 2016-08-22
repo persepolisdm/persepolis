@@ -3,9 +3,9 @@
 
 
 from PyQt5 import QtCore, QtGui, QtWidgets
-from PyQt5.QtWidgets import QWidget , QPushButton , QComboBox , QSpinBox ,QVBoxLayout, QHBoxLayout , QLabel , QApplication , QWidget , QFileDialog, QSizePolicy , QGridLayout , QCheckBox , QFrame , QLineEdit , QPushButton
+from PyQt5.QtWidgets import QFileDialog 
 import os , string , ast
-from newopen import Open
+from newopen import Open , writeList , readList
 from addlink_ui import AddLinkWindow_Ui
 
 
@@ -69,13 +69,10 @@ class PropertiesWindow(AddLinkWindow_Ui):
 #initialization
         self.connections_spinBox.setValue(connections)
         download_info_file = download_info_folder + "/" + self.gid
-        f = Open(download_info_file)
-        download_info_file_lines = f.readlines()
-        f.close()
-        add_link_dictionary_str = str(download_info_file_lines[9].strip())
-        self.add_link_dictionary = ast.literal_eval(add_link_dictionary_str) 
+        download_info_file_list = readList(download_info_file) 
+        self.add_link_dictionary = download_info_file_list[9]
 #disable folder_frame when download is complete
-        status = download_info_file_lines[1].strip() 
+        status = download_info_file_list[1] 
         if status == 'complete':
             self.folder_frame.setEnabled(False)
 

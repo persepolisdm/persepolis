@@ -43,7 +43,9 @@ parser.add_argument('--agent',action='store',nargs = 1 , help='User Agent' )
 parser.add_argument('--headers',action='store',nargs = 1 , help='Extra request headers' )
 parser.add_argument('--name',action='store',nargs = 1 , help='Requested file name' )
 parser.add_argument('--execute',action='store',nargs=1, help='execute or not!' )
-
+parser.add_argument('--default',action='store_true',help='restore default setting' )
+parser.add_argument('--clear',action='store_true',help='clear download list' )
+parser.add_argument('--version', action='version', version='Persepolis Download Manager 2.1.0 Unstable')
 args = parser.parse_args()
 
 #Mozilla firefox flashgot will send download information whith terminal arguments(link , referer , cookie , agent , headers , name )
@@ -53,6 +55,24 @@ args = parser.parse_args()
 
 
 add_link_dictionary = {}
+
+if args.clear:
+    status = os.system('rm -rf "' + str(config_folder) + '"' )
+    if status == 0 :
+        print ('Download list cleard!')
+    else:
+        print("persepolis can't clear download list")
+
+    sys.exit(0)
+
+if args.default :
+    status = os.system('rm  "' + str(setting_file) + '"' )
+    if status == 0 :
+        print ('Persepolis restored default')
+    else :
+        print("Persepolis couldn't restore default")
+    sys.exit(0)
+
 
 if args.link :
     add_link_dictionary ['link'] = "".join(args.link)
@@ -102,12 +122,12 @@ if "".join(args.execute) == "yes":
         elif color_scheme == 'Persepolis ArcDark Red':
             persepolis_arcdark_red = ArcDarkRedPallete()
             persepolis_download_manager.setPalette(persepolis_arcdark_red)
-            persepolis_download_manager.setStyleSheet("QToolTip { color: #ffffff; background-color: #353535; border: 1px solid white; }")
+            persepolis_download_manager.setStyleSheet("QToolTip { color: #ffffff; background-color: #353945; border: 1px solid white; } QPushButton {background-color: #353945  } QTabWidget {background-color : #353945;} QMenu {background-color: #353945 }")
+
         elif color_scheme == 'Persepolis ArcDark Blue':
             persepolis_arcdark_blue = ArcDarkBluePallete()
             persepolis_download_manager.setPalette(persepolis_arcdark_blue)
-            persepolis_download_manager.setStyleSheet("QToolTip { color: #ffffff; background-color: #353535; border: 1px solid white; }")
-
+            persepolis_download_manager.setStyleSheet("QToolTip { color: #ffffff; background-color: #353945; border: 1px solid white; } QPushButton {background-color: #353945  } QTabWidget {background-color : #353945;} QMenu {background-color: #353945 }")
 
 
 
@@ -125,7 +145,6 @@ else:
         notifySend('Persepolis Download Manager','is still running!',3000 ,'warning' )
         f = open("/tmp/persepolis/show-window" , 'w')
         f.close()
-
     sys.exit(0)
 
 

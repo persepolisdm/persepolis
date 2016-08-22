@@ -7,7 +7,7 @@ import os
 import time
 import ast
 import shutil
-from newopen import Open
+from newopen import Open , readList , writeList
 
 
 
@@ -23,7 +23,7 @@ setting_file = config_folder + '/setting'
 host = 'localhost'
 port = 6800
 
-
+#RPC
 SERVER_URI_FORMAT = 'http://{}:{:d}/rpc'
 server_uri = SERVER_URI_FORMAT.format(host, port)
 server = xmlrpc.client.ServerProxy(server_uri, allow_none=True)
@@ -33,11 +33,8 @@ server = xmlrpc.client.ServerProxy(server_uri, allow_none=True)
 def downloadAria(gid):
 #add_link_dictionary is a dictionary that contains user download request information
     download_info_file = download_info_folder + "/" + gid
-    f = Open(download_info_file)
-    download_info_file_lines = f.readlines()
-    f.close()
-    add_link_dictionary_str = str(download_info_file_lines[9].strip())
-    add_link_dictionary = ast.literal_eval(add_link_dictionary_str) 
+    download_info_file_list = readList(download_info_file)
+    add_link_dictionary = download_info_file_list[9]
 
     link = add_link_dictionary ['link']
     ip = add_link_dictionary['ip']
@@ -58,14 +55,31 @@ def downloadAria(gid):
     cookies = add_link_dictionary['load-cookies']
     referer = add_link_dictionary['referer']
     
+    #making header option
+    header_list = []
+    if cookies != None :
+        semicolon_split_cookies = cookies.split('; ')
+        for i in semicolon_split_cookies:
+            equal_split_cookie = i.split('=')
+            join_cookie = ':'.join(equal_split_cookie)
+            if i != '':
+                header_list.append(join_cookie)
+
+    if header != None :
+        semicolon_split_header = header.split('; ')
+        for i in semicolon_split_header:
+            equal_split_header = i.split('=')
+            join_header = ':'.join(equal_split_header)
+            if i != '':
+                header_list.append(join_header)
+    
+    if len(header_list) == 0 :
+        header_list = None
+
     if start_hour != None :
-        download_info_file_lines[1] = "scheduled"
-
-    f = Open(download_info_file , "w")
-    for i in range(10):
-        f.writelines(download_info_file_lines[i].strip() + "\n")
-
-    f.close()
+        download_info_file_list[1] = "scheduled"
+        download_info_file_list[9] = add_link_dictionary 
+        writeList(download_info_file,download_info_file_list)
 
     if ip :
         ip_port = str(ip) + ":" + str(port)
@@ -79,28 +93,18 @@ def downloadAria(gid):
 
 
     if start_time_status == "scheduled":
-#read new limit option before starting download! perhaps user changed this with progress bar window
-        f = Open(download_info_file)
-        download_info_file_lines = f.readlines()
-        f.close()
-        add_link_dictionary_str = str(download_info_file_lines[9].strip())
-        add_link_dictionary = ast.literal_eval(add_link_dictionary_str) 
+#read new limit option before starting download! perhaps user changed this in progress bar window
+        download_info_file_list = readList(download_info_file) 
+        add_link_dictionary = download_info_file_list[9]
         
         limit = add_link_dictionary['limit']
 
 #eliminate start_hour and start_minute!         
         add_link_dictionary['start_hour'] = None
         add_link_dictionary['start_minute'] = None
+        download_info_file_list [9] = add_link_dictionary
+        writeList(download_info_file , download_info_file_list)
 
-        f = Open(download_info_file , "w")
-        for i in range(10):
-            if i == 9 :
-                f.writelines(str(add_link_dictionary) + "\n")
-            else:
-                f.writelines(download_info_file_lines[i].strip() + "\n")
-
-
-        f.close()
 
 
 #find download_path_temp from setting_file
@@ -115,7 +119,7 @@ def downloadAria(gid):
 
     if start_time_status != 'stopped':
 #send download request to aria2
-        aria_dict = {'gid':gid ,'max-tries' : str(setting_dict['max-tries']) , 'retry-wait': int(setting_dict['retry-wait']) , 'timeout' : int(setting_dict['timeout']) , 'header': header ,'out': out , 'user-agent': user_agent , 'load-cookies': cookies , 'referer': referer ,  'all-proxy': ip_port , 'max-download-limit': limit , 'all-proxy-user':str(proxy_user), 'all-proxy-passwd':str(proxy_passwd), 'http-user':str(download_user), 'http-passwd':str(download_passwd) , 'split':'16', 'max-connection-per-server':str(connections) , 'min-split-size':'1M', 'continue':'true', 'dir':str(download_path_temp) } 
+        aria_dict = {'gid':gid ,'max-tries' : str(setting_dict['max-tries']) , 'retry-wait': int(setting_dict['retry-wait']) , 'timeout' : int(setting_dict['timeout']) , 'header': header_list ,'out': out , 'user-agent': user_agent ,  'referer': referer ,  'all-proxy': ip_port , 'max-download-limit': limit , 'all-proxy-user':str(proxy_user), 'all-proxy-passwd':str(proxy_passwd), 'http-user':str(download_user), 'http-passwd':str(download_passwd) , 'split':'16', 'max-connection-per-server':str(connections) , 'min-split-size':'1M', 'continue':'true', 'dir':str(download_path_temp) } 
         try:
             if ("http" in link[0:5]): 
                 answer = server.aria2.addUri([link],aria_dict)
@@ -133,7 +137,6 @@ def downloadAria(gid):
     else :
 #if start_time_status is "stopped" it means download Canceled by user
         print("Download Canceled")
-
 
 def downloadStatus(gid):
     try :
@@ -244,12 +247,9 @@ def downloadStatus(gid):
 
 
     download_info_file = download_info_folder + "/" + gid
-    f = Open(download_info_file)
-    download_info_file_lines = f.readlines()
-    f.close()
+    download_info_file_list = readList(download_info_file)
 
-    add_link_dictionary_str = str(download_info_file_lines[9].strip())
-    add_link_dictionary = ast.literal_eval(add_link_dictionary_str) 
+    add_link_dictionary = download_info_file_list[9]
 
     download_path = add_link_dictionary['download_path']
     final_download_path = add_link_dictionary ['final_download_path']
@@ -292,17 +292,15 @@ def downloadStatus(gid):
         status_str = None
 
 
-    download_info = [file_name , status_str , size_str , downloaded_str ,  percent_str , connections_str , download_speed_str ,estimate_time_left_str , None , str(add_link_dictionary) ]
+    download_info = [file_name , status_str , size_str , downloaded_str ,  percent_str , connections_str , download_speed_str ,estimate_time_left_str , None , add_link_dictionary ]
 
    
-    f = Open(download_info_file , "w")
     for i in range(10):
         if download_info[i] != None:
-            f.writelines(download_info[i] + "\n")
-        else:
-            f.writelines(download_info_file_lines[i].strip() + "\n")
-
-    f.close()
+            download_info_file_list[i] = download_info[i]
+ 
+        
+    writeList(download_info_file , download_info_file_list)
 
     return 'ready'
 
@@ -325,8 +323,11 @@ def downloadCompleteAction( path ,download_path , file_name):
         print('Persepolis can not move file')
 
     return str(file_path)
-    
+
+
+#this function is returning folder of download according to file extension    
 def findDownloadPath(file_name , download_path):
+
     file_name_split = file_name.split('.')
     file_extension = file_name_split[-1]
     audio = ['act','aiff','aac','amr','ape','au','awb','dct','dss','dvf','flac','gsm','iklax','ivs','m4a','m4p','mmf','mp3','mpc','msv','ogg','oga','opus','ra','raw','sln','tta','vox','wav','wma','wv']
@@ -374,11 +375,9 @@ def shutDown():
 #downloadStop stops download completely
 def downloadStop(gid):
     download_info_file = download_info_folder + "/" + gid
-    f = Open(download_info_file)
-    download_info_file_lines = f.readlines()
-    f.close()
+    download_info_file_list = readList(download_info_file)
 
-    status = download_info_file_lines[1].strip() 
+    status = download_info_file_list[1] 
     if status != 'scheduled':
         try :
             answer = server.aria2.remove(gid)
@@ -391,24 +390,16 @@ def downloadStop(gid):
         answer = 'stopped'
 
     if answer != 'None' or (answer == 'None' and status == 'waiting'):
-        add_link_dictionary_str = str(download_info_file_lines[9].strip())
-        add_link_dictionary = ast.literal_eval(add_link_dictionary_str) 
+        add_link_dictionary = download_info_file_list[9]
         add_link_dictionary['start_hour'] = None
         add_link_dictionary['start_minute'] = None
         add_link_dictionary['end_hour'] = None
         add_link_dictionary['end_minute'] = None
         add_link_dictionary['after_download'] = 'None'
 
-        f = Open(download_info_file , "w")
-        for i in range(10):
-            if i == 1 :
-                f.writelines("stopped" + "\n")
-            elif i == 9 :
-                f.writelines(str(add_link_dictionary) + "\n")
-            else:
-                f.writelines(download_info_file_lines[i].strip() + "\n")
-
-        f.close()
+        download_info_file_list[1] = "stopped"
+        download_info_file_list[9] = add_link_dictionary
+        writeList(download_info_file , download_info_file_list)
     return answer
  
 
@@ -473,10 +464,9 @@ def startTime(start_hour , start_minute , gid):
     while sigma_start != sigma_now :
         time.sleep(1.1)
         sigma_now = nowTime()
-        f = Open(download_info_file)
-        download_info_file_lines = f.readlines()
-        f.close()
-        if download_info_file_lines[1].strip() == 'stopped' :
+        download_info_file_list = readList(download_info_file)
+        
+        if download_info_file_list[1] == 'stopped' :
             status = 'stopped'
             break
         else :
@@ -496,11 +486,9 @@ def endTime(end_hour , end_minute , gid):
         while status_file == 'no':
             time.sleep(0.5)
             try :
-                f = Open(download_info_file)
-                download_info_file_lines = f.readlines()
-                f.close()
+                download_info_file_list = readList(download_info_file)
                 status_file = 'yes'
-                status = download_info_file_lines[1].strip() 
+                status = download_info_file_list[1]
             except:
                 status_file = 'no'
 #check download's status
@@ -525,26 +513,13 @@ def endTime(end_hour , end_minute , gid):
         if answer == 'None':
             os.system("killall aria2c")
 
-        f = Open(download_info_file)
-        download_info_file_lines = f.readlines()
-        f.close()
-        add_link_dictionary_str = str(download_info_file_lines[9].strip())
-        add_link_dictionary = ast.literal_eval(add_link_dictionary_str) 
+        download_info_file_list = readList(download_info_file) 
+        add_link_dictionary = download_info_file_list[9]
         add_link_dictionary['end_hour'] = None
         add_link_dictionary['end_minute'] = None
-
-        f = Open(download_info_file , "w")
-        for i in range(10):
-            if i == 1 :
-                f.writelines("stopped" + "\n")
-            elif i == 9 :
-                f.writelines(str(add_link_dictionary) + "\n")
-            else:
-                f.writelines(download_info_file_lines[i].strip() + "\n")
-
-
-        f.close()
-
+        download_info_file_list[9] = add_link_dictionary
+        download_info_file_list[1] = "stopped"
+        writeList(download_info_file,download_info_file_list)
         
         
                 

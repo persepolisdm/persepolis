@@ -6,7 +6,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import QWidget , QSizePolicy ,  QInputDialog
 from progress_ui import ProgressWindow_Ui
 import os , time , ast
-from newopen import Open
+from newopen import Open , readList , writeList
 import download
 from bubble import notifySend
 
@@ -41,15 +41,13 @@ class ProgressWindow(ProgressWindow_Ui):
         
         self.after_pushButton.clicked.connect(self.afterPushButtonPressed)
 #check if limit speed actived by user or not
-        download_info_file_lines_len = 1
-        while download_info_file_lines_len != 10 :
-            f = Open(download_info_folder + "/" + self.gid) 
-            download_info_file_lines = f.readlines()
-            f.close()
-            download_info_file_lines_len = len(download_info_file_lines)
+        download_info_file_list_len = 1
+        while download_info_file_list_len != 10 :
+            download_info_file = download_info_folder + "/" + self.gid
+            download_info_file_list = readList(download_info_file) 
+            download_info_file_list_len = len(download_info_file_list)
 
-        add_link_dictionary_str = str(download_info_file_lines[9].strip())
-        add_link_dictionary = ast.literal_eval(add_link_dictionary_str) 
+        add_link_dictionary = download_info_file_list[9]
         limit = add_link_dictionary['limit']  
         if limit != 0:
             limit_number = limit[:-1]
@@ -106,21 +104,12 @@ class ProgressWindow(ProgressWindow_Ui):
             if self.status != 'scheduled':
                 download.limitSpeed(self.gid , "0" )
             else:
-                f = Open(download_info_folder + "/" + self.gid) 
-                download_info_file_lines = f.readlines()
-                f.close()
-                add_link_dictionary_str = str(download_info_file_lines[9].strip())
-                add_link_dictionary = ast.literal_eval(add_link_dictionary_str) 
+                download_info_file = download_info_folder + '/' + self.gid
+                download_info_file_list = readList(download_info_file)
+                add_link_dictionary = download_info_file_list[9]
                 add_link_dictionary['limit'] = '0'
-
-                f = Open(download_info_folder + "/" + self.gid , "w")
-                for i in range(10):
-                    if i == 9 :
-                        f.writelines(str(add_link_dictionary) + "\n")
-                    else:
-                        f.writelines(download_info_file_lines[i].strip() + "\n")
-
-                f.close()
+                download_info_file_list[9] = add_link_dictionary
+                writeList(download_info_file , download_info_file_list)
 
     def limitComboBoxChanged(self , connect):
         self.limit_pushButton.setEnabled(True)
@@ -174,22 +163,12 @@ class ProgressWindow(ProgressWindow_Ui):
         if self.status != 'scheduled':
             download.limitSpeed(self.gid , limit)
         else:
-            f = Open(download_info_folder + "/" + self.gid) 
-            download_info_file_lines = f.readlines()
-            f.close()
-            add_link_dictionary_str = str(download_info_file_lines[9].strip())
-            add_link_dictionary = ast.literal_eval(add_link_dictionary_str) 
+            download_info_file = download_info_folder + "/" + self.gid
+            download_info_file_list = readList(download_info_file)
+            add_link_dictionary = download_info_file_list[9]
             add_link_dictionary['limit'] = limit
-
-            f = Open(download_info_folder + "/" + self.gid , "w")
-            for i in range(10):
-                if i == 9 :
-                    f.writelines(str(add_link_dictionary) + "\n")
-                else:
-                    f.writelines(download_info_file_lines[i].strip() + "\n")
-
-            f.close()
-
+            download_info_file_list[9] = add_link_dictionary
+            writeList(download_info_file , download_info_file_list)
 
 
 
