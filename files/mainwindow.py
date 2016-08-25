@@ -360,9 +360,7 @@ class MainWindow(MainWindow_Ui):
                         
                 save_as = "<b>Save as</b> : " + final_download_path + "/" + str(download_info_file_list[0])
                 progress_window.save_label.setText(save_as)
-                file_name = str(download_info_file_list[0])
-                if file_name != "***":
-                    progress_window.setWindowTitle(file_name ) 
+                progress_window.save_label.setToolTip(save_as)
 
                 #status
                 progress_window.status = download_info_file_list[1]
@@ -447,8 +445,14 @@ class MainWindow(MainWindow_Ui):
 
                 #progressbar
                 value = download_info_file_list[4]
+                file_name = str(download_info_file_list[0])
+                if file_name != "***":
+                    windows_title = '(' + str(value) + ')' +  str(file_name)
+                    progress_window.setWindowTitle(windows_title) 
+
                 value = value[:-1]
                 progress_window.download_progressBar.setValue(int(value))
+
             except :
                 pass
 
