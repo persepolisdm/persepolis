@@ -107,7 +107,7 @@ class CheckDownloadInfoThread(QThread):
                     remove_flag = 2
                     while remove_flag != 0 :
                         sleep(0.2)
-                sleep(0.2)
+                sleep(0.3)
                 f = Open(download_list_file_active) 
                 download_list_file_active_lines = f.readlines()
                 f.close()
@@ -828,7 +828,7 @@ class MainWindow(MainWindow_Ui):
         download_info_file = download_info_folder + "/" + gid
         download_info_file_list = readList(download_info_file )
         download_info_file_list [9] = add_link_dictionary
-        writeList(download_list_file , download_info_file_list)
+        writeList(download_info_file , download_info_file_list)
             
     def progressButtonPressed(self,button):
         selected_row_return = self.selectedRow()
