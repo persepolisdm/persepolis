@@ -416,6 +416,7 @@ class MainWindow(MainWindow_Ui):
                         if answer == 'error':
                             os.system('killall aria2c')
                         f = Open('/tmp/persepolis/shutdown/' + gid , 'w')
+                        notifySend('Persepolis is shutting down','your system in 20 seconds' , 150 ,'warning')
                         f.writelines('shutdown')
                         f.close()
                     elif os.path.isfile('/tmp/persepolis/shutdown/' + gid ) == True and progress_window.status == 'stopped':

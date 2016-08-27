@@ -5,11 +5,12 @@ shutdown_notification_file="/tmp/persepolis/shutdown/$gid"
 echo "wait" > $shutdown_notification_file
 shutdown_notification="wait"
 while [ "$shutdown_notification" == "wait" ];do
-    sleep 0.5 
+    sleep 1 
     shutdown_notification=`cat "$shutdown_notification_file"`
 done
 rm "$shutdown_notification_file"
 if [ "$shutdown_notification" == "shutdown" ];then
+    sleep 20
     echo "shutdown"       
     echo "$passwd" |sudo -S poweroff
 else
