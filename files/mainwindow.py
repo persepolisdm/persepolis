@@ -1021,6 +1021,18 @@ class MainWindow(MainWindow_Ui):
 
     def selectDownloads(self,menu):
         if self.selectAction.isChecked() == True:
+#selectAllAction is checked >> activating actions and adding removeSelectedAction and deleteSelectedAction to the toolBar
+            self.toolBar.clear()
+            for i in self.addlinkAction,self.resumeAction, self.pauseAction , self.stopAction, self.removeSelectedAction , self.deleteSelectedAction , self.propertiesAction, self.progressAction , self.exitAction :
+                self.toolBar.addAction(i)
+         
+
+            self.toolBar.insertSeparator(self.addlinkAction)
+            self.toolBar.insertSeparator(self.resumeAction)     
+            self.toolBar.insertSeparator(self.removeSelectedAction)
+            self.toolBar.insertSeparator(self.exitAction)
+            self.toolBar.addSeparator()
+
             for i in range(self.download_table.rowCount()):
                 item = self.download_table.item(i , 0)
                 item.setFlags(QtCore.Qt.ItemIsUserCheckable | QtCore.Qt.ItemIsEnabled)
@@ -1028,7 +1040,20 @@ class MainWindow(MainWindow_Ui):
                 self.selectAllAction.setEnabled(True)
                 self.removeSelectedAction.setEnabled(True)
                 self.deleteSelectedAction.setEnabled(True)
+                 
         else:
+#selectAction is unchecked deactivate actions and adding removeAction and deleteFileAction to the toolBar
+            self.toolBar.clear()
+            for i in self.addlinkAction,self.resumeAction, self.pauseAction , self.stopAction, self.removeAction , self.deleteFileAction , self.propertiesAction, self.progressAction , self.exitAction :
+                self.toolBar.addAction(i)
+         
+
+            self.toolBar.insertSeparator(self.addlinkAction)
+            self.toolBar.insertSeparator(self.resumeAction)     
+            self.toolBar.insertSeparator(self.removeSelectedAction)
+            self.toolBar.insertSeparator(self.exitAction)
+            self.toolBar.addSeparator()
+ 
             for i in range(self.download_table.rowCount()):
                 item_text = self.download_table.item(i , 0).text()
                 item = QTableWidgetItem(item_text) 
@@ -1037,7 +1062,7 @@ class MainWindow(MainWindow_Ui):
                 self.removeSelectedAction.setEnabled(False)
                 self.deleteSelectedAction.setEnabled(False)
                 
- 
+
 
     def selectAll(self,menu):
         for i in range(self.download_table.rowCount()):
