@@ -187,7 +187,7 @@ class MainWindow_Ui(QMainWindow):
         
 
 
-        for i in self.addlinkAction,self.resumeAction, self.pauseAction , self.stopAction, self.removeAction , self.propertiesAction, self.progressAction , self.exitAction :
+        for i in self.addlinkAction,self.resumeAction, self.pauseAction , self.stopAction, self.removeAction , self.deleteFileAction , self.propertiesAction, self.progressAction , self.exitAction :
             self.toolBar.addAction(i)
          
 

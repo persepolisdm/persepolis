@@ -8,6 +8,7 @@ from PyQt5.QtCore import QCoreApplication , QRect , QSize , QThread , pyqtSignal
 import os
 from time import sleep
 import random  
+from after_download import AfterDownloadWindow 
 from addlink import AddLinkWindow
 from properties import PropertiesWindow
 from progress import ProgressWindow
@@ -242,6 +243,7 @@ class MainWindow(MainWindow_Ui):
         self.addlinkwindows_list = []
         self.propertieswindows_list = []
         self.progress_window_list = []
+        self.afterdownload_list = []
         self.progress_window_list_dict = {}
 
         check_download_info = CheckDownloadInfoThread()
@@ -387,9 +389,7 @@ class MainWindow(MainWindow_Ui):
                     progress_window.close()
                     self.progress_window_list[member_number] = []
                     del self.progress_window_list_dict[gid]
-                    if progress_window.status == "complete":
-                        notifySend("Download Complete" ,str(download_info_file_list[0])  , 10000 , 'ok' )
-                    elif progress_window.status == "stopped":
+                    if progress_window.status == "stopped":
                         notifySend("Download Stopped" , str(download_info_file_list[0]) , 10000 , 'no')
 
                     elif progress_window.status == "error":
@@ -416,13 +416,28 @@ class MainWindow(MainWindow_Ui):
                         if answer == 'error':
                             os.system('killall aria2c')
                         f = Open('/tmp/persepolis/shutdown/' + gid , 'w')
-                        notifySend('Persepolis is shutting down','your system in 20 seconds' , 150 ,'warning')
+                        notifySend('Persepolis is shutting down','your system in 20 seconds' , 15000 ,'warning')
                         f.writelines('shutdown')
                         f.close()
                     elif os.path.isfile('/tmp/persepolis/shutdown/' + gid ) == True and progress_window.status == 'stopped':
                         f = Open('/tmp/persepolis/shutdown/' + gid , 'w')
                         f.writelines('canceled')
                         f.close()
+
+#showing download compelete dialog
+#check user's Preferences
+                    f = Open(setting_file)
+                    setting_file_lines = f.readlines()
+                    f.close()
+                    setting_dict_str = str(setting_file_lines[0].strip())
+                    setting_dict = ast.literal_eval(setting_dict_str) 
+ 
+                    if progress_window.status == "complete" and setting_dict['after-dialog'] == 'yes' :
+                        afterdownloadwindow = AfterDownloadWindow(download_info_file_list,setting_file)
+                        self.afterdownload_list.append(afterdownloadwindow)
+                        self.afterdownload_list[len(self.afterdownload_list) - 1].show()
+                    elif progress_window.status == "complete" and setting_dict['after-dialog'] == 'no' :
+                        notifySend("Download Complete" ,str(download_info_file_list[0])  , 10000 , 'ok' )
 
 
 
@@ -453,6 +468,8 @@ class MainWindow(MainWindow_Ui):
 
                 value = value[:-1]
                 progress_window.download_progressBar.setValue(int(value))
+
+
 
             except :
                 pass
@@ -976,7 +993,7 @@ class MainWindow(MainWindow_Ui):
                     del file_path_split[-1]
                     download_path = '/'.join(file_path_split)
                     if os.path.isdir(download_path):
-                        os.system("xdg-open '" + download_path + "'" )
+                        os.system("xdg-open '" + download_path + "' &" )
                     else:
                         notifySend(str(download_path) ,'Not Found' , 5000 , 'warning' )
 

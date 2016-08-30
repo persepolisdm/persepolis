@@ -4,7 +4,7 @@
 from setting_ui import Setting_Ui
 import ast , os
 from PyQt5 import QtWidgets
-from PyQt5.QtWidgets import QFileDialog 
+from PyQt5.QtWidgets import QFileDialog , QStyleFactory 
 from PyQt5.QtGui import QFont
 from newopen import Open
 
@@ -36,7 +36,7 @@ class PreferencesWindow(Setting_Ui):
         self.volume_label.setText('Volume : ' + str(self.setting_dict['sound-volume']) )
         self.volume_dial.setValue(int(self.setting_dict['sound-volume']))
 #set style 
-        available_styles = QtWidgets.QStyleFactory.keys()
+        available_styles = QStyleFactory.keys()
         for style in available_styles :
             self.style_comboBox.addItem(style)
 
@@ -94,6 +94,11 @@ class PreferencesWindow(Setting_Ui):
         else:
             self.enable_notifications_checkBox.setChecked(False)
             
+#after download dialog
+        if str(self.setting_dict['after-dialog']) == 'yes':
+            self.after_download_checkBox.setChecked(True)
+        else:
+            self.after_download_checkBox.setChecked(False)
 
 #ok cancel default button
         self.cancel_pushButton.clicked.connect(self.cancelButtonPressed)
@@ -143,7 +148,7 @@ class PreferencesWindow(Setting_Ui):
         download_path_temp_default = str(home_address) + '/.persepolis'
         download_path_default = str(home_address) + '/Downloads/Persepolis'
  
-        self.setting_dict = {'tray-icon':'yes', 'max-tries' : 5 , 'retry-wait': 0 , 'timeout' : 60 , 'connections' : 16 , 'download_path_temp' : download_path_temp_default , 'download_path':download_path_default , 'sound' : 'yes' , 'sound-volume':100 , 'style':'Fusion' , 'color-scheme' : 'Persepolis Dark Red' , 'icons':'Archdroid-Red','font' : 'Ubuntu' , 'font-size' : 9  }
+        self.setting_dict = {'after-dialog' : 'yes' , 'tray-icon':'yes', 'max-tries' : 5 , 'retry-wait': 0 , 'timeout' : 60 , 'connections' : 16 , 'download_path_temp' : download_path_temp_default , 'download_path':download_path_default , 'sound' : 'yes' , 'sound-volume':100 , 'style':'Fusion' , 'color-scheme' : 'Persepolis Dark Red' , 'icons':'Archdroid-Red','font' : 'Ubuntu' , 'font-size' : 9  }
 
         self.tries_spinBox.setValue(int(self.setting_dict['max-tries']))
         self.wait_spinBox.setValue(int(self.setting_dict['retry-wait']))
@@ -178,18 +183,11 @@ class PreferencesWindow(Setting_Ui):
         self.font_size_spinBox.setValue(int(self.setting_dict['font-size']))
 
 #sound frame 
-        if str(self.setting_dict['sound']) == 'yes':
-            self.enable_notifications_checkBox.setChecked(True) 
-        else:
-            self.enable_notifications_checkBox(False)
-
+        self.enable_notifications_checkBox.setChecked(True) 
 #tray icon
-       
-        if str(self.setting_dict['tray-icon']) == 'yes':
-            self.enable_system_tray_checkBox.setChecked(True)
-        else:
-            self.enable_notifications_checkBox.setChecked(False)
- 
+        self.enable_system_tray_checkBox.setChecked(True)
+# after_download_checkBox
+        self.after_download_checkBox.setChecked(True)
 
     def okPushButtonPressed(self,button):
         self.setting_dict['max-tries'] = self.tries_spinBox.value()
@@ -203,7 +201,7 @@ class PreferencesWindow(Setting_Ui):
         self.setting_dict['color-scheme'] = self.color_comboBox.currentText()
         self.setting_dict['icons'] = self.icon_comboBox.currentText()
         self.setting_dict['font-size'] = self.font_size_spinBox.value()
-
+#enable_system_tray_checkBox
         if self.enable_system_tray_checkBox.isChecked() == True :
             self.setting_dict['tray-icon'] = 'yes'
             self.parent.system_tray_icon.show()
@@ -214,7 +212,11 @@ class PreferencesWindow(Setting_Ui):
             self.parent.system_tray_icon.hide()
             self.parent.minimizeAction.setEnabled(False)
             self.parent.trayAction.setChecked(False)
-
+#after_download_checkBox
+        if self.after_download_checkBox.isChecked() == True :
+            self.setting_dict['after-dialog'] = 'yes'
+        else :
+            self.setting_dict['after-dialog'] = 'no'
 #this section  creates temporary download folder and download folder and download sub folders if they did not existed.
         download_path_temp  = self.setting_dict ['download_path_temp']
         download_path = self.setting_dict [ 'download_path']
