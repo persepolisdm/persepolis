@@ -693,15 +693,14 @@ class MainWindow(MainWindow_Ui):
         download_info_file_list[9] = str(download_info_file_list[9])
         for i in download_info_file_list :
             item = QTableWidgetItem(i)
-            if self.selectAction.isChecked() == True:
-                item = self.download_table.item(i , 0)
-                item.setFlags(QtCore.Qt.ItemIsUserCheckable | QtCore.Qt.ItemIsEnabled)
-                item.setCheckState(QtCore.Qt.Unchecked)
- 
-
             self.download_table.setItem(0,j,item)
             j = j + 1
 
+        if self.selectAction.isChecked() == True:
+            item = self.download_table.item(0 , 0)
+            item.setFlags(QtCore.Qt.ItemIsUserCheckable | QtCore.Qt.ItemIsEnabled)
+            item.setCheckState(QtCore.Qt.Unchecked)
+ 
         f = Open (download_list_file , "a")
         f.writelines(gid + "\n")
         f.close()
