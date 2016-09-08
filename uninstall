@@ -1,5 +1,6 @@
 #!/bin/bash
 sudo rm -rf /usr/share/persepolis
 sudo rm -rf /usr/bin/persepolis
+sudo rm -rf /usr/share/pixmaps/persepolis.svg
 sudo rm -rf "/usr/share/applications/Persepolis Download Manager.desktop"
 sudo rm -rf "/home/alireza/.config/persepolis_download_manager/"
