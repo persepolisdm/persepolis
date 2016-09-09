@@ -62,7 +62,7 @@ class ProgressWindow(ProgressWindow_Ui):
         self.after_comboBox.currentIndexChanged.connect(self.afterComboBoxChanged)
         self.limit_comboBox.currentIndexChanged.connect(self.limitComboBoxChanged)
         self.limit_spinBox.valueChanged.connect(self.limitComboBoxChanged)
-            
+
  
     def closeEvent(self, event):
         if self.parent.isVisible() == False:
@@ -76,7 +76,7 @@ class ProgressWindow(ProgressWindow_Ui):
         if self.status == "paused":
             answer = download.downloadUnpause(self.gid)
             if answer == 'None':
-                notifySend("Aria2 did not respond!","Try agian!",10000,'warning' )
+                notifySend("Aria2 did not respond!","Try agian!",10000,'warning' , systemtray = self.parent.system_tray_icon )
 
 
 
@@ -84,13 +84,13 @@ class ProgressWindow(ProgressWindow_Ui):
         if self.status == "downloading":
             answer = download.downloadPause(self.gid)
             if answer == 'None':
-                notifySend("Aria2 did not respond!","Try agian!" , 10000 , 'critical' )
+                notifySend("Aria2 did not respond!","Try agian!" , 10000 , 'critical' , systemtray = self.parent.system_tray_icon )
 
 
     def stopPushButtonPressed(self,button):
         answer = download.downloadStop(self.gid)
         if answer == 'None':
-            notifySend("Aria2 did not respond!","Try agian!" , 10000 , 'critical' )
+            notifySend("Aria2 did not respond!","Try agian!" , 10000 , 'critical' , systemtray = self.parent.system_tray_icon )
 
 
 

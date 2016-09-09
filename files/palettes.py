@@ -18,6 +18,7 @@ class DarkRedPallete(QPalette):
         self.setColor(QPalette.ToolTipText, Qt.white)
         #light gray
         self.setColor(QPalette.Text, QColor(174,167,159))
+
         #gray
         self.setColor(QPalette.Button, QColor(53, 53, 53))
         #light gray

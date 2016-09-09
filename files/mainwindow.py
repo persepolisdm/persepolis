@@ -143,7 +143,7 @@ class DownloadLink(QThread):
     def run(self):
         answer = download.downloadAria(self.gid)
         if answer == 'None':
-            notifySend('Aria2 did not respond' , 'Try again' , 5000 , 'critical')
+            notifySend('Aria2 did not respond' , 'Try again' , 5000 , 'critical' , systemtray = self.system_tray_icon )
 
         
 
@@ -275,7 +275,7 @@ class MainWindow(MainWindow_Ui):
         self.system_tray_icon.setContextMenu(system_tray_menu)
         self.system_tray_icon.activated.connect(self.systemTrayPressed)
         self.system_tray_icon.show()
-
+        self.system_tray_icon.setToolTip('Persepolis Download Manager')
         f = Open(setting_file)
         setting_file_lines = f.readlines()
         f.close()
@@ -294,7 +294,7 @@ class MainWindow(MainWindow_Ui):
             aria_startup_answer = 'ready'
         else:
             self.statusbar.showMessage('Error...')
-            notifySend('Persepolis can not connect to Aria2' , 'Restart Persepolis' ,10000,'critical' )
+            notifySend('Persepolis can not connect to Aria2' , 'Restart Persepolis' ,10000,'critical' , systemtray = self.system_tray_icon )
 
     def checkDownloadInfo(self,gid):
         try:
@@ -366,7 +366,7 @@ class MainWindow(MainWindow_Ui):
 
                 #status
                 progress_window.status = download_info_file_list[1]
-                status = "<b>status</b> : " + progress_window.status 
+                status = "<b>Status</b> : " + progress_window.status 
                 progress_window.status_label.setText(status)
                 if progress_window.status == "downloading":
                     progress_window.resume_pushButton.setEnabled(False)
@@ -390,10 +390,10 @@ class MainWindow(MainWindow_Ui):
                     self.progress_window_list[member_number] = []
                     del self.progress_window_list_dict[gid]
                     if progress_window.status == "stopped":
-                        notifySend("Download Stopped" , str(download_info_file_list[0]) , 10000 , 'no')
+                        notifySend("Download Stopped" , str(download_info_file_list[0]) , 10000 , 'no', systemtray = self.system_tray_icon )
 
                     elif progress_window.status == "error":
-                        notifySend("Error - " + add_link_dictionary['error'] , str(download_info_file_list[0]) , 10000 , 'fail')
+                        notifySend("Error - " + add_link_dictionary['error'] , str(download_info_file_list[0]) , 10000 , 'fail', systemtray = self.system_tray_icon )
                
                         add_link_dictionary['start_hour'] = None
                         add_link_dictionary['start_minute'] = None
@@ -416,7 +416,7 @@ class MainWindow(MainWindow_Ui):
                         if answer == 'error':
                             os.system('killall aria2c')
                         f = Open('/tmp/persepolis/shutdown/' + gid , 'w')
-                        notifySend('Persepolis is shutting down','your system in 20 seconds' , 15000 ,'warning')
+                        notifySend('Persepolis is shutting down','your system in 20 seconds' , 15000 ,'warning', systemtray = self.system_tray_icon )
                         f.writelines('shutdown')
                         f.close()
                     elif os.path.isfile('/tmp/persepolis/shutdown/' + gid ) == True and progress_window.status == 'stopped':
@@ -437,7 +437,7 @@ class MainWindow(MainWindow_Ui):
                         self.afterdownload_list.append(afterdownloadwindow)
                         self.afterdownload_list[len(self.afterdownload_list) - 1].show()
                     elif progress_window.status == "complete" and setting_dict['after-dialog'] == 'no' :
-                        notifySend("Download Complete" ,str(download_info_file_list[0])  , 10000 , 'ok' )
+                        notifySend("Download Complete" ,str(download_info_file_list[0])  , 10000 , 'ok' , systemtray = self.system_tray_icon )
 
 
 
@@ -717,7 +717,7 @@ class MainWindow(MainWindow_Ui):
             message = "Download Starts"
         else:
             message = "Download Scheduled"
-        notifySend(message ,'' , 10000 , 'no')
+        notifySend(message ,'' , 10000 , 'no', systemtray = self.system_tray_icon )
 
  
 
@@ -733,7 +733,7 @@ class MainWindow(MainWindow_Ui):
             if download_status == "paused" :
                 answer = download.downloadUnpause(gid)
                 if answer == 'None':
-                    notifySend("Aria2 did not respond!","Try agian!",10000,'warning' )
+                    notifySend("Aria2 did not respond!","Try agian!",10000,'warning' , systemtray = self.system_tray_icon )
 
 
 
@@ -758,7 +758,7 @@ class MainWindow(MainWindow_Ui):
             gid = self.download_table.item(selected_row_return , 8 ).text()
             answer = download.downloadStop(gid)
             if answer == 'None':
-                notifySend("Aria2 did not respond!","Try agian!" , 10000 , 'critical' )
+                notifySend("Aria2 did not respond!","Try agian!" , 10000 , 'critical' , systemtray = self.system_tray_icon )
 
 
 
@@ -774,7 +774,7 @@ class MainWindow(MainWindow_Ui):
             gid = self.download_table.item(selected_row_return , 8 ).text()
             answer = download.downloadPause(gid)
             if answer == 'None':
-                notifySend("Aria2 did not respond!" , "Try agian!" , 10000 , 'critical' )
+                notifySend("Aria2 did not respond!" , "Try agian!" , 10000 , 'critical' , systemtray = self.system_tray_icon )
 
         else:
             self.statusbar.showMessage("Please select an item first!")
@@ -926,7 +926,7 @@ class MainWindow(MainWindow_Ui):
         for gid in active_gids:
             answer = download.downloadStop(gid)
             if answer == 'None':
-                notifySend("Aria2 did not respond!" , "Try agian!" , 10000 , 'critical' )
+                notifySend("Aria2 did not respond!" , "Try agian!" , 10000 , 'critical' , systemtray = self.system_tray_icon )
 
 
             sleep(0.3)
@@ -947,7 +947,7 @@ class MainWindow(MainWindow_Ui):
             if gid in download_list_file_active_lines :
                 answer = download.downloadPause(gid)
                 if answer == 'None':
-                    notifySend("Aria2 did not respond!" , "Try agian!" , 10000 , 'critical' )
+                    notifySend("Aria2 did not respond!" , "Try agian!" , 10000 , 'critical' , systemtray = self.system_tray_icon )
 
                 sleep(0.3)
             
@@ -973,7 +973,7 @@ class MainWindow(MainWindow_Ui):
         if os.path.isdir(download_path):
             os.system("xdg-open '" + download_path + "'" )
         else:
-            notifySend(str(download_path) ,'Not Found' , 5000 , 'warning' )
+            notifySend(str(download_path) ,'Not Found' , 5000 , 'warning' , systemtray = self.system_tray_icon )
 
 
 
@@ -994,7 +994,7 @@ class MainWindow(MainWindow_Ui):
                     if os.path.isdir(download_path):
                         os.system("xdg-open '" + download_path + "' &" )
                     else:
-                        notifySend(str(download_path) ,'Not Found' , 5000 , 'warning' )
+                        notifySend(str(download_path) ,'Not Found' , 5000 , 'warning' , systemtray = self.system_tray_icon )
 
 
 
@@ -1011,7 +1011,7 @@ class MainWindow(MainWindow_Ui):
                     if os.path.isfile(file_path):
                         os.system("xdg-open '" + file_path  + "' &" )
                     else:
-                        notifySend(str(file_path) ,'Not Found' , 5000 , 'warning' )
+                        notifySend(str(file_path) ,'Not Found' , 5000 , 'warning' , systemtray = self.system_tray_icon )
 
     def deleteFile(self,menu):
         selected_row_return = self.selectedRow()
@@ -1031,7 +1031,7 @@ class MainWindow(MainWindow_Ui):
                     if os.path.isfile(file_path):
                         os.system("rm '" + file_path  + "'" )
                     else:
-                        notifySend(str(file_path) ,'Not Found' , 5000 , 'warning' )
+                        notifySend(str(file_path) ,'Not Found' , 5000 , 'warning' , systemtray = self.system_tray_icon )
                     remove_flag = 3
                     self.removeButtonPressed(menu)
 
@@ -1212,7 +1212,7 @@ class MainWindow(MainWindow_Ui):
                     if os.path.isfile(file_path):
                         os.system("rm '" + file_path  + "'" )
                     else:
-                        notifySend(str(file_path) ,'Not Found' , 5000 , 'warning' )
+                        notifySend(str(file_path) ,'Not Found' , 5000 , 'warning' , systemtray = self.system_tray_icon )
 
         remove_flag = 0
 

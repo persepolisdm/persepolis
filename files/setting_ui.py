@@ -160,8 +160,8 @@ class Setting_Ui(QWidget):
         self.horizontalLayout_7.addWidget(self.color_comboBox)
 
         self.verticalLayout_3.addLayout(self.horizontalLayout_7)
-        self.horizontalLayout_12 = QHBoxLayout()
 #icon_label
+        self.horizontalLayout_12 = QHBoxLayout()
         self.icon_label = QLabel(self.layoutWidget3)
         self.horizontalLayout_12.addWidget(self.icon_label)
 #icon_comboBox
@@ -170,6 +170,14 @@ class Setting_Ui(QWidget):
 
         self.verticalLayout_3.addLayout(self.horizontalLayout_12)
         self.horizontalLayout_6 = QHBoxLayout()
+#notification_label
+        self.horizontalLayout_13 = QHBoxLayout()
+        self.notification_label = QLabel(self.layoutWidget3)
+        self.horizontalLayout_13.addWidget(self.notification_label)
+#notification_comboBox
+        self.notification_comboBox = QComboBox(self.layoutWidget3)
+        self.horizontalLayout_13.addWidget(self.notification_comboBox)
+        self.verticalLayout_3.addLayout(self.horizontalLayout_13)
 #font_label
         self.font_label = QLabel(self.layoutWidget3)
         self.horizontalLayout_6.addWidget(self.font_label)
@@ -238,6 +246,7 @@ class Setting_Ui(QWidget):
         self.style_label.setText( "Style : ")
         self.color_label.setText( "Color scheme : ")
         self.icon_label.setText( "Icons : ")
+        self.notification_label.setText("Notification type : ")
         self.font_label.setText( "Font : ")
         self.font_size_label.setText( "Size : ")
         self.enable_system_tray_checkBox.setText("Enable system tray icon.")

@@ -59,7 +59,12 @@ class PreferencesWindow(Setting_Ui):
         current_icons_index = self.icon_comboBox.findText(str(self.setting_dict['icons']))
         if current_icons_index != -1 :
             self.icon_comboBox.setCurrentIndex(current_icons_index)
-
+#set notification
+        notifications = [ 'Native notification' , 'QT notification' ]
+        self.notification_comboBox.addItems(notifications)
+        current_notification_index = self.notification_comboBox.findText(str(self.setting_dict['notification']))
+        if current_notification_index != -1 :
+            self.notification_comboBox.setCurrentIndex(current_notification_index)
 #set font 
         font_setting = QFont() 
         font_setting.setFamily(str(self.setting_dict['font']))
@@ -148,7 +153,7 @@ class PreferencesWindow(Setting_Ui):
         download_path_temp_default = str(home_address) + '/.persepolis'
         download_path_default = str(home_address) + '/Downloads/Persepolis'
  
-        self.setting_dict = {'after-dialog' : 'yes' , 'tray-icon':'yes', 'max-tries' : 5 , 'retry-wait': 0 , 'timeout' : 60 , 'connections' : 16 , 'download_path_temp' : download_path_temp_default , 'download_path':download_path_default , 'sound' : 'yes' , 'sound-volume':100 , 'style':'Fusion' , 'color-scheme' : 'Persepolis Dark Red' , 'icons':'Archdroid-Red','font' : 'Ubuntu' , 'font-size' : 9  }
+        self.setting_dict = {'notification' : 'QT notification' , 'after-dialog' : 'yes' , 'tray-icon':'yes', 'max-tries' : 5 , 'retry-wait': 0 , 'timeout' : 60 , 'connections' : 16 , 'download_path_temp' : download_path_temp_default , 'download_path':download_path_default , 'sound' : 'yes' , 'sound-volume':100 , 'style':'Fusion' , 'color-scheme' : 'Persepolis Dark Red' , 'icons':'Archdroid-Red','font' : 'Ubuntu' , 'font-size' : 9  }
 
         self.tries_spinBox.setValue(int(self.setting_dict['max-tries']))
         self.wait_spinBox.setValue(int(self.setting_dict['retry-wait']))
@@ -164,16 +169,16 @@ class PreferencesWindow(Setting_Ui):
         self.volume_dial.setValue(int(self.setting_dict['sound-volume']))
 #set style 
         current_style_index = self.style_comboBox.findText(str(self.setting_dict['style']))
-        if current_style_index != -1 :
-            self.style_comboBox.setCurrentIndex(current_style_index)
+        self.style_comboBox.setCurrentIndex(current_style_index)
 #set color_scheme
         current_color_index = self.color_comboBox.findText(str(self.setting_dict['color-scheme']))
-        if current_color_index != -1 :
-            self.color_comboBox.setCurrentIndex(current_color_index)
+        self.color_comboBox.setCurrentIndex(current_color_index)
 #set icons
         current_icons_index = self.icon_comboBox.findText(str(self.setting_dict['icons']))
-        if current_icons_index != -1 :
-            self.icon_comboBox.setCurrentIndex(current_icons_index)
+        self.icon_comboBox.setCurrentIndex(current_icons_index)
+#set notification
+        current_notification_index = self.notification_comboBox.findText(str(self.setting_dict['notification']))
+        self.notification_comboBox.setCurrentIndex(current_notification_index)
 
 #set font 
         font_setting = QFont() 
@@ -200,7 +205,11 @@ class PreferencesWindow(Setting_Ui):
         self.setting_dict['style'] = self.style_comboBox.currentText()
         self.setting_dict['color-scheme'] = self.color_comboBox.currentText()
         self.setting_dict['icons'] = self.icon_comboBox.currentText()
+        self.setting_dict['notification'] = self.notification_comboBox.currentText()
         self.setting_dict['font-size'] = self.font_size_spinBox.value()
+#if user select qt notification  >> enable_system_tray icon
+        if self.setting_dict['notification'] == 'QT notification':
+            self.enable_system_tray_checkBox.setChecked(True)
 #enable_system_tray_checkBox
         if self.enable_system_tray_checkBox.isChecked() == True :
             self.setting_dict['tray-icon'] = 'yes'
