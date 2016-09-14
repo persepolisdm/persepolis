@@ -171,6 +171,29 @@ class CheckFlashgot(QThread):
 class MainWindow(MainWindow_Ui):
     def __init__(self):
         super().__init__()
+        self.system_tray_icon = QSystemTrayIcon() 
+        self.system_tray_icon.setIcon(QIcon.fromTheme('persepolis',QIcon(':/icon.svg') ))
+        system_tray_menu = QMenu()
+        system_tray_menu.addAction(self.addlinkAction)
+        system_tray_menu.addAction(self.pauseAllAction)
+        system_tray_menu.addAction(self.stopAllAction)
+        system_tray_menu.addAction(self.minimizeAction)
+        system_tray_menu.addAction(self.exitAction)
+        self.system_tray_icon.setContextMenu(system_tray_menu)
+        self.system_tray_icon.activated.connect(self.systemTrayPressed)
+        self.system_tray_icon.show()
+        self.system_tray_icon.setToolTip('Persepolis Download Manager')
+        f = Open(setting_file)
+        setting_file_lines = f.readlines()
+        f.close()
+        setting_dict_str = str(setting_file_lines[0].strip())
+        setting_dict = ast.literal_eval(setting_dict_str) 
+        if setting_dict['tray-icon'] != 'yes': 
+            self.minimizeAction.setEnabled(False)
+            self.trayAction.setChecked(False)
+            self.system_tray_icon.hide()
+
+
         self.statusbar.showMessage('Please Wait ...')
         self.checkSelectedRow()
 
@@ -264,28 +287,6 @@ class MainWindow(MainWindow_Ui):
 
         self.download_table.itemDoubleClicked.connect(self.openFile)
         
-        self.system_tray_icon = QSystemTrayIcon() 
-        self.system_tray_icon.setIcon(QIcon.fromTheme('persepolis',QIcon(':/icon.svg') ))
-        system_tray_menu = QMenu()
-        system_tray_menu.addAction(self.addlinkAction)
-        system_tray_menu.addAction(self.pauseAllAction)
-        system_tray_menu.addAction(self.stopAllAction)
-        system_tray_menu.addAction(self.minimizeAction)
-        system_tray_menu.addAction(self.exitAction)
-        self.system_tray_icon.setContextMenu(system_tray_menu)
-        self.system_tray_icon.activated.connect(self.systemTrayPressed)
-        self.system_tray_icon.show()
-        self.system_tray_icon.setToolTip('Persepolis Download Manager')
-        f = Open(setting_file)
-        setting_file_lines = f.readlines()
-        f.close()
-        setting_dict_str = str(setting_file_lines[0].strip())
-        setting_dict = ast.literal_eval(setting_dict_str) 
-        if setting_dict['tray-icon'] != 'yes': 
-            self.minimizeAction.setEnabled(False)
-            self.trayAction.setChecked(False)
-            self.system_tray_icon.hide()
-
     def startAriaMessage(self,message):
         global aria_startup_answer
         if message == 'yes':
