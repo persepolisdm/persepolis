@@ -29,7 +29,7 @@ After installing dependencies, change your directory with cd command and run ins
 
 for uninstall,
 
-    $ sh unistall
+    $ sh uninstall
 
 ### or...
 
