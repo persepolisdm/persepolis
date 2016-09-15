@@ -136,6 +136,7 @@ class CheckDownloadInfoThread(QThread):
 
             
 class DownloadLink(QThread):
+    ARIA2NOTRESPOND = pyqtSignal()
     def __init__(self,gid):
         QThread.__init__(self)
         self.gid = gid
@@ -143,7 +144,7 @@ class DownloadLink(QThread):
     def run(self):
         answer = download.downloadAria(self.gid)
         if answer == 'None':
-            notifySend('Aria2 did not respond' , 'Try again' , 5000 , 'critical' , systemtray = self.system_tray_icon )
+            self.ARIA2NOTRESPOND.emit()
 
         
 
@@ -713,6 +714,7 @@ class MainWindow(MainWindow_Ui):
         new_download = DownloadLink(gid)
         self.threadPool.append(new_download)
         self.threadPool[len(self.threadPool) - 1].start()
+        self.threadPool[len(self.threadPool) - 1].ARIA2NOTRESPOND.connect(self.aria2NotRespond)
         self.progressBarOpen(gid) 
         if add_link_dictionary['start_hour'] == None :
             message = "Download Starts"
@@ -742,6 +744,8 @@ class MainWindow(MainWindow_Ui):
                 new_download = DownloadLink(gid)
                 self.threadPool.append(new_download)
                 self.threadPool[len(self.threadPool) - 1].start()
+                self.threadPool[len(self.threadPool) - 1].ARIA2NOTRESPOND.connect(self.aria2NotRespond)
+
                 sleep(1)
                 self.progressBarOpen(gid)
 
@@ -751,6 +755,8 @@ class MainWindow(MainWindow_Ui):
         else:
             self.statusbar.showMessage("Please select an item first!")
 
+    def aria2NotRespond(self):
+        notifySend('Aria2 did not respond' , 'Try again' , 5000 , 'critical' , systemtray = self.system_tray_icon )
 
     def stopButtonPressed(self,button):
         self.stopAction.setEnabled(False)
