@@ -37,7 +37,7 @@ def notifySend(message1,message2,time,sound ,systemtray=None ):
 
 #using Qt notification or Native system notification
     if enable_notification == 'QT notification':
-        systemtray.showMessage(message1 , message2 , 1, 10000)
+        systemtray.showMessage(message1 , message2 , 0, 10000)
     else:
         os.system("notify-send --icon='persepolis' --app-name='Persepolis Download Manager' --expire-time='" + time + "' '" +  message1 +  "' \ '" + message2 +  "' "  )
 
