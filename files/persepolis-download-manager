@@ -114,20 +114,20 @@ if "".join(args.execute) == "yes":
         if color_scheme == 'Persepolis Dark Red':
             persepolis_dark_red = DarkRedPallete()
             persepolis_download_manager.setPalette(persepolis_dark_red)
-            persepolis_download_manager.setStyleSheet("QMenu::item:selected {background-color : #d64937 ;color : white} QWidget {background-color : #3f3f3f ; color : #93a79f } QToolTip { color: #ffffff; background-color: #353535; border: 1px solid white; }")
+            persepolis_download_manager.setStyleSheet("QMenu::item:selected {background-color : #d64937 ;color : white} QToolTip { color: #ffffff; background-color: #353535; border: 1px solid white; }")
         elif color_scheme == 'Persepolis Dark Blue':
             persepolis_dark_blue = DarkBluePallete()
             persepolis_download_manager.setPalette(persepolis_dark_blue)
-            persepolis_download_manager.setStyleSheet("QMenu::item:selected { background-color : #2a82da ;color : white } QWidget {background-color : #3f3f3f ; color : #93a79f } QToolTip { color: #ffffff; background-color: #353535; border: 1px solid white; }")
+            persepolis_download_manager.setStyleSheet("QMenu::item:selected { background-color : #2a82da ;color : white } QToolTip { color: #ffffff; background-color: #353535; border: 1px solid white; }")
         elif color_scheme == 'Persepolis ArcDark Red':
             persepolis_arcdark_red = ArcDarkRedPallete()
             persepolis_download_manager.setPalette(persepolis_arcdark_red)
-            persepolis_download_manager.setStyleSheet("QMenu::item:selected {background-color : #bf474d ; color : white} QWidget {background-color : #404552 ; color : #aea79f } QToolTip { color: #ffffff; background-color: #353945; border: 1px solid white; } QPushButton {background-color: #353945  } QTabWidget {background-color : #353945;} QMenu {background-color: #353945 }")
+            persepolis_download_manager.setStyleSheet("QMenu::item:selected {background-color : #bf474d ; color : white} QToolTip { color: #ffffff; background-color: #353945; border: 1px solid white; } QPushButton {background-color: #353945  } QTabWidget {background-color : #353945;} QMenu {background-color: #353945 }")
 
         elif color_scheme == 'Persepolis ArcDark Blue':
             persepolis_arcdark_blue = ArcDarkBluePallete()
             persepolis_download_manager.setPalette(persepolis_arcdark_blue)
-            persepolis_download_manager.setStyleSheet("QMenu::item:selected {background-color : #5294e2 ; color : white }  QWidget {background-color : #404552 ; color : #aea79f } QToolTip { color: #ffffff; background-color: #353945; border: 1px solid white; } QPushButton {background-color: #353945  } QTabWidget {background-color : #353945;} QMenu {background-color: #353945 }")
+            persepolis_download_manager.setStyleSheet("QMenu::item:selected {background-color : #5294e2 ; color : white } QToolTip { color: #ffffff; background-color: #353945; border: 1px solid white; } QPushButton {background-color: #353945  } QTabWidget {background-color : #353945;} QMenu {background-color: #353945 }")
 
 
 
