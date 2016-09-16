@@ -29,8 +29,6 @@ class MainWindow_Ui(QMainWindow):
         super().__init__()
 #MainWindow
         self.resize(600, 400)
-        self.setMinimumSize(QSize(600, 400))
-        self.setMaximumSize(QSize(16777215, 16777215))
         self.setWindowTitle("Persepolis Download Manager")
         self.setWindowIcon(QIcon.fromTheme('persepolis',QIcon(':/icon.svg') ))
        
@@ -40,16 +38,12 @@ class MainWindow_Ui(QMainWindow):
         self.setAcceptDrops(True)
 #frame
         self.frame = QFrame(self.centralwidget)
-        self.frame.setGeometry(QRect(10, 10, 581, 251))
-        self.frame.setFrameShape(QFrame.StyledPanel)
-        self.frame.setFrameShadow(QFrame.Raised)
-        self.gridLayout = QGridLayout(self.frame)
- 
+
 
 #tablewidget
         self.download_table = QTableWidget(self.frame)
-        self.download_table.setGeometry(QRect(10, 10, 560, 231))
-        self.download_table.setSizeIncrement(QSize(0, 0))
+        self.download_table_verticalLayout = QVBoxLayout()
+        self.download_table_verticalLayout.addWidget(self.download_table)
         self.download_table.setColumnCount(10)
         self.download_table.setSelectionBehavior(QAbstractItemView.SelectRows)
         self.download_table.setEditTriggers(QAbstractItemView.NoEditTriggers)
@@ -58,7 +52,7 @@ class MainWindow_Ui(QMainWindow):
         self.download_table.setColumnHidden(8 , True)
         self.download_table.setColumnHidden(9 , True)
 
-        self.gridLayout.addWidget(self.download_table, 0, 0, 1, 1)
+        self.frame.setLayout(self.download_table_verticalLayout)
         self.verticalLayout.addWidget(self.frame)
  
         self.setCentralWidget(self.centralwidget)

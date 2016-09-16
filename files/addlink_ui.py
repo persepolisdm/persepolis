@@ -261,22 +261,7 @@ class AddLinkWindow_Ui(QWidget):
         self.verticalLayout.addLayout(self.addlink_verticalLayout)
 
     
-#         self.proxy_checkBox.raise_()
-#         self.download_checkBox.raise_()
-#         self.folder_frame.raise_()
-#         self.download_frame.raise_()
-#         self.limit_checkBox.raise_()
-#         self.connections_frame.raise_()
-#         self.limit_frame.raise_()
-#         self.cancel_pushButton.raise_()
-#         self.ok_pushButton.raise_()
-#         self.link_frame.raise_()
-#         self.proxy_frame.raise_()
-#         self.start_checkBox.raise_()
-#         self.end_checkBox.raise_()
-#         self.start_frame.raise_()
-#         self.end_frame.raise_()
-# 
+ 
 #labels
         self.setWindowTitle( "Enter Your Link")
         self.link_label.setText( "Download Link : ")
