@@ -55,16 +55,25 @@ setting_dict = ast.literal_eval(setting_dict_str)
 icons = ':/' + str(setting_dict['icons']) + '/'
 
 
-#start aria2 when Persepolis starts
+#starting aria2 when Persepolis starts
 class StartAria2Thread(QThread):
     ARIA2RESPONDSIGNAL = pyqtSignal(str)
     def __init__(self):
         QThread.__init__(self)
         
     def run(self):
+        #aria_startup_answer is None when Persepolis starts! and after ARIA2RESPONDSIGNAL emitting yes , then startAriaMessage function changing aria_startup_answer to 'Ready'
         global aria_startup_answer
         aria_startup_answer = 'None'
-        answer = download.startAria()
+        for i in range(5):
+            answer = download.startAria()
+            if answer == 'did not respond' and i != 4:
+                signal_str = 'try again'
+                self.ARIA2RESPONDSIGNAL.emit(signal_str)
+                sleep(2)
+            else :
+                break
+
         #if Aria2 doesn't respond to Persepolis ,ARIA2RESPONDSIGNAL is emitting no  
         if answer == 'did not respond':
             signal_str = 'no'
@@ -134,7 +143,7 @@ class CheckDownloadInfoThread(QThread):
 
 
 
-            
+#this threa sending download request to aria2            
 class DownloadLink(QThread):
     ARIA2NOTRESPOND = pyqtSignal()
     def __init__(self,gid):
@@ -142,9 +151,12 @@ class DownloadLink(QThread):
         self.gid = gid
 
     def run(self):
+        #if request is not successful then persepolis is checking rpc connection whith download.aria2Version() function
         answer = download.downloadAria(self.gid)
         if answer == 'None':
-            self.ARIA2NOTRESPOND.emit()
+            version_answer = download.aria2Version()
+            if answer == 'did not respond':
+                self.ARIA2NOTRESPOND.emit()
 
         
 
@@ -287,13 +299,16 @@ class MainWindow(MainWindow_Ui):
         self.threadPool[3].SHOWMAINWINDOWSIGNAL.connect(self.showMainWindow)
 
         self.download_table.itemDoubleClicked.connect(self.openFile)
-        
+
+# startAriaMessage function is showing some message on statusbar and sending notification when aria failed to start! see StartAria2Thread for more details
     def startAriaMessage(self,message):
         global aria_startup_answer
         if message == 'yes':
             sleep (2)
             self.statusbar.showMessage('Ready...')
             aria_startup_answer = 'ready'
+        elif message == 'try again':
+            self.statusbar.showMessage("Aria2 didn't respond! be patient!Persepolis tries again in 2 seconds!")
         else:
             self.statusbar.showMessage('Error...')
             notifySend('Persepolis can not connect to Aria2' , 'Restart Persepolis' ,10000,'critical' , systemtray = self.system_tray_icon )

@@ -28,8 +28,24 @@ SERVER_URI_FORMAT = 'http://{}:{:d}/rpc'
 server_uri = SERVER_URI_FORMAT.format(host, port)
 server = xmlrpc.client.ServerProxy(server_uri, allow_none=True)
 
+#starting aria2 with RPC
+def startAria():
+    os.system("aria2c --version 1> /dev/null")
+    os.system("aria2c --no-conf  --enable-rpc --rpc-max-request-size '10M' --rpc-listen-all --quiet=true &")
+    time.sleep(2)
+    answer = aria2Version()
+    return answer
 
-
+#check aria2 release version . Persepolis is usig this function to check that aria2 RPC conection is available or not
+def aria2Version():
+    try : 
+        answer = server.aria2.getVersion()
+        print("Aria2 Version : " + str(answer['version']))
+    except :
+        print("aria2 not respond!")
+        answer = "did not respond"
+    return answer
+ 
 def downloadAria(gid):
 #add_link_dictionary is a dictionary that contains user download request information
     download_info_file = download_info_folder + "/" + gid
@@ -346,19 +362,6 @@ def findDownloadPath(file_name , download_path):
         return download_path + '/Others'
 
 
-
-#starting aria2 with RPC
-def startAria():
-    os.system("aria2c --version 1> /dev/null")
-    os.system("aria2c --no-conf  --enable-rpc --rpc-max-request-size '10M' --rpc-listen-all --quiet=true &")
-    time.sleep(2)
-    try : 
-        answer = server.aria2.getVersion()
-        print("Aria2 Version : " + str(answer['version']))
-    except :
-        print("aria2 not respond!")
-        answer = "did not respond"
-    return answer
 
         
 #shutdown aria2
