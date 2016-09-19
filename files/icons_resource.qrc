@@ -2,7 +2,6 @@
 	<qresource prefix="/">
 
                 <file>icon.svg</file>
-                
 		<file>Archdroid-Blue/about.svg</file>		
 		<file>Archdroid-Blue/add.svg</file>		
 		<file>Archdroid-Blue/exit.svg</file>		
