@@ -379,20 +379,23 @@ def shutDown():
 def downloadStop(gid):
     download_info_file = download_info_folder + "/" + gid
     download_info_file_list = readList(download_info_file)
-
+#if status is scheduled so download request is not sended to aria2 yet!
     status = download_info_file_list[1] 
     if status != 'scheduled':
         try :
+        #this section is sending request to aria2 to removing download. see aria2 documentation for more informations 
             answer = server.aria2.remove(gid)
             if status == 'downloading':
                 server.aria2.removeDownloadResult(gid)
+            version_answer = 'ok'
         except :
             answer = str ("None")
+            version_answer = aria2Version()
         print(answer + " stopped")
     else :
         answer = 'stopped'
 
-    if answer != 'None' or (answer == 'None' and status == 'waiting'):
+    if version_answer == 'did not respond' or answer != 'None' or (answer == 'None' and status == 'waiting'):
         add_link_dictionary = download_info_file_list[9]
         add_link_dictionary['start_hour'] = None
         add_link_dictionary['start_minute'] = None
@@ -408,23 +411,57 @@ def downloadStop(gid):
 
 #downloadPause pauses download
 def downloadPause(gid):
+    download_info_file = download_info_folder + "/" + gid
+    download_info_file_list = readList(download_info_file)
+#this section is sending pause request to aira2 . see aria2 documentation for more informations
     try :
         answer = server.aria2.pause(gid)
+        version_answer = 'ok'
     except :
         answer = str("None")
+        version_answer = aria2Version()
         
     print(answer + " paused")
+    if version_answer == 'did not respond': 
+        add_link_dictionary = download_info_file_list[9]
+        add_link_dictionary['start_hour'] = None
+        add_link_dictionary['start_minute'] = None
+        add_link_dictionary['end_hour'] = None
+        add_link_dictionary['end_minute'] = None
+        add_link_dictionary['after_download'] = 'None'
+
+        download_info_file_list[1] = "stopped"
+        download_info_file_list[9] = add_link_dictionary
+        writeList(download_info_file , download_info_file_list)
+ 
     return answer
 
 
 
 #downloadUnpause unpauses download
 def downloadUnpause(gid):
+    download_info_file = download_info_folder + "/" + gid
+    download_info_file_list = readList(download_info_file)
+#this section is sending unpause request to aria2 . see aria2 documentation for more informations.
     try :
         answer = server.aria2.unpause(gid)
+        version_answer = 'ok'
     except :
         answer = str("None")
+        version_answer = aria2Version()
     print(answer + " unpaused")
+    if version_answer == 'did not respond': 
+        add_link_dictionary = download_info_file_list[9]
+        add_link_dictionary['start_hour'] = None
+        add_link_dictionary['start_minute'] = None
+        add_link_dictionary['end_hour'] = None
+        add_link_dictionary['end_minute'] = None
+        add_link_dictionary['after_download'] = 'None'
+
+        download_info_file_list[1] = "stopped"
+        download_info_file_list[9] = add_link_dictionary
+        writeList(download_info_file , download_info_file_list)
+ 
     return answer
 
 #limit download speed
