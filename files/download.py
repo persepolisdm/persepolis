@@ -379,6 +379,7 @@ def shutDown():
 def downloadStop(gid):
     download_info_file = download_info_folder + "/" + gid
     download_info_file_list = readList(download_info_file)
+    version_answer = 'ok'
 #if status is scheduled so download request is not sended to aria2 yet!
     status = download_info_file_list[1] 
     if status != 'scheduled':
@@ -387,7 +388,6 @@ def downloadStop(gid):
             answer = server.aria2.remove(gid)
             if status == 'downloading':
                 server.aria2.removeDownloadResult(gid)
-            version_answer = 'ok'
         except :
             answer = str ("None")
             version_answer = aria2Version()
