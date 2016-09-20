@@ -29,6 +29,7 @@ class PreferencesWindow(Setting_Ui):
         self.wait_spinBox.setValue(int(self.setting_dict['retry-wait']))
         self.time_out_spinBox.setValue(int(self.setting_dict['timeout']))
         self.connections_spinBox.setValue(int(self.setting_dict['connections']))
+        self.rpc_port_spinbox.setValue(int(self.setting_dict['rpc-port']))
 
         self.download_folder_lineEdit.setText(str(self.setting_dict['download_path']))
         self.temp_download_lineEdit.setText(str(self.setting_dict['download_path_temp']))
@@ -153,12 +154,13 @@ class PreferencesWindow(Setting_Ui):
         download_path_temp_default = str(home_address) + '/.persepolis'
         download_path_default = str(home_address) + '/Downloads/Persepolis'
  
-        self.setting_dict = {'notification' : 'QT notification' , 'after-dialog' : 'yes' , 'tray-icon':'yes', 'max-tries' : 5 , 'retry-wait': 0 , 'timeout' : 60 , 'connections' : 16 , 'download_path_temp' : download_path_temp_default , 'download_path':download_path_default , 'sound' : 'yes' , 'sound-volume':100 , 'style':'Fusion' , 'color-scheme' : 'Persepolis Dark Red' , 'icons':'Archdroid-Red','font' : 'Ubuntu' , 'font-size' : 9  }
+        self.setting_dict = {'rpc-port' : 6801 , 'notification' : 'Native notification' , 'after-dialog' : 'yes' , 'tray-icon':'yes', 'max-tries' : 5 , 'retry-wait': 0 , 'timeout' : 60 , 'connections' : 16 , 'download_path_temp' : download_path_temp_default , 'download_path':download_path_default , 'sound' : 'yes' , 'sound-volume':100 , 'style':'Fusion' , 'color-scheme' : 'Persepolis Dark Red' , 'icons':'Archdroid-Red','font' : 'Ubuntu' , 'font-size' : 9  }
 
         self.tries_spinBox.setValue(int(self.setting_dict['max-tries']))
         self.wait_spinBox.setValue(int(self.setting_dict['retry-wait']))
         self.time_out_spinBox.setValue(int(self.setting_dict['timeout']))
         self.connections_spinBox.setValue(int(self.setting_dict['connections']))
+        self.rpc_port_spinbox.setValue(int(self.setting_dict['rpc-port']))
 
         self.download_folder_lineEdit.setText(str(self.setting_dict['download_path']))
         self.temp_download_lineEdit.setText(str(self.setting_dict['download_path_temp']))
@@ -199,6 +201,7 @@ class PreferencesWindow(Setting_Ui):
         self.setting_dict['retry-wait'] = self.wait_spinBox.value()
         self.setting_dict['timeout'] = self.time_out_spinBox.value()
         self.setting_dict['connections'] = self.connections_spinBox.value()
+        self.setting_dict['rpc-port'] = self.rpc_port_spinbox.value()
         self.setting_dict['download_path'] = self.download_folder_lineEdit.text()
         self.setting_dict['download_path_temp'] = self.temp_download_lineEdit.text()
         self.setting_dict['sound-volume'] = self.volume_dial.value()

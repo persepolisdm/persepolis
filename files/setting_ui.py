@@ -79,6 +79,19 @@ class Setting_Ui(QWidget):
         self.horizontalLayout_2.addWidget(self.connections_spinBox)
 
         self.download_options_verticalLayout.addLayout(self.horizontalLayout_2)
+#rpc_port_label
+        self.rpc_port_label = QLabel(self.layoutWidget)
+        self.rpc_horizontalLayout = QHBoxLayout()
+        self.rpc_horizontalLayout.addWidget(self.rpc_port_label)
+#rpc_port_spinbox
+        self.rpc_port_spinbox = QSpinBox(self.layoutWidget)
+        self.rpc_port_spinbox.setMinimum(1024)
+        self.rpc_port_spinbox.setMaximum(65535)
+        self.rpc_horizontalLayout.addWidget(self.rpc_port_spinbox)
+        self.download_options_verticalLayout.addLayout(self.rpc_horizontalLayout) 
+        
+
+
         self.setting_tabWidget.addTab(self.download_options_tab, "")
 #save_as_tab
         self.save_as_tab = QWidget()
@@ -234,7 +247,10 @@ class Setting_Ui(QWidget):
         self.connections_label.setToolTip( "<html><head/><body><p>Using multiple connections can help speed up your download.</p></body></html>")
         self.connections_label.setText( "Number of connections : ")
         self.connections_spinBox.setToolTip( "<html><head/><body><p>Using multiple connections can help speed up your download.</p></body></html>")
+        self.rpc_port_label.setText("RPC port number : ")
+        self.rpc_port_spinbox.setToolTip("<html><head/><body><p> Specify a port number for JSON-RPC/XML-RPC server to listen to. Possible Values: 1024 - 65535 Default: 6801 </p></body></html>")
         self.setting_tabWidget.setTabText(self.setting_tabWidget.indexOf(self.download_options_tab),  "Download Options")
+
         self.download_folder_label.setText( "Download Folder : ")
         self.download_folder_pushButton.setText( "Change")
         self.temp_download_label.setText( "Temporary Download Folder : ")
