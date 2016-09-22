@@ -45,7 +45,8 @@ parser.add_argument('--name',action='store',nargs = 1 , help='Requested file nam
 parser.add_argument('--execute',action='store',nargs=1, help='execute or not!' )
 parser.add_argument('--default',action='store_true',help='restore default setting' )
 parser.add_argument('--clear',action='store_true',help='clear download list' )
-parser.add_argument('--version', action='version', version='Persepolis Download Manager 2.1.1 Unstable')
+parser.add_argument('--tray',action='store_true',help='Persepolis is starting in tray icon' )
+parser.add_argument('--version', action='version', version='Persepolis Download Manager 2.1.1.0702 Unstable')
 args = parser.parse_args()
 
 #Mozilla firefox flashgot will send download information whith terminal arguments(link , referer , cookie , agent , headers , name )
@@ -73,6 +74,10 @@ if args.default :
         print("Persepolis couldn't restore default")
     sys.exit(0)
 
+if args.tray :
+    start_in_tray = 'yes'
+else:
+    start_in_tray = 'no'
 
 if args.link :
     add_link_dictionary ['link'] = "".join(args.link)
@@ -132,8 +137,11 @@ if "".join(args.execute) == "yes":
 
 
 
-        mainwindow = MainWindow()
-        mainwindow.show()
+        mainwindow = MainWindow( start_in_tray )
+        if start_in_tray == 'yes':
+            mainwindow.hide()
+        else:
+            mainwindow.show()
         sys.exit(persepolis_download_manager.exec_())
     else:
          sys.exit(0)

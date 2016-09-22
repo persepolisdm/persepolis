@@ -183,8 +183,9 @@ class CheckFlashgot(QThread):
 
 
 class MainWindow(MainWindow_Ui):
-    def __init__(self):
+    def __init__(self , start_in_tray):
         super().__init__()
+#system_tray_icon
         self.system_tray_icon = QSystemTrayIcon() 
         self.system_tray_icon.setIcon(QIcon.fromTheme('persepolis',QIcon(':/icon.svg') ))
         system_tray_menu = QMenu()
@@ -202,12 +203,12 @@ class MainWindow(MainWindow_Ui):
         f.close()
         setting_dict_str = str(setting_file_lines[0].strip())
         setting_dict = ast.literal_eval(setting_dict_str) 
-        if setting_dict['tray-icon'] != 'yes': 
+        if setting_dict['tray-icon'] != 'yes' and start_in_tray == 'no' : 
             self.minimizeAction.setEnabled(False)
             self.trayAction.setChecked(False)
             self.system_tray_icon.hide()
 
-
+#statusbar
         self.statusbar.showMessage('Please Wait ...')
         self.checkSelectedRow()
 
@@ -449,13 +450,14 @@ class MainWindow(MainWindow_Ui):
                     f.close()
                     setting_dict_str = str(setting_file_lines[0].strip())
                     setting_dict = ast.literal_eval(setting_dict_str) 
- 
-                    if progress_window.status == "complete" and setting_dict['after-dialog'] == 'yes' :
-                        afterdownloadwindow = AfterDownloadWindow(download_info_file_list,setting_file)
-                        self.afterdownload_list.append(afterdownloadwindow)
-                        self.afterdownload_list[len(self.afterdownload_list) - 1].show()
-                    elif progress_window.status == "complete" and setting_dict['after-dialog'] == 'no' :
-                        notifySend("Download Complete" ,str(download_info_file_list[0])  , 10000 , 'ok' , systemtray = self.system_tray_icon )
+
+                    if progress_window.status == "complete" :
+                        if setting_dict['after-dialog'] == 'yes' :
+                            afterdownloadwindow = AfterDownloadWindow(download_info_file_list,setting_file)
+                            self.afterdownload_list.append(afterdownloadwindow)
+                            self.afterdownload_list[len(self.afterdownload_list) - 1].show()
+                        else :
+                            notifySend("Download Complete" ,str(download_info_file_list[0])  , 10000 , 'ok' , systemtray = self.system_tray_icon )
 
 
 
@@ -697,15 +699,32 @@ class MainWindow(MainWindow_Ui):
         self.addlinkwindows_list.append(addlinkwindow)
         self.addlinkwindows_list[len(self.addlinkwindows_list) - 1].show()
 
-    def callBack(self , add_link_dictionary):
+    def callBack(self , add_link_dictionary , download_later):
+        #aria2 identifies each download by the ID called GID. The GID must be hex string of 16 characters.
         gid = self.gidGenerator()
 
-        download_info_file_list = ['***','waiting','***','***','***','***','***','***',gid , add_link_dictionary]
+	#download_info_file_list is a list that contains ['file_name' , 'status' , 'size' , 'downloaded size' ,'download percentage' , 'number of connections' ,'Transfer rate' , 'estimate_time_left' , 'gid' , 'add_link_dictionary']
+
+        #if user or flashgot defined filename then file_name is valid in add_link_dictionary['out']
+        if add_link_dictionary['out'] != None :
+            file_name = add_link_dictionary['out']
+        else:
+            file_name = '***'
+
+
+        if download_later == 'no':
+            download_info_file_list = [ file_name ,'waiting','***','***','***','***','***','***',gid , add_link_dictionary]
+        else:
+            download_info_file_list = [ file_name ,'stopped','***','***','***','***','***','***',gid , add_link_dictionary]
+
+
+        #after user pushs ok button on add link window , a gid is generating for download and a file (with name of gid) is creating in download_info_folder . this file is containing download_info_file_list
         download_info_file = config_folder + "/download_info/" + gid
         os.system("touch " + download_info_file )
          
         writeList(download_info_file , download_info_file_list)
         
+        #creating a row in download_table
         self.download_table.insertRow(0)
         j = 0
         download_info_file_list[9] = str(download_info_file_list[9])
@@ -713,30 +732,36 @@ class MainWindow(MainWindow_Ui):
             item = QTableWidgetItem(i)
             self.download_table.setItem(0,j,item)
             j = j + 1
-
+        #this section is adding checkBox to the row , if user selected selectAction
         if self.selectAction.isChecked() == True:
             item = self.download_table.item(0 , 0)
             item.setFlags(QtCore.Qt.ItemIsUserCheckable | QtCore.Qt.ItemIsEnabled)
             item.setCheckState(QtCore.Qt.Unchecked)
- 
+        # adding gid of download to download_list_file . download_list_file contains gid of all downloads.
         f = Open (download_list_file , "a")
         f.writelines(gid + "\n")
         f.close()
 
-
+        #adding gid to download_list_file_active . this file contains gid of active downloads . 
         f = Open (download_list_file_active , "a")
         f.writelines(gid + "\n")
         f.close()
-        new_download = DownloadLink(gid)
-        self.threadPool.append(new_download)
-        self.threadPool[len(self.threadPool) - 1].start()
-        self.threadPool[len(self.threadPool) - 1].ARIA2NOTRESPOND.connect(self.aria2NotRespond)
-        self.progressBarOpen(gid) 
-        if add_link_dictionary['start_hour'] == None :
-            message = "Download Starts"
-        else:
-            message = "Download Scheduled"
-        notifySend(message ,'' , 10000 , 'no', systemtray = self.system_tray_icon )
+
+        #if user didn't press download_later_pushButton in add_link window then this section is creating new qthread for new download!
+        if download_later == 'no':
+            new_download = DownloadLink(gid)
+            self.threadPool.append(new_download)
+            self.threadPool[len(self.threadPool) - 1].start()
+            self.threadPool[len(self.threadPool) - 1].ARIA2NOTRESPOND.connect(self.aria2NotRespond)
+
+        #opening progress window for download.
+            self.progressBarOpen(gid) 
+        #notifiying user for scheduled download or download starting.
+            if add_link_dictionary['start_hour'] == None :
+                message = "Download Starts"
+            else:
+                message = "Download Scheduled"
+            notifySend(message ,'' , 10000 , 'no', systemtray = self.system_tray_icon )
 
  
 
@@ -892,6 +917,7 @@ class MainWindow(MainWindow_Ui):
         print("Please Wait...")
         self.hide()
         self.system_tray_icon.hide()
+
         download.shutDown()
         sleep(0.5)
         global shutdown_notification

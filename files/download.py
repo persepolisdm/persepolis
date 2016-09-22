@@ -278,7 +278,7 @@ def downloadStatus(gid):
     final_download_path = add_link_dictionary ['final_download_path']
 
 
-#if final_download_path did not defined and download_path equaled to user default download folder then find final_download_path according to file extension
+#if final_download_path did not defined and download_path equaled to user default download folder then this section is finding final_download_path according to file extension
     if final_download_path == None :
         if file_name != None :
 #finding default download_path
@@ -291,6 +291,9 @@ def downloadStatus(gid):
             if setting_dict['download_path'] == download_path :
                 final_download_path = findDownloadPath(file_name , download_path)
                 add_link_dictionary ['final_download_path'] = final_download_path
+            else :
+                final_download_path = download_path 
+                add_link_dictionary['final_download_path'] = final_download_path
 #if download completed move file to the download folder
     if (status_str == "complete"):
         if final_download_path != None :

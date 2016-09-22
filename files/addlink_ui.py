@@ -28,14 +28,9 @@ class AddLinkWindow_Ui(QWidget):
     def __init__(self):
         super().__init__()
 #window
-        self.resize(475, 465)
+        self.resize(520, 465)
         sizePolicy = QSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.sizePolicy().hasHeightForWidth())
-        self.setSizePolicy(sizePolicy)
-        self.setMinimumSize(QtCore.QSize(475, 465))
-        self.setMaximumSize(QtCore.QSize(16777215, 16777215))
+        self.setMinimumSize(QtCore.QSize(520, 465))
         self.setWindowIcon(QIcon.fromTheme('persepolis' ,QIcon(':/icon.svg')))
 
         self.widget = QWidget(self)
@@ -253,8 +248,10 @@ class AddLinkWindow_Ui(QWidget):
 
         self.ok_pushButton = QPushButton(self.widget)
         self.ok_pushButton.setIcon(QIcon(icons + 'ok'))
-        self.buttons_horizontalLayout.addWidget(self.ok_pushButton)
+
         self.buttons_horizontalLayout.addWidget(self.cancel_pushButton)
+        self.buttons_horizontalLayout.addWidget(self.ok_pushButton)
+
         self.connections_horizontalLayout.addLayout(self.buttons_horizontalLayout)
         self.addlink_verticalLayout.addLayout(self.connections_horizontalLayout)
 
@@ -285,6 +282,5 @@ class AddLinkWindow_Ui(QWidget):
         self.connections_label.setText( "Number Of Connections :")
         self.cancel_pushButton.setText( "Cancel")
         self.ok_pushButton.setText( "OK")
-
 
 

@@ -3,8 +3,9 @@
 
 
 from PyQt5 import QtWidgets
-from PyQt5.QtWidgets import QHBoxLayout ,  QApplication ,  QFileDialog,  QCheckBox , QLineEdit  
-import os , string , ast
+from PyQt5.QtWidgets import QHBoxLayout ,  QApplication ,  QFileDialog,  QCheckBox , QLineEdit , QPushButton  
+from PyQt5.QtGui import QIcon
+import os , string , ast , functools
 from addlink_ui import AddLinkWindow_Ui
 from newopen import Open
 
@@ -14,6 +15,14 @@ config_folder = str(home_address) + "/.config/persepolis_download_manager"
 
 #setting
 setting_file = config_folder + '/setting'
+f = Open(setting_file)
+setting_file_lines = f.readlines()
+f.close()
+setting_dict_str = str(setting_file_lines[0].strip())
+setting_dict = ast.literal_eval(setting_dict_str) 
+
+icons =':/' + str(setting_dict['icons']) + '/'
+
 
 class AddLinkWindow(AddLinkWindow_Ui):
     def __init__(self , callback,flashgot_add_link_dictionary = {}):
@@ -34,6 +43,14 @@ class AddLinkWindow(AddLinkWindow_Ui):
 
         self.link_verticalLayout.addLayout(self.change_name_horizontalLayout)
 
+#adding download_later button
+        self.download_later_pushButton = QPushButton(self.widget)
+        self.download_later_pushButton.setIcon(QIcon(icons + 'stop'))
+
+
+        self.buttons_horizontalLayout.addWidget(self.download_later_pushButton)
+
+        self.download_later_pushButton.setText("Download later")
 #entry initialization            
 
         f = Open(setting_file)
@@ -100,10 +117,11 @@ class AddLinkWindow(AddLinkWindow_Ui):
 #connect folder_pushButton
         self.folder_pushButton.clicked.connect(self.changeFolder)
 
-#connect OK and canel button
+#connect OK and canel download_later button
 
         self.cancel_pushButton.clicked.connect(self.cancelButtonPressed)
-        self.ok_pushButton.clicked.connect(self.okButtonPressed)
+        self.ok_pushButton.clicked.connect(functools.partial(self.okButtonPressed ,download_later = 'no'))
+        self.download_later_pushButton.clicked.connect(functools.partial(self.okButtonPressed , download_later = 'yes'))
 #frames and checkBoxes
         self.proxy_frame.setEnabled(False)
         self.proxy_checkBox.toggled.connect(self.proxyFrame)
@@ -191,7 +209,7 @@ class AddLinkWindow(AddLinkWindow_Ui):
     def cancelButtonPressed(self,button):
         self.close()
 
-    def okButtonPressed(self,button):
+    def okButtonPressed(self,button , download_later):
         global init_file
         f = Open(init_file , "w")
 #writing user's input data to init file
@@ -282,7 +300,7 @@ class AddLinkWindow(AddLinkWindow_Ui):
 
 
         del self.flashgot_add_link_dictionary
-        self.callback(self.add_link_dictionary)
+        self.callback(self.add_link_dictionary , download_later)
 
 
         self.close()

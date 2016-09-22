@@ -34,6 +34,9 @@ class AfterDownloadWindow(AfterDownloadWindow_Ui):
 #play notifications
         playNotification('notifications/ok.ogg')
 
+#disabling link_lineEdit and save_as_lineEdit
+        self.link_lineEdit.setEnabled(False)
+        self.save_as_lineEdit.setEnabled(False)
     def openFile(self):
 #executing file
         add_link_dictionary = self.download_info_file_list[9]
