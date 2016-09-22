@@ -931,7 +931,6 @@ class MainWindow(MainWindow_Ui):
             self.hide()
 
     def showMainWindow(self):
-        self.show()
         self.showNormal()
         self.minimizeAction.setText('Minimize to system tray')
         self.minimizeAction.setIcon(QIcon(icons + 'minimize'))
