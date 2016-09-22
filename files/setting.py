@@ -2,9 +2,9 @@
 # -*- coding: utf-8 -*-
 
 from setting_ui import Setting_Ui
-import ast , os
+import ast , os , copy
 from PyQt5 import QtWidgets
-from PyQt5.QtWidgets import QFileDialog , QStyleFactory 
+from PyQt5.QtWidgets import QFileDialog , QStyleFactory , QMessageBox 
 from PyQt5.QtGui import QFont
 from newopen import Open
 
@@ -24,6 +24,10 @@ class PreferencesWindow(Setting_Ui):
         f.close()
         setting_dict_str = str(setting_file_lines[0].strip())
         self.setting_dict = ast.literal_eval(setting_dict_str) 
+        #in okPushButtonPressed , function is comparing user_dict and setting_dict. and if rpc_port_spinbox , style_comboBox , color_scheme
+        # , icon_comboBox , fontComboBox was changed , then a notification window is showing for notify user to restart program!
+        self.user_dict = copy.deepcopy(self.setting_dict)
+
 #initialization
         self.tries_spinBox.setValue(int(self.setting_dict['max-tries']))
         self.wait_spinBox.setValue(int(self.setting_dict['retry-wait']))
@@ -249,6 +253,14 @@ class PreferencesWindow(Setting_Ui):
         f = Open(setting_file , 'w')
         f.writelines(str(self.setting_dict))
         f.close()
+#comparing user_dict Vs setting_dict
+        for i in ['rpc-port' , 'style' , 'color-scheme' , 'icons' , 'font' , 'font-size' ] :
+            if self.user_dict[i] != self.setting_dict[i] :
+                restart_messageBox = QMessageBox()                
+                restart_messageBox.setText('<b>Some changes take effect after restarting persepolis</b>')
+                restart_messageBox.setWindowTitle('Restart Persepolis!')
+                restart_messageBox.exec_()
+                break
 
         self.close()
 
