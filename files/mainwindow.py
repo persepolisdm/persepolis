@@ -159,7 +159,8 @@ class DownloadLink(QThread):
                 self.ARIA2NOTRESPOND.emit()
 
         
-
+#this thread is checking that user called flashgot .
+#assume that user executed program before . if user is clicking on persepolis icon in menu this tread emit SHOWMAINWINDOWSIGNAL
 class CheckFlashgot(QThread):
     CHECKFLASHGOTSIGNAL = pyqtSignal()
     SHOWMAINWINDOWSIGNAL = pyqtSignal()
@@ -931,6 +932,7 @@ class MainWindow(MainWindow_Ui):
 
     def showMainWindow(self):
         self.show()
+        self.showNormal()
         self.minimizeAction.setText('Minimize to system tray')
         self.minimizeAction.setIcon(QIcon(icons + 'minimize'))
  
