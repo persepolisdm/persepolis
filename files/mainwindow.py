@@ -207,7 +207,9 @@ class MainWindow(MainWindow_Ui):
             self.minimizeAction.setEnabled(False)
             self.trayAction.setChecked(False)
             self.system_tray_icon.hide()
-
+        if start_in_tray == 'yes':
+            self.minimizeAction.setText('Show main Window')
+            self.minimizeAction.setIcon(QIcon(icons + 'window'))
 #statusbar
         self.statusbar.showMessage('Please Wait ...')
         self.checkSelectedRow()
