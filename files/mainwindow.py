@@ -916,8 +916,9 @@ class MainWindow(MainWindow_Ui):
  
 #close event
     def closeEvent(self, event):
+        QCoreApplication.instance().closeAllWindows()
         print("Please Wait...")
-        self.hide()
+        self.stopAllDownloads(event)
         self.system_tray_icon.hide()
 
         download.shutDown()
@@ -927,7 +928,6 @@ class MainWindow(MainWindow_Ui):
         while shutdown_notification != 2:
             sleep (0.1)
 
-        QCoreApplication.instance().closeAllWindows()
 
         QCoreApplication.instance().quit
         print("Persepolis Closed")
