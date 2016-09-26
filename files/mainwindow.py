@@ -158,12 +158,14 @@ class DownloadLink(QThread):
             if answer == 'did not respond':
                 self.ARIA2NOTRESPOND.emit()
 
-        
-#this thread is checking that user called flashgot .
-#assume that user executed program before . if user is clicking on persepolis icon in menu this tread emit SHOWMAINWINDOWSIGNAL
-class CheckFlashgot(QThread):
+#CheckingThread have 3 duty!        
+#1-this class is checking that user called flashgot .
+#2-assume that user executed program before . if user is clicking on persepolis icon in menu this tread emit SHOWMAINWINDOWSIGNAL
+#3-this class is checking aria2 rpc connection! if aria rpc is not availabile , this class restarts aria!
+class CheckingThread(QThread):
     CHECKFLASHGOTSIGNAL = pyqtSignal()
     SHOWMAINWINDOWSIGNAL = pyqtSignal()
+    RECONNECTARIASIGNAL = pyqtSignal(str)
     def __init__(self):
         QThread.__init__(self)
 
@@ -171,6 +173,7 @@ class CheckFlashgot(QThread):
         global shutdown_notification
         while shutdown_notification == 0 and aria_startup_answer != 'ready':
             sleep (2)
+        j = 0
         while shutdown_notification == 0:
             if os.path.isfile("/tmp/persepolis/show-window") == True:
                 os.system('rm /tmp/persepolis/show-window ' )
@@ -178,10 +181,22 @@ class CheckFlashgot(QThread):
             sleep(1)
             if os.path.isfile("/tmp/persepolis-flashgot")  == True and os.path.isfile("/tmp/persepolis-flashgot.lock") == False:
                 self.CHECKFLASHGOTSIGNAL.emit()
-
-
-
-
+             
+            j = j + 1
+            if j == 30 : #if is executed every 30 seconds
+                j = 0
+                answer = download.aria2Version() #checking aria2 availability by aria2Version function
+                if answer == 'did not respond':
+                    for i in range(5):
+                        answer = download.startAria() #starting aria2
+                        if answer == 'did not respond' and i != 4: # checking answer
+                            sleep(2)
+                        else :
+                            break
+                    self.RECONNECTARIASIGNAL.emit(str(answer))  #emitting answer , if answer is 'did not respond' , it means that reconnecting aria was not successful         
+ 
+   
+ 
 class MainWindow(MainWindow_Ui):
     def __init__(self , start_in_tray):
         super().__init__()
@@ -285,23 +300,26 @@ class MainWindow(MainWindow_Ui):
         self.progress_window_list = []
         self.afterdownload_list = []
         self.progress_window_list_dict = {}
-
+#CheckDownloadInfoThread
         check_download_info = CheckDownloadInfoThread()
         self.threadPool.append(check_download_info)
         self.threadPool[1].start()
         self.threadPool[1].DOWNLOAD_INFO_SIGNAL.connect(self.checkDownloadInfo)
-
+#CheckSelectedRowThread
         check_selected_row = CheckSelectedRowThread()
         self.threadPool.append(check_selected_row)
         self.threadPool[2].start()
         self.threadPool[2].CHECKSELECTEDROWSIGNAL.connect(self.checkSelectedRow)
-
-        check_flashgot = CheckFlashgot()
+#CheckingThread
+        check_flashgot = CheckingThread()
         self.threadPool.append(check_flashgot)
         self.threadPool[3].start()
         self.threadPool[3].CHECKFLASHGOTSIGNAL.connect(self.checkFlashgot)
         self.threadPool[3].SHOWMAINWINDOWSIGNAL.connect(self.showMainWindow)
+        self.threadPool[3].RECONNECTARIASIGNAL.connect(self.reconnectAria)
 
+
+#if user is doubleclicking on an item in download_table , then openFile function is executing
         self.download_table.itemDoubleClicked.connect(self.openFile)
 
 # startAriaMessage function is showing some message on statusbar and sending notification when aria failed to start! see StartAria2Thread for more details
@@ -316,6 +334,37 @@ class MainWindow(MainWindow_Ui):
         else:
             self.statusbar.showMessage('Error...')
             notifySend('Persepolis can not connect to Aria2' , 'Restart Persepolis' ,10000,'critical' , systemtray = self.system_tray_icon )
+
+    def reconnectAria(self,message):
+        #this function is executing if RECONNECTARIASIGNAL is emitted by CheckingThread . 
+        #if message is 'did not respond' then a message(Persepolis can not connect to Aria2) shown 
+        #if message is not 'did not respond' , it means that reconnecting Aria2 was successful. 
+        if message == 'did not respond' : 
+            self.statusbar.showMessage('Error...')
+            notifySend('Persepolis can not connect to Aria2' , 'Restart Persepolis' ,10000,'critical' , systemtray = self.system_tray_icon )
+        else:
+            self.statusbar.showMessage('Reconnecting aria2...')
+            #this section is checking download status of items in download table , if status is downloading then restarting this download.
+            for row in range(self.download_table.rowCount()):
+                status_download_table = str(self.download_table.item( row , 1 ).text())
+                gid = self.download_table.item( row , 8).text()
+                if status_download_table == 'downloading': 
+                    new_download = DownloadLink(gid)
+                    self.threadPool.append(new_download)
+                    self.threadPool[len(self.threadPool) - 1].start()
+                    self.threadPool[len(self.threadPool) - 1].ARIA2NOTRESPOND.connect(self.aria2NotRespond)
+            #if status is paused , then this section is stopping download.
+                if status_download_table == 'paused':
+                    download.downloadStop(gid)
+                    notifySend('Aria2 did not respond' , 'Try agian!' ,10000,'critical' , systemtray = self.system_tray_icon )
+
+            self.statusbar.showMessage('Persepolis Download Manager') 
+
+           
+
+
+
+
 
     def checkDownloadInfo(self,gid):
         try:
@@ -340,7 +389,7 @@ class MainWindow(MainWindow_Ui):
 #remove gid of completed download from active downloads list file
                 elif i == 1 :
                     status = str(download_info_file_list[i])
-                    status_download_table = str(self.download_table.item(row , 1 ) . text())
+                    status_download_table = str(self.download_table.item(row , 1 ).text())
                     if status == "complete":
                         f = Open(download_list_file_active)
                         download_list_file_active_lines = f.readlines()

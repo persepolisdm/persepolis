@@ -410,17 +410,17 @@ def downloadStop(gid):
     else :
         answer = 'stopped'
 
-    if version_answer == 'did not respond' or answer != 'None' or (answer == 'None' and status == 'waiting'):
-        add_link_dictionary = download_info_file_list[9]
-        add_link_dictionary['start_hour'] = None
-        add_link_dictionary['start_minute'] = None
-        add_link_dictionary['end_hour'] = None
-        add_link_dictionary['end_minute'] = None
-        add_link_dictionary['after_download'] = 'None'
+#     if version_answer == 'did not respond' or answer != 'None' or (answer == 'None' and status == 'waiting'):
+    add_link_dictionary = download_info_file_list[9]
+    add_link_dictionary['start_hour'] = None
+    add_link_dictionary['start_minute'] = None
+    add_link_dictionary['end_hour'] = None
+    add_link_dictionary['end_minute'] = None
+    add_link_dictionary['after_download'] = 'None'
 
-        download_info_file_list[1] = "stopped"
-        download_info_file_list[9] = add_link_dictionary
-        writeList(download_info_file , download_info_file_list)
+    download_info_file_list[1] = "stopped"
+    download_info_file_list[9] = add_link_dictionary
+    writeList(download_info_file , download_info_file_list)
     return answer
  
 
