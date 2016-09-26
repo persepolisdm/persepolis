@@ -142,7 +142,12 @@ def downloadAria(gid):
 
     if start_time_status != 'stopped':
 #send download request to aria2
-        aria_dict = {'gid':gid ,'max-tries' : str(setting_dict['max-tries']) , 'retry-wait': int(setting_dict['retry-wait']) , 'timeout' : int(setting_dict['timeout']) , 'header': header_list ,'out': out , 'user-agent': user_agent ,  'referer': referer ,  'all-proxy': ip_port , 'max-download-limit': limit , 'all-proxy-user':str(proxy_user), 'all-proxy-passwd':str(proxy_passwd), 'http-user':str(download_user), 'http-passwd':str(download_passwd) , 'split':'16', 'max-connection-per-server':str(connections) , 'min-split-size':'1M', 'continue':'true', 'dir':str(download_path_temp) } 
+        if link[0:5] != "https":
+            aria_dict = {'gid':gid ,'max-tries' : str(setting_dict['max-tries']) , 'retry-wait': int(setting_dict['retry-wait']) , 'timeout' : int(setting_dict['timeout']) , 'header': header_list ,'out': out , 'user-agent': user_agent ,  'referer': referer ,  'all-proxy': ip_port , 'max-download-limit': limit , 'all-proxy-user':str(proxy_user), 'all-proxy-passwd':str(proxy_passwd), 'http-user':str(download_user), 'http-passwd':str(download_passwd) , 'split':'16', 'max-connection-per-server':str(connections) , 'min-split-size':'1M', 'continue':'true', 'dir':str(download_path_temp) } 
+        else:
+            aria_dict = {'gid':gid ,'max-tries' : str(setting_dict['max-tries']) , 'retry-wait': int(setting_dict['retry-wait']) , 'timeout' : int(setting_dict['timeout']) , 'header': header_list ,'out': out , 'user-agent': user_agent ,  'referer': referer ,  'all-proxy': ip_port , 'max-download-limit': limit , 'all-proxy-user':str(proxy_user), 'all-proxy-passwd':str(proxy_passwd), 'split':'16', 'max-connection-per-server':str(connections) , 'min-split-size':'1M', 'continue':'true', 'dir':str(download_path_temp) } 
+
+
         try:
             if ("http" in link[0:5]): 
                 answer = server.aria2.addUri([link],aria_dict)
