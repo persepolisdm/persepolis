@@ -43,14 +43,6 @@ class AddLinkWindow(AddLinkWindow_Ui):
 
         self.link_verticalLayout.addLayout(self.change_name_horizontalLayout)
 
-#adding download_later button
-        self.download_later_pushButton = QPushButton(self.widget)
-        self.download_later_pushButton.setIcon(QIcon(icons + 'stop'))
-
-
-        self.buttons_horizontalLayout.addWidget(self.download_later_pushButton)
-
-        self.download_later_pushButton.setText("Download later")
 #entry initialization            
 
         f = Open(setting_file)

@@ -242,13 +242,18 @@ class AddLinkWindow_Ui(QWidget):
         self.connections_horizontalLayout.addWidget(self.connections_frame)
 
         self.buttons_horizontalLayout = QHBoxLayout()
-#ok cancel buttons
+#ok cancel download_later buttons
+        self.download_later_pushButton = QPushButton(self.widget)
+        self.download_later_pushButton.setIcon(QIcon(icons + 'stop'))
+
+
         self.cancel_pushButton = QPushButton(self.widget)
         self.cancel_pushButton.setIcon(QIcon(icons + 'remove'))
 
         self.ok_pushButton = QPushButton(self.widget)
         self.ok_pushButton.setIcon(QIcon(icons + 'ok'))
 
+        self.buttons_horizontalLayout.addWidget(self.download_later_pushButton)
         self.buttons_horizontalLayout.addWidget(self.cancel_pushButton)
         self.buttons_horizontalLayout.addWidget(self.ok_pushButton)
 
@@ -283,4 +288,5 @@ class AddLinkWindow_Ui(QWidget):
         self.cancel_pushButton.setText( "Cancel")
         self.ok_pushButton.setText( "OK")
 
+        self.download_later_pushButton.setText("Download later")
 

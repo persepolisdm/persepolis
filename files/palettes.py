@@ -38,6 +38,7 @@ class DarkRedPallete(QPalette):
         self.setColor(QPalette.Disabled , QPalette.Base , QColor(32 , 32 , 32))
 
 
+
 class DarkBluePallete(QPalette):
     def __init__(self):
         super().__init__()

@@ -25,6 +25,9 @@ setting_file = config_folder + '/setting'
 class PropertiesWindow(AddLinkWindow_Ui):
     def __init__(self,callback,gid):
         super().__init__()
+
+        self.download_later_pushButton.hide() #hiding download_later_pushButton
+
         self.callback = callback
         self.gid = gid
         
