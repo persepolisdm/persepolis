@@ -69,6 +69,7 @@ class AddLinkWindow(AddLinkWindow_Ui):
         self.download_folder_lineEdit.setEnabled(False)
 
         self.ok_pushButton.setEnabled(False)
+        self.download_later_pushButton.setEnabled(False)
         self.link_lineEdit.textChanged.connect(self.linkLineChanged)
 #AddLink - checking clipboard for link!   
         if 'link' in self.flashgot_add_link_dictionary : 
@@ -187,8 +188,10 @@ class AddLinkWindow(AddLinkWindow_Ui):
     def linkLineChanged(self,lineEdit):
         if str(self.link_lineEdit.text()) == '' :
             self.ok_pushButton.setEnabled(False)
+            self.download_later_pushButton.setEnabled(False)
         else :
             self.ok_pushButton.setEnabled(True)
+            self.download_later_pushButton.setEnabled(True)
 
     def changeName(self,checkBoxes):
         if self.change_name_checkBox.isChecked() == True:
