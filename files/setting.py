@@ -51,7 +51,7 @@ class PreferencesWindow(Setting_Ui):
         if current_style_index != -1 :
             self.style_comboBox.setCurrentIndex(current_style_index)
 #set color_scheme
-        color_scheme = ['System' , 'Persepolis Dark Red' , 'Persepolis Dark Blue' , 'Persepolis ArcDark Red' , 'Persepolis ArcDark Blue' ]
+        color_scheme = ['System' , 'Persepolis Dark Red' , 'Persepolis Dark Blue' , 'Persepolis ArcDark Red' , 'Persepolis ArcDark Blue','Persepolis Light Red' , 'Persepolis Light Blue' ]
         self.color_comboBox.addItems(color_scheme)
             
         current_color_index = self.color_comboBox.findText(str(self.setting_dict['color-scheme']))

@@ -8,7 +8,7 @@ import os , sys , time , ast , argparse
 from mainwindow import MainWindow
 from PyQt5.QtWidgets import QApplication  
 from PyQt5.QtGui import QFont   
-from palettes import DarkRedPallete , DarkBluePallete , ArcDarkRedPallete , ArcDarkBluePallete
+from palettes import DarkRedPallete , DarkBluePallete , ArcDarkRedPallete , ArcDarkBluePallete , LightRedPallete , LightBluePallete
 from bubble import notifySend
 
 # initialization
@@ -133,9 +133,15 @@ if "".join(args.execute) == "yes":
             persepolis_arcdark_blue = ArcDarkBluePallete()
             persepolis_download_manager.setPalette(persepolis_arcdark_blue)
             persepolis_download_manager.setStyleSheet("QMenu::item:selected {background-color : #5294e2 ; color : white } QToolTip { color: #ffffff; background-color: #353945; border: 1px solid white; } QPushButton {background-color: #353945  } QTabWidget {background-color : #353945;} QMenu {background-color: #353945 }")
+        elif color_scheme == 'Persepolis Light Red':
+            persepolis_light_red = LightRedPallete()
+            persepolis_download_manager.setPalette(persepolis_light_red)
+            persepolis_download_manager.setStyleSheet("QMenu::item:selected {background-color : #d64937 ;color : white} QToolTip { color: #ffffff; background-color: #353535; border: 1px solid white; }")
 
-
-
+        elif color_scheme == 'Persepolis Light Blue':
+            persepolis_light_blue = LightBluePallete()
+            persepolis_download_manager.setPalette(persepolis_light_blue)
+            persepolis_download_manager.setStyleSheet("QMenu::item:selected { background-color : #2a82da ;color : white } QToolTip { color: #ffffff; background-color: #353535; border: 1px solid white; }")
 
         mainwindow = MainWindow( start_in_tray )
         if start_in_tray == 'yes':
