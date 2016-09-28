@@ -405,12 +405,10 @@ def downloadStop(gid):
                 server.aria2.removeDownloadResult(gid)
         except :
             answer = str ("None")
-            version_answer = aria2Version()
         print(answer + " stopped")
     else :
         answer = 'stopped'
 
-#     if version_answer == 'did not respond' or answer != 'None' or (answer == 'None' and status == 'waiting'):
     add_link_dictionary = download_info_file_list[9]
     add_link_dictionary['start_hour'] = None
     add_link_dictionary['start_minute'] = None
@@ -434,21 +432,9 @@ def downloadPause(gid):
         version_answer = 'ok'
     except :
         answer = str("None")
-        version_answer = aria2Version()
         
     print(answer + " paused")
-    if version_answer == 'did not respond': 
-        add_link_dictionary = download_info_file_list[9]
-        add_link_dictionary['start_hour'] = None
-        add_link_dictionary['start_minute'] = None
-        add_link_dictionary['end_hour'] = None
-        add_link_dictionary['end_minute'] = None
-        add_link_dictionary['after_download'] = 'None'
 
-        download_info_file_list[1] = "stopped"
-        download_info_file_list[9] = add_link_dictionary
-        writeList(download_info_file , download_info_file_list)
- 
     return answer
 
 
@@ -463,20 +449,7 @@ def downloadUnpause(gid):
         version_answer = 'ok'
     except :
         answer = str("None")
-        version_answer = aria2Version()
-    print(answer + " unpaused")
-    if version_answer == 'did not respond': 
-        add_link_dictionary = download_info_file_list[9]
-        add_link_dictionary['start_hour'] = None
-        add_link_dictionary['start_minute'] = None
-        add_link_dictionary['end_hour'] = None
-        add_link_dictionary['end_minute'] = None
-        add_link_dictionary['after_download'] = 'None'
 
-        download_info_file_list[1] = "stopped"
-        download_info_file_list[9] = add_link_dictionary
-        writeList(download_info_file , download_info_file_list)
- 
     return answer
 
 #limit download speed

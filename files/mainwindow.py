@@ -29,8 +29,9 @@ shutdown_notification = 0
 # remove_flag : 0 >> normal situation ; 1 >> remove button or delete button pressed by user ; 2 >> check_download_info function is stopping until remove operation done ; 3 >> deleteFileAction is done it's job and It is called removeButtonPressed function
 global remove_flag
 remove_flag = 0
-
-
+#when rpc connection between persepolis and aria is disconnected >> aria2_disconnected = 1
+global aria2_disconnected
+aria2_disconnected = 0
 
 home_address = os.path.expanduser("~")
 config_folder = str(home_address) + "/.config/persepolis_download_manager"
@@ -155,7 +156,7 @@ class DownloadLink(QThread):
         answer = download.downloadAria(self.gid)
         if answer == 'None':
             version_answer = download.aria2Version()
-            if answer == 'did not respond':
+            if version_answer == 'did not respond':
                 self.ARIA2NOTRESPOND.emit()
 
 #CheckingThread have 3 duty!        
@@ -171,6 +172,7 @@ class CheckingThread(QThread):
 
     def run(self):
         global shutdown_notification
+        global aria2_disconnected
         while shutdown_notification == 0 and aria_startup_answer != 'ready':
             sleep (2)
         j = 0
@@ -183,8 +185,10 @@ class CheckingThread(QThread):
                 self.CHECKFLASHGOTSIGNAL.emit()
              
             j = j + 1
-            if j == 30 : #if is executed every 30 seconds
+#every 30 seconds
+            if j == 30 or aria2_disconnected == 1 : 
                 j = 0
+                aria2_disconnected = 0
                 answer = download.aria2Version() #checking aria2 availability by aria2Version function
                 if answer == 'did not respond':
                     for i in range(5):
@@ -356,12 +360,14 @@ class MainWindow(MainWindow_Ui):
             #if status is paused , then this section is stopping download.
                 if status_download_table == 'paused':
                     download.downloadStop(gid)
-                    notifySend('Aria2 did not respond' , 'Try agian!' ,10000,'critical' , systemtray = self.system_tray_icon )
 
+            notifySend('Persepolis reconnected aria2' , 'successfully!' ,10000,'warning' , systemtray = self.system_tray_icon )
             self.statusbar.showMessage('Persepolis Download Manager') 
 
-           
-
+#when this function is called , aria2_disconnected value is changing to 1! and it means that aria2 rpc connection disconnected.so CheckingThread is trying to fix it .          
+    def aria2Disconnected(self):
+        global aria2_disconnected
+        aria2_disconnected = 1
 
 
 
@@ -819,7 +825,8 @@ class MainWindow(MainWindow_Ui):
         
     def resumeButtonPressed(self,button):
         self.resumeAction.setEnabled(False)
-        selected_row_return = self.selectedRow()
+        selected_row_return = self.selectedRow() #finding user selected row
+
         if selected_row_return != None:
             gid = self.download_table.item(selected_row_return , 8 ).text()
             download_status = self.download_table.item(selected_row_return , 1).text()
@@ -827,8 +834,14 @@ class MainWindow(MainWindow_Ui):
                 
             if download_status == "paused" :
                 answer = download.downloadUnpause(gid)
+#if aria2 did not respond , then this function is checking for aria2 availability , and if aria2 disconnected then aria2Disconnected is executed 
                 if answer == 'None':
-                    notifySend("Aria2 did not respond!","Try agian!",10000,'warning' , systemtray = self.system_tray_icon )
+                    version_answer = download.aria2Version()
+                    if version_answer == 'did not respond':
+                        self.aria2Disconnected()
+                        notifySend("Aria2 disconnected!","Persepolis is trying to connect!be patient!",10000,'warning' , systemtray = self.system_tray_icon )
+                    else:
+                        notifySend("Aria2 did not respond!","Try agian!",10000,'warning' , systemtray = self.system_tray_icon )
 
 
 
@@ -844,39 +857,41 @@ class MainWindow(MainWindow_Ui):
 
 
 
-        else:
-            self.statusbar.showMessage("Please select an item first!")
-
     def aria2NotRespond(self):
+        self.aria2Disconnected()
         notifySend('Aria2 did not respond' , 'Try again' , 5000 , 'critical' , systemtray = self.system_tray_icon )
 
     def stopButtonPressed(self,button):
         self.stopAction.setEnabled(False)
-        selected_row_return = self.selectedRow()
+        selected_row_return = self.selectedRow()#finding user selected row
+
         if selected_row_return != None:
             gid = self.download_table.item(selected_row_return , 8 ).text()
             answer = download.downloadStop(gid)
+#if aria2 did not respond , then this function is checking for aria2 availability , and if aria2 disconnected then aria2Disconnected is executed 
             if answer == 'None':
-                notifySend("Aria2 did not respond!","Try agian!" , 10000 , 'critical' , systemtray = self.system_tray_icon )
-
-
-
-           
+                version_answer = download.aria2Version()
+                if version_answer == 'did not respond':
+                    self.aria2Disconnected()
+                    notifySend("Aria2 disconnected!","Persepolis is trying to connect!be patient!",10000,'warning' , systemtray = self.system_tray_icon )
                
-        else:
-            self.statusbar.showMessage("Please select an item first!")
 
     def pauseButtonPressed(self,button):
         self.pauseAction.setEnabled(False)
-        selected_row_return = self.selectedRow()
+        selected_row_return = self.selectedRow()#finding user selected row
+
         if selected_row_return != None:
             gid = self.download_table.item(selected_row_return , 8 ).text()
             answer = download.downloadPause(gid)
+#if aria2 did not respond , then this function is checking for aria2 availability , and if aria2 disconnected then aria2Disconnected is executed 
             if answer == 'None':
-                notifySend("Aria2 did not respond!" , "Try agian!" , 10000 , 'critical' , systemtray = self.system_tray_icon )
-
-        else:
-            self.statusbar.showMessage("Please select an item first!")
+                version_answer = download.aria2Version()
+                if version_answer == 'did not respond':
+                    self.aria2Disconnected()
+                    download.downloadStop(gid)
+                    notifySend("Aria2 disconnected!","Persepolis is trying to connect!be patient!",10000,'warning' , systemtray = self.system_tray_icon )
+                else:
+                    notifySend("Aria2 did not respond!" , "Try agian!" , 10000 , 'critical' , systemtray = self.system_tray_icon )
         sleep(1)
 
     def removeButtonPressed(self,button):
@@ -930,7 +945,8 @@ class MainWindow(MainWindow_Ui):
 
     def propertiesButtonPressed(self,button):
         self.propertiesAction.setEnabled(False)
-        selected_row_return = self.selectedRow()
+        selected_row_return = self.selectedRow() #finding user selected row
+
         if selected_row_return != None :
             add_link_dictionary_str = self.download_table.item(selected_row_return , 9).text() 
             add_link_dictionary = ast.literal_eval(add_link_dictionary_str) 
@@ -946,33 +962,39 @@ class MainWindow(MainWindow_Ui):
         writeList(download_info_file , download_info_file_list)
             
     def progressButtonPressed(self,button):
-        selected_row_return = self.selectedRow()
+        selected_row_return = self.selectedRow() #finding user selected row
         if selected_row_return != None:
             gid = self.download_table.item(selected_row_return , 8 ).text()
+        # if gid is in self.progress_window_list_dict , it means that progress window  for this gid (for this download) is created before and it's available!
             if gid in self.progress_window_list_dict :
                 member_number = self.progress_window_list_dict[gid]
+                #if window is visible >> hide it , and if window is hide >> make it visible!
                 if self.progress_window_list[member_number].isVisible() == False:
                     self.progress_window_list[member_number].show()
                 else :
                     self.progress_window_list[member_number].hide()
-
+            else :
+                self.progressBarOpen(gid) #if window is not availabile , let's create it!
     def progressBarOpen(self,gid):
-        progress_window = ProgressWindow(parent = self,gid = gid)
-        self.progress_window_list.append(progress_window)
+        progress_window = ProgressWindow(parent = self,gid = gid) #creating a progress window
+        self.progress_window_list.append(progress_window) #adding progress window to progress_window_list
         member_number = len(self.progress_window_list) - 1
-        self.progress_window_list_dict[gid] = member_number 
-        self.progress_window_list[member_number].show()
+        self.progress_window_list_dict[gid] = member_number #in progress_window_list_dict , key is gid and value is member's rank(number) in progress_window_list
+        self.progress_window_list[member_number].show() #showing progress window
  
 #close event
+#when user wants to close application then this function is called
     def closeEvent(self, event):
         QCoreApplication.instance().closeAllWindows()
         print("Please Wait...")
-        self.stopAllDownloads(event)
-        self.system_tray_icon.hide()
 
-        download.shutDown()
+        self.stopAllDownloads(event) #stopping all downloads
+        self.system_tray_icon.hide() #hiding system_tray_icon
+
+        download.shutDown() #shutting down Aria2
         sleep(0.5)
-        global shutdown_notification
+        global shutdown_notification #see start of this script and see inherited QThreads 
+#shutdown_notification = 0 >> persepolis running , 1 >> persepolis is ready for close(closeEvent called) , 2 >> OK, let's close application!
         shutdown_notification = 1
         while shutdown_notification != 2:
             sleep (0.1)
@@ -982,59 +1004,62 @@ class MainWindow(MainWindow_Ui):
         print("Persepolis Closed")
         sys.exit(0)
 
+#showTray function is showing/hiding system tray icon
     def showTray(self,menu):
         if self.trayAction.isChecked() == True :
-            self.system_tray_icon.show()
-            self.minimizeAction.setEnabled(True)
+            self.system_tray_icon.show() #show system_tray_icon
+            self.minimizeAction.setEnabled(True) #enabling minimizeAction in menu
         else:
-            self.system_tray_icon.hide()
-            self.minimizeAction.setEnabled(False)
+            self.system_tray_icon.hide() #hide system_tray_icon
+            self.minimizeAction.setEnabled(False) #disabaling minimizeAction in menu
 
+#when user click on mouse's left button , then this function is called
     def systemTrayPressed(self,click):
         if click == 3 :
             self.minMaxTray(click)
             
-
+#minMaxTray function is showing/hiding main window
     def minMaxTray(self,menu):
         if self.isVisible() == False:
             self.show()
             self.minimizeAction.setText('Minimize to system tray')
             self.minimizeAction.setIcon(QIcon(icons + 'minimize'))
         
-
         else :
             self.minimizeAction.setText('Show main Window')
             self.minimizeAction.setIcon(QIcon(icons + 'window'))
             self.hide()
 
+#showMainWindow is show main window in normal mode , see CheckingThread 
     def showMainWindow(self):
         self.showNormal()
         self.minimizeAction.setText('Minimize to system tray')
         self.minimizeAction.setIcon(QIcon(icons + 'minimize'))
  
-
+#stopAllDownloads is stopping all downloads
     def stopAllDownloads(self,menu):
         active_gids = []
         for i in range(self.download_table.rowCount()):
             try:
                 row_status = self.download_table.item(i , 1).text()
-                if row_status == 'downloading' or row_status == 'paused' or row_status == 'waiting':
-                    row_gid = self.download_table.item(i , 8).text()
-                    active_gids.append(row_gid)
+                if row_status == 'downloading' or row_status == 'paused' or row_status == 'waiting': #checking status of downloads
+                    row_gid = self.download_table.item(i , 8).text() #finding gid
+                    active_gids.append(row_gid) #adding gid to active_gids list
             except :
                 pass
+        #executing downloadStop function for all gid in active_gids list
         for gid in active_gids:
             answer = download.downloadStop(gid)
-            if answer == 'None':
+            if answer == 'None': #sending error if Aria2 didn't respond
                 notifySend("Aria2 did not respond!" , "Try agian!" , 10000 , 'critical' , systemtray = self.system_tray_icon )
 
 
             sleep(0.3)
 
            
-
+#this function is paussing all downloads
     def pauseAllDownloads(self,menu):
-#get active gid of downloads from aria
+#getting active gid of downloads from aria
         active_gids = download.activeDownloads()
 #check that if gid is in download_list_file_active
         f = Open(download_list_file_active)
@@ -1045,8 +1070,8 @@ class MainWindow(MainWindow_Ui):
 
         for gid in active_gids :
             if gid in download_list_file_active_lines :
-                answer = download.downloadPause(gid)
-                if answer == 'None':
+                answer = download.downloadPause(gid) #pausing downloads in loop
+                if answer == 'None': #sending error if Aria2 didn't respond
                     notifySend("Aria2 did not respond!" , "Try agian!" , 10000 , 'critical' , systemtray = self.system_tray_icon )
 
                 sleep(0.3)
@@ -1054,36 +1079,39 @@ class MainWindow(MainWindow_Ui):
 
     def openPreferences(self,menu):
         self.preferenceswindow = PreferencesWindow(self)
-        self.preferenceswindow.show()
+        self.preferenceswindow.show() #showing Preferences Window
 
 
 
     def openAbout(self,menu):
         self.about_window = AboutWindow()
-        self.about_window.show()
+        self.about_window.show() #showing about window
 
-
+#This function is openning user's default download folder
     def openDefaultDownloadFolder(self,menu):
+        #finding user's default download folder from setting file
         f = Open(setting_file)
         setting_file_lines = f.readlines()
         f.close()
         setting_dict_str = str(setting_file_lines[0].strip())
         setting_dict = ast.literal_eval(setting_dict_str) 
         download_path = setting_dict ['download_path']
-        if os.path.isdir(download_path):
-            os.system("xdg-open '" + download_path + "'" )
+        if os.path.isdir(download_path): #checking that if download folder is availabile or not
+            os.system("xdg-open '" + download_path + "'" ) #openning folder
         else:
-            notifySend(str(download_path) ,'Not Found' , 5000 , 'warning' , systemtray = self.system_tray_icon )
+            notifySend(str(download_path) ,'Not Found' , 5000 , 'warning' , systemtray = self.system_tray_icon ) #showing error message if folder didn't existed
 
 
 
-
+#this function is openning download folder , if download was finished
     def openDownloadFolder(self,menu):
-        selected_row_return = self.selectedRow()
+        selected_row_return = self.selectedRow() #finding user selected row
+
         if selected_row_return != None:
-            gid = self.download_table.item(selected_row_return , 8 ).text()
-            download_status = self.download_table.item(selected_row_return , 1).text()
+            gid = self.download_table.item(selected_row_return , 8 ).text() #finding gid
+            download_status = self.download_table.item(selected_row_return , 1).text() #finding download status
             if download_status == 'complete':
+            #finding download path
                 add_link_dictionary_str = self.download_table.item(selected_row_return , 9).text() 
                 add_link_dictionary = ast.literal_eval(add_link_dictionary_str) 
                 if 'file_path' in add_link_dictionary :
@@ -1092,29 +1120,32 @@ class MainWindow(MainWindow_Ui):
                     del file_path_split[-1]
                     download_path = '/'.join(file_path_split)
                     if os.path.isdir(download_path):
-                        os.system("xdg-open '" + download_path + "' &" )
+                        os.system("xdg-open '" + download_path + "' &") #opening folder
                     else:
-                        notifySend(str(download_path) ,'Not Found' , 5000 , 'warning' , systemtray = self.system_tray_icon )
+                        notifySend(str(download_path) ,'Not Found' , 5000 , 'warning' , systemtray = self.system_tray_icon ) #showing error message , if folder did't existed
 
 
-
+#this function is executing(openning) download file if download was finished
     def openFile(self,menu):
-        selected_row_return = self.selectedRow()
+        selected_row_return = self.selectedRow() #finding user selected row
+
         if selected_row_return != None:
-            gid = self.download_table.item(selected_row_return , 8 ).text()
-            download_status = self.download_table.item(selected_row_return , 1).text()
+            gid = self.download_table.item(selected_row_return , 8 ).text() #finding gid
+            download_status = self.download_table.item(selected_row_return , 1).text() #finding download status
             if download_status == 'complete':
+                #finding file path
                 add_link_dictionary_str = self.download_table.item(selected_row_return , 9).text() 
                 add_link_dictionary = ast.literal_eval(add_link_dictionary_str) 
                 if 'file_path' in add_link_dictionary:
                     file_path = add_link_dictionary['file_path']
                     if os.path.isfile(file_path):
-                        os.system("xdg-open '" + file_path  + "' &" )
+                        os.system("xdg-open '" + file_path  + "' &" ) #opening file
                     else:
-                        notifySend(str(file_path) ,'Not Found' , 5000 , 'warning' , systemtray = self.system_tray_icon )
+                        notifySend(str(file_path) ,'Not Found' , 5000 , 'warning' , systemtray = self.system_tray_icon ) #showing error message , if file was deleted or moved
 
     def deleteFile(self,menu):
-        selected_row_return = self.selectedRow()
+        selected_row_return = self.selectedRow() #finding user selected row
+
         global remove_flag
         remove_flag = 1
         while remove_flag != 2 :

@@ -75,24 +75,41 @@ class ProgressWindow(ProgressWindow_Ui):
     def resumePushButtonPressed(self,button):
         if self.status == "paused":
             answer = download.downloadUnpause(self.gid)
+#if aria2 did not respond , then this function is checking for aria2 availability , and if aria2 disconnected then aria2Disconnected is executed 
             if answer == 'None':
-                notifySend("Aria2 did not respond!","Try agian!",10000,'warning' , systemtray = self.parent.system_tray_icon )
+                version_answer = download.aria2Version()
+                if version_answer == 'did not respond':
+                    self.parent.aria2Disconnected()
+                    notifySend("Aria2 disconnected!","Persepolis is trying to connect!be patient!",10000,'warning' , systemtray = self.parent.system_tray_icon )
+                else:
+                    notifySend("Aria2 did not respond!","Try agian!",10000,'warning' , systemtray = self.parent.system_tray_icon )
+
 
 
 
     def pausePushButtonPressed(self,button):
         if self.status == "downloading":
             answer = download.downloadPause(self.gid)
+#if aria2 did not respond , then this function is checking for aria2 availability , and if aria2 disconnected then aria2Disconnected is executed 
             if answer == 'None':
-                notifySend("Aria2 did not respond!","Try agian!" , 10000 , 'critical' , systemtray = self.parent.system_tray_icon )
-
+                version_answer = download.aria2Version()
+                if version_answer == 'did not respond':
+                    self.parent.aria2Disconnected()
+                    download.downloadStop(self.gid)
+                    notifySend("Aria2 disconnected!","Persepolis is trying to connect!be patient!",10000,'warning' , systemtray = self.parent.system_tray_icon )
+                else:
+                    notifySend("Aria2 did not respond!" , "Try agian!" , 10000 , 'critical' , systemtray = self.parent.system_tray_icon )
+ 
 
     def stopPushButtonPressed(self,button):
         answer = download.downloadStop(self.gid)
+#if aria2 did not respond , then this function is checking for aria2 availability , and if aria2 disconnected then aria2Disconnected is executed 
         if answer == 'None':
-            notifySend("Aria2 did not respond!","Try agian!" , 10000 , 'critical' , systemtray = self.parent.system_tray_icon )
-
-
+            version_answer = download.aria2Version()
+            if version_answer == 'did not respond':
+                self.parent.aria2Disconnected()
+                notifySend("Aria2 disconnected!","Persepolis is trying to connect!be patient!",10000,'warning' , systemtray = self.parent.system_tray_icon )
+ 
 
 
     def limitCheckBoxToggled(self,checkBoxes): 
