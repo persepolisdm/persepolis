@@ -74,6 +74,10 @@ class AfterDownloadWindow(AfterDownloadWindow_Ui):
 
     def saveWindowSize(self):
 #finding last windows_size that saved in windows_size file
+        home_address = os.path.expanduser("~")
+
+        config_folder = str(home_address) + "/.config/persepolis_download_manager"
+
         windows_size = config_folder + '/windows_size'
         f = Open(windows_size)
         windows_size_file_lines = f.readlines()
