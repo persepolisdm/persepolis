@@ -48,14 +48,16 @@ for uninstall,
 open firefox
 open menu
 click add-ons
+![ScreenShot](http://s9.picofile.com/file/8269073968/addons.jpg)
 click on get add-ons
 in the search box search the flashgot
 then click on install and install it
 restart the firefox (close and open it again)
 
-![ScreenShot](http://s6.picofile.com/file/8259833184/flashgot.jpg)
-
 then after opening firefox go to Extensions and find flashgot
+
+![ScreenShot](http://s9.picofile.com/file/8269074242/prefrences.jpg)
+
 then click on preferences and click add
 write Persepolis Download Manager and select this file for executble path
 
@@ -70,23 +72,23 @@ then in the white field copy/paste the following codes
 
 then at the end click on the advance tab and uncheck automatic download manager detection
 
-![ScreenShot](http://s2.picofile.com/file/8264685876/flashgot4.png)
+![ScreenShot](http://s9.picofile.com/file/8269073134/flashgot4.jpg)
 
 and on media tab select Persepolis Download Manager
 
-![ScreenShot](http://s1.picofile.com/file/8264685868/flashgot3.png)
+![ScreenShot](http://s9.picofile.com/file/8269073384/flashgot3.jpg)
 
 uncheck this too!
 
-![ScreenShot](http://s2.picofile.com/file/8264685834/flashgot2.png)
+![ScreenShot](http://s8.picofile.com/file/8269073684/flashgot2.jpg)
 
 then Click OK and enjoy!!
 
 you can use flashgot for download from youtube , ...
 
-![ScreenShot](http://s4.picofile.com/file/8179632850/11.jpg)
+![ScreenShot](http://s9.picofile.com/file/8269074434/mediafire_download.jpg)
 
-![ScreenShot](http://s6.picofile.com/file/8179631500/10.jpg)
+![ScreenShot](http://s8.picofile.com/file/8269074500/youtube_download.jpg)
 
 
 
