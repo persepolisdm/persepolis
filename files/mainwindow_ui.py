@@ -28,7 +28,16 @@ class MainWindow_Ui(QMainWindow):
     def __init__(self):
         super().__init__()
 #MainWindow
-        self.resize(600, 400)
+#finding windows_size
+        windows_size = config_folder + '/windows_size'
+        f = Open(windows_size)
+        windows_size_file_lines = f.readlines()
+        f.close()
+        windows_size_dict_str = str(windows_size_file_lines[0].strip())
+        windows_size_dict = ast.literal_eval(windows_size_dict_str) 
+        MainWindow_Ui_size = windows_size_dict['MainWindow_Ui']
+
+        self.resize(int(MainWindow_Ui_size[0]),int(MainWindow_Ui_size[1]) )
         self.setWindowTitle("Persepolis Download Manager")
         self.setWindowIcon(QIcon.fromTheme('persepolis',QIcon(':/icon.svg') ))
        

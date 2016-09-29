@@ -1,6 +1,6 @@
 Persepolis Download Manager 
 =============
-+ version : 2.1.1 Unstable
++ version : 2.2 Unstable
 + Persepolis Download Manager is a GUI for aria2.
 + Persepolis written in PYQT5.
 
@@ -9,7 +9,7 @@ Persepolis Download Manager
 
 
 ### Before running install file make sure that all dependencies are installed on your system!
-You must install `aria2` , `vorbis-tools` , `pulseaudio-utils` , `libnotify-bin` , `python 3` , `pyqt5` , `qt5-svg`
+You must install `aria2` , `pulseaudio-utils` , `libnotify-bin` , `python 3` , `pyqt5` , `qt5-svg`
 
 ## Dependencies for Archlinux
 
@@ -17,11 +17,11 @@ You must install `aria2` , `vorbis-tools` , `pulseaudio-utils` , `libnotify-bin`
 
 ## Dependencies for Debian and Debian base distro.s (ubuntu 16.04 , ... )
 
-    $ sudo apt-get install aria2 pulseaudio-utils vorbis-tools libnotify-bin python3-pyqt5 libqt5svg5
+    $ sudo apt-get install aria2 pulseaudio-utils libnotify-bin python3-pyqt5 libqt5svg5
 
 ## Dependencies for Fedora
 
-    $ sudo dnf install aria2 vorbis-tools libnotify python3-qt5 qt5-qtsvg
+    $ sudo dnf install aria2 pulseaudio-utils libnotify python3-qt5 qt5-qtsvg
 
 After installing dependencies, change your directory with cd command and run install file
 

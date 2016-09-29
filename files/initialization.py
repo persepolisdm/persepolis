@@ -20,6 +20,8 @@ download_info_folder = config_folder + "/download_info"
 persepolis_tmp = '/tmp/persepolis'
 #user's preferences will saved in setting file
 setting_file = config_folder + '/setting'
+#when user is resizing a window , size of window is saving in windows_size file .
+windows_size = config_folder + '/windows_size'
 #perseolis_shutdown
 perseolis_shutdown = '/tmp/persepolis/shutdown'
 shutil.rmtree(perseolis_shutdown, ignore_errors=True, onerror=None)
@@ -30,7 +32,7 @@ for folder in folder_list :
         os.mkdir(folder)
 
 
-#this section checks setting file existed or not !and if it is not existed , exists a default setting file
+#this section is checking setting file existed or not !and if it is not existed , exists a default setting file
 if os.path.isfile(setting_file) == False :
     download_path_temp = str(home_address) + '/.persepolis'
     download_path = str(home_address) + '/Downloads/Persepolis'
@@ -44,6 +46,14 @@ setting_file_lines = f.readlines()
 f.close()
 setting_dict_str = str(setting_file_lines[0].strip())
 setting_dict = ast.literal_eval(setting_dict_str) 
+
+#this section is checking windows_size existed or not!and if it is not existed , then exists the file with default value .
+if os.path.isfile(windows_size) == False:
+    default_size = {'MainWindow_Ui' : [600,400] , 'AddLinkWindow_Ui' : [520 , 465] , 'Setting_Ui' : [578 , 465] , 'ProgressWindow_Ui' : [595,284] , 'AboutWindow' : [363 , 300] }
+    f = Open(windows_size, 'w')
+    f.writelines(str(default_size))
+    f.close()
+
 
 #this section  creates temporary download folder and download folder and download sub folders if they did not existed.
 download_path_temp  = setting_dict ['download_path_temp']

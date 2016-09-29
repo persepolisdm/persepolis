@@ -985,6 +985,8 @@ class MainWindow(MainWindow_Ui):
 #close event
 #when user wants to close application then this function is called
     def closeEvent(self, event):
+        self.saveWindowSize()
+        self.hide()
         QCoreApplication.instance().closeAllWindows()
         print("Please Wait...")
 
@@ -1346,4 +1348,24 @@ class MainWindow(MainWindow_Ui):
                         notifySend(str(file_path) ,'Not Found' , 5000 , 'warning' , systemtray = self.system_tray_icon )
 
         remove_flag = 0
+
+    def saveWindowSize(self):
+#finding last windows_size that saved in windows_size file
+        windows_size = config_folder + '/windows_size'
+        f = Open(windows_size)
+        windows_size_file_lines = f.readlines()
+        f.close()
+        windows_size_dict_str = str(windows_size_file_lines[0].strip())
+        windows_size_dict = ast.literal_eval(windows_size_dict_str) 
+
+        
+#getting current windows_size
+        width = int(self.frameGeometry().width())
+        height = int(self.frameGeometry().height())
+#replacing current size with old size in window_size_dict
+        windows_size_dict ['MainWindow_Ui'] = [ width , height ]
+        f = Open(windows_size, 'w')
+        f.writelines(str(windows_size_dict))
+        f.close()
+
 
