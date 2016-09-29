@@ -49,7 +49,7 @@ setting_dict = ast.literal_eval(setting_dict_str)
 
 #this section is checking windows_size existed or not!and if it is not existed , then exists the file with default value .
 if os.path.isfile(windows_size) == False:
-    default_size = {'MainWindow_Ui' : [600,400] , 'AddLinkWindow_Ui' : [520 , 465] , 'Setting_Ui' : [578 , 465] , 'ProgressWindow_Ui' : [595,284] , 'AboutWindow' : [363 , 300] }
+    default_size = {'MainWindow_Ui' : [600,400] , 'AddLinkWindow_Ui' : [520 , 465] , 'Setting_Ui' : [578 , 465] , 'ProgressWindow_Ui' : [595,284] , 'AboutWindow' : [363 , 300] , 'AfterDownloadWindow_Ui' : [570 , 290] }
     f = Open(windows_size, 'w')
     f.writelines(str(default_size))
     f.close()

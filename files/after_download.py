@@ -43,6 +43,7 @@ class AfterDownloadWindow(AfterDownloadWindow_Ui):
         file_path = add_link_dictionary['file_path']
         if os.path.isfile(file_path):
             os.system("xdg-open '" + file_path  + "' &" )
+        self.saveWindowSize()
         self.close()
 
     def openFolder(self):
@@ -54,6 +55,7 @@ class AfterDownloadWindow(AfterDownloadWindow_Ui):
         download_path = '/'.join(file_path_split)
         if os.path.isdir(download_path):
             os.system("xdg-open '" + download_path + "' &" )
+        self.saveWindowSize()
         self.close()
  
     def okButtonPressed(self):
@@ -67,6 +69,26 @@ class AfterDownloadWindow(AfterDownloadWindow_Ui):
             f = Open(self.setting_file , 'w')
             f.writelines(str(setting_dict))
             f.close()
+        self.saveWindowSize()
         self.close()
+
+    def saveWindowSize(self):
+#finding last windows_size that saved in windows_size file
+        windows_size = config_folder + '/windows_size'
+        f = Open(windows_size)
+        windows_size_file_lines = f.readlines()
+        f.close()
+        windows_size_dict_str = str(windows_size_file_lines[0].strip())
+        windows_size_dict = ast.literal_eval(windows_size_dict_str) 
+
+        
+#getting current windows_size
+        width = int(self.frameGeometry().width())
+        height = int(self.frameGeometry().height())
+#replacing current size with old size in window_size_dict
+        windows_size_dict ['AfterDownloadWindow_Ui'] = [ width , height ]
+        f = Open(windows_size, 'w')
+        f.writelines(str(windows_size_dict))
+        f.close()
 
 

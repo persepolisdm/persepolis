@@ -338,6 +338,7 @@ class MainWindow(MainWindow_Ui):
         else:
             self.statusbar.showMessage('Error...')
             notifySend('Persepolis can not connect to Aria2' , 'Restart Persepolis' ,10000,'critical' , systemtray = self.system_tray_icon )
+            self.propertiesAction.setEnabled(True)
 
     def reconnectAria(self,message):
         #this function is executing if RECONNECTARIASIGNAL is emitted by CheckingThread . 

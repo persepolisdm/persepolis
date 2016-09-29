@@ -61,6 +61,7 @@ sudo cp -rf "./persepolis" "$exec_path"
 sudo cp -rf "./Persepolis Download Manager.desktop" "/usr/share/applications/"
 sudo cp -rf "./files/icon.svg" "/usr/share/pixmaps/persepolis.svg"
 rm -rf "$HOME/.config/persepolis_download_manager/setting"
+rm -rf "$HOME/.config/persepolis_download_manager/windows_size"
 if [ "$?" -eq "0" ];then
     ./compatibility.py
     echo "Installation compeleted!"

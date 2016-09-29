@@ -27,7 +27,16 @@ icons =':/' + str(setting_dict['icons']) + '/'
 class AfterDownloadWindow_Ui(QWidget):
     def __init__(self):
         super().__init__()
-        self.resize(570,290)
+#finding windows_size
+        windows_size = config_folder + '/windows_size'
+        f = Open(windows_size)
+        windows_size_file_lines = f.readlines()
+        f.close()
+        windows_size_dict_str = str(windows_size_file_lines[0].strip())
+        windows_size_dict = ast.literal_eval(windows_size_dict_str) 
+        AfterDownloadWindow_Ui_size= windows_size_dict['AfterDownloadWindow_Ui']
+
+        self.resize(AfterDownloadWindow_Ui_size[0],AfterDownloadWindow_Ui_size[1])
         self.setWindowIcon(QIcon.fromTheme('persepolis' ,QIcon(':/icon.svg')))
         self.setWindowTitle("Persepolis Download Manager")
 #complete_label
