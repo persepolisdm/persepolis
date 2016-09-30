@@ -463,6 +463,7 @@ class MainWindow(MainWindow_Ui):
                     progress_window.pause_pushButton.setEnabled(False)
                 elif progress_window.status == "stopped" or progress_window.status == "error" or progress_window.status == "complete" :
 #close progress_window if download status is stopped or completed or error
+                    progress_window.saveWindowSize()
                     progress_window.close()
                     self.progress_window_list[member_number] = []
                     del self.progress_window_list_dict[gid]
