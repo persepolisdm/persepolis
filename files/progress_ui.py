@@ -12,15 +12,6 @@ from newopen import Open
 home_address = os.path.expanduser("~")
 config_folder = str(home_address) + "/.config/persepolis_download_manager"
 
-#finding windows_size
-windows_size = config_folder + '/windows_size'
-f = Open(windows_size)
-windows_size_file_lines = f.readlines()
-f.close()
-windows_size_dict_str = str(windows_size_file_lines[0].strip())
-windows_size_dict = ast.literal_eval(windows_size_dict_str) 
-ProgressWindow_Ui_size = windows_size_dict['ProgressWindow_Ui']
-
 #setting
 setting_file = config_folder + '/setting'
 f = Open(setting_file)
@@ -37,6 +28,15 @@ class ProgressWindow_Ui(QWidget):
         super().__init__()
 
 #window
+    #finding windows_size
+        windows_size = config_folder + '/windows_size'
+        f = Open(windows_size)
+        windows_size_file_lines = f.readlines()
+        f.close()
+        windows_size_dict_str = str(windows_size_file_lines[0].strip())
+        windows_size_dict = ast.literal_eval(windows_size_dict_str) 
+        ProgressWindow_Ui_size = windows_size_dict['ProgressWindow_Ui']
+
         self.resize(int(ProgressWindow_Ui_size[0]),int(ProgressWindow_Ui_size[1]) )
         self.setMinimumSize(QtCore.QSize(595, 284))
 
