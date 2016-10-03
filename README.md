@@ -1,6 +1,6 @@
 Persepolis Download Manager 
 =============
-+ version : 2.2 Unstable
++ version : 2.2.1 Unstable
 + Persepolis Download Manager is a GUI for aria2.
 + Persepolis written in PYQT5.
 
@@ -107,7 +107,7 @@ mostafaasadi73@gmail.com
 
 Persepolis website developer : Sadegh Alirezaei
 https://github.com/Alirezaies
-Alirezaie.Sadegh@gmail.Com
+alirezaie.sadegh@gmail.com
 
 
 Persepolis persian website:
