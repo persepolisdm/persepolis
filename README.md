@@ -101,6 +101,10 @@ Arch repository maintainer : Mohammadreza Abdollahzadeh
 https://github.com/morealaz
 morealaz@gmail.com
 
+Launchpad repository maintainer : Mostafa Asadi
+https://github.com/mostafaasadi
+mostafaasadi73@gmail.com
+
 Persepolis website developer : Sadegh Alirezaei
 https://github.com/Alirezaies
 Alirezaie.Sadegh@gmail.Com
