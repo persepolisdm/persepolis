@@ -1,0 +1,53 @@
+<!DOCTYPE RCC><RCC version="1.0">
+	<qresource prefix="/">
+
+                <file>icon.svg</file>
+                <file>icon.png</file>
+
+		<file>Archdroid-Blue/about.svg</file>		
+		<file>Archdroid-Blue/add.svg</file>		
+		<file>Archdroid-Blue/exit.svg</file>		
+		<file>Archdroid-Blue/folder.svg</file>		
+		<file>Archdroid-Blue/minimize.svg</file>		
+		<file>Archdroid-Blue/ok.svg</file>		
+		<file>Archdroid-Blue/pause.svg</file>		
+		<file>Archdroid-Blue/pause_all.svg</file>		
+		<file>Archdroid-Blue/play.svg</file>		
+		<file>Archdroid-Blue/preferences.svg</file>		
+		<file>Archdroid-Blue/remove.svg</file>		
+		<file>Archdroid-Blue/setting.svg</file>		
+		<file>Archdroid-Blue/stop.svg</file>		
+		<file>Archdroid-Blue/stop_all.svg</file>		
+		<file>Archdroid-Blue/trash.svg</file>		
+		<file>Archdroid-Blue/window.svg</file>		
+		<file>Archdroid-Blue/file.svg</file>		
+                <file>Archdroid-Blue/multi_remove.svg</file>	
+                <file>Archdroid-Blue/multi_trash.svg</file>	
+                <file>Archdroid-Blue/select_all.svg</file>	
+
+		<file>Archdroid-Red/about.svg</file>		
+		<file>Archdroid-Red/add.svg</file>		
+		<file>Archdroid-Red/exit.svg</file>		
+		<file>Archdroid-Red/folder.svg</file>		
+		<file>Archdroid-Red/minimize.svg</file>		
+		<file>Archdroid-Red/ok.svg</file>		
+		<file>Archdroid-Red/pause.svg</file>		
+		<file>Archdroid-Red/pause_all.svg</file>		
+		<file>Archdroid-Red/play.svg</file>		
+		<file>Archdroid-Red/preferences.svg</file>		
+		<file>Archdroid-Red/remove.svg</file>		
+		<file>Archdroid-Red/setting.svg</file>		
+		<file>Archdroid-Red/stop.svg</file>		
+		<file>Archdroid-Red/stop_all.svg</file>		
+		<file>Archdroid-Red/trash.svg</file>		
+		<file>Archdroid-Red/window.svg</file>		
+		<file>Archdroid-Red/file.svg</file>		
+                <file>Archdroid-Red/multi_remove.svg</file>	
+                <file>Archdroid-Red/multi_trash.svg</file>	
+                <file>Archdroid-Red/select_all.svg</file>	
+
+
+
+
+	</qresource>
+</RCC>

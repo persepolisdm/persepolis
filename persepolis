@@ -1,0 +1,26 @@
+#!/bin/bash
+
+#    This program is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation, either version 3 of the License, or
+#    (at your option) any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+#
+#    You should have received a copy of the GNU General Public License
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+run_times=`ps -A|grep "persepolis-down"|wc -l`
+echo $run_times
+cd "/usr/share/persepolis"
+if [ "$run_times" -eq "0" ];then
+    exec ./persepolis-download-manager "$@" --execute yes  2>/tmp/persepolis_error 
+else
+    exec ./persepolis-download-manager "$@" --execute no 
+fi
+exit 
+
+
