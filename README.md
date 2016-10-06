@@ -21,6 +21,12 @@ Persepolis Download Manager
 
     $ yaourt -S persepolis-git
 
+
+##For installing in Fedora
+
+	$ sudo dnf copr enable hayyan71/persepolis
+	$ sudo dnf install persepolis
+
 ### For other distributions (Installing from github)
 ## Before running install file make sure that all dependencies are installed on your system!
 You must install `aria2` , `pulseaudio-utils` , `libnotify-bin` , `python 3` , `pyqt5` , `qt5-svg`
