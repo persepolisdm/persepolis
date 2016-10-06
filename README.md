@@ -24,7 +24,7 @@ Persepolis Download Manager
 
 ##For installing in Fedora
 
-	$ sudo dnf copr enable hayyan71/persepolis
+	$ sudo dnf copr enable amirsamimi/persepolis
 	$ sudo dnf install persepolis
 
 ### For other distributions (Installing from github)
