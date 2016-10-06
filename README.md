@@ -27,6 +27,9 @@ Persepolis Download Manager
 	$ sudo dnf copr enable amirsamimi/persepolis
 	$ sudo dnf install persepolis
 
+##For installing in openSUSE
+	please visit this link : https://software.opensuse.org/download.html?project=home%3Ahayyan71&package=persepolis
+
 ### For other distributions (Installing from github)
 ## Before running install file make sure that all dependencies are installed on your system!
 You must install `aria2` , `pulseaudio-utils` , `libnotify-bin` , `python 3` , `pyqt5` , `qt5-svg`
