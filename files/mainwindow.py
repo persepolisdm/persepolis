@@ -1040,6 +1040,7 @@ class MainWindow(MainWindow_Ui):
     def minMaxTray(self,menu):
         if self.isVisible() == False:
             self.show()
+            self.menubar.show()
             self.minimizeAction.setText('Minimize to system tray')
             self.minimizeAction.setIcon(QIcon(icons + 'minimize'))
         
