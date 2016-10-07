@@ -375,6 +375,7 @@ def findDownloadPath(file_name , download_path):
 
     file_name_split = file_name.split('.')
     file_extension = file_name_split[-1]
+    file_extension = file_extension.lower() #converting extension letters to lower case
     audio = ['act','aiff','aac','amr','ape','au','awb','dct','dss','dvf','flac','gsm','iklax','ivs','m4a','m4p','mmf','mp3','mpc','msv','ogg','oga','opus','ra','raw','sln','tta','vox','wav','wma','wv']
     video = ['3g2','3gp','asf','avi','drc','flv','m4v','mkv','mng','mov','qt','mp4','m4p','mpg','mp2','mpeg','mpe','mpv','m2v','mxf','nsv','ogv','rmvb','roq','svi','vob','webm','wmv','yuv','rm']
     document = ['doc','docx','html','htm','fb2','odt','sxw','pdf','ps','rtf','tex','txt']
