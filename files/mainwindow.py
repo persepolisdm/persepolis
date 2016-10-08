@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
 #    This program is free software: you can redistribute it and/or modify
@@ -1040,7 +1039,7 @@ class MainWindow(MainWindow_Ui):
     def minMaxTray(self,menu):
         if self.isVisible() == False:
             self.show()
-            self.menubar.show()
+            self.menubar.show() #this line is for solving unity(ubuntu 16.04) problem
             self.minimizeAction.setText('Minimize to system tray')
             self.minimizeAction.setIcon(QIcon(icons + 'minimize'))
         
