@@ -15,10 +15,6 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 clear screen
-echo "############################################################"
-echo "#### Welcome to Persepolis Download Manager installation ###"
-echo "################### Version 2.2 Unstable ###################"
-echo "############################################################"
 
 echo "Checking dependencies"
 aria2c --version 1>/dev/null
@@ -66,8 +62,6 @@ chmod +x "./files/persepolis-download-manager"
 chmod +x "./persepolis"
 chmod +x "./Persepolis Download Manager.desktop"
 chmod +x "./compatibility.py"
-mkdir "$HOME/.fonts" 2>/dev/null 
-cp "./Ubuntu.ttf" "$HOME/.fonts"
 sudo rm -rf "$program_path"
 sudo mkdir -p "$program_path"
 sudo cp -rf  ./files/* "$program_path/"
