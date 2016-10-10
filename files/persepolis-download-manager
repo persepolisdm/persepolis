@@ -58,7 +58,7 @@ parser.add_argument('--execute',action='store',nargs=1, help="Execute persepolis
 parser.add_argument('--default',action='store_true',help='restore default setting' )
 parser.add_argument('--clear',action='store_true',help='Clear download list and user setting!' )
 parser.add_argument('--tray',action='store_true',help="Persepolis is starting in tray icon. It's useful when you want to put persepolis in system's startup." )
-parser.add_argument('--version', action='version', version='Persepolis Download Manager 2.2.1 Unstable')
+parser.add_argument('--version', action='version', version='Persepolis Download Manager 2.2.2 Unstable')
 args = parser.parse_args()
 
 #Mozilla firefox flashgot will send download information whith terminal arguments(link , referer , cookie , agent , headers , name )
