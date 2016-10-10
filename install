@@ -68,6 +68,7 @@ sudo cp -rf  ./files/* "$program_path/"
 sudo cp -rf "./persepolis" "$exec_path"
 sudo cp -rf "./Persepolis Download Manager.desktop" "/usr/share/applications/"
 sudo cp -rf "./files/icon.svg" "/usr/share/pixmaps/persepolis.svg"
+sudo cp -rf "./persepolis.1.gz" "/usr/share/man/man1/persepolis.1.gz"
 rm -rf "$HOME/.config/persepolis_download_manager/setting"
 rm -rf "$HOME/.config/persepolis_download_manager/windows_size"
 if [ "$?" -eq "0" ];then
