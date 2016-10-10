@@ -499,32 +499,35 @@ def nowTime():
 
 def startTime(start_hour , start_minute , gid):
     print("Download starts at " + start_hour + ":" + start_minute )
-    sigma_start = sigmaTime(start_hour , start_minute)
-    sigma_now = nowTime()
-    download_info_file = download_info_folder + "/" + gid
-    status = 'scheduled'
-    while sigma_start != sigma_now :
-        time.sleep(1.1)
+    sigma_start = sigmaTime(start_hour , start_minute) #getting sima time
+    sigma_now = nowTime() #getting sigma now time
+    download_info_file = download_info_folder + "/" + gid #getting download_info_file path
+    status = 'scheduled' #defining status
+    while sigma_start != sigma_now : #this loop is countinuing until download time arrival!
+        time.sleep(2.1)
         sigma_now = nowTime()
-        download_info_file_list = readList(download_info_file)
+        try: #this part is reading download informations for finding download status , perhaps user canceled download! try command used for avoiding some problems when readList reading files
+            download_info_file_list = readList(download_info_file)
+        except:
+            download_info_file_list = [ 'some_name' , 'scheduled' ]
         
-        if download_info_file_list[1] == 'stopped' :
+        if download_info_file_list[1] == 'stopped' : #if download_info_file_list[1] = stopped >> it means that user canceled download , and loop is breaking!
             status = 'stopped'
             break
         else :
             status = 'scheduled'
-    return status
+    return status #if user canceled download , then 'stopped' returns and if download time arrived then 'scheduled' returns!
 
 def endTime(end_hour , end_minute , gid):
     time.sleep(1)
     print("end time actived")
-    sigma_end = sigmaTime(end_hour , end_minute)
+    sigma_end = sigmaTime(end_hour , end_minute) 
     sigma_now = nowTime()
     download_info_file = download_info_folder + "/" + gid
 
-    while sigma_end != sigma_now :
+    while sigma_end != sigma_now : 
         status_file = 'no'
-#wait for start downloading :
+#waiting for start downloading :
         while status_file == 'no':
             time.sleep(0.5)
             try :
@@ -533,7 +536,7 @@ def endTime(end_hour , end_minute , gid):
                 status = download_info_file_list[1]
             except:
                 status_file = 'no'
-#check download's status
+#checking download's status
         if status == 'downloading' or status == 'paused' :
             answer = 'continue'
         else:
@@ -542,7 +545,7 @@ def endTime(end_hour , end_minute , gid):
             break
 
         sigma_now = nowTime()
-        time.sleep(1.1)
+        time.sleep(2.1)
 
     if  answer != 'end':
         print("Time is Up")
