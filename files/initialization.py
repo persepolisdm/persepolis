@@ -48,6 +48,8 @@ for folder in folder_list :
 #this section is checking setting file existed or not !and if it is not existed , exists a default setting file
 if os.path.isfile(setting_file) == False :
     download_path_temp = str(home_address) + '/.persepolis'
+    user_download_folder = str(home_address) + '/Downloads'
+    os.mkdir(user_download_folderw)
     download_path = str(home_address) + '/Downloads/Persepolis'
     default_setting = {'rpc-port' : 6801 , 'notification' : 'Native notification' , 'after-dialog' : 'yes' , 'tray-icon' : 'yes', 'max-tries' : 5 , 'retry-wait': 0 , 'timeout' : 60 , 'connections' : 16 , 'download_path_temp' : download_path_temp , 'download_path':download_path , 'sound' : 'yes' , 'sound-volume':90 , 'style':'Fusion' , 'color-scheme' : 'Persepolis Dark Red' , 'icons':'Archdroid-Red','font' : 'Ubuntu' , 'font-size' : 9  }
     f = Open(setting_file , 'w')
