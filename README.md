@@ -18,10 +18,14 @@ Persepolis Download Manager
 
 
 ##For installing in ArchLinux and Arch bases
+#Installing last release (recommended)
 
-    $ yaourt -S persepolis-git
+    $ yaourt -S persepolis
 
+#Installing with latest chang on github
 
+	$ yaourt -S persepolis-git
+Obviously you can't install both of persepolis and persepolis-git simoltaneously . and you must uninstall one of them(with pacman) for installing another one.
 ##For installing in Fedora
 
 	$ sudo dnf copr enable amirsamimi/persepolis
@@ -29,6 +33,9 @@ Persepolis Download Manager
 
 ##For installing in openSUSE
 	please visit this link : https://software.opensuse.org/download.html?project=home%3Ahayyan71&package=persepolis
+
+
+
 
 ### For other distributions (Installing from github)
 ## Before running install file make sure that all dependencies are installed on your system!
