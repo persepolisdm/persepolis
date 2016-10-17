@@ -39,19 +39,19 @@ Obviously you can't install both of persepolis and persepolis-git simoltaneously
 
 ### For other distributions (Installing from github)
 ## Before running install file make sure that all dependencies are installed on your system!
-You must install `aria2` , `pulseaudio-utils` , `libnotify-bin` , `python 3` , `pyqt5` , `qt5-svg`
+You must install `aria2` , `pulseaudio-utils` , `libnotify-bin` , `python 3` , `pyqt5` , `qt5-svg` , `python3-requests`
 
 ## Dependencies for Archlinux
 
-    $ sudo pacman -S aria2 vorbis-tools libnotify python-pyqt5 qt5-svg
+    $ sudo pacman -S aria2 vorbis-tools libnotify python-pyqt5 qt5-svg python-requests
 
 ## Dependencies for Debian and Debian base distro.s (ubuntu 16.04 , ... )
 
-    $ sudo apt-get install aria2 pulseaudio-utils libnotify-bin python3-pyqt5 libqt5svg5
+    $ sudo apt-get install aria2 pulseaudio-utils libnotify-bin python3-pyqt5 libqt5svg5 python3-requests
 
 ## Dependencies for Fedora
 
-    $ sudo dnf install aria2 pulseaudio-utils libnotify python3-qt5 qt5-qtsvg
+    $ sudo dnf install aria2 pulseaudio-utils libnotify python3-qt5 qt5-qtsvg python3-requests
 
 After installing dependencies, change your directory with cd command and run install file
 

@@ -33,6 +33,7 @@ from bubble import notifySend
 from setting import PreferencesWindow
 from about import AboutWindow
 import icons_resource
+import spider
 
 
 #shutdown_notification = 0 >> persepolis running , 1 >> persepolis is ready for close(closeEvent called) , 2 >> OK, let's close application!
@@ -154,6 +155,18 @@ class CheckDownloadInfoThread(QThread):
                             
                         
 
+
+class SpiderThread(QThread):
+    def __init__(self,add_link_dictionary , gid):
+        QThread.__init__(self)
+        self.add_link_dictionary = add_link_dictionary
+        self.gid = gid
+
+    def run(self):
+        try :
+            spider.spider(self.add_link_dictionary , self.gid)
+        except :
+            print("Spider couldn't find download informations")
 
 
 
@@ -787,7 +800,7 @@ class MainWindow(MainWindow_Ui):
         if download_later == 'no':
             download_info_file_list = [ file_name ,'waiting','***','***','***','***','***','***',gid , add_link_dictionary]
         else:
-            download_info_file_list = [ file_name ,'stopped','***','***','***','***','***','***',gid , add_link_dictionary]
+            download_info_file_list = [ file_name ,'stopped', '***' ,'***','***','***','***','***',gid , add_link_dictionary]
 
 
         #after user pushs ok button on add link window , a gid is generating for download and a file (with name of gid) is creating in download_info_folder . this file is containing download_info_file_list
@@ -825,19 +838,24 @@ class MainWindow(MainWindow_Ui):
             self.threadPool.append(new_download)
             self.threadPool[len(self.threadPool) - 1].start()
             self.threadPool[len(self.threadPool) - 1].ARIA2NOTRESPOND.connect(self.aria2NotRespond)
-
         #opening progress window for download.
             self.progressBarOpen(gid) 
         #notifiying user for scheduled download or download starting.
             if add_link_dictionary['start_hour'] == None :
                 message = "Download Starts"
             else:
+                new_spider = SpiderThread(add_link_dictionary , gid )
+                self.threadPool.append(new_spider)
+                self.threadPool[len(self.threadPool) - 1].start()
                 message = "Download Scheduled"
             notifySend(message ,'' , 10000 , 'no', systemtray = self.system_tray_icon )
 
- 
+        else :
+            new_spider = SpiderThread(add_link_dictionary , gid )
+            self.threadPool.append(new_spider)
+            self.threadPool[len(self.threadPool) - 1].start()
 
-        
+
     def resumeButtonPressed(self,button):
         self.resumeAction.setEnabled(False)
         selected_row_return = self.selectedRow() #finding user selected row
