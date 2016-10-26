@@ -1206,7 +1206,7 @@ class MainWindow(MainWindow_Ui):
         if self.selectAction.isChecked() == True:
 #selectAllAction is checked >> activating actions and adding removeSelectedAction and deleteSelectedAction to the toolBar
             self.toolBar.clear()
-            for i in self.addlinkAction,self.resumeAction, self.pauseAction , self.stopAction, self.removeSelectedAction , self.deleteSelectedAction , self.propertiesAction, self.progressAction , self.exitAction :
+            for i in self.addlinkAction,self.resumeAction, self.pauseAction , self.stopAction, self.removeSelectedAction , self.deleteSelectedAction , self.propertiesAction, self.progressAction, self.minimizeAction , self.exitAction :
                 self.toolBar.addAction(i)
          
 
@@ -1227,7 +1227,7 @@ class MainWindow(MainWindow_Ui):
         else:
 #selectAction is unchecked deactivate actions and adding removeAction and deleteFileAction to the toolBar
             self.toolBar.clear()
-            for i in self.addlinkAction,self.resumeAction, self.pauseAction , self.stopAction, self.removeAction , self.deleteFileAction , self.propertiesAction, self.progressAction , self.exitAction :
+            for i in self.addlinkAction,self.resumeAction, self.pauseAction , self.stopAction, self.removeAction , self.deleteFileAction , self.propertiesAction, self.progressAction , self.minimizeAction  , self.exitAction :
                 self.toolBar.addAction(i)
          
 
