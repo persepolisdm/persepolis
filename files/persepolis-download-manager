@@ -22,7 +22,7 @@ from PyQt5.QtWidgets import QApplication
 from PyQt5.QtGui import QFont   
 from palettes import DarkRedPallete , DarkBluePallete , ArcDarkRedPallete , ArcDarkBluePallete , LightRedPallete , LightBluePallete
 from bubble import notifySend
-
+import osCommands
 # initialization
 home_address = os.path.expanduser("~")
 
@@ -70,8 +70,8 @@ args = parser.parse_args()
 add_link_dictionary = {}
 
 if args.clear:
-    status = os.system('rm -rf "' + str(config_folder) + '"' )
-    if status == 0 :
+    status = osCommands.removeDir(str(config_folder))
+    if status == 'ok' or status == 'no' :
         print ('Download list cleard!')
     else:
         print("persepolis can't clear download list")
@@ -79,8 +79,8 @@ if args.clear:
     sys.exit(0)
 
 if args.default :
-    status = os.system('rm  "' + str(setting_file) + '"' )
-    if status == 0 :
+    status = osCommands.remove(str(setting_file))
+    if status == 'ok' or status == 'no':
         print ('Persepolis restored default')
     else :
         print("Persepolis couldn't restore default")

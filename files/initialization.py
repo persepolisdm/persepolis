@@ -16,7 +16,7 @@
 
 import  os , shutil , ast 
 from newopen import Open
-
+import osCommands
 
 
 # initialization
@@ -41,17 +41,15 @@ shutil.rmtree(perseolis_shutdown, ignore_errors=True, onerror=None)
 #creating folders
 folder_list = [ config_folder , download_info_folder ,persepolis_tmp , perseolis_shutdown ]
 for folder in folder_list :
-    if os.path.isdir(folder) == False :
-        os.mkdir(folder)
+    osCommands.makeDirs(folder)
 
 
 #this section is checking setting file existed or not !and if it is not existed , exists a default setting file
 if os.path.isfile(setting_file) == False :
     download_path_temp = str(home_address) + '/.persepolis'
-    user_download_folder = str(home_address) + '/Downloads'
-    if os.path.isdir(user_download_folder) == False :
-        os.mkdir(user_download_folder)
+
     download_path = str(home_address) + '/Downloads/Persepolis'
+
     default_setting = {'rpc-port' : 6801 , 'notification' : 'Native notification' , 'after-dialog' : 'yes' , 'tray-icon' : 'yes', 'max-tries' : 5 , 'retry-wait': 0 , 'timeout' : 60 , 'connections' : 16 , 'download_path_temp' : download_path_temp , 'download_path':download_path , 'sound' : 'yes' , 'sound-volume':90 , 'style':'Fusion' , 'color-scheme' : 'Persepolis Dark Red' , 'icons':'Archdroid-Red','font' : 'Ubuntu' , 'font-size' : 9  }
     f = Open(setting_file , 'w')
     f.writelines(str(default_setting))
@@ -74,13 +72,11 @@ if os.path.isfile(windows_size) == False:
 #this section  creates temporary download folder and download folder and download sub folders if they did not existed.
 download_path_temp  = setting_dict ['download_path_temp']
 download_path = setting_dict [ 'download_path']
-folder_list = [download_path_temp , download_path]
+folder_list = [download_path_temp]
 for folder in [ 'Audios' , 'Videos', 'Others','Documents','Compressed' ]:
     folder_list.append(download_path + '/' + folder )
 
 for folder in folder_list :
-    if os.path.isdir(folder) == False :
-        os.mkdir(folder)
-
+    osCommands.makeDirs(folder)
 
 

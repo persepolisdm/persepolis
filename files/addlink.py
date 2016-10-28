@@ -19,7 +19,7 @@ from PyQt5.QtGui import QIcon
 import os , string , ast , functools
 from addlink_ui import AddLinkWindow_Ui
 from newopen import Open
-
+import osCommands
 
 home_address = os.path.expanduser("~")
 config_folder = str(home_address) + "/.config/persepolis_download_manager"
@@ -69,7 +69,7 @@ class AddLinkWindow(AddLinkWindow_Ui):
 
         global init_file
         init_file = str(home_address) + "/.config/persepolis_download_manager/addlink_init_file"
-        os.system("touch " + init_file)
+        osCommands.touch(init_file)
         f = Open(init_file)
         init_file_lines = f.readlines()
         f.close()

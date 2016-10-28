@@ -34,7 +34,8 @@ from setting import PreferencesWindow
 from about import AboutWindow
 import icons_resource
 import spider
-
+import osCommands
+import glob
 
 #shutdown_notification = 0 >> persepolis running , 1 >> persepolis is ready for close(closeEvent called) , 2 >> OK, let's close application!
 global shutdown_notification
@@ -204,7 +205,7 @@ class CheckingThread(QThread):
         j = 0
         while shutdown_notification == 0:
             if os.path.isfile("/tmp/persepolis/show-window") == True:
-                os.system('rm /tmp/persepolis/show-window ' )
+                osCommands.remove('/tmp/persepolis/show-window')
                 self.SHOWMAINWINDOWSIGNAL.emit()
             sleep(1)
             if os.path.isfile("/tmp/persepolis-flashgot")  == True and os.path.isfile("/tmp/persepolis-flashgot.lock") == False:
@@ -260,21 +261,22 @@ class MainWindow(MainWindow_Ui):
         self.checkSelectedRow()
 
 #touch download_list_file
-        if not(os.path.isfile(download_list_file)):
-            f = Open(download_list_file , 'w')
-            f.close()
+        osCommands.touch(download_list_file)
 
 #touch download_list_file_active
-        if not(os.path.isfile(download_list_file_active)):
-            f = Open(download_list_file_active , 'w')
-            f.close()
+        osCommands.touch(download_list_file_active)
 
 
 #lock files perventing to access a file simultaneously
 
 #removing lock files in starting persepolis
-        os.system("rm " + config_folder +"/*.lock" + "  2>/dev/null" )
-        os.system("rm " + download_info_folder + "/*.lock" + "   2>/dev/null" )
+        pattern = str(config_folder) + '/*.lock'
+        for file in glob.glob(pattern):
+            osCommands.remove(file)
+
+        pattern = str(download_info_folder) + '/*.lock'
+        for file in glob.glob(pattern):
+            osCommands.remove(file)
 
 
 
@@ -805,7 +807,7 @@ class MainWindow(MainWindow_Ui):
 
         #after user pushs ok button on add link window , a gid is generating for download and a file (with name of gid) is creating in download_info_folder . this file is containing download_info_file_list
         download_info_file = config_folder + "/download_info/" + gid
-        os.system("touch " + download_info_file )
+        osCommands.touch(download_info_file)
          
         writeList(download_info_file , download_info_file_list)
         
@@ -968,9 +970,10 @@ class MainWindow(MainWindow_Ui):
 #remove file of download form download temp folder
             if file_name != '***' and status != 'complete' :
                 file_name_path = temp_download_folder + "/" +  str(file_name)
-                os.system('rm "' + str(file_name_path) +'"')
+                osCommands.remove(file_name_path) #removing file
+
                 file_name_aria = file_name_path + str('.aria2')
-                os.system('rm "' + str(file_name_aria) +'"')
+                osCommands.remove(file_name_aria) #removin file.aria 
         else:
             self.statusbar.showMessage("Please select an item first!")
         remove_flag = 0
@@ -1133,7 +1136,7 @@ class MainWindow(MainWindow_Ui):
         setting_dict = ast.literal_eval(setting_dict_str) 
         download_path = setting_dict ['download_path']
         if os.path.isdir(download_path): #checking that if download folder is availabile or not
-            os.system("xdg-open '" + download_path + "'" ) #openning folder
+            osCommands.xdgOpen(download_path) #openning folder
         else:
             notifySend(str(download_path) ,'Not Found' , 5000 , 'warning' , systemtray = self.system_tray_icon ) #showing error message if folder didn't existed
 
@@ -1156,7 +1159,7 @@ class MainWindow(MainWindow_Ui):
                     del file_path_split[-1]
                     download_path = '/'.join(file_path_split)
                     if os.path.isdir(download_path):
-                        os.system("xdg-open '" + download_path + "' &") #opening folder
+                        osCommands.xdgOpen(download_path) #openning file
                     else:
                         notifySend(str(download_path) ,'Not Found' , 5000 , 'warning' , systemtray = self.system_tray_icon ) #showing error message , if folder did't existed
 
@@ -1175,7 +1178,7 @@ class MainWindow(MainWindow_Ui):
                 if 'file_path' in add_link_dictionary:
                     file_path = add_link_dictionary['file_path']
                     if os.path.isfile(file_path):
-                        os.system("xdg-open '" + file_path  + "' &" ) #opening file
+                        osCommands.xdgOpen(file_path) #openning file
                     else:
                         notifySend(str(file_path) ,'Not Found' , 5000 , 'warning' , systemtray = self.system_tray_icon ) #showing error message , if file was deleted or moved
 
@@ -1194,10 +1197,9 @@ class MainWindow(MainWindow_Ui):
                 add_link_dictionary_str = self.download_table.item(selected_row_return , 9).text() 
                 add_link_dictionary = ast.literal_eval(add_link_dictionary_str) 
                 if 'file_path' in add_link_dictionary:
-                    file_path = add_link_dictionary['file_path']
-                    if os.path.isfile(file_path):
-                        os.system("rm '" + file_path  + "'" )
-                    else:
+                    file_path = add_link_dictionary['file_path'] #finding file_path from add_link_dictionary
+                    remove_answer = osCommands.remove(file_path) #removing file_path file
+                    if remove_answer == 'no': #notifiying user if file_path is not valid
                         notifySend(str(file_path) ,'Not Found' , 5000 , 'warning' , systemtray = self.system_tray_icon )
                     remove_flag = 3
                     self.removeButtonPressed(menu)
@@ -1253,6 +1255,8 @@ class MainWindow(MainWindow_Ui):
             item.setCheckState(QtCore.Qt.Checked)
  
     def removeSelected(self,menu):
+#if remove_flag is equal to 1, it means that user pressed remove or delete button . so checking download information must stop until removing done!
+
         global remove_flag
         remove_flag = 1
         while remove_flag != 2 :
@@ -1305,13 +1309,15 @@ class MainWindow(MainWindow_Ui):
 #remove file of download form download temp folder
             if file_name != '***' and status != 'complete' :
                 file_name_path = temp_download_folder + "/" +  str(file_name)
-                os.system('rm "' + str(file_name_path) +'"')
+                osCommands.remove(file_name_path) #removing file : file_name_path
                 file_name_aria = file_name_path + str('.aria2')
-                os.system('rm "' + str(file_name_aria) +'"')
+                osCommands.remove(file_name_aria) #removing aria2 information file *.aria
 
         remove_flag = 0
 
     def deleteSelected(self,menu):
+#if remove_flag is equal to 1, it means that user pressed remove or delete button . so checking download information must stop until removing done!
+
         global remove_flag
         remove_flag = 1
         while remove_flag != 2 :
@@ -1368,17 +1374,16 @@ class MainWindow(MainWindow_Ui):
 #remove file of download form download temp folder
             if file_name != '***' and status != 'complete' :
                 file_name_path = temp_download_folder + "/" +  str(file_name)
-                os.system('rm "' + str(file_name_path) +'"')
-                file_name_aria = file_name_path + str('.aria2')
-                os.system('rm "' + str(file_name_aria) +'"')
+                osCommands.remove(file_name_path) #removing file : file_name_path
 
+                file_name_aria = file_name_path + str('.aria2') #removing aria2 download information file : file_name_aria
+                osCommands.remove(file_name_aria)
 #remove download file
             if status == 'complete':
                 if 'file_path' in add_link_dictionary:
                     file_path = add_link_dictionary['file_path']
-                    if os.path.isfile(file_path):
-                        os.system("rm '" + file_path  + "'" )
-                    else:
+                    remove_answer = osCommands.remove(file_path)
+                    if remove_answer == 'no':
                         notifySend(str(file_path) ,'Not Found' , 5000 , 'warning' , systemtray = self.system_tray_icon )
 
         remove_flag = 0

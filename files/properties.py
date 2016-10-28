@@ -24,10 +24,8 @@ from addlink_ui import AddLinkWindow_Ui
 home_address = os.path.expanduser("~")
 
 config_folder = str(home_address) + "/.config/persepolis_download_manager"
-os.system("mkdir -p  $HOME/.config/persepolis_download_manager")
 
 download_info_folder = config_folder + "/download_info"
-os.system("mkdir -p  $HOME/.config/persepolis_download_manager/download_info")
 
 config_folder = str(home_address) + "/.config/persepolis_download_manager"
 

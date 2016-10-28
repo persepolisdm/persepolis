@@ -17,6 +17,7 @@ from newopen import Open , readList , writeList
 from after_download_ui import AfterDownloadWindow_Ui
 import os , ast
 from play import playNotification
+import osCommands
 
 class AfterDownloadWindow(AfterDownloadWindow_Ui):
     def __init__(self,download_info_file_list , setting_file) :
@@ -54,7 +55,7 @@ class AfterDownloadWindow(AfterDownloadWindow_Ui):
         add_link_dictionary = self.download_info_file_list[9]
         file_path = add_link_dictionary['file_path']
         if os.path.isfile(file_path):
-            os.system("xdg-open '" + file_path  + "' &" )
+            osCommands.xdgOpen(file_path)
         self.saveWindowSize()
         self.close()
 
@@ -66,7 +67,7 @@ class AfterDownloadWindow(AfterDownloadWindow_Ui):
         del file_path_split[-1]
         download_path = '/'.join(file_path_split)
         if os.path.isdir(download_path):
-            os.system("xdg-open '" + download_path + "' &" )
+            osCommands.xdgOpen(download_path)
         self.saveWindowSize()
         self.close()
  

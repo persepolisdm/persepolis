@@ -19,6 +19,7 @@ from PyQt5 import QtWidgets
 from PyQt5.QtWidgets import QFileDialog , QStyleFactory , QMessageBox 
 from PyQt5.QtGui import QFont
 from newopen import Open
+import osCommands
 
 home_address = os.path.expanduser("~")
 config_folder = str(home_address) + "/.config/persepolis_download_manager"
@@ -249,13 +250,12 @@ class PreferencesWindow(Setting_Ui):
 #this section  creates temporary download folder and download folder and download sub folders if they did not existed.
         download_path_temp  = self.setting_dict ['download_path_temp']
         download_path = self.setting_dict [ 'download_path']
-        folder_list = [download_path_temp , download_path]
+        folder_list = [download_path_temp]
         for folder in [ 'Audios' , 'Videos', 'Others','Documents','Compressed' ]:
             folder_list.append(download_path + '/' + folder )
 
         for folder in folder_list :
-            if os.path.isdir(folder) == False :
-                os.mkdir(folder)
+            osCommands.makeDirs(folder)
 
 
         if self.enable_notifications_checkBox.isChecked() == True :

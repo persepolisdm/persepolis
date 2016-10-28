@@ -26,11 +26,9 @@ home_address = os.path.expanduser("~")
 
 global config_folder
 config_folder = str(home_address) + "/.config/persepolis_download_manager"
-os.system("mkdir -p  $HOME/.config/persepolis_download_manager")
 
 global download_info_folder
 download_info_folder = config_folder + "/download_info"
-os.system("mkdir -p  $HOME/.config/persepolis_download_manager/download_info")
 
 
 class ProgressWindow(ProgressWindow_Ui):

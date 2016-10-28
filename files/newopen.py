@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -14,6 +15,7 @@
 
 import os , ast , random , shutil
 from time import sleep
+import osCommands
 
 persepolis_tmp = '/tmp/persepolis/'
 
@@ -34,7 +36,7 @@ class Open():
         self.lock_file = self.file_name + ".lock"
         while os.path.isfile(self.lock_file) == True :
             sleep(0.1)
-        os.system("touch " + self.lock_file)
+        osCommands.touch(self.lock_file)
         if self.mode == "w":
             self.f = open(self.temp_file_path, "w")
         elif self.mode == "a":
