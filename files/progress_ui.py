@@ -20,6 +20,7 @@ from PyQt5.QtWidgets import QWidget , QSizePolicy
 from PyQt5.QtGui import QIcon
 import ast , os
 from newopen import Open
+import platform
 
 home_address = os.path.expanduser("~")
 config_folder = str(home_address) + "/.config/persepolis_download_manager"
@@ -34,6 +35,8 @@ setting_dict = ast.literal_eval(setting_dict_str)
 
 icons = ':/' + str(setting_dict['icons']) + '/'
 
+global os_type
+os_type = platform.system()
 
 class ProgressWindow_Ui(QWidget):
     def __init__(self):
@@ -192,7 +195,9 @@ class ProgressWindow_Ui(QWidget):
         self.limit_pushButton.setText( "Apply")
 
         self.after_comboBox.setItemText(0,  "Shut Down as root")
-        self.after_comboBox.setItemText(1,  "Shut Down")
+
+        if os_type == 'Linux': #OS X can't shutdown system without sudo
+            self.after_comboBox.setItemText(1,  "Shut Down")
 
         self.progress_tabWidget.setTabText(self.progress_tabWidget.indexOf(self.options_tab),  "Download Options")
         self.resume_pushButton.setText( "Resume")

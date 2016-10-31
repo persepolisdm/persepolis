@@ -21,6 +21,11 @@ import os , time , ast
 from newopen import Open , readList , writeList
 import download
 from bubble import notifySend
+import platform
+
+global os_type
+os_type = platform.system()
+
 
 home_address = os.path.expanduser("~")
 
@@ -170,7 +175,11 @@ class ProgressWindow(ProgressWindow_Ui):
                         break
 
                 if ok != False :
-                    os.system("bash " + "shutdown_script_root  '" + passwd + "' '"+ self.gid + "' &" )
+                    if os_type == 'Linux':
+                        os.system("bash " + "shutdown_script_root  '" + passwd + "' '"+ self.gid + "' &" )
+                    elif os_type == 'Darwin':
+                        os.system("bash " + "shutdown_script_root_osx  '" + passwd + "' '"+ self.gid + "' &" )
+
                 else:
                     self.after_checkBox.setChecked(False)
             else:

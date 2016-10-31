@@ -15,6 +15,11 @@
 import os
 from newopen import Open
 import ast
+import platform
+
+
+global os_type
+os_type = platform.system()
 
 home_address = os.path.expanduser("~")
 config_folder = str(home_address) + "/.config/persepolis_download_manager"
@@ -39,5 +44,10 @@ def playNotification(file):
     volume = int((65536 * volume_percent)/100)
 
     if enable_notification == 'yes':
-        os.system("paplay --volume='"+ str(volume) + "' '" + file + "' &")
+        if os_type == 'Linux':
+            os.system("paplay --volume='"+ str(volume) + "' '" + file + "' &")
+        elif os_type == 'Darwin' :
+            os.system("osascript -e 'set volume alert volume " + str(volume) + "'" )
+            os.system("osascript -e 'beep 3' &")
+
 

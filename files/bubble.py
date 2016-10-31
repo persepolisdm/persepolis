@@ -14,11 +14,16 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import os , ast
+import platform
 from play import playNotification
 from newopen import Open
 
 home_address = os.path.expanduser("~")
 config_folder = str(home_address) + "/.config/persepolis_download_manager"
+
+#platform
+global os_type
+os_type = platform.system()
 
 #setting
 setting_file = config_folder + '/setting'
@@ -52,5 +57,8 @@ def notifySend(message1,message2,time,sound ,systemtray=None ):
     if enable_notification == 'QT notification':
         systemtray.showMessage(message1 , message2 , 0, 10000)
     else:
-        os.system("notify-send --icon='persepolis' --app-name='Persepolis Download Manager' --expire-time='" + time + "' '" +  message1 +  "' \ '" + message2 +  "' "  )
+        if os_type == 'Linux':
+            os.system("notify-send --icon='persepolis' --app-name='Persepolis Download Manager' --expire-time='" + time + "' '" +  message1 +  "' \ '" + message2 +  "' "  )
+        elif os_type == 'Darwin':
+            os.system("osascript -e 'display notification \"" + message2 + "\"with title \"Persepolis Download Manager\" subtitle \""  +  message1 + "\"'" )
 
