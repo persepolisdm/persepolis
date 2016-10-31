@@ -60,7 +60,6 @@ def startAria():
 def aria2Version():
     try : 
         answer = server.aria2.getVersion()
-        print("Aria2 Version : " + str(answer['version']))
     except :
         print("aria2 not respond!")
         answer = "did not respond"
