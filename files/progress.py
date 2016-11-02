@@ -57,7 +57,7 @@ class ProgressWindow(ProgressWindow_Ui):
         self.after_pushButton.clicked.connect(self.afterPushButtonPressed)
 #check if limit speed actived by user or not
         download_info_file_list_len = 1
-        while download_info_file_list_len != 10 :
+        while download_info_file_list_len != 12 :
             download_info_file = download_info_folder + "/" + self.gid
             download_info_file_list = readList(download_info_file) 
             download_info_file_list_len = len(download_info_file_list)

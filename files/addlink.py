@@ -20,6 +20,7 @@ import os , string , ast , functools
 from addlink_ui import AddLinkWindow_Ui
 from newopen import Open
 import osCommands
+import download
 
 home_address = os.path.expanduser("~")
 config_folder = str(home_address) + "/.config/persepolis_download_manager"
@@ -301,7 +302,9 @@ class AddLinkWindow(AddLinkWindow_Ui):
             self.flashgot_add_link_dictionary['load-cookies'] = None
 
         final_download_path = None
-        self.add_link_dictionary = {'out' :out , 'final_download_path':final_download_path , 'start_hour':start_hour ,'start_minute' : start_minute ,'end_hour' : end_hour ,'end_minute':end_minute , 'link':link , 'ip':ip , 'port':port , 'proxy_user':proxy_user , 'proxy_passwd' : proxy_passwd , 'download_user':download_user , 'download_passwd': download_passwd ,'connections':connections , 'limit':limit, 'download_path':download_path }
+
+        now_date_list = download.nowDate()
+        self.add_link_dictionary = { 'last_try_date' : now_date_list , 'firs_try_date' : now_date_list , 'out' :out , 'final_download_path':final_download_path , 'start_hour':start_hour ,'start_minute' : start_minute ,'end_hour' : end_hour ,'end_minute':end_minute , 'link':link , 'ip':ip , 'port':port , 'proxy_user':proxy_user , 'proxy_passwd' : proxy_passwd , 'download_user':download_user , 'download_passwd': download_passwd ,'connections':connections , 'limit':limit, 'download_path':download_path }
         for i in self.flashgot_add_link_dictionary.keys():
             self.add_link_dictionary[i] = self.flashgot_add_link_dictionary[i]
 

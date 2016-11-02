@@ -89,7 +89,11 @@ def downloadAria(gid):
     user_agent = add_link_dictionary['user-agent']
     cookies = add_link_dictionary['load-cookies']
     referer = add_link_dictionary['referer']
-    
+     
+    #setting time and date for last_try_date
+    now_date_list = nowDate()
+    add_link_dictionary [ 'last_try_date'] = now_date_list 
+
     #making header option
     header_list = []
     if cookies != None :
@@ -113,8 +117,10 @@ def downloadAria(gid):
 
     if start_hour != None :
         download_info_file_list[1] = "scheduled"
-        download_info_file_list[9] = add_link_dictionary 
-        writeList(download_info_file,download_info_file_list)
+
+    #writing new informations on download_info_file
+    download_info_file_list[9] = add_link_dictionary 
+    writeList(download_info_file,download_info_file_list)
 
     if ip :
         ip_port = str(ip) + ":" + str(port)
@@ -334,11 +340,17 @@ def downloadStatus(gid):
     if (status_str == "None"):
         status_str = None
 
+#setting firs_try_date and last_try_date
+    date_list = add_link_dictionary ['firs_try_date']
+    firs_try_date = str(date_list[0]) + '/' + str(date_list[1]) + '/' + str(date_list[2]) + ' , ' + str(date_list[3]) + ':' +  str(date_list[4]) + ':' + str(date_list[5])
 
-    download_info = [file_name , status_str , size_str , downloaded_str ,  percent_str , connections_str , download_speed_str ,estimate_time_left_str , None , add_link_dictionary ]
+    date_list = add_link_dictionary ['last_try_date']
+    last_try_date = str(date_list[0]) + '/' + str(date_list[1]) + '/' + str(date_list[2]) + ' , ' + str(date_list[3]) + ':' +  str(date_list[4]) + ':' + str(date_list[5])
+
+    download_info = [file_name , status_str , size_str , downloaded_str ,  percent_str , connections_str , download_speed_str ,estimate_time_left_str , None , add_link_dictionary , firs_try_date , last_try_date ]
 
    
-    for i in range(10):
+    for i in range(12):
         if download_info[i] != None:
             download_info_file_list[i] = download_info[i]
  
@@ -486,6 +498,12 @@ def activeDownloads():
 
     return active_gids
 
+
+def nowDate():
+    date_list = []
+    for i in ['%Y' , '%m' , '%d' , '%H' , '%M' , '%S' ] :
+        date_list.append(time.strftime(i))
+    return date_list
 #sigmaTime get hours and minutes for input . convert hours to minutes and return summation in minutes        
 def sigmaTime(hour,minute):
     return (int(hour)*60 + int(minute))
@@ -550,7 +568,7 @@ def endTime(end_hour , end_minute , gid):
         print("Time is Up")
         answer = downloadStop(gid)
         i = 0
-        while answer == 'None' and (i <= 9):
+        while answer == 'None' and (i <= 9): #trying to stop download 10 times
             time.sleep(1)
             answer = downloadStop(gid)
             i = i + 1

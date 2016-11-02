@@ -299,7 +299,7 @@ class MainWindow(MainWindow_Ui):
             self.download_table.insertRow(0)
             download_info_file = download_info_folder + "/" + gid
             download_info_file_list = readList(download_info_file,'string')
-            for i in range(10):
+            for i in range(12):
                 item = QTableWidgetItem(download_info_file_list[i])
                 self.download_table.setItem(0 , i , item)
 
@@ -319,7 +319,7 @@ class MainWindow(MainWindow_Ui):
                 download_info_file = download_info_folder + "/" + gid
                 download_info_file_list = readList(download_info_file,'string')
 
-                for i in range(10):
+                for i in range(12):
                     if i == 1 :
                         download_info_file_list[i] = 'stopped'
                         item = QTableWidgetItem('stopped')
@@ -415,7 +415,7 @@ class MainWindow(MainWindow_Ui):
                     row = i 
                     break
 
-            for i in range(10):
+            for i in range(12):
 #check flag of download!
 #It's showing that selection mode is active or not!
                 if i == 0 :
@@ -507,7 +507,7 @@ class MainWindow(MainWindow_Ui):
                         add_link_dictionary['end_minute'] = None
                         add_link_dictionary['after_download'] = 'None'
 
-                        for i in range(10):
+                        for i in range(12):
                             if i == 9 :
                                 download_info_file_list[i] = add_link_dictionary
                                 
@@ -790,7 +790,7 @@ class MainWindow(MainWindow_Ui):
         #aria2 identifies each download by the ID called GID. The GID must be hex string of 16 characters.
         gid = self.gidGenerator()
 
-	#download_info_file_list is a list that contains ['file_name' , 'status' , 'size' , 'downloaded size' ,'download percentage' , 'number of connections' ,'Transfer rate' , 'estimate_time_left' , 'gid' , 'add_link_dictionary']
+	#download_info_file_list is a list that contains ['file_name' , 'status' , 'size' , 'downloaded size' ,'download percentage' , 'number of connections' ,'Transfer rate' , 'estimate_time_left' , 'gid' , 'add_link_dictionary' , 'firs_try_date' , 'last_try_date']
 
         #if user or flashgot defined filename then file_name is valid in add_link_dictionary['out']
         if add_link_dictionary['out'] != None :
@@ -798,11 +798,10 @@ class MainWindow(MainWindow_Ui):
         else:
             file_name = '***'
 
-
         if download_later == 'no':
-            download_info_file_list = [ file_name ,'waiting','***','***','***','***','***','***',gid , add_link_dictionary]
+            download_info_file_list = [ file_name ,'waiting','***','***','***','***','***','***',gid , add_link_dictionary , '***' , '***' ]
         else:
-            download_info_file_list = [ file_name ,'stopped', '***' ,'***','***','***','***','***',gid , add_link_dictionary]
+            download_info_file_list = [ file_name ,'stopped', '***' ,'***','***','***','***','***',gid , add_link_dictionary , '***' ,'***' ]
 
 
         #after user pushs ok button on add link window , a gid is generating for download and a file (with name of gid) is creating in download_info_folder . this file is containing download_info_file_list

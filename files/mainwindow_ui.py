@@ -64,7 +64,7 @@ class MainWindow_Ui(QMainWindow):
         self.download_table = QTableWidget(self.frame)
         self.download_table_verticalLayout = QVBoxLayout()
         self.download_table_verticalLayout.addWidget(self.download_table)
-        self.download_table.setColumnCount(10)
+        self.download_table.setColumnCount(12)
         self.download_table.setSelectionBehavior(QAbstractItemView.SelectRows)
         self.download_table.setEditTriggers(QAbstractItemView.NoEditTriggers)
         self.download_table.verticalHeader().hide()
@@ -77,7 +77,7 @@ class MainWindow_Ui(QMainWindow):
  
         self.setCentralWidget(self.centralwidget)
 
-        download_table_header = ['File Name' , 'Status' , 'Size' , 'Downloaded' , 'Percentage' , 'Connections' , 'Transfer rate' , 'Estimate time left' , 'Gid' , 'Info']
+        download_table_header = ['File Name' , 'Status' , 'Size' , 'Downloaded' , 'Percentage' , 'Connections' , 'Transfer rate' , 'Estimate time left' , 'Gid' , 'Info' , 'First try date' , 'Last try date']
         self.download_table.setHorizontalHeaderLabels(download_table_header)    
 #fixing the size of download_table when window is Maximized!
         self.download_table.horizontalHeader().setSectionResizeMode(0)
