@@ -928,56 +928,6 @@ class MainWindow(MainWindow_Ui):
                     notifySend("Aria2 did not respond!" , "Try agian!" , 10000 , 'critical' , systemtray = self.system_tray_icon )
         sleep(1)
 
-    def removeButtonPressed(self,button):
-        self.removeAction.setEnabled(False)
-        global remove_flag
-        if remove_flag !=3 :
-            remove_flag = 1
-            while remove_flag != 2 :
-                sleep(0.1)
-        selected_row_return = self.selectedRow()
-        if selected_row_return != None:
-            gid = self.download_table.item(selected_row_return , 8 ).text()
-            file_name = self.download_table.item(selected_row_return , 0).text()
-            status = self.download_table.item(selected_row_return , 1).text()
-            sleep(0.5)
-            self.download_table.removeRow(selected_row_return)
-
-#remove gid of download from download list file
-            f = Open(download_list_file)
-            download_list_file_lines = f.readlines()
-            f.close()
-            f = Open(download_list_file , "w")
-            for i in download_list_file_lines:
-                if i.strip() != gid:
-                    f.writelines(i.strip() + "\n")
-            f.close()
-#remove gid of download from active download list file
-            f = Open(download_list_file_active)
-            download_list_file_active_lines = f.readlines()
-            f.close()
-            f = Open(download_list_file_active , "w")
-            for i in download_list_file_active_lines:
-                if i.strip() != gid:
-                    f.writelines(i.strip() + "\n")
-            f.close()
-#remove download_info_file
-            download_info_file = download_info_folder + "/" + gid
-            f = Open(download_info_file)
-            f.close()
-            f.remove()
-#remove file of download form download temp folder
-            if file_name != '***' and status != 'complete' :
-                file_name_path = temp_download_folder + "/" +  str(file_name)
-                osCommands.remove(file_name_path) #removing file
-
-                file_name_aria = file_name_path + str('.aria2')
-                osCommands.remove(file_name_aria) #removin file.aria 
-        else:
-            self.statusbar.showMessage("Please select an item first!")
-        remove_flag = 0
-        self.selectedRow()
-
     def propertiesButtonPressed(self,button):
         self.propertiesAction.setEnabled(False)
         selected_row_return = self.selectedRow() #finding user selected row
@@ -1181,6 +1131,60 @@ class MainWindow(MainWindow_Ui):
                     else:
                         notifySend(str(file_path) ,'Not Found' , 5000 , 'warning' , systemtray = self.system_tray_icon ) #showing error message , if file was deleted or moved
 
+    def removeButtonPressed(self,button):
+        self.removeAction.setEnabled(False)
+        global remove_flag
+        if remove_flag !=3 :
+            remove_flag = 1
+            while remove_flag != 2 :
+                sleep(0.1)
+        selected_row_return = self.selectedRow()
+        if selected_row_return != None:
+            gid = self.download_table.item(selected_row_return , 8 ).text()
+            file_name = self.download_table.item(selected_row_return , 0).text()
+            status = self.download_table.item(selected_row_return , 1).text()
+
+            self.download_table.removeRow(selected_row_return)
+
+#remove gid of download from download list file
+            f = Open(download_list_file)
+            download_list_file_lines = f.readlines()
+            f.close()
+            f = Open(download_list_file , "w")
+            for i in download_list_file_lines:
+                if i.strip() != gid:
+                    f.writelines(i.strip() + "\n")
+            f.close()
+#remove gid of download from active download list file
+            f = Open(download_list_file_active)
+            download_list_file_active_lines = f.readlines()
+            f.close()
+            f = Open(download_list_file_active , "w")
+            for i in download_list_file_active_lines:
+                if i.strip() != gid:
+                    f.writelines(i.strip() + "\n")
+            f.close()
+#remove download_info_file
+            download_info_file = download_info_folder + "/" + gid
+            f = Open(download_info_file)
+            f.close()
+            f.remove()
+#remove file of download form download temp folder
+            if file_name != '***' and status != 'complete' :
+                file_name_path = temp_download_folder + "/" +  str(file_name)
+                osCommands.remove(file_name_path) #removing file
+
+                file_name_aria = file_name_path + str('.aria2')
+                osCommands.remove(file_name_aria) #removin file.aria 
+        else:
+            self.statusbar.showMessage("Please select an item first!")
+        remove_flag = 0
+        self.selectedRow()
+
+
+
+
+
     def deleteFile(self,menu):
         selected_row_return = self.selectedRow() #finding user selected row
 
@@ -1261,6 +1265,7 @@ class MainWindow(MainWindow_Ui):
         while remove_flag != 2 :
             sleep(0.1)
 
+ #finding checked rows! and append gid of checked rows to gid_list
         gid_list = []
         for row in range(self.download_table.rowCount()):
             status = self.download_table.item(row , 1).text() 
@@ -1269,7 +1274,7 @@ class MainWindow(MainWindow_Ui):
                 gid = self.download_table.item(row , 8 ).text()
                 gid_list.append(gid)
 
-
+#removing checked rows
         for gid in gid_list:        
             for i in range(self.download_table.rowCount()):
                 row_gid = self.download_table.item(i , 8).text()
@@ -1279,7 +1284,7 @@ class MainWindow(MainWindow_Ui):
 
            
             file_name = self.download_table.item(row , 0).text()
-            sleep(0.5)
+
             self.download_table.removeRow(row)
 
 #remove gid of download from download list file
@@ -1321,7 +1326,7 @@ class MainWindow(MainWindow_Ui):
         remove_flag = 1
         while remove_flag != 2 :
             sleep(0.1)
-
+#finding checked rows! and append gid of checked rows to gid_list
         gid_list = []
         for row in range(self.download_table.rowCount()):
             status = self.download_table.item(row , 1).text() 
@@ -1330,7 +1335,7 @@ class MainWindow(MainWindow_Ui):
                 gid = self.download_table.item(row , 8 ).text()
                 gid_list.append(gid)
 
-
+#removing checked rows
         for gid in gid_list:        
             for i in range(self.download_table.rowCount()):
                 row_gid = self.download_table.item(i , 8).text()
@@ -1342,7 +1347,6 @@ class MainWindow(MainWindow_Ui):
             add_link_dictionary = ast.literal_eval(add_link_dictionary_str) 
 
 
-            sleep(0.5)
             self.download_table.removeRow(row)
 #remove gid of download from download list file
             f = Open(download_list_file)
