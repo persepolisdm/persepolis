@@ -252,7 +252,6 @@ class Setting_Ui(QWidget):
         self.horizontalLayout.addWidget(self.ok_pushButton)
 
         self.verticalLayout_2.addLayout(self.horizontalLayout)
-
         self.setting_tabWidget.setCurrentIndex(3)
 
         self.setWindowTitle( "Preferences")
