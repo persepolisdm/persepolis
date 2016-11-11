@@ -16,7 +16,7 @@
 run_times=`ps -A|grep "persepolis-down"|wc -l`
 echo $run_times
 cd "/usr/local/share/persepolis"
-if [ "$run_times" -eq "0" ];then
+if [ "$run_times" -eq "1" ];then
     exec ./persepolis-download-manager "$@" --execute yes  2>/tmp/persepolis_error 
 else
     exec ./persepolis-download-manager "$@" --execute no 
