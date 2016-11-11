@@ -9,7 +9,7 @@ Persepolis Download Manager
 
 
 
-### Installation
+### Installation on GNU/Linux
 ##For Ubuntu bases(Ubuntu16.04 , Kubuntu , Xubuntu , Linux Mint , ... ):
 
 	$ sudo add-apt-repository ppa:persepolis/ppa
@@ -55,11 +55,11 @@ You must install `aria2` , `pulseaudio-utils` , `libnotify-bin` , `python 3` , `
 
 After installing dependencies, change your directory with cd command and run install file
 
-    $ sh install
+    $ bash install
 
 for uninstall,
 
-    $ sh uninstall
+    $ bash uninstall
 
 ### or...
 
@@ -68,8 +68,23 @@ for uninstall,
     $ wget -O persepolis.tar.gz https://github.com/persepolisdm/persepolis/archive/master.tar.gz
     $ tar  --overwrite-dir -xf persepolis.tar.gz
     $ cd persepolis-master
-    $ sh install
+    $ bash install
 
+
+### Installation on Mac OS X
+you must install aria2 python3 python3-requests python3-pyqt5
+
+    $ cd
+    $ cd /tmp
+    $ wget -O persepolis.tar.gz https://github.com/persepolisdm/persepolis/archive/master.tar.gz
+    $ tar  --overwrite-dir -xf persepolis.tar.gz
+    $ cd persepolis-master
+    $ bash install_mac
+    
+in mac os x >> after installation run persepolis from terminal with this command
+
+	$ persepolis
+we started developing persepolis for mac in just few days ago!It's not finished yet!
 
 
 ##Configuring PersepolisDM to use with FlashGot
