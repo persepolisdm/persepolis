@@ -74,7 +74,7 @@ for uninstall,
 
     $ git clone "https://github.com/persepolisdm/persepolis.git" 
     $ cd persepolis
-    $ bash install mac
+    $ bash install 
 
 ### Installation on Mac OS X
 you must install aria2 python3 python3-requests python3-pyqt5
