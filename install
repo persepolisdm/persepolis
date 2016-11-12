@@ -16,6 +16,8 @@
 
 clear screen
 
+os_type="$1" #os_type can be linux or mac
+
 echo "Checking dependencies"
 aria2c --version 1>/dev/null
 if [ "$?" -ne "0" ];then
@@ -33,6 +35,7 @@ fi
 install_path=`pwd`
 cd "$install_path"
 chmod +x "./checkpyqt.py"
+chmod +x "./check_request.py"
 
 ./checkpyqt.py
 if [ "$?" -ne "0" ];then
@@ -41,43 +44,78 @@ if [ "$?" -ne "0" ];then
     exit
 fi
 
-notify-send --version 1>/dev/null
+./check_request.py
 if [ "$?" -ne "0" ];then
-    echo "libnotify-bin not installed"
+    echo "python3-requests not installed"
     echo "Installation Failed!"
     exit
 fi
 
-paplay --version 1>/dev/null
-if [ "$?" -ne "0" ];then
-    echo "vorbis-tools not installed"
-    echo "Installation Failed!"
-    exit
+if [ "$os_type" != "mac" ];then 
+    notify-send --version 1>/dev/null
+    if [ "$?" -ne "0" ];then
+        echo "libnotify-bin not installed"
+        echo "Installation Failed!"
+        exit
+    fi
+
+    paplay --version 1>/dev/null
+    if [ "$?" -ne "0" ];then
+        echo "vorbis-tools not installed"
+        echo "Installation Failed!"
+        exit
+    fi
 fi
 
-
-program_path="/usr/share/persepolis"
-exec_path='/usr/bin/'
-chmod +x "./files/persepolis-download-manager"
-chmod +x "./persepolis"
-chmod +x "./Persepolis Download Manager.desktop"
-chmod +x "./compatibility.py"
-sudo rm -rf "$program_path"
-sudo mkdir -p "$program_path"
-sudo cp -rf  ./files/* "$program_path/"
-sudo cp -rf "./persepolis" "$exec_path"
-sudo cp -rf "./Persepolis Download Manager.desktop" "/usr/share/applications/"
-sudo cp -rf "./files/icon.svg" "/usr/share/pixmaps/persepolis.svg"
-sudo cp -rf "./persepolis.1.gz" "/usr/share/man/man1/persepolis.1.gz"
-rm -rf "$HOME/.config/persepolis_download_manager/setting"
-rm -rf "$HOME/.config/persepolis_download_manager/windows_size"
-if [ "$?" -eq "0" ];then
-    ./compatibility.py
-    echo "Installation compeleted!"
+if [ "os_type" != "mac" ];then
+    program_path="/usr/share/persepolis"
+    exec_path='/usr/bin/'
+    chmod +x "./files/persepolis-download-manager"
+    chmod +x "./persepolis"
+    chmod +x "./Persepolis Download Manager.desktop"
+    chmod +x "./compatibility.py"
+    sudo rm -rf "$program_path"
+    sudo mkdir -p "$program_path"
+    sudo cp -rf  ./files/* "$program_path/"
+    sudo cp -rf "./persepolis" "$exec_path"
+    sudo cp -rf "./Persepolis Download Manager.desktop" "/usr/share/applications/"
+    sudo cp -rf "./files/icon.svg" "/usr/share/pixmaps/persepolis.svg"
+    sudo cp -rf "./persepolis.1.gz" "/usr/share/man/man1/persepolis.1.gz"
+    rm -rf "$HOME/.config/persepolis_download_manager/setting"
+    rm -rf "$HOME/.config/persepolis_download_manager/windows_size"
+    if [ "$?" -eq "0" ];then
+        ./compatibility.py
+        echo "Installation compeleted!"
+    else
+        echo "Installation Failed"
+    fi
+    exit
 else
-    echo "Installation Failed"
+    program_path="/usr/local/share/persepolis"
+    exec_path='/usr/local/bin/'
+    rm "./files/persepolis-download-manager"
+    mv "./files/persepolis-download-manager_mac" "./files/persepolis-download-manager"
+    chmod +x "./files/persepolis-download-manager"
+    rm "./persepolis"
+    mv "./persepolis_mac" "./persepolis"
+    chmod +x "./persepolis"
+    chmod +x "./compatibility.py"
+    sudo rm -rf "$program_path"
+    sudo mkdir -p "$program_path"
+    sudo cp -rf  ./files/* "$program_path/"
+    sudo cp -rf "./persepolis" "$exec_path"
+    sudo cp -rf "./persepolis.1.gz" "/usr/local/share/man/man1/persepolis.1.gz"
+    rm -rf "$HOME/.config/persepolis_download_manager/setting"
+    rm -rf "$HOME/.config/persepolis_download_manager/windows_size"
+    if [ "$?" -eq "0" ];then
+        ./compatibility.py
+        echo "Installation compeleted!"
+    else
+        echo "Installation Failed"
+    fi
+    exit
 fi
-exit
+
 
 
 

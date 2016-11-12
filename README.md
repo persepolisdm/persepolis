@@ -70,17 +70,26 @@ for uninstall,
     $ cd persepolis-master
     $ bash install
 
+### or ...
+
+    $ git clone "https://github.com/persepolisdm/persepolis.git" 
+    $ cd persepolis
+    $ bash install mac
 
 ### Installation on Mac OS X
 you must install aria2 python3 python3-requests python3-pyqt5
 
-    $ cd
-    $ cd /tmp
-    $ wget -O persepolis.tar.gz https://github.com/persepolisdm/persepolis/archive/master.tar.gz
-    $ tar  --overwrite-dir -xf persepolis.tar.gz
-    $ cd persepolis-master
-    $ bash install_mac
-    
+    $ git clone "https://github.com/persepolisdm/persepolis.git" 
+    $ cd persepolis
+    $ bash install mac
+
+for uninstallation
+
+    $ git clone "https://github.com/persepolisdm/persepolis.git" 
+    $ cd persepolis
+    $ bash uninstall mac
+
+
 in mac os x >> after installation run persepolis from terminal with this command
 
 	$ persepolis

@@ -13,9 +13,18 @@
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-sudo rm -rf /usr/share/persepolis
-sudo rm -rf /usr/bin/persepolis
-sudo rm -rf /usr/share/pixmaps/persepolis.svg
-sudo rm -rf "/usr/share/applications/Persepolis Download Manager.desktop"
-sudo rm -rf "$HOME/.config/persepolis_download_manager/"
-sudo rm -rf "/usr/share/man/man1/persepolis.1.gz"
+os_type="$1" #os_type can be linux or mac
+
+if [ "$os_type" != "mac" ];then 
+    sudo rm -rf /usr/share/persepolis
+    sudo rm -rf /usr/bin/persepolis
+    sudo rm -rf /usr/share/pixmaps/persepolis.svg
+    sudo rm -rf "/usr/share/applications/Persepolis Download Manager.desktop"
+    sudo rm -rf "$HOME/.config/persepolis_download_manager/"
+    sudo rm -rf "/usr/share/man/man1/persepolis.1.gz"
+else
+    sudo rm -rf /usr/local/share/persepolis
+    sudo rm -rf /usr/local/bin/persepolis
+    sudo rm -rf "$HOME/.config/persepolis_download_manager/"
+    sudo rm -rf "/usr/local/share/man/man1/persepolis.1.gz"
+fi
