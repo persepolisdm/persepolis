@@ -67,7 +67,7 @@ if [ "$os_type" != "mac" ];then
     fi
 fi
 
-if [ "os_type" != "mac" ];then
+if [ "$os_type" != "mac" ];then
     program_path="/usr/share/persepolis"
     exec_path='/usr/bin/'
     chmod +x "./files/persepolis-download-manager"
