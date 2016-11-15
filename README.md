@@ -78,6 +78,8 @@ for uninstall,
 
 ### Installation on Mac OS X
 you must install aria2 python3 python3-requests python3-pyqt5 first! you can use homebrew for it.
+
+    $ brew install python3
     $ brew install aria2
     $ brew install pyqt5
     $ pip3 install requests 
