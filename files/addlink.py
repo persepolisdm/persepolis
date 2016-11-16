@@ -146,6 +146,8 @@ class AddLinkWindow(AddLinkWindow_Ui):
 
         self.change_name_lineEdit.setEnabled(False)
         self.change_name_checkBox.toggled.connect(self.changeName)
+        #set focus to ok button
+        self.ok_pushButton.setFocus()
 
 #check name of flashgot link 
         if 'out' in self.flashgot_add_link_dictionary:
