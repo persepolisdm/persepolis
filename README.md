@@ -118,10 +118,13 @@ then after opening firefox go to Extensions and find flashgot
 ![ScreenShot](http://s9.picofile.com/file/8269074242/prefrences.jpg)
 
 then click on preferences and click add
-write Persepolis Download Manager and select this file for executble path
+write Persepolis Download Manager and select this file for executble path (in linux)
 
 	$ /usr/bin/persepolis
 
+and (in Mac)
+
+    $ /usr/local/bin/persepolis 
 
 then in the white field copy/paste the following codes
 
