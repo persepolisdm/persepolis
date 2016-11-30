@@ -27,4 +27,5 @@ else
     sudo rm -rf /usr/local/bin/persepolis
     sudo rm -rf "$HOME/.config/persepolis_download_manager/"
     sudo rm -rf "/usr/local/share/man/man1/persepolis.1.gz"
+    sudo rm -rf "/Applications/Persepolis Download Manager.app"
 fi

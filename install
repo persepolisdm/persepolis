@@ -93,6 +93,7 @@ if [ "$os_type" != "mac" ];then
 else
     program_path="/usr/local/share/persepolis"
     exec_path='/usr/local/bin/'
+	pythonpath=`./pythonfinder.py`
     rm "./files/persepolis-download-manager"
     mv "./files/persepolis-download-manager_mac" "./files/persepolis-download-manager"
     chmod +x "./files/persepolis-download-manager"
@@ -104,6 +105,9 @@ else
     sudo mkdir -p "$program_path"
     sudo cp -rf  ./files/* "$program_path/"
     sudo cp -rf "./persepolis" "$exec_path"
+    sudo ln -s $pythonpath $program_path/"Persepolis Download Manager"
+    sudo rm -rf "/Applications/Persepolis Download Manager.app"
+    sudo cp -rf "Persepolis Download Manager.app" /Applications
     sudo cp -rf "./persepolis.1.gz" "/usr/local/share/man/man1/persepolis.1.gz"
     rm -rf "$HOME/.config/persepolis_download_manager/setting"
     rm -rf "$HOME/.config/persepolis_download_manager/windows_size"
