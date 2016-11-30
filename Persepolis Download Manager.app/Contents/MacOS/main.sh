@@ -1,5 +1,6 @@
-#!/bin/sh
+#!/bin/bash
 export PATH=/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin
+export PYTHONPATH=$PYTHONPATH:/usr/local/lib/python3.5/site-packages
 run_times=`ps -A|grep "persepolis-down"|wc -l`
 cd "/usr/local/share/persepolis"
 echo $run_times
