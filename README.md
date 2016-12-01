@@ -3,7 +3,7 @@ Persepolis Download Manager
 + version : 2.2.2 Unstable
 + Persepolis Download Manager is a GUI for aria2.
 + Persepolis written in PYQT5.
-
++ You can install Persepolis in GNU/Linux distributions or Mac Os or OS X
 
 ![ScreenShot](http://s1.picofile.com/file/8264685926/persepolis.jpg)
 
@@ -77,17 +77,21 @@ for uninstall,
     $ bash install 
 
 ### Installation on Mac OS X
-you must install aria2 python3 python3-requests python3-pyqt5 first! you can use homebrew for it.
+you must install aria2 python3 python3-requests python3-pyqt5 first! you can use [HomeBrew](http://brew.sh/)] .
 
     $ brew install python3
     $ brew install aria2
     $ brew install pyqt5
     $ pip3 install requests 
 
+an alternative way for installing dependencies in mac , after cloning project you can run `bash dependay_mac` in terminal
+
+
 when dependencies installed :
 
     $ git clone "https://github.com/persepolisdm/persepolis.git" 
     $ cd persepolis
+    $ bash dependay_mac
     $ bash install mac
 
 for uninstallation
@@ -97,11 +101,7 @@ for uninstallation
     $ bash uninstall mac
 
 
-in mac os x >> after installation run persepolis from terminal with this command
-
-	$ persepolis
-
-you can find Persepolis Download Manager Icon in your Application folder and  finder menu .
+you can find Persepolis Download Manager Icon in your Application folder and  applications menu .
 
 ##Configuring PersepolisDM to use with FlashGot
 open firefox
@@ -118,7 +118,7 @@ then after opening firefox go to Extensions and find flashgot
 ![ScreenShot](http://s9.picofile.com/file/8269074242/prefrences.jpg)
 
 then click on preferences and click add
-write Persepolis Download Manager and select this file for executble path (in linux)
+write Persepolis Download Manager and select this file for executble path (in GNU/Linux)
 
 	$ /usr/bin/persepolis
 
@@ -170,6 +170,12 @@ mostafaasadi73@gmail.com
 Persepolis website developer : Sadegh Alirezaei
 https://github.com/Alirezaies
 alirezaie.sadegh@gmail.com
+
+Persepolis Mac developer : Mohammad Amin Vahediniya
+https://github.com/Mr0Null
+mohammadamin@beeit.ir
+
+
 
 Persepolis website :
 https://persepolisdm.github.io/
