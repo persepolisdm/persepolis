@@ -100,8 +100,8 @@ for uninstallation
 in mac os x >> after installation run persepolis from terminal with this command
 
 	$ persepolis
-we started developing persepolis for mac in just few days ago!It's not finished yet!
 
+you can find Persepolis Download Manager Icon in your Application folder and  finder menu .
 
 ##Configuring PersepolisDM to use with FlashGot
 open firefox
