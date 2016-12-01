@@ -9,7 +9,7 @@
 	<key>CFBundleGetInfoString</key>
 	<string>Persepolis Download Manager 2.3.0</string>
 	<key>CFBundleIconFile</key>
-	<string>app</string>
+	<string>app.icns</string>
 	<key>CFBundleIdentifier</key>
 	<string>com.BeeIT.pdm</string>
 	<key>CFBundleInfoDictionaryVersion</key>
