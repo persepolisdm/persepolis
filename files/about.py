@@ -79,13 +79,6 @@ class AboutWindow(QWidget):
         self.name_label.setAlignment(QtCore.Qt.AlignCenter)
         self.verticalLayout.addWidget(self.name_label)
 
-        self.site_label = QtWidgets.QLabel(self)
-        self.site_label.setTextFormat(QtCore.Qt.RichText)
-        self.site_label.setAlignment(QtCore.Qt.AlignCenter)
-        self.site_label.setOpenExternalLinks(True)
-        self.site_label.setTextInteractionFlags(QtCore.Qt.TextBrowserInteraction)
-        self.verticalLayout.addWidget(self.site_label)
-
         self.site2_label = QtWidgets.QLabel(self)
         self.site2_label.setTextFormat(QtCore.Qt.RichText)
         self.site2_label.setAlignment(QtCore.Qt.AlignCenter)
@@ -121,8 +114,7 @@ class AboutWindow(QWidget):
         self.setWindowTitle( "About Persepolis")
         self.title_label.setText( "Persepolis Download Manager")
         self.version_label.setText( "Version 2.2.2 unstable")
-        self.name_label.setText( "\nAliReza AmirSamimi\nMohammadreza Abdollahzadeh\nSadegh Alirezaie\nMostafa Asadi")
-        self.site_label.setText("<a href=http://amirsamimi.ir>http://amirsamimi.ir</a>" )
+        self.name_label.setText( "\nAliReza AmirSamimi\nMohammadreza Abdollahzadeh\nSadegh Alirezaie\nMostafa Asadi\nMohammadAmin Vahedinia")
         self.site2_label.setText("<a href=https://persepolisdm.github.io>https://persepolisdm.github.io</a>" )
         self.telegram_label.setText( "<a href=https://telegram.me/persepolisdm>https://telegram.me/persepolisdm</a>" )
         self.pushButton.setText( "Ok")
