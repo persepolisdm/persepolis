@@ -77,7 +77,7 @@ for uninstall,
     $ bash install 
 
 ### Installation on Mac OS X
-you must install aria2 python3 python3-requests python3-pyqt5 first! you can use [HomeBrew](http://brew.sh/)] .
+you must install aria2 python3 python3-requests python3-pyqt5 first! you can use [HomeBrew](http://brew.sh/) .
 
     $ brew install python3
     $ brew install aria2
@@ -91,7 +91,6 @@ when dependencies installed :
 
     $ git clone "https://github.com/persepolisdm/persepolis.git" 
     $ cd persepolis
-    $ bash dependay_mac
     $ bash install mac
 
 for uninstallation
