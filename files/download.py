@@ -56,7 +56,7 @@ def startAria():
     answer = aria2Version()
     return answer
 
-#check aria2 release version . Persepolis is usig this function to check that aria2 RPC conection is available or not
+#checking aria2 release version . Persepolis is usig this function to check that aria2 RPC conection is available or not
 def aria2Version():
     try : 
         answer = server.aria2.getVersion()
@@ -65,6 +65,7 @@ def aria2Version():
         answer = "did not respond"
     return answer
  
+#this function is sending download request to aria2        
 def downloadAria(gid):
 #add_link_dictionary is a dictionary that contains user download request information
     download_info_file = download_info_folder + "/" + gid
@@ -134,13 +135,13 @@ def downloadAria(gid):
 
 
     if start_time_status == "scheduled":
-#read new limit option before starting download! perhaps user changed this in progress bar window
+#reading new limit option before starting download! perhaps user changed this in progress bar window
         download_info_file_list = readList(download_info_file) 
         add_link_dictionary = download_info_file_list[9]
         
         limit = add_link_dictionary['limit']
 
-#eliminate start_hour and start_minute!         
+#eliminating start_hour and start_minute!         
         add_link_dictionary['start_hour'] = None
         add_link_dictionary['start_minute'] = None
         download_info_file_list [9] = add_link_dictionary
@@ -148,7 +149,7 @@ def downloadAria(gid):
 
 
 
-#find download_path_temp from setting_file
+#finding download_path_temp from setting_file
     f = Open(setting_file)
     setting_file_lines = f.readlines()
     f.close()
@@ -159,7 +160,7 @@ def downloadAria(gid):
 
 
     if start_time_status != 'stopped':
-#send download request to aria2
+#sending download request to aria2
         if link[0:5] != "https":
             aria_dict = {'gid':gid ,'max-tries' : str(setting_dict['max-tries']) , 'retry-wait': int(setting_dict['retry-wait']) , 'timeout' : int(setting_dict['timeout']) , 'header': header_list ,'out': out , 'user-agent': user_agent ,  'referer': referer ,  'all-proxy': ip_port , 'max-download-limit': limit , 'all-proxy-user':str(proxy_user), 'all-proxy-passwd':str(proxy_passwd), 'http-user':str(download_user), 'http-passwd':str(download_passwd) , 'split':'16', 'max-connection-per-server':str(connections) , 'min-split-size':'1M', 'continue':'true', 'dir':str(download_path_temp) } 
         else:
@@ -434,16 +435,17 @@ def downloadStop(gid):
     else :
         answer = 'stopped'
 
-    add_link_dictionary = download_info_file_list[9]
-    add_link_dictionary['start_hour'] = None
-    add_link_dictionary['start_minute'] = None
-    add_link_dictionary['end_hour'] = None
-    add_link_dictionary['end_minute'] = None
-    add_link_dictionary['after_download'] = 'None'
+    if status != 'complete':
+        add_link_dictionary = download_info_file_list[9]
+        add_link_dictionary['start_hour'] = None
+        add_link_dictionary['start_minute'] = None
+        add_link_dictionary['end_hour'] = None
+        add_link_dictionary['end_minute'] = None
+        add_link_dictionary['after_download'] = 'None'
 
-    download_info_file_list[1] = "stopped"
-    download_info_file_list[9] = add_link_dictionary
-    writeList(download_info_file , download_info_file_list)
+        download_info_file_list[1] = "stopped"
+        download_info_file_list[9] = add_link_dictionary
+        writeList(download_info_file , download_info_file_list)
     return answer
  
 
@@ -477,7 +479,7 @@ def downloadUnpause(gid):
 
     return answer
 
-#limit download speed
+#limiting download speed
 def limitSpeed(gid ,limit):
     try :
         answer = server.aria2.changeOption(gid, {'max-download-limit': limit })
@@ -485,6 +487,7 @@ def limitSpeed(gid ,limit):
         answer = str("None")
     print(answer)
 
+#this function returning  GID of active downloads
 def activeDownloads():
     try:
         answer = server.aria2.tellActive(['gid'])
@@ -510,8 +513,8 @@ def sigmaTime(hour,minute):
 
 #nowTime returns now time!
 def nowTime():
-    now_time_hour = time. strftime("%H")
-    now_time_minute = time. strftime("%M")
+    now_time_hour = time.strftime("%H")
+    now_time_minute = time.strftime("%M")
     return sigmaTime(now_time_hour,now_time_minute)
 
 def startTime(start_hour , start_minute , gid):
@@ -537,7 +540,7 @@ def startTime(start_hour , start_minute , gid):
 
 def endTime(end_hour , end_minute , gid):
     time.sleep(1)
-    print("end time actived")
+    print("end time actived " + gid)
     sigma_end = sigmaTime(end_hour , end_minute) 
     sigma_now = nowTime()
     download_info_file = download_info_folder + "/" + gid
@@ -554,11 +557,11 @@ def endTime(end_hour , end_minute , gid):
             except:
                 status_file = 'no'
 #checking download's status
-        if status == 'downloading' or status == 'paused' :
+        if status == 'downloading' or status == 'paused' or status == 'waiting' :
             answer = 'continue'
         else:
             answer = 'end'
-            print("Download ended before!")
+            print("Download ended before! " + str(gid))
             break
 
         sigma_now = nowTime()

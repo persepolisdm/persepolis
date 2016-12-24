@@ -21,10 +21,6 @@ import os , time , ast
 from newopen import Open , readList , writeList
 import download
 from bubble import notifySend
-import platform
-
-global os_type
-os_type = platform.system()
 
 
 home_address = os.path.expanduser("~")
@@ -57,7 +53,7 @@ class ProgressWindow(ProgressWindow_Ui):
         self.after_pushButton.clicked.connect(self.afterPushButtonPressed)
 #check if limit speed actived by user or not
         download_info_file_list_len = 1
-        while download_info_file_list_len != 12 :
+        while download_info_file_list_len != 13 :
             download_info_file = download_info_folder + "/" + self.gid
             download_info_file_list = readList(download_info_file) 
             download_info_file_list_len = len(download_info_file_list)
@@ -160,32 +156,31 @@ class ProgressWindow(ProgressWindow_Ui):
             f.close()
 
     def afterPushButtonPressed(self , button):
-        action = self.after_comboBox.currentText()
         self.after_pushButton.setEnabled(False)
-        if action == 'Shut Down as root':
-            passwd, ok = QInputDialog.getText(self, 'PassWord','Please enter root password:' , QtWidgets.QLineEdit.Password)
-            if ok :
-                answer = os.system("echo '" + passwd+"' |sudo -S echo 'checking passwd'  "  )
-                while answer != 0 :
-                    passwd, ok = QInputDialog.getText(self, 'PassWord','Wrong Password!\nTry again!' , QtWidgets.QLineEdit.Password)
-                    if ok :
-                        answer = os.system("echo '" + passwd+"' |sudo -S echo 'checking passwd'  "  )
-                    else:
-                        ok = False
-                        break
-
-                if ok != False :
-                    if os_type == 'Linux':
-                        os.system("bash " + "shutdown_script_root  '" + passwd + "' '"+ self.gid + "' &" )
-                    elif os_type == 'Darwin':
-                        os.system("bash " + "shutdown_script_root_osx  '" + passwd + "' '"+ self.gid + "' &" )
-
+        #getting root password
+        passwd, ok = QInputDialog.getText(self, 'PassWord','Please enter root password:' , QtWidgets.QLineEdit.Password)
+        if ok :
+            #checking password
+            answer = os.system("echo '" + passwd+"' |sudo -S echo 'checking passwd'  "  )
+            while answer != 0 :
+                passwd, ok = QInputDialog.getText(self, 'PassWord','Wrong Password!\nTry again!' , QtWidgets.QLineEdit.Password)
+                if ok :
+                    answer = os.system("echo '" + passwd +"' |sudo -S echo 'checking passwd'  "  )
                 else:
-                    self.after_checkBox.setChecked(False)
+                    ok = False
+                    break
+
+            if ok != False :
+                    #shutdown_script_root will create by initialization.py on persepolis startup
+                    #sending password and queue name to shutdown_script_root
+                    #this script is creating a file with name of self.gid in  this folder "/tmp/persepolis/shutdown/" . and writing a "wait" word in this file 
+                    #shutdown_script_root is checking that file every second . when "wait" changes to "shutdown" in that file then script is shutting down system 
+ 
+                    os.system("bash " + "/tmp/persepolis/shutdown_script_root  '" + passwd + "' '"+ self.gid + "' &" )
             else:
                 self.after_checkBox.setChecked(False)
         else:
-            os.system("bash " + "shutdown_script  '" + self.gid  + "' &" )
+            self.after_checkBox.setChecked(False)
 
 
 

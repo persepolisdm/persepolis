@@ -16,7 +16,7 @@
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import QFileDialog 
-import os , string , ast
+import os , ast
 from newopen import Open , writeList , readList
 from addlink_ui import AddLinkWindow_Ui
 
@@ -28,6 +28,9 @@ config_folder = str(home_address) + "/.config/persepolis_download_manager"
 download_info_folder = config_folder + "/download_info"
 
 config_folder = str(home_address) + "/.config/persepolis_download_manager"
+queues_list_file = config_folder + '/queues_list'
+category_folder = config_folder + '/category_folder'
+
 
 #setting
 setting_file = config_folder + '/setting'
@@ -37,6 +40,8 @@ class PropertiesWindow(AddLinkWindow_Ui):
         super().__init__()
 
         self.download_later_pushButton.hide() #hiding download_later_pushButton
+        self.change_name_checkBox.hide() #hiding change_name_checkBox
+        self.change_name_lineEdit.hide() #hiding change_name_lineEdit
 
         self.callback = callback
         self.gid = gid
@@ -140,6 +145,27 @@ class PropertiesWindow(AddLinkWindow_Ui):
         except :
             pass
             
+#finding categories name and adding them to add_queue_comboBox 
+        self.add_queue_comboBox.addItem('Single Downloads')
+        f_queues_list = Open(queues_list_file)
+        queues_list_file_lines = f_queues_list.readlines()
+        f_queues_list.close()
+        for queue in queues_list_file_lines :
+            queue_strip = queue.strip()
+            self.add_queue_comboBox.addItem(str(queue_strip))
+
+
+    #finding current queue and setting it!
+        self.current_category = str(download_info_file_list[12])
+
+        current_category_index = self.add_queue_comboBox.findText(self.current_category)
+        self.add_queue_comboBox.setCurrentIndex(current_category_index)
+
+
+# add_queue_comboBox event
+        self.add_queue_comboBox.currentIndexChanged.connect(self.queueChanged) 
+
+
 #limit speed            
         limit = str(self.add_link_dictionary['limit'])
         if limit != '0' :
@@ -214,7 +240,18 @@ class PropertiesWindow(AddLinkWindow_Ui):
         else :
             self.ok_pushButton.setEnabled(True)
 
+    def queueChanged(self,combo):
+        #if one of the queues selected by user , start time and end time must be deactivated
+        if self.add_queue_comboBox.currentIndex() != 0 :
+            self.start_checkBox.setCheckState(QtCore.Qt.Unchecked) 
+            self.start_checkBox.setEnabled(False)
 
+            self.end_checkBox.setCheckState(QtCore.Qt.Unchecked)
+            self.end_checkBox.setEnabled(False)
+        else:
+            self.start_checkBox.setEnabled(True)
+            self.end_checkBox.setEnabled(True)
+ 
 
 
 #close window if cancelButton Pressed
@@ -294,7 +331,35 @@ class PropertiesWindow(AddLinkWindow_Ui):
         self.add_link_dictionary['download_path'] = download_path
         self.add_link_dictionary['limit'] = limit
         self.add_link_dictionary['connections'] = connections
-        self.callback(self.add_link_dictionary , self.gid)
+
+        new_category = str(self.add_queue_comboBox.currentText()) 
+        if new_category != self.current_category : #it means category changed
+        #first download must eliminated form former category 
+        #reading current_category
+            current_category_file = category_folder + '/' + self.current_category
+
+            f = Open(current_category_file)
+            f_list = f.readlines()
+            f.close()
+            #eliminating gid of download from current_category_file
+            f = Open(current_category_file , 'w')
+            for line in f_list:
+                gid = line.strip()
+                if gid != self.gid :
+                    f.writelines(gid + '\n')
+
+            f.close()
+ 
+            #adding download to the new category
+            new_category_file = category_folder + '/' + str(new_category)
+
+            f = Open(new_category_file , 'a')
+            f.writelines(self.gid + '\n')
+            f.close()
+               
+
+
+        self.callback(self.add_link_dictionary , self.gid , new_category)
 
         self.saveWindowSize()
         self.close()

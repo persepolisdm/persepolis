@@ -45,10 +45,10 @@ def notifySend(message1,message2,time,sound ,systemtray=None ):
     setting_file_lines = f.readlines()
     f.close()
     setting_dict_str = str(setting_file_lines[0].strip())
-    setting_dict = ast.literal_eval(setting_dict_str) 
+    setting_dict = ast.literal_eval(setting_dict_str)
 
     enable_notification = str(setting_dict['notification'])
- 
+
     time = str(time)
     message1 = str(message1)
     message2 = str(message2)
@@ -60,5 +60,6 @@ def notifySend(message1,message2,time,sound ,systemtray=None ):
         if os_type == 'Linux':
             os.system("notify-send --icon='persepolis' --app-name='Persepolis Download Manager' --expire-time='" + time + "' '" +  message1 +  "' \ '" + message2 +  "' "  )
         elif os_type == 'Darwin':
-            os.system("osascript -e 'display notification \"" + message2 + "\"with title \"Persepolis Download Manager\" subtitle \""  +  message1 + "\"'" )
+            from mac_notification import notifyMac
 
+            notifyMac("Persepolis Download Manager", message1, message2)

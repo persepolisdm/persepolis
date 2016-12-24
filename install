@@ -16,7 +16,6 @@
 
 clear screen
 
-os_type="$1" #os_type can be linux or mac
 
 echo "Checking dependencies"
 aria2c --version 1>/dev/null
@@ -67,58 +66,24 @@ if [ "$os_type" != "mac" ];then
     fi
 fi
 
-if [ "$os_type" != "mac" ];then
-    program_path="/usr/share/persepolis"
-    exec_path='/usr/bin/'
-    chmod +x "./files/persepolis-download-manager"
-    chmod +x "./persepolis"
-    chmod +x "./Persepolis Download Manager.desktop"
-    chmod +x "./compatibility.py"
-    sudo rm -rf "$program_path"
-    sudo mkdir -p "$program_path"
-    sudo cp -rf  ./files/* "$program_path/"
-    sudo cp -rf "./persepolis" "$exec_path"
-    sudo cp -rf "./Persepolis Download Manager.desktop" "/usr/share/applications/"
-    sudo cp -rf "./files/icon.svg" "/usr/share/pixmaps/persepolis.svg"
-    sudo cp -rf "./persepolis.1.gz" "/usr/share/man/man1/persepolis.1.gz"
-    rm -rf "$HOME/.config/persepolis_download_manager/setting"
-    rm -rf "$HOME/.config/persepolis_download_manager/windows_size"
-    if [ "$?" -eq "0" ];then
-        ./compatibility.py
-        echo "Installation compeleted!"
-    else
-        echo "Installation Failed"
-    fi
-    exit
+program_path="/usr/share/persepolis"
+exec_path='/usr/bin/'
+chmod +x "./files/persepolis"
+chmod +x "./persepolis"
+chmod +x "./Persepolis Download Manager.desktop"
+sudo rm -rf "$program_path"
+sudo mkdir -p "$program_path"
+sudo cp -rf  ./files/* "$program_path/"
+sudo cp -rf "./persepolis" "$exec_path"
+sudo cp -rf "./Persepolis Download Manager.desktop" "/usr/share/applications/"
+sudo cp -rf "./files/icon.svg" "/usr/share/pixmaps/persepolis.svg"
+sudo cp -rf "./persepolis.1.gz" "/usr/share/man/man1/persepolis.1.gz"
+if [ "$?" -eq "0" ];then
+    echo "Installation compeleted!"
 else
-    program_path="/usr/local/share/persepolis"
-    exec_path='/usr/local/bin/'
-	pythonpath=`./pythonfinder.py`
-    rm "./files/persepolis-download-manager"
-    mv "./files/persepolis-download-manager_mac" "./files/persepolis-download-manager"
-    chmod +x "./files/persepolis-download-manager"
-    rm "./persepolis"
-    mv "./persepolis_mac" "./persepolis"
-    chmod +x "./persepolis"
-    chmod +x "./compatibility.py"
-    sudo rm -rf "$program_path"
-    sudo mkdir -p "$program_path"
-    sudo cp -rf  ./files/* "$program_path/"
-    sudo cp -rf "./persepolis" "$exec_path"
-    sudo ln -s $pythonpath $program_path/"Persepolis Download Manager"
-    sudo rm -rf "/Applications/Persepolis Download Manager.app"
-    sudo cp -rf "Persepolis Download Manager.app" /Applications
-    sudo cp -rf "./persepolis.1.gz" "/usr/local/share/man/man1/persepolis.1.gz"
-    rm -rf "$HOME/.config/persepolis_download_manager/setting"
-    rm -rf "$HOME/.config/persepolis_download_manager/windows_size"
-    if [ "$?" -eq "0" ];then
-        ./compatibility.py
-        echo "Installation compeleted!"
-    else
-        echo "Installation Failed"
-    fi
-    exit
+    echo "Installation Failed"
 fi
+exit
 
 
 

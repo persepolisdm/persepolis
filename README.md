@@ -3,7 +3,7 @@ Persepolis Download Manager
 + version : 2.2.2 Unstable
 + Persepolis Download Manager is a GUI for aria2.
 + Persepolis written in PYQT5.
-+ You can install Persepolis in GNU/Linux distributions or Mac Os or OS X
+
 
 ![ScreenShot](http://s1.picofile.com/file/8264685926/persepolis.jpg)
 
@@ -18,14 +18,14 @@ Persepolis Download Manager
 
 
 ##For installing in ArchLinux and Arch bases
-#Installing latest release (recommended)
+#Installing last release (recommended)
 
     $ yaourt -S persepolis
 
-#Installing with latest change on github
+#Installing with latest chang on github
 
 	$ yaourt -S persepolis-git
-
+Obviously you can't install both of persepolis and persepolis-git simoltaneously . and you must uninstall one of them(with pacman) for installing another one.
 ##For installing in Fedora
 
 	$ sudo dnf copr enable amirsamimi/persepolis
@@ -53,54 +53,27 @@ You must install `aria2` , `pulseaudio-utils` , `libnotify-bin` , `python 3` , `
 
     $ sudo dnf install aria2 pulseaudio-utils libnotify python3-qt5 qt5-qtsvg python3-requests
 
-After installing dependencies, change your directory with cd command and run install file
 
-    $ bash install
-
-for uninstall,
-
-    $ bash uninstall
-
-### or...
-
-    $ cd
-    $ cd /tmp
-    $ wget -O persepolis.tar.gz https://github.com/persepolisdm/persepolis/archive/master.tar.gz
-    $ tar  --overwrite-dir -xf persepolis.tar.gz
-    $ cd persepolis-master
-    $ bash install
 
 ### or ...
 
     $ git clone "https://github.com/persepolisdm/persepolis.git" 
     $ cd persepolis
+
+for installation
     $ bash install 
 
+for uninstallation,
+
+    $ bash uninstall
+
+
 ### Installation on Mac OS X
-you must install aria2 python3 python3-requests python3-pyqt5 first! you can use [HomeBrew](http://brew.sh/) .
-
-    $ brew install python3
-    $ brew install aria2
-    $ brew install pyqt5
-    $ pip3 install requests 
-
-an alternative way for installing dependencies in mac , after cloning project you can run `bash dependay_mac` in terminal
+Download .app file from [our realease page](https://github.com/persepolisdm/persepolis/releases)
 
 
-when dependencies installed :
-
-    $ git clone "https://github.com/persepolisdm/persepolis.git" 
-    $ cd persepolis
-    $ bash install mac
-
-for uninstallation
-
-    $ git clone "https://github.com/persepolisdm/persepolis.git" 
-    $ cd persepolis
-    $ bash uninstall mac
 
 
-you can find Persepolis Download Manager Icon in your Application folder and  applications menu .
 
 ##Configuring PersepolisDM to use with FlashGot
 open firefox
@@ -117,13 +90,13 @@ then after opening firefox go to Extensions and find flashgot
 ![ScreenShot](http://s9.picofile.com/file/8269074242/prefrences.jpg)
 
 then click on preferences and click add
-write Persepolis Download Manager and select this file for executble path (in GNU/Linux)
+write Persepolis Download Manager and select this file for executble path (in linux)
 
 	$ /usr/bin/persepolis
 
 and (in Mac)
 
-    $ /usr/local/bin/persepolis 
+    $ /Applications/Persepolis Download Manager.app/Contents/MacOS/Persepolis Download Manager 
 
 then in the white field copy/paste the following codes
 
@@ -170,18 +143,14 @@ Persepolis website developer : Sadegh Alirezaei
 https://github.com/Alirezaies
 alirezaie.sadegh@gmail.com
 
-Persepolis Mac developer : Mohammad Amin Vahediniya
-https://github.com/Mr0Null
-mohammadamin@beeit.ir
-
-
-
 Persepolis website :
 https://persepolisdm.github.io/
 
 Persepolis persian website:
 http://amirsamimi.ir/persepolis2
 
+Persepolis Twitter
+https://twitter.com/persepolisdm
 
 PersepolisDM Telegram Channel:
 https://telegram.me/persepolisdm

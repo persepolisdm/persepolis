@@ -99,3 +99,12 @@ def readList(file_path , mode = 'dictionary' ):
         
     return list
 
+def readDict(file_path) :
+    f = Open(file_path)
+    f_lines = f.readlines()
+    f.close()
+    dict_str = str(f_lines[0].strip())
+    return_dict = ast.literal_eval(dict_str) 
+    return return_dict
+
+

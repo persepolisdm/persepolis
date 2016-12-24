@@ -239,6 +239,14 @@ class Setting_Ui(QWidget):
         self.after_download_checkBox = QCheckBox()    
         self.verticalLayout_3.addWidget(self.after_download_checkBox)
 
+#show_menubar_checkbox
+        self.show_menubar_checkbox = QCheckBox()
+        self.verticalLayout_3.addWidget(self.show_menubar_checkbox)
+
+#show_sidepanel_checkbox
+        self.show_sidepanel_checkbox = QCheckBox()
+        self.verticalLayout_3.addWidget(self.show_sidepanel_checkbox)
+
 #defaults_pushButton
         self.defaults_pushButton = QPushButton(self)
         self.horizontalLayout.addWidget(self.defaults_pushButton)
@@ -286,7 +294,10 @@ class Setting_Ui(QWidget):
         self.font_label.setText( "Font : ")
         self.font_size_label.setText( "Size : ")
         self.enable_system_tray_checkBox.setText("Enable system tray icon.")
-        self.after_download_checkBox.setText("Show download complete dialog,when download finished.")
+        self.after_download_checkBox.setText("Show download complete dialog,when download has finished.")
+        self.show_menubar_checkbox.setText("Show menubar.")
+        self.show_sidepanel_checkbox.setText("Show side panel.")
+
         self.setting_tabWidget.setTabText(self.setting_tabWidget.indexOf(self.style_tab),  "Appearance")
         self.defaults_pushButton.setText( "Defaults")
         self.cancel_pushButton.setText( "Cancel")

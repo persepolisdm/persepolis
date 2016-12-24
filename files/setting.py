@@ -20,6 +20,7 @@ from PyQt5.QtWidgets import QFileDialog , QStyleFactory , QMessageBox
 from PyQt5.QtGui import QFont
 from newopen import Open
 import osCommands
+import platform
 
 home_address = os.path.expanduser("~")
 config_folder = str(home_address) + "/.config/persepolis_download_manager"
@@ -116,6 +117,21 @@ class PreferencesWindow(Setting_Ui):
             self.enable_system_tray_checkBox.setChecked(True)
         else:
             self.enable_notifications_checkBox.setChecked(False)
+#show_menubar
+        if str(self.setting_dict['show_menubar']) == 'yes':
+            self.show_menubar_checkbox.setChecked(True)
+        else:
+            self.show_menubar_checkbox.setChecked(False)
+
+        if platform.system() == 'Darwin' :
+            self.show_menubar_checkbox.setChecked(True)
+            self.show_menubar_checkbox.hide()
+#show_sidepanel
+        if str(self.setting_dict['show_sidepanel']) == 'yes':
+            self.show_sidepanel_checkbox.setChecked(True)
+        else:
+            self.show_sidepanel_checkbox.setChecked(False)
+
             
 #after download dialog
         if str(self.setting_dict['after-dialog']) == 'yes':
@@ -142,7 +158,7 @@ class PreferencesWindow(Setting_Ui):
 
     def downloadFolderPushButtonClicked(self,button):
         download_path = str(self.setting_dict['download_path'])
-        fname = QFileDialog.getExistingDirectory(self,'Open f', download_path )
+        fname = QFileDialog.getExistingDirectory(self,'Select a directory', download_path )
         if fname:
             self.download_folder_lineEdit.setText(fname)
             self.setting_dict['download_path'] = str(fname)
@@ -172,7 +188,7 @@ class PreferencesWindow(Setting_Ui):
         download_path_temp_default = str(home_address) + '/.persepolis'
         download_path_default = str(home_address) + '/Downloads/Persepolis'
  
-        self.setting_dict = {'rpc-port' : 6801 , 'notification' : 'Native notification' , 'after-dialog' : 'yes' , 'tray-icon':'yes', 'max-tries' : 5 , 'retry-wait': 0 , 'timeout' : 60 , 'connections' : 16 , 'download_path_temp' : download_path_temp_default , 'download_path':download_path_default , 'sound' : 'yes' , 'sound-volume':100 , 'style':'Fusion' , 'color-scheme' : 'Persepolis Dark Red' , 'icons':'Archdroid-Red','font' : 'Ubuntu' , 'font-size' : 9  }
+        self.setting_dict = { 'show_menubar' : 'no' , 'show_sidepanel' : 'yes' , 'rpc-port' : 6801 , 'notification' : 'Native notification' , 'after-dialog' : 'yes' , 'tray-icon':'yes', 'max-tries' : 5 , 'retry-wait': 0 , 'timeout' : 60 , 'connections' : 16 , 'download_path_temp' : download_path_temp_default , 'download_path':download_path_default , 'sound' : 'yes' , 'sound-volume':100 , 'style':'Fusion' , 'color-scheme' : 'Persepolis Dark Red' , 'icons':'Archdroid-Red','font' : 'Ubuntu' , 'font-size' : 9  }
 
         self.tries_spinBox.setValue(int(self.setting_dict['max-tries']))
         self.wait_spinBox.setValue(int(self.setting_dict['retry-wait']))
@@ -213,6 +229,13 @@ class PreferencesWindow(Setting_Ui):
         self.enable_system_tray_checkBox.setChecked(True)
 # after_download_checkBox
         self.after_download_checkBox.setChecked(True)
+#hide menubar for linux
+        if platform.system == 'Darwin':
+            self.show_menubar_checkbox.setChecked(True)
+        else:
+            self.show_menubar_checkbox.setChecked(False)
+#show side panel
+        self.show_sidepanel_checkbox.setCheckState(True)
 
     def okPushButtonPressed(self,button):
         self.setting_dict['max-tries'] = self.tries_spinBox.value()
@@ -247,6 +270,23 @@ class PreferencesWindow(Setting_Ui):
             self.setting_dict['after-dialog'] = 'yes'
         else :
             self.setting_dict['after-dialog'] = 'no'
+
+#show_menubar_checkbox
+        if self.show_menubar_checkbox.isChecked() == True :
+            self.setting_dict['show_menubar'] = 'yes'
+            self.parent.menubar.show()
+
+        else:
+            self.setting_dict['show_menubar'] = 'no'
+            self.parent.menubar.hide()
+
+#show_sidepanel_checkbox
+        if self.show_sidepanel_checkbox.isChecked() == True:
+            self.setting_dict['show_sidepanel'] = 'yes'
+            self.parent.category_tree_qwidget.show()
+        else:
+            self.setting_dict['show_sidepanel'] = 'no'
+            self.parent.category_tree_qwidget.hide()
 #this section  creates temporary download folder and download folder and download sub folders if they did not existed.
         download_path_temp  = self.setting_dict ['download_path_temp']
         download_path = self.setting_dict [ 'download_path']

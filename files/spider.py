@@ -106,10 +106,10 @@ def spider(add_link_dictionary , gid):
     download_info_file_list = readList(download_info_file)
     
 
-    download_info = [filename , None , filesize , None ,  None , None , None ,None , None , None , None , None ]
+    download_info = [filename , None , filesize , None ,  None , None , None ,None , None , None , None , None  , None ]
 
    
-    for i in range(12):
+    for i in range(13):
         if download_info[i] != None:
             download_info_file_list[i] = download_info[i]
  

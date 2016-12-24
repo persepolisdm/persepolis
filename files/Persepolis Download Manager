@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
 #    This program is free software: you can redistribute it and/or modify
@@ -14,6 +14,8 @@
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+#This script is running persepolis for mac
+
 import initialization
 from newopen import Open
 import os , sys , time , ast , argparse
@@ -23,6 +25,8 @@ from PyQt5.QtGui import QFont
 from palettes import DarkRedPallete , DarkBluePallete , ArcDarkRedPallete , ArcDarkBluePallete , LightRedPallete , LightBluePallete
 from bubble import notifySend
 import osCommands
+from error_window import ErrorWindow
+import traceback
 # initialization
 home_address = os.path.expanduser("~")
 
@@ -54,7 +58,6 @@ parser.add_argument('--cookie',action='store',nargs = 1 , help='Cookie' )
 parser.add_argument('--agent',action='store',nargs = 1 , help='Set user agent for HTTP(S) downloads.  Default: aria2/$VERSION, $VERSION is replaced by package version.' )
 parser.add_argument('--headers',action='store',nargs = 1 , help='Append HEADER to HTTP request header. ' )
 parser.add_argument('--name',action='store',nargs = 1 , help='The  file  name  of  the downloaded file. ' )
-parser.add_argument('--execute',action='store',nargs=1, help="Execute persepolis or not! It's useful when Persepolis started before and you want to add a download link.")
 parser.add_argument('--default',action='store_true',help='restore default setting' )
 parser.add_argument('--clear',action='store_true',help='Clear download list and user setting!' )
 parser.add_argument('--tray',action='store_true',help="Persepolis is starting in tray icon. It's useful when you want to put persepolis in system's startup." )
@@ -120,7 +123,8 @@ if ('link' in add_link_dictionary):
     f.writelines(str(add_link_dictionary))
     f.close()
 
-if "".join(args.execute) == "yes": 
+if not (os.path.isfile('/tmp/persepolis_exec.lock')): #if persepolis_exec is existed , it means persepolis is still running! 
+    osCommands.touch('/tmp/persepolis_exec.lock') #create persepolis_exec.lock in /tmp
 #setting color_scheme and style
 #see palettes.py and setting.py
     if __name__ == "__main__":
@@ -155,16 +159,32 @@ if "".join(args.execute) == "yes":
             persepolis_download_manager.setPalette(persepolis_light_blue)
             persepolis_download_manager.setStyleSheet("QMenu::item:selected { background-color : #2a82da ;color : white } QToolTip { color: #ffffff; background-color: #353535; border: 1px solid white; }")
 
-        mainwindow = MainWindow( start_in_tray )
-        if start_in_tray == 'yes':
-            mainwindow.hide()
-        else:
-            mainwindow.show()
+
+        try:
+            mainwindow = MainWindow( start_in_tray )
+            if start_in_tray == 'yes':
+                mainwindow.hide()
+            else:
+                mainwindow.show()
+
+        except Exception :
+            #Resetting persepolis
+            status = osCommands.removeDir(str(config_folder))
+            #removing persepolis lock form /tmp
+            f = Open('/tmp/persepolis_exec.lock')
+            f.close()
+            f.remove()
+            error_window = ErrorWindow(str(traceback.format_exc()))
+            error_window.show()
+
         sys.exit(persepolis_download_manager.exec_())
+
     else:
          sys.exit(0)
 else:
-# (--execute no) and no link finded in --link
+    print('lock file found in this path:')
+    print('    /tmp/persepolis_exec.lock')
+    print('you can remove it manually!')
 #this section warns user that program is still running and no need to run it again
 #and creating a file to notify mainwindow for showing
     if not('link' in add_link_dictionary):

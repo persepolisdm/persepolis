@@ -93,6 +93,14 @@ class AboutWindow(QWidget):
         self.telegram_label.setTextInteractionFlags(QtCore.Qt.TextBrowserInteraction)
         self.verticalLayout.addWidget(self.telegram_label)
 
+        self.twitter_label = QtWidgets.QLabel(self)
+        self.twitter_label.setTextFormat(QtCore.Qt.RichText)
+        self.twitter_label.setAlignment(QtCore.Qt.AlignCenter)
+        self.twitter_label.setOpenExternalLinks(True)
+        self.twitter_label.setTextInteractionFlags(QtCore.Qt.TextBrowserInteraction)
+        self.verticalLayout.addWidget(self.twitter_label)
+
+   
         self.horizontalLayout_2.addLayout(self.verticalLayout)
         self.verticalLayout_2.addLayout(self.horizontalLayout_2)
         self.horizontalLayout = QtWidgets.QHBoxLayout()
@@ -113,10 +121,11 @@ class AboutWindow(QWidget):
 
         self.setWindowTitle( "About Persepolis")
         self.title_label.setText( "Persepolis Download Manager")
-        self.version_label.setText( "Version 2.2.2 unstable")
+        self.version_label.setText( "Version 2.3 Alpha")
         self.name_label.setText( "\nAliReza AmirSamimi\nMohammadreza Abdollahzadeh\nSadegh Alirezaie\nMostafa Asadi\nMohammadAmin Vahedinia")
         self.site2_label.setText("<a href=https://persepolisdm.github.io>https://persepolisdm.github.io</a>" )
         self.telegram_label.setText( "<a href=https://telegram.me/persepolisdm>https://telegram.me/persepolisdm</a>" )
+        self.twitter_label.setText("<a href=https://twitter.com/persepolisdm>https://twitter.com/persepolisdm</a>")
         self.pushButton.setText( "Ok")
 
     def saveWindowSize(self):

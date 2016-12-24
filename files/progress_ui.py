@@ -64,7 +64,7 @@ class ProgressWindow_Ui(QWidget):
 #progress_tabWidget
         self.progress_tabWidget = QtWidgets.QTabWidget(self)
 #informations_tab
-        self.informations_tab = QtWidgets.QWidget()
+        self.informations_tab = QWidget()
         self.informations_verticalLayout = QtWidgets.QVBoxLayout(self.informations_tab)
 #link_label
         self.link_label = QtWidgets.QLabel(self.informations_tab)
@@ -196,8 +196,8 @@ class ProgressWindow_Ui(QWidget):
 
         self.after_comboBox.setItemText(0,  "Shut Down as root")
 
-        if os_type == 'Linux': #OS X can't shutdown system without sudo
-            self.after_comboBox.setItemText(1,  "Shut Down")
+#         if os_type == 'Linux': #OS X can't shutdown system without sudo
+#             self.after_comboBox.setItemText(1,  "Shut Down")
 
         self.progress_tabWidget.setTabText(self.progress_tabWidget.indexOf(self.options_tab),  "Download Options")
         self.resume_pushButton.setText( "Resume")
