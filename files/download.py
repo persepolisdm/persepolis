@@ -21,6 +21,7 @@ import time
 import ast
 import shutil
 from newopen import Open , readList , writeList
+import platform
 
 
 
@@ -50,8 +51,16 @@ server = xmlrpc.client.ServerProxy(server_uri, allow_none=True)
 
 #starting aria2 with RPC
 def startAria():
-    os.system("aria2c --version 1> /dev/null")
-    os.system("aria2c --no-conf  --enable-rpc --rpc-listen-port '" + str(port) + "' --rpc-max-request-size '10M' --rpc-listen-all --quiet=true &")
+    if platform.system == 'Linux':
+        os.system("aria2c --version 1> /dev/null")
+        os.system("aria2c --no-conf  --enable-rpc --rpc-listen-port '" + str(port) + "' --rpc-max-request-size '10M' --rpc-listen-all --quiet=true &")
+    else:
+        cwd = sys.argv[0]
+        cwd = os.path.dirname(cwd)
+        aria2d = cwd + "/aria2c"
+        os.system("'" + aria2d + "' --version 1> /dev/null")
+        os.system("'" + aria2d + "' --no-conf  --enable-rpc --rpc-listen-port '" + str(port) + "' --rpc-max-request-size '10M' --rpc-listen-all --quiet=true &")
+
     time.sleep(2)
     answer = aria2Version()
     return answer
