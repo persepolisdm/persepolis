@@ -19,8 +19,10 @@ import ast
 home_address = os.path.expanduser("~")
 config_folder = str(home_address) + "/.config/persepolis_download_manager"
 download_info_folder = config_folder + "/download_info"
+category_folder = config_folder + '/category_folder'
+single_downloads_list_file = category_folder + "/" + "Single Downloads"
+
 download_list_file = config_folder + "/download_list_file"
-single_downloads_list_file = config_folder + "/category_folder/Single Downloads"
 download_list_file_lines = []
 
 def compatibility():
@@ -87,7 +89,14 @@ def compatibility():
                 f.writelines(str(dictionary)) 
                 f.close()
 
-                os.system('rm "' + single_downloads_list_file + '" ' )
-                os.system('cp "' +  download_list_file + '"  "' + single_downloads_list_file + '" ' )
 
+                f = open(download_list_file)
+                f_lines = f.readlines()
+                f.close()
 
+                f = open(single_downloads_list_file , 'w')
+                for line in f_lines :
+                    gid = line.strip()
+                    f.writelines(gid + '\n')
+
+                f.close()
