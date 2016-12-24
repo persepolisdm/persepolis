@@ -20,7 +20,7 @@ home_address = os.path.expanduser("~")
 config_folder = str(home_address) + "/.config/persepolis_download_manager"
 download_info_folder = config_folder + "/download_info"
 download_list_file = config_folder + "/download_list_file"
-single_downloads_list_file = config_folder + "/single_downloads_list_file"
+single_downloads_list_file = config_folder + "/category_folder/Single Downloads"
 download_list_file_lines = []
 
 def compatibility():
