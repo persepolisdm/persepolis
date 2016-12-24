@@ -87,7 +87,7 @@ def compatibility():
                 f.writelines(str(dictionary)) 
                 f.close()
 
-        if not(os.path.isfile(single_downloads_list_file)) :
-            os.system('cp "' +  download_list_file + '"  "' + single_downloads_list_file + '" ' )
+                os.system('rm "' + single_downloads_list_file + '" ' )
+                os.system('cp "' +  download_list_file + '"  "' + single_downloads_list_file + '" ' )
 
 
