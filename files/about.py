@@ -17,7 +17,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import QWidget
 from PyQt5.QtGui import QIcon
 import ast , os
-from newopen import Open
+from newopen import Open , readDict
 import icons_resource
 
 home_address = os.path.expanduser("~")
@@ -37,16 +37,6 @@ icons = ':/' + str(setting_dict['icons']) + '/'
 class AboutWindow(QWidget):
     def __init__(self):
         super().__init__()
-#finding windows_size
-        windows_size = config_folder + '/windows_size'
-        f = Open(windows_size)
-        windows_size_file_lines = f.readlines()
-        f.close()
-        windows_size_dict_str = str(windows_size_file_lines[0].strip())
-        windows_size_dict = ast.literal_eval(windows_size_dict_str) 
-        AboutWindow_size = windows_size_dict['AboutWindow']
-
-        self.resize(int(AboutWindow_size[0]),int(AboutWindow_size[1]))
         self.setWindowModality(QtCore.Qt.NonModal)
         self.setMinimumSize(QtCore.QSize(363, 300))
         self.setWindowIcon(QIcon.fromTheme('persepolis',QIcon(':/icon.svg')))
@@ -127,6 +117,13 @@ class AboutWindow(QWidget):
         self.telegram_label.setText( "<a href=https://telegram.me/persepolisdm>https://telegram.me/persepolisdm</a>" )
         self.twitter_label.setText("<a href=https://twitter.com/persepolisdm>https://twitter.com/persepolisdm</a>")
         self.pushButton.setText( "Ok")
+
+#finding windows_size
+        windows_size = config_folder + '/windows_size'
+        windows_size_dict = readDict(windows_size) 
+        AboutWindow_size = windows_size_dict['AboutWindow']
+#setting windows_size
+        self.resize(int(AboutWindow_size[0]),int(AboutWindow_size[1]))
 
     def saveWindowSize(self):
 #finding last windows_size that saved in windows_size file

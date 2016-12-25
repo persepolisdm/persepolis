@@ -17,7 +17,7 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import QFileDialog 
 import os , ast
-from newopen import Open , writeList , readList
+from newopen import Open , writeList , readList , readDict
 from addlink_ui import AddLinkWindow_Ui
 
 
@@ -188,6 +188,13 @@ class PropertiesWindow(AddLinkWindow_Ui):
             self.end_hour_spinBox.setValue(int(self.add_link_dictionary['end_hour']))
             self.end_minute_spinBox.setValue(int(self.add_link_dictionary['end_minute']))
         
+  #finding windows_size
+        windows_size = config_folder + '/windows_size'
+        windows_size_dict = readDict(windows_size) 
+        AddLinkWindow_Ui_size = windows_size_dict['AddLinkWindow_Ui']
+
+#setting windows_size
+        self.resize(int(AddLinkWindow_Ui_size[0]) , int(AddLinkWindow_Ui_size[1]))
             
 
        

@@ -13,11 +13,15 @@
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from newopen import Open , readList , writeList
+from newopen import Open , readList , writeList , readDict
 from after_download_ui import AfterDownloadWindow_Ui
 import os , ast
 from play import playNotification
 import osCommands
+
+home_address = os.path.expanduser("~")
+config_folder = str(home_address) + "/.config/persepolis_download_manager"
+
 
 class AfterDownloadWindow(AfterDownloadWindow_Ui):
     def __init__(self,download_info_file_list , setting_file) :
@@ -50,6 +54,15 @@ class AfterDownloadWindow(AfterDownloadWindow_Ui):
 #disabling link_lineEdit and save_as_lineEdit
         self.link_lineEdit.setEnabled(False)
         self.save_as_lineEdit.setEnabled(False)
+
+#finding windows_size
+        windows_size = config_folder + '/windows_size'
+        windows_size_dict = readDict(windows_size) 
+        AfterDownloadWindow_Ui_size= windows_size_dict['AfterDownloadWindow_Ui']
+
+        self.resize(AfterDownloadWindow_Ui_size[0],AfterDownloadWindow_Ui_size[1])
+
+
     def openFile(self):
 #executing file
         add_link_dictionary = self.download_info_file_list[9]

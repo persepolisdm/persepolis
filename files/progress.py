@@ -18,7 +18,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import QWidget , QSizePolicy ,  QInputDialog
 from progress_ui import ProgressWindow_Ui
 import os , time , ast
-from newopen import Open , readList , writeList
+from newopen import Open , readList , writeList , readDict
 import download
 from bubble import notifySend
 
@@ -73,6 +73,14 @@ class ProgressWindow(ProgressWindow_Ui):
         self.after_comboBox.currentIndexChanged.connect(self.afterComboBoxChanged)
         self.limit_comboBox.currentIndexChanged.connect(self.limitComboBoxChanged)
         self.limit_spinBox.valueChanged.connect(self.limitComboBoxChanged)
+
+    #finding windows_size
+        windows_size = config_folder + '/windows_size'
+        windows_size_dict = readDict(windows_size) 
+        ProgressWindow_Ui_size = windows_size_dict['ProgressWindow_Ui']
+
+    #setting windows_size
+        self.resize(int(ProgressWindow_Ui_size[0]),int(ProgressWindow_Ui_size[1]) )
 
  
     def closeEvent(self, event):

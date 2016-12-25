@@ -18,7 +18,7 @@ import ast , os , copy
 from PyQt5 import QtWidgets
 from PyQt5.QtWidgets import QFileDialog , QStyleFactory , QMessageBox 
 from PyQt5.QtGui import QFont
-from newopen import Open
+from newopen import Open , readDict
 import osCommands
 import platform
 
@@ -143,6 +143,14 @@ class PreferencesWindow(Setting_Ui):
         self.cancel_pushButton.clicked.connect(self.cancelButtonPressed)
         self.defaults_pushButton.clicked.connect(self.defaultsPushButtonPressed)
         self.ok_pushButton.clicked.connect(self.okPushButtonPressed)
+
+#finding windows_size
+        windows_size = config_folder + '/windows_size'
+        windows_size_dict = readDict(windows_size) 
+        Setting_Ui_size = windows_size_dict['Setting_Ui']
+
+#setting windows_size
+        self.resize(int(Setting_Ui_size[0]),int(Setting_Ui_size[1]) )
 
 
     def closeEvent(self,event):

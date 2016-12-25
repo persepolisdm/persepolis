@@ -39,16 +39,6 @@ icons = ':/' +  str(setting_dict['icons']) + '/'
 class Setting_Ui(QWidget):
     def __init__(self,parent=None):
         super().__init__()
-#finding windows_size
-        windows_size = config_folder + '/windows_size'
-        f = Open(windows_size)
-        windows_size_file_lines = f.readlines()
-        f.close()
-        windows_size_dict_str = str(windows_size_file_lines[0].strip())
-        windows_size_dict = ast.literal_eval(windows_size_dict_str) 
-        Setting_Ui_size = windows_size_dict['Setting_Ui']
-
-        self.resize(int(Setting_Ui_size[0]),int(Setting_Ui_size[1]) )
         icon = QtGui.QIcon()
         self.setWindowIcon(QIcon.fromTheme('persepolis',QIcon(':/icon.svg') ))
         self.setWindowTitle('Preferences')

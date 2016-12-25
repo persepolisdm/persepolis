@@ -42,18 +42,6 @@ class TextQueue_Ui(QWidget):
         self.setWindowIcon(QIcon.fromTheme('persepolis' ,QIcon(':/icon.svg')))
         window_verticalLayout = QVBoxLayout()
         self.setLayout(window_verticalLayout)
-#window size
-        windows_size = config_folder + '/windows_size'
-        f = Open(windows_size)
-        windows_size_file_lines = f.readlines()
-        f.close()
- 
-        windows_size_dict_str = str(windows_size_file_lines[0].strip())
-        windows_size_dict = ast.literal_eval(windows_size_dict_str) 
-        AddLinkWindow_Ui_size = windows_size_dict['TextQueue_Ui']
-
-        self.resize(int(AddLinkWindow_Ui_size[0]) , int(AddLinkWindow_Ui_size[1]))
-
 #queue_tabWidget
         self.queue_tabWidget = QTabWidget(self)
         window_verticalLayout.addWidget(self.queue_tabWidget)

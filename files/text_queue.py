@@ -17,7 +17,7 @@ from text_queue_ui import TextQueue_Ui
 from PyQt5 import QtWidgets , QtCore , QtGui
 from PyQt5.QtGui import QIcon
 from PyQt5.QtWidgets import QTableWidgetItem , QFileDialog
-from newopen import Open
+from newopen import Open , readDict
 import download
 import ast , os 
 import osCommands
@@ -154,6 +154,14 @@ class TextQueue(TextQueue_Ui):
 
 # add_queue_comboBox event
         self.add_queue_comboBox.currentIndexChanged.connect(self.queueChanged) 
+
+#window size
+        windows_size = config_folder + '/windows_size'
+        windows_size_dict = readDict(windows_size) 
+        AddLinkWindow_Ui_size = windows_size_dict['TextQueue_Ui']
+
+#setting windows_size
+        self.resize(int(AddLinkWindow_Ui_size[0]) , int(AddLinkWindow_Ui_size[1]))
 
 
     def queueChanged(self,combo):

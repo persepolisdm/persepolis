@@ -609,6 +609,13 @@ class MainWindow(MainWindow_Ui):
         self.category_tree_qwidget.setEnabled(False) #It will be enabled after aria2 startup!(see startAriaMessage methode) .This line added for solving crash problems on startup
 
 
+#finding windows_size
+        windows_size = config_folder + '/windows_size'
+        windows_size_dict = readDict(windows_size)
+        MainWindow_Ui_size = windows_size_dict['MainWindow_Ui']
+#setting window size
+        self.resize(int(MainWindow_Ui_size[0]),int(MainWindow_Ui_size[1]) )
+
 
 # startAriaMessage function is showing some message on statusbar and sending notification when aria failed to start! see StartAria2Thread for more details
     def startAriaMessage(self,message):

@@ -18,7 +18,7 @@ from PyQt5.QtWidgets import QHBoxLayout ,  QApplication ,  QFileDialog,  QCheckB
 from PyQt5.QtGui import QIcon
 import os , ast , functools
 from addlink_ui import AddLinkWindow_Ui
-from newopen import Open
+from newopen import Open , readDict
 import osCommands
 import download
 
@@ -157,7 +157,13 @@ class AddLinkWindow(AddLinkWindow_Ui):
             self.change_name_checkBox.setChecked(True)
             del self.flashgot_add_link_dictionary['out']
 
-      
+ #finding windows_size
+        windows_size = config_folder + '/windows_size'
+        windows_size_dict = readDict(windows_size) 
+        AddLinkWindow_Ui_size = windows_size_dict['AddLinkWindow_Ui']
+
+        self.resize(int(AddLinkWindow_Ui_size[0]) , int(AddLinkWindow_Ui_size[1]))
+     
            
 #activate frames if checkBoxes checked
     def proxyFrame(self,checkBox):

@@ -43,16 +43,6 @@ class ProgressWindow_Ui(QWidget):
         super().__init__()
 
 #window
-    #finding windows_size
-        windows_size = config_folder + '/windows_size'
-        f = Open(windows_size)
-        windows_size_file_lines = f.readlines()
-        f.close()
-        windows_size_dict_str = str(windows_size_file_lines[0].strip())
-        windows_size_dict = ast.literal_eval(windows_size_dict_str) 
-        ProgressWindow_Ui_size = windows_size_dict['ProgressWindow_Ui']
-
-        self.resize(int(ProgressWindow_Ui_size[0]),int(ProgressWindow_Ui_size[1]) )
         self.setMinimumSize(QtCore.QSize(595, 284))
 
         self.setWindowIcon(QIcon.fromTheme('persepolis' ,QIcon(':/icon.svg')))
