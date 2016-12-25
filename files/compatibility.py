@@ -15,6 +15,7 @@
 import time
 import os
 import ast
+from newopen import Open
 #this script for compatibility between Version 2.0 and 2.1 and 2.2 and 2.3 of persepolis
 home_address = os.path.expanduser("~")
 config_folder = str(home_address) + "/.config/persepolis_download_manager"
@@ -27,14 +28,14 @@ download_list_file_lines = []
 
 def compatibility():
     if os.path.isdir(download_info_folder) == True :
-        f = open(download_list_file)
+        f = Open(download_list_file)
         download_list_file_lines = f.readlines()
         f.close()
 
         for line in download_list_file_lines:
             gid = line.strip()
             download_info_file = download_info_folder + "/" + gid
-            f_download_info_file = open(download_info_file) 
+            f_download_info_file = Open(download_info_file) 
             download_info_file_lines = f_download_info_file.readlines()
             f_download_info_file.close()
             if len(download_info_file_lines) == 10 :
@@ -46,7 +47,7 @@ def compatibility():
                     list.append(line_strip)
                 dictionary =  {'list' : list }
                 os.system('echo "' + str(dictionary) + '"  >  "' + str(download_info_file) + '"' )
-                f_download_info_file = open (download_info_file , 'w')
+                f_download_info_file = Open (download_info_file , 'w')
                 f_download_info_file.writelines(str(dictionary))
                 f_download_info_file.close()
  
@@ -58,7 +59,7 @@ def compatibility():
         for line in download_list_file_lines:
             gid = line.strip()
             download_info_file = download_info_folder + "/" + gid
-            f = open(download_info_file , 'r')
+            f = Open(download_info_file , 'r')
             f_string = f.readline()
             f.close()
             dictionary = ast.literal_eval(f_string.strip())
@@ -76,25 +77,37 @@ def compatibility():
             
                 list.append(try_date)
                 list.append(try_date)
-
-                dictionary =  {'list' : list }
-                f = open(download_info_file , 'w')
-                f.writelines(str(dictionary)) 
-                f.close()
-
-            elif len(list) == 12 :
                 list.append('Single Downloads')
+
                 dictionary =  {'list' : list }
-                f = open(download_info_file , 'w')
+                f = Open(download_info_file , 'w')
                 f.writelines(str(dictionary)) 
                 f.close()
 
+                print(str(dictionary))
 
-                f = open(download_list_file)
+                f = Open(download_list_file)
                 f_lines = f.readlines()
                 f.close()
 
-                f = open(single_downloads_list_file , 'w')
+                f = Open(single_downloads_list_file , 'w')
+                for line in f_lines :
+                    f.writelines(line)
+
+                f.close()
+            elif len(list) == 12 :
+                list.append('Single Downloads')
+                dictionary =  {'list' : list }
+                f = Open(download_info_file , 'w')
+                f.writelines(str(dictionary)) 
+                f.close()
+
+
+                f = Open(download_list_file)
+                f_lines = f.readlines()
+                f.close()
+
+                f = Open(single_downloads_list_file , 'w')
                 for line in f_lines :
                     gid = line.strip()
                     f.writelines(gid + '\n')
