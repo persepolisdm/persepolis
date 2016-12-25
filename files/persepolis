@@ -15,11 +15,14 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #this script is running persepolis for Linux
-
-import initialization
 from newopen import Open
 import os , sys , time , ast , argparse
-from mainwindow import MainWindow
+    
+#this script is running persepolis for Linux
+if not (os.path.isfile('/tmp/persepolis_exec.lock')): 
+    import initialization
+    from mainwindow import MainWindow
+
 from PyQt5.QtWidgets import QApplication  
 from PyQt5.QtGui import QFont   
 from palettes import DarkRedPallete , DarkBluePallete , ArcDarkRedPallete , ArcDarkBluePallete , LightRedPallete , LightBluePallete
@@ -185,6 +188,11 @@ else:
     print('lock file found in this path:')
     print('    /tmp/persepolis_exec.lock')
     print('you can remove it manually!')
+    print('1.Run:')
+    print ('killall persepolis')
+    print('and then...')
+    print('2.Run:')
+    print('rm /tmp/persepolis_exec.lock')
 #this section warns user that program is still running and no need to run it again
 #and creating a file to notify mainwindow for showing
     if not('link' in add_link_dictionary):

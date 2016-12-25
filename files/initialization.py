@@ -27,7 +27,7 @@ from newopen import Open
 import osCommands
 import platform
 from compatibility import compatibility
-
+import glob
 
 # initialization
 home_address = os.path.expanduser("~")
@@ -65,6 +65,17 @@ setting_file = config_folder + '/setting'
 
 #when user is resizing a window , size of window is saving in windows_size file .
 windows_size = config_folder + '/windows_size'
+
+#lock files perventing to access a file simultaneously
+
+#removing lock files in starting persepolis
+pattern_folder_list = [config_folder , download_info_folder , category_folder]
+
+for folder in pattern_folder_list:
+    pattern = str(folder) + '/*.lock'
+    for file in glob.glob(pattern):
+        osCommands.remove(file)
+
 
 #perseolis_shutdown
 perseolis_shutdown = '/tmp/persepolis/shutdown'

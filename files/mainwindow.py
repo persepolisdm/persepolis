@@ -36,7 +36,6 @@ from about import AboutWindow
 import icons_resource
 import spider
 import osCommands
-import glob
 import platform
 #THIS FILE CREATES MAIN WINDOW
 
@@ -471,16 +470,6 @@ class MainWindow(MainWindow_Ui):
 #statusbar
         self.statusbar.showMessage('Please Wait ...')
         self.checkSelectedRow()
-
-#lock files perventing to access a file simultaneously
-
-#removing lock files in starting persepolis
-        pattern_folder_list = [config_folder , download_info_folder , category_folder]
-
-        for folder in pattern_folder_list:
-            pattern = str(folder) + '/*.lock'
-            for file in glob.glob(pattern):
-                osCommands.remove(file)
 
 
 #threads     
@@ -1377,21 +1366,55 @@ class MainWindow(MainWindow_Ui):
         if self.trayAction.isChecked() == True :
             self.system_tray_icon.show() #showing system_tray_icon
             self.minimizeAction.setEnabled(True) #enabling minimizeAction in menu
+            tray_icon = 'yes' 
         else:
             self.system_tray_icon.hide() #hide system_tray_icon
             self.minimizeAction.setEnabled(False) #disabaling minimizeAction in menu
+            tray_icon = 'no'
+        #writing changes to setting file
+        setting_dict = readDict(setting_file)
+
+        setting_dict['tray-icon'] = tray_icon
+
+        f = Open(setting_file , 'w')
+        f.writelines(str(setting_dict))
+        f.close()
+
 
     def showMenuBar(self , menu):
         if self.showMenuBarAction.isChecked():
             self.menubar.show()
+            show_menubar = 'yes'
         else:
             self.menubar.hide()
+            show_menubar = 'no'
+
+        #writing changes to setting file
+        setting_dict = readDict(setting_file)
+
+        setting_dict['show_menubar'] = show_menubar
+
+        f = Open(setting_file , 'w')
+        f.writelines(str(setting_dict))
+        f.close()
 
     def showSidePanel(self , menu):
         if self.showSidePanelAction.isChecked():
             self.category_tree_qwidget.show()
+            show_sidepanel = 'yes'
         else:
             self.category_tree_qwidget.hide()
+            show_sidepanel = 'no'
+
+        #writing changes to setting file
+        setting_dict = readDict(setting_file)
+
+        setting_dict['show_sidepanel'] = show_sidepanel
+
+        f = Open(setting_file , 'w')
+        f.writelines(str(setting_dict))
+        f.close()
+
 
 #when user click on mouse's left button , then this methode is called
     def systemTrayPressed(self,click):
