@@ -1,6 +1,6 @@
 Persepolis Download Manager 
 =============
-+ version : 2.2.2 Unstable
++ version : 2.3 Alpha
 + Persepolis Download Manager is a GUI for aria2.
 + Persepolis written in PYQT5.
 

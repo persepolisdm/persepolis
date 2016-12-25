@@ -94,8 +94,6 @@ if args.tray :
 else:
     start_in_tray = 'no'
 
-start_in_tray = 'no'
-
 if args.link :
     add_link_dictionary ['link'] = "".join(args.link)
 

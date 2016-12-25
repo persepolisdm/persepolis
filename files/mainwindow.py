@@ -37,7 +37,6 @@ import icons_resource
 import spider
 import osCommands
 import glob
-from user_greeting import GreetingWindow
 import platform
 #THIS FILE CREATES MAIN WINDOW
 
@@ -205,7 +204,7 @@ class DownloadLink(QThread):
 
 #this thread managing queue and sending download request to aria2            
 class Queue(QThread):
-    #this signal emited when download status of queue change to stop
+    #this signal emited when download status of queue changes to stop
     REFRESHTOOLBARSIGNAL = pyqtSignal(str)
     def __init__(self,category , start_hour , start_minute , end_hour , end_minute ,parent):
         QThread.__init__(self)
@@ -469,8 +468,6 @@ class MainWindow(MainWindow_Ui):
             self.showSidePanelAction.setChecked(False)
 
 
-        self.greeting_window = GreetingWindow()
-        self.greeting_window.show()
 #statusbar
         self.statusbar.showMessage('Please Wait ...')
         self.checkSelectedRow()
@@ -618,6 +615,9 @@ class MainWindow(MainWindow_Ui):
 #this line set toolBar And Context Menu Items
         self.toolBarAndContextMenuItems('All Downloads')
 
+        self.category_tree_qwidget.setEnabled(False) #It will be enabled after aria2 startup!(see startAriaMessage methode) .This line added for solving crash problems on startup
+
+
 
 # startAriaMessage function is showing some message on statusbar and sending notification when aria failed to start! see StartAria2Thread for more details
     def startAriaMessage(self,message):
@@ -626,14 +626,19 @@ class MainWindow(MainWindow_Ui):
             sleep (0.5)
             self.statusbar.showMessage('Ready...')
             aria_startup_answer = 'ready'
-            self.greeting_window.close()
+
+            self.category_tree_qwidget.setEnabled(True)
+
+
         elif message == 'try again':
             self.statusbar.showMessage("Aria2 didn't respond! be patient!Persepolis tries again in 2 seconds!")
         else:
             self.statusbar.showMessage('Error...')
             notifySend('Persepolis can not connect to Aria2' , 'Check your network & Restart Persepolis' ,10000,'critical' , systemtray = self.system_tray_icon )
             self.propertiesAction.setEnabled(True)
-            self.greeting_window.close()
+
+            self.category_tree_qwidget.setEnabled(True)
+
 
     def reconnectAria(self,message):
         #this function is executing if RECONNECTARIASIGNAL is emitted by CheckingThread . 
