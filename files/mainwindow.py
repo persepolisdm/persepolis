@@ -452,9 +452,11 @@ class MainWindow(MainWindow_Ui):
         if setting_dict['show_menubar'] == 'yes':
             self.menubar.show()
             self.showMenuBarAction.setChecked(True)
+            self.toolBar2.hide()
         else:
             self.menubar.hide()
             self.showMenuBarAction.setChecked(False)
+            self.toolBar2.show()
 
         if platform.system() == 'Darwin':
             self.showMenuBarAction.setEnabled(False)
@@ -1384,9 +1386,11 @@ class MainWindow(MainWindow_Ui):
     def showMenuBar(self , menu):
         if self.showMenuBarAction.isChecked():
             self.menubar.show()
+            self.toolBar2.hide()
             show_menubar = 'yes'
         else:
             self.menubar.hide()
+            self.toolBar2.show()
             show_menubar = 'no'
 
         #writing changes to setting file

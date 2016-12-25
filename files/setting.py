@@ -275,10 +275,12 @@ class PreferencesWindow(Setting_Ui):
         if self.show_menubar_checkbox.isChecked() == True :
             self.setting_dict['show_menubar'] = 'yes'
             self.parent.menubar.show()
+            self.parent.toolBar2.hide()
 
         else:
             self.setting_dict['show_menubar'] = 'no'
             self.parent.menubar.hide()
+            self.parent.toolBar2.show()
 
 #show_sidepanel_checkbox
         if self.show_sidepanel_checkbox.isChecked() == True:
