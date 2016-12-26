@@ -18,8 +18,15 @@
 from newopen import Open
 import os , sys , time , ast , argparse
     
+# initialization
+home_address = os.path.expanduser("~")
+
+user_name_split = home_address.split('/')
+user_name = user_name_split[2]
+
+lock_file = '/tmp/persepolis_exec_' + user_name + '.lock'
 #this script is running persepolis for Linux
-if not (os.path.isfile('/tmp/persepolis_exec.lock')): 
+if not (os.path.isfile(lock_file)): 
     import initialization
     from mainwindow import MainWindow
 
@@ -31,8 +38,7 @@ from bubble import notifySend
 import osCommands
 from error_window import ErrorWindow
 import traceback
-# initialization
-home_address = os.path.expanduser("~")
+
 
 # ~/.config/persepolis_download_manager/ is download manager config folder
 config_folder = str(home_address) + "/.config/persepolis_download_manager"
@@ -127,8 +133,8 @@ if ('link' in add_link_dictionary):
     f.writelines(str(add_link_dictionary))
     f.close()
 
-if not (os.path.isfile('/tmp/persepolis_exec.lock')): #if persepolis_exec is existed , it means persepolis is still running! 
-    osCommands.touch('/tmp/persepolis_exec.lock') #create persepolis_exec.lock in /tmp
+if not (os.path.isfile(lock_file)): #if lock_file is existed , it means persepolis is still running! 
+    osCommands.touch(lock_file) #create lock_file in /tmp
 #setting color_scheme and style
 #see palettes.py and setting.py
     if __name__ == "__main__":
@@ -179,7 +185,7 @@ if not (os.path.isfile('/tmp/persepolis_exec.lock')): #if persepolis_exec is exi
             #Resetting persepolis
             status = osCommands.removeDir(str(config_folder))
             #removing persepolis lock form /tmp
-            f = Open('/tmp/persepolis_exec.lock')
+            f = Open(lock_file)
             f.close()
             f.remove()
             error_window = ErrorWindow(str(traceback.format_exc()))
@@ -191,13 +197,13 @@ if not (os.path.isfile('/tmp/persepolis_exec.lock')): #if persepolis_exec is exi
          sys.exit(0)
 else:
     print('lock file found in this path:')
-    print('    /tmp/persepolis_exec.lock')
+    print(lock_file)
     print('you can remove it manually!')
     print('1.Run:')
     print ('killall persepolis')
     print('and then...')
     print('2.Run:')
-    print('rm /tmp/persepolis_exec.lock')
+    print('rm ' + lock_file )
 #this section warns user that program is still running and no need to run it again
 #and creating a file to notify mainwindow for showing
     if not('link' in add_link_dictionary):

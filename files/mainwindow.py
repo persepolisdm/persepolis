@@ -57,6 +57,13 @@ global aria2_disconnected
 aria2_disconnected = 0
 
 home_address = os.path.expanduser("~")
+user_name_split = home_address.split('/')
+user_name = user_name_split[2]
+#persepolis lock file address
+#if lock_file is existed , it means persepolis is still running! 
+
+lock_file = '/tmp/persepolis_exec_' + user_name + '.lock'
+
 config_folder = str(home_address) + "/.config/persepolis_download_manager"
 
 download_info_folder = config_folder + "/download_info"
@@ -1350,7 +1357,7 @@ class MainWindow(MainWindow_Ui):
         self.persepolis_setting.sync()
 
         #removing persepolis lock form /tmp
-        f = Open('/tmp/persepolis_exec.lock')
+        f = Open(lock_file)
         f.close()
         f.remove()
         self.hide()
