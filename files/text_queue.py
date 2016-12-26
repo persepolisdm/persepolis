@@ -17,6 +17,7 @@ from text_queue_ui import TextQueue_Ui
 from PyQt5 import QtWidgets , QtCore , QtGui
 from PyQt5.QtGui import QIcon
 from PyQt5.QtWidgets import QTableWidgetItem , QFileDialog
+from PyQt5.QtCore import QPoint , QSize
 from newopen import Open , readDict
 import download
 import ast , os 
@@ -37,8 +38,9 @@ icons =':/' + str(setting_dict['icons']) + '/'
 
 
 class TextQueue(TextQueue_Ui):
-    def __init__(self , parent , file_path , callback ):
+    def __init__(self , parent , file_path , callback , persepolis_setting ):
         super().__init__()
+        self.persepolis_setting = persepolis_setting
         self.callback = callback
         self.file_path = file_path
         self.parent = parent
@@ -136,7 +138,7 @@ class TextQueue(TextQueue_Ui):
 
 #connect OK and canel button
 
-        self.cancel_pushButton.clicked.connect(self.cancelButtonPressed)
+        self.cancel_pushButton.clicked.connect(self.close)
         self.ok_pushButton.clicked.connect(self.okButtonPressed) 
 
 #frames and checkBoxes
@@ -155,13 +157,13 @@ class TextQueue(TextQueue_Ui):
 # add_queue_comboBox event
         self.add_queue_comboBox.currentIndexChanged.connect(self.queueChanged) 
 
-#window size
-        windows_size = config_folder + '/windows_size'
-        windows_size_dict = readDict(windows_size) 
-        AddLinkWindow_Ui_size = windows_size_dict['TextQueue_Ui']
+#setting window size and position
+        size = self.persepolis_setting.value('TextQueue/size' , QSize(700 , 500))
+        position = self.persepolis_setting.value('TextQueue/position' , QPoint(300 , 300))
+        self.resize(size)
+        self.move(position)
 
-#setting windows_size
-        self.resize(int(AddLinkWindow_Ui_size[0]) , int(AddLinkWindow_Ui_size[1]))
+
 
 
     def queueChanged(self,combo):
@@ -216,11 +218,6 @@ class TextQueue(TextQueue_Ui):
         if os.path.isdir(fname):
             self.download_folder_lineEdit.setText(fname)
 
-
-#close window if cancelButton Pressed
-    def cancelButtonPressed(self,button):
-        self.saveWindowSize()
-        self.close()
 
     def okButtonPressed(self,button):
         global init_file
@@ -294,26 +291,12 @@ class TextQueue(TextQueue_Ui):
         self.add_link_dictionary_list.reverse()
         self.callback(self.add_link_dictionary_list , category)
 
-        self.saveWindowSize()
         self.close()
  
-    def saveWindowSize(self):
-#finding last windows_size that saved in windows_size file
-        windows_size = config_folder + '/windows_size'
-        f = Open(windows_size)
-        windows_size_file_lines = f.readlines()
-        f.close()
-        windows_size_dict_str = str(windows_size_file_lines[0].strip())
-        windows_size_dict = ast.literal_eval(windows_size_dict_str) 
 
-        
-#getting current windows_size
-        width = int(self.frameGeometry().width())
-        height = int(self.frameGeometry().height())
-#replacing current size with old size in window_size_dict
-        windows_size_dict ['TextQueue_Ui'] = [ width , height ]
-        f = Open(windows_size, 'w')
-        f.writelines(str(windows_size_dict))
-        f.close()
+    def closeEvent(self , event):
+        self.persepolis_setting.setValue('TextQueue/size' , self.size())
+        self.persepolis_setting.setValue('TextQueue/position' , self.pos())
+        self.persepolis_setting.sync()
 
-
+        self.close()

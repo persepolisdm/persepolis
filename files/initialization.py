@@ -63,9 +63,6 @@ persepolis_tmp = '/tmp/persepolis'
 #user's preferences will saved in setting file
 setting_file = config_folder + '/setting'
 
-#when user is resizing a window , size of window is saving in windows_size file .
-windows_size = config_folder + '/windows_size'
-
 #lock files perventing to access a file simultaneously
 
 #removing lock files in starting persepolis
@@ -115,24 +112,6 @@ if len(setting_dict) != 19:
     f.close()
     setting_dict_str = str(setting_file_lines[0].strip())
     setting_dict = ast.literal_eval(setting_dict_str) 
-
-osCommands.touch(windows_size)
-f = Open(windows_size)
-windows_size_lines = f.readlines()
-f.close()
-try:
-    size_dict_str = str(windows_size_lines[0].strip())
-    size_dict = ast.literal_eval(size_dict_str) 
-except:
-    size_dict = []
-
-
-#this section is checking windows_size existed or not!and if it is not existed , then exists the file with default value .
-if len(size_dict) != 7:
-    default_size = { 'TextQueue_Ui' : [700 , 500] , 'MainWindow_Ui' : [900,500] , 'AddLinkWindow_Ui' : [520 , 565] , 'Setting_Ui' : [578 , 465] , 'ProgressWindow_Ui' : [595,284] , 'AboutWindow' : [363 , 300] , 'AfterDownloadWindow_Ui' : [570 , 290] }
-    f = Open(windows_size, 'w')
-    f.writelines(str(default_size))
-    f.close()
 
 
 #this section  creates temporary download folder and download folder and download sub folders if they did not existed.

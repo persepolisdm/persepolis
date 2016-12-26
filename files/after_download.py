@@ -15,6 +15,8 @@
 
 from newopen import Open , readList , writeList , readDict
 from after_download_ui import AfterDownloadWindow_Ui
+from PyQt5 import QtCore
+from PyQt5.QtCore import QSize , QPoint
 import os , ast
 from play import playNotification
 import osCommands
@@ -24,8 +26,9 @@ config_folder = str(home_address) + "/.config/persepolis_download_manager"
 
 
 class AfterDownloadWindow(AfterDownloadWindow_Ui):
-    def __init__(self,download_info_file_list , setting_file) :
+    def __init__(self,download_info_file_list , setting_file , persepolis_setting) :
         super().__init__()
+        self.persepolis_setting = persepolis_setting
         self.download_info_file_list = download_info_file_list
         self.setting_file = setting_file
 #connecting buttons
@@ -55,12 +58,11 @@ class AfterDownloadWindow(AfterDownloadWindow_Ui):
         self.link_lineEdit.setEnabled(False)
         self.save_as_lineEdit.setEnabled(False)
 
-#finding windows_size
-        windows_size = config_folder + '/windows_size'
-        windows_size_dict = readDict(windows_size) 
-        AfterDownloadWindow_Ui_size= windows_size_dict['AfterDownloadWindow_Ui']
-
-        self.resize(AfterDownloadWindow_Ui_size[0],AfterDownloadWindow_Ui_size[1])
+ #setting window size and position
+        size = self.persepolis_setting.value('AfterDownloadWindow/size' , QSize(570 , 290))
+        position = self.persepolis_setting.value('AfterDownloadWindow/position' , QPoint(300 , 300))
+        self.resize(size)
+        self.move(position)
 
 
     def openFile(self):
@@ -69,7 +71,6 @@ class AfterDownloadWindow(AfterDownloadWindow_Ui):
         file_path = add_link_dictionary['file_path']
         if os.path.isfile(file_path):
             osCommands.xdgOpen(file_path)
-        self.saveWindowSize()
         self.close()
 
     def openFolder(self):
@@ -81,7 +82,6 @@ class AfterDownloadWindow(AfterDownloadWindow_Ui):
         download_path = '/'.join(file_path_split)
         if os.path.isdir(download_path):
             osCommands.xdgOpen(download_path)
-        self.saveWindowSize()
         self.close()
  
     def okButtonPressed(self):
@@ -95,30 +95,14 @@ class AfterDownloadWindow(AfterDownloadWindow_Ui):
             f = Open(self.setting_file , 'w')
             f.writelines(str(setting_dict))
             f.close()
-        self.saveWindowSize()
         self.close()
 
-    def saveWindowSize(self):
-#finding last windows_size that saved in windows_size file
-        home_address = os.path.expanduser("~")
+    def closeEvent(self , event):
+        #saving window size and position
+        self.persepolis_setting.setValue('AfterDownloadWindow/size' , self.size())
+        self.persepolis_setting.setValue('AfterDownloadWindow/position' , self.pos())
+        self.persepolis_setting.sync()
 
-        config_folder = str(home_address) + "/.config/persepolis_download_manager"
-
-        windows_size = config_folder + '/windows_size'
-        f = Open(windows_size)
-        windows_size_file_lines = f.readlines()
-        f.close()
-        windows_size_dict_str = str(windows_size_file_lines[0].strip())
-        windows_size_dict = ast.literal_eval(windows_size_dict_str) 
-
-        
-#getting current windows_size
-        width = int(self.frameGeometry().width())
-        height = int(self.frameGeometry().height())
-#replacing current size with old size in window_size_dict
-        windows_size_dict ['AfterDownloadWindow_Ui'] = [ width , height ]
-        f = Open(windows_size, 'w')
-        f.writelines(str(windows_size_dict))
-        f.close()
-
+        self.close()
+    
 

@@ -16,6 +16,7 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import QWidget
 from PyQt5.QtGui import QIcon
+from PyQt5.QtCore import QSize , QPoint
 import ast , os
 from newopen import Open , readDict
 import icons_resource
@@ -35,8 +36,9 @@ icons = ':/' + str(setting_dict['icons']) + '/'
 
 
 class AboutWindow(QWidget):
-    def __init__(self):
+    def __init__(self,persepolis_setting):
         super().__init__()
+        self.persepolis_setting = persepolis_setting
         self.setWindowModality(QtCore.Qt.NonModal)
         self.setMinimumSize(QtCore.QSize(363, 300))
         self.setWindowIcon(QIcon.fromTheme('persepolis',QIcon(':/icon.svg')))
@@ -99,7 +101,7 @@ class AboutWindow(QWidget):
 
         self.pushButton = QtWidgets.QPushButton(self)
         self.pushButton.setIcon(QIcon(icons + 'ok'))
-        self.pushButton.clicked.connect(self.saveWindowSize)
+        self.pushButton.clicked.connect(self.close)
 
         self.horizontalLayout.addWidget(self.pushButton)
         spacerItem1 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
@@ -118,32 +120,18 @@ class AboutWindow(QWidget):
         self.twitter_label.setText("<a href=https://twitter.com/persepolisdm>https://twitter.com/persepolisdm</a>")
         self.pushButton.setText( "Ok")
 
-#finding windows_size
-        windows_size = config_folder + '/windows_size'
-        windows_size_dict = readDict(windows_size) 
-        AboutWindow_size = windows_size_dict['AboutWindow']
-#setting windows_size
-        self.resize(int(AboutWindow_size[0]),int(AboutWindow_size[1]))
+#setting window size and position
+        size = self.persepolis_setting.value('AboutWindow/size' , QSize(363 , 300) )
+        position = self.persepolis_setting.value('AboutWindow/position' , QPoint(300 , 300))
 
-    def saveWindowSize(self):
-#finding last windows_size that saved in windows_size file
-        windows_size = config_folder + '/windows_size'
-        f = Open(windows_size)
-        windows_size_file_lines = f.readlines()
-        f.close()
-        windows_size_dict_str = str(windows_size_file_lines[0].strip())
-        windows_size_dict = ast.literal_eval(windows_size_dict_str) 
+        self.resize(size)
+        self.move(position)
 
-        
-#getting current windows_size
-        width = int(self.frameGeometry().width())
-        height = int(self.frameGeometry().height())
-#replacing current size with old size in window_size_dict
-        windows_size_dict ['AboutWindow'] = [ width , height ]
-        f = Open(windows_size, 'w')
-        f.writelines(str(windows_size_dict))
-        f.close()
-        
+
+    def closeEvent(self,event):
+        #saving window size and position
+        self.persepolis_setting.setValue('AboutWindow/size' , self.size())
+        self.persepolis_setting.setValue('AboutWindow/position' , self.pos())
+        self.persepolis_setting.sync()
         self.close()
-
 

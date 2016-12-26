@@ -17,7 +17,7 @@ import sys , ast
 from PyQt5 import QtCore, QtGui, QtWidgets  
 from PyQt5.QtWidgets import QApplication ,  QAction , QFileDialog , QSystemTrayIcon , QMenu , QTableWidgetItem , QApplication , QInputDialog , QMessageBox 
 from PyQt5.QtGui import QIcon , QColor , QPalette , QStandardItem 
-from PyQt5.QtCore import QCoreApplication , QRect , QSize , QThread , pyqtSignal  , Qt
+from PyQt5.QtCore import QCoreApplication , QRect , QSize , QPoint, QThread , pyqtSignal  , Qt
 import os
 from time import sleep
 import random  
@@ -424,8 +424,9 @@ class CheckingThread(QThread):
    
  
 class MainWindow(MainWindow_Ui):
-    def __init__(self , start_in_tray):
+    def __init__(self , start_in_tray , persepolis_setting):
         super().__init__()
+        self.persepolis_setting = persepolis_setting
 #system_tray_icon
         self.system_tray_icon = QSystemTrayIcon() 
         self.system_tray_icon.setIcon(QIcon.fromTheme('persepolis',QIcon(':/icon.svg') ))
@@ -610,11 +611,11 @@ class MainWindow(MainWindow_Ui):
 
 
 #finding windows_size
-        windows_size = config_folder + '/windows_size'
-        windows_size_dict = readDict(windows_size)
-        MainWindow_Ui_size = windows_size_dict['MainWindow_Ui']
+        size = self.persepolis_setting.value('MainWindow/size' , QSize(900 , 500) ) 
+        position = self.persepolis_setting.value('MainWindow/position' , QPoint(300 , 300) )
 #setting window size
-        self.resize(int(MainWindow_Ui_size[0]),int(MainWindow_Ui_size[1]) )
+        self.resize(size)
+        self.move(position)
 
 
 # startAriaMessage function is showing some message on statusbar and sending notification when aria failed to start! see StartAria2Thread for more details
@@ -779,7 +780,6 @@ class MainWindow(MainWindow_Ui):
 
                 elif progress_window.status == "stopped" or progress_window.status == "error" or progress_window.status == "complete" : #it means download has finished!
 #close progress_window if download status is stopped or completed or error
-                    progress_window.saveWindowSize() #save window size!
                     progress_window.close() #close window!
 
                     #eliminating window information! in progress_window_list and progress_window_list_dict
@@ -834,7 +834,7 @@ class MainWindow(MainWindow_Ui):
 
                     if progress_window.status == "complete" :
                         if setting_dict['after-dialog'] == 'yes' :
-                            afterdownloadwindow = AfterDownloadWindow(download_info_file_list,setting_file)
+                            afterdownloadwindow = AfterDownloadWindow(download_info_file_list,setting_file , self.persepolis_setting)
                             self.afterdownload_list.append(afterdownloadwindow)
                             self.afterdownload_list[len(self.afterdownload_list) - 1].show()
                         else :
@@ -1104,14 +1104,14 @@ class MainWindow(MainWindow_Ui):
 
 #this methode creates an addlinkwindow when user calls Persepolis whith flashgot
     def flashgotAddLink(self,flashgot_add_link_dictionary):
-        addlinkwindow = AddLinkWindow(self.callBack , flashgot_add_link_dictionary)
+        addlinkwindow = AddLinkWindow(self.callBack , self.persepolis_setting , flashgot_add_link_dictionary)
         self.addlinkwindows_list.append(addlinkwindow)
         self.addlinkwindows_list[len(self.addlinkwindows_list) - 1].show()
 
 
 #This methode creates addlinkwindow when user presses plus button in MainWindow
     def addLinkButtonPressed(self ,button):
-        addlinkwindow = AddLinkWindow(self.callBack)
+        addlinkwindow = AddLinkWindow(self.callBack , self.persepolis_setting)
         self.addlinkwindows_list.append(addlinkwindow)
         self.addlinkwindows_list[len(self.addlinkwindows_list) - 1].show()
 
@@ -1293,7 +1293,7 @@ class MainWindow(MainWindow_Ui):
             gid = self.download_table.item(selected_row_return , 8 ).text()
 
             #creating propertieswindow
-            propertieswindow = PropertiesWindow(self.propertiesCallback ,gid)
+            propertieswindow = PropertiesWindow(self.propertiesCallback ,gid  , self.persepolis_setting)
             self.propertieswindows_list.append(propertieswindow)
             self.propertieswindows_list[len(self.propertieswindows_list) - 1].show()
 
@@ -1336,7 +1336,7 @@ class MainWindow(MainWindow_Ui):
 
 #This methode creates new ProgressWindow
     def progressBarOpen(self,gid):
-        progress_window = ProgressWindow(parent = self,gid = gid) #creating a progress window
+        progress_window = ProgressWindow(parent = self,gid = gid , persepolis_setting = self.persepolis_setting ) #creating a progress window
         self.progress_window_list.append(progress_window) #adding progress window to progress_window_list
         member_number = len(self.progress_window_list) - 1
         self.progress_window_list_dict[gid] = member_number #in progress_window_list_dict , key is gid and value is member's rank(number) in progress_window_list
@@ -1345,11 +1345,14 @@ class MainWindow(MainWindow_Ui):
 #close event
 #when user wants to close application then this function is called
     def closeEvent(self, event):
+        self.persepolis_setting.setValue('MainWindow/size' , self.size())
+        self.persepolis_setting.setValue('MainWindow/position' , self.pos())
+        self.persepolis_setting.sync()
+
         #removing persepolis lock form /tmp
         f = Open('/tmp/persepolis_exec.lock')
         f.close()
         f.remove()
-        self.saveWindowSize()
         self.hide()
         QCoreApplication.instance().closeAllWindows()
         print("Please Wait...")
@@ -1479,13 +1482,13 @@ class MainWindow(MainWindow_Ui):
            
 #this methode is creating Preferences window
     def openPreferences(self,menu):
-        self.preferenceswindow = PreferencesWindow(self)
+        self.preferenceswindow = PreferencesWindow(self , self.persepolis_setting)
         self.preferenceswindow.show() #showing Preferences Window
 
 
 #this methode is creating AboutWindow
     def openAbout(self,menu):
-        self.about_window = AboutWindow()
+        self.about_window = AboutWindow(self.persepolis_setting)
         self.about_window.show() #showing about window
 
 #This methode is openning user's default download folder
@@ -1820,26 +1823,6 @@ class MainWindow(MainWindow_Ui):
 #telling the CheckDownloadInfoThread that job is done!
 
         checking_flag = 0
-
-#this methode saving windows size before closing
-    def saveWindowSize(self):
-#finding last windows_size that saved in windows_size file
-        windows_size = config_folder + '/windows_size'
-        f = Open(windows_size)
-        windows_size_file_lines = f.readlines()
-        f.close()
-        windows_size_dict_str = str(windows_size_file_lines[0].strip())
-        windows_size_dict = ast.literal_eval(windows_size_dict_str) 
-
-        
-#getting current windows_size
-        width = int(self.frameGeometry().width())
-        height = int(self.frameGeometry().height())
-#replacing current size with old size in window_size_dict
-        windows_size_dict ['MainWindow_Ui'] = [ width , height ]
-        f = Open(windows_size, 'w')
-        f.writelines(str(windows_size_dict))
-        f.close()
 
 #when this methode called , download_table will sort by name
     def sortByName (self,menu_item):
@@ -2237,7 +2220,7 @@ class MainWindow(MainWindow_Ui):
         f_path , filters = QFileDialog.getOpenFileName(self , 'Select the text file that contains links')
         if os.path.isfile(str(f_path)) == True :
             #creating a text_queue_window for getting information.
-            text_queue_window = TextQueue(self , f_path , self.queueCallback )
+            text_queue_window = TextQueue(self , f_path , self.queueCallback , self.persepolis_setting )
             self.text_queue_window_list.append(text_queue_window)
             self.text_queue_window_list[len(self.text_queue_window_list) - 1].show()
             

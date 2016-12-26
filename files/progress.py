@@ -16,6 +16,7 @@
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import QWidget , QSizePolicy ,  QInputDialog
+from PyQt5.QtCore import QSize , QPoint
 from progress_ui import ProgressWindow_Ui
 import os , time , ast
 from newopen import Open , readList , writeList , readDict
@@ -33,8 +34,9 @@ download_info_folder = config_folder + "/download_info"
 
 
 class ProgressWindow(ProgressWindow_Ui):
-    def __init__(self, parent ,gid ):
+    def __init__(self, parent ,gid , persepolis_setting ):
         super().__init__()
+        self.persepolis_setting = persepolis_setting
         self.parent = parent
         self.gid = gid
         self.status = None
@@ -74,16 +76,20 @@ class ProgressWindow(ProgressWindow_Ui):
         self.limit_comboBox.currentIndexChanged.connect(self.limitComboBoxChanged)
         self.limit_spinBox.valueChanged.connect(self.limitComboBoxChanged)
 
-    #finding windows_size
-        windows_size = config_folder + '/windows_size'
-        windows_size_dict = readDict(windows_size) 
-        ProgressWindow_Ui_size = windows_size_dict['ProgressWindow_Ui']
+  #setting window size and position
+        size = self.persepolis_setting.value('ProgressWindow/size' , QSize(595 , 274))
+        position = self.persepolis_setting.value('ProgressWindow/position' , QPoint(300 , 300))
+        self.resize(size)
+        self.move(position)
 
-    #setting windows_size
-        self.resize(int(ProgressWindow_Ui_size[0]),int(ProgressWindow_Ui_size[1]) )
 
- 
     def closeEvent(self, event):
+        #saving window size and position
+        self.persepolis_setting.setValue('ProgressWindow/size' , self.size())
+        self.persepolis_setting.setValue('ProgressWindow/position' , self.pos())
+        self.persepolis_setting.sync()
+
+
         if self.parent.isVisible() == False:
             self.parent.minMaxTray(event)
 
@@ -208,27 +214,6 @@ class ProgressWindow(ProgressWindow_Ui):
             add_link_dictionary['limit'] = limit
             download_info_file_list[9] = add_link_dictionary
             writeList(download_info_file , download_info_file_list)
-
-
-    def saveWindowSize(self):
-#finding last windows_size that saved in windows_size file
-        windows_size = config_folder + '/windows_size'
-        f = Open(windows_size)
-        windows_size_file_lines = f.readlines()
-        f.close()
-        windows_size_dict_str = str(windows_size_file_lines[0].strip())
-        windows_size_dict = ast.literal_eval(windows_size_dict_str) 
-
-        
-#getting current windows_size
-        width = int(self.frameGeometry().width())
-        height = int(self.frameGeometry().height())
-#replacing current size with old size in window_size_dict
-        windows_size_dict ['ProgressWindow_Ui'] = [ width , height ]
-        f = Open(windows_size, 'w')
-        f.writelines(str(windows_size_dict))
-        f.close()
-
 
 
 
