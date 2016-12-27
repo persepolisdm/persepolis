@@ -347,9 +347,13 @@ class MainWindow_Ui(QMainWindow):
 
         self.category_tree_qwidget.setLayout(category_tree_verticalLayout)
         tabels_splitter.addWidget(self.category_tree_qwidget)
+
 #download table widget
+        self.download_table_content_widget = QWidget(self)
+        download_table_content_widget_verticalLayout = QVBoxLayout(self.download_table_content_widget)
         self.download_table = DownloadTableWidget(self)
-        tabels_splitter.addWidget(self.download_table)
+        download_table_content_widget_verticalLayout.addWidget(self.download_table)
+        tabels_splitter.addWidget(self.download_table_content_widget)
 
         self.download_table.setColumnCount(13)
         self.download_table.setSelectionBehavior(QAbstractItemView.SelectRows)
