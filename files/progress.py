@@ -25,11 +25,15 @@ from bubble import notifySend
 
 
 home_address = os.path.expanduser("~")
+user_name_split = home_address.split('/')
+user_name = user_name_split[2]
 
-global config_folder
+#persepolis tmp folder in /tmp
+persepolis_tmp = '/tmp/persepolis_' + user_name
+
+
 config_folder = str(home_address) + "/.config/persepolis_download_manager"
 
-global download_info_folder
 download_info_folder = config_folder + "/download_info"
 
 
@@ -165,7 +169,7 @@ class ProgressWindow(ProgressWindow_Ui):
                 self.after_frame.setEnabled(True)
         else :
             self.after_frame.setEnabled(False)
-            f = Open('/tmp/persepolis/shutdown/' + self.gid , 'w')
+            f = Open(persepolis_tmp + '/shutdown/' + self.gid , 'w')
             f.writelines('canceled')
             f.close()
 
@@ -187,10 +191,10 @@ class ProgressWindow(ProgressWindow_Ui):
             if ok != False :
                     #shutdown_script_root will create by initialization.py on persepolis startup
                     #sending password and queue name to shutdown_script_root
-                    #this script is creating a file with name of self.gid in  this folder "/tmp/persepolis/shutdown/" . and writing a "wait" word in this file 
+                    #this script is creating a file with name of self.gid in  this folder "/tmp/persepolis_tmp/shutdown/" . and writing a "wait" word in this file 
                     #shutdown_script_root is checking that file every second . when "wait" changes to "shutdown" in that file then script is shutting down system 
  
-                    os.system("bash " + "/tmp/persepolis/shutdown_script_root  '" + passwd + "' '"+ self.gid + "' &" )
+                    os.system("bash " + persepolis_tmp + "/shutdown_script_root  '" + passwd + "' '"+ self.gid + "' &" )
             else:
                 self.after_checkBox.setChecked(False)
         else:

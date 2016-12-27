@@ -17,7 +17,13 @@ import os , ast , random , shutil
 from time import sleep
 import osCommands
 
-persepolis_tmp = '/tmp/persepolis/'
+home_address = os.path.expanduser("~")
+user_name_split = home_address.split('/')
+user_name = user_name_split[2]
+
+#persepolis tmp folder in /tmp
+persepolis_tmp = '/tmp/persepolis_' + user_name
+
 
 class Open():
 #safer way to read and write files.

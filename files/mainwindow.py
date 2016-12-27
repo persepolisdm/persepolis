@@ -64,6 +64,10 @@ user_name = user_name_split[2]
 
 lock_file = '/tmp/persepolis_exec_' + user_name + '.lock'
 
+#persepolis tmp folder in /tmp
+persepolis_tmp = '/tmp/persepolis_' + user_name
+
+
 config_folder = str(home_address) + "/.config/persepolis_download_manager"
 
 download_info_folder = config_folder + "/download_info"
@@ -374,7 +378,7 @@ class Queue(QThread):
 #KILL aria2c if didn't respond
                 if answer == 'error':
                     os.system('killall aria2c')
-                f = Open('/tmp/persepolis/shutdown/' + self.category , 'w')
+                f = Open( persepolis_tmp + '/shutdown/' + self.category , 'w')
                 notifySend('Persepolis is shutting down','your system in 20 seconds' , 15000 ,'warning', systemtray = self.parent.system_tray_icon )
                 f.writelines('shutdown')
                 f.close()
@@ -406,8 +410,8 @@ class CheckingThread(QThread):
             sleep (2)
         j = 0
         while shutdown_notification == 0:
-            if os.path.isfile("/tmp/persepolis/show-window") == True:
-                osCommands.remove('/tmp/persepolis/show-window')
+            if os.path.isfile( persepolis_tmp + "/show-window") == True:
+                osCommands.remove(persepolis_tmp +  '/show-window')
                 self.SHOWMAINWINDOWSIGNAL.emit()
             sleep(1)
             if os.path.isfile("/tmp/persepolis-flashgot")  == True and os.path.isfile("/tmp/persepolis-flashgot.lock") == False: #It means new flashgot call is available!
@@ -817,17 +821,17 @@ class MainWindow(MainWindow_Ui):
 
 
 #this section is sending shutdown signal to the shutdown script(if user select shutdown for after download)
-                    if os.path.isfile('/tmp/persepolis/shutdown/' + gid ) == True and progress_window.status != 'stopped':
+                    if os.path.isfile( persepolis_tmp + '/shutdown/' + gid ) == True and progress_window.status != 'stopped':
                         answer = download.shutDown()
 #KILL aria2c if didn't respond
                         if answer == 'error':
                             os.system('killall aria2c')
-                        f = Open('/tmp/persepolis/shutdown/' + gid , 'w')
+                        f = Open(persepolis_tmp + '/shutdown/' + gid , 'w')
                         notifySend('Persepolis is shutting down','your system in 20 seconds' , 15000 ,'warning', systemtray = self.system_tray_icon )
                         f.writelines('shutdown')
                         f.close()
-                    elif os.path.isfile('/tmp/persepolis/shutdown/' + gid ) == True and progress_window.status == 'stopped':
-                        f = Open('/tmp/persepolis/shutdown/' + gid , 'w')
+                    elif os.path.isfile(persepolis_tmp + '/shutdown/' + gid ) == True and progress_window.status == 'stopped':
+                        f = Open( persepolis_tmp + '/shutdown/' + gid , 'w')
                         f.writelines('canceled')
                         f.close()
 
@@ -2802,9 +2806,9 @@ class MainWindow(MainWindow_Ui):
 
                     #shutdown_script_root will create by initialization.py on persepolis startup
                     #sending password and queue name to shutdown_script_root
-                    #this script is creating a file with the name of queue in  this folder "/tmp/persepolis/shutdown/" . and writing a "wait" word in this file 
+                    #this script is creating a file with the name of queue in  this folder "/tmp/persepolis_tmp/shutdown/" . and writing a "wait" word in this file 
                     #shutdown_script_root is checking that file every second . when "wait" changes to "shutdown" in that file then script is shutting down system 
-                    os.system("bash " + "/tmp/persepolis/shutdown_script_root  '" + passwd + "' '"+ current_category_tree_text + "' &" )
+                    os.system("bash " +  persepolis_tmp +  "/shutdown_script_root  '" + passwd + "' '"+ current_category_tree_text + "' &" )
             else:
                 self.after_checkBox.setChecked(False)
                 self.queue_list_dict[current_category_tree_text].after = False
@@ -2824,10 +2828,10 @@ class MainWindow(MainWindow_Ui):
         else:
             self.after_frame.setEnabled(False) #disabaling after_frame
 
-            #writing 'canceled' word in /tmp/persepolis/shutdown/queue_name . this is informing shutdown_script_root for canceling shutdown operation after download
+            #writing 'canceled' word in /tmp/persepolis_tmp/shutdown/queue_name . this is informing shutdown_script_root for canceling shutdown operation after download
             if current_category_tree_text in self.queue_list_dict.keys():
                 if self.queue_list_dict[current_category_tree_text].after == True:
-                    f = Open('/tmp/persepolis/shutdown/' + current_category_tree_text , 'w')
+                    f = Open( persepolis_tmp + '/shutdown/' + current_category_tree_text , 'w')
                     f.writelines('canceled')
                     f.close()
                     self.queue_list_dict[current_category_tree_text].after = False

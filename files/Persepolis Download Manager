@@ -24,6 +24,10 @@ home_address = os.path.expanduser("~")
 user_name_split = home_address.split('/')
 user_name = user_name_split[2]
 
+#persepolis tmp folder in /tmp
+persepolis_tmp = '/tmp/persepolis_' + user_name
+
+#persepolis lock file
 lock_file = '/tmp/persepolis_exec_' + user_name + '.lock'
 #this script is running persepolis for Linux
 if not (os.path.isfile(lock_file)): 
@@ -199,12 +203,15 @@ else:
     print('lock file found in this path:')
     print(lock_file)
     print('you can remove it manually!')
-    print('Run:')
+    print('1.Run:')
+    print ('killall persepolis')
+    print('and then...')
+    print('2.Run:')
     print('rm ' + lock_file )
 #this section warns user that program is still running and no need to run it again
 #and creating a file to notify mainwindow for showing
     if not('link' in add_link_dictionary):
-        f = open("/tmp/persepolis/show-window" , 'w')
+        f = open(persepolis_tmp + "/show-window" , 'w')
         f.close()
     sys.exit(0)
 
