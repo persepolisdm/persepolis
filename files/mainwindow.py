@@ -428,9 +428,10 @@ class CheckingThread(QThread):
    
  
 class MainWindow(MainWindow_Ui):
-    def __init__(self , start_in_tray , persepolis_setting):
+    def __init__(self , start_in_tray , persepolis_main , persepolis_setting):
         super().__init__(persepolis_setting)
         self.persepolis_setting = persepolis_setting
+        self.persepolis_main = persepolis_main
         global icons
         icons = ':/' + str(self.persepolis_setting.value('settings/icons')) + '/'
 
@@ -1467,7 +1468,7 @@ class MainWindow(MainWindow_Ui):
            
 #this methode is creating Preferences window
     def openPreferences(self,menu):
-        self.preferenceswindow = PreferencesWindow(self , self.persepolis_setting)
+        self.preferenceswindow = PreferencesWindow(self , self.persepolis_setting )
         self.preferenceswindow.show() #showing Preferences Window
 
 

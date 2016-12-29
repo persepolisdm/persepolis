@@ -32,6 +32,7 @@ class PreferencesWindow(Setting_Ui):
         super().__init__(persepolis_setting)
         self.persepolis_setting = persepolis_setting
         self.parent = parent
+        self.grandparent = parent.persepolis_main
 
         self.persepolis_setting.beginGroup('settings')
 
@@ -93,9 +94,7 @@ class PreferencesWindow(Setting_Ui):
         self.download_folder_pushButton.clicked.connect(self.downloadFolderPushButtonClicked)
         self.temp_download_lineEdit.setEnabled(False)
         self.temp_download_pushButton.clicked.connect(self.tempDownloadPushButtonClicked)
-#font change 
         
-        self.fontComboBox.currentFontChanged.connect(self.fontChanged)
 
 #dial
         self.volume_dial.setNotchesVisible(True)
@@ -174,12 +173,6 @@ class PreferencesWindow(Setting_Ui):
         if fname:
             self.temp_download_lineEdit.setText(fname)
             self.persepolis_setting.setValue('settings/download_path_temp' , str(fname))
-
-    def fontChanged(self,combo):
-        current_font = self.fontComboBox.currentFont()
-        current_font = current_font.key()
-        current_font = current_font.split(',')
-        self.persepolis_setting.setValue('settings/font' , str(current_font[0]))
 
 
     def dialChanged(self,dial):
@@ -260,11 +253,37 @@ class PreferencesWindow(Setting_Ui):
         self.persepolis_setting.setValue('download_path' , self.download_folder_lineEdit.text())
         self.persepolis_setting.setValue('download_path_temp' , self.temp_download_lineEdit.text())
         self.persepolis_setting.setValue('sound-volume' , self.volume_dial.value())
-        self.persepolis_setting.setValue('style' , self.style_comboBox.currentText())
-        self.persepolis_setting.setValue('color-scheme' , self.color_comboBox.currentText())
         self.persepolis_setting.setValue('icons' , self.icon_comboBox.currentText())
         self.persepolis_setting.setValue('notification' , self.notification_comboBox.currentText())
-        self.persepolis_setting.setValue('font-size' , self.font_size_spinBox.value())
+
+#style
+        style = str(self.style_comboBox.currentText())
+        self.persepolis_setting.setValue('style' , style) 
+
+        if style != self.grandparent.persepolis_style :#if style changed,then set new style
+            self.grandparent.setPersepolisStyle(style)
+
+#color_scheme
+        color_scheme = self.color_comboBox.currentText() 
+        self.persepolis_setting.setValue('color-scheme' , color_scheme )
+
+        if color_scheme != self.grandparent.persepolis_color_scheme:#if color_scheme changed , then set new color_scheme
+            self.grandparent.setPersepolisColorScheme(color_scheme)
+
+#font and font size
+        current_font = self.fontComboBox.currentFont()
+        current_font = current_font.key()
+        current_font = current_font.split(',')
+        font = str(current_font[0])
+        self.persepolis_setting.setValue('font' , font )
+
+        font_size = self.font_size_spinBox.value()
+        self.persepolis_setting.setValue('font-size' , font_size )
+
+        if self.grandparent.persepolis_font != font or int(self.grandparent.persepolis_font_size) != int(font_size): #if font or font_size changed,set new font , font_size
+            self.grandparent.setPersepolisFont(font , int(font_size))
+            self.grandparent.setPersepolisStyle(style)
+            self.grandparent.setPersepolisColorScheme(color_scheme)
 
 #if user select qt notification  >> enable_system_tray icon
         if self.persepolis_setting.value('notification') == 'QT notification':
