@@ -47,20 +47,12 @@ import traceback
 # ~/.config/persepolis_download_manager/ is download manager config folder
 config_folder = str(home_address) + "/.config/persepolis_download_manager"
 
-#user's preferences will saved in setting file
-setting_file = config_folder + '/setting'
-
-f = Open(setting_file)
-setting_file_lines = f.readlines()
-f.close()
-setting_dict_str = str(setting_file_lines[0].strip())
-setting_dict = ast.literal_eval(setting_dict_str) 
-
-#getting user's desired font and style , ... from setting file
-font = setting_dict['font']
-font_size = int(setting_dict['font-size'])
-style = setting_dict['style']
-color_scheme = setting_dict['color-scheme']
+#load persepolis_settings
+persepolis_setting = QSettings('persepolis_download_manager' , 'persepolis')
+font = persepolis_setting.value('settings/font')
+font_size = int(persepolis_setting.value('settings/font-size'))
+style = persepolis_setting.value('settings/style')
+color_scheme = persepolis_setting.value('settings/color-scheme')
 
 
 #creating  terminal arguments  
@@ -96,11 +88,10 @@ if args.clear:
     sys.exit(0)
 
 if args.default :
-    status = osCommands.remove(str(setting_file))
-    if status == 'ok' or status == 'no':
-        print ('Persepolis restored default')
-    else :
-        print("Persepolis couldn't restore default")
+    persepolis_setting = QSettings('persepolis_download_manager' , 'persepolis')
+    persepolis_setting.clear()
+    persepolis_setting.sync()
+    print ('Persepolis restored default')
     sys.exit(0)
 
 if args.tray :
@@ -143,12 +134,26 @@ if not (os.path.isfile(lock_file)): #if lock_file is existed , it means persepol
 #see palettes.py and setting.py
     if __name__ == "__main__":
         persepolis_download_manager = QApplication(sys.argv)
+
+        #setting font and style
         persepolis_download_manager.setFont(QFont(font , font_size ))
         persepolis_download_manager.setStyle(style)
+
+        #setting organization name and domain and apllication name
         QCoreApplication.setOrganizationName('persepolis_download_manager')
         QCoreApplication.setOrganizationDomain('http://persepolisdm.github.io')
         QCoreApplication.setApplicationName('persepolis')
+
+        #Persepolis setting
         persepolis_download_manager.setting = QSettings()
+
+        #getting user's desired font and style , ... from setting
+        font = persepolis_download_manager.setting.value('settings/font')
+        font_size = int(persepolis_download_manager.setting.value('settings/font-size'))
+        style = persepolis_download_manager.setting.value('settings/style')
+        color_scheme = persepolis_download_manager.setting.value('settings/color-scheme')
+
+
 
         if color_scheme == 'Persepolis Dark Red':
             persepolis_dark_red = DarkRedPallete()

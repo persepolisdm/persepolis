@@ -26,11 +26,10 @@ config_folder = str(home_address) + "/.config/persepolis_download_manager"
 
 
 class AfterDownloadWindow(AfterDownloadWindow_Ui):
-    def __init__(self,download_info_file_list , setting_file , persepolis_setting) :
-        super().__init__()
+    def __init__(self,download_info_file_list , persepolis_setting) :
+        super().__init__(persepolis_setting)
         self.persepolis_setting = persepolis_setting
         self.download_info_file_list = download_info_file_list
-        self.setting_file = setting_file
 #connecting buttons
         self.open_pushButtun.clicked.connect(self.openFile)
         self.open_folder_pushButtun.clicked.connect(self.openFolder)
@@ -86,15 +85,8 @@ class AfterDownloadWindow(AfterDownloadWindow_Ui):
  
     def okButtonPressed(self):
         if self.dont_show_checkBox.isChecked() == True :
-            f = Open(self.setting_file)
-            setting_file_lines = f.readlines()
-            f.close()
-            setting_dict_str = str(setting_file_lines[0].strip())
-            setting_dict = ast.literal_eval(setting_dict_str) 
-            setting_dict['after-dialog'] = 'no'
-            f = Open(self.setting_file , 'w')
-            f.writelines(str(setting_dict))
-            f.close()
+            self.persepolis_setting.setValue('settings/after-dialog' , 'no')
+            self.persepolis_setting.sync()
         self.close()
 
     def closeEvent(self , event):

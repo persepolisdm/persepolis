@@ -89,13 +89,6 @@ category_folder = config_folder + '/category_folder'
 #single_downloads_list_file contains gid of non categorised downloads
 single_downloads_list_file = category_folder + "/" + "Single Downloads"
 
-#setting
-setting_file = config_folder + '/setting'
-setting_dict = readDict(setting_file)
-
-#finding icons folder path
-icons = ':/' + str(setting_dict['icons']) + '/'
-
 
 #starting aria2 when Persepolis starts
 class StartAria2Thread(QThread):
@@ -436,8 +429,12 @@ class CheckingThread(QThread):
  
 class MainWindow(MainWindow_Ui):
     def __init__(self , start_in_tray , persepolis_setting):
-        super().__init__()
+        super().__init__(persepolis_setting)
         self.persepolis_setting = persepolis_setting
+        global icons
+        icons = ':/' + str(self.persepolis_setting.value('settings/icons')) + '/'
+
+
 #system_tray_icon
         self.system_tray_icon = QSystemTrayIcon() 
         self.system_tray_icon.setIcon(QIcon.fromTheme('persepolis',QIcon(':/icon.svg') ))
@@ -452,8 +449,7 @@ class MainWindow(MainWindow_Ui):
         self.trayAction.setChecked(True)
         self.system_tray_icon.setToolTip('Persepolis Download Manager')
 
-        setting_dict = readDict(setting_file)
-        if setting_dict['tray-icon'] != 'yes' and start_in_tray == 'no' : 
+        if self.persepolis_setting.value('settings/tray-icon') != 'yes' and start_in_tray == 'no' : 
             self.minimizeAction.setEnabled(False)
             self.trayAction.setChecked(False)
             self.system_tray_icon.hide()
@@ -461,7 +457,7 @@ class MainWindow(MainWindow_Ui):
             self.minimizeAction.setText('Show main Window')
             self.minimizeAction.setIcon(QIcon(icons + 'window'))
 
-        if setting_dict['show_menubar'] == 'yes':
+        if self.persepolis_setting.value('settings/show-menubar') == 'yes':
             self.menubar.show()
             self.showMenuBarAction.setChecked(True)
             self.toolBar2.hide()
@@ -473,7 +469,7 @@ class MainWindow(MainWindow_Ui):
         if platform.system() == 'Darwin':
             self.showMenuBarAction.setEnabled(False)
 
-        if setting_dict['show_sidepanel'] == 'yes':
+        if self.persepolis_setting.value('settings/show-sidepanel') == 'yes':
             self.category_tree_qwidget.show()
             self.showSidePanelAction.setChecked(True)
         else:
@@ -837,15 +833,10 @@ class MainWindow(MainWindow_Ui):
 
 #showing download compelete dialog
 #check user's Preferences
-                    f = Open(setting_file)
-                    setting_file_lines = f.readlines()
-                    f.close()
-                    setting_dict_str = str(setting_file_lines[0].strip())
-                    setting_dict = ast.literal_eval(setting_dict_str) 
-
+                    self.persepolis_setting.sync()
                     if progress_window.status == "complete" :
-                        if setting_dict['after-dialog'] == 'yes' :
-                            afterdownloadwindow = AfterDownloadWindow(download_info_file_list,setting_file , self.persepolis_setting)
+                        if self.persepolis_setting.value('settings/after-dialog') == 'yes' :
+                            afterdownloadwindow = AfterDownloadWindow(download_info_file_list,self.persepolis_setting)
                             self.afterdownload_list.append(afterdownloadwindow)
                             self.afterdownload_list[len(self.afterdownload_list) - 1].show()
                         else :
@@ -1395,14 +1386,8 @@ class MainWindow(MainWindow_Ui):
             self.minimizeAction.setEnabled(False) #disabaling minimizeAction in menu
             tray_icon = 'no'
         #writing changes to setting file
-        setting_dict = readDict(setting_file)
-
-        setting_dict['tray-icon'] = tray_icon
-
-        f = Open(setting_file , 'w')
-        f.writelines(str(setting_dict))
-        f.close()
-
+        self.persepolis_setting.setValue('settings/tray-icon'  , tray_icon)
+        self.persepolis_setting.sync()
 
     def showMenuBar(self , menu):
         if self.showMenuBarAction.isChecked():
@@ -1414,14 +1399,9 @@ class MainWindow(MainWindow_Ui):
             self.toolBar2.show()
             show_menubar = 'no'
 
-        #writing changes to setting file
-        setting_dict = readDict(setting_file)
-
-        setting_dict['show_menubar'] = show_menubar
-
-        f = Open(setting_file , 'w')
-        f.writelines(str(setting_dict))
-        f.close()
+        #writing changes to persepolis_setting
+        self.persepolis_setting.setValue('settings/show-menubar' , show_menubar)
+        self.persepolis_setting.sync()
 
     def showSidePanel(self , menu):
         if self.showSidePanelAction.isChecked():
@@ -1431,15 +1411,9 @@ class MainWindow(MainWindow_Ui):
             self.category_tree_qwidget.hide()
             show_sidepanel = 'no'
 
-        #writing changes to setting file
-        setting_dict = readDict(setting_file)
-
-        setting_dict['show_sidepanel'] = show_sidepanel
-
-        f = Open(setting_file , 'w')
-        f.writelines(str(setting_dict))
-        f.close()
-
+        #writing changes to persepolis_setting
+        self.persepolis_setting.setValue('settings/show-sidepanel' , show_sidepanel)
+        self.persepolis_setting.sync()
 
 #when user click on mouse's left button , then this methode is called
     def systemTrayPressed(self,click):
@@ -1504,19 +1478,13 @@ class MainWindow(MainWindow_Ui):
 
 #This methode is openning user's default download folder
     def openDefaultDownloadFolder(self,menu):
-        #finding user's default download folder from setting file
-        f = Open(setting_file)
-        setting_file_lines = f.readlines()
-        f.close()
-        setting_dict_str = str(setting_file_lines[0].strip())
-        setting_dict = ast.literal_eval(setting_dict_str) 
-        download_path = setting_dict ['download_path']
+        #finding user's default download folder from persepolis_setting 
+        self.persepolis_setting.sync()
+        download_path = self.persepolis_setting('settings/download_path')
         if os.path.isdir(download_path): #checking that if download folder is availabile or not
             osCommands.xdgOpen(download_path) #openning folder
         else:
             notifySend(str(download_path) ,'Not Found' , 5000 , 'warning' , systemtray = self.system_tray_icon ) #showing error message if folder didn't existed
-
-
 
 #this methode is openning download folder , if download was finished
     def openDownloadFolder(self,menu):

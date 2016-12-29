@@ -25,22 +25,14 @@ import platform
 home_address = os.path.expanduser("~")
 config_folder = str(home_address) + "/.config/persepolis_download_manager"
 
-#setting
-setting_file = config_folder + '/setting'
-f = Open(setting_file)
-setting_file_lines = f.readlines()
-f.close()
-setting_dict_str = str(setting_file_lines[0].strip())
-setting_dict = ast.literal_eval(setting_dict_str) 
-
-icons = ':/' + str(setting_dict['icons']) + '/'
-
-global os_type
 os_type = platform.system()
 
 class ProgressWindow_Ui(QWidget):
-    def __init__(self):
+    def __init__(self,persepolis_setting):
         super().__init__()
+
+        global icons
+        icons = ':/' + str(persepolis_setting.value('settings/icons')) + '/'
 
 #window
         self.setMinimumSize(QtCore.QSize(595, 284))

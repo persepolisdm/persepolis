@@ -39,7 +39,7 @@ download_info_folder = config_folder + "/download_info"
 
 class ProgressWindow(ProgressWindow_Ui):
     def __init__(self, parent ,gid , persepolis_setting ):
-        super().__init__()
+        super().__init__(persepolis_setting)
         self.persepolis_setting = persepolis_setting
         self.parent = parent
         self.gid = gid

@@ -23,22 +23,14 @@ import icons_resource
 home_address = os.path.expanduser("~")
 config_folder = str(home_address) + "/.config/persepolis_download_manager"
 
-#setting
-setting_file = config_folder + '/setting'
-f = Open(setting_file)
-setting_file_lines = f.readlines()
-f.close()
-setting_dict_str = str(setting_file_lines[0].strip())
-setting_dict = ast.literal_eval(setting_dict_str) 
-
-icons =':/' + str(setting_dict['icons']) + '/'
-
-
 
 class AddLinkWindow_Ui(QWidget):
-    def __init__(self):
+    def __init__(self , persepolis_setting):
         super().__init__()
 #window
+        global icons
+        icons = ':/' + str(persepolis_setting.value('settings/icons')) + '/'
+
         self.setMinimumSize(QtCore.QSize(520, 465))
         self.setWindowIcon(QIcon.fromTheme('persepolis' ,QIcon(':/icon.svg')))
 

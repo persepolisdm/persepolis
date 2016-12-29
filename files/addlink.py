@@ -27,34 +27,23 @@ home_address = os.path.expanduser("~")
 config_folder = str(home_address) + "/.config/persepolis_download_manager"
 queues_list_file = config_folder + '/queues_list'
 
-#setting
-setting_file = config_folder + '/setting'
-f = Open(setting_file)
-setting_file_lines = f.readlines()
-f.close()
-setting_dict_str = str(setting_file_lines[0].strip())
-setting_dict = ast.literal_eval(setting_dict_str) 
-
-icons =':/' + str(setting_dict['icons']) + '/'
 
 
 class AddLinkWindow(AddLinkWindow_Ui):
     def __init__(self , callback,persepolis_setting , flashgot_add_link_dictionary = {}):
-        super().__init__()
+        super().__init__(persepolis_setting)
         self.callback = callback
         self.flashgot_add_link_dictionary = flashgot_add_link_dictionary
         self.persepolis_setting = persepolis_setting
 #entry initialization            
 
-        f = Open(setting_file)
-        setting_file_lines = f.readlines()
-        f.close()
-        setting_dict_str = str(setting_file_lines[0].strip())
-        setting_dict = ast.literal_eval(setting_dict_str) 
         global connections
-        connections = int(setting_dict['connections'])
+        connections = int(self.persepolis_setting.value('settings/connections'))
         global download_path
-        download_path = str(setting_dict['download_path'])
+        download_path = str(self.persepolis_setting.value('settings/download_path'))
+
+        global icons
+        icons = ':/' + str(self.persepolis_setting.value('settings/icons')) + '/'
 
 
         global init_file

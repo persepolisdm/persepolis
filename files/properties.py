@@ -38,7 +38,7 @@ setting_file = config_folder + '/setting'
 
 class PropertiesWindow(AddLinkWindow_Ui):
     def __init__(self,callback,gid , persepolis_setting):
-        super().__init__()
+        super().__init__(persepolis_setting)
 
         self.persepolis_setting = persepolis_setting
         self.download_later_pushButton.hide() #hiding download_later_pushButton
@@ -48,14 +48,8 @@ class PropertiesWindow(AddLinkWindow_Ui):
         self.callback = callback
         self.gid = gid
         
-        f = Open(setting_file)
-        setting_file_lines = f.readlines()
-        f.close()
-        setting_dict_str = str(setting_file_lines[0].strip())
-        setting_dict = ast.literal_eval(setting_dict_str) 
-
         global connections
-        connections = int(setting_dict['connections'])
+        connections = int(self.persepolis_setting.value('settings/connections'))
 
 
 #connect folder_pushButton

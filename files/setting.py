@@ -26,36 +26,27 @@ import platform
 home_address = os.path.expanduser("~")
 config_folder = str(home_address) + "/.config/persepolis_download_manager"
 
-#setting
-setting_file = config_folder + '/setting'
-
 
 class PreferencesWindow(Setting_Ui):
     def __init__(self,parent , persepolis_setting):
-        super().__init__(parent)
+        super().__init__(persepolis_setting)
         self.persepolis_setting = persepolis_setting
         self.parent = parent
-        f = Open(setting_file)
-        setting_file_lines = f.readlines()
-        f.close()
-        setting_dict_str = str(setting_file_lines[0].strip())
-        self.setting_dict = ast.literal_eval(setting_dict_str) 
-        #in okPushButtonPressed , function is comparing user_dict and setting_dict. and if rpc_port_spinbox , style_comboBox , color_scheme
-        # , icon_comboBox , fontComboBox was changed , then a notification window is showing for notify user to restart program!
-        self.user_dict = copy.deepcopy(self.setting_dict)
 
-#initialization
-        self.tries_spinBox.setValue(int(self.setting_dict['max-tries']))
-        self.wait_spinBox.setValue(int(self.setting_dict['retry-wait']))
-        self.time_out_spinBox.setValue(int(self.setting_dict['timeout']))
-        self.connections_spinBox.setValue(int(self.setting_dict['connections']))
-        self.rpc_port_spinbox.setValue(int(self.setting_dict['rpc-port']))
+        self.persepolis_setting.beginGroup('settings')
 
-        self.download_folder_lineEdit.setText(str(self.setting_dict['download_path']))
-        self.temp_download_lineEdit.setText(str(self.setting_dict['download_path_temp']))
+        #initialization
+        self.tries_spinBox.setValue(int(self.persepolis_setting.value('max-tries')))
+        self.wait_spinBox.setValue(int(self.persepolis_setting.value('retry-wait')))
+        self.time_out_spinBox.setValue(int(self.persepolis_setting.value('timeout')))
+        self.connections_spinBox.setValue(int(self.persepolis_setting.value('connections')))
+        self.rpc_port_spinbox.setValue(int(self.persepolis_setting.value('rpc-port')))
+
+        self.download_folder_lineEdit.setText(str(self.persepolis_setting.value('download_path')))
+        self.temp_download_lineEdit.setText(str(self.persepolis_setting.value('download_path_temp')))
         
-        self.volume_label.setText('Volume : ' + str(self.setting_dict['sound-volume']) )
-        self.volume_dial.setValue(int(self.setting_dict['sound-volume']))
+        self.volume_label.setText('Volume : ' + str(self.persepolis_setting.value('sound-volume')))
+        self.volume_dial.setValue(int(self.persepolis_setting.value('sound-volume')))
 #set style 
         available_styles = QStyleFactory.keys()
         for style in available_styles :
@@ -63,40 +54,37 @@ class PreferencesWindow(Setting_Ui):
 
         self.style_comboBox.addItem('System')
         
-        current_style_index = self.style_comboBox.findText(str(self.setting_dict['style']))
+        current_style_index = self.style_comboBox.findText(str(self.persepolis_setting.value('style')))
         if current_style_index != -1 :
             self.style_comboBox.setCurrentIndex(current_style_index)
 #set color_scheme
         color_scheme = ['System' , 'Persepolis Dark Red' , 'Persepolis Dark Blue' , 'Persepolis ArcDark Red' , 'Persepolis ArcDark Blue','Persepolis Light Red' , 'Persepolis Light Blue' ]
         self.color_comboBox.addItems(color_scheme)
             
-        current_color_index = self.color_comboBox.findText(str(self.setting_dict['color-scheme']))
-        if current_color_index != -1 :
-            self.color_comboBox.setCurrentIndex(current_color_index)
+        current_color_index = self.color_comboBox.findText(str(self.persepolis_setting.value('color-scheme')))
+        self.color_comboBox.setCurrentIndex(current_color_index)
 #set icons
         icons = ['Archdroid-Red' , 'Archdroid-Blue']
         self.icon_comboBox.addItems(icons)
 
-        current_icons_index = self.icon_comboBox.findText(str(self.setting_dict['icons']))
-        if current_icons_index != -1 :
-            self.icon_comboBox.setCurrentIndex(current_icons_index)
+        current_icons_index = self.icon_comboBox.findText(str(self.persepolis_setting.value('icons')))
+        self.icon_comboBox.setCurrentIndex(current_icons_index)
 #set notification
         notifications = [ 'Native notification' , 'QT notification' ]
         self.notification_comboBox.addItems(notifications)
-        current_notification_index = self.notification_comboBox.findText(str(self.setting_dict['notification']))
-        if current_notification_index != -1 :
-            self.notification_comboBox.setCurrentIndex(current_notification_index)
+        current_notification_index = self.notification_comboBox.findText(str(self.persepolis_setting.value('notification')))
+        self.notification_comboBox.setCurrentIndex(current_notification_index)
 #set font 
         font_setting = QFont() 
-        font_setting.setFamily(str(self.setting_dict['font']))
+        font_setting.setFamily(str(self.persepolis_setting.value('font')))
         self.fontComboBox.setCurrentFont(font_setting)
     
-        self.font_size_spinBox.setValue(int(self.setting_dict['font-size']))
+        self.font_size_spinBox.setValue(int(self.persepolis_setting.value('font-size')))
 
 #sound frame 
         self.sound_frame.setEnabled(False)
         self.enable_notifications_checkBox.toggled.connect(self.soundFrame)
-        if str(self.setting_dict['sound']) == 'yes':
+        if str(self.persepolis_setting.value('sound')) == 'yes':
             self.enable_notifications_checkBox.setChecked(True) 
         else:
             self.enable_notifications_checkBox.setChecked(False)
@@ -115,12 +103,12 @@ class PreferencesWindow(Setting_Ui):
 
 #tray icon
        
-        if str(self.setting_dict['tray-icon']) == 'yes':
+        if str(self.persepolis_setting.value('tray-icon')) == 'yes':
             self.enable_system_tray_checkBox.setChecked(True)
         else:
             self.enable_notifications_checkBox.setChecked(False)
 #show_menubar
-        if str(self.setting_dict['show_menubar']) == 'yes':
+        if str(self.persepolis_setting.value('show-menubar')) == 'yes':
             self.show_menubar_checkbox.setChecked(True)
         else:
             self.show_menubar_checkbox.setChecked(False)
@@ -129,14 +117,14 @@ class PreferencesWindow(Setting_Ui):
             self.show_menubar_checkbox.setChecked(True)
             self.show_menubar_checkbox.hide()
 #show_sidepanel
-        if str(self.setting_dict['show_sidepanel']) == 'yes':
+        if str(self.persepolis_setting.value('show-sidepanel')) == 'yes':
             self.show_sidepanel_checkbox.setChecked(True)
         else:
             self.show_sidepanel_checkbox.setChecked(False)
 
             
 #after download dialog
-        if str(self.setting_dict['after-dialog']) == 'yes':
+        if str(self.persepolis_setting.value('after-dialog')) == 'yes':
             self.after_download_checkBox.setChecked(True)
         else:
             self.after_download_checkBox.setChecked(False)
@@ -152,6 +140,8 @@ class PreferencesWindow(Setting_Ui):
 
         self.resize(size)
         self.move(position)
+
+        self.persepolis_setting.endGroup()
 
 
     def closeEvent(self,event):
@@ -172,34 +162,42 @@ class PreferencesWindow(Setting_Ui):
  
 
     def downloadFolderPushButtonClicked(self,button):
-        download_path = str(self.setting_dict['download_path'])
+        download_path = str(self.persepolis_setting.value('settings/download_path'))
         fname = QFileDialog.getExistingDirectory(self,'Select a directory', download_path )
         if fname:
             self.download_folder_lineEdit.setText(fname)
-            self.setting_dict['download_path'] = str(fname)
+            self.persepolis_setting.setValue('settings/download_path' , str(fname) ) 
 
     def tempDownloadPushButtonClicked(self , button):
-        download_path_temp = str(self.setting_dict['download_path_temp'])
+        download_path_temp = str(self.persepolis_setting.value('settings/download_path_temp'))
         fname = QFileDialog.getExistingDirectory(self,'Open f', download_path_temp )
         if fname:
             self.temp_download_lineEdit.setText(fname)
-            self.setting_dict['download_path_temp'] = str(fname)
+            self.persepolis_setting.setValue('settings/download_path_temp' , str(fname))
 
     def fontChanged(self,combo):
         current_font = self.fontComboBox.currentFont()
         current_font = current_font.key()
         current_font = current_font.split(',')
-        self.setting_dict['font'] = str(current_font[0])
+        self.persepolis_setting.setValue('settings/font' , str(current_font[0]))
 
 
     def dialChanged(self,dial):
         self.volume_label.setText('Volume : ' + str(self.volume_dial.value()))
 
     def defaultsPushButtonPressed(self , button):
+        self.persepolis_setting.beginGroup('settings')
+
         download_path_temp_default = str(home_address) + '/.persepolis'
         download_path_default = str(home_address) + '/Downloads/Persepolis'
+
  
-        self.setting_dict = { 'show_menubar' : 'no' , 'show_sidepanel' : 'yes' , 'rpc-port' : 6801 , 'notification' : 'Native notification' , 'after-dialog' : 'yes' , 'tray-icon':'yes', 'max-tries' : 5 , 'retry-wait': 0 , 'timeout' : 60 , 'connections' : 16 , 'download_path_temp' : download_path_temp_default , 'download_path':download_path_default , 'sound' : 'yes' , 'sound-volume':100 , 'style':'Fusion' , 'color-scheme' : 'Persepolis Dark Red' , 'icons':'Archdroid-Red','font' : 'Ubuntu' , 'font-size' : 9  }
+        self.setting_dict = { 'show-menubar' : 'no' , 'show-sidepanel' : 'yes' , 'rpc-port' : 6801 , 'notification' : 'Native notification' , 'after-dialog' : 'yes' , 'tray-icon':'yes', 'max-tries' : 5 , 'retry-wait': 0 , 'timeout' : 60 , 'connections' : 16 , 'download_path_temp' : download_path_temp_default , 'download_path':download_path_default , 'sound' : 'yes' , 'sound-volume':100 , 'style':'Fusion' , 'color-scheme' : 'Persepolis Dark Red' , 'icons':'Archdroid-Red','font' : 'Ubuntu' , 'font-size' : 9  }
+
+        #this loop is checking values in persepolis_setting . if value is not valid then value replaced by default_setting_dict value
+        for key in self.setting_dict.keys():
+            self.persepolis_setting.setValue(key , self.setting_dict[key] )
+
 
         self.tries_spinBox.setValue(int(self.setting_dict['max-tries']))
         self.wait_spinBox.setValue(int(self.setting_dict['retry-wait']))
@@ -247,62 +245,71 @@ class PreferencesWindow(Setting_Ui):
             self.show_menubar_checkbox.setChecked(False)
 #show side panel
         self.show_sidepanel_checkbox.setCheckState(True)
+        
+        self.persepolis_setting.endGroup()
 
     def okPushButtonPressed(self,button):
-        self.setting_dict['max-tries'] = self.tries_spinBox.value()
-        self.setting_dict['retry-wait'] = self.wait_spinBox.value()
-        self.setting_dict['timeout'] = self.time_out_spinBox.value()
-        self.setting_dict['connections'] = self.connections_spinBox.value()
-        self.setting_dict['rpc-port'] = self.rpc_port_spinbox.value()
-        self.setting_dict['download_path'] = self.download_folder_lineEdit.text()
-        self.setting_dict['download_path_temp'] = self.temp_download_lineEdit.text()
-        self.setting_dict['sound-volume'] = self.volume_dial.value()
-        self.setting_dict['style'] = self.style_comboBox.currentText()
-        self.setting_dict['color-scheme'] = self.color_comboBox.currentText()
-        self.setting_dict['icons'] = self.icon_comboBox.currentText()
-        self.setting_dict['notification'] = self.notification_comboBox.currentText()
-        self.setting_dict['font-size'] = self.font_size_spinBox.value()
+
+        self.persepolis_setting.beginGroup('settings')
+
+        self.persepolis_setting.setValue('max-tries' , self.tries_spinBox.value())
+        self.persepolis_setting.setValue('retry-wait' , self.wait_spinBox.value())
+        self.persepolis_setting.setValue('timeout' , self.time_out_spinBox.value())
+        self.persepolis_setting.setValue('connections' , self.connections_spinBox.value())
+        self.persepolis_setting.setValue('rpc-port' , self.rpc_port_spinbox.value())
+        self.persepolis_setting.setValue('download_path' , self.download_folder_lineEdit.text())
+        self.persepolis_setting.setValue('download_path_temp' , self.temp_download_lineEdit.text())
+        self.persepolis_setting.setValue('sound-volume' , self.volume_dial.value())
+        self.persepolis_setting.setValue('style' , self.style_comboBox.currentText())
+        self.persepolis_setting.setValue('color-scheme' , self.color_comboBox.currentText())
+        self.persepolis_setting.setValue('icons' , self.icon_comboBox.currentText())
+        self.persepolis_setting.setValue('notification' , self.notification_comboBox.currentText())
+        self.persepolis_setting.setValue('font-size' , self.font_size_spinBox.value())
+
 #if user select qt notification  >> enable_system_tray icon
-        if self.setting_dict['notification'] == 'QT notification':
+        if self.persepolis_setting.value('notification') == 'QT notification':
             self.enable_system_tray_checkBox.setChecked(True)
+
 #enable_system_tray_checkBox
         if self.enable_system_tray_checkBox.isChecked() == True :
-            self.setting_dict['tray-icon'] = 'yes'
+            self.persepolis_setting.setValue('tray-icon' , 'yes')
             self.parent.system_tray_icon.show()
             self.parent.minimizeAction.setEnabled(True)
             self.parent.trayAction.setChecked(True)
         else:
-            self.setting_dict['tray-icon'] = 'no'
+            self.persepolis_setting.setValue('tray-icon' , 'no')
             self.parent.system_tray_icon.hide()
             self.parent.minimizeAction.setEnabled(False)
             self.parent.trayAction.setChecked(False)
+
 #after_download_checkBox
         if self.after_download_checkBox.isChecked() == True :
-            self.setting_dict['after-dialog'] = 'yes'
+            self.persepolis_setting.setValue('after-dialog' , 'yes')
         else :
-            self.setting_dict['after-dialog'] = 'no'
+            self.persepolis_setting.setValue('after-dialog' , 'no')
 
 #show_menubar_checkbox
         if self.show_menubar_checkbox.isChecked() == True :
-            self.setting_dict['show_menubar'] = 'yes'
+            self.persepolis_setting.setValue('show-menubar' , 'yes')
             self.parent.menubar.show()
             self.parent.toolBar2.hide()
 
         else:
-            self.setting_dict['show_menubar'] = 'no'
+            self.persepolis_setting.setValue('show-menubar' , 'no')
             self.parent.menubar.hide()
             self.parent.toolBar2.show()
 
 #show_sidepanel_checkbox
         if self.show_sidepanel_checkbox.isChecked() == True:
-            self.setting_dict['show_sidepanel'] = 'yes'
+            self.persepolis_setting.setValue('show_sidepanel' , 'yes')
             self.parent.category_tree_qwidget.show()
         else:
-            self.setting_dict['show_sidepanel'] = 'no'
+            self.persepolis_setting.setValue('show_sidepanel' , 'no')
             self.parent.category_tree_qwidget.hide()
+
 #this section  creates temporary download folder and download folder and download sub folders if they did not existed.
-        download_path_temp  = self.setting_dict ['download_path_temp']
-        download_path = self.setting_dict [ 'download_path']
+        download_path_temp  = self.persepolis_setting.value('download_path_temp')
+        download_path = self.persepolis_setting.value( 'download_path')
         folder_list = [download_path_temp]
         for folder in [ 'Audios' , 'Videos', 'Others','Documents','Compressed' ]:
             folder_list.append(download_path + '/' + folder )
@@ -312,20 +319,20 @@ class PreferencesWindow(Setting_Ui):
 
 
         if self.enable_notifications_checkBox.isChecked() == True :
-            self.setting_dict['sound'] = 'yes'
+            self.persepolis_setting.setValue('sound' , 'yes')
         else:
-            self.setting_dict['sound'] = 'no'
+            self.persepolis_setting.setValue('sound' , 'no')
 
-        f = Open(setting_file , 'w')
-        f.writelines(str(self.setting_dict))
-        f.close()
+        #applying changes
+        self.persepolis_setting.endGroup()
+        self.persepolis_setting.sync()
 #comparing user_dict Vs setting_dict
-        for i in ['rpc-port' , 'style' , 'color-scheme' , 'icons' , 'font' , 'font-size' ] :
-            if self.user_dict[i] != self.setting_dict[i] :
-                restart_messageBox = QMessageBox()                
-                restart_messageBox.setText('<b>Some changes take effect after restarting persepolis</b>')
-                restart_messageBox.setWindowTitle('Restart Persepolis!')
-                restart_messageBox.exec_()
-                break
+#         for i in ['rpc-port' , 'style' , 'color-scheme' , 'icons' , 'font' , 'font-size' ] :
+#             if self.user_dict[i] != self.setting_dict[i] :
+#                 restart_messageBox = QMessageBox()                
+#                 restart_messageBox.setText('<b>Some changes take effect after restarting persepolis</b>')
+#                 restart_messageBox.setWindowTitle('Restart Persepolis!')
+#                 restart_messageBox.exec_()
+#                 break
         self.close()
 

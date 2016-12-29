@@ -28,6 +28,8 @@ import osCommands
 import platform
 from compatibility import compatibility
 import glob
+import PyQt5
+from PyQt5.QtCore import QSettings
 
 # initialization
 home_address = os.path.expanduser("~")
@@ -63,9 +65,6 @@ single_downloads_list_file = category_folder + "/" + "Single Downloads"
 #persepolis tmp folder in /tmp
 persepolis_tmp = '/tmp/persepolis_' + user_name
 
-#user's preferences will saved in setting file
-setting_file = config_folder + '/setting'
-
 #lock files perventing to access a file simultaneously
 
 #removing lock files in starting persepolis
@@ -89,37 +88,34 @@ for folder in  [ config_folder , download_info_folder ,persepolis_tmp , perseoli
 for file in [queues_list , download_list_file , download_list_file_active , single_downloads_list_file ]:
     osCommands.touch(file)
 
-osCommands.touch(setting_file)
-f = Open(setting_file)
-setting_file_lines = f.readlines()
-f.close()
-try :
-    setting_dict_str = str(setting_file_lines[0].strip())
-    setting_dict = ast.literal_eval(setting_dict_str) 
-except :
-    setting_dict = [] 
 
-#this section is checking setting file existed or not !and if it is not existed , exists a default setting file
-if len(setting_dict) != 19:
-    download_path_temp = str(home_address) + '/.persepolis'
+#import persepolis_setting
+#persepolis is using QSettings for saving windows size and windows position and program settings
+persepolis_setting = QSettings('persepolis_download_manager' , 'persepolis')
 
-    download_path = str(home_address) + '/Downloads/Persepolis'
+persepolis_setting.beginGroup('settings')
 
-    default_setting = {'show_menubar' : 'no' , 'show_sidepanel' : 'yes' , 'rpc-port' : 6801 , 'notification' : 'Native notification' , 'after-dialog' : 'yes' , 'tray-icon' : 'yes', 'max-tries' : 5 , 'retry-wait': 0 , 'timeout' : 60 , 'connections' : 16 , 'download_path_temp' : download_path_temp , 'download_path':download_path , 'sound' : 'yes' , 'sound-volume':90 , 'style':'Fusion' , 'color-scheme' : 'Persepolis Dark Red' , 'icons':'Archdroid-Red','font' : 'Ubuntu' , 'font-size' : 9  }
-    f = Open(setting_file , 'w')
-    f.writelines(str(default_setting))
-    f.close()
+download_path_temp = str(home_address) + '/.persepolis'
 
-    f = Open(setting_file)
-    setting_file_lines = f.readlines()
-    f.close()
-    setting_dict_str = str(setting_file_lines[0].strip())
-    setting_dict = ast.literal_eval(setting_dict_str) 
+download_path = str(home_address) + '/Downloads/Persepolis'
 
+
+default_setting_dict = {'show-menubar' : 'no' , 'show-sidepanel' : 'yes' , 'rpc-port' : 6801 , 'notification' : 'Native notification' , 'after-dialog' : 'yes' , 'tray-icon' : 'yes', 'max-tries' : 5 , 'retry-wait': 0 , 'timeout' : 60 , 'connections' : 16 , 'download_path_temp' : download_path_temp , 'download_path':download_path , 'sound' : 'yes' , 'sound-volume':90 , 'style':'Fusion' , 'color-scheme' : 'Persepolis Dark Red' , 'icons':'Archdroid-Red','font' : 'Ubuntu' , 'font-size' : 9  }
+
+#this loop is checking values in persepolis_setting . if value is not valid then value replaced by default_setting_dict value
+for key in default_setting_dict.keys():
+
+    setting_value = persepolis_setting.value(key, default_setting_dict[key] )
+    persepolis_setting.setValue(key , setting_value )
+
+persepolis_setting.sync()
 
 #this section  creates temporary download folder and download folder and download sub folders if they did not existed.
-download_path_temp  = setting_dict ['download_path_temp']
-download_path = setting_dict [ 'download_path']
+download_path_temp  = persepolis_setting.value('download_path_temp')
+download_path = persepolis_setting.value('download_path')
+
+persepolis_setting.endGroup()
+
 folder_list = [download_path_temp]
 for folder in [ 'Audios' , 'Videos', 'Others','Documents','Compressed' ]:
     folder_list.append(download_path + '/' + folder )

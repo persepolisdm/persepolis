@@ -25,15 +25,6 @@ home_address = os.path.expanduser("~")
 config_folder = str(home_address) + "/.config/persepolis_download_manager"
 
 #setting
-setting_file = config_folder + '/setting'
-f = Open(setting_file)
-setting_file_lines = f.readlines()
-f.close()
-setting_dict_str = str(setting_file_lines[0].strip())
-setting_dict = ast.literal_eval(setting_dict_str) 
-
-icons = ':/' + str(setting_dict['icons']) + '/'
-
 global os_type
 os_type = platform.system()
 
@@ -43,6 +34,9 @@ class MenuWidget(QPushButton):
         super().__init__()
 
         self.parent = parent
+
+        icons = ':/' + str(self.parent.persepolis_setting.value('settings/icons')) + '/'
+
 
         #creating context menu
         self.menubar = QMenu(self)
@@ -178,9 +172,15 @@ class CategoryTreeView(QTreeView):
 
 
 class MainWindow_Ui(QMainWindow):
-    def __init__(self):
+    def __init__(self , persepolis_setting):
         super().__init__()
 #MainWindow
+        self.persepolis_setting = persepolis_setting
+
+        global icons
+        icons = ':/' + str(self.persepolis_setting.value('settings/icons')) + '/'
+
+
         self.setWindowTitle("Persepolis Download Manager")
         self.setWindowIcon(QIcon.fromTheme('persepolis',QIcon(':/icon.svg') ))
        

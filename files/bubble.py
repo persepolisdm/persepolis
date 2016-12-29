@@ -17,6 +17,7 @@ import os , ast
 import platform
 from play import playNotification
 from newopen import Open
+from PyQt5.QtCore import QSettings
 
 home_address = os.path.expanduser("~")
 config_folder = str(home_address) + "/.config/persepolis_download_manager"
@@ -25,8 +26,6 @@ config_folder = str(home_address) + "/.config/persepolis_download_manager"
 global os_type
 os_type = platform.system()
 
-#setting
-setting_file = config_folder + '/setting'
 
 
 #notifySend use notify-send program in user's system for sending notifications
@@ -40,14 +39,13 @@ def notifySend(message1,message2,time,sound ,systemtray=None ):
         playNotification('notifications/you.ogg')
     elif sound == 'critical':
         playNotification('notifications/connection.ogg')
+    elif sound == 'queue':
+        playNotification('notifications/queue.ogg')
 
-    f = Open(setting_file)
-    setting_file_lines = f.readlines()
-    f.close()
-    setting_dict_str = str(setting_file_lines[0].strip())
-    setting_dict = ast.literal_eval(setting_dict_str)
+    #load settings
+    persepolis_setting = QSettings('persepolis_download_manager' , 'persepolis')
 
-    enable_notification = str(setting_dict['notification'])
+    enable_notification = persepolis_setting.value('settings/notification')
 
     time = str(time)
     message1 = str(message1)

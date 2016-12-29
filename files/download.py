@@ -22,7 +22,7 @@ import ast
 import shutil
 from newopen import Open , readList , writeList
 import platform , sys
-
+from PyQt5.QtCore import QSettings
 
 
 home_address = os.path.expanduser("~")
@@ -33,16 +33,10 @@ download_list_file_active = config_folder + "/download_list_file_active"
 config_folder = str(home_address) + "/.config/persepolis_download_manager"
 
 #setting
-setting_file = config_folder + '/setting'
-f = Open(setting_file)
-setting_file_lines = f.readlines()
-f.close()
-setting_dict_str = str(setting_file_lines[0].strip())
-setting_dict = ast.literal_eval(setting_dict_str) 
-
+persepolis_setting = QSettings('persepolis_download_manager' , 'persepolis')
 
 host = 'localhost'
-port = int(setting_dict['rpc-port'])
+port = int(persepolis_setting.value('settings/rpc-port'))
 
 #RPC
 SERVER_URI_FORMAT = 'http://{}:{:d}/rpc'
@@ -158,22 +152,17 @@ def downloadAria(gid):
 
 
 
-#finding download_path_temp from setting_file
-    f = Open(setting_file)
-    setting_file_lines = f.readlines()
-    f.close()
-    setting_dict_str = str(setting_file_lines[0].strip())
-    setting_dict = ast.literal_eval(setting_dict_str) 
-
-    download_path_temp = setting_dict ['download_path_temp' ] 
+#finding download_path_temp from persepolis_setting
+    persepolis_setting.sync()
+    download_path_temp = persepolis_setting.value('settings/download_path_temp') 
 
 
     if start_time_status != 'stopped':
 #sending download request to aria2
         if link[0:5] != "https":
-            aria_dict = {'gid':gid ,'max-tries' : str(setting_dict['max-tries']) , 'retry-wait': int(setting_dict['retry-wait']) , 'timeout' : int(setting_dict['timeout']) , 'header': header_list ,'out': out , 'user-agent': user_agent ,  'referer': referer ,  'all-proxy': ip_port , 'max-download-limit': limit , 'all-proxy-user':str(proxy_user), 'all-proxy-passwd':str(proxy_passwd), 'http-user':str(download_user), 'http-passwd':str(download_passwd) , 'split':'16', 'max-connection-per-server':str(connections) , 'min-split-size':'1M', 'continue':'true', 'dir':str(download_path_temp) } 
+            aria_dict = {'gid':gid ,'max-tries' : str(persepolis_setting.value('settings/max-tries')) , 'retry-wait': int(persepolis_setting.value('settings/retry-wait')) , 'timeout' : int(persepolis_setting.value('settings/timeout')) , 'header': header_list ,'out': out , 'user-agent': user_agent ,  'referer': referer ,  'all-proxy': ip_port , 'max-download-limit': limit , 'all-proxy-user':str(proxy_user), 'all-proxy-passwd':str(proxy_passwd), 'http-user':str(download_user), 'http-passwd':str(download_passwd) , 'split':'16', 'max-connection-per-server':str(connections) , 'min-split-size':'1M', 'continue':'true', 'dir':str(download_path_temp) } 
         else:
-            aria_dict = {'gid':gid ,'max-tries' : str(setting_dict['max-tries']) , 'retry-wait': int(setting_dict['retry-wait']) , 'timeout' : int(setting_dict['timeout']) , 'header': header_list ,'out': out , 'user-agent': user_agent ,  'referer': referer ,  'all-proxy': ip_port , 'max-download-limit': limit , 'all-proxy-user':str(proxy_user), 'all-proxy-passwd':str(proxy_passwd), 'split':'16', 'max-connection-per-server':str(connections) , 'min-split-size':'1M', 'continue':'true', 'dir':str(download_path_temp) } 
+            aria_dict = {'gid':gid ,'max-tries' : str(persepolis_setting.value('settings/max-tries')) , 'retry-wait': int(persepolis_setting.value('settings/retry-wait')) , 'timeout' : int(persepolis_setting.value('settings/timeout')) , 'header': header_list ,'out': out , 'user-agent': user_agent ,  'referer': referer ,  'all-proxy': ip_port , 'max-download-limit': limit , 'all-proxy-user':str(proxy_user), 'all-proxy-passwd':str(proxy_passwd), 'split':'16', 'max-connection-per-server':str(connections) , 'min-split-size':'1M', 'continue':'true', 'dir':str(download_path_temp) } 
 
 
         try:
@@ -315,13 +304,10 @@ def downloadStatus(gid):
     if final_download_path == None :
         if file_name != None :
 #finding default download_path
-            f = Open(setting_file)
-            setting_file_lines = f.readlines()
-            f.close()
-            setting_dict_str = str(setting_file_lines[0].strip())
-            setting_dict = ast.literal_eval(setting_dict_str) 
 
-            if setting_dict['download_path'] == download_path :
+            persepolis_setting.sync()
+            
+            if persepolis_setting.value('settings/download_path') == download_path :
                 final_download_path = findDownloadPath(file_name , download_path)
                 add_link_dictionary ['final_download_path'] = final_download_path
             else :

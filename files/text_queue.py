@@ -26,24 +26,21 @@ import osCommands
 home_address = os.path.expanduser("~")
 config_folder = str(home_address) + "/.config/persepolis_download_manager"
 queues_list_file = config_folder + '/queues_list'
-#setting
-setting_file = config_folder + '/setting'
-f = Open(setting_file)
-setting_file_lines = f.readlines()
-f.close()
-setting_dict_str = str(setting_file_lines[0].strip())
-setting_dict = ast.literal_eval(setting_dict_str) 
 
-icons =':/' + str(setting_dict['icons']) + '/'
 
 
 class TextQueue(TextQueue_Ui):
     def __init__(self , parent , file_path , callback , persepolis_setting ):
-        super().__init__()
+        super().__init__(persepolis_setting)
         self.persepolis_setting = persepolis_setting
         self.callback = callback
         self.file_path = file_path
         self.parent = parent
+
+        global icons
+        icons = ':/' + str(self.persepolis_setting.value('settings/icons')) + '/'
+
+
         #setting file column hidden in links_table
         self.links_table.setColumnHidden(1 , True)
 
@@ -86,15 +83,10 @@ class TextQueue(TextQueue_Ui):
 
 #entry initialization            
 
-        f = Open(setting_file)
-        setting_file_lines = f.readlines()
-        f.close()
-        setting_dict_str = str(setting_file_lines[0].strip())
-        setting_dict = ast.literal_eval(setting_dict_str) 
         global connections
-        connections = int(setting_dict['connections'])
+        connections = int(self.persepolis_setting.value('settings/connections'))
         global download_path
-        download_path = str(setting_dict['download_path'])
+        download_path = str(self.persepolis_setting.value('settings/download_path'))
 
 
         global init_file

@@ -16,7 +16,7 @@ import os
 from newopen import Open
 import ast
 import platform
-
+from PyQt5.QtCore import QSettings
 
 global os_type
 os_type = platform.system()
@@ -29,17 +29,15 @@ config_folder = str(home_address) + "/.config/persepolis_download_manager"
 setting_file = config_folder + '/setting'
 
 def playNotification(file):
-#getting user setting from setting file
-#setting_dict['sound'] >>> enable or disable sound
-#setting_dict['sound-volume'] >>>Specify volume of sound . between 0 to 100
-    f = Open(setting_file)
-    setting_file_lines = f.readlines()
-    f.close()
-    setting_dict_str = str(setting_file_lines[0].strip())
-    setting_dict = ast.literal_eval(setting_dict_str) 
+#getting user setting from persepolis_setting
+    persepolis_setting = QSettings('persepolis_download_manager' , 'persepolis')
 
-    enable_notification = str(setting_dict['sound'])
-    volume_percent = int(setting_dict['sound-volume'])
+    #enbling or disabling notification sound in persepolis_setting
+    enable_notification = str(persepolis_setting.value('settings/sound'))
+
+    #volume of notification in persepolis_setting(an integer between 0 to 100)
+    volume_percent = int(persepolis_setting.value('settings/sound-volume'))
+
 #Paplay volume value must be between 0 (silent) and 65536 (100% volume)
     volume = int((65536 * volume_percent)/100)
 
