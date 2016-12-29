@@ -2331,13 +2331,14 @@ class MainWindow(MainWindow_Ui):
 
         queueAction = QAction(QIcon(icons + 'add') , 'Single Downloads' , self , statusTip = "Add to Single Downloads"  , triggered = partial(self.addToQueue , 'Single Downloads' ) ) 
         self.download_table.sendMenu.addAction(queueAction)
-
+        #adding sendMenu items
         f = Open(queues_list_file)
         f_lines = f.readlines()
         f.close()
         for i in f_lines:
-            queueAction = QAction(QIcon(icons + 'add_queue') , str(i.strip()) , self , statusTip = "Add to" + str(i.strip()) , triggered = partial(self.addToQueue , str(i.strip())) ) 
-            self.download_table.sendMenu.addAction(queueAction)
+            if i.strip() != category:
+                queueAction = QAction(QIcon(icons + 'add_queue') , str(i.strip()) , self , statusTip = "Add to" + str(i.strip()) , triggered = partial(self.addToQueue , str(i.strip())) ) 
+                self.download_table.sendMenu.addAction(queueAction)
 
         if category == 'All Downloads' and mode == 'None':
 
