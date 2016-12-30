@@ -37,6 +37,7 @@ import icons_resource
 import spider
 import osCommands
 import platform
+from copy import deepcopy
 #THIS FILE CREATES MAIN WINDOW
 
 #The GID (or gid) is a key to manage each download. Each download will be assigned a unique GID.
@@ -55,6 +56,10 @@ checking_flag = 0
 #when rpc connection between persepolis and aria is disconnected >> aria2_disconnected = 1
 global aria2_disconnected
 aria2_disconnected = 0
+
+
+global button_pressed_counter
+button_pressed_counter = 0
 
 home_address = os.path.expanduser("~")
 user_name_split = home_address.split('/')
@@ -204,6 +209,9 @@ class DownloadLink(QThread):
             version_answer = download.aria2Version()
             if version_answer == 'did not respond':
                 self.ARIA2NOTRESPOND.emit()
+
+
+
 
 #this thread managing queue and sending download request to aria2            
 class Queue(QThread):
@@ -425,7 +433,36 @@ class CheckingThread(QThread):
                             break
                     self.RECONNECTARIASIGNAL.emit(str(answer))  #emitting answer , if answer is 'did not respond' , it means that reconnecting aria was not successful         
  
-   
+class WaitThread(QThread):
+    QTABLEREADY = pyqtSignal()
+    def __init__(self):
+        QThread.__init__(self)
+
+    def run(self):
+#if checking_flag is equal to 1, it means that user pressed remove or delete button . so checking download information must stop until removing done!
+        global checking_flag
+        checking_flag = 1
+        while checking_flag != 2 :
+            sleep(0.05)
+        self.QTABLEREADY.emit()
+
+class ButtonPressedThread(QThread):
+    def __init__(self):
+        QThread.__init__(self)
+
+    def run(self):
+        global checking_flag
+        current_button_pressed_value = deepcopy(button_pressed_counter) + 1 
+        while current_button_pressed_value != button_pressed_counter :
+            current_button_pressed_value = deepcopy(button_pressed_counter) 
+            sleep(2)
+#job is done!
+        checking_flag = 0
+
+
+
+
+  
  
 class MainWindow(MainWindow_Ui):
     def __init__(self , start_in_tray , persepolis_main , persepolis_setting):
@@ -2865,14 +2902,23 @@ class MainWindow(MainWindow_Ui):
     def newUpdate(self,menu):
         osCommands.xdgOpen('https://github.com/persepolisdm/persepolis/releases')
 
-
     def moveUp(self,menu):
+        global button_pressed_counter
+        button_pressed_counter = button_pressed_counter + 1
 #if checking_flag is equal to 1, it means that user pressed remove or delete button . so checking download information must stop until removing done!
-        global checking_flag
-        checking_flag = 1
-        while checking_flag != 2 :
-            sleep(0.1)
+        if checking_flag != 2 :
+            button_pressed_thread = ButtonPressedThread()
+            self.threadPool.append(button_pressed_thread)
+            self.threadPool[len(self.threadPool) - 1].start()
 
+            wait_check = WaitThread()
+            self.threadPool.append(wait_check)
+            self.threadPool[len(self.threadPool) - 1].start()
+            self.threadPool[len(self.threadPool) - 1].QTABLEREADY.connect(self.moveUp2)
+        else:
+            self.moveUp2()
+ 
+    def moveUp2(self):
         old_row = self.selectedRow() #finding user selected row
 
         #current_category_tree_text is the name of queue that selected by user
@@ -2919,16 +2965,27 @@ class MainWindow(MainWindow_Ui):
 
                     item = QTableWidgetItem(old_row_items_list[i])
                     self.download_table.setItem(new_row , i , item)
-#job is done!
-        checking_flag = 0
+
+                self.download_table.selectRow(new_row)
 
     def moveDown(self,menu):
 #if checking_flag is equal to 1, it means that user pressed remove or delete button . so checking download information must stop until removing done!
-        global checking_flag
-        checking_flag = 1
-        while checking_flag != 2 :
-            sleep(0.1)
+        global button_pressed_counter
+        button_pressed_counter = button_pressed_counter + 1
+#if checking_flag is equal to 1, it means that user pressed remove or delete button . so checking download information must stop until removing done!
+        if checking_flag != 2 :
+            button_pressed_thread = ButtonPressedThread()
+            self.threadPool.append(button_pressed_thread)
+            self.threadPool[len(self.threadPool) - 1].start()
 
+            wait_check = WaitThread()
+            self.threadPool.append(wait_check)
+            self.threadPool[len(self.threadPool) - 1].start()
+            self.threadPool[len(self.threadPool) - 1].QTABLEREADY.connect(self.moveDown2)
+        else:
+            self.moveDown2()
+ 
+    def moveDown2(self):
         old_row = self.selectedRow() #finding user selected row
 
         #current_category_tree_text is the name of queue that selected by user
@@ -2975,6 +3032,7 @@ class MainWindow(MainWindow_Ui):
 
                     item = QTableWidgetItem(old_row_items_list[i])
                     self.download_table.setItem(new_row , i , item)
+                self.download_table.selectRow(new_row)
 #job is done!
         checking_flag = 0
 
