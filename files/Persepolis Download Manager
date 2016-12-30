@@ -178,7 +178,6 @@ if not (os.path.isfile(lock_file)): #if lock_file is existed , it means persepol
 
         #setting organization name and domain and apllication name
         QCoreApplication.setOrganizationName('persepolis_download_manager')
-        QCoreApplication.setOrganizationDomain('http://persepolisdm.github.io')
         QCoreApplication.setApplicationName('persepolis')
 
         #Persepolis setting
