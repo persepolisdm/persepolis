@@ -128,24 +128,24 @@ you can use flashgot for download from youtube , ...
 
 
 ## Contact us
-Persepolis code developer : Alireza Amirsamimi
+Persepolis code developer : **Alireza Amirsamimi**
 https://github.com/alireza-amirsamimi
 alireza.amirsamimi@ubuntu.ir
 
-Arch repository maintainer : Mohammadreza Abdollahzadeh
+Arch repository maintainer : **Mohammadreza Abdollahzadeh**
 https://github.com/morealaz
 morealaz@gmail.com
 
-Launchpad repository maintainer : Mostafa Asadi
+Launchpad repository maintainer : **Mostafa Asadi**
 https://github.com/mostafaasadi
 mostafaasadi73@gmail.com
 
-MacOS X users support : MohammadAmin Vahedinia
+MacOS X users support : **MohammadAmin Vahedinia**
 https://github.com/Mr0Null
 mohammadamin@beeit.ir
 
 
-Persepolis website developer : Sadegh Alirezaei
+Persepolis website developer : **Sadegh Alirezaei**
 https://github.com/Alirezaies
 alirezaie.sadegh@gmail.com
 
