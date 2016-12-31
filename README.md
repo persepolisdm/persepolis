@@ -141,6 +141,8 @@ https://github.com/mostafaasadi
 mostafaasadi73@gmail.com
 
 MacOS X users support : MohammadAmin Vahedinia
+https://github.com/Mr0Null
+mohammadamin@beeit.ir
 
 
 Persepolis website developer : Sadegh Alirezaei
