@@ -9,68 +9,69 @@ Persepolis Download Manager
 
 
 
-### Installation on GNU/Linux
-##For Ubuntu bases(Ubuntu16.04 , Kubuntu , Xubuntu , Linux Mint , ... ):
+# Installing on GNU/Linux
+## Ubuntu based (Ubuntu16.04 , Kubuntu , Xubuntu , Linux Mint , ... ):
 
 	$ sudo add-apt-repository ppa:persepolis/ppa
 	$ sudo apt-get update
 	$ sudo apt-get install persepolis
 
 
-##For installing in ArchLinux and Arch bases
-#Installing latest release (recommended)
+## Intalling on ArchLinux and Arch bases
+### Installing latest release (recommended)
 
     $ yaourt -S persepolis
 
-#Installing with latest change on github
+### Installing with latest changes from github
 
 	$ yaourt -S persepolis-git
-Obviously you can't install both of persepolis and persepolis-git simoltaneously . and you must uninstall one of them(with pacman) for installing another one.
-##For installing in Fedora
+	
+Obviously you can't install both persepolis and persepolis-git simultaneously, and you must uninstall one of them (with pacman) in order to install other one.
+## Installing on Fedora
 
 	$ sudo dnf copr enable amirsamimi/persepolis
 	$ sudo dnf install persepolis
 
-##For installing in openSUSE
+## Installing on openSUSE
 	please visit this link : https://software.opensuse.org/download.html?project=home%3Ahayyan71&package=persepolis
 
 
 
 
-### For other distributions (Installing from github)
-## Before running install file make sure that all dependencies are installed on your system!
-You must install `aria2` , `pulseaudio-utils` , `libnotify-bin` , `python 3` , `pyqt5` , `qt5-svg` , `python3-requests`
+## Other distributions (Installing from github)
+### Before running install file make sure that all dependencies are installed on your system!
+You must have `aria2` , `pulseaudio-utils` , `libnotify-bin` , `python 3` , `pyqt5` , `qt5-svg` , `python3-requests` installed.
 
-## Dependencies for Archlinux
+#### Installing Dependencies for Archlinux
 
     $ sudo pacman -S aria2 vorbis-tools libnotify python-pyqt5 qt5-svg python-requests
 
-## Dependencies for Debian and Debian base distro.s (ubuntu 16.04 , ... )
+#### Installing Dependencies for Debian and Debian base distros (ubuntu, ... )
 
     $ sudo apt-get install aria2 pulseaudio-utils libnotify-bin python3-pyqt5 libqt5svg5 python3-requests
 
-## Dependencies for Fedora
+#### Installing Dependencies for Fedora
 
     $ sudo dnf install aria2 pulseaudio-utils libnotify python3-qt5 qt5-qtsvg python3-requests
 
 
 
-### or ...
+### Installing Persepolis Download Manager itself
 
     $ git clone "https://github.com/persepolisdm/persepolis.git" 
     $ cd persepolis
 
-for installation
+to install
     $ bash install 
 
-for uninstallation,
+to uninstall,
 
     $ bash uninstall
 
 
-### Installation on Mac OS X
-Download .app file from [our realease page](https://github.com/persepolisdm/persepolis/releases)
-
+## Installing on Mac OS X
+Download .app file from [our realease page](https://github.com/persepolisdm/persepolis/releases) and copy (or move!) it to your applications folder.
+or if you preffer build the package yourself, you should have Persepolis Download Manager dependecies installed at first! It is recommended to use brew to install dependecies. At first place, you need to have latest xCode installed! then install `python3`, `pyqt5` and `qt5`from brew. After that, we need some python libraries, so install `pyobjc` and `requests` using `pip3`. Finally, your system is ready to build `.app` bundle for Persepolis Download Manager. At this step you can simply clone this repo (or download one of the releases) and change directory (cd) to the cloned or extracted directory, and run `./package_build`. then you can see `Persepolis Download Manager.app` in current directory! or if you don't want to run than script, you can see what's there and run them yourself! If you have any problems with Persepolis Download Manager on macOS, don't hesitate yourself to contact us!
 
 
 
@@ -138,6 +139,9 @@ morealaz@gmail.com
 Launchpad repository maintainer : Mostafa Asadi
 https://github.com/mostafaasadi
 mostafaasadi73@gmail.com
+
+MacOS X users support : MohammadAmin Vahedinia
+
 
 Persepolis website developer : Sadegh Alirezaei
 https://github.com/Alirezaies
