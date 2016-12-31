@@ -433,19 +433,25 @@ class CheckingThread(QThread):
                             break
                     self.RECONNECTARIASIGNAL.emit(str(answer))  #emitting answer , if answer is 'did not respond' , it means that reconnecting aria was not successful         
  
+
+
+
+#if checking_flag is equal to 1, it means that user pressed remove or delete button or ... . so checking download information must be stopped until job is done!
+#this thread checks checking_flag and when checking_flag changes to 2 QTABLEREADY signal is emmited
 class WaitThread(QThread):
     QTABLEREADY = pyqtSignal()
     def __init__(self):
         QThread.__init__(self)
 
     def run(self):
-#if checking_flag is equal to 1, it means that user pressed remove or delete button . so checking download information must stop until removing done!
         global checking_flag
         checking_flag = 1
         while checking_flag != 2 :
             sleep(0.05)
         self.QTABLEREADY.emit()
 
+#button_pressed_counter changed if user pressed move up and move down and ... actions
+#this thread is changing checking_flag to zero if button_pressed_counter don't change for 2 seconds
 class ButtonPressedThread(QThread):
     def __init__(self):
         QThread.__init__(self)
@@ -1564,16 +1570,22 @@ class MainWindow(MainWindow_Ui):
                     else:
                         notifySend(str(file_path) ,'Not Found' , 5000 , 'warning' , systemtray = self.system_tray_icon ) #showing error message , if file was deleted or moved
 
-#This methode called when user presses remove button in main window . removeButtonPressed is removing download item
+#This methode is called when user presses remove button in main window . removeButtonPressed is removing download item
     def removeButtonPressed(self,button):
         self.removeAction.setEnabled(False)
-#if checking_flag is equal to 1, it means that user pressed remove or delete button  or sorting form viewMenu , ... selected . so checking download information must stop until removing done!
         global checking_flag
-        if checking_flag !=3 :
-            checking_flag = 1
-            while checking_flag != 2 :
-                sleep(0.1)
+#if checking_flag is equal to 1, it means that user pressed remove or delete button or ... . so checking download information must be stopped until job is done!
+        if checking_flag != 2 :
+            wait_check = WaitThread()
+            self.threadPool.append(wait_check)
+            self.threadPool[len(self.threadPool) - 1].start()
+            self.threadPool[len(self.threadPool) - 1].QTABLEREADY.connect(self.removeButtonPressed2)
+        else:
+            self.removeButtonPressed2()
 
+
+
+    def removeButtonPressed2(self):
         selected_row_return = self.selectedRow() #finding selected row
 
         if selected_row_return != None:
@@ -1616,22 +1628,26 @@ class MainWindow(MainWindow_Ui):
             self.statusbar.showMessage("Please select an item first!")
 
 #telling the CheckDownloadInfoThread that job is done!
+        global checking_flag
         checking_flag = 0
 
         self.selectedRow()
 
 
 
-
-#this methode called when user presses delete button in MainWindow . this methode is deleting download file from hard disk and removing download item
+#this methode is called when user presses delete button in MainWindow . this methode is deleting download file from hard disk and removing download item
     def deleteFile(self,menu):
-        selected_row_return = self.selectedRow() #finding user selected row
-#if checking_flag is equal to 1, it means that user pressed remove or delete button  or sorting form viewMenu , ... selected . so checking download information must stop until removing done!
-        global checking_flag
-        checking_flag = 1
-        while checking_flag != 2 :
-            sleep(0.1)
+#if checking_flag is equal to 1, it means that user pressed remove or delete button or ... . so checking download information must be stopped until job is done!
+        if checking_flag != 2 :
+            wait_check = WaitThread()
+            self.threadPool.append(wait_check)
+            self.threadPool[len(self.threadPool) - 1].start()
+            self.threadPool[len(self.threadPool) - 1].QTABLEREADY.connect(self.deleteFile2)
+        else:
+            self.deleteFile2()
 
+    def deleteFile2(self):
+        selected_row_return = self.selectedRow() #finding user selected row
 #This section is checking the download status , if download was completed then download file is removing
         if selected_row_return != None:
             gid = self.download_table.item(selected_row_return , 8 ).text()
@@ -1644,20 +1660,23 @@ class MainWindow(MainWindow_Ui):
                     remove_answer = osCommands.remove(file_path) #removing file_path file
                     if remove_answer == 'no': #notifiying user if file_path is not valid
                         notifySend(str(file_path) ,'Not Found' , 5000 , 'warning' , systemtray = self.system_tray_icon )
-                    checking_flag = 3
-                    self.removeButtonPressed(menu)
+                    self.removeButtonPressed2()
 
-#this methode called when user checkes selection mode in edit menu!
+#this methode is called when user checkes selection mode in edit menu!
     def selectDownloads(self,menu):
 #selectAllAction is checked >> activating actions and adding removeSelectedAction and deleteSelectedAction to the toolBar
 #selectAction is unchecked deactivate actions and adding removeAction and deleteFileAction to the toolBar
+#if checking_flag is equal to 1, it means that user pressed remove or delete button or ... . so checking download information must be stopped until job is done!
+        if checking_flag != 2 :
+            wait_check = WaitThread()
+            self.threadPool.append(wait_check)
+            self.threadPool[len(self.threadPool) - 1].start()
+            self.threadPool[len(self.threadPool) - 1].QTABLEREADY.connect(self.selectDownloads2)
+        else:
+            self.selectDownloads2()
 
-#if checking_flag is equal to 1, it means that user pressed remove or delete button . so checking download information must stop until removing done!
 
-        global checking_flag
-        checking_flag = 1
-        while checking_flag != 2 :
-            sleep(0.1)
+    def selectDownloads2(self):
 #finding highlited item in category_tree
         current_category_tree_text = str(current_category_tree_index.data())
         self.toolBarAndContextMenuItems(current_category_tree_text)
@@ -1686,6 +1705,7 @@ class MainWindow(MainWindow_Ui):
                 
 
 #telling the CheckDownloadInfoThread that job is done!
+        global checking_flag
         checking_flag = 0
 
 
@@ -1695,15 +1715,19 @@ class MainWindow(MainWindow_Ui):
             item = self.download_table.item(i , 0)
             item.setCheckState(QtCore.Qt.Checked)
  
-#this methode called when user presses 'remove selected items' button
+#this methode is called when user presses 'remove selected items' button
     def removeSelected(self,menu):
-#if checking_flag is equal to 1, it means that user pressed remove or delete button  or sorting form viewMenu selected . so checking download information must stop until removing done!
 
-        global checking_flag
-        checking_flag = 1
-        while checking_flag != 2 :
-            sleep(0.1)
+#if checking_flag is equal to 1, it means that user pressed remove or delete button or ... . so checking download information must be stopped until job is done!
+        if checking_flag != 2 :
+            wait_check = WaitThread()
+            self.threadPool.append(wait_check)
+            self.threadPool[len(self.threadPool) - 1].start()
+            self.threadPool[len(self.threadPool) - 1].QTABLEREADY.connect(self.removeSelected2)
+        else:
+            self.removeSelected2()
 
+    def removeSelected2(self):
  #finding checked rows! and append gid of checked rows to gid_list
         gid_list = []
         for row in range(self.download_table.rowCount()):
@@ -1759,16 +1783,21 @@ class MainWindow(MainWindow_Ui):
                 osCommands.remove(file_name_aria) #removing aria2 information file *.aria
 
 #telling the CheckDownloadInfoThread that job is done!
+        global checking_flag
         checking_flag = 0
 
-#this methode called when user presses 'delete selected items'
+#this methode is called when user presses 'delete selected items'
     def deleteSelected(self,menu):
-#if checking_flag is equal to 1, it means that user pressed remove or delete button . so checking download information must stop until removing done!
+#if checking_flag is equal to 1, it means that user pressed remove or delete button or ... . so checking download information must be stopped until job is done!
+        if checking_flag != 2 :
+            wait_check = WaitThread()
+            self.threadPool.append(wait_check)
+            self.threadPool[len(self.threadPool) - 1].start()
+            self.threadPool[len(self.threadPool) - 1].QTABLEREADY.connect(self.deleteSelected2)
+        else:
+            self.deleteSelected2()
 
-        global checking_flag
-        checking_flag = 1
-        while checking_flag != 2 :
-            sleep(0.1)
+    def deleteSelected2(self):
 #finding checked rows! and appending gid of checked rows to gid_list
         gid_list = []
         for row in range(self.download_table.rowCount()):
@@ -1838,16 +1867,22 @@ class MainWindow(MainWindow_Ui):
                         notifySend(str(file_path) ,'Not Found' , 5000 , 'warning' , systemtray = self.system_tray_icon )
 
 #telling the CheckDownloadInfoThread that job is done!
-
+        global checking_flag
         checking_flag = 0
 
 #when this methode called , download_table will sort by name
-    def sortByName (self,menu_item):
-#if checking_flag is equal to 1, it means that user pressed remove or delete button or selected sorting form viewMenu. so checking download information must stop until removing done!
-        global checking_flag
-        checking_flag = 1
-        while checking_flag != 2 :
-            sleep(0.1)
+    def sortByName(self,menu_item):
+
+#if checking_flag is equal to 1, it means that user pressed remove or delete button or ... . so checking download information must be stopped until job is done!
+        if checking_flag != 2 :
+            wait_check = WaitThread()
+            self.threadPool.append(wait_check)
+            self.threadPool[len(self.threadPool) - 1].start()
+            self.threadPool[len(self.threadPool) - 1].QTABLEREADY.connect(self.sortByName2)
+        else:
+            self.sortByName2()
+
+    def sortByName2(self):
 #finding names and gid of download and saving them in name_gid_dict
         gid_name_dict = {}
         for row in range(self.download_table.rowCount()):
@@ -1891,16 +1926,25 @@ class MainWindow(MainWindow_Ui):
             f.writelines(gid + '\n')    
 
         f.close()
+
 #telling the CheckDownloadInfoThread that job is done!
+        global checking_flag
         checking_flag = 0
 
 #this methode is sorting download_table by size
     def sortBySize(self , menu_item):
-#if checking_flag is equal to 1, it means that user pressed remove or delete button or selected sorting form viewMenu. so checking download information must stop until removing done!
-        global checking_flag
-        checking_flag = 1
-        while checking_flag != 2 :
-            sleep(0.1)
+
+#if checking_flag is equal to 1, it means that user pressed remove or delete button or ... . so checking download information must be stopped until job is done!
+        if checking_flag != 2 :
+            wait_check = WaitThread()
+            self.threadPool.append(wait_check)
+            self.threadPool[len(self.threadPool) - 1].start()
+            self.threadPool[len(self.threadPool) - 1].QTABLEREADY.connect(self.sortBySize2)
+        else:
+            self.sortBySize2()
+
+
+    def sortBySize2(self):
 #finding gid and size of downloads
         gid_size_dict = {}
         for row in range(self.download_table.rowCount()):
@@ -1964,17 +2008,24 @@ class MainWindow(MainWindow_Ui):
 
         f.close()
 
+        global checking_flag
         checking_flag = 0
 
 
 #this methode is sorting download_table with status
     def sortByStatus(self,item):
 
-#if checking_flag is equal to 1, it means that user pressed remove or delete button or selected sorting form viewMenu. so checking download information must stop until removing done!
-        global checking_flag
-        checking_flag = 1
-        while checking_flag != 2 :
-            sleep(0.1)
+#if checking_flag is equal to 1, it means that user pressed remove or delete button or ... . so checking download information must be stopped until job is done!
+        if checking_flag != 2 :
+            wait_check = WaitThread()
+            self.threadPool.append(wait_check)
+            self.threadPool[len(self.threadPool) - 1].start()
+            self.threadPool[len(self.threadPool) - 1].QTABLEREADY.connect(self.sortByStatus2)
+        else:
+            self.sortByStatus2()
+
+
+    def sortByStatus2(self):
 #finding gid and status of downloads
         gid_status_dict = {}
         for row in range(self.download_table.rowCount()):
@@ -2038,15 +2089,22 @@ class MainWindow(MainWindow_Ui):
 
 
 #telling the CheckDownloadInfoThread that job is done!
+        global checking_flag
         checking_flag = 0
 
 #this methode is sorting download table with date added information
     def sortByFirstTry(self,item) :
-#if checking_flag is equal to 1, it means that user pressed remove or delete button or selected sorting form viewMenu. so checking download information must stop until removing done!
-        global checking_flag
-        checking_flag = 1
-        while checking_flag != 2 :
-            sleep(0.1)
+
+#if checking_flag is equal to 1, it means that user pressed remove or delete button or ... . so checking download information must be stopped until job is done!
+        if checking_flag != 2 :
+            wait_check = WaitThread()
+            self.threadPool.append(wait_check)
+            self.threadPool[len(self.threadPool) - 1].start()
+            self.threadPool[len(self.threadPool) - 1].QTABLEREADY.connect(self.sortByFirstTry2)
+        else:
+            self.sortByFirstTry2()
+
+    def sortByFirstTry2(self):
 #finding gid and first try date
         gid_try_dict = {}
         for row in range(self.download_table.rowCount()):
@@ -2103,19 +2161,24 @@ class MainWindow(MainWindow_Ui):
 
         f.close()
 
-
-
 #telling the CheckDownloadInfoThread that job is done!
+        global checking_flag
         checking_flag = 0
 
 
 #this methode is sorting download_table with order of last modify date
     def sortByLastTry(self,item) :
-#if checking_flag is equal to 1, it means that user pressed remove or delete button or selected sorting form viewMenu. so checking download information must stop until removing done!
-        global checking_flag
-        checking_flag = 1
-        while checking_flag != 2 :
-            sleep(0.1)
+#if checking_flag is equal to 1, it means that user pressed remove or delete button or ... . so checking download information must be stopped until job is done!
+        if checking_flag != 2 :
+            wait_check = WaitThread()
+            self.threadPool.append(wait_check)
+            self.threadPool[len(self.threadPool) - 1].start()
+            self.threadPool[len(self.threadPool) - 1].QTABLEREADY.connect(self.sortByLastTry2)
+        else:
+            self.sortByLastTry2()
+
+    def sortByLastTry2(self):
+ 
 #finding gid and last try date
         gid_try_dict = {}
         for row in range(self.download_table.rowCount()):
@@ -2174,6 +2237,7 @@ class MainWindow(MainWindow_Ui):
         f.close()
 
 #telling the CheckDownloadInfoThread that job is done!
+        global checking_flag
         checking_flag = 0
 
 #this methode called , when user clicks on 'create new queue' button in main window.
@@ -2302,53 +2366,60 @@ class MainWindow(MainWindow_Ui):
             self.threadPool.append(new_spider)
             self.threadPool[len(self.threadPool) - 1].start()
 
-#this methode called , when user is clicking on an item in category_tree (left side panel)
+#this methode is called , when user is clicking on an item in category_tree (left side panel)
     def categoryTreeSelected(self,item):
-        global current_category_tree_index
         new_selection = item
         if current_category_tree_index != new_selection :
-#if checking_flag is equal to 1, it means that user pressed remove or delete button or selected sorting form viewMenu. so checking download information must stop until removing done!
-            global checking_flag
-            checking_flag = 1
-            while checking_flag != 2 :
-                sleep(0.1)
+#if checking_flag is equal to 1, it means that user pressed remove or delete button or ... . so checking download information must be stopped until job is done!
+            if checking_flag != 2 :
+
+                wait_check = WaitThread()
+                self.threadPool.append(wait_check)
+                self.threadPool[len(self.threadPool) - 1].start()
+                self.threadPool[len(self.threadPool) - 1].QTABLEREADY.connect(partial(self.categoryTreeSelected2 , new_selection ))
+            else:
+                self.categoryTreeSelected2(new_selection)
+ 
+    def categoryTreeSelected2(self , new_selection):
+        global current_category_tree_index
 
 #clearing download_table 
-            self.download_table.setRowCount(0)
+        self.download_table.setRowCount(0)
 
 #updating download_table
-            current_category_tree_index = new_selection 
-            current_category_tree_text = str(self.category_tree.currentIndex().data())
+        current_category_tree_index = new_selection 
+        current_category_tree_text = str(self.category_tree.currentIndex().data())
             #findin path of gid_list_file , gid_list_file cantains gid of downloads for selected category 
-            if current_category_tree_text == 'All Downloads':
-                gid_list_file = download_list_file
-            else:
-                gid_list_file = category_folder + '/' + current_category_tree_text
+        if current_category_tree_text == 'All Downloads':
+            gid_list_file = download_list_file
+        else:
+            gid_list_file = category_folder + '/' + current_category_tree_text
                     
-            f_download_list_file = Open(gid_list_file)
-            download_list_file_lines = f_download_list_file.readlines()
-            f_download_list_file.close()
+        f_download_list_file = Open(gid_list_file)
+        download_list_file_lines = f_download_list_file.readlines()
+        f_download_list_file.close()
             
-            for line in download_list_file_lines:
-                gid = line.strip()
-                self.download_table.insertRow(0)
-                download_info_file = download_info_folder + "/" + gid
-                download_info_file_list = readList(download_info_file,'string')
-                for i in range(13):
-                    item = QTableWidgetItem(download_info_file_list[i])
+        for line in download_list_file_lines:
+            gid = line.strip()
+            self.download_table.insertRow(0)
+            download_info_file = download_info_folder + "/" + gid
+            download_info_file_list = readList(download_info_file,'string')
+            for i in range(13):
+                item = QTableWidgetItem(download_info_file_list[i])
                     
                     #adding checkbox to download rows if selectAction is checked in edit menu
-                    if self.selectAction.isChecked() == True and i == 0:
-                        item.setFlags(QtCore.Qt.ItemIsUserCheckable | QtCore.Qt.ItemIsEnabled)
-                        item.setCheckState(QtCore.Qt.Unchecked)
+                if self.selectAction.isChecked() == True and i == 0:
+                    item.setFlags(QtCore.Qt.ItemIsUserCheckable | QtCore.Qt.ItemIsEnabled)
+                    item.setCheckState(QtCore.Qt.Unchecked)
  
-                    self.download_table.setItem(0 , i , item)
+                self.download_table.setItem(0 , i , item)
 
 #telling the CheckDownloadInfoThread that job is done!
-            checking_flag = 0
+        global checking_flag
+        checking_flag = 0
 
 #updating toolBar and tablewidget_menu items
-            self.toolBarAndContextMenuItems(str(current_category_tree_text)) 
+        self.toolBarAndContextMenuItems(str(current_category_tree_text)) 
                 
 
 #this methode changing toolabr and cotext menu items when new item highlited by user in category_tree
@@ -2545,9 +2616,8 @@ class MainWindow(MainWindow_Ui):
         if current_category_tree_text != 'All Downloads' and current_category_tree_text != 'Single Downloads' :
 
             #removing queue from category_tree
-            for i in range(self.category_tree_model.rowCount()):
-                row_number = current_category_tree_index.row()
-                self.category_tree_model.removeRow(row_number)
+            row_number = current_category_tree_index.row()
+            self.category_tree_model.removeRow(row_number)
 
             #finding path of queue in category_folder
             queue_gid_file = category_folder + '/' + current_category_tree_text
@@ -2630,14 +2700,18 @@ class MainWindow(MainWindow_Ui):
  
         self.startQueueAction.setEnabled(True)
                  
-#this methode called , when user want to add a download to a queue with context menu. see also toolBarAndContextMenuItems() methode
+#this methode is called , when user want to add a download to a queue with context menu. see also toolBarAndContextMenuItems() methode
     def addToQueue(self , data, menu ):
-#if checking_flag is equal to 1, it means that user pressed remove or delete button . so checking download information must stop until removing done!
-        global checking_flag
-        checking_flag = 1
-        while checking_flag != 2 :
-            sleep(0.1)
-
+#if checking_flag is equal to 1, it means that user pressed remove or delete button or ... . so checking download information must be stopped until job is done!
+        if checking_flag != 2 :
+            wait_check = WaitThread()
+            self.threadPool.append(wait_check)
+            self.threadPool[len(self.threadPool) - 1].start()
+            self.threadPool[len(self.threadPool) - 1].QTABLEREADY.connect(partial(self.addToQueue2 , data ))
+        else:
+            self.addToQueue2(data)
+ 
+    def addToQueue2(self , data):
         new_category = str(data) #new selected category
         gid_list = []
         #checking if user checked selectAction in edit menu
@@ -2726,8 +2800,9 @@ class MainWindow(MainWindow_Ui):
                 else:
                     self.download_table.removeRow(row)
 
-#telling the CheckDownloadInfoThread that job is done!
+        global checking_flag
         checking_flag = 0
+
 
 #this methode activating or deactivating start_frame according to situation
     def startFrame(self,checkBox):
@@ -2776,7 +2851,7 @@ class MainWindow(MainWindow_Ui):
                 self.queue_list_dict[current_category_tree_text].limit_changed = True
 
 
-#this methode limiting download speed in queue
+#this methode is limiting download speed in queue
     def limitPushButtonPressed(self,button):
         self.limit_pushButton.setEnabled(False)
 
@@ -2787,7 +2862,7 @@ class MainWindow(MainWindow_Ui):
         self.queue_list_dict[current_category_tree_text].limit = True
         self.queue_list_dict[current_category_tree_text].limit_changed = True
 
-
+#this methode is handling user's shutdown request in queue downloading
     def afterPushButtonPressed(self , button):
         #current_category_tree_text is the name of queue that selected by user
         current_category_tree_text = str(current_category_tree_index.data())
@@ -2902,10 +2977,14 @@ class MainWindow(MainWindow_Ui):
     def newUpdate(self,menu):
         osCommands.xdgOpen('https://github.com/persepolisdm/persepolis/releases')
 
+
+#this methode is called when user pressed moveUpAction
+#this methode is subtituting selected download item with upper one
     def moveUp(self,menu):
         global button_pressed_counter
         button_pressed_counter = button_pressed_counter + 1
-#if checking_flag is equal to 1, it means that user pressed remove or delete button . so checking download information must stop until removing done!
+#if checking_flag is equal to 1, it means that user pressed remove or delete button or ... . so checking download information must be stopped until job is done!
+
         if checking_flag != 2 :
             button_pressed_thread = ButtonPressedThread()
             self.threadPool.append(button_pressed_thread)
@@ -2968,11 +3047,12 @@ class MainWindow(MainWindow_Ui):
 
                 self.download_table.selectRow(new_row)
 
+#this methode is called if user pressed moveDown action 
+#this methode is subtituting selected download item with lower download item
     def moveDown(self,menu):
-#if checking_flag is equal to 1, it means that user pressed remove or delete button . so checking download information must stop until removing done!
         global button_pressed_counter
         button_pressed_counter = button_pressed_counter + 1
-#if checking_flag is equal to 1, it means that user pressed remove or delete button . so checking download information must stop until removing done!
+#if checking_flag is equal to 1, it means that user pressed remove or delete button or ... . so checking download information must be stopped until job is done!
         if checking_flag != 2 :
             button_pressed_thread = ButtonPressedThread()
             self.threadPool.append(button_pressed_thread)
@@ -3033,7 +3113,5 @@ class MainWindow(MainWindow_Ui):
                     item = QTableWidgetItem(old_row_items_list[i])
                     self.download_table.setItem(new_row , i , item)
                 self.download_table.selectRow(new_row)
-#job is done!
-        checking_flag = 0
 
 
