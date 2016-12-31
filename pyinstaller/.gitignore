@@ -1,0 +1,88 @@
+*~
+.\#*
+\#*#
+
+*.py[co]
+__pycache__/
+/*.egg
+/*.egg-info/
+/*.egg-link
+
+# /
+/AES.pyd
+/AES.so
+/*.bak
+/build/
+/dist/
+/*.patch
+/MANIFEST
+
+# Temporary vim files
+*.swp
+
+# Temporary rope files
+.ropeproject
+
+# PyCharm settings
+.idea
+
+# /tests/
+/tests/build*
+/tests/dist*
+/tests/logdict*.log
+/tests/test*.exe
+/tests/warn*.txt
+/tests/python_exe.build
+/tests/report.xml
+
+/tests/**/build/
+/tests/**/dist/
+
+# Ignore generated spec-files
+# NB: You can still add .spec-files to be tracked using `git add`
+/tests/old_suite/**/*.spec
+
+# /tests/functional/data
+/tests/functional/data/sphinx/_build
+
+# /tests/old_suite/basic/
+/tests/old_suite/basic/python_exe.build
+
+# /tests/old_suite/basic/ctypes/
+/tests/old_suite/basic/ctypes/testctypes.dylib
+/tests/old_suite/basic/ctypes/testctypes.so
+/tests/old_suite/basic/ctypes/testctypes-win.dll
+/tests/old_suite/basic/ctypes/testctypes-win.exp
+/tests/old_suite/basic/ctypes/testctypes-win.obj
+/tests/old_suite/basic/ctypes/testctypes-win.lib
+
+tests/old_suite/basic/test_pyz_as_external_file.exe.pkg
+
+# /tests/old_suite/libraries/
+/tests/old_suite/libraries/tinysample.png
+
+/old/e2etests/common/hanoi[1-9]
+
+# /doc/
+/doc/source/_definitions.txt
+/doc/man/_pyi*.tmp
+/doc/_build
+
+# Bootloader source
+/bootloader/.lock-waf*
+/bootloader/.lock-wscript
+/bootloader/build/
+/bootloader/.vagrant/
+/bootloader/waf-*/
+/bootloader/waf3-*/
+/bootloader/.waf-*/
+/bootloader/.waf3-*/
+
+# Mac OS X
+.DS_store
+
+# Windows debug symbols
+*.pdb
+
+# py.test cache folder
+.cache

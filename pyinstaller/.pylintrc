@@ -1,0 +1,24 @@
+[MASTER]
+# Add files or directories to the blacklist. They should be base names, not
+# paths.
+ignore=CVS,altgraph,macholib,pefile.py,six.py,unittest2,ordlookup,modulegraph
+[BASIC]
+# Good variable names which should always be accepted, separated by a comma
+good-names=i,j,k,ex,Run,_,hiddenimports,binaries,datas,excludedimports
+# Regular expression matching correct constant names
+const-rgx=(([A-Z_][A-Z0-9_]*)|([a-z_][a-z0-9_]*)|(__.*__))$
+# Naming hint for constant names
+const-name-hint=(([A-Z_][A-Z0-9_]*)|([a-z_][a-z0-9_]*)|(__.*__))$
+[VARIABLES]
+# List of additional names supposed to be defined in builtins. Remember that
+# you should avoid to define new builtins when possible.
+additional-builtins=buffer,unicode,long,cmp
+[TYPECHECK]
+# List of members which are set dynamically and missed by pylint inference
+# system, and so shouldn't trigger E0201 when accessed. Python regular
+# expressions are accepted.
+generated-members=REQUEST,acl_users,aq_parent,_MEIPASS
+[CLASSES]
+# List of member names, which should be excluded from the protected access
+# warning.
+exclude-protected=_asdict,_fields,_replace,_source,_make,_MEIPASS

@@ -1,0 +1,137 @@
+# As config example taken this file: https://github.com/ogrisel/python-appveyor-demo/blob/master/appveyor.yml
+environment:
+  global:
+    # SDK v7.0 MSVC Express 2008's SetEnv.cmd script will fail if the
+    # /E:ON and /V:ON options are not enabled in the batch script intepreter
+    # See: http://stackoverflow.com/a/13751649/163740
+    CMD_IN_ENV: "cmd /E:ON /V:ON /C .\\tests\\scripts\\appveyor\\run_with_env.cmd"
+
+  matrix:
+    - PYTHON: "C:\\Python35-x64"
+      PYTHON_VERSION: "3.5"
+      PYTHON_ARCH: "64"
+      VCVARSALL: "x64"
+      # Break the tests into two runs, since together they exceed the 1 hour limit.
+      # See https://github.com/pyinstaller/pyinstaller/issues/2024#issuecomment-224129520
+      # for more discussion.
+      TEST1_CMD: "py.test --maxfail 5 --durations=10 tests\\unit tests\\functional -k \"not tests/functional/test_libraries.py\""
+      TEST2_CMD: ""
+
+    - PYTHON: "C:\\Python35-x64"
+      PYTHON_VERSION: "3.5"
+      PYTHON_ARCH: "64"
+      VCVARSALL: "x64"
+      TEST1_CMD: ""
+      TEST2_CMD: "py.test --maxfail 5 --durations=10 tests\\functional\\test_libraries.py"
+
+    - PYTHON: "C:\\Python35"
+      PYTHON_VERSION: "3.5"
+      PYTHON_ARCH: "32"
+      VCVARSALL: "x86"
+      # Break the tests into two runs, since together they exceed the 1 hour limit.
+      # See https://github.com/pyinstaller/pyinstaller/issues/2024#issuecomment-224129520
+      # for more discussion.
+      TEST1_CMD: "py.test --maxfail 5 --durations=10 tests\\unit tests\\functional -k \"not tests/functional/test_libraries.py\""
+      TEST2_CMD: ""
+
+    - PYTHON: "C:\\Python35"
+      PYTHON_VERSION: "3.5"
+      PYTHON_ARCH: "32"
+      VCVARSALL: "x86"
+      TEST1_CMD: ""
+      TEST2_CMD: "py.test --maxfail 5 --durations=10 tests\\functional\\test_libraries.py"
+
+    - PYTHON: "C:\\Python34"
+      PYTHON_VERSION: "3.4"
+      PYTHON_ARCH: "32"
+      VCVARSALL: "x86"
+      TEST1_CMD: "py.test --maxfail 5 --durations=10 tests\\unit tests\\functional -k \"not tests/functional/test_libraries.py\""
+      TEST2_CMD: ""
+
+    - PYTHON: "C:\\Python34"
+      PYTHON_VERSION: "3.4"
+      PYTHON_ARCH: "32"
+      VCVARSALL: "x86"
+      TEST1_CMD: ""
+      TEST2_CMD: "py.test --maxfail 5 --durations=10 tests\\functional\\test_libraries.py"
+
+    - PYTHON: "C:\\Python33"
+      PYTHON_VERSION: "3.3"
+      PYTHON_ARCH: "32"
+      VCVARSALL: "x86"
+      TEST1_CMD: "py.test --maxfail 5 --durations=10 tests\\unit tests\\functional -k \"not tests/functional/test_libraries.py\""
+      TEST2_CMD: ""
+
+    - PYTHON: "C:\\Python33"
+      PYTHON_VERSION: "3.3"
+      PYTHON_ARCH: "32"
+      VCVARSALL: "x86"
+      TEST1_CMD: ""
+      TEST2_CMD: "py.test --maxfail 5 --durations=10 tests\\functional\\test_libraries.py"
+
+    - PYTHON: "C:\\Python27"
+      PYTHON_VERSION: "2.7"
+      PYTHON_ARCH: "32"
+      VCVARSALL: "x86"
+      TEST1_CMD: "py.test --maxfail 5 --durations=10 tests\\unit tests\\functional -k \"not tests/functional/test_libraries.py\""
+      TEST2_CMD: ""
+
+    - PYTHON: "C:\\Python27"
+      PYTHON_VERSION: "2.7"
+      PYTHON_ARCH: "32"
+      VCVARSALL: "x86"
+      TEST1_CMD: ""
+      TEST2_CMD: "py.test --maxfail 5 --durations=10 tests\\functional\\test_libraries.py"
+
+cache:
+  # Cache downloaded pip packages.
+  - "C:\\Users\\appveyor\\AppData\\Local\\pip"
+
+init:
+  - "ECHO %PYTHON% %PYTHON_VERSION% %PYTHON_ARCH%"
+  - "ECHO \"%APPVEYOR_SCHEDULED_BUILD%\""
+
+install:
+  # Prepend newly installed Python to the PATH of this build (this cannot be
+  # done from inside the powershell script as it would require to restart
+  # the parent CMD process).
+  - "SET PATH=%PYTHON%;%PYTHON%\\Scripts;%PATH%"
+
+  # Check that we have the expected version and architecture for Python
+  - "python --version"
+  - "python -c \"import struct; print(struct.calcsize('P') * 8)\""
+
+  # Compile bootloader.
+  - "cd bootloader"
+  - "\"C:\\Program Files (x86)\\Microsoft Visual Studio 12.0\\VC\\vcvarsall.bat\" %VCVARSALL%"
+  - "python waf --msvc_version=\"msvc 12.0\" distclean all"
+  - "cd .."
+
+  ### Install the PyInsaller dependencies.
+  # Upgrade to the latest pip.
+  - "%CMD_IN_ENV% python -m pip install -U pip"
+
+  # Install lxml from anaconda.org channel since PyPI fails (or it takes too long).
+  # See: https://github.com/pyinstaller/pyinstaller/pull/1638
+  - "%CMD_IN_ENV% pip install -U -i https://pypi.anaconda.org/giumas/simple lxml"
+
+  # Install the PyInstaller test dependencies.
+  - "%CMD_IN_ENV% pip install -U --disable-pip-version-check --timeout 5 --retries 2 -r tests/requirements-tools.txt"
+  # Some libraries are available only for 32-bit Windows. Install those if we
+  # can. Otherwise, install libraries that work on 32-bit and 64-bit Windows systems.
+  - "if \"%PYTHON_ARCH%\" == \"32\" (
+      %CMD_IN_ENV% pip install -U --disable-pip-version-check --timeout 5 --retries 2 -r tests/requirements-win32.txt
+    ) ELSE (
+      %CMD_IN_ENV% pip install -U --disable-pip-version-check --timeout 5 --retries 2 -r tests/requirements-win.txt )"
+  # Install PyInstaller into virtualenv.
+  - "%CMD_IN_ENV% pip install -e ."
+
+build: none
+
+test_script:
+  # Run the tests appropriate for this entry in the test matrix. Skip tests
+  # if we're just updating the cache.
+  - "if not \"%APPVEYOR_SCHEDULED_BUILD%\" == \"True\" (
+    %CMD_IN_ENV% %TEST1_CMD% )"
+  - "if not \"%APPVEYOR_SCHEDULED_BUILD%\" == \"True\" (
+    %CMD_IN_ENV% %TEST2_CMD% )"
