@@ -156,13 +156,15 @@ class CheckDownloadInfoThread(QThread):
                     checking_flag = 2
                     while checking_flag != 0 :
                         sleep(0.2)
-                sleep(0.3)
+                sleep(0.1)
                 f = Open(download_list_file_active) 
                 download_list_file_active_lines = f.readlines()
                 f.close()
                 if len(download_list_file_active_lines) != 0 :
                     for line in download_list_file_active_lines:
                         gid = line.strip()
+                        if checking_flag == 1 :
+                            break
                         try:
                             answer = download.downloadStatus(gid)
                         except:
