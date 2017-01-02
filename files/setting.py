@@ -70,6 +70,7 @@ class PreferencesWindow(Setting_Ui):
 
         current_icons_index = self.icon_comboBox.findText(str(self.persepolis_setting.value('icons')))
         self.icon_comboBox.setCurrentIndex(current_icons_index)
+        self.current_icon = str(self.icon_comboBox.currentText())
 #set notification
         notifications = [ 'Native notification' , 'QT notification' ]
         self.notification_comboBox.addItems(notifications)
@@ -261,8 +262,20 @@ class PreferencesWindow(Setting_Ui):
         self.persepolis_setting.setValue('download_path' , self.download_folder_lineEdit.text())
         self.persepolis_setting.setValue('download_path_temp' , self.temp_download_lineEdit.text())
         self.persepolis_setting.setValue('sound-volume' , self.volume_dial.value())
-        self.persepolis_setting.setValue('icons' , self.icon_comboBox.currentText())
         self.persepolis_setting.setValue('notification' , self.notification_comboBox.currentText())
+
+#changing icons
+
+        icons = self.icon_comboBox.currentText() 
+        self.persepolis_setting.setValue('icons' , icons )
+
+        if icons != self.current_icon : #it means icons changed
+
+            for list in [self.parent.about_window_list , self.parent.addlinkwindows_list , self.parent.propertieswindows_list , self.parent.afterdownload_list , self.parent.text_queue_window_list , self.parent.progress_window_list ]:
+                for window in list :
+                    window.changeIcon(icons)
+
+            self.parent.changeIcon(icons)
 
 #style
         style = str(self.style_comboBox.currentText())
@@ -359,13 +372,5 @@ class PreferencesWindow(Setting_Ui):
         #applying changes
         self.persepolis_setting.endGroup()
         self.persepolis_setting.sync()
-#comparing user_dict Vs setting_dict
-#         for i in ['rpc-port' , 'style' , 'color-scheme' , 'icons' , 'font' , 'font-size' ] :
-#             if self.user_dict[i] != self.setting_dict[i] :
-#                 restart_messageBox = QMessageBox()                
-#                 restart_messageBox.setText('<b>Some changes take effect after restarting persepolis</b>')
-#                 restart_messageBox.setWindowTitle('Restart Persepolis!')
-#                 restart_messageBox.exec_()
-#                 break
         self.close()
 

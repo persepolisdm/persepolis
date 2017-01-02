@@ -30,8 +30,7 @@ os_type = platform.system()
 class ProgressWindow_Ui(QWidget):
     def __init__(self,persepolis_setting):
         super().__init__()
-
-        global icons
+        self.persepolis_setting = persepolis_setting
         icons = ':/' + str(persepolis_setting.value('settings/icons')) + '/'
 
 #window
@@ -186,4 +185,11 @@ class ProgressWindow_Ui(QWidget):
         self.pause_pushButton.setText( "Pause")
         self.stop_pushButton.setText( "Stop")
         self.after_pushButton.setText("Apply")
+
+    def changeIcon(self , icons ):
+        icons = ':/' + str(icons) + '/'
+
+        self.resume_pushButton.setIcon(QIcon(icons + 'play'))
+        self.pause_pushButton.setIcon(QIcon(icons + 'pause'))
+        self.stop_pushButton.setIcon(QIcon(icons + 'stop'))
 

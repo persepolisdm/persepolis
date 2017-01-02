@@ -123,6 +123,10 @@ class AboutWindow(QWidget):
         self.resize(size)
         self.move(position)
 
+    def changeIcon(self , icons ):
+        icons = ':/' + str(icons) + '/'
+        self.pushButton.setIcon(QIcon(icons + 'ok'))
+
 
     def closeEvent(self,event):
         #saving window size and position
