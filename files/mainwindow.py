@@ -2610,6 +2610,23 @@ class MainWindow(MainWindow_Ui):
             self.removeQueueAction.setEnabled(False)
             self.moveUpAction.setEnabled(False)
             self.moveDownAction.setEnabled(False)
+
+        #adding sortMenu to download_table context menu
+        sortMenu = self.download_table.tablewidget_menu.addMenu('Sort by')
+        sortMenu.addAction(self.sort_file_name_Action)
+
+        sortMenu.addAction(self.sort_file_size_Action)
+
+
+        sortMenu.addAction(self.sort_first_try_date_Action)
+
+
+        sortMenu.addAction(self.sort_last_try_date_Action)
+
+        sortMenu.addAction(self.sort_download_status_Action)
+
+
+
  
 
 
