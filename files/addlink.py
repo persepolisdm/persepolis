@@ -138,6 +138,7 @@ class AddLinkWindow(AddLinkWindow_Ui):
 
         #solving focusing problem in mac
         self.raise_()
+        self.activateWindow()
 
         #set focus to ok button
         self.ok_pushButton.setFocus()
