@@ -30,8 +30,9 @@ class AfterDownloadWindow_Ui(QWidget):
     def __init__(self,persepolis_setting):
         super().__init__()
 
-        global icons
-        icons = ':/' + str(persepolis_setting.value('settings/icons')) + '/'
+        self.persepolis_setting = persepolis_setting
+
+        icons = ':/' + str(self.persepolis_setting.value('settings/icons')) + '/'
 
         self.setWindowIcon(QIcon.fromTheme('persepolis' ,QIcon(':/icon.svg')))
         self.setWindowTitle("Persepolis Download Manager")
@@ -95,4 +96,10 @@ class AfterDownloadWindow_Ui(QWidget):
         self.save_as_label.setText("<b>Save as</b> : ")
         self.link_label.setText("<b>Link</b> : " ) 
 
+
+    def changeIcon(self , icons ):
+        icons = ':/' + str(icons) + '/'
+        self.ok_pushButton.setIcon(QIcon(icons + 'ok'))
+        self.open_folder_pushButtun.setIcon(QIcon(icons + 'folder'))
+        self.open_pushButtun.setIcon(QIcon(icons + 'file'))
 

@@ -27,9 +27,9 @@ config_folder = str(home_address) + "/.config/persepolis_download_manager"
 class AddLinkWindow_Ui(QWidget):
     def __init__(self , persepolis_setting):
         super().__init__()
+        self.persepolis_setting = persepolis_setting
 #window
-        global icons
-        icons = ':/' + str(persepolis_setting.value('settings/icons')) + '/'
+        icons = ':/' + str(self.persepolis_setting.value('settings/icons')) + '/'
 
         self.setMinimumSize(QtCore.QSize(520, 465))
         self.setWindowIcon(QIcon.fromTheme('persepolis' ,QIcon(':/icon.svg')))
@@ -329,4 +329,13 @@ class AddLinkWindow_Ui(QWidget):
         self.ok_pushButton.setText( "OK")
 
         self.download_later_pushButton.setText("Download later")
+
+    def changeIcon(self , icons ):
+        icons = ':/' + str(icons) + '/'
+
+        self.folder_pushButton.setIcon(QIcon(icons + 'folder'))
+        self.download_later_pushButton.setIcon(QIcon(icons + 'stop'))
+        self.cancel_pushButton.setIcon(QIcon(icons + 'remove'))
+        self.ok_pushButton.setIcon(QIcon(icons + 'ok'))
+
 

@@ -29,8 +29,8 @@ class TextQueue_Ui(QWidget):
     def __init__(self,persepolis_setting):
         super().__init__()
 
-        global icons
-        icons = ':/' + str(persepolis_setting.value('settings/icons')) + '/'
+        self.persepolis_setting = persepolis_setting
+        icons = ':/' + str(self.persepolis_setting.value('settings/icons')) + '/'
 
 
         self.setWindowIcon(QIcon.fromTheme('persepolis' ,QIcon(':/icon.svg')))
@@ -264,4 +264,10 @@ class TextQueue_Ui(QWidget):
         self.cancel_pushButton.setText('Cancel')
 
 
+    def changeIcon(self , icons ):
+        icons = ':/' + str(icons) + '/'
+
+        self.ok_pushButton.setIcon(QIcon(icons + 'ok'))
+        self.cancel_pushButton.setIcon(QIcon(icons + 'remove'))
+        self.folder_pushButton.setIcon(QIcon(icons + 'folder'))
 

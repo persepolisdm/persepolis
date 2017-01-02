@@ -42,10 +42,6 @@ class AddLinkWindow(AddLinkWindow_Ui):
         global download_path
         download_path = str(self.persepolis_setting.value('settings/download_path'))
 
-        global icons
-        icons = ':/' + str(self.persepolis_setting.value('settings/icons')) + '/'
-
-
         global init_file
         init_file = str(home_address) + "/.config/persepolis_download_manager/addlink_init_file"
         osCommands.touch(init_file)
@@ -139,6 +135,10 @@ class AddLinkWindow(AddLinkWindow_Ui):
 
         self.change_name_lineEdit.setEnabled(False)
         self.change_name_checkBox.toggled.connect(self.changeName)
+
+        #solving focusing problem in mac
+        self.raise_()
+
         #set focus to ok button
         self.ok_pushButton.setFocus()
 
@@ -324,7 +324,6 @@ class AddLinkWindow(AddLinkWindow_Ui):
         self.callback(self.add_link_dictionary , download_later , category)
 
         self.close()
-
 
     def closeEvent(self , event):
         self.persepolis_setting.setValue('AddLinkWindow/size' , self.size())

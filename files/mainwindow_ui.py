@@ -177,7 +177,6 @@ class MainWindow_Ui(QMainWindow):
 #MainWindow
         self.persepolis_setting = persepolis_setting
 
-        global icons
         icons = ':/' + str(self.persepolis_setting.value('settings/icons')) + '/'
 
 
@@ -567,3 +566,10 @@ class MainWindow_Ui(QMainWindow):
         self.after_comboBox.setItemText(0,  "Shut Down as root")
         self.after_pushButton.setText("Apply")
 
+
+    def changeIcon(self , icons ):
+        icons = ':/' + str(icons) + '/'
+
+        action_icon_dict = {self.stopAllAction : 'stop_all' , self.minimizeAction : 'minimize' , self.addlinkAction : 'add' , self.addtextfileAction : 'file' , self.resumeAction : 'play' , self.pauseAction : 'pause' , self.stopAction : 'stop' , self.removeAction : 'remove' , self.propertiesAction : 'setting' , self.progressAction : 'window' , self.openFileAction : 'file' , self.openDownloadFolderAction : 'folder' , self.deleteFileAction : 'trash' , self.openDefaultDownloadFolderAction : 'folder' , self.exitAction : 'exit' , self.selectAllAction : 'select_all' , self.removeSelectedAction : 'multi_remove' , self.deleteSelectedAction : 'multi_trash' , self.createQueueAction : 'add_queue' , self.removeQueueAction : 'remove_queue' , self.startQueueAction : 'start_queue' , self.stopQueueAction : 'stop_queue' , self.moveUpAction : 'up' , self.moveDownAction : 'down' , self.preferencesAction : 'preferences' , self.aboutAction : 'about' , self.issueAction : 'about' , self.updateAction : 'about' , self.qmenu : 'menu' }
+        for key in action_icon_dict.keys():
+            key.setIcon(QIcon(icons + str(action_icon_dict[key])))

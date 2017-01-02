@@ -594,6 +594,7 @@ class MainWindow(MainWindow_Ui):
         self.progress_window_list = []
         self.afterdownload_list = []
         self.text_queue_window_list = []
+        self.about_window_list = []
         self.progress_window_list_dict = {}
 #queue_list_dict contains queue threads >> queue_list_dict[name of queue] = Queue(name of queue , parent)
         self.queue_list_dict = {}
@@ -1524,8 +1525,11 @@ class MainWindow(MainWindow_Ui):
 
 #this methode is creating AboutWindow
     def openAbout(self,menu):
-        self.about_window = AboutWindow(self.persepolis_setting)
-        self.about_window.show() #showing about window
+        about_window = AboutWindow(self.persepolis_setting)
+        self.about_window_list.append(about_window)
+        self.about_window_list[len(self.about_window_list) - 1].show()
+
+
 
 #This methode is openning user's default download folder
     def openDefaultDownloadFolder(self,menu):
