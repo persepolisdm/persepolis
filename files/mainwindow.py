@@ -1388,7 +1388,12 @@ class MainWindow(MainWindow_Ui):
         self.progress_window_list.append(progress_window) #adding progress window to progress_window_list
         member_number = len(self.progress_window_list) - 1
         self.progress_window_list_dict[gid] = member_number #in progress_window_list_dict , key is gid and value is member's rank(number) in progress_window_list
-        self.progress_window_list[member_number].show() #showing progress window
+
+        #checking user preferences
+        if str(self.persepolis_setting.value('settings/show-progress')) == 'yes':
+            self.progress_window_list[member_number].show() #showing progress window
+        else:
+            self.progress_window_list[member_number].hide() #hiding progress window
  
 #close event
 #when user wants to close application then this function is called
