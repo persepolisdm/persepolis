@@ -498,7 +498,7 @@ class MainWindow_Ui(QMainWindow):
         self.exitAction = QAction(QIcon(icons + 'exit') , 'Exit' , self , shortcut = "Ctrl+Q" , statusTip = "Exit" , triggered = self.closeEvent)
         fileMenu.addAction(self.exitAction)
 
-        self.selectAction = QAction('Enable selectection mode' , self , statusTip = 'Select Downloads' , triggered = self.selectDownloads)
+        self.selectAction = QAction('Select multiple items ' , self , statusTip = 'Select multiple items' , triggered = self.selectDownloads)
         self.selectAction.setCheckable(True)
         editMenu.addAction(self.selectAction)
 

@@ -2429,6 +2429,10 @@ class MainWindow(MainWindow_Ui):
         self.toolBar.clear()
         self.download_table.tablewidget_menu.clear()
         self.category_tree.category_tree_menu.clear()
+
+        #adding selectAction to context menu
+        self.download_table.tablewidget_menu.addAction(self.selectAction)
+
         #checking if user checked selection mode
         if self.selectAction.isChecked() == True :
             mode = 'selection'
