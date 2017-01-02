@@ -71,7 +71,7 @@ to uninstall,
 
 ## Installing on Mac OS X
 Coming soon!
-or if you preffer build the package yourself , Please read [packaging instruction](https://github.com/persepolisdm/persepolis/blob/master/how_to_package_for_mac) file 
+or if you preffer build the package yourself , Please read [packaging instruction](https://github.com/persepolisdm/persepolis/blob/master/how_to_package_for_mac.md) file 
 
 
 
