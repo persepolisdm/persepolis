@@ -135,6 +135,10 @@ class AddLinkWindow(AddLinkWindow_Ui):
 
         self.change_name_lineEdit.setEnabled(False)
         self.change_name_checkBox.toggled.connect(self.changeName)
+
+        #solving focusing problem in mac
+        self.raise_()
+
         #set focus to ok button
         self.ok_pushButton.setFocus()
 
