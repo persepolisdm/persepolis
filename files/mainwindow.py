@@ -1156,6 +1156,7 @@ class MainWindow(MainWindow_Ui):
         addlinkwindow = AddLinkWindow(self.callBack , self.persepolis_setting , flashgot_add_link_dictionary)
         self.addlinkwindows_list.append(addlinkwindow)
         self.addlinkwindows_list[len(self.addlinkwindows_list) - 1].show()
+        self.addlinkwindows_list[len(self.addlinkwindows_list) - 1].raise_()
 
 
 #This methode creates addlinkwindow when user presses plus button in MainWindow
@@ -1163,6 +1164,7 @@ class MainWindow(MainWindow_Ui):
         addlinkwindow = AddLinkWindow(self.callBack , self.persepolis_setting)
         self.addlinkwindows_list.append(addlinkwindow)
         self.addlinkwindows_list[len(self.addlinkwindows_list) - 1].show()
+        self.addlinkwindows_list[len(self.addlinkwindows_list) - 1].raise_()
 
 #callback of AddLinkWindow
     def callBack(self , add_link_dictionary , download_later , category):
