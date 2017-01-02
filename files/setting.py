@@ -121,6 +121,11 @@ class PreferencesWindow(Setting_Ui):
         else:
             self.show_sidepanel_checkbox.setChecked(False)
 
+#show ProgressWindow
+        if str(self.persepolis_setting.value('show-progress')) == 'yes':
+            self.show_progress_window_checkbox.setChecked(True)
+        else:
+            self.show_progress_window_checkbox.setChecked(False)
             
 #after download dialog
         if str(self.persepolis_setting.value('after-dialog')) == 'yes':
@@ -185,7 +190,7 @@ class PreferencesWindow(Setting_Ui):
         download_path_default = str(home_address) + '/Downloads/Persepolis'
 
  
-        self.setting_dict = { 'show-menubar' : 'no' , 'show-sidepanel' : 'yes' , 'rpc-port' : 6801 , 'notification' : 'Native notification' , 'after-dialog' : 'yes' , 'tray-icon':'yes', 'max-tries' : 5 , 'retry-wait': 0 , 'timeout' : 60 , 'connections' : 16 , 'download_path_temp' : download_path_temp_default , 'download_path':download_path_default , 'sound' : 'yes' , 'sound-volume':100 , 'style':'Fusion' , 'color-scheme' : 'Persepolis Dark Red' , 'icons':'Archdroid-Red','font' : 'Ubuntu' , 'font-size' : 9  }
+        self.setting_dict = { 'show-progress' : 'yes' , 'show-menubar' : 'no' , 'show-sidepanel' : 'yes' , 'rpc-port' : 6801 , 'notification' : 'Native notification' , 'after-dialog' : 'yes' , 'tray-icon':'yes', 'max-tries' : 5 , 'retry-wait': 0 , 'timeout' : 60 , 'connections' : 16 , 'download_path_temp' : download_path_temp_default , 'download_path':download_path_default , 'sound' : 'yes' , 'sound-volume':100 , 'style':'Fusion' , 'color-scheme' : 'Persepolis Dark Red' , 'icons':'Archdroid-Red','font' : 'Ubuntu' , 'font-size' : 9  }
 
         #this loop is checking values in persepolis_setting . if value is not valid then value replaced by default_setting_dict value
         for key in self.setting_dict.keys():
@@ -237,7 +242,10 @@ class PreferencesWindow(Setting_Ui):
         else:
             self.show_menubar_checkbox.setChecked(False)
 #show side panel
-        self.show_sidepanel_checkbox.setCheckState(True)
+        self.show_sidepanel_checkbox.setChecked(True)
+
+#show progress window
+        self.show_progress_window_checkbox.setChecked(True)
         
         self.persepolis_setting.endGroup()
 
@@ -325,6 +333,12 @@ class PreferencesWindow(Setting_Ui):
         else:
             self.persepolis_setting.setValue('show_sidepanel' , 'no')
             self.parent.category_tree_qwidget.hide()
+
+#show_progress_window_checkbox
+        if self.show_progress_window_checkbox.isChecked() == True :
+            self.persepolis_setting.setValue('show-progress' , 'yes')
+        else:
+            self.persepolis_setting.setValue('show-progress' , 'no')
 
 #this section  creates temporary download folder and download folder and download sub folders if they did not existed.
         download_path_temp  = self.persepolis_setting.value('download_path_temp')

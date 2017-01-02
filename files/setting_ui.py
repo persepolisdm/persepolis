@@ -230,6 +230,10 @@ class Setting_Ui(QWidget):
         self.show_sidepanel_checkbox = QCheckBox()
         self.verticalLayout_3.addWidget(self.show_sidepanel_checkbox)
 
+#hide progress window
+        self.show_progress_window_checkbox = QCheckBox()
+        self.verticalLayout_3.addWidget(self.show_progress_window_checkbox)
+
 #defaults_pushButton
         self.defaults_pushButton = QPushButton(self)
         self.horizontalLayout.addWidget(self.defaults_pushButton)
@@ -280,6 +284,7 @@ class Setting_Ui(QWidget):
         self.after_download_checkBox.setText("Show download complete dialog,when download has finished.")
         self.show_menubar_checkbox.setText("Show menubar.")
         self.show_sidepanel_checkbox.setText("Show side panel.")
+        self.show_progress_window_checkbox.setText("Show download's progress window")
 
         self.setting_tabWidget.setTabText(self.setting_tabWidget.indexOf(self.style_tab),  "Appearance")
         self.defaults_pushButton.setText( "Defaults")
