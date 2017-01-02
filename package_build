@@ -4,3 +4,6 @@ python3 pyinstaller/pyinstaller.py files/Persepolis\ Download\ Manager -w -i ico
 cp aria2c 'dist/Persepolis Download Manager.app/Contents/MacOS/'
 cp Info.plist 'dist/Persepolis Download Manager.app/Contents/'
 mv 'dist/Persepolis Download Manager.app' .
+rm -rf dist
+rm -rf build
+rm 'Persepolis Download Manager.spec'
