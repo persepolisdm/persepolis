@@ -16,6 +16,7 @@
 
 #this script is running persepolis for Linux
 from newopen import Open
+import osCommands
 import os , sys , time , ast , argparse
     
 # initialization
@@ -161,13 +162,14 @@ if args.name :
 #persepolis mainwindow checks /tmp for flashgot request file every 2 seconds ( see CheckFlashgot class in mainwindow.py )
 #when requset received by CheckFlashgot, a popup window (AddLinkWindow) is coming up and window is getting additional download informations from user (port , proxy , ...) and download starts and request file deleted
 if ('link' in add_link_dictionary):   
-#this section is checking validation of flashgot request file in /tmp . if request file is existed , it means that download manager didn't consider past requset, or consideration is still continuing
-#so this loop is waiting 0.5 seconds and trying again
-    while os.path.isfile("/tmp/persepolis-flashgot") == True :
-        time.sleep(0.5)
-    f = open("/tmp/persepolis-flashgot","w")
-    f.writelines(str(add_link_dictionary))
+    #adding add_link_dictionary to /tmp/persepolis-flashgot
+    f = open("/tmp/persepolis-flashgot","a")
+    f.writelines(str(add_link_dictionary) + '\n')
     f.close()
+    flashgot_ready = '/tmp/persepolis-flashgot-ready'
+    osCommands.touch(flashgot_ready)
+
+
 
 if not (os.path.isfile(lock_file)): #if lock_file is existed , it means persepolis is still running! 
     osCommands.touch(lock_file) #create lock_file in /tmp

@@ -50,9 +50,11 @@ class TextQueue_Ui(QWidget):
         self.links_table.setEditTriggers(QAbstractItemView.NoEditTriggers)
         self.links_table.verticalHeader().hide()
 
-        self.links_table.setColumnCount(2)
-        links_table_header_labels = [ 'Download Link'  , 'File name'] 
+        self.links_table.setColumnCount(3)
+        links_table_header_labels = [ 'File Name'  , 'Download Link' , 'dictionary'] 
         self.links_table.setHorizontalHeaderLabels(links_table_header_labels)
+        self.links_table.setColumnHidden(2 , True)
+
         
         self.links_table.horizontalHeader().setSectionResizeMode(0)
         self.links_table.horizontalHeader().setStretchLastSection(True)
