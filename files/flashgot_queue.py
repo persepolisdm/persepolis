@@ -164,6 +164,12 @@ class FlashgotQueue(TextQueue_Ui):
         self.cancel_pushButton.clicked.connect(self.close)
         self.ok_pushButton.clicked.connect(self.okButtonPressed) 
 
+#connect select_all_pushButton  deselect_all_pushButton
+        self.select_all_pushButton.clicked.connect(self.selectAll)
+
+        self.deselect_all_pushButton.clicked.connect(self.deselectAll)
+
+
 #frames and checkBoxes
         self.proxy_frame.setEnabled(False)
         self.proxy_checkBox.toggled.connect(self.proxyFrame)
@@ -186,6 +192,16 @@ class FlashgotQueue(TextQueue_Ui):
         self.resize(size)
         self.move(position)
 
+
+    def selectAll(self,button):
+        for i in range(self.links_table.rowCount()):
+            item = self.links_table.item(i , 0 )
+            item.setCheckState(QtCore.Qt.Checked)
+
+    def deselectAll(self,button):
+        for i in range(self.links_table.rowCount()):
+            item = self.links_table.item(i , 0 )
+            item.setCheckState(QtCore.Qt.Unchecked)
 
 
 

@@ -418,7 +418,13 @@ class CheckingThread(QThread):
 
             sleep(1)
             if os.path.isfile("/tmp/persepolis-flashgot-ready")  == True :#It means new flashgot call is available!
-                sleep(0.5) #this 0.5 seconds is important . because program waits for queue request form flashgot! perhaps we have more than one request.
+                size = 0
+                #This loop check that is size of persepolis-flashgot changed or not.
+                #if it's change we have queue request and loop waits until all links inserted in persepolis-flashgot file
+                while size != os.path.getsize('/tmp/persepolis-flashgot'):
+                    size =  os.path.getsize('/tmp/persepolis-flashgot')
+                    sleep(0.3) 
+
                 self.CHECKFLASHGOTSIGNAL.emit()#notifiying that we have flashgot request 
                 while os.path.isfile("/tmp/persepolis-flashgot-ready") :#wait for persepolis consideration!
                     sleep(0.5) 

@@ -63,6 +63,15 @@ class TextQueue_Ui(QWidget):
 #add_queue 
         add_queue_horizontalLayout = QHBoxLayout()
 
+        self.select_all_pushButton = QPushButton(self.links_tab)
+        add_queue_horizontalLayout.addWidget(self.select_all_pushButton)
+
+        self.deselect_all_pushButton = QPushButton(self.links_tab)
+        add_queue_horizontalLayout.addWidget(self.deselect_all_pushButton)
+
+        add_queue_horizontalLayout.addStretch(1)
+
+
         self.add_queue_label = QLabel(self.links_tab)
         add_queue_horizontalLayout.addWidget(self.add_queue_label)
 
@@ -242,6 +251,9 @@ class TextQueue_Ui(QWidget):
 
         self.queue_tabWidget.setTabText(self.queue_tabWidget.indexOf(self.links_tab) , 'Links' )
         self.queue_tabWidget.setTabText(self.queue_tabWidget.indexOf(self.options_tab) , 'Download options')
+
+        self.select_all_pushButton.setText('Select All')
+        self.deselect_all_pushButton.setText('Deselect All')
 
         self.add_queue_label.setText('Add to queue : ')
 
