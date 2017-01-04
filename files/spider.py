@@ -47,6 +47,9 @@ def spider(add_link_dictionary , gid):
     user_agent = add_link_dictionary['user-agent']
     raw_cookies = add_link_dictionary['load-cookies']
     referer = add_link_dictionary['referer']
+
+    if out == '***':
+        out = None
     
     requests_session = requests.Session() #defining a requests Session
     if ip :
@@ -116,4 +119,47 @@ def spider(add_link_dictionary , gid):
         
     writeList(download_info_file , download_info_file_list)
 
+#this function finds and returns name of the file
+def queueSpider(add_link_dictionary):
+    #getting user's download request from add_link_dictionary
+    for i in ['link' , 'header' , 'out' , 'user-agent' , 'load-cookies' , 'referer' ]:
+        if not (i in add_link_dictionary):
+            add_link_dictionary[i] = None
 
+    link = add_link_dictionary ['link']
+    header = add_link_dictionary['header']
+    user_agent = add_link_dictionary['user-agent']
+    raw_cookies = add_link_dictionary['load-cookies']
+    referer = add_link_dictionary['referer']
+    
+    requests_session = requests.Session() #defining a requests Session
+
+    if raw_cookies != None : #setting cookies
+        cookie = SimpleCookie()
+        cookie.load(raw_cookies)
+
+        cookies = {key: morsel.value for key, morsel in cookie.items()}
+        requests_session.cookies = cookiejar_from_dict(cookies)
+
+    if referer != None :
+        requests_session.headers.update({'referer': referer }) #setting referer to the session
+
+    if user_agent != None :
+        requests_session.headers.update({'user-agent':user_agent }) #setting user_agent to the session
+        
+    #finding headers
+    response = requests_session.head(link)   
+    header = response.headers
+    filename = '***'
+    if 'Content-Disposition' in header.keys() : #checking if filename is available
+        content_disposition = header['Content-Disposition']
+        if content_disposition.find('filename') != -1 :
+            filename_splited = content_disposition.split('filename=')
+            filename_splited = filename_splited[-1]
+            filename = filename_splited[1:-1] #getting file name in desired format 
+    
+    
+    if filename == '***' :
+        filename = link.split('/')[-1]
+ 
+    return filename

@@ -145,7 +145,7 @@ https://github.com/Mr0Null
 mohammadamin@beeit.ir
 
 
-Persepolis website developer : **Sadegh Alirezaei**
+Persepolis website developer : **Sadegh Alirezaie**
 https://github.com/Alirezaies
 alirezaie.sadegh@gmail.com
 

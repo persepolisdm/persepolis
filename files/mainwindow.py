@@ -23,6 +23,7 @@ from time import sleep
 import random  
 from after_download import AfterDownloadWindow 
 from text_queue import TextQueue
+from flashgot_queue import FlashgotQueue
 from addlink import AddLinkWindow
 from properties import PropertiesWindow
 from progress import ProgressWindow
@@ -194,8 +195,6 @@ class SpiderThread(QThread):
             spider.spider(self.add_link_dictionary , self.gid)
         except :
             print("Spider couldn't find download information")
-
-
 
 #this thread sending download request to aria2            
 class DownloadLink(QThread):
@@ -396,8 +395,8 @@ class Queue(QThread):
 
  
 #CheckingThread have 3 duty!        
-#1-this class is checking that user called flashgot .
-#2-assume that user executed program before . if user is clicking on persepolis icon in menu this tread emit SHOWMAINWINDOWSIGNAL
+#1-this class is checking that if user called flashgot .
+#2-assume that user executed program before . if user is clicking on persepolis icon in menu this tread emits SHOWMAINWINDOWSIGNAL
 #3-this class is checking aria2 rpc connection! if aria rpc is not availabile , this class restarts aria!
 class CheckingThread(QThread):
     CHECKFLASHGOTSIGNAL = pyqtSignal()
@@ -416,9 +415,19 @@ class CheckingThread(QThread):
             if os.path.isfile( persepolis_tmp + "/show-window") == True:
                 osCommands.remove(persepolis_tmp +  '/show-window')
                 self.SHOWMAINWINDOWSIGNAL.emit()
+
             sleep(1)
-            if os.path.isfile("/tmp/persepolis-flashgot")  == True and os.path.isfile("/tmp/persepolis-flashgot.lock") == False: #It means new flashgot call is available!
-                self.CHECKFLASHGOTSIGNAL.emit() 
+            if os.path.isfile("/tmp/persepolis-flashgot-ready")  == True :#It means new flashgot call is available!
+                size = 0
+                #This loop check that is size of persepolis-flashgot changed or not.
+                #if it's change we have queue request and loop waits until all links inserted in persepolis-flashgot file
+                while size != os.path.getsize('/tmp/persepolis-flashgot'):
+                    size =  os.path.getsize('/tmp/persepolis-flashgot')
+                    sleep(0.3) 
+
+                self.CHECKFLASHGOTSIGNAL.emit()#notifiying that we have flashgot request 
+                while os.path.isfile("/tmp/persepolis-flashgot-ready") :#wait for persepolis consideration!
+                    sleep(0.5) 
              
             j = j + 1
 #every 30 seconds
@@ -595,6 +604,7 @@ class MainWindow(MainWindow_Ui):
         self.afterdownload_list = []
         self.text_queue_window_list = []
         self.about_window_list = []
+        self.flashgot_queue_window_list = []
         self.progress_window_list_dict = {}
 #queue_list_dict contains queue threads >> queue_list_dict[name of queue] = Queue(name of queue , parent)
         self.queue_list_dict = {}
@@ -1140,18 +1150,21 @@ class MainWindow(MainWindow_Ui):
 
 #when new user requests download with flashgot , this methode called           
     def checkFlashgot(self):
-#         sleep(0.5)
         #this lines extract add_link_dictionary from /tmp/persepolis-flashgot
         flashgot_file = Open("/tmp/persepolis-flashgot")
-        flashgot_line = flashgot_file.readlines()
+        flashgot_lines = flashgot_file.readlines()
         flashgot_file.close()
         flashgot_file.remove()
-        flashgot_add_link_dictionary_str = flashgot_line[0]
-        flashgot_add_link_dictionary = ast.literal_eval(flashgot_add_link_dictionary_str) 
-        #this line calls flashgotAddLink methode with flashgot_add_link_dictionary
-        self.flashgotAddLink(flashgot_add_link_dictionary)
+        osCommands.remove('/tmp/persepolis-flashgot-ready')
+        if len(flashgot_lines) == 1 : #It means we have only one request from flashgot
+            flashgot_add_link_dictionary_str = flashgot_lines[0].strip()
+            flashgot_add_link_dictionary = ast.literal_eval(flashgot_add_link_dictionary_str) 
+            #this line calls flashgotAddLink methode with flashgot_add_link_dictionary
+            self.flashgotAddLink(flashgot_add_link_dictionary)
+        else: #we have queue request from flashgot
+            self.flashgotQueue(flashgot_lines)
 
-#this methode creates an addlinkwindow when user calls Persepolis whith flashgot
+#this methode creates an addlinkwindow when user calls Persepolis whith flashgot (Single Download)
     def flashgotAddLink(self,flashgot_add_link_dictionary):
         addlinkwindow = AddLinkWindow(self.callBack , self.persepolis_setting , flashgot_add_link_dictionary)
         self.addlinkwindows_list.append(addlinkwindow)
@@ -2305,7 +2318,13 @@ class MainWindow(MainWindow_Ui):
             return queue_name
 
 
+    def flashgotQueue(self , flashgot_lines):
+        flashgot_queue_window = FlashgotQueue(self , flashgot_lines , self.queueCallback , self.persepolis_setting)
+        self.flashgot_queue_window_list.append(flashgot_queue_window)
+        self.flashgot_queue_window_list[len(self.flashgot_queue_window_list) - 1].show()
+        self.flashgot_queue_window_list[len(self.flashgot_queue_window_list) - 1].raise_()
 
+        
 
 #this methode is importing text file for creating queue . text file must contain links . 1 link per line!
     def importText(self , item) :
@@ -2338,13 +2357,18 @@ class MainWindow(MainWindow_Ui):
 
         #creating download_info_file for every add_link_dictionary in add_link_dictionary_list 
         for add_link_dictionary in add_link_dictionary_list:
+
             #aria2 identifies each download by the ID called GID. The GID must be hex string of 16 characters.
             gid = self.gidGenerator()
 
 	    #download_info_file_list is a list that contains ['file_name' , 'status' , 'size' , 'downloaded size' ,'download percentage' , 'number of connections' ,'Transfer rate' , 'estimate_time_left' , 'gid' , 'add_link_dictionary' , 'firs_try_date' , 'last_try_date']
+            try:
+                file_name = str(add_link_dictionary['out'])
+            except:
+                file_name = '***'
 
 
-            download_info_file_list = [ '***' ,'stopped', '***' ,'***','***','***','***','***',gid , add_link_dictionary , '***' ,'***' , selected_category ]
+            download_info_file_list = [ file_name ,'stopped', '***' ,'***','***','***','***','***',gid , add_link_dictionary , '***' ,'***' , selected_category ]
 
 
             #gid is generating for download and a file (with name of gid) is creating in download_info_folder . this file is containing download_info_file_list
@@ -3147,4 +3171,15 @@ class MainWindow(MainWindow_Ui):
                     self.download_table.setItem(new_row , i , item)
                 self.download_table.selectRow(new_row)
 
+    def queueSpiderCallBack(self, filename , child , row_number ):
+        item = QTableWidgetItem(str(filename))
 
+        #adding checkbox to the item
+        item.setFlags(QtCore.Qt.ItemIsUserCheckable | QtCore.Qt.ItemIsEnabled)
+        if child.links_table.item(int(row_number) , 0 ).checkState() == 2: 
+            item.setCheckState(QtCore.Qt.Checked)
+        else:
+            item.setCheckState(QtCore.Qt.Unchecked)
+
+
+        child.links_table.setItem(int(row_number) , 0 , item )
