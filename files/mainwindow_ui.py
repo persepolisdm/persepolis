@@ -126,6 +126,12 @@ class MenuWidget(QPushButton):
 
         queueMenu.addAction(self.parent.moveDownAction)
 
+        queueMenu.addAction(self.parent.moveUpSelectedAction)
+
+        queueMenu.addAction(self.parent.moveDownSelectedAction)
+
+
+
         editMenu.addAction(self.parent.preferencesAction)
 
         helpMenu.addAction(self.parent.aboutAction)
@@ -528,8 +534,14 @@ class MainWindow_Ui(QMainWindow):
         self.moveUpAction = QAction(QIcon(icons + 'up') , 'Move up this item' , self , statusTip = 'Move currently selected item up by one row' , triggered = self.moveUp  )
         queueMenu.addAction(self.moveUpAction)
 
-        self.moveDownAction = QAction(QIcon(icons + 'down') , 'Move down this item' , self , statusTip = 'Move currently selected item down by one row' , triggered = self.moveDown  )
+        self.moveDownAction = QAction(QIcon(icons + 'down') , 'Move down this item' , self , statusTip = 'Move currently selected item down by one row' , triggered = self.moveDown)
         queueMenu.addAction(self.moveDownAction)
+
+        self.moveUpSelectedAction = QAction(QIcon(icons + 'multi_up') , 'Move up selected items' , self , statusTip = 'Move currently selected items up by one row' , triggered = self.moveUpSelected  )
+        queueMenu.addAction(self.moveUpSelectedAction)
+
+        self.moveDownSelectedAction = QAction(QIcon(icons + 'multi_down') , 'Move down selected items' , self , statusTip = 'Move currently selected items down by one row' , triggered = self.moveDownSelected  )
+        queueMenu.addAction(self.moveDownSelectedAction)
 
 
         self.preferencesAction = QAction(QIcon(icons + 'preferences') , 'Preferences' , self , statusTip = 'Preferences' , triggered = self.openPreferences , menuRole = 5)

@@ -11,7 +11,6 @@
 		<file>Archdroid-Blue/minimize.svg</file>		
 		<file>Archdroid-Blue/ok.svg</file>		
 		<file>Archdroid-Blue/pause.svg</file>		
-		<file>Archdroid-Blue/pause_all.svg</file>		
 		<file>Archdroid-Blue/play.svg</file>		
 		<file>Archdroid-Blue/preferences.svg</file>		
 		<file>Archdroid-Blue/remove.svg</file>		
@@ -32,6 +31,9 @@
         <file>Archdroid-Blue/menu.svg</file>	
         <file>Archdroid-Blue/up.svg</file>	
         <file>Archdroid-Blue/down.svg</file>	
+        <file>Archdroid-Blue/multi_up.svg</file>	
+        <file>Archdroid-Blue/multi_down.svg</file>	
+
 
 
 
@@ -43,7 +45,6 @@
 		<file>Archdroid-Red/minimize.svg</file>		
 		<file>Archdroid-Red/ok.svg</file>		
 		<file>Archdroid-Red/pause.svg</file>		
-		<file>Archdroid-Red/pause_all.svg</file>		
 		<file>Archdroid-Red/play.svg</file>		
 		<file>Archdroid-Red/preferences.svg</file>		
 		<file>Archdroid-Red/remove.svg</file>		
@@ -64,6 +65,9 @@
         <file>Archdroid-Red/menu.svg</file>	
         <file>Archdroid-Red/up.svg</file>	
         <file>Archdroid-Red/down.svg</file>	
+        <file>Archdroid-Red/multi_up.svg</file>	
+        <file>Archdroid-Red/multi_down.svg</file>	
+
 
 
 

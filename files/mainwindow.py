@@ -2603,7 +2603,7 @@ class MainWindow(MainWindow_Ui):
             self.queue_panel_widget.show()
             self.queuePanelWidget(category)
 
-            for i in self.addlinkAction,self.removeSelectedAction , self.deleteSelectedAction , self.propertiesAction,self.startQueueAction , self.stopQueueAction , self.removeQueueAction  , self.moveUpAction , self.moveDownAction , self.minimizeAction , self.exitAction :
+            for i in self.addlinkAction,self.removeSelectedAction , self.deleteSelectedAction , self.propertiesAction,self.startQueueAction , self.stopQueueAction , self.removeQueueAction  , self.moveUpSelectedAction , self.moveDownSelectedAction , self.minimizeAction , self.exitAction :
                 self.toolBar.addAction(i)
  
             self.toolBar.insertSeparator(self.addlinkAction)
@@ -2634,19 +2634,33 @@ class MainWindow(MainWindow_Ui):
                 self.removeQueueAction.setEnabled(False)
                 self.moveUpAction.setEnabled(False)
                 self.moveDownAction.setEnabled(False)
+                self.moveUpSelectedAction.setEnabled(False)
+                self.moveDownSelectedAction.setEnabled(False)
             else:            #if queue didn't start 
                 self.stopQueueAction.setEnabled(False)
                 self.startQueueAction.setEnabled(True)
                 self.removeQueueAction.setEnabled(True)
-                self.moveUpAction.setEnabled(True)
-                self.moveDownAction.setEnabled(True)
+                if mode != 'selection':
+                    self.moveUpAction.setEnabled(True)
+                    self.moveDownAction.setEnabled(True)
+                    self.moveUpSelectedAction.setEnabled(False)
+                    self.moveDownSelectedAction.setEnabled(False)
+                else:
+                    self.moveUpAction.setEnabled(False)
+                    self.moveDownAction.setEnabled(False)
+                    self.moveUpSelectedAction.setEnabled(True)
+                    self.moveDownSelectedAction.setEnabled(True)
+ 
+                
         else: #if category is All Downloads  or Single Downloads
             self.stopQueueAction.setEnabled(False)
             self.startQueueAction.setEnabled(False)
             self.removeQueueAction.setEnabled(False)
             self.moveUpAction.setEnabled(False)
             self.moveDownAction.setEnabled(False)
-
+            self.moveUpSelectedAction.setEnabled(False)
+            self.moveDownSelectedAction.setEnabled(False)
+ 
         #adding sortMenu to download_table context menu
         sortMenu = self.download_table.tablewidget_menu.addMenu('Sort by')
         sortMenu.addAction(self.sort_file_name_Action)
@@ -3098,13 +3112,109 @@ class MainWindow(MainWindow_Ui):
             
                 #replacing
                 for i in range(13):
+                    #old row
                     item = QTableWidgetItem(new_row_items_list[i])
+
                     self.download_table.setItem(old_row , i , item)
 
+                    #new row
                     item = QTableWidgetItem(old_row_items_list[i])
                     self.download_table.setItem(new_row , i , item)
 
                 self.download_table.selectRow(new_row)
+
+
+#this methode is called when user pressed moveUpSelectedAction
+#this methode is subtituting selected  items with upper one
+
+    def moveUpSelected(self , menu):
+        global button_pressed_counter
+        button_pressed_counter = button_pressed_counter + 1
+#if checking_flag is equal to 1, it means that user pressed remove or delete button or ... . so checking download information must be stopped until job is done!
+
+        if checking_flag != 2 :
+            button_pressed_thread = ButtonPressedThread()
+            self.threadPool.append(button_pressed_thread)
+            self.threadPool[len(self.threadPool) - 1].start()
+
+            wait_check = WaitThread()
+            self.threadPool.append(wait_check)
+            self.threadPool[len(self.threadPool) - 1].start()
+            self.threadPool[len(self.threadPool) - 1].QTABLEREADY.connect(self.moveUpSelected2)
+        else:
+            self.moveUpSelected2()
+ 
+
+    def moveUpSelected2(self):
+        index_list = []
+
+        #current_category_tree_text is the name of queue that selected by user
+        current_category_tree_text = str(current_category_tree_index.data())
+
+
+        #finding checked rows
+        for row in range(self.download_table.rowCount()):
+            item = self.download_table.item(row , 0)
+            if (item.checkState() == 2) :
+                index_list.append(row) #appending index of checked rows to index_list
+
+        #moving up selected rows
+        for old_row in index_list:
+            new_row = int(old_row) - 1
+            if new_row >= 0 :
+
+                #opening and reading queue_file
+                queue_file = category_folder + '/' + current_category_tree_text
+
+                f = Open(queue_file)
+                queue_file_lines = f.readlines()
+                f.close()
+
+
+                #old index and new index of item in queue file
+                old_index_in_file = len(queue_file_lines) - old_row - 1
+                new_index_in_file = old_index_in_file + 1
+                #replacing lines in queue_file
+                queue_file_lines[old_index_in_file] , queue_file_lines[new_index_in_file] = queue_file_lines [new_index_in_file] , queue_file_lines[old_index_in_file]
+
+                f = Open(queue_file , 'w')
+                for line in queue_file_lines:
+                    f.writelines(line)
+
+                f.close()
+
+        
+                old_row_items_list = [] 
+                new_row_items_list = []
+
+
+                #reading current items in download_table
+                for i in range(13):
+                    old_row_items_list.append(self.download_table.item(old_row , i).text())
+                    new_row_items_list.append(self.download_table.item(new_row , i).text())
+            
+                #replacing
+                for i in range(13):
+                    #old row
+                    item = QTableWidgetItem(new_row_items_list[i])
+                    #adding checkbox
+                    if i == 0:
+                        item.setFlags(QtCore.Qt.ItemIsUserCheckable | QtCore.Qt.ItemIsEnabled)
+                        #set Unchecked
+                        item.setCheckState(QtCore.Qt.Unchecked)
+
+                    self.download_table.setItem(old_row , i , item)
+
+                    #new row
+                    item = QTableWidgetItem(old_row_items_list[i])
+                    #adding checkbox
+                    if i == 0 :
+                        item.setFlags(QtCore.Qt.ItemIsUserCheckable | QtCore.Qt.ItemIsEnabled)
+                        #set Checked
+                        item.setCheckState(QtCore.Qt.Checked)
+
+                    self.download_table.setItem(new_row , i , item)
+
 
 #this methode is called if user pressed moveDown action 
 #this methode is subtituting selected download item with lower download item
@@ -3166,12 +3276,112 @@ class MainWindow(MainWindow_Ui):
             
                 #replacing
                 for i in range(13):
+                    #old_row
                     item = QTableWidgetItem(new_row_items_list[i])
                     self.download_table.setItem(old_row , i , item)
 
+                    #new_row
                     item = QTableWidgetItem(old_row_items_list[i])
                     self.download_table.setItem(new_row , i , item)
                 self.download_table.selectRow(new_row)
+
+
+#this methode is called if user pressed moveDownSelected action 
+#this methode is subtituting selected download item with lower download item
+    def moveDownSelected(self,menu):
+        global button_pressed_counter
+        button_pressed_counter = button_pressed_counter + 1
+#if checking_flag is equal to 1, it means that user pressed remove or delete button or ... . so checking download information must be stopped until job is done!
+        if checking_flag != 2 :
+            button_pressed_thread = ButtonPressedThread()
+            self.threadPool.append(button_pressed_thread)
+            self.threadPool[len(self.threadPool) - 1].start()
+
+            wait_check = WaitThread()
+            self.threadPool.append(wait_check)
+            self.threadPool[len(self.threadPool) - 1].start()
+            self.threadPool[len(self.threadPool) - 1].QTABLEREADY.connect(self.moveDownSelected2)
+        else:
+            self.moveDownSelected2()
+ 
+    def moveDownSelected2(self):
+
+#an old row and new row must replaced  by each other
+        index_list = []
+
+        #current_category_tree_text is the name of queue that selected by user
+        current_category_tree_text = str(current_category_tree_index.data())
+
+
+        #finding checked rows
+        for row in range(self.download_table.rowCount()):
+            item = self.download_table.item(row , 0)
+            if (item.checkState() == 2) :
+                index_list.append(row) #appending index of checked rows to index_list
+
+        index_list.reverse()
+
+        #moving up selected rows
+        for old_row in index_list:
+ 
+            new_row = int(old_row) + 1
+            if new_row < self.download_table.rowCount():
+
+                #opening and reading queue_file
+                queue_file = category_folder + '/' + current_category_tree_text
+
+                f = Open(queue_file)
+                queue_file_lines = f.readlines()
+                f.close()
+
+
+                #old index and new index of item in queue file
+                old_index_in_file = len(queue_file_lines) - old_row - 1
+                new_index_in_file = old_index_in_file - 1
+                #replacing lines in queue_file
+                queue_file_lines[old_index_in_file] , queue_file_lines[new_index_in_file] = queue_file_lines [new_index_in_file] , queue_file_lines[old_index_in_file]
+
+                f = Open(queue_file , 'w')
+                for line in queue_file_lines:
+                    f.writelines(line)
+
+                f.close()
+
+        
+                old_row_items_list = [] 
+                new_row_items_list = []
+                
+                #reading current items in download_table
+                for i in range(13):
+                    old_row_items_list.append(self.download_table.item(old_row , i).text())
+                    new_row_items_list.append(self.download_table.item(new_row , i).text())
+            
+                #replacing
+                for i in range(13):
+                    #old row
+                    item = QTableWidgetItem(new_row_items_list[i])
+                    
+                    #adding checkbox
+                    if i == 0:
+                        item.setFlags(QtCore.Qt.ItemIsUserCheckable | QtCore.Qt.ItemIsEnabled)
+                        #set Unchecked
+                        item.setCheckState(QtCore.Qt.Unchecked)
+
+                    self.download_table.setItem(old_row , i , item)
+
+                    
+                    #new_row
+                    item = QTableWidgetItem(old_row_items_list[i])
+
+                    #adding checkbox
+                    if i == 0 :
+                        item.setFlags(QtCore.Qt.ItemIsUserCheckable | QtCore.Qt.ItemIsEnabled)
+                        #set Checked
+                        item.setCheckState(QtCore.Qt.Checked)
+
+
+                    self.download_table.setItem(new_row , i , item)
+
 
     def queueSpiderCallBack(self, filename , child , row_number ):
         item = QTableWidgetItem(str(filename))

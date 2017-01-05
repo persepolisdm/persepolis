@@ -12,7 +12,7 @@
    id="svg2"
    version="1.1"
    inkscape:version="0.91 r13725"
-   sodipodi:docname="multi_remove.svg">
+   sodipodi:docname="multi_down.svg">
   <metadata
      id="metadata10">
     <rdf:RDF>
@@ -48,21 +48,21 @@
      inkscape:current-layer="svg2">
     <inkscape:grid
        type="xygrid"
-       id="grid4159" />
+       id="grid4138" />
   </sodipodi:namedview>
   <path
-     d="m 29.254237,11.406271 -2.83,-2.8299998 -11.17,11.1699998 -11.1699997,-11.1699998 -2.83,2.8299998 11.1699997,11.17 -11.1699997,11.17 2.83,2.83 11.1699997,-11.17 11.17,11.17 2.83,-2.83 -11.17,-11.17 z"
+     d="m 13.406271,8.8945763 9.17,9.1699997 9.17,-9.1699997 2.83,2.8299997 -12,12 -12,-12 z"
      id="path4"
-     style="stroke:#000000;stroke-opacity:1"
-     inkscape:connector-curvature="0" />
+     inkscape:connector-curvature="0"
+     style="stroke:#000000;stroke-opacity:1" />
   <path
-     d="m 37.59322,11.406271 -2.83,-2.8299999 -11.17,11.1699999 -11.17,-11.1699999 -2.8299993,2.8299999 11.1699993,11.17 -11.1699993,11.17 2.8299993,2.83 11.17,-11.17 11.17,11.17 2.83,-2.83 -11.17,-11.17 z"
+     d="m 13.406271,17.589492 9.17,9.17 9.17,-9.17 2.83,2.83 -12,12 -12,-12 z"
      id="path4-3"
-     style="stroke:#000000;stroke-opacity:1"
-     inkscape:connector-curvature="0" />
+     inkscape:connector-curvature="0"
+     style="stroke:#000000;stroke-opacity:1" />
   <path
-     d="m 45.932203,11.406271 -2.83,-2.83 -11.17,11.170001 -11.17,-11.170001 -2.83,2.83 11.17,11.170001 -11.17,11.17 2.83,2.83 11.17,-11.17 11.17,11.17 2.83,-2.83 -11.17,-11.17 z"
+     d="m 13.406271,25.843729 9.17,9.17 9.17,-9.17 2.83,2.83 -12,12 -12,-12 z"
      id="path4-6"
-     style="stroke:#000000;stroke-opacity:1"
-     inkscape:connector-curvature="0" />
+     inkscape:connector-curvature="0"
+     style="stroke:#000000;stroke-opacity:1" />
 </svg>
