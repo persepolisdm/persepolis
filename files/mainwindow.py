@@ -896,6 +896,8 @@ class MainWindow(MainWindow_Ui):
                             afterdownloadwindow = AfterDownloadWindow(download_info_file_list,self.persepolis_setting)
                             self.afterdownload_list.append(afterdownloadwindow)
                             self.afterdownload_list[len(self.afterdownload_list) - 1].show()
+                            self.afterdownload_list[len(self.afterdownload_list) - 1].raise_()
+
                         else :
                             notifySend("Download Complete" ,str(download_info_file_list[0])  , 10000 , 'ok' , systemtray = self.system_tray_icon )
 
