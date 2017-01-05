@@ -1006,7 +1006,6 @@ class MainWindow(MainWindow_Ui):
                     self.openDownloadFolderAction.setEnabled(False)
                     self.openFileAction.setEnabled(False)            
                     self.deleteFileAction.setEnabled(False)
-                    self.download_table.sendMenu.setEnabled(False)
 
                 elif status == "stopped" or status == "error" :
                     self.stopAction.setEnabled(False)
@@ -1018,7 +1017,6 @@ class MainWindow(MainWindow_Ui):
                     self.openDownloadFolderAction.setEnabled(False)
                     self.openFileAction.setEnabled(False)            
                     self.deleteFileAction.setEnabled(False)
-                    self.download_table.sendMenu.setEnabled(True)
 
 
 
@@ -1032,7 +1030,6 @@ class MainWindow(MainWindow_Ui):
                     self.openDownloadFolderAction.setEnabled(False)
                     self.openFileAction.setEnabled(False)            
                     self.deleteFileAction.setEnabled(False)
-                    self.download_table.sendMenu.setEnabled(False)
 
 
 
@@ -1046,7 +1043,6 @@ class MainWindow(MainWindow_Ui):
                     self.openDownloadFolderAction.setEnabled(False)
                     self.openFileAction.setEnabled(False)            
                     self.deleteFileAction.setEnabled(False)
-                    self.download_table.sendMenu.setEnabled(False)
 
 
 
@@ -1060,7 +1056,6 @@ class MainWindow(MainWindow_Ui):
                     self.openDownloadFolderAction.setEnabled(True)
                     self.openFileAction.setEnabled(True)            
                     self.deleteFileAction.setEnabled(True)
-                    self.download_table.sendMenu.setEnabled(False)
 
 
 
@@ -1074,7 +1069,6 @@ class MainWindow(MainWindow_Ui):
                     self.openDownloadFolderAction.setEnabled(False)
                     self.openFileAction.setEnabled(False)            
                     self.deleteFileAction.setEnabled(False)
-                    self.download_table.sendMenu.setEnabled(False)
 
 
               
@@ -1089,7 +1083,6 @@ class MainWindow(MainWindow_Ui):
                     self.openDownloadFolderAction.setEnabled(False)
                     self.openFileAction.setEnabled(False)            
                     self.deleteFileAction.setEnabled(False)
-                    self.download_table.sendMenu.setEnabled(False)
 
             else:
 
@@ -1103,7 +1096,6 @@ class MainWindow(MainWindow_Ui):
                     self.openDownloadFolderAction.setEnabled(True)
                     self.openFileAction.setEnabled(True)            
                     self.deleteFileAction.setEnabled(True)
-                    self.download_table.sendMenu.setEnabled(False)
 
                 elif status == "stopped" or status == "error" :
                     self.stopAction.setEnabled(False)
@@ -1115,7 +1107,6 @@ class MainWindow(MainWindow_Ui):
                     self.openDownloadFolderAction.setEnabled(False)
                     self.openFileAction.setEnabled(False)            
                     self.deleteFileAction.setEnabled(False)
-                    self.download_table.sendMenu.setEnabled(True)
 
                 elif status == "scheduled" or status == "downloading" or status == "paused" or status == "waiting":
                     self.resumeAction.setEnabled(False)
@@ -1127,12 +1118,7 @@ class MainWindow(MainWindow_Ui):
                     self.openDownloadFolderAction.setEnabled(False)
                     self.openFileAction.setEnabled(False)            
                     self.deleteFileAction.setEnabled(False)
-                    self.download_table.sendMenu.setEnabled(False)
 
-
-            if category in self.queue_list_dict.keys():
-                if self.queue_list_dict[category].start :
-                    self.download_table.sendMenu.setEnabled(False)
 
 
 
@@ -1146,7 +1132,6 @@ class MainWindow(MainWindow_Ui):
             self.openDownloadFolderAction.setEnabled(False)
             self.openFileAction.setEnabled(False)            
             self.deleteFileAction.setEnabled(False)
-            self.download_table.sendMenu.setEnabled(False)
 
         
 
@@ -2469,18 +2454,21 @@ class MainWindow(MainWindow_Ui):
         #adding selectAction to context menu
         self.download_table.tablewidget_menu.addAction(self.selectAction)
 
+
+        queueAction = QAction(QIcon(icons + 'add') , 'Single Downloads' , self , statusTip = "Add to Single Downloads"  , triggered = partial(self.addToQueue , 'Single Downloads' ) ) 
+
         #checking if user checked selection mode
         if self.selectAction.isChecked() == True :
             mode = 'selection'
             self.download_table.sendMenu = self.download_table.tablewidget_menu.addMenu('Send selected downloads to')
 
+            self.download_table.sendMenu.addAction(queueAction)
         else:
             mode = 'None'
             self.download_table.sendMenu = self.download_table.tablewidget_menu.addMenu('Send to')
 
-
-        queueAction = QAction(QIcon(icons + 'add') , 'Single Downloads' , self , statusTip = "Add to Single Downloads"  , triggered = partial(self.addToQueue , 'Single Downloads' ) ) 
         self.download_table.sendMenu.addAction(queueAction)
+
         #adding sendMenu items
         f = Open(queues_list_file)
         f_lines = f.readlines()
@@ -2489,6 +2477,7 @@ class MainWindow(MainWindow_Ui):
             if i.strip() != category:
                 queueAction = QAction(QIcon(icons + 'add_queue') , str(i.strip()) , self , statusTip = "Add to" + str(i.strip()) , triggered = partial(self.addToQueue , str(i.strip())) ) 
                 self.download_table.sendMenu.addAction(queueAction)
+
 
         if category == 'All Downloads' and mode == 'None':
 
@@ -2776,6 +2765,7 @@ class MainWindow(MainWindow_Ui):
 #this methode is called , when user want to add a download to a queue with context menu. see also toolBarAndContextMenuItems() methode
     def addToQueue(self , data, menu ):
 #if checking_flag is equal to 1, it means that user pressed remove or delete button or ... . so checking download information must be stopped until job is done!
+
         if checking_flag != 2 :
             wait_check = WaitThread()
             self.threadPool.append(wait_check)
@@ -2785,6 +2775,9 @@ class MainWindow(MainWindow_Ui):
             self.addToQueue2(data)
  
     def addToQueue2(self , data):
+        
+
+        send_message = False
         new_category = str(data) #new selected category
         gid_list = []
         #checking if user checked selectAction in edit menu
@@ -2793,9 +2786,18 @@ class MainWindow(MainWindow_Ui):
             for row in range(self.download_table.rowCount()):
                 status = self.download_table.item(row , 1).text() 
                 item = self.download_table.item(row , 0)
-                if (item.checkState() == 2) and (status == 'error' or status == 'stopped' ):
+                category = self.download_table.item(row , 12).text()
+
+                if category in self.queue_list_dict.keys():
+                    if self.queue_list_dict[category].start :
+                        status = 'downloading' #It means queue is in download progress
+
+                if (item.checkState() == 2) and (status == 'error' or status == 'stopped' or status == 'complete' ):
                     gid = self.download_table.item(row , 8 ).text()
                     gid_list.append(gid)
+                if not  (status == 'error' or status == 'stopped' or status == 'complete' ):
+                    send_message = True
+
         else:
             #finding selected_row
             selected_row_return = self.selectedRow() #finding user selected row
@@ -2804,8 +2806,17 @@ class MainWindow(MainWindow_Ui):
             if selected_row_return != None:
                 gid = self.download_table.item(selected_row_return , 8 ).text()
                 status = self.download_table.item(selected_row_return , 1).text() 
-                if  (status == 'error' or status == 'stopped' ):
+                category = self.download_table.item(selected_row_return , 12).text()
+
+                if category in self.queue_list_dict.keys():
+                    if self.queue_list_dict[category].start :
+                        status = 'downloading' #It means queue is in download progress
+
+
+                if  (status == 'error' or status == 'stopped' or status == 'complete' ):
                     gid_list.append(gid)
+                else:
+                    send_message = True
 
         for gid in gid_list:        
 
@@ -2872,6 +2883,9 @@ class MainWindow(MainWindow_Ui):
                     self.download_table.setItem(row , 12 , item)
                 else:
                     self.download_table.removeRow(row)
+
+        if send_message:
+            notifySend("sending some items was unsuccessful!", "Please stop download progress first" , '5000' , 'no', systemtray = self.system_tray_icon )
 
         global checking_flag
         checking_flag = 0
