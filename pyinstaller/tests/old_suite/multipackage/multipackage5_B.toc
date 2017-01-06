@@ -1,4 +1,0 @@
-[
-    'getopt',
-    'multipackage5_B',
-]

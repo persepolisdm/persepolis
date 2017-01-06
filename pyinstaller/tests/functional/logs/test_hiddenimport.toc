@@ -1,3 +1,0 @@
-[
- 'a_hidden_import.submodule',
-]
