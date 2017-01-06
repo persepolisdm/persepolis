@@ -71,13 +71,18 @@ exec_path='/usr/bin/'
 chmod +x "./files/persepolis"
 chmod +x "./persepolis"
 chmod +x "./Persepolis Download Manager.desktop"
+chmod +x "./com.persepolis.pdmchromewrapper.json"
+chmod +x "./pdm-chrome-wrapper"
 sudo rm -rf "$program_path"
 sudo mkdir -p "$program_path"
+sudo mkdir -p "/etc/chromium/native-messaging-hosts/"
 sudo cp -rf  ./files/* "$program_path/"
 sudo cp -rf "./persepolis" "$exec_path"
 sudo cp -rf "./Persepolis Download Manager.desktop" "/usr/share/applications/"
 sudo cp -rf "./files/icon.svg" "/usr/share/pixmaps/persepolis.svg"
 sudo cp -rf "./persepolis.1.gz" "/usr/share/man/man1/persepolis.1.gz"
+sudo cp -rf "./pdm-chrome-wrapper" "/usr/bin/"
+sudo cp -rf "./com.persepolis.pdmchromewrapper.json" "/etc/chromium/native-messaging-hosts/"
 if [ "$?" -eq "0" ];then
     echo "Installation compeleted!"
 else

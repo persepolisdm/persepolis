@@ -1,0 +1,116 @@
+#!/usr/bin/env python2
+
+# Perspolis-chrome-wrapper (forked from uget-chrome-wrapper) is a tool to integrate uGet Download manager
+# with Google Chrome in Linux systems.
+
+# Copyright (C) 2016  Gobinath
+
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+
+import struct
+import sys
+import threading
+from subprocess import call
+import json
+from urlparse import urlparse
+from os.path import splitext, basename, join, expanduser
+import urllib2
+from mimetypes import guess_extension
+
+#UGET_COMMAND = "uget-gtk2"
+UGET_COMMAND = "persepolis"
+VERSION = "1.3.4"
+
+# Platform specific configuration
+if sys.platform == "win32":
+	# Set the default I/O mode to O_BINARY in windows
+	import os, msvcrt
+	msvcrt.setmode(sys.stdin.fileno(), os.O_BINARY)
+	msvcrt.setmode(sys.stdout.fileno(), os.O_BINARY)
+	UGET_COMMAND = "uget"
+
+def extract_file_name(url):
+	fileName = ''
+	if "googlevideo.com/" in url and '&title=' in url:
+		# Youtube video
+		url = urllib2.unquote(url)
+		url_components = url.split('&')
+		for smt in url_components:
+			if smt.startswith('title='):
+				title = smt.replace('title=', '').replace('+', ' ')
+			elif smt.startswith('mime='):
+				mime = smt.replace('mime=', '')
+
+		if title:
+			fileName = title
+			if mime:
+				fileName += guess_extension(mime)
+	else:
+		fileName = basename(urlparse(url).path).replace('%20', ' ')
+
+	return fileName
+
+# Send a message to the webapp.
+def send_message(message):
+	# Write message size.
+	#call([UGET_COMMAND,"--link http://www.google.com"])
+	#call(["persepolis", "--link=" + "http://www.google.com/"])
+	sys.stdout.write(struct.pack('I', len(message)))
+	# Write the message itself.
+	sys.stdout.write(message)
+	sys.stdout.flush()
+
+# Read messages from the webapp.
+def read_message():
+	while 1:
+		# Read the message length (first 4 bytes).
+		text_length_bytes = sys.stdin.read(4)
+
+		# Unpack message length as 4 byte integer.
+		text_length = struct.unpack('i', text_length_bytes)[0]
+
+		# Read the text (JSON object) of the message.
+		text = sys.stdin.read(text_length).decode('utf-8')
+
+		if text:
+			if not 'url' in text:
+				send_message('{"enable": true, "version": "' + VERSION + '"}')
+				return
+
+			send_message('{"state": "accepted"}')
+			data = json.loads(text)
+			url = data['url']
+
+			if url:
+				filename = data['filename']
+				cookie = data['cookies']
+				referer = data['referrer']
+				if not filename:
+					filename = extract_file_name(url)
+					call([UGET_COMMAND, url])
+				if referer:
+					call([UGET_COMMAND, "--referer=" + referer, "--name=" + filename,"--link="+ url])
+				else:
+					call([UGET_COMMAND, "--name=" + filename,"--link="+ url])
+
+			sys.exit(0)
+
+
+def Main():
+	read_message()
+
+
+if __name__ == '__main__':
+	Main()
