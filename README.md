@@ -26,7 +26,6 @@ Persepolis Download Manager
 
 	$ yaourt -S persepolis-git
 	
-Obviously you can't install both persepolis and persepolis-git simultaneously, and you must uninstall one of them (with pacman) in order to install other one.
 ## Installing on Fedora
 
 	$ sudo dnf copr enable amirsamimi/persepolis
