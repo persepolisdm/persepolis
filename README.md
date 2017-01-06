@@ -33,7 +33,8 @@ Obviously you can't install both persepolis and persepolis-git simultaneously, a
 	$ sudo dnf install persepolis
 
 ## Installing on openSUSE
-	please visit this link : https://software.opensuse.org/download.html?project=home%3Ahayyan71&package=persepolis
+
+please visit this link : [software.opensuse.org](https://software.opensuse.org/download.html?project=home%3Ahayyan71&package=persepolis)
 
 
 
@@ -62,6 +63,7 @@ You must have `aria2` , `pulseaudio-utils` , `libnotify-bin` , `python 3` , `pyq
     $ cd persepolis
 
 to install
+
     $ bash install 
 
 to uninstall,
