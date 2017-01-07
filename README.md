@@ -126,10 +126,6 @@ you can use flashgot for download from youtube , ...
 
 ![ScreenShot](http://s8.picofile.com/file/8269074500/youtube_download.jpg)
 
-#Chromium(Chrome) integration(For Linux)
-Install our [chrome extensions](https://chrome.google.com/webstore/detail/persepolis-download-manag/legimlagjjoghkoedakdjhocbeomojao?hl=en)
-Right click on your download link and select download with pdm!
-
 ## Contact us
 Persepolis code developer : **Alireza Amirsamimi**
 https://github.com/alireza-amirsamimi
