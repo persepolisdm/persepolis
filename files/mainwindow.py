@@ -22,6 +22,7 @@ import os
 from time import sleep
 import random  
 from after_download import AfterDownloadWindow 
+from chromium_integration_window import ChromiumIntegrationWindow 
 from text_queue import TextQueue
 from flashgot_queue import FlashgotQueue
 from addlink import AddLinkWindow
@@ -605,6 +606,7 @@ class MainWindow(MainWindow_Ui):
         self.text_queue_window_list = []
         self.about_window_list = []
         self.flashgot_queue_window_list = []
+        self.browser_integration_window_list = []
         self.progress_window_list_dict = {}
 #queue_list_dict contains queue threads >> queue_list_dict[name of queue] = Queue(name of queue , parent)
         self.queue_list_dict = {}
@@ -3409,3 +3411,9 @@ class MainWindow(MainWindow_Ui):
 
 
         child.links_table.setItem(int(row_number) , 0 , item )
+
+    def browserIntegration(self,menu):
+        browser_integration_window = ChromiumIntegrationWindow(self.persepolis_setting)
+        self.browser_integration_window_list.append(browser_integration_window)
+        self.browser_integration_window_list[len(self.browser_integration_window_list) - 1].show()
+

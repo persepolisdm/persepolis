@@ -17,16 +17,13 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import QPushButton , QComboBox ,  QMenu , QTreeView , QSplitter , QSizePolicy , QGridLayout , QHBoxLayout , QVBoxLayout , QMenu , QTableWidgetItem ,QAbstractItemView , QApplication , QToolBar , QMenuBar , QStatusBar, QTableWidget , QAction , QMainWindow , QWidget , QFrame , QAbstractItemView , QCheckBox , QSpinBox , QLabel
 from PyQt5.QtGui import QIcon  , QStandardItemModel , QStandardItem 
 from PyQt5.QtCore import QCoreApplication , QRect , QSize , Qt  
-import ast , os , platform
+import ast , os  
 from newopen import Open
 import icons_resource
 
 home_address = os.path.expanduser("~")
 config_folder = str(home_address) + "/.config/persepolis_download_manager"
 
-#setting
-global os_type
-os_type = platform.system()
 
 
 class MenuWidget(QPushButton):
@@ -139,6 +136,8 @@ class MenuWidget(QPushButton):
         helpMenu.addAction(self.parent.issueAction)
 
         helpMenu.addAction(self.parent.updateAction)
+
+        helpMenu.addAction(self.parent.browserAction)
 
 
 #viewMenu submenus
@@ -556,6 +555,10 @@ class MainWindow_Ui(QMainWindow):
         self.updateAction = QAction(QIcon(icons + 'about') , 'Check for newer version' , self , statusTip = 'Check for newer release' , triggered = self.newUpdate  )
         helpMenu.addAction(self.updateAction)
 
+        self.browserAction = QAction(QIcon(icons + 'browser') , 'Browser integration' , self , statusTip = 'Browser inegration' , triggered = self.browserIntegration  )
+        helpMenu.addAction(self.browserAction)
+
+       
 
         self.qmenu = MenuWidget(self)
 

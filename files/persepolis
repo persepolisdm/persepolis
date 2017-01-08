@@ -18,6 +18,10 @@
 from newopen import Open
 import osCommands
 import os , sys , time , ast , argparse
+import struct
+import json
+
+
     
 # initialization
 home_address = os.path.expanduser("~")
@@ -100,6 +104,7 @@ class PersepolisApplication(QApplication):
 #creating  terminal arguments  
 
 parser = argparse.ArgumentParser(description='Persepolis Download Manager')
+parser.add_argument('chromium' ,nargs = '?' , default = 'no' )
 parser.add_argument('--link',action='store',nargs = 1 , help='Download link.(Use "" for links)' )
 parser.add_argument('--referer',action='store',nargs = 1 , help='Set an http referrer (Referer). This affects all http/https downloads.  If * is given, the download URI is also used as the referrer.' )
 parser.add_argument('--cookie',action='store',nargs = 1 , help='Cookie' )
@@ -119,6 +124,32 @@ args = parser.parse_args()
 
 
 add_link_dictionary = {}
+if args.chromium != 'no':
+
+    text_length_bytes = sys.stdin.buffer.read(4)
+
+		# Unpack message length as 4 byte integer.
+    text_length = struct.unpack('i', text_length_bytes)[0]
+
+		# Read the text (JSON object) of the message.
+    text = sys.stdin.buffer.read(text_length).decode("utf-8")
+    if text:
+        if not 'url' in text:
+            sys.exit(0)
+
+        data = json.loads(text)
+        url = str(data['url'])
+
+        if url:
+            args.link = str(url)
+            if 'referrer' in data.keys():
+                args.referer = data['referrer']
+
+            if 'filename' in data.keys():
+                args.name = data['filename']
+
+            if 'cookies' in data.keys():
+                args.cookie = data['cookies']
 
 if args.clear:
     status = osCommands.removeDir(str(config_folder))

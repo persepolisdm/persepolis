@@ -32,10 +32,8 @@ class AboutWindow(QWidget):
 
         self.persepolis_setting = persepolis_setting
 
-        global icons
         icons = ':/' + str(self.persepolis_setting.value('settings/icons')) + '/'
 
-        self.setWindowModality(QtCore.Qt.NonModal)
         self.setMinimumSize(QtCore.QSize(363, 300))
         self.setWindowIcon(QIcon.fromTheme('persepolis',QIcon(':/icon.svg')))
         self.setLayoutDirection(QtCore.Qt.LeftToRight)

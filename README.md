@@ -75,6 +75,12 @@ Coming soon!
 or if you preffer build the package yourself , Please read [packaging instruction](https://github.com/persepolisdm/persepolis/blob/master/how_to_package_for_mac.md) file 
 
 
+#Chromium(Chrome) integration
+Install our [chrome extensions](https://chrome.google.com/webstore/detail/persepolis-download-manag/legimlagjjoghkoedakdjhocbeomojao?hl=en)
+Open persepolis . from Help menu select browser integration and then select your browser . restart your browser!
+Done!
+
+right click on your download link and select "download with persepolis"
 
 
 ##Configuring PersepolisDM to use with FlashGot
@@ -125,6 +131,8 @@ you can use flashgot for download from youtube , ...
 ![ScreenShot](http://s9.picofile.com/file/8269074434/mediafire_download.jpg)
 
 ![ScreenShot](http://s8.picofile.com/file/8269074500/youtube_download.jpg)
+
+
 
 ## Contact us
 Persepolis code developer : **Alireza Amirsamimi**
