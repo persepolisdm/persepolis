@@ -151,7 +151,7 @@ class ChromiumIntegrationWindow(QWidget):
             f.writelines(str(i) + '\n')
         f.close()
          
-        os.system('chmod +x ' + str(native_message_file) )
+        os.system('chmod +x "' + str(native_message_file) + '"' )
 
 
         if browser == 'chromium' :
