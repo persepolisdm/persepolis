@@ -16,6 +16,7 @@
 from PyQt5 import QtWidgets , QtCore
 from PyQt5.QtGui import QIcon
 from PyQt5.QtWidgets import QWidget , QVBoxLayout , QHBoxLayout , QLabel , QPushButton
+from PyQt5.QtCore import QSize , QPoint
 import platform , os
 from newopen import Open
 from functools import partial
@@ -120,6 +121,15 @@ class ChromiumIntegrationWindow(QWidget):
         self.chromium_pushButton.setText('Chromium')
 
         self.ok_pushButton.setText('OK')
+        
+        #window size and position
+        size = self.persepolis_setting.value('ChromiumIntegrationWindow/size' , QSize(363 , 300) )
+        position = self.persepolis_setting.value('ChromiumIntegrationWindow/position' , QPoint(300 , 300))
+
+        self.resize(size)
+        self.move(position)
+
+
 
 
     def chromiumPressed(self,browser):
@@ -158,3 +168,17 @@ class ChromiumIntegrationWindow(QWidget):
             self.chromium_label.setText('Done!')
         elif browser == 'chrome' :
             self.chrome_label.setText('Done!')
+
+    def changeIcon(self , icons ):
+        icons = ':/' + str(icons) + '/'
+        self.ok_pushButton.setIcon(QIcon(icons + 'ok'))
+
+
+
+    def closeEvent(self,event):
+        #saving window size and position
+        self.persepolis_setting.setValue('ChromiumIntegrationWindow/size' , self.size())
+        self.persepolis_setting.setValue('ChromiumIntegrationWindow/position' , self.pos())
+        self.persepolis_setting.sync()
+        self.close()
+

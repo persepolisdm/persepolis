@@ -271,7 +271,7 @@ class PreferencesWindow(Setting_Ui):
 
         if icons != self.current_icon : #it means icons changed
 
-            for list in [self.parent.about_window_list , self.parent.addlinkwindows_list , self.parent.propertieswindows_list , self.parent.afterdownload_list , self.parent.text_queue_window_list , self.parent.progress_window_list ]:
+            for list in [self.parent.browser_integration_window_list , self.parent.about_window_list , self.parent.addlinkwindows_list , self.parent.propertieswindows_list , self.parent.afterdownload_list , self.parent.text_queue_window_list , self.parent.progress_window_list ]:
                 for window in list :
                     window.changeIcon(icons)
 

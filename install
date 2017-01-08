@@ -71,8 +71,6 @@ exec_path='/usr/bin/'
 chmod +x "./files/persepolis"
 chmod +x "./persepolis"
 chmod +x "./Persepolis Download Manager.desktop"
-chmod +x "./com.persepolis.pdmchromewrapper.json"
-chmod +x "./pdm-chrome-wrapper"
 sudo rm -rf "$program_path"
 sudo mkdir -p "$program_path"
 sudo mkdir -p "/etc/chromium/native-messaging-hosts/"
