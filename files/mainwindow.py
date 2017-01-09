@@ -3398,7 +3398,7 @@ class MainWindow(MainWindow_Ui):
 
                     self.download_table.setItem(new_row , i , item)
 
-
+#see flashgot_queue.py file
     def queueSpiderCallBack(self, filename , child , row_number ):
         item = QTableWidgetItem(str(filename))
 
@@ -3412,6 +3412,7 @@ class MainWindow(MainWindow_Ui):
 
         child.links_table.setItem(int(row_number) , 0 , item )
 
+#Chrome and Chromium Integration Window
     def browserIntegration(self,menu):
         browser_integration_window = ChromiumIntegrationWindow(self.persepolis_setting)
         self.browser_integration_window_list.append(browser_integration_window)
