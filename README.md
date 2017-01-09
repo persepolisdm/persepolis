@@ -73,7 +73,7 @@ to uninstall,
 ## Installing on Mac OS X
 Download Persepolis.Download.Manager.app.zip package from [here](https://github.com/persepolisdm/persepolis/releases/tag/2.3) . 
 Unzip it! Move .app file to /Application folder.
-or if you preffer build the package yourself , Please read [packaging instruction](https://github.com/persepolisdm/persepolis/blob/master/how_to_package_for_mac.md) file 
+or if you preffer build the package yourself , Please read [packaging instruction](https://github.com/persepolisdm/mac-package-build) 
 
 
 #Chromium(Chrome) integration
