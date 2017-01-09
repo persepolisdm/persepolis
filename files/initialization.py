@@ -137,19 +137,9 @@ for i in shutdown_script_list :
 f.close()
 
 #compatibility
-version_file = config_folder + '/' + 'version'
-osCommands.touch(version_file)
-f = Open(version_file)
-version_file_line = f.readline()
-f.close()
-
-persepolis_version = version_file_line.strip()
-
-if persepolis_version != '2.3 Alpha':
+persepolis_version =  float(persepolis_setting.value('version/version' , 2.2 ))
+if persepolis_version != 2.3:
     compatibility()
-    persepolis_version = '2.3 Alpha'
-    f = Open(version_file , 'w')
-    f.writelines(persepolis_version)
-    f.close()
-    
+    persepolis_setting.setValue('version/version' , 2.3 ) 
+    persepolis_setting.sync()
 

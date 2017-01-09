@@ -431,8 +431,8 @@ class CheckingThread(QThread):
                     sleep(0.5) 
              
             j = j + 1
-#every 30 seconds
-            if j == 30 or aria2_disconnected == 1 : 
+#every 39 seconds
+            if j == 39 or aria2_disconnected == 1 : 
                 j = 0
                 aria2_disconnected = 0
                 answer = download.aria2Version() #checking aria2 availability by aria2Version function
