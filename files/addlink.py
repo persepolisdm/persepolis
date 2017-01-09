@@ -42,13 +42,6 @@ class AddLinkWindow(AddLinkWindow_Ui):
         global download_path
         download_path = str(self.persepolis_setting.value('settings/download_path'))
 
-        global init_file
-        init_file = str(home_address) + "/.config/persepolis_download_manager/addlink_init_file"
-        osCommands.touch(init_file)
-        f = Open(init_file)
-        init_file_lines = f.readlines()
-        f.close()
-
 #initialization
         self.connections_spinBox.setValue(connections)
         self.download_folder_lineEdit.setText(download_path)
@@ -64,35 +57,29 @@ class AddLinkWindow(AddLinkWindow_Ui):
         else:    
             clipboard = QApplication.clipboard()
             text = clipboard.text()
-            try:
-                if ("tp:/" in text[2:6]) or ("tps:/" in text[2:7]) :
-                    self.link_lineEdit.setText(str(text))
-            except:
-                pass
+            if ("tp:/" in text[2:6]) or ("tps:/" in text[2:7]) :
+                self.link_lineEdit.setText(str(text))
+
 #ip_lineEdit initialization 
-        try:
-            self.ip_lineEdit.setText(init_file_lines[0].strip())
-        except :
-            pass
+        settings_ip = self.persepolis_setting.value('add_link_initialization/ip' , None )
+        if settings_ip :
+            self.ip_lineEdit.setText(str(settings_ip))
 
 #proxy user lineEdit initialization 
-        try:
-            self.proxy_user_lineEdit.setText(init_file_lines[2].strip())
-        except :
-            pass
+        settings_proxy_user = self.persepolis_setting.value('add_link_initialization/proxy_user' , None )
+        if settings_proxy_user :
+            self.proxy_user_lineEdit.setText(str(settings_proxy_user))
 
 #port_spinBox initialization 
-        try:
-            self.port_spinBox.setValue(int(init_file_lines[1].strip()))
-        except :
-            pass
+        settings_port = self.persepolis_setting.value('add_link_initialization/port' , 0 )
+       
+        self.port_spinBox.setValue(int(int(settings_port)))
 
 
 #download UserName initialization
-        try:
-            self.download_user_lineEdit.setText(init_file_lines[3].strip())
-        except :
-            pass
+        settings_download_user = self.persepolis_setting.value('add_link_initialization/download_user' , None )
+        if settings_download_user:
+            self.download_user_lineEdit.setText(str(settings_download_user))
 
 #finding queues name and adding them to add_queue_comboBox 
         self.add_queue_comboBox.addItem('Single Downloads')
@@ -225,12 +212,11 @@ class AddLinkWindow(AddLinkWindow_Ui):
             
 
     def okButtonPressed(self,button , download_later):
-        global init_file
-        f = Open(init_file , "w")
 #writing user's input data to init file
-        for i in self.ip_lineEdit.text(),self.port_spinBox.value(),self.proxy_user_lineEdit.text(),self.download_user_lineEdit.text()  :
-            f.writelines(str(i) + "\n")
-        f.close()
+        self.persepolis_setting.setValue('add_link_initialization/ip' , self.ip_lineEdit.text() )
+        self.persepolis_setting.setValue('add_link_initialization/port' , self.port_spinBox.value())
+        self.persepolis_setting.setValue('add_link_initialization/proxy_user' , self.proxy_user_lineEdit.text())
+        self.persepolis_setting.setValue('add_link_initialization/download_user' , self.download_user_lineEdit.text() )
 
         if self.proxy_checkBox.isChecked() == False :
             ip = None
