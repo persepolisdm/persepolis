@@ -59,6 +59,9 @@ checking_flag = 0
 global aria2_disconnected
 aria2_disconnected = 0
 
+global aria_startup_answer
+aria_startup_answer = 'None'
+
 
 global button_pressed_counter
 button_pressed_counter = 0
@@ -106,7 +109,6 @@ class StartAria2Thread(QThread):
     def run(self):
         #aria_startup_answer is None when Persepolis starts! and after ARIA2RESPONDSIGNAL emitting yes , then startAriaMessage function changing aria_startup_answer to 'Ready'
         global aria_startup_answer
-        aria_startup_answer = 'None'
         for i in range(5):
             answer = download.startAria()
             if answer == 'did not respond' and i != 4:
