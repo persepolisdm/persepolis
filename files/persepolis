@@ -238,10 +238,6 @@ if not (os.path.isfile(lock_file)): #if lock_file is existed , it means persepol
         except Exception :
             #Resetting persepolis
             status = osCommands.removeDir(str(config_folder))
-            #removing persepolis lock form /tmp
-            f = Open(lock_file)
-            f.close()
-            f.remove()
             error_window = ErrorWindow(str(traceback.format_exc()))
             error_window.show()
         finally:

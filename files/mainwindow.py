@@ -1408,10 +1408,6 @@ class MainWindow(MainWindow_Ui):
         self.persepolis_setting.setValue('MainWindow/position' , self.pos())
         self.persepolis_setting.sync()
 
-        #removing persepolis lock form /tmp
-        f = Open(lock_file)
-        f.close()
-        f.remove()
         self.hide()
         QCoreApplication.instance().closeAllWindows()
         print("Please Wait...")
