@@ -131,5 +131,5 @@ class AboutWindow(QWidget):
         self.persepolis_setting.setValue('AboutWindow/size' , self.size())
         self.persepolis_setting.setValue('AboutWindow/position' , self.pos())
         self.persepolis_setting.sync()
-        self.close()
+        self.destroy()
 

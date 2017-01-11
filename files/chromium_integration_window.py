@@ -180,5 +180,5 @@ class ChromiumIntegrationWindow(QWidget):
         self.persepolis_setting.setValue('ChromiumIntegrationWindow/size' , self.size())
         self.persepolis_setting.setValue('ChromiumIntegrationWindow/position' , self.pos())
         self.persepolis_setting.sync()
-        self.close()
+        self.destroy()
 

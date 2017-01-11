@@ -94,8 +94,8 @@ class ProgressWindow(ProgressWindow_Ui):
         self.persepolis_setting.sync()
 
 
-        if self.parent.isVisible() == False:
-            self.parent.minMaxTray(event)
+#         if self.parent.isVisible() == False:
+#             self.parent.minMaxTray(event)
 
 
         self.hide()

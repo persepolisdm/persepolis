@@ -154,7 +154,7 @@ class PreferencesWindow(Setting_Ui):
         self.persepolis_setting.setValue('PreferencesWindow/size' , self.size())
         self.persepolis_setting.setValue('PreferencesWindow/position' , self.pos())
         self.persepolis_setting.sync()
-        self.close()
+        self.destroy()
 
         if self.parent.isVisible() == False:
             self.parent.minMaxTray(event)

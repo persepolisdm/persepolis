@@ -426,7 +426,7 @@ class CheckingThread(QThread):
                 #if it's change we have queue request and loop waits until all links inserted in persepolis-flashgot file
                 while size != os.path.getsize('/tmp/persepolis-flashgot'):
                     size =  os.path.getsize('/tmp/persepolis-flashgot')
-                    sleep(0.3) 
+                    sleep(1) 
 
                 self.CHECKFLASHGOTSIGNAL.emit()#notifiying that we have flashgot request 
                 while os.path.isfile("/tmp/persepolis-flashgot-ready") :#wait for persepolis consideration!
@@ -848,7 +848,7 @@ class MainWindow(MainWindow_Ui):
 
                 elif progress_window.status == "stopped" or progress_window.status == "error" or progress_window.status == "complete" : #it means download has finished!
 #close progress_window if download status is stopped or completed or error
-                    progress_window.close() #close window!
+                    progress_window.destroy() #close window!
 
                     #eliminating window information! in progress_window_list and progress_window_list_dict
                     self.progress_window_list[member_number] = []
@@ -1165,7 +1165,7 @@ class MainWindow(MainWindow_Ui):
 
 #This methode creates addlinkwindow when user presses plus button in MainWindow
     def addLinkButtonPressed(self ,button):
-        addlinkwindow = AddLinkWindow(self.callBack , self.persepolis_setting)
+        addlinkwindow = AddLinkWindow( self.callBack , self.persepolis_setting)
         self.addlinkwindows_list.append(addlinkwindow)
         self.addlinkwindows_list[len(self.addlinkwindows_list) - 1].show()
 
@@ -1404,12 +1404,12 @@ class MainWindow(MainWindow_Ui):
 #close event
 #when user wants to close application then this function is called
     def closeEvent(self, event):
+        osCommands.remove(lock_file)
         self.persepolis_setting.setValue('MainWindow/size' , self.size())
         self.persepolis_setting.setValue('MainWindow/position' , self.pos())
         self.persepolis_setting.sync()
 
         self.hide()
-        QCoreApplication.instance().closeAllWindows()
         print("Please Wait...")
 
         self.stopAllDownloads(event) #stopping all downloads

@@ -364,5 +364,5 @@ class PropertiesWindow(AddLinkWindow_Ui):
         self.persepolis_setting.setValue('PropertiesWindow/position' , self.pos())
         self.persepolis_setting.sync()
 
-        self.close()
+        self.destroy()
     

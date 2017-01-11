@@ -43,10 +43,7 @@ class ErrorWindow(QWidget):
 
         verticalLayout.addWidget(self.text_edit)
 
-        self.label = QLabel(self)
-        self.label.setText('<b>Persepolis Reset!Restart persepolis.</b>')
-        verticalLayout.addWidget(self.label)
-        
+       
         self.label2 = QLabel(self)
         self.label2.setText('Please copy this error message and press "Report Issue" button\nand open a new issue in Github for it.\nWe answer you as soon as possible. \nreporting this issue help us to improve persepolis.\nThank you!')
         verticalLayout.addWidget(self.label2)
@@ -55,9 +52,15 @@ class ErrorWindow(QWidget):
         self.report_pushButton.setText("Report Issue")
         horizontalLayout.addWidget(self.report_pushButton)
 
+        self.reset_persepolis_pushButton = QPushButton(self)
+        self.reset_persepolis_pushButton.clicked.connect(self.resetPushButtonPressed)
+        self.reset_persepolis_pushButton.setText('Reset Persepolis')
+        horizontalLayout.addWidget(self.reset_persepolis_pushButton)
+
         self.close_pushButton = QPushButton(self)
         self.close_pushButton.setText('close')
         horizontalLayout.addWidget(self.close_pushButton)
+        
 
         verticalLayout.addLayout(horizontalLayout)
 
@@ -70,5 +73,5 @@ class ErrorWindow(QWidget):
     def closePushButtonPressed(self,button):
         self.close()
 
-
-        
+    def resetPushButtonPressed(self, button):
+        status = osCommands.removeDir(str(config_folder))
