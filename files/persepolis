@@ -244,6 +244,11 @@ if not (os.path.isfile(lock_file)): #if lock_file is existed , it means persepol
             f.remove()
             error_window = ErrorWindow(str(traceback.format_exc()))
             error_window.show()
+        finally:
+            f = Open(lock_file)
+            f.close()
+            f.remove()
+           
 
         sys.exit(persepolis_download_manager.exec_())
 

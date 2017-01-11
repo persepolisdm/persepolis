@@ -114,7 +114,7 @@ parser.add_argument('--name',action='store',nargs = 1 , help='The  file  name  o
 parser.add_argument('--default',action='store_true',help='restore default setting' )
 parser.add_argument('--clear',action='store_true',help='Clear download list and user setting!' )
 parser.add_argument('--tray',action='store_true',help="Persepolis is starting in tray icon. It's useful when you want to put persepolis in system's startup." )
-parser.add_argument('--version', action='version', version='Persepolis Download Manager 2.3 Alpha ')
+parser.add_argument('--version', action='version', version='Persepolis Download Manager 2.3')
 args = parser.parse_args()
 
 #Mozilla firefox flashgot will send download information whith terminal arguments(link , referer , cookie , agent , headers , name )
@@ -244,6 +244,11 @@ if not (os.path.isfile(lock_file)): #if lock_file is existed , it means persepol
             f.remove()
             error_window = ErrorWindow(str(traceback.format_exc()))
             error_window.show()
+        finally:
+            f = Open(lock_file)
+            f.close()
+            f.remove()
+           
 
         sys.exit(persepolis_download_manager.exec_())
 
