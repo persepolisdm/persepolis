@@ -66,6 +66,9 @@ aria_startup_answer = 'None'
 global button_pressed_counter
 button_pressed_counter = 0
 
+global flashgot_checked_links
+flashgot_checked_links = False
+
 home_address = os.path.expanduser("~")
 user_name_split = home_address.split('/')
 user_name = user_name_split[2]
@@ -411,6 +414,7 @@ class CheckingThread(QThread):
     def run(self):
         global shutdown_notification
         global aria2_disconnected
+        global flashgot_checked_links
         while shutdown_notification == 0 and aria_startup_answer != 'ready':
             sleep (2)
         j = 0
@@ -426,11 +430,15 @@ class CheckingThread(QThread):
                 #if it's change we have queue request and loop waits until all links inserted in persepolis-flashgot file
                 while size != os.path.getsize('/tmp/persepolis-flashgot'):
                     size =  os.path.getsize('/tmp/persepolis-flashgot')
-                    sleep(1) 
+                    sleep(0.3) 
 
+
+                #When checkFlashgot methode considered request , then flashgot_checked_links changes to True
+                flashgot_checked_links = False
                 self.CHECKFLASHGOTSIGNAL.emit()#notifiying that we have flashgot request 
-                while os.path.isfile("/tmp/persepolis-flashgot-ready") :#wait for persepolis consideration!
+                while flashgot_checked_links != True :#wait for persepolis consideration!                   
                     sleep(0.5) 
+                
              
             j = j + 1
 #every 39 seconds
@@ -1141,12 +1149,14 @@ class MainWindow(MainWindow_Ui):
 
 #when new user requests download with flashgot , this methode called           
     def checkFlashgot(self):
+        global flashgot_checked_links
         #this lines extract add_link_dictionary from /tmp/persepolis-flashgot
         flashgot_file = Open("/tmp/persepolis-flashgot")
         flashgot_lines = flashgot_file.readlines()
         flashgot_file.close()
         flashgot_file.remove()
         osCommands.remove('/tmp/persepolis-flashgot-ready')
+        flashgot_checked_links = True
         if len(flashgot_lines) == 1 : #It means we have only one request from flashgot
             flashgot_add_link_dictionary_str = flashgot_lines[0].strip()
             flashgot_add_link_dictionary = ast.literal_eval(flashgot_add_link_dictionary_str) 
