@@ -296,6 +296,10 @@ class MainWindow_Ui(QMainWindow):
 
         start_verticalLayout.addWidget(self.end_frame)
 
+        self.reverse_checkBox = QCheckBox(self)
+        start_verticalLayout.addWidget(self.reverse_checkBox)
+        
+
         queue_panel_verticalLayout.addWidget(self.start_end_frame)
 
 #limit_after_frame    
@@ -571,6 +575,8 @@ class MainWindow_Ui(QMainWindow):
 
         self.end_checkBox.setText( "End Time")
         self.end_label.setText( ":")
+
+        self.reverse_checkBox.setText("Download older\n  items first")
 
         self.limit_checkBox.setText( "Limit Speed")
         self.limit_comboBox.setItemText(0,  "KB/S")

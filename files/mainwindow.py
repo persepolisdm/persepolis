@@ -248,7 +248,9 @@ class Queue(QThread):
             f = Open(queue_file)
             queue_file_lines = f.readlines()
             f.close()
-            queue_file_lines.reverse()
+
+            if not(self.parent.reverse_checkBox.isChecked()) :
+                queue_file_lines.reverse()
 
             if self.start_hour != None and counter == 0: # checking that if user set start time
             #setting start time for first download in queue
@@ -366,7 +368,9 @@ class Queue(QThread):
                     self.limit = False
                     self.limit_changed = False
                     self.break_for_loop = True #it means that break outer for loop
-                    self.REFRESHTOOLBARSIGNAL.emit(self.category)
+
+                    if str(self.parent.category_tree.currentIndex().data()) == str(self.category) :
+                        self.REFRESHTOOLBARSIGNAL.emit(self.category)
 
         #showing notification
                     notifySend("Persepolis" , "Queue Stopped!", 10000 , 'no', systemtray = self.parent.system_tray_icon )
@@ -396,7 +400,9 @@ class Queue(QThread):
             self.limit = False
             self.limit_changed = False
             self.after = False
-            self.REFRESHTOOLBARSIGNAL.emit(self.category)
+            if str(self.parent.category_tree.currentIndex().data()) == str(self.category) :
+                self.REFRESHTOOLBARSIGNAL.emit(self.category)
+
 
 
  
@@ -693,6 +699,8 @@ class MainWindow(MainWindow_Ui):
         self.resize(size)
         self.move(position)
 
+#check reverse_checkBox
+        self.reverse_checkBox.setChecked(False)
 
 # startAriaMessage function is showing some message on statusbar and sending notification when aria failed to start! see StartAria2Thread for more details
     def startAriaMessage(self,message):
