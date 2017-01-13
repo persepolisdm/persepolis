@@ -1554,7 +1554,7 @@ class MainWindow(MainWindow_Ui):
     def openDefaultDownloadFolder(self,menu):
         #finding user's default download folder from persepolis_setting 
         self.persepolis_setting.sync()
-        download_path = self.persepolis_setting('settings/download_path')
+        download_path = self.persepolis_setting.value('settings/download_path')
         if os.path.isdir(download_path): #checking that if download folder is availabile or not
             osCommands.xdgOpen(download_path) #openning folder
         else:
