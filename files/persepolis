@@ -20,9 +20,8 @@ import osCommands
 import os , sys , time , ast , argparse
 import struct
 import json
+import fcntl
 
-
-    
 # initialization
 home_address = os.path.expanduser("~")
 
@@ -34,8 +33,20 @@ persepolis_tmp = '/tmp/persepolis_' + user_name
 
 #persepolis lock file
 lock_file = '/tmp/persepolis_exec_' + user_name + '.lock'
-#this script is running persepolis for Linux
-if not (os.path.isfile(lock_file)): 
+
+#creating lock file
+global lock_file_validation
+fp = open(lock_file, 'w')
+
+try:
+    fcntl.lockf(fp, fcntl.LOCK_EX | fcntl.LOCK_NB)
+
+    lock_file_validation = True #Lock file created successfully!
+except IOError:
+    lock_file_validation = False #creating lock_file was unsuccessful! So persepolis is still running
+
+
+if lock_file_validation: 
     import initialization
     from mainwindow import MainWindow
 
@@ -202,8 +213,7 @@ if ('link' in add_link_dictionary):
 
 
 
-if not (os.path.isfile(lock_file)): #if lock_file is existed , it means persepolis is still running! 
-    osCommands.touch(lock_file) #create lock_file in /tmp
+if lock_file_validation: #if lock_file is existed , it means persepolis is still running! 
 #setting color_scheme and style
 #see palettes.py and setting.py
     if __name__ == "__main__":
@@ -239,21 +249,13 @@ if not (os.path.isfile(lock_file)): #if lock_file is existed , it means persepol
             #Resetting persepolis
             error_window = ErrorWindow(str(traceback.format_exc()))
             error_window.show()
-            osCommands.remove(lock_file)
          
         sys.exit(persepolis_download_manager.exec_())
 
     else:
          sys.exit(0)
 else:
-    print('lock file found in this path:')
-    print(lock_file)
-    print('you can remove it manually!')
-    print('1.Run:')
-    print ('killall persepolis')
-    print('and then...')
-    print('2.Run:')
-    print('rm ' + lock_file )
+    print('persepolis is still running')
 #this section warns user that program is still running and no need to run it again
 #and creating a file to notify mainwindow for showing
     if not('link' in add_link_dictionary):

@@ -72,10 +72,6 @@ flashgot_checked_links = False
 home_address = os.path.expanduser("~")
 user_name_split = home_address.split('/')
 user_name = user_name_split[2]
-#persepolis lock file address
-#if lock_file is existed , it means persepolis is still running! 
-
-lock_file = '/tmp/persepolis_exec_' + user_name + '.lock'
 
 #persepolis tmp folder in /tmp
 persepolis_tmp = '/tmp/persepolis_' + user_name
@@ -1422,7 +1418,6 @@ class MainWindow(MainWindow_Ui):
 #close event
 #when user wants to close application then this function is called
     def closeEvent(self, event):
-        osCommands.remove(lock_file)
         self.persepolis_setting.setValue('MainWindow/size' , self.size())
         self.persepolis_setting.setValue('MainWindow/position' , self.pos())
         self.persepolis_setting.sync()
