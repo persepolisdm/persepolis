@@ -1367,10 +1367,32 @@ class MainWindow(MainWindow_Ui):
 
 #callBack of PropertiesWindow
     def propertiesCallback(self,add_link_dictionary , gid , category ):
+
+#if checking_flag is equal to 1, it means that user pressed remove or delete button or ... . so checking download information must be stopped until job is done!
+        if checking_flag != 2 :
+            wait_check = WaitThread()
+            self.threadPool.append(wait_check)
+            self.threadPool[len(self.threadPool) - 1].start()
+            self.threadPool[len(self.threadPool) - 1].QTABLEREADY.connect(partial(self.propertiesCallback2 , add_link_dictionary , gid , category  ))
+        else:
+            self.removeSelected2(self , add_link_dictionary , gid , category)
+
+    def propertiesCallback2(self , add_link_dictionary , gid , category):
+        #current_category_tree_text is current category that highlited by user is the left side panel
+        current_category_tree_text = str(self.category_tree.currentIndex().data())
+
+        selected_row_return = self.selectedRow()#finding user selected row
+
+        #finding current category before changing
+        current_category = self.download_table.item(selected_row_return , 12).text()
+
+ #finding checked rows! and append gid of checked rows to gid_list
+
         download_info_file = download_info_folder + "/" + gid
         download_info_file_list = readList(download_info_file )
         download_info_file_list [9] = add_link_dictionary
         download_info_file_list [12] = str(category)
+
 
         #updating download_info_file
         writeList(download_info_file , download_info_file_list)
@@ -1383,8 +1405,21 @@ class MainWindow(MainWindow_Ui):
                 row = i 
                 break
 
-        item = QTableWidgetItem(str(category))
-        self.download_table.setItem(row , 12 , item)
+        if current_category_tree_text == 'All Downloads':
+            item = QTableWidgetItem(str(category))
+            self.download_table.setItem(row , 12 , item)
+        elif (str(current_category) != str(category)):
+
+            #removing row from download_table
+            self.download_table.removeRow(row)
+
+
+
+#telling the CheckDownloadInfoThread that job is done!
+        global checking_flag
+        checking_flag = 0
+
+        
 
 #This methode called if user presses "show/hide progress window" button in MainWindow            
     def progressButtonPressed(self,button):
