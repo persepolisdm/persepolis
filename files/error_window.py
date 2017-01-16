@@ -45,7 +45,7 @@ class ErrorWindow(QWidget):
 
        
         self.label2 = QLabel(self)
-        self.label2.setText('Please copy this error message and press "Report Issue" button\nand open a new issue in Github for it.\nWe answer you as soon as possible. \nreporting this issue help us to improve persepolis.\nThank you!')
+        self.label2.setText('Reseting persepolis may solving problem.\nDo not panic!If you add your download links again,\npersepolis will resume your downloads\nPlease copy this error message and press "Report Issue" button\nand open a new issue in Github for it.\nWe answer you as soon as possible. \nreporting this issue help us to improve persepolis.\nThank you!')
         verticalLayout.addWidget(self.label2)
 
         self.report_pushButton = QPushButton(self)
