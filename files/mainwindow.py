@@ -2475,12 +2475,12 @@ class MainWindow(MainWindow_Ui):
             mode = 'selection'
             self.download_table.sendMenu = self.download_table.tablewidget_menu.addMenu('Send selected downloads to')
 
-            self.download_table.sendMenu.addAction(queueAction)
         else:
             mode = 'None'
             self.download_table.sendMenu = self.download_table.tablewidget_menu.addMenu('Send to')
 
-        self.download_table.sendMenu.addAction(queueAction)
+        if category != 'Single Downloads':
+            self.download_table.sendMenu.addAction(queueAction)
 
         #adding sendMenu items
         f = Open(queues_list_file)
