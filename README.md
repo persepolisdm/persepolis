@@ -1,5 +1,5 @@
-Persepolis Download Manager 
-=============
+#Persepolis Download Manager [![Build Status](https://travis-ci.org/persepolisdm/persepolis.svg?branch=master)](https://travis-ci.org/persepolisdm/persepolis)
+
 + version : 2.3.1
 + Persepolis Download Manager is a GUI for aria2.
 + Persepolis written in PYQT5.
