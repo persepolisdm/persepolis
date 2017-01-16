@@ -107,7 +107,7 @@ class AboutWindow(QWidget):
 
         self.setWindowTitle( "About Persepolis")
         self.title_label.setText( "Persepolis Download Manager")
-        self.version_label.setText( "Version 2.3.1")
+        self.version_label.setText( "Version 2.3.2")
         self.name_label.setText( "\nAliReza AmirSamimi\nMohammadreza Abdollahzadeh\nSadegh Alirezaie\nMostafa Asadi\nMohammadAmin Vahedinia\nJafar Akhondali")
         self.site2_label.setText("<a href=https://persepolisdm.github.io>https://persepolisdm.github.io</a>" )
         self.telegram_label.setText( "<a href=https://telegram.me/persepolisdm>https://telegram.me/persepolisdm</a>" )
