@@ -73,8 +73,8 @@ chmod +x "./persepolis"
 chmod +x "./Persepolis Download Manager.desktop"
 
 chmod +x "./man/config"
-exec $(pwd)/man/config"
-
+./man/config
+echo "here"
 sudo rm -rf "$program_path"
 sudo mkdir -p "$program_path"
 sudo cp -rf  ./files/* "$program_path/"
