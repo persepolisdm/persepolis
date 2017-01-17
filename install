@@ -1,5 +1,5 @@
 #!/bin/bash
-#install Persepolis Download Manager
+# install Persepolis Download Manager
 
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -71,13 +71,17 @@ exec_path='/usr/bin/'
 chmod +x "./files/persepolis"
 chmod +x "./persepolis"
 chmod +x "./Persepolis Download Manager.desktop"
+
+chmod +x "./man/config"
+exec $(pwd)/man/config"
+
 sudo rm -rf "$program_path"
 sudo mkdir -p "$program_path"
 sudo cp -rf  ./files/* "$program_path/"
 sudo cp -rf "./persepolis" "$exec_path"
 sudo cp -rf "./Persepolis Download Manager.desktop" "/usr/share/applications/"
 sudo cp -rf "./files/icon.svg" "/usr/share/pixmaps/persepolis.svg"
-sudo cp -rf "./persepolis.1" "/usr/share/man/man1/persepolis.1"
+sudo cp -rf "man/persepolis.1.gz" "/usr/share/man/man1/persepolis.1.gz"
 if [ "$?" -eq "0" ];then
     echo "Installation compeleted!"
 else

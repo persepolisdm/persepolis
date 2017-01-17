@@ -1,0 +1,6 @@
+#!/bin/bash
+# general configuration 
+# and compressing man page with level 9 compression of gzip
+
+gzip -k -9 persepolis.1  # level 9 is important because 
+                         # debian is using this as the standard.
