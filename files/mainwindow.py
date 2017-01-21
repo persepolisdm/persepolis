@@ -246,7 +246,7 @@ class Queue(QThread):
             f.close()
 
             if not(self.parent.reverse_checkBox.isChecked()) :
-                queue_file_lines.reverse()
+                queue_file_lines.reverse() #download top of the list first
 
             if self.start_hour != None and counter == 0: # checking that if user set start time
             #setting start time for first download in queue
@@ -274,7 +274,9 @@ class Queue(QThread):
 
             #writing on download_info_file
                         writeList(download_info_file , download_info_file_list)
-
+                            
+                        print('here')
+                        break
             for line in queue_file_lines :
                 gid = line.strip()
 
@@ -291,7 +293,7 @@ class Queue(QThread):
                 status = 'waiting'
                 download_info_file_list[1] = status 
           
-                if self.end_hour != None :#it means user set end time for download
+                if self.end_hour != None :#it means user was set end time for download
 
                 #reading add_link_dictionary 
                     add_link_dictionary = download_info_file_list[9]
