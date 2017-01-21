@@ -275,7 +275,6 @@ class Queue(QThread):
             #writing on download_info_file
                         writeList(download_info_file , download_info_file_list)
                             
-                        print('here')
                         break
             for line in queue_file_lines :
                 gid = line.strip()
@@ -3042,6 +3041,7 @@ class MainWindow(MainWindow_Ui):
 
         if self.after_checkBox.isChecked() == True: #enabling after_frame
             self.after_frame.setEnabled(True)
+            self.after_pushButton.setEnabled(True)
         else:
             self.after_frame.setEnabled(False) #disabaling after_frame
 
