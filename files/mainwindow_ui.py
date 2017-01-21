@@ -576,7 +576,7 @@ class MainWindow_Ui(QMainWindow):
         self.end_checkBox.setText( "End Time")
         self.end_label.setText( ":")
 
-        self.reverse_checkBox.setText("Download top of\n the list first")
+        self.reverse_checkBox.setText("Download bottom of\n the list first")
 
         self.limit_checkBox.setText( "Limit Speed")
         self.limit_comboBox.setItemText(0,  "KB/S")

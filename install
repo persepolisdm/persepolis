@@ -72,8 +72,7 @@ chmod +x "./files/persepolis"
 chmod +x "./persepolis"
 chmod +x "./Persepolis Download Manager.desktop"
 
-chmod +x "./man/config"
-./man/config
+gzip -k -9 ./man/persepolis.1
 
 sudo rm -rf "$program_path"
 sudo mkdir -p "$program_path"
