@@ -384,7 +384,7 @@ def findDownloadPath(file_name , download_path):
     file_extension = file_extension.lower() #converting extension letters to lower case
     audio = ['act','aiff','aac','amr','ape','au','awb','dct','dss','dvf','flac','gsm','iklax','ivs','m4a','m4p','mmf','mp3','mpc','msv','ogg','oga','opus','ra','raw','sln','tta','vox','wav','wma','wv']
     video = ['3g2','3gp','asf','avi','drc','flv','m4v','mkv','mng','mov','qt','mp4','m4p','mpg','mp2','mpeg','mpe','mpv','m2v','mxf','nsv','ogv','rmvb','roq','svi','vob','webm','wmv','yuv','rm']
-    document = ['doc','docx','html','htm','fb2','odt','sxw','pdf','ps','rtf','tex','txt','epub','mobi','azw','azw3','azw4','kf8','chm','cbt','cbr','cbz','cb7','cba','ibooks','djvu']
+    document = ['doc','docx','html','htm','fb2','odt','sxw','pdf','ps','rtf','tex','txt','epub','mobi','azw','azw3','azw4','kf8','chm','cbt','cbr','cbz','cb7','cba','ibooks','djvu','md']
     compressed = ['a','ar','cpio','shar','LBR','iso','lbr','mar','tar','bz2','F','gz','lz','lzma','lzo','rz','sfark','sz','xz','Z','z','infl','7z','s7z','ace','afa','alz','apk','arc','arj','b1','ba','bh','cab','cfs','cpt','dar','dd','dgc','dmg','ear','gca','ha','hki','ice','jar','kgb','lzh','lha','lzx','pac','partimg','paq6','paq7','paq8','pea','pim','pit','qda','rar','rk','sda','sea','sen','sfx','sit','sitx','sqx','tar.gz','tgz','tar.Z','tar.bz2','tbz2','tar.lzma','tlz','uc','uc0','uc2','ucn','ur2','ue2','uca','uha','war','wim','xar','xp3','yz1','zip','zipx','zoo','zpaq','zz','ecc','par','par2']
     if file_extension in audio :
         return download_path + '/Audios'
