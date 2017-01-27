@@ -33,37 +33,49 @@ from PyQt5.QtCore import QSettings
 
 # initialization
 home_address = os.path.expanduser("~")
-user_name_split = home_address.split('/')
-user_name = user_name_split[2]
 
+#os_type >> Linux or Darwin(Mac osx) or Windows(Microsoft Windows)
+os_type = platform.system()
 
-# ~/.config/persepolis_download_manager/ is download manager config folder
-config_folder = str(home_address) + "/.config/persepolis_download_manager"
+#download manager config folder . 
+if os_type == 'Linux' :
+    config_folder = os.path.join(str(home_address) , ".config/persepolis_download_manager")
+elif os_type == 'Darwin':
+    config_folder = os.path.join(str(home_address) , "Library/Application Support/persepolis_download_manager")
+elif os_type == 'Windows' :
+    config_folder = os.path.join(str(home_address) , 'AppData','Local','persepolis_download_manager')
 
 #download information (Percentage , Estimate time left , size of file , ... ) saved in download_info folder. 
 #Persepolis creates one file for every download . 
 #Persepolis uses download's GID for the name of the file
-download_info_folder = config_folder + "/download_info"
+download_info_folder = os.path.join(config_folder , "download_info")
 
 #category_folder contains some file , and every files named with categories . every file contains gid of downloads for that category
-category_folder = config_folder + '/category_folder'
+category_folder = os.path.join(config_folder , 'category_folder')
 
 
 #queue initialization files
 #queues_list contains queues name
-queues_list = config_folder + '/queues_list' 
+queues_list = os.path.join(config_folder , 'queues_list') 
 
 #download_list_file contains GID of all downloads
-download_list_file = config_folder + "/download_list_file"
+download_list_file = os.path.join(config_folder , "download_list_file")
 
 #download_list_file_active for active downloads
-download_list_file_active = config_folder + "/download_list_file_active"
+download_list_file_active = os.path.join(config_folder , "download_list_file_active")
 
 #single_downloads_list_file contains gid of non categorised downloads
-single_downloads_list_file = category_folder + "/" + "Single Downloads"
+single_downloads_list_file = os.path.join(category_folder , "Single Downloads")
 
 #persepolis tmp folder in /tmp
-persepolis_tmp = '/tmp/persepolis_' + user_name
+if os_type != 'Windows':
+    user_name_split = home_address.split('/')
+    user_name = user_name_split[2]
+    persepolis_tmp = '/tmp/persepolis_' + user_name
+else:
+    persepolis_tmp = os.path.join(str(home_address) , 'AppData','Local','persepolis_tmp')
+
+osCommands.removeDir(persepolis_tmp)
 
 #lock files perventing to access a file simultaneously
 
@@ -71,13 +83,13 @@ persepolis_tmp = '/tmp/persepolis_' + user_name
 pattern_folder_list = [config_folder , download_info_folder , category_folder]
 
 for folder in pattern_folder_list:
-    pattern = str(folder) + '/*.lock'
+    pattern = os.path.join(str(folder) , '*.lock'  )
     for file in glob.glob(pattern):
         osCommands.remove(file)
 
 
 #perseolis_shutdown
-perseolis_shutdown = persepolis_tmp + '/shutdown'
+perseolis_shutdown = os.path.join(persepolis_tmp , 'shutdown')
 shutil.rmtree(perseolis_shutdown, ignore_errors=True, onerror=None)
 
 #creating folders
@@ -95,9 +107,13 @@ persepolis_setting = QSettings('persepolis_download_manager' , 'persepolis')
 
 persepolis_setting.beginGroup('settings')
 
-download_path_temp = str(home_address) + '/.persepolis'
+#persepolis temporary download folder
+if os_type != 'Windows':
+    download_path_temp = str(home_address) + '/.persepolis'
+else :
+    download_path_temp = os.path.join(str(home_address) , 'AppData' , 'Local','persepolis')
 
-download_path = str(home_address) + '/Downloads/Persepolis'
+download_path = os.path.join(str(home_address) , 'Downloads' , 'Persepolis')
 
 
 default_setting_dict = {'show-progress' : 'yes' , 'show-menubar' : 'no' , 'show-sidepanel' : 'yes' , 'rpc-port' : 6801 , 'notification' : 'Native notification' , 'after-dialog' : 'yes' , 'tray-icon' : 'yes', 'max-tries' : 5 , 'retry-wait': 0 , 'timeout' : 60 , 'connections' : 16 , 'download_path_temp' : download_path_temp , 'download_path':download_path , 'sound' : 'yes' , 'sound-volume':90 , 'style':'Fusion' , 'color-scheme' : 'Persepolis Dark Red' , 'icons':'Archdroid-Red','font' : 'Ubuntu' , 'font-size' : 9  }
@@ -118,28 +134,32 @@ persepolis_setting.endGroup()
 
 folder_list = [download_path_temp]
 for folder in [ 'Audios' , 'Videos', 'Others','Documents','Compressed' ]:
-    folder_list.append(download_path + '/' + folder )
+    folder_list.append(os.path.join(download_path , folder ))
 
 for folder in folder_list :
     osCommands.makeDirs(folder)
 
-#creating shutdown script in /tmp/persepolis
-os_type = platform.system()
-if os_type == 'Darwin':
-    shutdown_script_list = [ 'passwd="$1" ', 'gid="$2"', 'shutdown_notification_file="' + perseolis_shutdown +  '/$gid"', 'echo "wait" > $shutdown_notification_file', 'shutdown_notification="wait"', 'while [ "$shutdown_notification" == "wait" ];do','    sleep 1' ,'    shutdown_notification=`cat "$shutdown_notification_file"`','done','rm "$shutdown_notification_file"','if [ "$shutdown_notification" == "shutdown" ];then','    sleep 20','    echo "shutdown"' ,'    echo "$passwd" |sudo -S shutdown -h now','else','    exit','fi']
-elif os_type == 'Linux':
-    shutdown_script_list = [ 'passwd="$1" ', 'gid="$2"', 'shutdown_notification_file="' + perseolis_shutdown +  '/$gid"', 'echo "wait" > $shutdown_notification_file', 'shutdown_notification="wait"', 'while [ "$shutdown_notification" == "wait" ];do','    sleep 1' ,'    shutdown_notification=`cat "$shutdown_notification_file"`','done','rm "$shutdown_notification_file"','if [ "$shutdown_notification" == "shutdown" ];then','    sleep 20','    echo "shutdown"' , '	poweroff' , '	if [ "$?" != "0" ];then' , '    	echo "$passwd" |sudo -S poweroff' ,'	fi','    echo "$passwd" |sudo -S poweroff','else','    exit','fi']
-
-shutdown_script_path = persepolis_tmp + '/shutdown_script_root'
-f = Open(shutdown_script_path , 'w')
-for i in shutdown_script_list :
-    f.writelines( i + '\n' )
-f.close()
-
 #compatibility
 persepolis_version =  float(persepolis_setting.value('version/version' , 2.2 ))
-if persepolis_version != 2.3:
+if persepolis_version < 2.3:
     compatibility()
+    persepolis_version = 2.3
     persepolis_setting.setValue('version/version' , 2.3 ) 
     persepolis_setting.sync()
+
+if persepolis_version != 2.4 :
+    if os_type == 'Darwin':
+        try:
+            old_config_folder = os.path.join(str(home_address) , ".config/persepolis_download_manager")
+            shutil.copytree( old_config_folder ,  config_folder )
+            osCommands.removeDir(old_config_folder)
+            persepolis_setting.setValue('version/version' , 2.4 ) 
+            persepolis_setting.sync()
+        except Exception as e :
+            print(e)
+    else:
+            
+        persepolis_setting.setValue('version/version' , 2.4 ) 
+        persepolis_setting.sync()
+ 
 

@@ -20,31 +20,55 @@ import osCommands
 import os , sys , time , ast , argparse
 import struct
 import json
-import fcntl
-
+import platform
 # initialization
 home_address = os.path.expanduser("~")
 
-user_name_split = home_address.split('/')
-user_name = user_name_split[2]
+#finding os platform
+os_type = platform.system()
+
 
 #persepolis tmp folder in /tmp
-persepolis_tmp = '/tmp/persepolis_' + user_name
+if os_type != 'Windows':
 
+    user_name_split = home_address.split('/')
+    user_name = user_name_split[2]
+
+    persepolis_tmp = '/tmp/persepolis_' + user_name
+else:
+    persepolis_tmp = os.path.join(str(home_address) , 'AppData\Local\persepolis')
+
+
+global lock_file_validation
+
+#if lock_file_validation == True >> not another instanse running , else another instanse of persepolis running
+if os_type != 'Windows':
+    import fcntl
 #persepolis lock file
-lock_file = '/tmp/persepolis_exec_' + user_name + '.lock'
+    lock_file = '/tmp/persepolis_exec_' + user_name + '.lock'
 
 #creating lock file
-global lock_file_validation
-fp = open(lock_file, 'w')
+    fp = open(lock_file, 'w')
 
-try:
-    fcntl.lockf(fp, fcntl.LOCK_EX | fcntl.LOCK_NB)
+    try:
+        fcntl.lockf(fp, fcntl.LOCK_EX | fcntl.LOCK_NB)
 
-    lock_file_validation = True #Lock file created successfully!
-except IOError:
-    lock_file_validation = False #creating lock_file was unsuccessful! So persepolis is still running
+        lock_file_validation = True #Lock file created successfully!
+    except IOError:
+        lock_file_validation = False #creating lock_file was unsuccessful! So persepolis is still running
+else: #for windows
+    #pypiwin32 must be installed by pip
+    from win32event import CreateMutex
+    from win32api import GetLastError
+    from winerror import ERROR_ALREADY_EXISTS
+    from sys import exit
 
+    handle = CreateMutex(None, 1, 'persepolis_download_manager')
+
+    if GetLastError() == ERROR_ALREADY_EXISTS:
+        lock_file_validation = False 
+    else:
+        lock_file_validation = True
 
 if lock_file_validation: 
     import initialization
@@ -60,8 +84,14 @@ from error_window import ErrorWindow
 import traceback
 
 
-# ~/.config/persepolis_download_manager/ is download manager config folder
-config_folder = str(home_address) + "/.config/persepolis_download_manager"
+# download manager config folder
+if os_type == 'Linux' :
+    config_folder = os.path.join(str(home_address) , ".config/persepolis_download_manager" )
+elif os_type == 'Darwin':
+    config_folder = os.path.join(str(home_address) , "Library/Application Support/persepolis_download_manager")
+elif os_type == 'Windows' :
+    config_folder = os.path.join(str(home_address) , 'AppData\Local\persepolis_download_manager')
+
 
 #load persepolis_settings
 persepolis_setting = QSettings('persepolis_download_manager' , 'persepolis')
@@ -125,7 +155,7 @@ parser.add_argument('--name',action='store',nargs = 1 , help='The  file  name  o
 parser.add_argument('--default',action='store_true',help='restore default setting' )
 parser.add_argument('--clear',action='store_true',help='Clear download list and user setting!' )
 parser.add_argument('--tray',action='store_true',help="Persepolis is starting in tray icon. It's useful when you want to put persepolis in system's startup." )
-parser.add_argument('--version', action='version', version='Persepolis Download Manager 2.3.3')
+parser.add_argument('--version', action='version', version='Persepolis Download Manager 2.4 alpha')
 args = parser.parse_args()
 
 #Mozilla firefox flashgot will send download information whith terminal arguments(link , referer , cookie , agent , headers , name )
@@ -204,11 +234,12 @@ if args.name :
 #persepolis mainwindow checks /tmp for flashgot request file every 2 seconds ( see CheckFlashgot class in mainwindow.py )
 #when requset received by CheckFlashgot, a popup window (AddLinkWindow) is coming up and window is getting additional download informations from user (port , proxy , ...) and download starts and request file deleted
 if ('link' in add_link_dictionary):   
-    #adding add_link_dictionary to /tmp/persepolis-flashgot
-    f = open("/tmp/persepolis-flashgot","a")
+    #adding add_link_dictionary to persepolis-flashgot
+    flashgot_file = os.path.join(persepolis_tmp , 'persepolis-flashgot' )
+    f = open(flashgot_file,"a")
     f.writelines(str(add_link_dictionary) + '\n')
     f.close()
-    flashgot_ready = '/tmp/persepolis-flashgot-ready'
+    flashgot_ready = os.path.join(persepolis_tmp , 'persepolis-flashgot-ready')
     osCommands.touch(flashgot_ready)
 
 
@@ -259,7 +290,8 @@ else:
 #this section warns user that program is still running and no need to run it again
 #and creating a file to notify mainwindow for showing
     if not('link' in add_link_dictionary):
-        f = open(persepolis_tmp + "/show-window" , 'w')
+        show_window_file = os.path.join(persepolis_tmp , 'show-window')
+        f = open(show_window_file , 'w')
         f.close()
     sys.exit(0)
 

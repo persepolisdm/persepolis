@@ -20,9 +20,19 @@ import ast , os
 from newopen import Open
 import icons_resource
 import osCommands
+import platform
+
+os_type = platform.system()
 
 home_address = os.path.expanduser("~")
-config_folder = str(home_address) + "/.config/persepolis_download_manager"
+
+#config_folder
+if os_type == 'Linux' :
+    config_folder = os.path.join(str(home_address) , ".config/persepolis_download_manager")
+elif os_type == 'Darwin':
+    config_folder = os.path.join(str(home_address) , "Library/Application Support/persepolis_download_manager")
+elif os_type == 'Windows' :
+    config_folder = os.path.join(str(home_address) , 'AppData' , 'Local' , 'persepolis_download_manager')
 
 
 class ErrorWindow(QWidget):

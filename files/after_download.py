@@ -20,9 +20,19 @@ from PyQt5.QtCore import QSize , QPoint
 import os , ast
 from play import playNotification
 import osCommands
+import platform
+
+os_type = platform.system()
 
 home_address = os.path.expanduser("~")
-config_folder = str(home_address) + "/.config/persepolis_download_manager"
+
+#config_folder
+if os_type == 'Linux' :
+    config_folder = os.path.join(str(home_address) , ".config/persepolis_download_manager")
+elif os_type == 'Darwin':
+    config_folder = os.path.join(str(home_address) , "Library/Application Support/persepolis_download_manager")
+elif os_type == 'Windows' :
+    config_folder = os.path.join(str(home_address) , 'AppData','Local','persepolis_download_manager')
 
 
 class AfterDownloadWindow(AfterDownloadWindow_Ui):
@@ -68,17 +78,25 @@ class AfterDownloadWindow(AfterDownloadWindow_Ui):
 #executing file
         add_link_dictionary = self.download_info_file_list[9]
         file_path = add_link_dictionary['file_path']
+
         if os.path.isfile(file_path):
             osCommands.xdgOpen(file_path)
+
         self.close()
 
     def openFolder(self):
 #open download folder
         add_link_dictionary = self.download_info_file_list[9]
         file_path = add_link_dictionary ['file_path']
-        file_path_split = file_path.split('/')
+
+        file_name = os.path.basename(file_path)
+
+        file_path_split = file_path.split(file_name)
+
         del file_path_split[-1]
-        download_path = '/'.join(file_path_split)
+
+        download_path = file_name.join(file_path_split)
+
         if os.path.isdir(download_path):
             osCommands.xdgOpen(download_path)
         self.close()

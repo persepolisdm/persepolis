@@ -19,14 +19,27 @@ from newopen import Open , readList , writeList
 from http.cookies import SimpleCookie
 from requests.cookies import cookiejar_from_dict
 from requests import Session
+import platform
+
+os_type = platform.system()
 
 
 
 home_address = os.path.expanduser("~")
-config_folder = str(home_address) + "/.config/persepolis_download_manager"
-download_info_folder = config_folder +  "/download_info"
-download_list_file = config_folder + "/download_list_file"
-download_list_file_active = config_folder + "/download_list_file_active"
+
+#config_folder
+if os_type == 'Linux' :
+    config_folder = os.path.join(str(home_address) , ".config/persepolis_download_manager")
+elif os_type == 'Darwin':
+    config_folder = os.path.join(str(home_address) , "Library/Application Support/persepolis_download_manager")
+elif os_type == 'Windows' :
+    config_folder = os.path.join(str(home_address) , 'AppData' , 'Local' , 'persepolis_download_manager')
+
+
+
+download_info_folder = os.path.join(config_folder  , "download_info")
+download_list_file =  os.path.join(config_folder , "download_list_file")
+download_list_file_active =  os.path.join(config_folder , "download_list_file_active")
 
 #for more informations about "requests" library , please see http://docs.python-requests.org/en/master/
 
@@ -105,7 +118,7 @@ def spider(add_link_dictionary , gid):
             size_str = str(file_size)
         filesize = size_str
  
-    download_info_file = download_info_folder + "/" + gid
+    download_info_file =os.path.join( download_info_folder , gid)
     download_info_file_list = readList(download_info_file)
     
 

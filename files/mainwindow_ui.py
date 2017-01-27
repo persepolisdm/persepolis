@@ -21,9 +21,8 @@ import ast , os
 from newopen import Open
 import icons_resource
 
-home_address = os.path.expanduser("~")
-config_folder = str(home_address) + "/.config/persepolis_download_manager"
 
+home_address = os.path.expanduser("~")
 
 
 class MenuWidget(QPushButton):
@@ -584,7 +583,9 @@ class MainWindow_Ui(QMainWindow):
         self.limit_pushButton.setText( "Apply")
 
         self.after_checkBox.setText( "After download")
-        self.after_comboBox.setItemText(0,  "Shut Down as root")
+        self.after_comboBox.setItemText(0,  "Shut Down")
+
+
         self.after_pushButton.setText("Apply")
 
 

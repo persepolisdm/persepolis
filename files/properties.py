@@ -20,21 +20,31 @@ from PyQt5.QtCore import QSize , QPoint
 import os , ast
 from newopen import Open , writeList , readList , readDict
 from addlink_ui import AddLinkWindow_Ui
+import platform
+
+os_type = platform.system()
 
 
 home_address = os.path.expanduser("~")
 
-config_folder = str(home_address) + "/.config/persepolis_download_manager"
+#config_folder
+if os_type == 'Linux' :
+    config_folder = os.path.join(str(home_address) , ".config/persepolis_download_manager")
+elif os_type == 'Darwin':
+    config_folder = os.path.join(str(home_address) , "Library/Application Support/persepolis_download_manager")
+elif os_type == 'Windows' :
+    config_folder = os.path.join(str(home_address) , 'AppData' , 'Local' , 'persepolis_download_manager')
 
-download_info_folder = config_folder + "/download_info"
 
-config_folder = str(home_address) + "/.config/persepolis_download_manager"
-queues_list_file = config_folder + '/queues_list'
-category_folder = config_folder + '/category_folder'
+
+download_info_folder = os.path.join(config_folder , "download_info")
+
+queues_list_file =  os.path.join(config_folder , 'queues_list')
+category_folder =  os.path.join(config_folder , 'category_folder')
 
 
 #setting
-setting_file = config_folder + '/setting'
+setting_file = os.path.join(config_folder , 'setting')
 
 class PropertiesWindow(AddLinkWindow_Ui):
     def __init__(self,callback,gid , persepolis_setting):
@@ -331,7 +341,7 @@ class PropertiesWindow(AddLinkWindow_Ui):
         if new_category != self.current_category : #it means category changed
         #first download must eliminated form former category 
         #reading current_category
-            current_category_file = category_folder + '/' + self.current_category
+            current_category_file = os.path.join( category_folder , self.current_category)
 
             f = Open(current_category_file)
             f_list = f.readlines()
@@ -346,7 +356,7 @@ class PropertiesWindow(AddLinkWindow_Ui):
             f.close()
  
             #adding download to the new category
-            new_category_file = category_folder + '/' + str(new_category)
+            new_category_file = os.path.join( category_folder , str(new_category))
 
             f = Open(new_category_file , 'a')
             f.writelines(self.gid + '\n')

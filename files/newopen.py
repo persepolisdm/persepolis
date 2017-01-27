@@ -16,13 +16,21 @@
 import os , ast , random , shutil
 from time import sleep
 import osCommands
+import platform
+
+os_type = platform.system()
 
 home_address = os.path.expanduser("~")
-user_name_split = home_address.split('/')
-user_name = user_name_split[2]
 
-#persepolis tmp folder in /tmp
-persepolis_tmp = '/tmp/persepolis_' + user_name
+#persepolis tmp folder (temporary folder) 
+if os_type != 'Windows':
+
+    user_name_split = home_address.split('/')
+    user_name = user_name_split[2]
+
+    persepolis_tmp = '/tmp/persepolis_' + user_name
+else:
+    persepolis_tmp = os.path.join(str(home_address) , 'AppData','Local','persepolis_tmp')
 
 
 class Open():
@@ -31,7 +39,7 @@ class Open():
 #random_number for temporary file name
         random_number = random.randint(1152921504606846976,18446744073709551615)
 #temporary file
-        self.temp_file_path = persepolis_tmp + str(random_number) 
+        self.temp_file_path = os.path.join(persepolis_tmp , str(random_number)) 
 # r = read mode , w = write mode , a = append mode
         self.mode = mode
         self.file_name = file_name

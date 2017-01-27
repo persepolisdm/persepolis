@@ -24,6 +24,9 @@ import download
 import ast , os 
 import osCommands
 import spider
+import platform
+
+os_type = platform.system()
 
 
 class QueueSpiderThread(QThread):
@@ -41,8 +44,17 @@ class QueueSpiderThread(QThread):
 
 
 home_address = os.path.expanduser("~")
-config_folder = str(home_address) + "/.config/persepolis_download_manager"
-queues_list_file = config_folder + '/queues_list'
+
+#config_folder
+if os_type == 'Linux' :
+    config_folder = os.path.join(str(home_address) , ".config/persepolis_download_manager")
+elif os_type == 'Darwin':
+    config_folder = os.path.join(str(home_address) , "Library/Application Support/persepolis_download_manager")
+elif os_type == 'Windows' :
+    config_folder = os.path.join(str(home_address) , 'AppData' , 'Local' , 'persepolis_download_manager')
+
+
+queues_list_file = os.path.join(config_folder , 'queues_list')
 
 
 

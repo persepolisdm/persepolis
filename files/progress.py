@@ -16,25 +16,52 @@
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import QWidget , QSizePolicy ,  QInputDialog
-from PyQt5.QtCore import QSize , QPoint
+from PyQt5.QtCore import QSize , QPoint , QThread
 from progress_ui import ProgressWindow_Ui
 import os , time , ast
 from newopen import Open , readList , writeList , readDict
 import download
 from bubble import notifySend
+import platform
 
+os_type = platform.system()
 
 home_address = os.path.expanduser("~")
-user_name_split = home_address.split('/')
-user_name = user_name_split[2]
-
-#persepolis tmp folder in /tmp
-persepolis_tmp = '/tmp/persepolis_' + user_name
 
 
-config_folder = str(home_address) + "/.config/persepolis_download_manager"
 
-download_info_folder = config_folder + "/download_info"
+class ShutDownThread(QThread):
+    def __init__(self , gid , password = None):
+        QThread.__init__(self)
+        self.gid = gid
+        self.password = password
+
+    def run(self):
+        shutDown(self.gid , self.password)
+
+
+#persepolis tmp folder (temporary folder) 
+if os_type != 'Windows':
+
+    user_name_split = home_address.split('/')
+    user_name = user_name_split[2]
+
+    persepolis_tmp = '/tmp/persepolis_' + user_name
+else:
+    persepolis_tmp = os.path.join(str(home_address) , 'AppData','Local','persepolis_tmp')
+
+
+#config_folder
+if os_type == 'Linux' :
+    config_folder = os.path.join(str(home_address) , ".config/persepolis_download_manager")
+elif os_type == 'Darwin':
+    config_folder = os.path.join(str(home_address) , "Library/Application Support/persepolis_download_manager")
+elif os_type == 'Windows' :
+    config_folder = os.path.join(str(home_address) , 'AppData' , 'Local' , 'persepolis_download_manager')
+
+
+download_info_folder = os.path.join(config_folder , "download_info")
+
 
 
 class ProgressWindow(ProgressWindow_Ui):
@@ -92,10 +119,6 @@ class ProgressWindow(ProgressWindow_Ui):
         self.persepolis_setting.setValue('ProgressWindow/size' , self.size())
         self.persepolis_setting.setValue('ProgressWindow/position' , self.pos())
         self.persepolis_setting.sync()
-
-
-#         if self.parent.isVisible() == False:
-#             self.parent.minMaxTray(event)
 
 
         self.hide()
@@ -169,37 +192,47 @@ class ProgressWindow(ProgressWindow_Ui):
                 self.after_frame.setEnabled(True)
         else :
             self.after_frame.setEnabled(False)
-            f = Open(persepolis_tmp + '/shutdown/' + self.gid , 'w')
+            shutdown_file = os.path.join(persepolis_tmp , 'shutdown' , self.gid )
+            f = Open(shutdown_file, 'w')
             f.writelines('canceled')
             f.close()
 
     def afterPushButtonPressed(self , button):
         self.after_pushButton.setEnabled(False)
-        #getting root password
-        passwd, ok = QInputDialog.getText(self, 'PassWord','Please enter root password:' , QtWidgets.QLineEdit.Password)
-        if ok :
-            #checking password
-            answer = os.system("echo '" + passwd+"' |sudo -S echo 'checking passwd'  "  )
-            while answer != 0 :
-                passwd, ok = QInputDialog.getText(self, 'PassWord','Wrong Password!\nTry again!' , QtWidgets.QLineEdit.Password)
-                if ok :
-                    answer = os.system("echo '" + passwd +"' |sudo -S echo 'checking passwd'  "  )
-                else:
-                    ok = False
-                    break
 
-            if ok != False :
-                    #shutdown_script_root will create by initialization.py on persepolis startup
-                    #sending password and queue name to shutdown_script_root
-                    #this script is creating a file with name of self.gid in  this folder "/tmp/persepolis_tmp/shutdown/" . and writing a "wait" word in this file 
-                    #shutdown_script_root is checking that file every second . when "wait" changes to "shutdown" in that file then script is shutting down system 
+        if os_type != 'Windows': #For Linux and Mac OSX
+        #getting root password
+            passwd, ok = QInputDialog.getText(self, 'PassWord','Please enter root password:' , QtWidgets.QLineEdit.Password)
+            if ok :
+                #checking password
+                answer = os.system("echo '" + passwd+"' |sudo -S echo 'checking passwd'  "  )
+                while answer != 0 :
+                    passwd, ok = QInputDialog.getText(self, 'PassWord','Wrong Password!\nTry again!' , QtWidgets.QLineEdit.Password)
+                    if ok :
+                        answer = os.system("echo '" + passwd +"' |sudo -S echo 'checking passwd'  "  )
+                    else:
+                        ok = False
+                        break
+
+                if ok != False :
+                    #sending password and queue name to shutdown_script
+                    #this script is creating a file with name of self.gid in  this folder "persepolis_tmp/shutdown/" . and writing a "wait" word in this file 
+                    #shutdown_script is checking that file every second . when "wait" changes to "shutdown" in that file then script is shutting down system 
  
-                    os.system("bash " + persepolis_tmp + "/shutdown_script_root  '" + passwd + "' '"+ self.gid + "' &" )
+                        shutdown_enable = ShutDownThread( current_category_tree_text , passwd)
+                        self.parent.threadPool.append(shutdown_enable)
+                        self.parent.threadPool[len(self.threadPool) - 1].start()
+ 
+                else:
+                    self.after_checkBox.setChecked(False)
             else:
                 self.after_checkBox.setChecked(False)
-        else:
-            self.after_checkBox.setChecked(False)
 
+        else: #for Windows
+            shutdown_enable = ShutDownThread( current_category_tree_text)
+            self.parent.threadPool.append(shutdown_enable)
+            self.parent.threadPool[len(self.threadPool) - 1].start()
+ 
 
 
     def limitPushButtonPressed(self,button):
@@ -212,7 +245,7 @@ class ProgressWindow(ProgressWindow_Ui):
         if self.status != 'scheduled':
             download.limitSpeed(self.gid , limit)
         else:
-            download_info_file = download_info_folder + "/" + self.gid
+            download_info_file = os.path.join(download_info_folder , self.gid)
             download_info_file_list = readList(download_info_file)
             add_link_dictionary = download_info_file_list[9]
             add_link_dictionary['limit'] = limit

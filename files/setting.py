@@ -24,7 +24,16 @@ import osCommands
 import platform
 
 home_address = os.path.expanduser("~")
-config_folder = str(home_address) + "/.config/persepolis_download_manager"
+os_type = platform.system()
+
+#config_folder
+if os_type == 'Linux' :
+    config_folder = os.path.join(str(home_address) , ".config/persepolis_download_manager")
+elif os_type == 'Darwin':
+    config_folder = os.path.join(str(home_address) , "Library/Application Support/persepolis_download_manager")
+elif os_type == 'Windows' :
+    config_folder = os.path.join(str(home_address) , 'AppData' , 'Local' , 'persepolis_download_manager')
+
 
 
 class PreferencesWindow(Setting_Ui):
@@ -187,8 +196,13 @@ class PreferencesWindow(Setting_Ui):
     def defaultsPushButtonPressed(self , button):
         self.persepolis_setting.beginGroup('settings')
 
-        download_path_temp_default = str(home_address) + '/.persepolis'
-        download_path_default = str(home_address) + '/Downloads/Persepolis'
+        #persepolis temporary download folder
+        if os_type != 'Windows':
+            download_path_temp_default = str(home_address) + '/.persepolis'
+        else :
+            download_path_temp_default = os.path.join(str(home_address) , 'AppData' , 'Local','persepolis')
+
+        download_path_default = os.path.join(str(home_address) , 'Downloads' , 'Persepolis')
 
  
         self.setting_dict = { 'show-progress' : 'yes' , 'show-menubar' : 'no' , 'show-sidepanel' : 'yes' , 'rpc-port' : 6801 , 'notification' : 'Native notification' , 'after-dialog' : 'yes' , 'tray-icon':'yes', 'max-tries' : 5 , 'retry-wait': 0 , 'timeout' : 60 , 'connections' : 16 , 'download_path_temp' : download_path_temp_default , 'download_path':download_path_default , 'sound' : 'yes' , 'sound-volume':100 , 'style':'Fusion' , 'color-scheme' : 'Persepolis Dark Red' , 'icons':'Archdroid-Red','font' : 'Ubuntu' , 'font-size' : 9  }
@@ -358,7 +372,7 @@ class PreferencesWindow(Setting_Ui):
         download_path = self.persepolis_setting.value( 'download_path')
         folder_list = [download_path_temp]
         for folder in [ 'Audios' , 'Videos', 'Others','Documents','Compressed' ]:
-            folder_list.append(download_path + '/' + folder )
+            folder_list.append(os.path.join(download_path , folder ))
 
         for folder in folder_list :
             osCommands.makeDirs(folder)

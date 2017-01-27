@@ -20,11 +20,17 @@ from newopen import Open
 from PyQt5.QtCore import QSettings
 
 home_address = os.path.expanduser("~")
-config_folder = str(home_address) + "/.config/persepolis_download_manager"
 
 #platform
-global os_type
 os_type = platform.system()
+
+#config_folder
+if os_type == 'Linux' :
+    config_folder = os.path.join(str(home_address) , ".config/persepolis_download_manager")
+elif os_type == 'Darwin':
+    config_folder = os.path.join(str(home_address) , "Library/Application Support/persepolis_download_manager")
+elif os_type == 'Windows' :
+    config_folder = os.path.join(str(home_address) , 'AppData','Local','persepolis_download_manager')
 
 
 
@@ -61,3 +67,7 @@ def notifySend(message1,message2,time,sound ,systemtray=None ):
             from mac_notification import notifyMac
 
             notifyMac("Persepolis Download Manager", message1, message2)
+
+        elif os_type == 'Windows':
+            systemtray.showMessage(message1 , message2 , 0, 10000)
+           

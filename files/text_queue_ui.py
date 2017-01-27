@@ -22,7 +22,6 @@ import os , ast
 import sys
 
 home_address = os.path.expanduser("~")
-config_folder = str(home_address) + "/.config/persepolis_download_manager"
 
 
 class TextQueue_Ui(QWidget):

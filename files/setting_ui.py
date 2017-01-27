@@ -22,7 +22,6 @@ from newopen import Open
 import icons_resource
 
 home_address = os.path.expanduser("~")
-config_folder = str(home_address) + "/.config/persepolis_download_manager"
 
 
 class Setting_Ui(QWidget):

@@ -17,7 +17,6 @@ import platform
 import os
 import shutil
 
-global os_type
 os_type = platform.system()
 
 def touch(file_path):
@@ -31,16 +30,18 @@ def xdgOpen(file_path):
         os.system('xdg-open "' + file_path + '" &')
     elif os_type == 'Darwin': # OS X systems
         os.system('open "' + file_path + '" &' )
+    elif os_type == 'Windows':
+        os.system('start "" "' + file_path + '" &')
 
 def remove(file_path): #removing file with path of file_path
     if os.path.isfile(file_path):
         try:
             os.remove(file_path)
-            return 'ok' #function returning  this if opertation was successful
+            return 'ok' #function returning  this , if opertation was successful
         except:
-            return 'cant' #function is returning this if operation was not successful
+            return 'cant' #function is returning this , if operation was not successful
     else:
-         return 'no' #function is returning this if file is not existed 
+         return 'no' #function is returning this , if file is not existed 
 
 def removeDir(folder_path): #removeDir is removing folder : folder_path 
     if os.path.isdir(folder_path): #checking folder_path existance

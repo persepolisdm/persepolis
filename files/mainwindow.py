@@ -40,6 +40,7 @@ import spider
 import osCommands
 import platform
 from copy import deepcopy
+from shutdown import shutDown
 #THIS FILE CREATES MAIN WINDOW
 
 #The GID (or gid) is a key to manage each download. Each download will be assigned a unique GID.
@@ -70,34 +71,61 @@ global flashgot_checked_links
 flashgot_checked_links = False
 
 home_address = os.path.expanduser("~")
-user_name_split = home_address.split('/')
-user_name = user_name_split[2]
 
-#persepolis tmp folder in /tmp
-persepolis_tmp = '/tmp/persepolis_' + user_name
+#finding os platform
+os_type = platform.system()
+
+#persepolis tmp folder (temporary folder) 
+if os_type != 'Windows':
+
+    user_name_split = home_address.split('/')
+    user_name = user_name_split[2]
+
+    persepolis_tmp = '/tmp/persepolis_' + user_name
+else:
+    persepolis_tmp = os.path.join(str(home_address) , 'AppData','Local','persepolis_tmp')
 
 
-config_folder = str(home_address) + "/.config/persepolis_download_manager"
+#config_folder
+if os_type == 'Linux' :
+    config_folder = os.path.join(str(home_address) , ".config/persepolis_download_manager")
+elif os_type == 'Darwin':
+    config_folder = os.path.join(str(home_address) , "Library/Application Support/persepolis_download_manager")
+elif os_type == 'Windows' :
+    config_folder = os.path.join(str(home_address) , 'AppData' , 'Local' , 'persepolis_download_manager')
 
-download_info_folder = config_folder + "/download_info"
 
-temp_download_folder = str(home_address) + "/.persepolis"
+download_info_folder = os.path.join(config_folder , "download_info")
+
+
+#persepolis temporary download folder
+if os_type != 'Windows':
+    temp_download_folder = str(home_address) + '/.persepolis'
+else :
+    temp_download_folder = os.path.join(str(home_address) , 'AppData','Local','persepolis')
+
 
 #download_list_file contains GID of all downloads
-download_list_file = config_folder + "/download_list_file"
+download_list_file = os.path.join(config_folder , "download_list_file")
 
 #download_list_file_active for active downloads
-download_list_file_active = config_folder + "/download_list_file_active"
+download_list_file_active = os.path.join(config_folder , "download_list_file_active")
 
 #queues_list contains queues name
-queues_list_file = config_folder + '/queues_list' 
+queues_list_file = os.path.join(config_folder , 'queues_list' )
 
 #category_folder contains some file , and every files named with queues . every file contains gid of downloads for that queue
-category_folder = config_folder + '/category_folder'
+category_folder = os.path.join(config_folder , 'category_folder')
 
 #single_downloads_list_file contains gid of non categorised downloads
-single_downloads_list_file = category_folder + "/" + "Single Downloads"
+single_downloads_list_file = os.path.join(category_folder , "Single Downloads")
 
+#see persepolis file for show_window_file and flashgot_ready and flashgot_file
+flashgot_ready = os.path.join(persepolis_tmp , 'persepolis-flashgot-ready')
+
+flashgot_file = os.path.join(persepolis_tmp , 'persepolis-flashgot' )
+
+show_window_file = os.path.join(persepolis_tmp , 'show-window')
 
 #starting aria2 when Persepolis starts
 class StartAria2Thread(QThread):
@@ -174,7 +202,7 @@ class CheckDownloadInfoThread(QThread):
                             answer = 'None'
                         if answer == 'ready' :
                             sleep(0.2)
-                            download_info_file = download_info_folder + "/" + gid
+                            download_info_file = os.path.join(download_info_folder , gid)
                             if os.path.isfile(download_info_file) == True:
                                 self.DOWNLOAD_INFO_SIGNAL.emit(gid)
             shutdown_notification = 2
@@ -237,7 +265,7 @@ class Queue(QThread):
         self.after = False
         self.break_for_loop = False
 
-        queue_file = category_folder + '/' + self.category
+        queue_file = os.path.join(category_folder , self.category)
 
         for counter in range(5):#queue is repeating 5 times! and everty times load queue list again! It is helping for checking new downloads in queue and retrying failed downloads
         #getting list of gid in queue
@@ -246,7 +274,7 @@ class Queue(QThread):
             f.close()
 
             if not(self.parent.reverse_checkBox.isChecked()) :
-                queue_file_lines.reverse() #download top of the list first
+                queue_file_lines.reverse()
 
             if self.start_hour != None and counter == 0: # checking that if user set start time
             #setting start time for first download in queue
@@ -255,7 +283,7 @@ class Queue(QThread):
                     first_download_gid = queue_file_lines[index].strip()
 
             #finding download_info_file
-                    download_info_file = download_info_folder + '/' + first_download_gid
+                    download_info_file = os.path.join(download_info_folder , first_download_gid)
 
             #reading download_info_file_list
                     download_info_file_list = readList(download_info_file)
@@ -274,12 +302,13 @@ class Queue(QThread):
 
             #writing on download_info_file
                         writeList(download_info_file , download_info_file_list)
-                            
+
                         break
+
             for line in queue_file_lines :
                 gid = line.strip()
 
-                download_info_file = download_info_folder + '/' + gid
+                download_info_file = os.path.join(download_info_folder , gid)
 
             #reading download_info_file_list
                 download_info_file_list = readList(download_info_file)
@@ -387,7 +416,9 @@ class Queue(QThread):
 #KILL aria2c if didn't respond
                 if answer == 'error':
                     os.system('killall aria2c')
-                f = Open( persepolis_tmp + '/shutdown/' + self.category , 'w')
+
+                shutdown_file = os.path.join(persepolis_tmp , 'shutdown' , self.category )
+                f = Open( shutdown_file , 'w')
                 notifySend('Persepolis is shutting down','your system in 20 seconds' , 15000 ,'warning', systemtray = self.parent.system_tray_icon )
                 f.writelines('shutdown')
                 f.close()
@@ -422,21 +453,25 @@ class CheckingThread(QThread):
             sleep (2)
         j = 0
         while shutdown_notification == 0:
-            if os.path.isfile( persepolis_tmp + "/show-window") == True:
-                osCommands.remove(persepolis_tmp +  '/show-window')
+
+
+            if os.path.isfile( show_window_file ) == True: #it means , user clicked on persepolis icon and persepolis is still running. see persepolis file for more details.
+                osCommands.remove(show_window_file)
                 self.SHOWMAINWINDOWSIGNAL.emit()
 
             sleep(1)
-            if os.path.isfile("/tmp/persepolis-flashgot-ready")  == True :#It means new flashgot call is available!
+
+            if os.path.isfile(flashgot_ready)  == True :#It means new flashgot call is available!
                 size = 0
                 #This loop check that is size of persepolis-flashgot changed or not.
-                #if it's change we have queue request and loop waits until all links inserted in persepolis-flashgot file
-                while size != os.path.getsize('/tmp/persepolis-flashgot'):
-                    size =  os.path.getsize('/tmp/persepolis-flashgot')
+                #if it's changed , we have queue request and loop waits until all links inserted in persepolis-flashgot file
+
+                while size != os.path.getsize(flashgot_file):
+                    size =  os.path.getsize(flashgot_file)
                     sleep(0.3) 
 
 
-                #When checkFlashgot methode considered request , then flashgot_checked_links changes to True
+                #When checkFlashgot methode considered request , then flashgot_checked_links is changed to True
                 flashgot_checked_links = False
                 self.CHECKFLASHGOTSIGNAL.emit()#notifiying that we have flashgot request 
                 while flashgot_checked_links != True :#wait for persepolis consideration!                   
@@ -491,7 +526,14 @@ class ButtonPressedThread(QThread):
         checking_flag = 0
 
 
+class ShutDownThread(QThread):
+    def __init__(self , gid , password = None):
+        QThread.__init__(self)
+        self.gid = gid
+        self.password = password
 
+    def run(self):
+        shutDown(self.gid , self.password)
 
   
  
@@ -581,7 +623,7 @@ class MainWindow(MainWindow_Ui):
         for line in download_list_file_lines:
             gid = line.strip()
             self.download_table.insertRow(0)
-            download_info_file = download_info_folder + "/" + gid
+            download_info_file = os.path.join(download_info_folder , gid)
             download_info_file_list = readList(download_info_file,'string')
             for i in range(13):
                 item = QTableWidgetItem(download_info_file_list[i])
@@ -600,7 +642,7 @@ class MainWindow(MainWindow_Ui):
                 add_link_dictionary['end_minute'] = None
                 add_link_dictionary['after_download'] = 'None'
 
-                download_info_file = download_info_folder + "/" + gid
+                download_info_file = os.path.join(download_info_folder , gid)
                 download_info_file_list = readList(download_info_file,'string')
 
                 for i in range(13):
@@ -752,7 +794,7 @@ class MainWindow(MainWindow_Ui):
     def checkDownloadInfo(self,gid):
 
 #get download information from download_info_file according to gid and write them in download_table cells
-        download_info_file = config_folder + "/download_info/" + gid
+        download_info_file = os.path.join(config_folder , "download_info" , gid)
         #check information validation
         try:
             download_info_file_list = readList(download_info_file)
@@ -829,7 +871,7 @@ class MainWindow(MainWindow_Ui):
                 if final_download_path == None : #It means that download didn't start yet
                     final_download_path = str(add_link_dictionary['download_path'])
                         
-                save_as = "<b>Save as</b> : " + final_download_path + "/" + str(download_info_file_list[0])
+                save_as = "<b>Save as</b> : " + os.path.join(final_download_path , str(download_info_file_list[0]))
                 progress_window.save_label.setText(save_as)
                 progress_window.save_label.setToolTip(save_as)
 
@@ -891,17 +933,18 @@ class MainWindow(MainWindow_Ui):
 
 
 #this section is sending shutdown signal to the shutdown script(if user select shutdown for after download)
-                    if os.path.isfile( persepolis_tmp + '/shutdown/' + gid ) == True and progress_window.status != 'stopped':
+                    shutdown_file = os.path.join( persepolis_tmp , 'shutdown' , gid )
+                    if os.path.isfile(shutdown_file) == True and progress_window.status != 'stopped':
                         answer = download.shutDown()
 #KILL aria2c if didn't respond
                         if answer == 'error':
                             os.system('killall aria2c')
-                        f = Open(persepolis_tmp + '/shutdown/' + gid , 'w')
+                        f = Open(shutdown_file, 'w')
                         notifySend('Persepolis is shutting down','your system in 20 seconds' , 15000 ,'warning', systemtray = self.system_tray_icon )
                         f.writelines('shutdown')
                         f.close()
-                    elif os.path.isfile(persepolis_tmp + '/shutdown/' + gid ) == True and progress_window.status == 'stopped':
-                        f = Open( persepolis_tmp + '/shutdown/' + gid , 'w')
+                    elif os.path.isfile(shutdown_file ) == True and progress_window.status == 'stopped':
+                        f = Open( shutdown_file , 'w')
                         f.writelines('canceled')
                         f.close()
 
@@ -1155,18 +1198,24 @@ class MainWindow(MainWindow_Ui):
 #when new user requests download with flashgot , this methode called           
     def checkFlashgot(self):
         global flashgot_checked_links
-        #this lines extract add_link_dictionary from /tmp/persepolis-flashgot
-        flashgot_file = Open("/tmp/persepolis-flashgot")
-        flashgot_lines = flashgot_file.readlines()
-        flashgot_file.close()
-        flashgot_file.remove()
-        osCommands.remove('/tmp/persepolis-flashgot-ready')
-        flashgot_checked_links = True
+        #this lines extract add_link_dictionary from persepolis-flashgot
+        f = Open(flashgot_file)
+        flashgot_lines = f.readlines()
+        f.close()
+
+        #job is done! remove files!
+        f.remove() 
+        osCommands.remove(flashgot_ready)
+
+        flashgot_checked_links = True #notifiying that job is done!and links are extracted flashgot_file
+
         if len(flashgot_lines) == 1 : #It means we have only one request from flashgot
             flashgot_add_link_dictionary_str = flashgot_lines[0].strip()
             flashgot_add_link_dictionary = ast.literal_eval(flashgot_add_link_dictionary_str) 
+
             #this line calls flashgotAddLink methode with flashgot_add_link_dictionary
             self.flashgotAddLink(flashgot_add_link_dictionary)
+
         else: #we have queue request from flashgot
             self.flashgotQueue(flashgot_lines)
 
@@ -1210,7 +1259,7 @@ class MainWindow(MainWindow_Ui):
 
 
         #if user pushs ok button on add link window , a gid is generating for download and a file (with name of gid) is creating in download_info_folder . this file is containing download_info_file_list
-        download_info_file = config_folder + "/download_info/" + gid
+        download_info_file = os.path.join(download_info_folder , gid) 
         osCommands.touch(download_info_file)
          
         writeList(download_info_file , download_info_file_list)
@@ -1245,7 +1294,7 @@ class MainWindow(MainWindow_Ui):
 
         #adding gid to download_list_file , download_list_file_active , category_gid_list_file
         #defining category_gid_list_file
-        category_gid_list_file = category_folder + '/' + category
+        category_gid_list_file = os.path.join(category_folder , category)
 
         for i in [download_list_file , download_list_file_active , category_gid_list_file] :
             f = Open ( i , "a")
@@ -1389,7 +1438,7 @@ class MainWindow(MainWindow_Ui):
 
  #finding checked rows! and append gid of checked rows to gid_list
 
-        download_info_file = download_info_folder + "/" + gid
+        download_info_file = os.path.join(download_info_folder , gid)
         download_info_file_list = readList(download_info_file )
         download_info_file_list [9] = add_link_dictionary
         download_info_file_list [12] = str(category)
@@ -1556,7 +1605,7 @@ class MainWindow(MainWindow_Ui):
 
         for line in single_downloads_list_file_lines:
             gid = line.strip()
-            download_info_file = download_info_folder + '/' + gid
+            download_info_file = os.path.join(download_info_folder , gid)
             download_info_file_list = readList(download_info_file)
             status = download_info_file_list[1]
             if status == 'downloading' or status == 'paused' or status == 'waiting': #checking status of downloads
@@ -1604,9 +1653,15 @@ class MainWindow(MainWindow_Ui):
                 add_link_dictionary = ast.literal_eval(add_link_dictionary_str) 
                 if 'file_path' in add_link_dictionary :
                     file_path = add_link_dictionary ['file_path']
-                    file_path_split = file_path.split('/')
+                        
+                    file_name = os.path.basename(str(file_path))
+                    
+                    file_path_split = file_path.split(file_name)
+
                     del file_path_split[-1]
-                    download_path = '/'.join(file_path_split)
+
+                    download_path = file_name.join(file_path_split)
+
                     if os.path.isdir(download_path):
                         osCommands.xdgOpen(download_path) #openning file
                     else:
@@ -1660,7 +1715,7 @@ class MainWindow(MainWindow_Ui):
 #remove gid of download from download list file and category list file and active download list file
             
             #finding category_gid_list_file
-            category_gid_list_file = category_folder + '/' + str(category)
+            category_gid_list_file = os.path.join(category_folder , str(category))
             #removing gid
             for file in [download_list_file , download_list_file_active , category_gid_list_file] :
                 f = Open(file)
@@ -1673,14 +1728,14 @@ class MainWindow(MainWindow_Ui):
                 f.close()
 
 #removing download_info_file
-            download_info_file = download_info_folder + "/" + gid
+            download_info_file = os.path.join(download_info_folder , gid)
             f = Open(download_info_file)
             f.close()
             f.remove()
 
 #remove file of download from download temp folder
             if file_name != '***' and status != 'complete' :
-                file_name_path = temp_download_folder + "/" +  str(file_name)
+                file_name_path = os.path.join(temp_download_folder ,  str(file_name))
                 osCommands.remove(file_name_path) #removing file
 
                 file_name_aria = file_name_path + str('.aria2')
@@ -1818,7 +1873,7 @@ class MainWindow(MainWindow_Ui):
 
 #removing gid of download from download list file and download_list_file_active and category_gid_list_file
             #setting category_gid_list_file path
-            category_gid_list_file = category_folder + '/' + str(category)
+            category_gid_list_file = os.path.join(category_folder , str(category))
 
             #removing gid
             for file in [download_list_file , download_list_file_active , category_gid_list_file] :
@@ -1832,13 +1887,13 @@ class MainWindow(MainWindow_Ui):
                 f.close()
 
 #removing download_info_file
-            download_info_file = download_info_folder + "/" + gid
+            download_info_file = os.path.join(download_info_folder , gid)
             f = Open(download_info_file)
             f.close()
             f.remove()
 #removing file of download form download temp folder
             if file_name != '***' and status != 'complete' :
-                file_name_path = temp_download_folder + "/" +  str(file_name)
+                file_name_path = os.path.join(temp_download_folder , str(file_name))
                 osCommands.remove(file_name_path) #removing file : file_name_path
                 file_name_aria = file_name_path + str('.aria2')
                 osCommands.remove(file_name_aria) #removing aria2 information file *.aria
@@ -1893,7 +1948,7 @@ class MainWindow(MainWindow_Ui):
 
 #removing gid of download from download list file and download_list_file_active and category_gid_list_file
             #finding category_gid_list_file
-            category_gid_list_file = category_folder + '/' + str(category)
+            category_gid_list_file = os.path.join(category_folder , str(category))
 
             #removing gid
             for file in [download_list_file , download_list_file_active , category_gid_list_file] :
@@ -1907,14 +1962,14 @@ class MainWindow(MainWindow_Ui):
                 f.close()
 
 #remove download_info_file
-            download_info_file = download_info_folder + "/" + gid
+            download_info_file = os.path.join(download_info_folder , gid)
             f = Open(download_info_file)
             f.close()
             f.remove()
 
 #remove file of download form download temp folder
             if file_name != '***' and status != 'complete' :
-                file_name_path = temp_download_folder + "/" +  str(file_name)
+                file_name_path = os.path.join(temp_download_folder , str(file_name))
                 osCommands.remove(file_name_path) #removing file : file_name_path
 
                 file_name_aria = file_name_path + str('.aria2') #removing aria2 download information file : file_name_aria
@@ -1959,7 +2014,7 @@ class MainWindow(MainWindow_Ui):
         for gid in gid_sorted_list:
             #entering download rows according to gid_sorted_list
             j = j + 1
-            download_info_file = download_info_folder + "/" + gid
+            download_info_file = os.path.join(download_info_folder , gid)
             download_info_file_list = readList(download_info_file,'string')
             for i in range(13):
                 item = QTableWidgetItem(download_info_file_list[i])
@@ -1974,7 +2029,7 @@ class MainWindow(MainWindow_Ui):
         #finding name of selected category
         current_category_tree_text = str(current_category_tree_index.data())
         if current_category_tree_text != 'All Downloads':
-            category_file = category_folder + '/' + current_category_tree_text
+            category_file = os.path.join(category_folder , current_category_tree_text)
         else:
             category_file = download_list_file
 
@@ -2037,7 +2092,7 @@ class MainWindow(MainWindow_Ui):
         j = -1
         for gid in gid_sorted_list:
             j = j + 1
-            download_info_file = download_info_folder + "/" + gid
+            download_info_file = os.path.join(download_info_folder , gid)
             download_info_file_list = readList(download_info_file,'string')
             for i in range(13):
                 item = QTableWidgetItem(download_info_file_list[i])
@@ -2054,7 +2109,7 @@ class MainWindow(MainWindow_Ui):
         current_category_tree_text = str(current_category_tree_index.data())
 
         if current_category_tree_text != 'All Downloads':
-            category_file = category_folder + '/' + current_category_tree_text
+            category_file = os.path.join(category_folder , current_category_tree_text)
         else:
             category_file = download_list_file
 
@@ -2117,7 +2172,7 @@ class MainWindow(MainWindow_Ui):
         j = -1
         for gid in gid_sorted_list:
             j = j + 1
-            download_info_file = download_info_folder + "/" + gid
+            download_info_file = os.path.join(download_info_folder , gid)
             download_info_file_list = readList(download_info_file,'string')
             for i in range(13):
                 item = QTableWidgetItem(download_info_file_list[i])
@@ -2133,7 +2188,7 @@ class MainWindow(MainWindow_Ui):
         current_category_tree_text = str(current_category_tree_index.data())
 
         if current_category_tree_text != 'All Downloads':
-            category_file = category_folder + '/' + current_category_tree_text
+            category_file = os.path.join(category_folder , current_category_tree_text)
         else:
             category_file = download_list_file
 
@@ -2191,7 +2246,7 @@ class MainWindow(MainWindow_Ui):
         j = -1
         for gid in gid_sorted_list:
             j = j + 1
-            download_info_file = download_info_folder + "/" + gid
+            download_info_file = os.path.join(download_info_folder , gid)
             download_info_file_list = readList(download_info_file,'string')
             for i in range(13):
                 item = QTableWidgetItem(download_info_file_list[i])
@@ -2207,7 +2262,7 @@ class MainWindow(MainWindow_Ui):
         current_category_tree_text = str(current_category_tree_index.data())
 
         if current_category_tree_text != 'All Downloads':
-            category_file = category_folder + '/' + current_category_tree_text
+            category_file = os.path.join(category_folder , current_category_tree_text)
         else:
             category_file = download_list_file
 
@@ -2265,7 +2320,7 @@ class MainWindow(MainWindow_Ui):
         j = -1
         for gid in gid_sorted_list:
             j = j + 1
-            download_info_file = download_info_folder + "/" + gid
+            download_info_file = os.path.join(download_info_folder , gid)
             download_info_file_list = readList(download_info_file,'string')
             for i in range(13):
                 item = QTableWidgetItem(download_info_file_list[i])
@@ -2282,7 +2337,7 @@ class MainWindow(MainWindow_Ui):
         current_category_tree_text = str(current_category_tree_index.data())
 
         if current_category_tree_text != 'All Downloads':
-            category_file = category_folder + '/' + current_category_tree_text
+            category_file = os.path.join(category_folder , current_category_tree_text)
         else:
             category_file = download_list_file
 
@@ -2336,7 +2391,7 @@ class MainWindow(MainWindow_Ui):
             f.close()
        
         #creating a file for this queue in category_folder
-            osCommands.touch(category_folder + '/' + queue_name )
+            osCommands.touch(os.path.join(category_folder , queue_name) )
 
         #highlighting selected category in category_tree
         #finding item 
@@ -2377,7 +2432,7 @@ class MainWindow(MainWindow_Ui):
     def queueCallback(self,add_link_dictionary_list , category):
         #defining path of category_file
         selected_category = str(category)
-        category_file = category_folder + '/' + selected_category
+        category_file = os.path.join(category_folder , selected_category)
 
         #highlighting selected category in category_tree
         #finding item 
@@ -2408,7 +2463,7 @@ class MainWindow(MainWindow_Ui):
 
 
             #gid is generating for download and a file (with name of gid) is creating in download_info_folder . this file is containing download_info_file_list
-            download_info_file = config_folder + "/download_info/" + gid
+            download_info_file = os.path.join( download_info_folder , gid)  
             osCommands.touch(download_info_file)
          
             writeList(download_info_file , download_info_file_list)
@@ -2465,7 +2520,7 @@ class MainWindow(MainWindow_Ui):
         if current_category_tree_text == 'All Downloads':
             gid_list_file = download_list_file
         else:
-            gid_list_file = category_folder + '/' + current_category_tree_text
+            gid_list_file = os.path.join(category_folder , current_category_tree_text)
                     
         f_download_list_file = Open(gid_list_file)
         download_list_file_lines = f_download_list_file.readlines()
@@ -2474,7 +2529,7 @@ class MainWindow(MainWindow_Ui):
         for line in download_list_file_lines:
             gid = line.strip()
             self.download_table.insertRow(0)
-            download_info_file = download_info_folder + "/" + gid
+            download_info_file = os.path.join(download_info_folder , gid)
             download_info_file_list = readList(download_info_file,'string')
             for i in range(13):
                 item = QTableWidgetItem(download_info_file_list[i])
@@ -2731,7 +2786,7 @@ class MainWindow(MainWindow_Ui):
             self.category_tree_model.removeRow(row_number)
 
             #finding path of queue in category_folder
-            queue_gid_file = category_folder + '/' + current_category_tree_text
+            queue_gid_file = os.path.join(category_folder , current_category_tree_text)
 
             #getting gids from queue_gid_file 
             f = Open(queue_gid_file)
@@ -2882,7 +2937,7 @@ class MainWindow(MainWindow_Ui):
                 
         #first download must eliminated form former category (current_category)
         #reading current_category_file
-                current_category_file = category_folder + '/' + current_category
+                current_category_file = os.path.join(category_folder , current_category)
 
                 f = Open(current_category_file)
                 f_list = f.readlines()
@@ -2898,14 +2953,14 @@ class MainWindow(MainWindow_Ui):
                 f.close()
  
                 #adding download to the new queue
-                new_category_file = category_folder + '/' + new_category
+                new_category_file = os.path.join(category_folder , new_category)
 
                 f = Open(new_category_file , 'a')
                 f.writelines(gid + '\n')
                 f.close()
  
 #updating download_info_file
-                download_info_file = download_info_folder + "/" + gid
+                download_info_file = os.path.join(download_info_folder , gid)
                 download_info_file_list = readList(download_info_file )
                 download_info_file_list [12] = new_category
 
@@ -3004,35 +3059,46 @@ class MainWindow(MainWindow_Ui):
         current_category_tree_text = str(current_category_tree_index.data())
 
         self.after_pushButton.setEnabled(False)
+
+        if os_type != 'Windows': #For Linu and Mac OSX
+
         #getting root password from user
-        passwd, ok = QInputDialog.getText(self, 'PassWord','Please enter root password:' , QtWidgets.QLineEdit.Password)
-        if ok :
-            answer = os.system("echo '" + passwd+"' |sudo -S echo 'checking passwd'  "  )
-            while answer != 0 :
-                passwd, ok = QInputDialog.getText(self, 'PassWord','Wrong Password!\nTry again!' , QtWidgets.QLineEdit.Password)
-                if ok :
-                    #checking password
-                    answer = os.system("echo '" + passwd +"' |sudo -S echo 'checking passwd'  "  )
-                else:
-                    ok = False
-                    break
+            passwd, ok = QInputDialog.getText(self, 'PassWord','Please enter root password:' , QtWidgets.QLineEdit.Password)
+            if ok :
+                answer = os.system("echo '" + passwd+"' |sudo -S echo 'checking passwd'  "  )
+                while answer != 0 :
+                    passwd, ok = QInputDialog.getText(self, 'PassWord','Wrong Password!\nTry again!' , QtWidgets.QLineEdit.Password)
+                    if ok :
+                        #checking password
+                        answer = os.system("echo '" + passwd +"' |sudo -S echo 'checking passwd'  "  )
+                    else:
+                        ok = False
+                        break
 
-            if ok != False :
-                    self.queue_list_dict[current_category_tree_text].after = True
+                if ok != False :
+                        self.queue_list_dict[current_category_tree_text].after = True
 
-                    #shutdown_script_root will create by initialization.py on persepolis startup
-                    #sending password and queue name to shutdown_script_root
-                    #this script is creating a file with the name of queue in  this folder "/tmp/persepolis_tmp/shutdown/" . and writing a "wait" word in this file 
+                    #sending password and queue name to ShutDownThread
+                    #this script is creating a file with the name of queue in  this folder "persepolis_tmp/shutdown/" . and writing a "wait" word in this file 
                     #shutdown_script_root is checking that file every second . when "wait" changes to "shutdown" in that file then script is shutting down system 
-                    os.system("bash " +  persepolis_tmp +  "/shutdown_script_root  '" + passwd + "' '"+ current_category_tree_text + "' &" )
+                        shutdown_enable = ShutDownThread( current_category_tree_text , passwd)
+                        self.threadPool.append(shutdown_enable)
+                        self.threadPool[len(self.threadPool) - 1].start()
+ 
+                else:
+                    self.after_checkBox.setChecked(False)
+                    self.queue_list_dict[current_category_tree_text].after = False
+
             else:
                 self.after_checkBox.setChecked(False)
                 self.queue_list_dict[current_category_tree_text].after = False
 
-        else:
-            self.after_checkBox.setChecked(False)
-            self.queue_list_dict[current_category_tree_text].after = False
-
+        else: #for windows
+            
+            shutdown_enable = ShutDownThread( current_category_tree_text)
+            self.threadPool.append(shutdown_enable)
+            self.threadPool[len(self.threadPool) - 1].start()
+ 
 
 #this methode is activating or deactivating after_frame according to after_checkBox situation
     def afterFrame(self , checkBox):
@@ -3045,10 +3111,11 @@ class MainWindow(MainWindow_Ui):
         else:
             self.after_frame.setEnabled(False) #disabaling after_frame
 
-            #writing 'canceled' word in /tmp/persepolis_tmp/shutdown/queue_name . this is informing shutdown_script_root for canceling shutdown operation after download
+            #writing 'canceled' word in persepolis_tmp/shutdown/queue_name . this is informing shutdown_script_root for canceling shutdown operation after download
             if current_category_tree_text in self.queue_list_dict.keys():
                 if self.queue_list_dict[current_category_tree_text].after == True:
-                    f = Open( persepolis_tmp + '/shutdown/' + current_category_tree_text , 'w')
+                    shutdown_file = os.path.join(persepolis_tmp , 'shutdown' , current_category_tree_text )
+                    f = Open( shutdown_file , 'w')
                     f.writelines('canceled')
                     f.close()
                     self.queue_list_dict[current_category_tree_text].after = False
@@ -3146,7 +3213,7 @@ class MainWindow(MainWindow_Ui):
             if new_row >= 0 :
 
                 #opening and reading queue_file
-                queue_file = category_folder + '/' + current_category_tree_text
+                queue_file = os.path.join(category_folder , current_category_tree_text)
 
                 f = Open(queue_file)
                 queue_file_lines = f.readlines()
@@ -3228,7 +3295,7 @@ class MainWindow(MainWindow_Ui):
             if new_row >= 0 :
 
                 #opening and reading queue_file
-                queue_file = category_folder + '/' + current_category_tree_text
+                queue_file = os.path.join(category_folder , current_category_tree_text)
 
                 f = Open(queue_file)
                 queue_file_lines = f.readlines()
@@ -3310,7 +3377,7 @@ class MainWindow(MainWindow_Ui):
             if new_row < self.download_table.rowCount():
 
                 #opening and reading queue_file
-                queue_file = category_folder + '/' + current_category_tree_text
+                queue_file = os.path.join(category_folder , current_category_tree_text)
 
                 f = Open(queue_file)
                 queue_file_lines = f.readlines()
@@ -3392,7 +3459,7 @@ class MainWindow(MainWindow_Ui):
             if new_row < self.download_table.rowCount():
 
                 #opening and reading queue_file
-                queue_file = category_folder + '/' + current_category_tree_text
+                queue_file = os.path.join(category_folder , current_category_tree_text)
 
                 f = Open(queue_file)
                 queue_file_lines = f.readlines()

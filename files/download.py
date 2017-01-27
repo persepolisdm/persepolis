@@ -23,14 +23,24 @@ import shutil
 from newopen import Open , readList , writeList
 import platform , sys
 from PyQt5.QtCore import QSettings
-
+import platform
 
 home_address = os.path.expanduser("~")
-config_folder = str(home_address) + "/.config/persepolis_download_manager"
-download_info_folder = config_folder +  "/download_info"
-download_list_file = config_folder + "/download_list_file"
-download_list_file_active = config_folder + "/download_list_file_active"
-config_folder = str(home_address) + "/.config/persepolis_download_manager"
+
+os_type = platform.system()
+#download manager config folder . 
+if os_type == 'Linux' :
+    config_folder = os.path.join(str(home_address) , ".config/persepolis_download_manager")
+elif os_type == 'Darwin':
+    config_folder = os.path.join(str(home_address) , "Library/Application Support/persepolis_download_manager")
+elif os_type == 'Windows' :
+    config_folder = os.path.join(str(home_address) , 'AppData','Local','persepolis_download_manager')
+
+download_info_folder = os.path.join(config_folder , "download_info")
+
+download_list_file = os.path.join(config_folder , "download_list_file")
+
+download_list_file_active =  os.path.join(config_folder , "download_list_file_active")
 
 #setting
 persepolis_setting = QSettings('persepolis_download_manager' , 'persepolis')
@@ -45,15 +55,21 @@ server = xmlrpc.client.ServerProxy(server_uri, allow_none=True)
 
 #starting aria2 with RPC
 def startAria():
-    if platform.system() == 'Linux':
+    if os_type == 'Linux':
         os.system("aria2c --version 1> /dev/null")
-        os.system("aria2c --no-conf  --enable-rpc --rpc-listen-port '" + str(port) + "' --rpc-max-request-size '10M' --rpc-listen-all --quiet=true &")
-    else:
+        os.system("aria2c --no-conf  --enable-rpc --rpc-listen-port '" + str(port) + "' --rpc-max-request-size=2M --rpc-listen-all --quiet=true &")
+    elif os_type == 'Darwin' :
         cwd = sys.argv[0]
         cwd = os.path.dirname(cwd)
         aria2d = cwd + "/aria2c"
         os.system("'" + aria2d + "' --version 1> /dev/null")
-        os.system("'" + aria2d + "' --no-conf  --enable-rpc --rpc-listen-port '" + str(port) + "' --rpc-max-request-size '10M' --rpc-listen-all --quiet=true &")
+        os.system("'" + aria2d + "' --no-conf  --enable-rpc --rpc-listen-port '" + str(port) + "' --rpc-max-request-size=2M --rpc-listen-all --quiet=true &")
+
+    elif os_type == 'Windows':
+        cwd = os.getcwd() #finding current directory
+        aria2d = os.path.join(cwd , "aria2c.exe") #defining aria2c.exe path
+        os.system("start /B " + aria2d + " --no-conf  --enable-rpc --rpc-listen-port " + str(port) + " --rpc-max-request-size=2M --rpc-listen-all --quiet=true ")
+
 
     time.sleep(2)
     answer = aria2Version()
@@ -71,7 +87,7 @@ def aria2Version():
 #this function is sending download request to aria2        
 def downloadAria(gid):
 #add_link_dictionary is a dictionary that contains user download request information
-    download_info_file = download_info_folder + "/" + gid
+    download_info_file = os.path.join(download_info_folder , gid)
     download_info_file_list = readList(download_info_file)
     add_link_dictionary = download_info_file_list[9]
 
@@ -193,8 +209,10 @@ def downloadStatus(gid):
         file_status = str(download_status['files'])
         file_status = file_status[1:-1]
         file_status = ast.literal_eval(file_status)
-        path = file_status['path']
-        file_name = str(path.split("/")[-1])
+        path = str(file_status['path'])
+
+        file_name = os.path.basename(path) 
+
         if not(file_name):
             file_name = None
     except :
@@ -291,7 +309,7 @@ def downloadStatus(gid):
         status_str = None
 
 
-    download_info_file = download_info_folder + "/" + gid
+    download_info_file = os.path.join(download_info_folder , gid)
     download_info_file_list = readList(download_info_file)
 
     add_link_dictionary = download_info_file_list[9]
@@ -313,17 +331,22 @@ def downloadStatus(gid):
             else :
                 final_download_path = download_path 
                 add_link_dictionary['final_download_path'] = final_download_path
-#if download completed move file to the download folder
+
+#if download has completed , then move file to the download folder
     if (status_str == "complete"):
         if final_download_path != None :
             download_path = final_download_path
+
         file_path = downloadCompleteAction(path , download_path ,file_name)
+
         add_link_dictionary [ 'file_path'] = file_path
-        file_path_split = file_path.split('/')
-        file_name = str(file_path_split[-1])
+
+        file_name = os.path.basename(file_path) 
+
 #rename active status to downloading
     if (status_str == "active"):
         status_str = "downloading"
+
 #rename removed status to stopped
     if (status_str == "removed" ):
         status_str = "stopped"
@@ -331,7 +354,6 @@ def downloadStatus(gid):
     if (status_str == "error"):
         add_link_dictionary["error"] = str(download_status['errorMessage'])
 
-        
 
     if (status_str == "None"):
         status_str = None
@@ -357,14 +379,18 @@ def downloadStatus(gid):
 
 
 #download complete actions!
+#this methode is returning file_path of file in the user's download folder
 def downloadCompleteAction( path ,download_path , file_name):
     i = 1
-    file_path = download_path + '/' + file_name
+    file_path =  os.path.join(download_path , file_name)
+
 #rename file if file already existed
     while  os.path.isfile(file_path):
         file_name_split = file_name.split('.')
         extension_length = len(file_name_split[-1]) + 1
-        file_path = download_path + '/' + file_name[0:-extension_length] + '_' + str(i) + file_name[-extension_length:]
+
+        new_name =  file_name[0:-extension_length] + '_' + str(i) + file_name[-extension_length:]
+        file_path =  os.path.join(download_path  , new_name)
         i = i + 1
 
 #move the file to the download folder
@@ -387,15 +413,19 @@ def findDownloadPath(file_name , download_path):
     document = ['doc','docx','html','htm','fb2','odt','sxw','pdf','ps','rtf','tex','txt','epub','mobi','azw','azw3','azw4','kf8','chm','cbt','cbr','cbz','cb7','cba','ibooks','djvu','md']
     compressed = ['a','ar','cpio','shar','LBR','iso','lbr','mar','tar','bz2','F','gz','lz','lzma','lzo','rz','sfark','sz','xz','Z','z','infl','7z','s7z','ace','afa','alz','apk','arc','arj','b1','ba','bh','cab','cfs','cpt','dar','dd','dgc','dmg','ear','gca','ha','hki','ice','jar','kgb','lzh','lha','lzx','pac','partimg','paq6','paq7','paq8','pea','pim','pit','qda','rar','rk','sda','sea','sen','sfx','sit','sitx','sqx','tar.gz','tgz','tar.Z','tar.bz2','tbz2','tar.lzma','tlz','uc','uc0','uc2','ucn','ur2','ue2','uca','uha','war','wim','xar','xp3','yz1','zip','zipx','zoo','zpaq','zz','ecc','par','par2']
     if file_extension in audio :
-        return download_path + '/Audios'
+        return os.path.join(download_path , 'Audios')
+
     elif file_extension in video :
-        return download_path + '/Videos'
+        return os.path.join( download_path , 'Videos')
+
     elif file_extension in document :
-        return download_path + '/Documents'
+        return os.path.join( download_path , 'Documents')
+
     elif file_extension in compressed :
-        return download_path + '/Compressed'
+        return os.path.join( download_path , 'Compressed')
+
     else:
-        return download_path + '/Others'
+        return os.path.join( download_path , 'Others')
 
 
 
@@ -413,7 +443,7 @@ def shutDown():
 
 #downloadStop stops download completely
 def downloadStop(gid):
-    download_info_file = download_info_folder + "/" + gid
+    download_info_file =  os.path.join(download_info_folder , gid)
     download_info_file_list = readList(download_info_file)
     version_answer = 'ok'
 #if status is scheduled so download request is not sended to aria2 yet!
@@ -446,7 +476,7 @@ def downloadStop(gid):
 
 #downloadPause pauses download
 def downloadPause(gid):
-    download_info_file = download_info_folder + "/" + gid
+    download_info_file =  os.path.join(download_info_folder , gid)
     download_info_file_list = readList(download_info_file)
 #this section is sending pause request to aira2 . see aria2 documentation for more informations
     try :
@@ -463,7 +493,7 @@ def downloadPause(gid):
 
 #downloadUnpause unpauses download
 def downloadUnpause(gid):
-    download_info_file = download_info_folder + "/" + gid
+    download_info_file =  os.path.join(download_info_folder , gid)
     download_info_file_list = readList(download_info_file)
 #this section is sending unpause request to aria2 . see aria2 documentation for more informations.
     try :
@@ -516,7 +546,7 @@ def startTime(start_hour , start_minute , gid):
     print("Download starts at " + start_hour + ":" + start_minute )
     sigma_start = sigmaTime(start_hour , start_minute) #getting sima time
     sigma_now = nowTime() #getting sigma now time
-    download_info_file = download_info_folder + "/" + gid #getting download_info_file path
+    download_info_file =  os.path.join(download_info_folder , gid) #getting download_info_file path
     status = 'scheduled' #defining status
     while sigma_start != sigma_now : #this loop is countinuing until download time arrival!
         time.sleep(2.1)
@@ -538,7 +568,7 @@ def endTime(end_hour , end_minute , gid):
     print("end time actived " + gid)
     sigma_end = sigmaTime(end_hour , end_minute) 
     sigma_now = nowTime()
-    download_info_file = download_info_folder + "/" + gid
+    download_info_file =  os.path.join(download_info_folder , gid)
 
     while sigma_end != sigma_now : 
         status_file = 'no'

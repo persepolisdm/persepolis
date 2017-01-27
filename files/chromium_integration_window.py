@@ -150,6 +150,13 @@ class ChromiumIntegrationWindow(QWidget):
             elif browser == 'chrome':
                 native_message_folder = home_address + '/Library/Application Support/Google/Chrome/NativeMessagingHosts'
 
+        elif os_type == 'Windows':
+            exec_path = os.path.join(home_address , 'Program Files\\Persepolis\\Persepolis Download Manager.exe')
+
+            native_message_folder = os.path.join(home_address , 'AppData\Local\persepolis_download_manager')
+
+
+
         json_file_lines = ['{' , '    "name": "com.persepolis.pdmchromewrapper",' , '    "description": "Integrate Persepolis with Google Chrome",' , '    "path": "' + str(exec_path) + '",' , '    "type": "stdio",' , '    "allowed_origins": [' , '        "chrome-extension://legimlagjjoghkoedakdjhocbeomojao/"' , '    ]','}' ]
 
         native_message_file = native_message_folder + '/com.persepolis.pdmchromewrapper.json'
@@ -161,7 +168,10 @@ class ChromiumIntegrationWindow(QWidget):
             f.writelines(str(i) + '\n')
         f.close()
          
-        os.system('chmod +x "' + str(native_message_file) + '"' )
+        if os_type != 'Windows':
+            os.system('chmod +x "' + str(native_message_file) + '"' )
+        else:
+            os.system('REG ADD "HKCU\\Software\\Google\Chrome\\NativeMessagingHosts\\com.persepolis.pdmchromewrapper.json" /ve /t REG_SZ /d "' + str(exec_path) + '" /f')
 
 
         if browser == 'chromium' :

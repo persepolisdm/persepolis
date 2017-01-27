@@ -18,11 +18,9 @@ from PyQt5.QtWidgets import QCheckBox , QWidget , QVBoxLayout , QHBoxLayout , QP
 from PyQt5.QtGui import QIcon
 import ast , os
 from newopen import Open
-
-
 import icons_resource
+
 home_address = os.path.expanduser("~")
-config_folder = str(home_address) + "/.config/persepolis_download_manager"
 
 
 

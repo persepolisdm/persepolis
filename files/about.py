@@ -20,9 +20,20 @@ from PyQt5.QtCore import QSize , QPoint
 import ast , os
 from newopen import Open , readDict
 import icons_resource
+import platform
 
 home_address = os.path.expanduser("~")
-config_folder = str(home_address) + "/.config/persepolis_download_manager"
+
+#os_type >> Linux or Darwin(Mac osx) or Windows(Microsoft Windows)
+os_type = platform.system()
+
+#download manager config folder . 
+if os_type == 'Linux' :
+    config_folder = os.path.join(str(home_address) , ".config/persepolis_download_manager")
+elif os_type == 'Darwin':
+    config_folder = os.path.join(str(home_address) , "Library/Application Support/persepolis_download_manager")
+elif os_type == 'Windows' :
+    config_folder = os.path.join(str(home_address) , 'AppData','Local','persepolis_download_manager')
 
 
 
@@ -107,7 +118,7 @@ class AboutWindow(QWidget):
 
         self.setWindowTitle( "About Persepolis")
         self.title_label.setText( "Persepolis Download Manager")
-        self.version_label.setText( "Version 2.3.3")
+        self.version_label.setText( "Version 2.4 alpha")
         self.name_label.setText( "\nAliReza AmirSamimi\nMohammadreza Abdollahzadeh\nSadegh Alirezaie\nMostafa Asadi\nMohammadAmin Vahedinia\nJafar Akhondali")
         self.site2_label.setText("<a href=https://persepolisdm.github.io>https://persepolisdm.github.io</a>" )
         self.telegram_label.setText( "<a href=https://telegram.me/persepolisdm>https://telegram.me/persepolisdm</a>" )
