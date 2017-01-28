@@ -28,7 +28,7 @@ import platform
 home_address = os.path.expanduser("~")
 
 os_type = platform.system()
-#download manager config folder . 
+#download manager config folder .
 if os_type == 'Linux' :
     config_folder = os.path.join(str(home_address) , ".config/persepolis_download_manager")
 elif os_type == 'Darwin':
@@ -77,14 +77,14 @@ def startAria():
 
 #checking aria2 release version . Persepolis is usig this function to check that aria2 RPC conection is available or not
 def aria2Version():
-    try : 
+    try :
         answer = server.aria2.getVersion()
     except :
         print("aria2 not respond!")
         answer = "did not respond"
     return answer
- 
-#this function is sending download request to aria2        
+
+#this function is sending download request to aria2
 def downloadAria(gid):
 #add_link_dictionary is a dictionary that contains user download request information
     download_info_file = os.path.join(download_info_folder , gid)
@@ -109,10 +109,10 @@ def downloadAria(gid):
     user_agent = add_link_dictionary['user-agent']
     cookies = add_link_dictionary['load-cookies']
     referer = add_link_dictionary['referer']
-     
+
     #setting time and date for last_try_date
     now_date_list = nowDate()
-    add_link_dictionary [ 'last_try_date'] = now_date_list 
+    add_link_dictionary [ 'last_try_date'] = now_date_list
 
     #making header option
     header_list = []
@@ -131,7 +131,7 @@ def downloadAria(gid):
             join_header = ':'.join(equal_split_header)
             if i != '':
                 header_list.append(join_header)
-    
+
     if len(header_list) == 0 :
         header_list = None
 
@@ -139,28 +139,28 @@ def downloadAria(gid):
         download_info_file_list[1] = "scheduled"
 
     #writing new informations on download_info_file
-    download_info_file_list[9] = add_link_dictionary 
+    download_info_file_list[9] = add_link_dictionary
     writeList(download_info_file,download_info_file_list)
 
     if ip :
         ip_port = str(ip) + ":" + str(port)
     else:
-        ip_port = "" 
+        ip_port = ""
 
     if start_hour != None :
         start_time_status = startTime(start_hour , start_minute , gid)
-    else : 
+    else :
         start_time_status = "downloading"
 
 
     if start_time_status == "scheduled":
 #reading new limit option before starting download! perhaps user changed this in progress bar window
-        download_info_file_list = readList(download_info_file) 
+        download_info_file_list = readList(download_info_file)
         add_link_dictionary = download_info_file_list[9]
-        
+
         limit = add_link_dictionary['limit']
 
-#eliminating start_hour and start_minute!         
+#eliminating start_hour and start_minute!
         add_link_dictionary['start_hour'] = None
         add_link_dictionary['start_minute'] = None
         download_info_file_list [9] = add_link_dictionary
@@ -170,19 +170,19 @@ def downloadAria(gid):
 
 #finding download_path_temp from persepolis_setting
     persepolis_setting.sync()
-    download_path_temp = persepolis_setting.value('settings/download_path_temp') 
+    download_path_temp = persepolis_setting.value('settings/download_path_temp')
 
 
     if start_time_status != 'stopped':
 #sending download request to aria2
         if link[0:5] != "https":
-            aria_dict = {'gid':gid ,'max-tries' : str(persepolis_setting.value('settings/max-tries')) , 'retry-wait': int(persepolis_setting.value('settings/retry-wait')) , 'timeout' : int(persepolis_setting.value('settings/timeout')) , 'header': header_list ,'out': out , 'user-agent': user_agent ,  'referer': referer ,  'all-proxy': ip_port , 'max-download-limit': limit , 'all-proxy-user':str(proxy_user), 'all-proxy-passwd':str(proxy_passwd), 'http-user':str(download_user), 'http-passwd':str(download_passwd) , 'split':'16', 'max-connection-per-server':str(connections) , 'min-split-size':'1M', 'continue':'true', 'dir':str(download_path_temp) } 
+            aria_dict = {'gid':gid ,'max-tries' : str(persepolis_setting.value('settings/max-tries')) , 'retry-wait': int(persepolis_setting.value('settings/retry-wait')) , 'timeout' : int(persepolis_setting.value('settings/timeout')) , 'header': header_list ,'out': out , 'user-agent': user_agent ,  'referer': referer ,  'all-proxy': ip_port , 'max-download-limit': limit , 'all-proxy-user':str(proxy_user), 'all-proxy-passwd':str(proxy_passwd), 'http-user':str(download_user), 'http-passwd':str(download_passwd) , 'split':'16', 'max-connection-per-server':str(connections) , 'min-split-size':'1M', 'continue':'true', 'dir':str(download_path_temp) }
         else:
-            aria_dict = {'gid':gid ,'max-tries' : str(persepolis_setting.value('settings/max-tries')) , 'retry-wait': int(persepolis_setting.value('settings/retry-wait')) , 'timeout' : int(persepolis_setting.value('settings/timeout')) , 'header': header_list ,'out': out , 'user-agent': user_agent ,  'referer': referer ,  'all-proxy': ip_port , 'max-download-limit': limit , 'all-proxy-user':str(proxy_user), 'all-proxy-passwd':str(proxy_passwd), 'split':'16', 'max-connection-per-server':str(connections) , 'min-split-size':'1M', 'continue':'true', 'dir':str(download_path_temp) } 
+            aria_dict = {'gid':gid ,'max-tries' : str(persepolis_setting.value('settings/max-tries')) , 'retry-wait': int(persepolis_setting.value('settings/retry-wait')) , 'timeout' : int(persepolis_setting.value('settings/timeout')) , 'header': header_list ,'out': out , 'user-agent': user_agent ,  'referer': referer ,  'all-proxy': ip_port , 'max-download-limit': limit , 'all-proxy-user':str(proxy_user), 'all-proxy-passwd':str(proxy_passwd), 'split':'16', 'max-connection-per-server':str(connections) , 'min-split-size':'1M', 'continue':'true', 'dir':str(download_path_temp) }
 
 
         try:
-            if ("http" in link[0:5]): 
+            if ("http" in link[0:5]):
                 answer = server.aria2.addUri([link],aria_dict)
             else:
                 answer = server.aria2.addUri([link],aria_dict)
@@ -203,15 +203,15 @@ def downloadStatus(gid):
     try :
         download_status = server.aria2.tellStatus(gid ,['status' ,'connections' ,'errorCode' , 'errorMessage' ,'downloadSpeed' , 'connections' , 'dir' , 'totalLength' , 'completedLength','files']  )
     except:
-        download_status = {'status': None ,'connections' : None ,'errorCode' : None , 'errorMessage' : None ,'downloadSpeed' : None , 'connections' : None , 'dir' : None , 'totalLength' : None , 'completedLength': None ,'files': None } 
-#file_status contains name of download file 
-    try:    
+        download_status = {'status': None ,'connections' : None ,'errorCode' : None , 'errorMessage' : None ,'downloadSpeed' : None , 'connections' : None , 'dir' : None , 'totalLength' : None , 'completedLength': None ,'files': None }
+#file_status contains name of download file
+    try:
         file_status = str(download_status['files'])
         file_status = file_status[1:-1]
         file_status = ast.literal_eval(file_status)
         path = str(file_status['path'])
 
-        file_name = os.path.basename(path) 
+        file_name = os.path.basename(path)
 
         if not(file_name):
             file_name = None
@@ -225,11 +225,11 @@ def downloadStatus(gid):
         file_size = float (download_status['totalLength'])
     except:
         file_size = None
-    try:    
+    try:
         downloaded = float (download_status['completedLength'])
     except:
         downloaded = None
-           
+
     if (downloaded != None and file_size != None and file_size != 0):
         file_size_back = file_size
         if int(file_size/1073741824) != 0 :
@@ -241,7 +241,7 @@ def downloadStatus(gid):
             size_str = str(int(file_size/1024)) + " KB"
         else:
             size_str = str(file_size)
-        downloaded_back = downloaded 
+        downloaded_back = downloaded
         if int(downloaded/1073741824) != 0:
             downloaded = downloaded/1073741824
             downloaded_str = str(round(downloaded , 2)) + " GB"
@@ -254,21 +254,21 @@ def downloadStatus(gid):
         file_size = file_size_back
         downloaded = downloaded_back
         percent =  int(downloaded * 100 / file_size)
-        percent_str = str(percent) + " %"
+        percent_str = str(percent) + "%%"
     else:
-        percent_str = None 
+        percent_str = None
         size_str = None
         downloaded_str = None
 
     try:
         download_speed = int(download_status['downloadSpeed'])
     except:
-        download_speed = 0 
+        download_speed = 0
 
     if (downloaded != None and  download_speed != 0):
         estimate_time_left = int((file_size - downloaded)/download_speed)
         if int((download_speed/1073741824)) != 0:
-            download_speed = download_speed/1073741824 
+            download_speed = download_speed/1073741824
             download_speed_str = str(round(download_speed , 2))+ " GB/S"
         elif int((download_speed/1048576)) != 0:
             download_speed_num = download_speed/1048576
@@ -290,11 +290,11 @@ def downloadStatus(gid):
             estimate_time_left = estimate_time_left % 60
             eta = eta + str(estimate_time_left) + "s"
         else :
-            eta = eta + str(estimate_time_left) + "s" 
+            eta = eta + str(estimate_time_left) + "s"
         estimate_time_left_str = eta
 
     else:
-        download_speed_str = "0" 
+        download_speed_str = "0"
         estimate_time_left_str = None
 
 
@@ -324,12 +324,12 @@ def downloadStatus(gid):
 #finding default download_path
 
             persepolis_setting.sync()
-            
+
             if persepolis_setting.value('settings/download_path') == download_path :
                 final_download_path = findDownloadPath(file_name , download_path)
                 add_link_dictionary ['final_download_path'] = final_download_path
             else :
-                final_download_path = download_path 
+                final_download_path = download_path
                 add_link_dictionary['final_download_path'] = final_download_path
 
 #if download has completed , then move file to the download folder
@@ -341,7 +341,7 @@ def downloadStatus(gid):
 
         add_link_dictionary [ 'file_path'] = file_path
 
-        file_name = os.path.basename(file_path) 
+        file_name = os.path.basename(file_path)
 
 #rename active status to downloading
     if (status_str == "active"):
@@ -367,12 +367,12 @@ def downloadStatus(gid):
 
     download_info = [file_name , status_str , size_str , downloaded_str ,  percent_str , connections_str , download_speed_str ,estimate_time_left_str , None , add_link_dictionary , firs_try_date , last_try_date ]
 
-   
+
     for i in range(12):
         if download_info[i] != None:
             download_info_file_list[i] = download_info[i]
- 
-        
+
+
     writeList(download_info_file , download_info_file_list)
 
     return 'ready'
@@ -402,7 +402,7 @@ def downloadCompleteAction( path ,download_path , file_name):
     return str(file_path)
 
 
-#this function is returning folder of download according to file extension    
+#this function is returning folder of download according to file extension
 def findDownloadPath(file_name , download_path):
 
     file_name_split = file_name.split('.')
@@ -429,7 +429,7 @@ def findDownloadPath(file_name , download_path):
 
 
 
-        
+
 #shutdown aria2
 def shutDown():
     try:
@@ -447,10 +447,10 @@ def downloadStop(gid):
     download_info_file_list = readList(download_info_file)
     version_answer = 'ok'
 #if status is scheduled so download request is not sended to aria2 yet!
-    status = download_info_file_list[1] 
+    status = download_info_file_list[1]
     if status != 'scheduled':
         try :
-        #this section is sending request to aria2 to removing download. see aria2 documentation for more informations 
+        #this section is sending request to aria2 to removing download. see aria2 documentation for more informations
             answer = server.aria2.remove(gid)
             if status == 'downloading':
                 server.aria2.removeDownloadResult(gid)
@@ -472,7 +472,7 @@ def downloadStop(gid):
         download_info_file_list[9] = add_link_dictionary
         writeList(download_info_file , download_info_file_list)
     return answer
- 
+
 
 #downloadPause pauses download
 def downloadPause(gid):
@@ -484,7 +484,7 @@ def downloadPause(gid):
         version_answer = 'ok'
     except :
         answer = str("None")
-        
+
     print(answer + " paused")
 
     return answer
@@ -517,10 +517,10 @@ def activeDownloads():
     try:
         answer = server.aria2.tellActive(['gid'])
     except:
-        answer = [] 
+        answer = []
     active_gids = []
     for i in answer :
-        dict = i 
+        dict = i
         gid = dict['gid']
         active_gids.append(gid)
 
@@ -532,7 +532,7 @@ def nowDate():
     for i in ['%Y' , '%m' , '%d' , '%H' , '%M' , '%S' ] :
         date_list.append(time.strftime(i))
     return date_list
-#sigmaTime get hours and minutes for input . convert hours to minutes and return summation in minutes        
+#sigmaTime get hours and minutes for input . convert hours to minutes and return summation in minutes
 def sigmaTime(hour,minute):
     return (int(hour)*60 + int(minute))
 
@@ -555,7 +555,7 @@ def startTime(start_hour , start_minute , gid):
             download_info_file_list = readList(download_info_file)
         except:
             download_info_file_list = [ 'some_name' , 'scheduled' ]
-        
+
         if download_info_file_list[1] == 'stopped' : #if download_info_file_list[1] = stopped >> it means that user canceled download , and loop is breaking!
             status = 'stopped'
             break
@@ -566,11 +566,11 @@ def startTime(start_hour , start_minute , gid):
 def endTime(end_hour , end_minute , gid):
     time.sleep(1)
     print("end time actived " + gid)
-    sigma_end = sigmaTime(end_hour , end_minute) 
+    sigma_end = sigmaTime(end_hour , end_minute)
     sigma_now = nowTime()
     download_info_file =  os.path.join(download_info_folder , gid)
 
-    while sigma_end != sigma_now : 
+    while sigma_end != sigma_now :
         status_file = 'no'
 #waiting for start downloading :
         while status_file == 'no':
@@ -603,18 +603,10 @@ def endTime(end_hour , end_minute , gid):
         if answer == 'None':
             os.system("killall aria2c")
 
-        download_info_file_list = readList(download_info_file) 
+        download_info_file_list = readList(download_info_file)
         add_link_dictionary = download_info_file_list[9]
         add_link_dictionary['end_hour'] = None
         add_link_dictionary['end_minute'] = None
         download_info_file_list[9] = add_link_dictionary
         download_info_file_list[1] = "stopped"
         writeList(download_info_file,download_info_file_list)
-        
-        
-                
-
-
-
-
-
