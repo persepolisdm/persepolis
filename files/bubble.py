@@ -25,7 +25,7 @@ home_address = os.path.expanduser("~")
 os_type = platform.system()
 
 #config_folder
-if os_type == 'Linux' :
+if os_type == 'Linux' or os_type == 'FreeBSD' :
     config_folder = os.path.join(str(home_address) , ".config/persepolis_download_manager")
 elif os_type == 'Darwin':
     config_folder = os.path.join(str(home_address) , "Library/Application Support/persepolis_download_manager")
@@ -61,7 +61,7 @@ def notifySend(message1,message2,time,sound ,systemtray=None ):
     if enable_notification == 'QT notification':
         systemtray.showMessage(message1 , message2 , 0, 10000)
     else:
-        if os_type == 'Linux':
+        if os_type == 'Linux' or os_type == 'FreeBSD' :
             os.system("notify-send --icon='persepolis' --app-name='Persepolis Download Manager' --expire-time='" + time + "' '" +  message1 +  "' \ '" + message2 +  "' "  )
         elif os_type == 'Darwin':
             from mac_notification import notifyMac

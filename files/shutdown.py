@@ -65,3 +65,8 @@ def shutDown(gid , password = None):
 
         elif os_type == 'Windows':
             os.system('shutdown -S')
+
+        elif os_type == 'FreeBSD':
+            os.system( 'echo "' + password + '" |sudo -S shutdown -p now ')
+
+

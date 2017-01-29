@@ -142,6 +142,15 @@ class ChromiumIntegrationWindow(QWidget):
             elif browser == 'chrome':
                 native_message_folder = home_address + '/.config/google-chrome/NativeMessagingHosts'
 
+        elif os_type == 'FreeBSD' :
+            exec_path = '/usr/local/bin/persepolis'
+
+            if browser == 'chromium':
+                native_message_folder = home_address + '/.config/chromium/NativeMessagingHosts'
+            elif browser == 'chrome':
+                native_message_folder = home_address + '/.config/google-chrome/NativeMessagingHosts'
+
+
         elif os_type == 'Darwin' :
             exec_path = '/Applications/Persepolis Download Manager.app/Contents/MacOS/Persepolis Download Manager'
             
