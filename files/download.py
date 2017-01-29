@@ -29,7 +29,7 @@ home_address = os.path.expanduser("~")
 
 os_type = platform.system()
 #download manager config folder . 
-if os_type == 'Linux' :
+if os_type == 'Linux' or os_type == 'FreeBSD' :
     config_folder = os.path.join(str(home_address) , ".config/persepolis_download_manager")
 elif os_type == 'Darwin':
     config_folder = os.path.join(str(home_address) , "Library/Application Support/persepolis_download_manager")
@@ -55,7 +55,7 @@ server = xmlrpc.client.ServerProxy(server_uri, allow_none=True)
 
 #starting aria2 with RPC
 def startAria():
-    if os_type == 'Linux':
+    if os_type == 'Linux' or os_type == 'FreeBSD' :
         os.system("aria2c --version 1> /dev/null")
         os.system("aria2c --no-conf  --enable-rpc --rpc-listen-port '" + str(port) + "' --rpc-max-request-size=2M --rpc-listen-all --quiet=true &")
     elif os_type == 'Darwin' :

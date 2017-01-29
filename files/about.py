@@ -24,11 +24,11 @@ import platform
 
 home_address = os.path.expanduser("~")
 
-#os_type >> Linux or Darwin(Mac osx) or Windows(Microsoft Windows)
+#os_type >> Linux or Darwin(Mac osx) or Windows(Microsoft Windows) or FreeBSD
 os_type = platform.system()
 
 #download manager config folder . 
-if os_type == 'Linux' :
+if os_type == 'Linux' or os_type == 'FreeBSD' :
     config_folder = os.path.join(str(home_address) , ".config/persepolis_download_manager")
 elif os_type == 'Darwin':
     config_folder = os.path.join(str(home_address) , "Library/Application Support/persepolis_download_manager")
