@@ -254,7 +254,7 @@ def downloadStatus(gid):
         file_size = file_size_back
         downloaded = downloaded_back
         percent =  int(downloaded * 100 / file_size)
-        percent_str = str(percent) + " %"
+        percent_str = str(percent) + "%"
     else:
         percent_str = None 
         size_str = None
