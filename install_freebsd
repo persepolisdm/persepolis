@@ -78,9 +78,9 @@ sudo rm -rf "$program_path"
 sudo mkdir -p "$program_path"
 sudo cp -rf  ./files/* "$program_path/"
 sudo cp -rf "./persepolis_freebsd" "$exec_path/persepolis"
-sudo cp -rf "./Persepolis Download Manager.desktop" "/usr/share/applications/"
+sudo cp -rf "./Persepolis Download Manager.desktop" "/usr/local/share/applications/"
 sudo cp -rf "./files/icon.svg" "/usr/local/share/pixmaps/persepolis.svg"
-sudo mv -f "man/persepolis.1.gz" "/usr/local/share/man/man1/persepolis.1.gz"
+sudo mv -f "man/persepolis.1.gz" "/usr/local/man/man1/persepolis.1.gz"
 if [ "$?" -eq "0" ];then
     echo "Installation compeleted!"
 else
