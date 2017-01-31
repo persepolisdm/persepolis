@@ -29,7 +29,7 @@ mohammadamin@beeit.ir
 
 Persepolis website developer : **Sadegh Alirezaie**
 https://github.com/Alirezaies
-alirezaie.sadegh@gmail.com
+sadegh@webgo.ir
 
 Chrome/Chromium Integration : **Jafar Akhondali**
 https://github.com/JafarAkhondali
