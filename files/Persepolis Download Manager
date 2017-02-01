@@ -186,7 +186,7 @@ if args.chromium != 'no':
             if 'referrer' in data.keys():
                 args.referer = data['referrer']
 
-            if 'filename' in data.keys():
+            if 'filename' in data.keys() and data['filename'] != '':
                 args.name = data['filename']
 
             if 'cookies' in data.keys():
