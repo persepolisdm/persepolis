@@ -9,15 +9,23 @@
 
 
 ### Persepolis Website
-visit our website for installation instructions
 
-    [Persepolis Website](https://persepolisdm.github.io)
+Visit our website for installation instructions
+
+[Persepolis Website](https://persepolisdm.github.io)
+
+
+
 
 ### Persepolis Wiki
+
 Read [Our Wiki For More Information Including Installers and Development and FAQ](https://github.com/persepolisdm/persepolis/wiki)
 
 
+
+
 ### How to report issues or how to ask a question
+
 If you have any question and if you want to report a bug or suggest a new feature feel free to [create an issue here](https://github.com/persepolisdm/persepolis/issues)
 
 
