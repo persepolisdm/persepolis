@@ -7,9 +7,22 @@
 
 ![ScreenShot](http://s1.picofile.com/file/8264685926/persepolis.jpg)
 
-Read [Our Wiki For More Information Including Installers And Development](https://github.com/persepolisdm/persepolis/wiki)
+
+### Persepolis Website
+visit our website for installation instructions
+
+    [Persepolis Website](https://persepolisdm.github.io)
+
+### Persepolis Wiki
+Read [Our Wiki For More Information Including Installers and Development and FAQ](https://github.com/persepolisdm/persepolis/wiki)
+
+
+### How to report issues or how to ask a question
+If you have any question and if you want to report a bug or suggest a new feature feel free to [create an issue here](https://github.com/persepolisdm/persepolis/issues)
+
 
 ## Contact us
+
 Persepolis code developer : **Alireza Amirsamimi**
 https://github.com/alireza-amirsamimi
 alireza.amirsamimi@ubuntu.ir
