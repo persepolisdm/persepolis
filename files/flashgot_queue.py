@@ -257,6 +257,12 @@ class FlashgotQueue(TextQueue_Ui):
 
     def changeFolder(self,button):
         fname = QFileDialog.getExistingDirectory(self,'Select a directory', download_path )
+
+        if fname:
+            #Returns pathName with the '/' separators converted to separators that are appropriate for the underlying operating system.
+            #On Windows, toNativeSeparators("c:/winnt/system32") returns "c:\winnt\system32".
+            fname = QDir.toNativeSeparators(fname)
+ 
         if os.path.isdir(fname):
             self.download_folder_lineEdit.setText(fname)
 

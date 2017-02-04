@@ -17,6 +17,7 @@ from newopen import Open
 from time import sleep
 import osCommands
 import platform
+import subprocess
 
 home_address = os.path.expanduser("~")
 
@@ -64,7 +65,9 @@ def shutDown(gid , password = None):
             os.system( 'echo "' + password + '" |sudo -S shutdown -h now ')
 
         elif os_type == 'Windows':
-            os.system('shutdown -S')
+            CREATE_NO_WINDOW = 0x08000000
+            subprocess.Popen(['shutdown','-S'] , shell = False ,creationflags = CREATE_NO_WINDOW )
+
 
         elif os_type == 'FreeBSD':
             os.system( 'echo "' + password + '" |sudo -S shutdown -p now ')

@@ -17,6 +17,7 @@ from newopen import Open
 import ast
 import platform
 from PyQt5.QtCore import QSettings
+import subprocess
 
 os_type = platform.system()
 
@@ -53,7 +54,9 @@ def playNotification(file):
             os.system("osascript -e 'beep 3' &")
 
         elif os_type == 'Windows':
-            os.system('rundll32 user32.dll,MessageBeep')
+            CREATE_NO_WINDOW = 0x08000000
+            subprocess.Popen(['rundll32' , 'user32.dll,MessageBeep'] , shell = False , creationflags = CREATE_NO_WINDOW )
+
 
         elif os_type == 'FreeBSD':
             print('sorry!no notification sound available for now in FreeBSD')

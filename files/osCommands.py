@@ -16,6 +16,9 @@
 import platform
 import os
 import shutil
+import subprocess
+import PyQt5
+from PyQt5 import QtCore
 
 os_type = platform.system()
 
@@ -31,7 +34,9 @@ def xdgOpen(file_path):
     elif os_type == 'Darwin': # OS X systems
         os.system('open "' + file_path + '" &' )
     elif os_type == 'Windows':
-        os.system('start "" "' + file_path + '" &')
+        CREATE_NO_WINDOW = 0x08000000
+        subprocess.Popen(['cmd' , '/C' ,'start', file_path  ,  file_path  ] , shell = False , creationflags = CREATE_NO_WINDOW )
+
 
 def remove(file_path): #removing file with path of file_path
     if os.path.isfile(file_path):

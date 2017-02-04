@@ -167,6 +167,14 @@ args = parser.parse_args()
 add_link_dictionary = {}
 if args.chromium != 'no':
 
+    #Send message to chrome extension
+    message = '{"enable": true, "version": "1.85"}'.encode('utf-8')
+    sys.stdout.buffer.write((struct.pack('I', len(message))))
+    sys.stdout.buffer.write(message)
+    sys.stdout.flush()
+
+    
+
     text_length_bytes = sys.stdin.buffer.read(4)
 
 		# Unpack message length as 4 byte integer.
@@ -186,7 +194,7 @@ if args.chromium != 'no':
             if 'referrer' in data.keys():
                 args.referer = data['referrer']
 
-            if 'filename' in data.keys():
+            if 'filename' in data.keys() and data['filename'] != '':
                 args.name = data['filename']
 
             if 'cookies' in data.keys():

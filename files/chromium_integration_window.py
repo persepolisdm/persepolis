@@ -21,6 +21,7 @@ import platform , os
 from newopen import Open
 from functools import partial
 import osCommands
+import subprocess
 
 
 os_type = platform.system()
@@ -180,7 +181,10 @@ class ChromiumIntegrationWindow(QWidget):
         if os_type != 'Windows':
             os.system('chmod +x "' + str(native_message_file) + '"' )
         else:
-            os.system('REG ADD "HKCU\\Software\\Google\Chrome\\NativeMessagingHosts\\com.persepolis.pdmchromewrapper.json" /ve /t REG_SZ /d "' + str(exec_path) + '" /f')
+            CREATE_NO_WINDOW = 0x08000000
+            subprocess.Popen(['REG','ADD','"HKCU\\Software\\Google\Chrome\\NativeMessagingHosts\\com.persepolis.pdmchromewrapper.json"', '/ve' , '/t' , 'REG_SZ' ,'/d' , '"' + str(exec_path) + '"' , '/f'] , shell = False ,creationflags = CREATE_NO_WINDOW )
+
+
 
 
         if browser == 'chromium' :

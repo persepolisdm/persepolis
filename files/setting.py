@@ -18,7 +18,7 @@ import ast , os , copy
 from PyQt5 import QtWidgets
 from PyQt5.QtWidgets import QFileDialog , QStyleFactory , QMessageBox 
 from PyQt5.QtGui import QFont
-from PyQt5.QtCore import QSize , QPoint
+from PyQt5.QtCore import QSize , QPoint , QDir
 from newopen import Open , readDict
 import osCommands
 import platform
@@ -178,7 +178,11 @@ class PreferencesWindow(Setting_Ui):
     def downloadFolderPushButtonClicked(self,button):
         download_path = str(self.persepolis_setting.value('settings/download_path'))
         fname = QFileDialog.getExistingDirectory(self,'Select a directory', download_path )
+
         if fname:
+            #Returns pathName with the '/' separators converted to separators that are appropriate for the underlying operating system.
+            #On Windows, toNativeSeparators("c:/winnt/system32") returns "c:\winnt\system32".
+            fname = QDir.toNativeSeparators(fname)
             self.download_folder_lineEdit.setText(fname)
             self.persepolis_setting.setValue('settings/download_path' , str(fname) ) 
 

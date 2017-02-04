@@ -66,11 +66,12 @@ def startAria():
         os.system("'" + aria2d + "' --no-conf  --enable-rpc --rpc-listen-port '" + str(port) + "' --rpc-max-request-size=2M --rpc-listen-all --quiet=true &")
 
     elif os_type == 'Windows':
+        NO_WINDOW = 0x08000000
         cwd = os.getcwd() #finding current directory
         aria2d = os.path.join(cwd , "aria2c.exe") #defining aria2c.exe path
 
         #aria2 command in windows
-        os.system('start /B "" "' + aria2d + '" --no-conf  --enable-rpc --rpc-listen-port=' + str(port) + ' --rpc-max-request-size=2M --rpc-listen-all --quiet=true ')
+        subprocess.Popen( [aria2d  ,'--no-conf','--enable-rpc','--rpc-listen-port=' + str(port) ,  '--rpc-max-request-size=2M' ,'--rpc-listen-all' ,'--quiet=true'] , shell = False , creationflags = NO_WINDOW )
  
     time.sleep(2)
     answer = aria2Version()
