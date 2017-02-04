@@ -16,7 +16,7 @@
 from PyQt5 import QtWidgets , QtCore
 from PyQt5.QtWidgets import QHBoxLayout ,  QApplication ,  QFileDialog,  QCheckBox , QLineEdit , QPushButton  
 from PyQt5.QtGui import QIcon
-from PyQt5.QtCore import QPoint , QSize
+from PyQt5.QtCore import QPoint , QSize , QDir
 import os , ast , functools
 from addlink_ui import AddLinkWindow_Ui
 from newopen import Open , readDict

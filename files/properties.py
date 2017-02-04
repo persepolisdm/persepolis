@@ -16,7 +16,7 @@
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import QFileDialog 
-from PyQt5.QtCore import QSize , QPoint
+from PyQt5.QtCore import QSize , QPoint , QDir
 import os , ast
 from newopen import Open , writeList , readList , readDict
 from addlink_ui import AddLinkWindow_Ui

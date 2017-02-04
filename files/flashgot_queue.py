@@ -18,7 +18,7 @@ from functools import partial
 from PyQt5 import QtWidgets , QtCore , QtGui
 from PyQt5.QtGui import QIcon
 from PyQt5.QtWidgets import QTableWidgetItem , QFileDialog
-from PyQt5.QtCore import QPoint , QSize , QThread , pyqtSignal
+from PyQt5.QtCore import QPoint , QSize , QThread , pyqtSignal , QDir
 from newopen import Open , readDict
 import download
 import ast , os 
