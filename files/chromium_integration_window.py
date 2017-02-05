@@ -153,7 +153,9 @@ class ChromiumIntegrationWindow(QWidget):
 
 
         elif os_type == 'Darwin' :
-            exec_path = '/Applications/Persepolis Download Manager.app/Contents/MacOS/Persepolis Download Manager'
+
+            current_directory = os.getcwd()
+            exec_path = os.path.join(current_directory , 'Persepolis Download Manager')
             
             if browser == 'chromium' :
                 native_message_folder = home_address + '/Library/Application Support/Chromium/NativeMessagingHosts'
@@ -161,7 +163,10 @@ class ChromiumIntegrationWindow(QWidget):
                 native_message_folder = home_address + '/Library/Application Support/Google/Chrome/NativeMessagingHosts'
 
         elif os_type == 'Windows':
-            exec_path = os.path.join(home_address , 'Program Files\\Persepolis\\Persepolis Download Manager.exe')
+
+            current_directory = os.getcwd()
+            
+            exec_path = os.path.join(current_directory,'Persepolis Download Manager.exe')
 
             native_message_folder = os.path.join(home_address , 'AppData\Local\persepolis_download_manager')
 
