@@ -1,16 +1,14 @@
-from check import Check
-import subprocess
-def Main():
-    try:
-        chk = Check()
-        if chk.check_PyQt() == False:
-            print ("PyQt5 Is Not Installed!")
-            sys.exit()
-        elif chk.check_requests() == False:
-            print ("requests Is Not installed!")
-            sys.exit()
-        subprocess.call(["./install"])
-    except:
-        print ("Error!")
-if __name__ == "__main__":
-    Main()
+from distutils.core import setup
+setup(
+  name = 'persepolis',
+  packages = ['persepolis'], # this must be the same as the name above
+  version = '2.3.3',
+  description = 'Persepolis Download Manager',
+  author = 'AliReza AmirSamimi, Sadegh Alirezaie',
+  author_email = 'sadegh@webgo.ir',
+  url = 'https://github.com/persepolisdm/persepolis', # use the URL to the github repo
+  download_url = 'https://github.com/persepolisdm/persepolis', # I'll explain this in a second
+  keywords = ['DownloadManager', 'aria2', 'Download'], # arbitrary keywords
+  classifiers = [],
+  install_requires=['PyQt5', 'requests'],
+)
