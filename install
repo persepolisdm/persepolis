@@ -33,13 +33,24 @@ fi
 
 install_path=`pwd`
 cd "$install_path"
-chmod +x "./check.py"
+chmod +x "./checkpyqt.py"
+chmod +x "./check_request.py"
 
-./check.py
-#deleted some lines here
+./checkpyqt.py
+if [ "$?" -ne "0" ];then
+    echo "pyqt5 not installed"
+    echo "Installation Failed!"
+    exit
+fi
 
+./check_request.py
+if [ "$?" -ne "0" ];then
+    echo "python3-requests not installed"
+    echo "Installation Failed!"
+    exit
+fi
 
-if [ "$os_type" != "mac" ];then
+if [ "$os_type" != "mac" ];then 
     notify-send --version 1>/dev/null
     if [ "$?" -ne "0" ];then
         echo "libnotify-bin not installed"
@@ -76,3 +87,7 @@ else
     echo "Installation Failed"
 fi
 exit
+
+
+
+
