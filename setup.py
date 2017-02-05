@@ -1,4 +1,5 @@
 from distutils.core import setup
+
 setup(
   name = 'persepolis',
   packages = ['persepolis'], # this must be the same as the name above
@@ -12,3 +13,5 @@ setup(
   classifiers = [],
   install_requires=['PyQt5', 'requests'],
 )
+
+import install
