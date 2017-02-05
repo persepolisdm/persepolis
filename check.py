@@ -14,8 +14,27 @@
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import os
 import sys
-from PyQt5.QtCore import  QT_VERSION_STR
-print("Qt version:", QT_VERSION_STR)
-sys.exit(0)
+import importlib
+import subprocess
+class Check:
 
+    def check_PyQt(self):
+        """ Check if PyQt5 is installed """
+        try:
+            import PyQt5
+            return True
+
+        except:
+            return False
+
+    def check_requests(self):
+        """ checks if requests is installed """
+
+        try:
+            import requests
+            return True
+
+        except ImportError:
+            return False
