@@ -177,7 +177,7 @@ class ChromiumIntegrationWindow(QWidget):
 
         json_file_lines = ['{' , '    "name": "com.persepolis.pdmchromewrapper",' , '    "description": "Integrate Persepolis with Google Chrome",' , '    "path": "' + str(exec_path) + '",' , '    "type": "stdio",' , '    "allowed_origins": [' , '        "chrome-extension://legimlagjjoghkoedakdjhocbeomojao/"' , '    ]','}' ]
 
-        native_message_file = native_message_folder + '/com.persepolis.pdmchromewrapper.json'
+        native_message_file = os.path.join(native_message_folder  , 'com.persepolis.pdmchromewrapper.json')
 
         osCommands.makeDirs(native_message_folder)
 
@@ -190,8 +190,8 @@ class ChromiumIntegrationWindow(QWidget):
             os.system('chmod +x "' + str(native_message_file) + '"' )
         else:
             CREATE_NO_WINDOW = 0x08000000
-            subprocess.Popen(['REG','ADD','"HKCU\\Software\\Google\Chrome\\NativeMessagingHosts\\com.persepolis.pdmchromewrapper.json"', '/ve' , '/t' , 'REG_SZ' ,'/d' , '"' + str(exec_path) + '"' , '/f'] , shell = False ,creationflags = CREATE_NO_WINDOW )
-
+#             subprocess.Popen(['REG','ADD','"HKCU\\Software\\Google\Chrome\\NativeMessagingHosts\\com.persepolis.pdmchromewrapper.json"', '/ve' , '/t' , 'REG_SZ' ,'/d' , '"' + str(exec_path) + '"' , '/f'] , shell = False ,creationflags = CREATE_NO_WINDOW )
+            os.system(r'REG ADD "HKCU\Software\Google\Chrome\NativeMessagingHosts\com.persepolis.pdmchromewrapper" /ve /t REG_SZ /d "' + native_message_file + '" /f')
 
 
 
