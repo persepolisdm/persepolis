@@ -22,6 +22,7 @@ from newopen import Open
 from functools import partial
 import osCommands
 import subprocess
+import sys
 
 
 os_type = platform.system()
