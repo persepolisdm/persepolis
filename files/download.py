@@ -67,7 +67,8 @@ def startAria():
 
     elif os_type == 'Windows':
         NO_WINDOW = 0x08000000
-        cwd = os.getcwd() #finding current directory
+        cwd = sys.argv[0]
+        cwd = os.path.dirname(cwd)
         aria2d = os.path.join(cwd , "aria2c.exe") #defining aria2c.exe path
 
         #aria2 command in windows
