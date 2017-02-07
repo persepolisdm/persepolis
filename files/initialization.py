@@ -155,7 +155,7 @@ if persepolis_version != 2.4 :
             osCommands.removeDir(old_config_folder)
             persepolis_setting.setValue('version/version' , 2.4 ) 
             persepolis_setting.sync()
-        except Exception, e :
+        except Exception as e :
 #            print(e)
             logger.logObj.error("Failed to load configuration!", exc_info=True)
     else:
