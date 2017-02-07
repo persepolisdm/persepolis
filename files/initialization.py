@@ -24,7 +24,7 @@
 
 import  os , shutil , ast 
 from newopen import Open
-import osCommands
+import osCommands, logger
 import platform
 from compatibility import compatibility
 import glob
@@ -155,8 +155,9 @@ if persepolis_version != 2.4 :
             osCommands.removeDir(old_config_folder)
             persepolis_setting.setValue('version/version' , 2.4 ) 
             persepolis_setting.sync()
-        except Exception as e :
-            print(e)
+        except Exception, e :
+#            print(e)
+            logger.logObj.error("Failed to load configuration!", exc_info=True)
     else:
             
         persepolis_setting.setValue('version/version' , 2.4 ) 

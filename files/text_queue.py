@@ -37,10 +37,10 @@ class QueueSpiderThread(QThread):
         try :
             filename = spider.queueSpider(self.add_link_dictionary)
             self.QUEUESPIDERRETURNEDFILENAME.emit(filename)
-        except Exception as e  :
+        except Exception, e  :
 #            print(e)
 #            print("Spider couldn't find download information")
-            logger.sendToLog("Spider couldn't find download information", "ERROR")
+            logger.logObj.error("Spider couldn't find download information", exc_info=True)
 
 
 home_address = os.path.expanduser("~")
