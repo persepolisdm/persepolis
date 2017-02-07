@@ -15,7 +15,7 @@ elif os_type == 'Windows' :
 log_file = os.path.join(str(config_folder), 'persepolisdm.log')
 
 # define logging object
-logObj = logging.getLogger(__name__)
+logObj = logging.getLogger("Persepolis Download Manager")
 logObj.setLevel(logging.INFO)
 
 # create a file handler
