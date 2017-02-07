@@ -170,6 +170,7 @@ class ChromiumIntegrationWindow(QWidget):
             current_directory = os.path.dirname(cwd)
  
             exec_path = os.path.join(current_directory,'Persepolis Download Manager.exe')
+            exec_path.replace('\\' , '\\\\')
 
             native_message_folder = os.path.join(home_address , 'AppData\Local\persepolis_download_manager')
 
