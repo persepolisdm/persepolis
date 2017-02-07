@@ -23,6 +23,7 @@ from newopen import Open , readList , writeList , readDict
 import download
 from bubble import notifySend
 import platform
+from shutdown import shutDown
 
 os_type = platform.system()
 
@@ -219,9 +220,9 @@ class ProgressWindow(ProgressWindow_Ui):
                     #this script is creating a file with name of self.gid in  this folder "persepolis_tmp/shutdown/" . and writing a "wait" word in this file 
                     #shutdown_script is checking that file every second . when "wait" changes to "shutdown" in that file then script is shutting down system 
  
-                        shutdown_enable = ShutDownThread( current_category_tree_text , passwd)
+                        shutdown_enable = ShutDownThread( self.gid , passwd)
                         self.parent.threadPool.append(shutdown_enable)
-                        self.parent.threadPool[len(self.threadPool) - 1].start()
+                        self.parent.threadPool[len(self.parent.threadPool) - 1].start()
  
                 else:
                     self.after_checkBox.setChecked(False)
@@ -229,9 +230,9 @@ class ProgressWindow(ProgressWindow_Ui):
                 self.after_checkBox.setChecked(False)
 
         else: #for Windows
-            shutdown_enable = ShutDownThread( current_category_tree_text)
+            shutdown_enable = ShutDownThread( self.gid)
             self.parent.threadPool.append(shutdown_enable)
-            self.parent.threadPool[len(self.threadPool) - 1].start()
+            self.parent.threadPool[len(self.parent.threadPool) - 1].start()
  
 
 
