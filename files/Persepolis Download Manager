@@ -17,7 +17,7 @@
 #this script is running persepolis for Linux
 from newopen import Open
 import osCommands
-import os , sys , time , ast , argparse
+import os , sys , time , ast , argparse, logger
 import struct
 import json
 import platform
@@ -201,9 +201,11 @@ if args.chromium != 'no':
 if args.clear:
     status = osCommands.removeDir(str(config_folder))
     if status == 'ok' or status == 'no' :
-        print ('Download list cleard!')
+#		print ('Download list cleard!')
+        logger.sendToLog('Download list cleared!', 'INFO')
     else:
-        print("persepolis can't clear download list")
+#        print("persepolis can't clear download list")
+        logger.sendToLog("Persepolis can't clear download list.", "ERROR")
 
     sys.exit(0)
 
@@ -211,7 +213,8 @@ if args.default :
     persepolis_setting = QSettings('persepolis_download_manager' , 'persepolis')
     persepolis_setting.clear()
     persepolis_setting.sync()
-    print ('Persepolis restored default')
+#	print ('Persepolis restored default')
+    logger.sendToLog('Persepolis restored default settings.', 'INFO')
     sys.exit(0)
 
 if args.tray :
@@ -292,7 +295,8 @@ if lock_file_validation: #if lock_file is existed , it means persepolis is still
     else:
          sys.exit(0)
 else:
-    print('persepolis is still running')
+#	print('persepolis is still running')
+    logger.sendToLog('Persepolis is still running', 'WARNING')
 #this section warns user that program is still running and no need to run it again
 #and creating a file to notify mainwindow for showing
     if not('link' in add_link_dictionary):

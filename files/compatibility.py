@@ -13,7 +13,7 @@
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import time
-import os
+import os, logger
 import ast
 from newopen import Open
 #this script for compatibility between Version 2.0 and 2.1 and 2.2 and 2.3 of persepolis
@@ -84,7 +84,8 @@ def compatibility():
                 f.writelines(str(dictionary)) 
                 f.close()
 
-                print(str(dictionary))
+#				print(str(dictionary))
+                logger.sendToLog(str(dictionary), 'INFO')
 
                 f = Open(download_list_file)
                 f_lines = f.readlines()

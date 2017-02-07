@@ -37,7 +37,7 @@ from setting import PreferencesWindow
 from about import AboutWindow
 import icons_resource
 import spider
-import osCommands
+import osCommands, logger
 import platform
 from copy import deepcopy
 from shutdown import shutDown
@@ -224,7 +224,8 @@ class SpiderThread(QThread):
         try :
             spider.spider(self.add_link_dictionary , self.gid)
         except :
-            print("Spider couldn't find download information")
+#            print("Spider couldn't find download information")
+            logger.sendToLog("Spider couldn't find download information", "ERROR")
 
 #this thread sending download request to aria2            
 class DownloadLink(QThread):
@@ -850,8 +851,10 @@ class MainWindow(MainWindow_Ui):
                     try :
                         self.download_table.setItem(row , i , item)
                     except Exception as problem:
-                        print('updating download_table was unsuccessful\nError is :' )
-                        print (problem)
+#                        print('updating download_table was unsuccessful\nError is :' )
+#                        print (problem)
+                        logger.sendToLog("Error occured while updating download table", "INFO")
+                        logger.sendToLog(problem, "ERROR")
 #updating download_table (refreshing!)
                 self.download_table.viewport().update()
 #update progresswindow
@@ -1508,7 +1511,8 @@ class MainWindow(MainWindow_Ui):
         self.persepolis_setting.sync()
 
         self.hide()
-        print("Please Wait...")
+#        print("Please Wait...")
+        logger.sendToLog("Please wait ...", "INFO")
 
         self.stopAllDownloads(event) #stopping all downloads
         self.system_tray_icon.hide() #hiding system_tray_icon
@@ -1523,7 +1527,8 @@ class MainWindow(MainWindow_Ui):
 
 
         QCoreApplication.instance().quit
-        print("Persepolis Closed")
+#        print("Persepolis Closed")
+        logger.sendToLog("Persepolis closed!", "INFO")
         sys.exit(0)
 
 #showTray methode is showing/hiding system tray icon
