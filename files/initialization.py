@@ -75,7 +75,15 @@ if os_type != 'Windows':
 else:
     persepolis_tmp = os.path.join(str(home_address) , 'AppData','Local','persepolis_tmp')
 
+#removing persepolis_tmp on start up
 osCommands.removeDir(persepolis_tmp)
+
+#log file address
+log_file = os.path.join(str(config_folder), 'persepolisdm.log')
+
+#removing log_file on start up
+osCommands.remove(log_file)
+
 
 #lock files perventing to access a file simultaneously
 
