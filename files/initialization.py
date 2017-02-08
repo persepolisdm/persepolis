@@ -81,8 +81,12 @@ osCommands.removeDir(persepolis_tmp)
 #log file address
 log_file = os.path.join(str(config_folder), 'persepolisdm.log')
 
-#removing log_file on start up
-osCommands.remove(log_file)
+#removing old line from log_file
+osCommands.touch(log_file)
+f = open(log_file , 'w' )
+f.writelines('Persepolis log file\n')
+f.close()
+
 
 
 #lock files perventing to access a file simultaneously
