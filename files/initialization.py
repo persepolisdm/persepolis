@@ -24,7 +24,7 @@
 
 import  os , shutil , ast 
 from newopen import Open
-import osCommands, logger
+import osCommands
 import platform
 from compatibility import compatibility
 import glob
@@ -75,19 +75,7 @@ if os_type != 'Windows':
 else:
     persepolis_tmp = os.path.join(str(home_address) , 'AppData','Local','persepolis_tmp')
 
-#removing persepolis_tmp on start up
 osCommands.removeDir(persepolis_tmp)
-
-#log file address
-log_file = os.path.join(str(config_folder), 'persepolisdm.log')
-
-#removing old line from log_file
-# osCommands.touch(log_file)
-# f = open(log_file , 'w' )
-# f.writelines('Persepolis log file\n')
-# f.close()
-# 
-
 
 #lock files perventing to access a file simultaneously
 
@@ -168,8 +156,7 @@ if persepolis_version != 2.4 :
             persepolis_setting.setValue('version/version' , 2.4 ) 
             persepolis_setting.sync()
         except Exception as e :
-#            print(e)
-            logger.logObj.error("Failed to load configuration!", exc_info=True)
+            print(e)
     else:
             
         persepolis_setting.setValue('version/version' , 2.4 ) 
