@@ -14,14 +14,18 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import os.path
-from sys import platform
+import platform
 import winreg
 from winreg import QueryValueEx, OpenKey, SetValueEx
+
+
+#finding os_type
+os_type = platform.system()
 
 # check startup
 def checkstartup():
     # check if it is linux
-    if platform == "linux" or platform == "linux2":
+    if os_type == "Linux" :
         homedir = os.environ['HOME']
         # check if the startup exists
         if os.path.exists(homedir + "/.config/autostart/persepolis.desktop"):
@@ -36,7 +40,7 @@ def checkstartup():
         # OS X
 
     # check if it is Windows
-    elif platform == "win32":
+    elif os_type == "Windows":
         # try to open startup key and check persepolis value
         try:
             aKey = winreg.OpenKey(winreg.HKEY_LOCAL_MACHINE, "Software\\Microsoft\\Windows\\CurrentVersion\\Run", 0, winreg.KEY_ALL_ACCESS)
@@ -59,7 +63,7 @@ def checkstartup():
 # add startup file
 def addstartup():
     # check if it is linux
-    if platform == "linux" or platform == "linux2":
+    if os_type == 'Linux': 
         homedir = os.environ['HOME']
         entry = '''!/usr/bin/env xdg-open
         [Desktop Entry]
@@ -93,7 +97,7 @@ def addstartup():
         # OS X
 
     # check if it is Windows
-    elif platform == "win32":
+    elif os_type == "Windows":
         # Connect to the startup path in Registry
         key = winreg.OpenKey(winreg.HKEY_LOCAL_MACHINE,"Software\\Microsoft\\Windows\\CurrentVersion\\Run",0,winreg.KEY_ALL_ACCESS)
         # add persepolis to startup
@@ -104,7 +108,7 @@ def addstartup():
 # remove startup file
 def removestartup():
     # check if it is linux
-    if platform == "linux" or platform == "linux2":
+    if os_type == 'Linux': 
         homedir = os.environ['HOME']
         # if startup file exists
         if os.path.exists(homedir + "/.config/autostart/persepolis.desktop"):
@@ -119,7 +123,7 @@ def removestartup():
             # OS X
 
     # check if it is Windows
-    elif platform == "win32":
+    elif os_type == 'Windows': 
         # Connect to the startup path in Registry
         key = winreg.OpenKey(winreg.HKEY_LOCAL_MACHINE,"Software\\Microsoft\\Windows\\CurrentVersion\\Run",0,winreg.KEY_ALL_ACCESS)
         # add persepolis to startup
