@@ -90,7 +90,7 @@ def addstartup():
             os.makedirs(homedir + "/.config/autostart",0o777)
             startupfile = open(homedir + "/.config/autostart/persepolis.desktop", 'w+')
             startupfile.write(entry)
-            os.chmod(homedir + "/.config/٬پautostart/persepolis.desktop",0o777)
+            os.chmod(homedir + "/.config/.autostart/persepolis.desktop",0o777)
 
     # check if it is mac OS
     #elif platform == "darwin":
