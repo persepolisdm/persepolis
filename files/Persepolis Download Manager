@@ -164,6 +164,13 @@ args = parser.parse_args()
 
 add_link_dictionary = {}
 if args.chromium != 'no':
+#
+# Platform specific configuration
+    if os_type == "Windows":
+  # Set the default I/O mode to O_BINARY in windows
+        import msvcrt
+        msvcrt.setmode(sys.stdin.fileno(), os.O_BINARY)
+        msvcrt.setmode(sys.stdout.fileno(), os.O_BINARY)
 
     #Send message to chrome extension
     message = '{"enable": true, "version": "1.85"}'.encode('utf-8')
