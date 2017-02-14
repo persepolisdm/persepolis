@@ -135,3 +135,4 @@ def removestartup():
 
             # Close connection
             winreg.CloseKey(key)
+
