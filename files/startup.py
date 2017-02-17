@@ -32,8 +32,11 @@ def checkstartup():
     if os_type == "Linux" or os_type == "FreeBSD" :
         # check if the startup exists
         if os.path.exists(home_address + "/.config/autostart/persepolis.desktop"):
+
+
             return True
         else:
+
             return False
 
     #TODO
@@ -45,7 +48,7 @@ def checkstartup():
     elif os_type == "Windows":
         # try to open startup key and check persepolis value
         try:
-            aKey = winreg.OpenKey(winreg.HKEY_CURRENT_USER, "Software\\Microsoft\\Windows\\CurrentVersion\\Run", 0, winreg.KEY_ALL_ACCESS)
+            aKey = winreg.OpenKey(winreg.HKEY_LOCAL_MACHINE, "Software\\Microsoft\\Windows\\CurrentVersion\\Run", 0, winreg.KEY_ALL_ACCESS)
             startupvalue = winreg.QueryValueEx(aKey,'persepolis')
             startup = True
         except WindowsError:
@@ -54,16 +57,19 @@ def checkstartup():
         # Close the connection
         winreg.CloseKey(aKey)
 
+
         # if the startup enabled or disabled
         if startup:
+
             return True
         if not startup:
+
             return False
 
 # add startup file
 def addstartup():
     # check if it is linux
-    if os_type == 'Linux' or os_type == 'FreeBSD':
+    if os_type == 'Linux' or os_type == 'FreeBSD': 
         entry = '''!/usr/bin/env xdg-open
         [Desktop Entry]
         Name=Persepolis Download Manager
@@ -100,12 +106,10 @@ def addstartup():
     elif os_type == "Windows":
 
         # Connect to the startup path in Registry
-        key = winreg.OpenKey(winreg.HKEY_CURRENT_USER,"Software\\Microsoft\\Windows\\CurrentVersion\\Run",0,winreg.KEY_ALL_ACCESS)
-        # find current persepolis exe path
-        cwd = os.getcwd()
-        persepolisexetray = '"' + cwd + '\Persepolis Download Manager.exe' + '"' + ' --tray'
+        key = winreg.OpenKey(winreg.HKEY_LOCAL_MACHINE,"Software\\Microsoft\\Windows\\CurrentVersion\\Run",0,winreg.KEY_ALL_ACCESS)
+
         # add persepolis to startup
-        winreg.SetValueEx(key, 'persepolis', 0, winreg.REG_SZ,persepolisexetray)
+        winreg.SetValueEx(key, 'persepolis', 0, winreg.REG_SZ, '"C:\Program Files (x86)\Persepolis Download Manager\Persepolis Download Manager.exe" --tray')
 
         # Close connection
         winreg.CloseKey(key)
@@ -113,26 +117,27 @@ def addstartup():
 # remove startup file
 def removestartup():
     # check if it is linux
-    if os_type == 'Linux' or os_type == 'FreeBSD':
+    if os_type == 'Linux' or os_type == 'FreeBSD': 
 
         # remove it
         os.remove(home_address + "/.config/autostart/persepolis.desktop")
 
-    #TODO
-    #adding remove startup command for mac OSX :
-    # check if it is mac OS
-    #elif platform == "darwin":
-        # OS X
+        #TODO 
+        #adding remove startup command for mac OSX :
+        # check if it is mac OS
+        #elif platform == "darwin":
+            # OS X
 
     # check if it is Windows
-    elif os_type == 'Windows':
-        if checkstartup() :
-            # Connect to the startup path in Registry
-            key = winreg.OpenKey(winreg.HKEY_CURRENT_USER,"Software\\Microsoft\\Windows\\CurrentVersion\\Run",0,winreg.KEY_ALL_ACCESS)
+    elif os_type == 'Windows': 
 
-            # remove persepolis from startup
-            winreg.DeleteValue(key, 'persepolis')
+        # Connect to the startup path in Registry
+        key = winreg.OpenKey(winreg.HKEY_LOCAL_MACHINE,"Software\\Microsoft\\Windows\\CurrentVersion\\Run",0,winreg.KEY_ALL_ACCESS)
 
-            # Close connection
-            winreg.CloseKey(key)
+        # remove persepolis from startup
+        winreg.DeleteValue(key, 'persepolis')
+
+        # Close connection
+        winreg.CloseKey(key)
+
 
