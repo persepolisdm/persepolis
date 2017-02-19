@@ -14,7 +14,7 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import os
-import platform
+import platform, sys
 
 home_address = os.path.expanduser("~")
 
@@ -36,9 +36,8 @@ def checkstartup():
         else:
             return False
 
-    #TODO
-    # check if it is mac OS
-    elif platform == "darwin":
+    # check if it is mac
+    elif os_type == "Darwin":
         # OS X
         if os.path.exists(home_address + "/Library/LaunchAgents/com.persepolisdm.plist"):
             return True
@@ -94,10 +93,8 @@ def addstartup():
             startupfile = open(home_address + "/.config/autostart/persepolis.desktop", 'w+')
             startupfile.write(entry)
             os.chmod(home_address + "/.config/.autostart/persepolis.desktop",0o777)
-
-    #TODO
-    # check if it is mac OS
-    elif platform == "darwin":
+    # check if it is mac
+    elif os_type == "Darwin":
         # OS X
         cwd = sys.argv[0]
         cwd = os.path.dirname(cwd)
@@ -116,7 +113,7 @@ def addstartup():
 	<key>RunAtLoad</key>
 	<true/>
 </dict>
-</plist>'''
+</plist>\n'''
         startupfile = open(home_address + '/Library/LaunchAgents/com.persepolisdm.plist', 'w+')
         startupfile.write(entry)
         os.system('launchctl load ' + home_address + "/Library/LaunchAgents/com.persepolisdm.plist")
@@ -142,10 +139,8 @@ def removestartup():
         # remove it
         os.remove(home_address + "/.config/autostart/persepolis.desktop")
 
-    #TODO
-    #adding remove startup command for mac OSX :
     # check if it is mac OS
-    elif platform == "darwin":
+    elif os_type == "Darwin":
         # OS X
         if checkstartup():
             os.system('launchctl unload ' + home_address + "/Library/LaunchAgents/com.persepolisdm.plist")
