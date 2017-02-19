@@ -17,7 +17,7 @@
 #this script is running persepolis for Linux
 from newopen import Open
 import osCommands
-import os , sys , time , ast , argparse, logger
+import os , sys , time , ast , argparse
 import struct
 import json
 import platform
@@ -143,7 +143,7 @@ class PersepolisApplication(QApplication):
 #creating  terminal arguments  
 
 parser = argparse.ArgumentParser(description='Persepolis Download Manager')
-parser.add_argument('chromium' ,nargs = '?' , default = 'no' )
+parser.add_argument('chromium' ,nargs = '?' , default = 'no' , help='this switch is used for chrome native messaging in Linux and Mac' )
 parser.add_argument('--link',action='store',nargs = 1 , help='Download link.(Use "" for links)' )
 parser.add_argument('--referer',action='store',nargs = 1 , help='Set an http referrer (Referer). This affects all http/https downloads.  If * is given, the download URI is also used as the referrer.' )
 parser.add_argument('--cookie',action='store',nargs = 1 , help='Cookie' )
@@ -153,6 +153,7 @@ parser.add_argument('--name',action='store',nargs = 1 , help='The  file  name  o
 parser.add_argument('--default',action='store_true',help='restore default setting' )
 parser.add_argument('--clear',action='store_true',help='Clear download list and user setting!' )
 parser.add_argument('--tray',action='store_true',help="Persepolis is starting in tray icon. It's useful when you want to put persepolis in system's startup." )
+parser.add_argument('--parent-window',action='store',nargs = 1 , help='this switch is used for chrome native messaging in Windows' )
 parser.add_argument('--version', action='version', version='Persepolis Download Manager 2.4 alpha')
 args = parser.parse_args()
 
@@ -163,7 +164,14 @@ args = parser.parse_args()
 
 
 add_link_dictionary = {}
-if args.chromium != 'no':
+if args.chromium != 'no' or args.parent_window:
+#
+# Platform specific configuration
+    if os_type == "Windows":
+  # Set the default I/O mode to O_BINARY in windows
+        import msvcrt
+        msvcrt.setmode(sys.stdin.fileno(), os.O_BINARY)
+        msvcrt.setmode(sys.stdout.fileno(), os.O_BINARY)
 
     #Send message to chrome extension
     message = '{"enable": true, "version": "1.85"}'.encode('utf-8')
@@ -201,11 +209,9 @@ if args.chromium != 'no':
 if args.clear:
     status = osCommands.removeDir(str(config_folder))
     if status == 'ok' or status == 'no' :
-#		print ('Download list cleard!')
-        logger.sendToLog('Download list cleared!', 'INFO')
+        print ('Download list cleard!')
     else:
-#        print("persepolis can't clear download list")
-        logger.sendToLog("Persepolis can't clear download list.", "ERROR")
+        print("persepolis can't clear download list")
 
     sys.exit(0)
 
@@ -213,8 +219,7 @@ if args.default :
     persepolis_setting = QSettings('persepolis_download_manager' , 'persepolis')
     persepolis_setting.clear()
     persepolis_setting.sync()
-#	print ('Persepolis restored default')
-    logger.sendToLog('Persepolis restored default settings.', 'INFO')
+    print ('Persepolis restored default')
     sys.exit(0)
 
 if args.tray :
@@ -295,8 +300,7 @@ if lock_file_validation: #if lock_file is existed , it means persepolis is still
     else:
          sys.exit(0)
 else:
-#	print('persepolis is still running')
-    logger.sendToLog('Persepolis is still running', 'WARNING')
+    print('persepolis is still running')
 #this section warns user that program is still running and no need to run it again
 #and creating a file to notify mainwindow for showing
     if not('link' in add_link_dictionary):

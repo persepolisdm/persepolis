@@ -22,6 +22,7 @@ from PyQt5.QtCore import QSize , QPoint , QDir
 from newopen import Open , readDict
 import osCommands
 import platform
+import startup
 
 home_address = os.path.expanduser("~")
 os_type = platform.system()
@@ -143,6 +144,13 @@ class PreferencesWindow(Setting_Ui):
         else:
             self.after_download_checkBox.setChecked(False)
 
+#run persepolis at startup checkBox
+        if str(self.persepolis_setting.value('startup')) == 'yes':
+            self.startup_checkbox.setChecked(True)
+        else:
+            self.startup_checkbox.setChecked(False)
+
+
 #ok cancel default button
         self.cancel_pushButton.clicked.connect(self.close)
         self.defaults_pushButton.clicked.connect(self.defaultsPushButtonPressed)
@@ -209,7 +217,7 @@ class PreferencesWindow(Setting_Ui):
         download_path_default = os.path.join(str(home_address) , 'Downloads' , 'Persepolis')
 
  
-        self.setting_dict = { 'show-progress' : 'yes' , 'show-menubar' : 'no' , 'show-sidepanel' : 'yes' , 'rpc-port' : 6801 , 'notification' : 'Native notification' , 'after-dialog' : 'yes' , 'tray-icon':'yes', 'max-tries' : 5 , 'retry-wait': 0 , 'timeout' : 60 , 'connections' : 16 , 'download_path_temp' : download_path_temp_default , 'download_path':download_path_default , 'sound' : 'yes' , 'sound-volume':100 , 'style':'Fusion' , 'color-scheme' : 'Persepolis Dark Red' , 'icons':'Archdroid-Red','font' : 'Ubuntu' , 'font-size' : 9  }
+        self.setting_dict = { 'startup' : 'no' , 'show-progress' : 'yes' , 'show-menubar' : 'no' , 'show-sidepanel' : 'yes' , 'rpc-port' : 6801 , 'notification' : 'Native notification' , 'after-dialog' : 'yes' , 'tray-icon':'yes', 'max-tries' : 5 , 'retry-wait': 0 , 'timeout' : 60 , 'connections' : 16 , 'download_path_temp' : download_path_temp_default , 'download_path':download_path_default , 'sound' : 'yes' , 'sound-volume':100 , 'style':'Fusion' , 'color-scheme' : 'Persepolis Dark Red' , 'icons':'Archdroid-Red','font' : 'Ubuntu' , 'font-size' : 9  }
 
         #this loop is checking values in persepolis_setting . if value is not valid then value replaced by default_setting_dict value
         for key in self.setting_dict.keys():
@@ -265,6 +273,9 @@ class PreferencesWindow(Setting_Ui):
 
 #show progress window
         self.show_progress_window_checkbox.setChecked(True)
+
+#run persepolis at startup checkBox
+        self.startup_checkbox.setChecked(False)
         
         self.persepolis_setting.endGroup()
 
@@ -370,6 +381,21 @@ class PreferencesWindow(Setting_Ui):
             self.persepolis_setting.setValue('show-progress' , 'yes')
         else:
             self.persepolis_setting.setValue('show-progress' , 'no')
+
+        if self.startup_checkbox.isChecked() == True:
+            self.persepolis_setting.setValue('startup' , 'yes')
+
+            if not(startup.checkstartup()) : #checking existance of Persepolis in  system's startup
+
+                startup.addstartup() #adding Persepolis to system's startup
+        else:
+            self.persepolis_setting.setValue('startup' , 'no')
+
+            if startup.checkstartup(): #checking existance of Persepolis in  system's startup
+
+                startup.removestartup() #removing Persepolis from system's startup
+
+
 
 #this section  creates temporary download folder and download folder and download sub folders if they did not existed.
         download_path_temp  = self.persepolis_setting.value('download_path_temp')

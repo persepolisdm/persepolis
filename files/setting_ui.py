@@ -233,6 +233,10 @@ class Setting_Ui(QWidget):
         self.show_progress_window_checkbox = QCheckBox()
         self.verticalLayout_3.addWidget(self.show_progress_window_checkbox)
 
+#add persepolis to startup
+        self.startup_checkbox = QCheckBox()
+        self.verticalLayout_3.addWidget(self.startup_checkbox)
+
 #defaults_pushButton
         self.defaults_pushButton = QPushButton(self)
         self.horizontalLayout.addWidget(self.defaults_pushButton)
@@ -284,8 +288,9 @@ class Setting_Ui(QWidget):
         self.show_menubar_checkbox.setText("Show menubar.")
         self.show_sidepanel_checkbox.setText("Show side panel.")
         self.show_progress_window_checkbox.setText("Show download's progress window")
+        self.startup_checkbox.setText("Run Persepolis at startup") 
 
-        self.setting_tabWidget.setTabText(self.setting_tabWidget.indexOf(self.style_tab),  "Appearance")
+        self.setting_tabWidget.setTabText(self.setting_tabWidget.indexOf(self.style_tab),  "Preferences")
         self.defaults_pushButton.setText( "Defaults")
         self.cancel_pushButton.setText( "Cancel")
         self.ok_pushButton.setText( "OK")
