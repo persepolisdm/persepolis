@@ -38,8 +38,12 @@ def checkstartup():
 
     #TODO
     # check if it is mac OS
-    #elif platform == "darwin":
+    elif platform == "darwin":
         # OS X
+        if os.path.exists(home_address + "/Library/LaunchAgents/com.persepolisdm.plist"):
+            return True
+        else:
+            return False
 
     # check if it is Windows
     elif os_type == "Windows":
@@ -93,9 +97,29 @@ def addstartup():
 
     #TODO
     # check if it is mac OS
-    #elif platform == "darwin":
+    elif platform == "darwin":
         # OS X
-
+        cwd = sys.argv[0]
+        cwd = os.path.dirname(cwd)
+        entry = '''<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>Label</key>
+	<string>com.persepolisdm.persepolis</string>
+	<key>Program</key>
+	<string>''' + cwd + '''/Persepolis Download Manager</string>
+	<key>ProgramArguments</key>
+	<array>
+		<string>--tray</string>
+	</array>
+	<key>RunAtLoad</key>
+	<true/>
+</dict>
+</plist>'''
+        startupfile = open(home_address + '/Library/LaunchAgents/com.persepolisdm.plist', 'w+')
+        startupfile.write(entry)
+        os.system('launchctl load ' + home_address + "/Library/LaunchAgents/com.persepolisdm.plist")
     # check if it is Windows
     elif os_type == "Windows":
 
@@ -121,8 +145,11 @@ def removestartup():
     #TODO
     #adding remove startup command for mac OSX :
     # check if it is mac OS
-    #elif platform == "darwin":
+    elif platform == "darwin":
         # OS X
+        if checkstartup():
+            os.system('launchctl unload ' + home_address + "/Library/LaunchAgents/com.persepolisdm.plist")
+            os.remove(home_address + "/Library/LaunchAgents/com.persepolisdm.plist")
 
     # check if it is Windows
     elif os_type == 'Windows':
@@ -135,4 +162,3 @@ def removestartup():
 
             # Close connection
             winreg.CloseKey(key)
-
