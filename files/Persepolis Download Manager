@@ -21,6 +21,7 @@ import os , sys , time , ast , argparse
 import struct
 import json
 import platform
+
 # initialization
 home_address = os.path.expanduser("~")
 
@@ -71,6 +72,12 @@ else: #for windows
 if lock_file_validation: 
     import initialization
     from mainwindow import MainWindow
+
+
+    if os_type == 'Linux': # setting "Persepolis Download Manager" name for this process in linux 
+        from setproctitle import setproctitle
+        setproctitle("Persepolis Download Manager")
+
 
 from PyQt5.QtWidgets import QApplication  
 from PyQt5.QtGui import QFont   
