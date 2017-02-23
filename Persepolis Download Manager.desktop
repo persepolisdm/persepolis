@@ -11,4 +11,4 @@ Categories=Qt;Network;
 StartupNotify=true
 Exec=persepolis 
 Icon=persepolis
-StartupWMClass=persepolis-download-manager
+StartupWMClass=Persepolis Download Manager

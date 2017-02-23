@@ -390,12 +390,12 @@ class MainWindow_Ui(QMainWindow):
         self.menubar = QMenuBar(self)
         self.menubar.setGeometry(QRect(0, 0, 600, 24))
         self.setMenuBar(self.menubar)
-        fileMenu = self.menubar.addMenu('File')
-        editMenu = self.menubar.addMenu('Edit')
-        viewMenu = self.menubar.addMenu('View')
-        downloadMenu = self.menubar.addMenu('Download')
-        queueMenu = self.menubar.addMenu('Queue')
-        helpMenu = self.menubar.addMenu('Help')
+        fileMenu = self.menubar.addMenu('&File')
+        editMenu = self.menubar.addMenu('&Edit')
+        viewMenu = self.menubar.addMenu('&View')
+        downloadMenu = self.menubar.addMenu('&Download')
+        queueMenu = self.menubar.addMenu('&Queue')
+        helpMenu = self.menubar.addMenu('&Help')
 
 
 #viewMenu submenus
