@@ -35,12 +35,6 @@ elif os_type == 'Darwin':
 elif os_type == 'Windows' :
     config_folder = os.path.join(str(home_address) , 'AppData\Local\persepolis_download_manager')
 
-log_file = os.path.join(str(config_folder), 'persepolisdm.log')
-
-osCommands.remove(log_file)
-osCommands.touch(log_file)
-
-import logger
 #persepolis tmp folder in /tmp
 if os_type != 'Windows':
     user_name_split = home_address.split('/')
@@ -284,6 +278,14 @@ if lock_file_validation: #if lock_file is existed , it means persepolis is still
 #setting color_scheme and style
 #see palettes.py and setting.py
     if __name__ == "__main__":
+        # refreshing log
+        log_file = os.path.join(str(config_folder), 'persepolisdm.log')
+
+        osCommands.remove(log_file)
+        osCommands.touch(log_file)
+
+        import logger
+
         persepolis_download_manager = PersepolisApplication(sys.argv)
 
         #setting organization name and domain and apllication name
