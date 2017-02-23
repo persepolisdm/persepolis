@@ -17,7 +17,7 @@
 #this script is running persepolis for Linux
 from newopen import Open
 import osCommands
-import os , sys , time , ast , argparse, logger
+import os , sys , time , ast , argparse
 import struct
 import json
 import platform
@@ -28,7 +28,19 @@ home_address = os.path.expanduser("~")
 #finding os platform
 os_type = platform.system()
 
+if os_type == 'Linux' or os_type == 'FreeBSD' :
+    config_folder = os.path.join(str(home_address) , ".config/persepolis_download_manager" )
+elif os_type == 'Darwin':
+    config_folder = os.path.join(str(home_address) , "Library/Application Support/persepolis_download_manager")
+elif os_type == 'Windows' :
+    config_folder = os.path.join(str(home_address) , 'AppData\Local\persepolis_download_manager')
 
+log_file = os.path.join(str(config_folder), 'persepolisdm.log')
+
+osCommands.remove(log_file)
+osCommands.touch(log_file)
+
+import logger
 #persepolis tmp folder in /tmp
 if os_type != 'Windows':
     user_name_split = home_address.split('/')
