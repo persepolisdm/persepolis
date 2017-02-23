@@ -68,7 +68,7 @@ fi
 
 program_path="/usr/share/persepolis"
 exec_path='/usr/bin/'
-chmod +x "./files/persepolis"
+chmod +x "./files/Persepolis Download Manager"
 chmod +x "./persepolis"
 chmod +x "./Persepolis Download Manager.desktop"
 
