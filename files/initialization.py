@@ -162,4 +162,7 @@ if persepolis_version != 2.4 :
         persepolis_setting.setValue('version/version' , 2.4 ) 
         persepolis_setting.sync()
  
-
+# refresh logs!
+import logger
+osCommands.remove(logger.log_file)
+osCommands.touch(logger.log_file)
