@@ -28,7 +28,19 @@ home_address = os.path.expanduser("~")
 #finding os platform
 os_type = platform.system()
 
+if os_type == 'Linux' or os_type == 'FreeBSD' :
+    config_folder = os.path.join(str(home_address) , ".config/persepolis_download_manager" )
+elif os_type == 'Darwin':
+    config_folder = os.path.join(str(home_address) , "Library/Application Support/persepolis_download_manager")
+elif os_type == 'Windows' :
+    config_folder = os.path.join(str(home_address) , 'AppData\Local\persepolis_download_manager')
 
+log_file = os.path.join(str(config_folder), 'persepolisdm.log')
+
+osCommands.remove(log_file)
+osCommands.touch(log_file)
+
+import logger
 #persepolis tmp folder in /tmp
 if os_type != 'Windows':
     user_name_split = home_address.split('/')
@@ -65,22 +77,22 @@ else: #for windows
     handle = CreateMutex(None, 1, 'persepolis_download_manager')
 
     if GetLastError() == ERROR_ALREADY_EXISTS:
-        lock_file_validation = False 
+        lock_file_validation = False
     else:
         lock_file_validation = True
 
-if lock_file_validation: 
+if lock_file_validation:
     import initialization
     from mainwindow import MainWindow
 
 
-    if os_type == 'Linux': # setting "Persepolis Download Manager" name for this process in linux 
+    if os_type == 'Linux': # setting "Persepolis Download Manager" name for this process in linux
         from setproctitle import setproctitle
         setproctitle("Persepolis Download Manager")
 
 
-from PyQt5.QtWidgets import QApplication  
-from PyQt5.QtGui import QFont   
+from PyQt5.QtWidgets import QApplication
+from PyQt5.QtGui import QFont
 from PyQt5.QtCore import QCoreApplication , QSettings
 from palettes import DarkRedPallete , DarkBluePallete , ArcDarkRedPallete , ArcDarkBluePallete , LightRedPallete , LightBluePallete
 from bubble import notifySend
@@ -115,7 +127,7 @@ class PersepolisApplication(QApplication):
         self.persepolis_font = font
         self.persepolis_font_size = font_size
         self.setFont(QFont(font , font_size ))
-#color_scheme 
+#color_scheme
     def setPersepolisColorScheme(self,color_scheme):
         self.persepolis_color_scheme = color_scheme
         if color_scheme == 'Persepolis Dark Red':
@@ -147,7 +159,7 @@ class PersepolisApplication(QApplication):
 
 
 
-#creating  terminal arguments  
+#creating  terminal arguments
 
 parser = argparse.ArgumentParser(description='Persepolis Download Manager')
 parser.add_argument('chromium' ,nargs = '?' , default = 'no' , help='this switch is used for chrome native messaging in Linux and Mac' )
@@ -166,7 +178,7 @@ args = parser.parse_args()
 
 #Mozilla firefox flashgot will send download information whith terminal arguments(link , referer , cookie , agent , headers , name )
 
-#if --execute >> yes  >>> persepolis main window  will starts 
+#if --execute >> yes  >>> persepolis main window  will starts
 #if --execute >> no >>> persepolis started before!
 
 
@@ -186,7 +198,7 @@ if args.chromium != 'no' or args.parent_window:
     sys.stdout.buffer.write(message)
     sys.stdout.flush()
 
-    
+
 
     text_length_bytes = sys.stdin.buffer.read(4)
 
@@ -217,8 +229,10 @@ if args.clear:
     status = osCommands.removeDir(str(config_folder))
     if status == 'ok' or status == 'no' :
         print ('Download list cleard!')
+        logger.sendToLog('Download list cleared!', 'INFO')
     else:
         print("persepolis can't clear download list")
+        logger.sendToLog("Persepolis can't clear download list.", "ERROR")
 
     sys.exit(0)
 
@@ -227,6 +241,7 @@ if args.default :
     persepolis_setting.clear()
     persepolis_setting.sync()
     print ('Persepolis restored default')
+    logger.sendToLog('Persepolis restored default settings.', 'INFO')
     sys.exit(0)
 
 if args.tray :
@@ -254,7 +269,7 @@ if args.name :
 #when flashgot calls persepolis  then persepolis is creating a request file in /tmp folder . this file contains download informations
 #persepolis mainwindow checks /tmp for flashgot request file every 2 seconds ( see CheckFlashgot class in mainwindow.py )
 #when requset received by CheckFlashgot, a popup window (AddLinkWindow) is coming up and window is getting additional download informations from user (port , proxy , ...) and download starts and request file deleted
-if ('link' in add_link_dictionary):   
+if ('link' in add_link_dictionary):
     #adding add_link_dictionary to persepolis-flashgot
     flashgot_file = os.path.join(persepolis_tmp , 'persepolis-flashgot' )
     f = open(flashgot_file,"a")
@@ -265,7 +280,7 @@ if ('link' in add_link_dictionary):
 
 
 
-if lock_file_validation: #if lock_file is existed , it means persepolis is still running! 
+if lock_file_validation: #if lock_file is existed , it means persepolis is still running!
 #setting color_scheme and style
 #see palettes.py and setting.py
     if __name__ == "__main__":
@@ -301,13 +316,14 @@ if lock_file_validation: #if lock_file is existed , it means persepolis is still
             #Resetting persepolis
             error_window = ErrorWindow(str(traceback.format_exc()))
             error_window.show()
-         
+
         sys.exit(persepolis_download_manager.exec_())
 
     else:
          sys.exit(0)
 else:
     print('persepolis is still running')
+    logger.sendToLog('Persepolis is still running', 'WARNING')
 #this section warns user that program is still running and no need to run it again
 #and creating a file to notify mainwindow for showing
     if not('link' in add_link_dictionary):
@@ -315,5 +331,3 @@ else:
         f = open(show_window_file , 'w')
         f.close()
     sys.exit(0)
-
-
