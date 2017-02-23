@@ -45,6 +45,10 @@ elif os_type == 'Darwin':
 elif os_type == 'Windows' :
     config_folder = os.path.join(str(home_address) , 'AppData','Local','persepolis_download_manager')
 
+# refresh logs!
+log_file = os.path.join(str(config_folder), 'persepolisdm.log')
+import logger
+
 #download information (Percentage , Estimate time left , size of file , ... ) saved in download_info folder. 
 #Persepolis creates one file for every download . 
 #Persepolis uses download's GID for the name of the file
@@ -157,12 +161,9 @@ if persepolis_version != 2.4 :
             persepolis_setting.sync()
         except Exception as e :
             print(e)
+            logger.logObj.error("Failed to load configuration!", exc_info=True)
     else:
             
         persepolis_setting.setValue('version/version' , 2.4 ) 
         persepolis_setting.sync()
  
-# refresh logs!
-import logger
-osCommands.remove(logger.log_file)
-osCommands.touch(logger.log_file)

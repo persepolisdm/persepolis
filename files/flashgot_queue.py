@@ -22,7 +22,7 @@ from PyQt5.QtCore import QPoint , QSize , QThread , pyqtSignal , QDir
 from newopen import Open , readDict
 import download
 import ast , os 
-import osCommands
+import osCommands, logger
 import spider
 import platform
 
@@ -41,6 +41,7 @@ class QueueSpiderThread(QThread):
             self.QUEUESPIDERRETURNEDFILENAME.emit(filename)
         except :
             print("Spider couldn't find download information")
+            logger.sendToLog("Spider couldn't find download information", "ERROR")
 
 
 home_address = os.path.expanduser("~")

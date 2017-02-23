@@ -15,7 +15,7 @@
 import os
 from newopen import Open
 from time import sleep
-import osCommands
+import osCommands, logger
 import platform
 import subprocess
 
@@ -57,6 +57,7 @@ def shutDown(gid , password = None):
     if shutdown_notification == "shutdown":
         
         print("shutdown in 20 seconds")
+        logger.sendToLog("Shutting down in 20 seconds", "INFO")
         sleep(20)
         if os_type == 'Linux':
     	    os.system('echo "' + password  + '" |sudo -S poweroff')

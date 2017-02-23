@@ -12,7 +12,7 @@
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import os
+import os, logger
 from newopen import Open
 import ast
 import platform
@@ -60,5 +60,6 @@ def playNotification(file):
 
         elif os_type == 'FreeBSD':
             print('sorry!no notification sound available for now in FreeBSD')
+            logger.sendToLog("Sorry, no notification sound available for now in FreeBSD", "WARNING")
 
 

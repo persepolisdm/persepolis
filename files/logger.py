@@ -13,6 +13,8 @@ elif os_type == 'Windows' :
 
 #log file address
 log_file = os.path.join(str(config_folder), 'persepolisdm.log')
+if not(os.path.isfile(log_file)) :
+    osCommands.touch(log_file)
 
 # define logging object
 logObj = logging.getLogger("Persepolis Download Manager")
@@ -35,4 +37,4 @@ def sendToLog(text="", type="INFO"):
     elif type == "ERROR":
         logObj.error(text)
     else:
-logObj.warning(text)
+        logObj.warning(text)

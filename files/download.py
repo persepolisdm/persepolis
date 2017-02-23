@@ -21,7 +21,7 @@ import time
 import ast
 import shutil
 from newopen import Open , readList , writeList
-import platform , sys
+import platform , sys, logger
 from PyQt5.QtCore import QSettings
 import platform
 
@@ -84,6 +84,7 @@ def aria2Version():
         answer = server.aria2.getVersion()
     except :
         print("aria2 not respond!")
+        logger.sendToLog("Aria2 didn't respond!", "ERROR")
         answer = "did not respond"
     return answer
  
@@ -191,16 +192,19 @@ def downloadAria(gid):
                 answer = server.aria2.addUri([link],aria_dict)
 
             print(answer + " Starts")
+            logger.sendToLog(answer + " Starts", 'INFO')
             if end_hour != None:
                 endTime(end_hour , end_minute , gid)
 
         except:
             print("None Starts")
+            logger.sendToLog("None Starts", "INFO")
 #if request was unsuccessful return None!
             return 'None'
     else :
 #if start_time_status is "stopped" it means download Canceled by user
         print("Download Canceled")
+        logger.sendToLog("Download Canceled", "INFO")
 
 def downloadStatus(gid):
     try :
@@ -401,6 +405,7 @@ def downloadCompleteAction( path ,download_path , file_name):
         shutil.move(str(path) ,str(file_path) )
     except:
         print('Persepolis can not move file')
+        logger.sendToLog('Persepolis can not move file', "ERROR")
 
     return str(file_path)
 
@@ -438,9 +443,11 @@ def shutDown():
     try:
         answer = server.aria2.shutdown()
         print("Aria2 Shutdown : " + str(answer))
+        logger.sendToLog("Aria2 Shutdown : " + str(answer), "INFO")
         return 'ok'
     except:
         print("Aria2 Shutdown Error")
+        logger.sendToLog("Aria2 Shutdown Error", "ERROR")
         return 'error'
 
 
@@ -460,6 +467,7 @@ def downloadStop(gid):
         except :
             answer = str ("None")
         print(answer + " stopped")
+        logger.sendToLog(answer + " stopped", "INFO")
     else :
         answer = 'stopped'
 
@@ -489,7 +497,7 @@ def downloadPause(gid):
         answer = str("None")
         
     print(answer + " paused")
-
+    logger.sendToLog(answer + " paused", "INFO")
     return answer
 
 
@@ -514,6 +522,7 @@ def limitSpeed(gid ,limit):
     except:
         answer = str("None")
     print(answer)
+    logger.sendToLog(answer, "INFO")
 
 #this function returning  GID of active downloads
 def activeDownloads():
@@ -547,6 +556,7 @@ def nowTime():
 
 def startTime(start_hour , start_minute , gid):
     print("Download starts at " + start_hour + ":" + start_minute )
+    logger.sendToLog("Download starts at " + start_hour + ":" + start_minute, "INFO")
     sigma_start = sigmaTime(start_hour , start_minute) #getting sima time
     sigma_now = nowTime() #getting sigma now time
     download_info_file =  os.path.join(download_info_folder , gid) #getting download_info_file path
@@ -569,6 +579,7 @@ def startTime(start_hour , start_minute , gid):
 def endTime(end_hour , end_minute , gid):
     time.sleep(1)
     print("end time actived " + gid)
+    logger.sendToLog("End time activated " + gid, "INFO")
     sigma_end = sigmaTime(end_hour , end_minute) 
     sigma_now = nowTime()
     download_info_file =  os.path.join(download_info_folder , gid)
@@ -590,6 +601,7 @@ def endTime(end_hour , end_minute , gid):
         else:
             answer = 'end'
             print("Download ended before! " + str(gid))
+            logger.sendToLog("Download has been finished! " + str(gid), "INFO")
             break
 
         sigma_now = nowTime()
@@ -597,6 +609,7 @@ def endTime(end_hour , end_minute , gid):
 
     if  answer != 'end':
         print("Time is Up")
+        logger.sendToLog("Time is up!", "INFO")
         answer = downloadStop(gid)
         i = 0
         while answer == 'None' and (i <= 9): #trying to stop download 10 times
