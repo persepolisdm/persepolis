@@ -274,8 +274,9 @@ if lock_file_validation: #if lock_file is existed , it means persepolis is still
         # refreshing log
         log_file = os.path.join(str(config_folder), 'persepolisdm.log')
 
-        osCommands.remove(log_file)
-        osCommands.touch(log_file)
+        f = open(log_file , 'w')
+        f.writelines('Persepolis Download Manager\n')
+        f.close()
 
         import logger
 
@@ -318,7 +319,6 @@ if lock_file_validation: #if lock_file is existed , it means persepolis is still
          sys.exit(0)
 else:
     print('persepolis is still running')
-    logger.sendToLog('Persepolis is still running', 'WARNING')
 #this section warns user that program is still running and no need to run it again
 #and creating a file to notify mainwindow for showing
     if not('link' in add_link_dictionary):
