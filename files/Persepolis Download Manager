@@ -216,10 +216,8 @@ if args.clear:
     status = osCommands.removeDir(str(config_folder))
     if status == 'ok' or status == 'no' :
         print ('Download list cleard!')
-        logger.sendToLog('Download list cleared!', 'INFO')
     else:
         print("persepolis can't clear download list")
-        logger.sendToLog("Persepolis can't clear download list.", "ERROR")
 
     sys.exit(0)
 
@@ -228,7 +226,6 @@ if args.default :
     persepolis_setting.clear()
     persepolis_setting.sync()
     print ('Persepolis restored default')
-    logger.sendToLog('Persepolis restored default settings.', 'INFO')
     sys.exit(0)
 
 if args.tray :
@@ -271,14 +268,6 @@ if lock_file_validation: #if lock_file is existed , it means persepolis is still
 #setting color_scheme and style
 #see palettes.py and setting.py
     if __name__ == "__main__":
-        # refreshing log
-        log_file = os.path.join(str(config_folder), 'persepolisdm.log')
-
-        f = open(log_file , 'w')
-        f.writelines('Persepolis Download Manager\n')
-        f.close()
-
-        import logger
 
         persepolis_download_manager = PersepolisApplication(sys.argv)
 

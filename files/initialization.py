@@ -45,10 +45,6 @@ elif os_type == 'Darwin':
 elif os_type == 'Windows' :
     config_folder = os.path.join(str(home_address) , 'AppData','Local','persepolis_download_manager')
 
-# refresh logs!
-log_file = os.path.join(str(config_folder), 'persepolisdm.log')
-import logger
-
 #download information (Percentage , Estimate time left , size of file , ... ) saved in download_info folder. 
 #Persepolis creates one file for every download . 
 #Persepolis uses download's GID for the name of the file
@@ -103,6 +99,15 @@ for folder in  [ config_folder , download_info_folder ,persepolis_tmp , perseoli
 #creating files
 for file in [queues_list , download_list_file , download_list_file_active , single_downloads_list_file ]:
     osCommands.touch(file)
+
+# refresh logs!
+log_file = os.path.join(str(config_folder), 'persepolisdm.log')
+
+f = open(log_file , 'w')
+f.writelines('Persepolis Download Manager\n')
+f.close()
+
+import logger
 
 
 #import persepolis_setting
