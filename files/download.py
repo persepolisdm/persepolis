@@ -616,7 +616,7 @@ def endTime(end_hour , end_minute , gid):
             time.sleep(1)
             answer = downloadStop(gid)
             i = i + 1
-        if answer == 'None':
+        if (answer == 'None') and (os_type != 'Windows'):
             os.system("killall aria2c")
 
         download_info_file_list = readList(download_info_file) 

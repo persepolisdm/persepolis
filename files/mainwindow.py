@@ -415,7 +415,7 @@ class Queue(QThread):
             if self.after == True: 
                 answer = download.shutDown()
 #KILL aria2c if didn't respond
-                if answer == 'error':
+                if (answer == 'error') and (os_type != 'Windows'):
                     os.system('killall aria2c')
 
                 shutdown_file = os.path.join(persepolis_tmp , 'shutdown' , self.category )
@@ -940,7 +940,7 @@ class MainWindow(MainWindow_Ui):
                     if os.path.isfile(shutdown_file) == True and progress_window.status != 'stopped':
                         answer = download.shutDown()
 #KILL aria2c if didn't respond
-                        if answer == 'error':
+                        if (answer == 'error') and (os_type != 'Windows'):
                             os.system('killall aria2c')
                         f = Open(shutdown_file, 'w')
                         notifySend('Persepolis is shutting down','your system in 20 seconds' , 15000 ,'warning', systemtray = self.system_tray_icon )
