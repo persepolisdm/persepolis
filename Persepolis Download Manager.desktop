@@ -12,3 +12,14 @@ StartupNotify=true
 Exec=persepolis 
 Icon=persepolis
 StartupWMClass=Persepolis Download Manager
+Actions=Open;Tray;
+
+[Desktop Action Open]
+Name=Start Persepolis
+Name[fa]=اجرای برنامه
+Exec=persepolis
+
+[Desktop Action Tray]
+Name=Start in System Tray
+Name[fa]=اجرای برنامه در سینی نمایه
+Exec=persepolis --tray
