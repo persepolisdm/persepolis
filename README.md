@@ -1,8 +1,9 @@
 #Persepolis Download Manager [![Build Status](https://travis-ci.org/persepolisdm/persepolis.svg?branch=master)](https://travis-ci.org/persepolisdm/persepolis)
  
-+ version : 2.3.3
-+ Persepolis Download Manager is a GUI for aria2.
-+ Persepolis written in PYQT5.
+ Persepolis Download Manager is a GUI for aria2.
+ 
++ Version : 2.3.3
++ Written in PYQT5.
 
 
 ![ScreenShot](http://s1.picofile.com/file/8264685926/persepolis.jpg)
@@ -68,5 +69,5 @@ https://twitter.com/persepolisdm
 PersepolisDM Telegram Channel:
 https://telegram.me/persepolisdm
 
-## Read more about PERSEPOLIS
+## Read more about Persepolis, The Ceremonial Capital
 https://en.wikipedia.org/wiki/Persepolis
