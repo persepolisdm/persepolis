@@ -69,5 +69,14 @@ https://twitter.com/persepolisdm
 PersepolisDM Telegram Channel:
 https://telegram.me/persepolisdm
 
-## Read more about Persepolis, The Ceremonial Capital
+###Where does the name come from?
+Persepolis (Greek: Περσέπολις Persépolis; "the Persian city") or Parsa (Old Persian: 𐎱𐎠𐎼𐎿 Pārsa; "Persia"), 
+also known as Takht-e-Jamshid (Persian: تخت جمشيد‎‎ Taxt e Jamšid; "Throne of Jamshid"),
+was the ceremonial capital of the Achaemenid Empire (ca. 550–330 BC).
+
+Persepolis is situated 60 km northeast of the city of Shiraz in Fars Province, Iran. The earliest remains of 
+Persepolis date back to 515 BC. 
+It exemplifies the Achaemenid style of architecture. UNESCO declared the ruins of Persepolis a World Heritage Site in 1979.
+
+#### Read more about Persepolis, The Ceremonial Capital
 https://en.wikipedia.org/wiki/Persepolis
