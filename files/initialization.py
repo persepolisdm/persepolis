@@ -81,9 +81,13 @@ else:
 #removing persepolis_tmp at persepolis startup
 osCommands.removeDir(persepolis_tmp)
 
+#persepolis_shutdown
+persepolis_shutdown = os.path.join(persepolis_tmp , 'shutdown')
+# shutil.rmtree(persepolis_shutdown, ignore_errors=True, onerror=None)
+
 
 #creating folders
-for folder in  [ config_folder , download_info_folder ,persepolis_tmp , category_folder , queue_info_folder ]:
+for folder in  [ config_folder , download_info_folder ,persepolis_tmp , category_folder , queue_info_folder , persepolis_shutdown ]:
     osCommands.makeDirs(folder)
 
 #creating files
@@ -101,10 +105,6 @@ for folder in pattern_folder_list:
     for file in glob.glob(pattern):
         osCommands.remove(file)
 
-
-#persepolis_shutdown
-persepolis_shutdown = os.path.join(persepolis_tmp , 'shutdown')
-shutil.rmtree(persepolis_shutdown, ignore_errors=True, onerror=None)
 
 
 # refresh logs!
