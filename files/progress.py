@@ -53,7 +53,7 @@ else:
 
 
 #config_folder
-if os_type == 'Linux' or os_type == 'FreeBSD' :
+if os_type == 'Linux' or os_type == 'FreeBSD'  or os_type == 'OpenBSD' :
     config_folder = os.path.join(str(home_address) , ".config/persepolis_download_manager")
 elif os_type == 'Darwin':
     config_folder = os.path.join(str(home_address) , "Library/Application Support/persepolis_download_manager")
@@ -201,7 +201,7 @@ class ProgressWindow(ProgressWindow_Ui):
     def afterPushButtonPressed(self , button):
         self.after_pushButton.setEnabled(False)
 
-        if os_type != 'Windows': #For Linux and Mac OSX
+        if os_type != 'Windows': #For Linux and Mac OSX and FreeBSD and OpenBSD
         #getting root password
             passwd, ok = QInputDialog.getText(self, 'PassWord','Please enter root password:' , QtWidgets.QLineEdit.Password)
             if ok :

@@ -29,7 +29,7 @@ def touch(file_path):
 
 #xdgOpen is openning files or folders
 def xdgOpen(file_path):
-    if os_type == 'Linux' or os_type == 'FreeBSD' : #GNU/Linux systems
+    if os_type == 'Linux' or os_type == 'FreeBSD'  or os_type == 'OpenBSD' : #GNU/Linux systems
         os.system('xdg-open "' + file_path + '" &')
     elif os_type == 'Darwin': # OS X systems
         os.system('open "' + file_path + '" &' )

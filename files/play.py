@@ -23,7 +23,7 @@ os_type = platform.system()
 
 home_address = os.path.expanduser("~")
 #config_folder
-if os_type == 'Linux' or os_type == 'FreeBSD' :
+if os_type == 'Linux' or os_type == 'FreeBSD' or os_type == 'OpenBSD': 
     config_folder = os.path.join(str(home_address) , ".config/persepolis_download_manager")
 elif os_type == 'Darwin':
     config_folder = os.path.join(str(home_address) , "Library/Application Support/persepolis_download_manager")
@@ -58,8 +58,8 @@ def playNotification(file):
             subprocess.Popen(['rundll32' , 'user32.dll,MessageBeep'] , shell = False , creationflags = CREATE_NO_WINDOW )
 
 
-        elif os_type == 'FreeBSD':
-            print('sorry!no notification sound available for now in FreeBSD')
-            logger.sendToLog("Sorry, no notification sound available for now in FreeBSD", "WARNING")
+        elif os_type == 'FreeBSD'  or os_type == 'OpenBSD' :
+            print('sorry!no notification sound available for now in FreeBSD and OpenBSD')
+            logger.sendToLog("Sorry, no notification sound available for now in FreeBSD and OpenBSD", "WARNING")
 
 

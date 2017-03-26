@@ -14,7 +14,6 @@
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-#this script is running persepolis for Linux
 from newopen import Open
 import osCommands
 import os , sys , time , ast , argparse
@@ -29,7 +28,7 @@ home_address = os.path.expanduser("~")
 os_type = platform.system()
 
 #persepolis config_folder
-if os_type == 'Linux' or os_type == 'FreeBSD' :
+if os_type == 'Linux' or os_type == 'FreeBSD'  or os_type == 'OpenBSD' :
     config_folder = os.path.join(str(home_address) , ".config/persepolis_download_manager" )
 elif os_type == 'Darwin':
     config_folder = os.path.join(str(home_address) , "Library/Application Support/persepolis_download_manager")

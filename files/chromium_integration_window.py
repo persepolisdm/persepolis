@@ -144,7 +144,7 @@ class ChromiumIntegrationWindow(QWidget):
             elif browser == 'chrome':
                 native_message_folder = home_address + '/.config/google-chrome/NativeMessagingHosts'
 
-        elif os_type == 'FreeBSD' :
+        elif os_type == 'FreeBSD'  or os_type == 'OpenBSD' :
             exec_path = '/usr/local/bin/persepolis'
 
             if browser == 'chromium':

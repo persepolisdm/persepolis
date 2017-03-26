@@ -70,7 +70,7 @@ def shutDown(gid , password = None):
             subprocess.Popen(['shutdown','-S'] , shell = False ,creationflags = CREATE_NO_WINDOW )
 
 
-        elif os_type == 'FreeBSD':
+        elif os_type == 'FreeBSD' or os_type == 'OpenBSD' :
             os.system( 'echo "' + password + '" |sudo -S shutdown -p now ')
 
 

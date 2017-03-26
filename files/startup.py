@@ -29,7 +29,7 @@ if os_type == 'Windows':
 # check startup
 def checkstartup():
     # check if it is linux
-    if os_type == "Linux" or os_type == "FreeBSD" :
+    if os_type == "Linux" or os_type == "FreeBSD"  or os_type == 'OpenBSD' :
         # check if the startup exists
         if os.path.exists(home_address + "/.config/autostart/persepolis.desktop"):
             return True
@@ -66,7 +66,7 @@ def checkstartup():
 # add startup file
 def addstartup():
     # check if it is linux
-    if os_type == 'Linux' or os_type == 'FreeBSD':
+    if os_type == 'Linux' or os_type == 'FreeBSD' or os_type == 'OpenBSD' :
         entry = '''!/usr/bin/env xdg-open
         [Desktop Entry]
         Name=Persepolis Download Manager
@@ -134,7 +134,7 @@ def addstartup():
 # remove startup file
 def removestartup():
     # check if it is linux
-    if os_type == 'Linux' or os_type == 'FreeBSD':
+    if os_type == 'Linux' or os_type == 'FreeBSD' or os_type == 'OpenBSD' :
 
         # remove it
         os.remove(home_address + "/.config/autostart/persepolis.desktop")
