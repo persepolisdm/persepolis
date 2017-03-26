@@ -113,6 +113,7 @@ def readList(file_path , mode = 'dictionary' ):
         
     return list
 
+#this function is reading a file that contains dictionary , and extracts dictionary from it.
 def readDict(file_path) :
     f = Open(file_path)
     f_lines = f.readlines()

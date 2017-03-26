@@ -117,6 +117,9 @@ queues_list_file = os.path.join(config_folder , 'queues_list' )
 #category_folder contains some file , and every files named with queues . every file contains gid of downloads for that queue
 category_folder = os.path.join(config_folder , 'category_folder')
 
+#queue_info_folder is contains queues information(start time,end time,limit speed , ...)
+queue_info_folder = os.path.join(config_folder , "queue_info")
+
 #single_downloads_list_file contains gid of non categorised downloads
 single_downloads_list_file = os.path.join(category_folder , "Single Downloads")
 
@@ -472,7 +475,7 @@ class CheckingThread(QThread):
                     sleep(0.3) 
 
 
-                #When checkFlashgot methode considered request , then flashgot_checked_links is changed to True
+                #When checkFlashgot method considered request , then flashgot_checked_links is changed to True
                 flashgot_checked_links = False
                 self.CHECKFLASHGOTSIGNAL.emit()#notifiying that we have flashgot request 
                 while flashgot_checked_links != True :#wait for persepolis consideration!                   
@@ -616,6 +619,29 @@ class MainWindow(MainWindow_Ui):
             new_queue_category.setEditable(False)
             self.category_tree_model.appendRow(new_queue_category)
 
+            #queue_info_file contains start time and end time information and ... for queue
+            #queue_info_file path
+            queue_info_file = os.path.join(queue_info_folder , queue_name)
+            osCommands.touch(queue_info_file)
+
+            #checking queue_info_file for all queues
+            try :
+                queue_info_dict = readDict(queue_info_file)
+            except: #using default queue_info_dict if any error occured!
+                #default queue_info_dict
+                queue_info_dict = {'start_time_enable' : 'no' , 'end_time_enable' : 'no' , 'start_minute' : '0' , 'start_hour' : '0' , 'end_hour': '0' , 'end_minute' : '0' , 'reverse' : 'no' , 'limit_speed' : 'yes' , 'limit' : '0K' , 'after' : 'yes' }
+                
+            #changing start_time_enable , end_time_enable , reverse , limit_speed , after to no !
+            for i in ['start_time_enable' , 'end_time_enable' , 'reverse' , 'limit_speed' , 'after' ]:
+                queue_info_dict[str(i)] = 'no' 
+
+            f = Open(queue_info_file , 'w' )
+            f.writelines(str(queue_info_dict))
+            f.close()
+
+ 
+
+
 #add downloads to the download_table
         f_download_list_file = Open(download_list_file)
         download_list_file_lines = f_download_list_file.readlines()
@@ -729,7 +755,7 @@ class MainWindow(MainWindow_Ui):
 #this line set toolBar And Context Menu Items
         self.toolBarAndContextMenuItems('All Downloads')
 
-        self.category_tree_qwidget.setEnabled(False) #It will be enabled after aria2 startup!(see startAriaMessage methode) .This line added for solving crash problems on startup
+        self.category_tree_qwidget.setEnabled(False) #It will be enabled after aria2 startup!(see startAriaMessage method) .This line added for solving crash problems on startup
 
 
 #finding windows_size
@@ -1198,7 +1224,7 @@ class MainWindow(MainWindow_Ui):
 
         
 
-#when new user requests download with flashgot , this methode called           
+#when new user requests download with flashgot , this method called           
     def checkFlashgot(self):
         global flashgot_checked_links
         #this lines extract add_link_dictionary from persepolis-flashgot
@@ -1216,13 +1242,13 @@ class MainWindow(MainWindow_Ui):
             flashgot_add_link_dictionary_str = flashgot_lines[0].strip()
             flashgot_add_link_dictionary = ast.literal_eval(flashgot_add_link_dictionary_str) 
 
-            #this line calls flashgotAddLink methode with flashgot_add_link_dictionary
+            #this line calls flashgotAddLink method with flashgot_add_link_dictionary
             self.flashgotAddLink(flashgot_add_link_dictionary)
 
         else: #we have queue request from flashgot
             self.flashgotQueue(flashgot_lines)
 
-#this methode creates an addlinkwindow when user calls Persepolis whith flashgot (Single Download)
+#this method creates an addlinkwindow when user calls Persepolis whith flashgot (Single Download)
     def flashgotAddLink(self,flashgot_add_link_dictionary):
         addlinkwindow = AddLinkWindow(self.callBack , self.persepolis_setting , flashgot_add_link_dictionary)
         self.addlinkwindows_list.append(addlinkwindow)
@@ -1230,7 +1256,7 @@ class MainWindow(MainWindow_Ui):
         self.addlinkwindows_list[len(self.addlinkwindows_list) - 1].raise_()
 
 
-#This methode creates addlinkwindow when user presses plus button in MainWindow
+#This method creates addlinkwindow when user presses plus button in MainWindow
     def addLinkButtonPressed(self ,button):
         addlinkwindow = AddLinkWindow( self.callBack , self.persepolis_setting)
         self.addlinkwindows_list.append(addlinkwindow)
@@ -1327,7 +1353,7 @@ class MainWindow(MainWindow_Ui):
             self.threadPool.append(new_spider)
             self.threadPool[len(self.threadPool) - 1].start()
 
-#when user presses resume button this methode called
+#when user presses resume button this method called
     def resumeButtonPressed(self,button):
         self.resumeAction.setEnabled(False)
         selected_row_return = self.selectedRow() #finding user selected row
@@ -1363,12 +1389,12 @@ class MainWindow(MainWindow_Ui):
 
 
 
-#this methode called if aria2 crashed or disconnected!
+#this method called if aria2 crashed or disconnected!
     def aria2NotRespond(self):
         self.aria2Disconnected()
         notifySend('Aria2 did not respond' , 'Try again' , 5000 , 'critical' , systemtray = self.system_tray_icon )
 
-#this methode called if user presses stop button in MainWindow
+#this method called if user presses stop button in MainWindow
     def stopButtonPressed(self,button):
         self.stopAction.setEnabled(False)
         selected_row_return = self.selectedRow()#finding user selected row
@@ -1384,7 +1410,7 @@ class MainWindow(MainWindow_Ui):
                     notifySend("Aria2 disconnected!","Persepolis is trying to connect!be patient!",10000,'warning' , systemtray = self.system_tray_icon )
                
 
-#this methode called if user presses pause button in MainWindow
+#this method called if user presses pause button in MainWindow
     def pauseButtonPressed(self,button):
         self.pauseAction.setEnabled(False)
         selected_row_return = self.selectedRow()#finding user selected row
@@ -1402,7 +1428,7 @@ class MainWindow(MainWindow_Ui):
                 else:
                     notifySend("Aria2 did not respond!" , "Try agian!" , 10000 , 'critical' , systemtray = self.system_tray_icon )
 
-#This methode called if properties button pressed by user in MainWindow
+#This method called if properties button pressed by user in MainWindow
     def propertiesButtonPressed(self,button):
         self.propertiesAction.setEnabled(False)
         selected_row_return = self.selectedRow() #finding user selected row
@@ -1474,7 +1500,7 @@ class MainWindow(MainWindow_Ui):
 
         
 
-#This methode called if user presses "show/hide progress window" button in MainWindow            
+#This method called if user presses "show/hide progress window" button in MainWindow            
     def progressButtonPressed(self,button):
         selected_row_return = self.selectedRow() #finding user selected row
         if selected_row_return != None:
@@ -1490,7 +1516,7 @@ class MainWindow(MainWindow_Ui):
             else :
                 self.progressBarOpen(gid) #if window is not availabile , let's create it!
 
-#This methode creates new ProgressWindow
+#This method creates new ProgressWindow
     def progressBarOpen(self,gid):
         progress_window = ProgressWindow(parent = self,gid = gid , persepolis_setting = self.persepolis_setting ) #creating a progress window
         self.progress_window_list.append(progress_window) #adding progress window to progress_window_list
@@ -1531,7 +1557,7 @@ class MainWindow(MainWindow_Ui):
         logger.sendToLog("Persepolis closed!", "INFO")
         sys.exit(0)
 
-#showTray methode is showing/hiding system tray icon
+#showTray method is showing/hiding system tray icon
     def showTray(self,menu):
         if self.trayAction.isChecked() == True :
             self.system_tray_icon.show() #showing system_tray_icon
@@ -1571,12 +1597,12 @@ class MainWindow(MainWindow_Ui):
         self.persepolis_setting.setValue('settings/show-sidepanel' , show_sidepanel)
         self.persepolis_setting.sync()
 
-#when user click on mouse's left button , then this methode is called
+#when user click on mouse's left button , then this method is called
     def systemTrayPressed(self,click):
         if click == 3 :
             self.minMaxTray(click)
             
-#when minMaxTray methode called ,this method showed/hide main window 
+#when minMaxTray method called ,this method showed/hide main window 
     def minMaxTray(self,menu):
         if self.isVisible() == False:
             self.show()
@@ -1621,13 +1647,13 @@ class MainWindow(MainWindow_Ui):
                     if version_answer == 'did not respond':
                         self.aria2Disconnected()
            
-#this methode is creating Preferences window
+#this method is creating Preferences window
     def openPreferences(self,menu):
         self.preferenceswindow = PreferencesWindow(self , self.persepolis_setting )
         self.preferenceswindow.show() #showing Preferences Window
 
 
-#this methode is creating AboutWindow
+#this method is creating AboutWindow
     def openAbout(self,menu):
         about_window = AboutWindow(self.persepolis_setting)
         self.about_window_list.append(about_window)
@@ -1635,7 +1661,7 @@ class MainWindow(MainWindow_Ui):
 
 
 
-#This methode is openning user's default download folder
+#This method is openning user's default download folder
     def openDefaultDownloadFolder(self,menu):
         #finding user's default download folder from persepolis_setting 
         self.persepolis_setting.sync()
@@ -1645,7 +1671,7 @@ class MainWindow(MainWindow_Ui):
         else:
             notifySend(str(download_path) ,'Not Found' , 5000 , 'warning' , systemtray = self.system_tray_icon ) #showing error message if folder didn't existed
 
-#this methode is openning download folder , if download was finished
+#this method is openning download folder , if download was finished
     def openDownloadFolder(self,menu):
         selected_row_return = self.selectedRow() #finding user selected row
 
@@ -1673,7 +1699,7 @@ class MainWindow(MainWindow_Ui):
                         notifySend(str(download_path) ,'Not Found' , 5000 , 'warning' , systemtray = self.system_tray_icon ) #showing error message , if folder did't existed
 
 
-#this methode is executing(openning) download file if download was finished
+#this method is executing(openning) download file if download was finished
     def openFile(self,menu):
         selected_row_return = self.selectedRow() #finding user selected row
 
@@ -1691,7 +1717,7 @@ class MainWindow(MainWindow_Ui):
                     else:
                         notifySend(str(file_path) ,'Not Found' , 5000 , 'warning' , systemtray = self.system_tray_icon ) #showing error message , if file was deleted or moved
 
-#This methode is called when user presses remove button in main window . removeButtonPressed is removing download item
+#This method is called when user presses remove button in main window . removeButtonPressed is removing download item
     def removeButtonPressed(self,button):
         self.removeAction.setEnabled(False)
         global checking_flag
@@ -1756,7 +1782,7 @@ class MainWindow(MainWindow_Ui):
 
 
 
-#this methode is called when user presses delete button in MainWindow . this methode is deleting download file from hard disk and removing download item
+#this method is called when user presses delete button in MainWindow . this method is deleting download file from hard disk and removing download item
     def deleteFile(self,menu):
 #if checking_flag is equal to 1, it means that user pressed remove or delete button or ... . so checking download information must be stopped until job is done!
         if checking_flag != 2 :
@@ -1783,7 +1809,7 @@ class MainWindow(MainWindow_Ui):
                         notifySend(str(file_path) ,'Not Found' , 5000 , 'warning' , systemtray = self.system_tray_icon )
                     self.removeButtonPressed2()
 
-#this methode is called when user checkes selection mode in edit menu!
+#this method is called when user checkes selection mode in edit menu!
     def selectDownloads(self,menu):
 #selectAllAction is checked >> activating actions and adding removeSelectedAction and deleteSelectedAction to the toolBar
 #selectAction is unchecked deactivate actions and adding removeAction and deleteFileAction to the toolBar
@@ -1830,13 +1856,13 @@ class MainWindow(MainWindow_Ui):
         checking_flag = 0
 
 
-#this methode called when user selects "select all items" form edit menu
+#this method called when user selects "select all items" form edit menu
     def selectAll(self,menu):
         for i in range(self.download_table.rowCount()):
             item = self.download_table.item(i , 0)
             item.setCheckState(QtCore.Qt.Checked)
  
-#this methode is called when user presses 'remove selected items' button
+#this method is called when user presses 'remove selected items' button
     def removeSelected(self,menu):
 
 #if checking_flag is equal to 1, it means that user pressed remove or delete button or ... . so checking download information must be stopped until job is done!
@@ -1907,7 +1933,7 @@ class MainWindow(MainWindow_Ui):
         global checking_flag
         checking_flag = 0
 
-#this methode is called when user presses 'delete selected items'
+#this method is called when user presses 'delete selected items'
     def deleteSelected(self,menu):
 #if checking_flag is equal to 1, it means that user pressed remove or delete button or ... . so checking download information must be stopped until job is done!
         if checking_flag != 2 :
@@ -1991,7 +2017,7 @@ class MainWindow(MainWindow_Ui):
         global checking_flag
         checking_flag = 0
 
-#when this methode called , download_table will sort by name
+#when this method called , download_table will sort by name
     def sortByName(self,menu_item):
 
 #if checking_flag is equal to 1, it means that user pressed remove or delete button or ... . so checking download information must be stopped until job is done!
@@ -2052,7 +2078,7 @@ class MainWindow(MainWindow_Ui):
         global checking_flag
         checking_flag = 0
 
-#this methode is sorting download_table by size
+#this method is sorting download_table by size
     def sortBySize(self , menu_item):
 
 #if checking_flag is equal to 1, it means that user pressed remove or delete button or ... . so checking download information must be stopped until job is done!
@@ -2133,7 +2159,7 @@ class MainWindow(MainWindow_Ui):
         checking_flag = 0
 
 
-#this methode is sorting download_table with status
+#this method is sorting download_table with status
     def sortByStatus(self,item):
 
 #if checking_flag is equal to 1, it means that user pressed remove or delete button or ... . so checking download information must be stopped until job is done!
@@ -2213,7 +2239,7 @@ class MainWindow(MainWindow_Ui):
         global checking_flag
         checking_flag = 0
 
-#this methode is sorting download table with date added information
+#this method is sorting download table with date added information
     def sortByFirstTry(self,item) :
 
 #if checking_flag is equal to 1, it means that user pressed remove or delete button or ... . so checking download information must be stopped until job is done!
@@ -2287,7 +2313,7 @@ class MainWindow(MainWindow_Ui):
         checking_flag = 0
 
 
-#this methode is sorting download_table with order of last modify date
+#this method is sorting download_table with order of last modify date
     def sortByLastTry(self,item) :
 #if checking_flag is equal to 1, it means that user pressed remove or delete button or ... . so checking download information must be stopped until job is done!
         if checking_flag != 2 :
@@ -2361,7 +2387,7 @@ class MainWindow(MainWindow_Ui):
         global checking_flag
         checking_flag = 0
 
-#this methode called , when user clicks on 'create new queue' button in main window.
+#this method called , when user clicks on 'create new queue' button in main window.
     def createQueue(self,item):
         text, ok = QInputDialog.getText(self, 'Queue', 'Enter queue name:' , text = 'queue' )
         if not(ok) :
@@ -2398,6 +2424,16 @@ class MainWindow(MainWindow_Ui):
         #creating a file for this queue in category_folder
             osCommands.touch(os.path.join(category_folder , queue_name) )
 
+        #creating a file for queue information in queue_info_folder
+            queue_info_file = os.path.join(queue_info_folder , queue_name)
+
+        #queue_info_file contains start time and end time information and ... for queue
+            queue_info_dict = {'start_time_enable' : 'no' , 'end_time_enable' : 'no' , 'start_minute' : '0' , 'start_hour' : '0' , 'end_hour': '0' , 'end_minute' : '0' , 'reverse' : 'no' , 'limit_speed' : 'yes' , 'limit' : '0K' , 'after' : 'yes' }
+
+            f = Open(queue_info_file , 'w' )
+            f.writelines(str(queue_info_dict))
+            f.close()
+
         #highlighting selected category in category_tree
         #finding item 
             for i in range(self.category_tree_model.rowCount()):
@@ -2422,7 +2458,7 @@ class MainWindow(MainWindow_Ui):
 
         
 
-#this methode is importing text file for creating queue . text file must contain links . 1 link per line!
+#this method is importing text file for creating queue . text file must contain links . 1 link per line!
     def importText(self , item) :
         #getting file path
         f_path , filters = QFileDialog.getOpenFileName(self , 'Select the text file that contains links')
@@ -2433,7 +2469,7 @@ class MainWindow(MainWindow_Ui):
             self.text_queue_window_list[len(self.text_queue_window_list) - 1].show()
             
 
-#callback of text_queue_window
+#callback of text_queue_window.See importText method for more information.
     def queueCallback(self,add_link_dictionary_list , category):
         #defining path of category_file
         selected_category = str(category)
@@ -2481,6 +2517,7 @@ class MainWindow(MainWindow_Ui):
                 item = QTableWidgetItem(i)
                 self.download_table.setItem(0,j,item)
                 j = j + 1
+
             #this section is adding checkBox to the row , if user selected selectAction
             if self.selectAction.isChecked() == True:
                 item = self.download_table.item(0 , 0)
@@ -2498,7 +2535,7 @@ class MainWindow(MainWindow_Ui):
             self.threadPool.append(new_spider)
             self.threadPool[len(self.threadPool) - 1].start()
 
-#this methode is called , when user is clicking on an item in category_tree (left side panel)
+#this method is called , when user is clicking on an item in category_tree (left side panel)
     def categoryTreeSelected(self,item):
         new_selection = item
         if current_category_tree_index != new_selection :
@@ -2518,10 +2555,95 @@ class MainWindow(MainWindow_Ui):
 #clearing download_table 
         self.download_table.setRowCount(0)
 
+
+#updating queue_info_file for old_selection before any changes!
+
+        #old_selection_index
+        old_selection_index = current_category_tree_index
+
+        #finding name of old_selection_index
+        old_category_tree_item_text = str(old_selection_index.data())
+
+
+        #queue_info_file contains start time and end time information and ... for queue
+        #finding queue_info_file path
+        queue_info_file = os.path.join(queue_info_folder , old_category_tree_item_text)
+
+        #queue_info_dict default format >> queue_info_dict = {'start_time_enable' : 'no' , 'end_time_enable' : 'no' , 'start_minute' : '0' , 'start_hour' : '0' , 'end_hour': '0' , 'end_minute' : '0' , 'reverse' : 'no' , 'limit_speed' : 'yes' , 'limit' : '0K'  , 'after': 'yes' }
+        queue_info_dict = {}
+
+        #start_checkBox
+        if self.start_checkBox.isChecked() :
+            queue_info_dict['start_time_enable'] = 'yes'
+        else:
+            queue_info_dict['start_time_enable'] = 'no'
+
+        #end_checkBox
+        if self.end_checkBox.isChecked():
+            queue_info_dict['end_time_enable'] = 'yes'
+        else:
+            queue_info_dict['end_time_enable'] = 'no'
+
+
+        #start_hour_spinBox
+        start_hour = self.start_hour_spinBox.value()
+        queue_info_dict['start_hour'] = str(start_hour)
+
+        #start_minute_spinBox
+        start_minute = self.start_minute_spinBox.value()
+        queue_info_dict['start_minute'] = str(start_minute)
+
+        #end_hour_spinBox
+        end_hour = self.end_hour_spinBox.value()
+        queue_info_dict ['end_hour'] = str(end_hour)
+
+        #end_minute_spinBox
+        end_minute = self.end_minute_spinBox.value()
+        queue_info_dict['end_minute'] = str(end_minute)
+
+
+        #reverse_checkBox
+        if self.reverse_checkBox.isChecked():
+            queue_info_dict['reverse'] = 'yes'
+        else:
+            queue_info_dict['reverse'] = 'no'
+
+        #limit_checkBox
+        if self.limit_checkBox.isChecked() :
+            queue_info_dict['limit_speed'] = 'yes'
+        else :
+            queue_info_dict['limit_speed'] = 'no'
+
+        #limit_comboBox and limit_spinBox
+        if self.limit_comboBox.currentText() == "KB/S" :
+            limit = str(self.limit_spinBox.value()) + str("K")
+        else :
+            limit = str(self.limit_spinBox.value()) + str("M")
+
+        queue_info_dict['limit'] = str(limit)
+
+
+        #after_checkBox
+        if self.after_checkBox.isChecked():
+            queue_info_dict['after'] = 'yes'
+        else:
+            queue_info_dict['after'] = 'no'
+
+        
+        if old_selection_index.data() != None : #if old_selection_index.data() is equal to None >> It means queue deleted! and no text (data) available for it
+            #saving values
+            f = Open(queue_info_file , 'w' )
+            f.writelines(str(queue_info_dict))
+            f.close()
+
+
 #updating download_table
         current_category_tree_index = new_selection 
+
+        #finding category name
         current_category_tree_text = str(self.category_tree.currentIndex().data())
-            #findin path of gid_list_file , gid_list_file cantains gid of downloads for selected category 
+
+        #findin path of gid_list_file , gid_list_file cantains gid of downloads for selected category 
         if current_category_tree_text == 'All Downloads':
             gid_list_file = download_list_file
         else:
@@ -2554,7 +2676,7 @@ class MainWindow(MainWindow_Ui):
         self.toolBarAndContextMenuItems(str(current_category_tree_text)) 
                 
 
-#this methode changing toolabr and cotext menu items when new item highlited by user in category_tree
+#this method changing toolabr and cotext menu items when new item highlited by user in category_tree
     def toolBarAndContextMenuItems(self,category):
         self.toolBar.clear()
         self.download_table.tablewidget_menu.clear()
@@ -2590,7 +2712,10 @@ class MainWindow(MainWindow_Ui):
 
         if category == 'All Downloads' and mode == 'None':
 
+            #hiding queue_panel_widget(left side down panel)
             self.queue_panel_widget.hide()
+
+            #updating toolBar
             for i in self.addlinkAction,self.resumeAction, self.pauseAction , self.stopAction, self.removeAction , self.deleteFileAction , self.propertiesAction , self.progressAction ,self.minimizeAction , self.exitAction :
                 self.toolBar.addAction(i)
  
@@ -2688,7 +2813,7 @@ class MainWindow(MainWindow_Ui):
             else:
                 queue_status = False
 
-            if queue_status : #if queue started befor 
+            if queue_status : #if queue started before 
                 self.stopQueueAction.setEnabled(True)
                 self.startQueueAction.setEnabled(False)
                 self.removeQueueAction.setEnabled(False)
@@ -2714,7 +2839,7 @@ class MainWindow(MainWindow_Ui):
             for action in [self.openFileAction , self.openDownloadFolderAction , self.removeAction , self.deleteFileAction , self.propertiesAction ]:
                 self.download_table.tablewidget_menu.addAction(action)
 
-#updating category_tree_menu
+#updating category_tree_menu(right click menu for category_tree items)
             for i in self.startQueueAction , self.stopQueueAction , self.removeQueueAction :
                 self.category_tree.category_tree_menu.addAction(i)
 
@@ -2748,8 +2873,8 @@ class MainWindow(MainWindow_Ui):
                     self.moveDownAction.setEnabled(False)
                     self.moveUpSelectedAction.setEnabled(True)
                     self.moveDownSelectedAction.setEnabled(True)
- 
-                
+
+           
         else: #if category is All Downloads  or Single Downloads
             self.stopQueueAction.setEnabled(False)
             self.startQueueAction.setEnabled(False)
@@ -2776,10 +2901,7 @@ class MainWindow(MainWindow_Ui):
 
 
  
-
-
-
-#this methode removes the queue that selected in category_tree
+#this method removes the queue that selected in category_tree
     def removeQueue(self,menu):
         #finding name of queue
         current_category_tree_text = str(current_category_tree_index.data())
@@ -2825,6 +2947,14 @@ class MainWindow(MainWindow_Ui):
                     f.writelines(i.strip() + '\n')
             f.close()
 
+            #removing queue_info_file
+            #finding queue_info_file path
+            queue_info_file = os.path.join(queue_info_folder , current_category_tree_text)
+
+            #removing file
+            osCommands.remove(queue_info_file)
+
+
 #highlighting "All Downloads" in category_tree
         all_download_index = self.category_tree_model.index(0,0)
         self.category_tree.setCurrentIndex(all_download_index)
@@ -2832,6 +2962,7 @@ class MainWindow(MainWindow_Ui):
 
     def startQueue(self,menu):
         self.startQueueAction.setEnabled(False)
+
         #current_category_tree_text is the name of queue that selected by user
         current_category_tree_text = str(current_category_tree_index.data())
 
@@ -2862,6 +2993,7 @@ class MainWindow(MainWindow_Ui):
  
     def stopQueue(self , menu):
         self.stopQueueAction.setEnabled(False)
+
         #current_category_tree_text is the name of queue that selected by user
         current_category_tree_text = str(current_category_tree_index.data())
 
@@ -2871,7 +3003,7 @@ class MainWindow(MainWindow_Ui):
  
         self.startQueueAction.setEnabled(True)
                  
-#this methode is called , when user want to add a download to a queue with context menu. see also toolBarAndContextMenuItems() methode
+#this method is called , when user want to add a download to a queue with context menu. see also toolBarAndContextMenuItems() method
     def addToQueue(self , data, menu ):
 #if checking_flag is equal to 1, it means that user pressed remove or delete button or ... . so checking download information must be stopped until job is done!
 
@@ -3000,7 +3132,7 @@ class MainWindow(MainWindow_Ui):
         checking_flag = 0
 
 
-#this methode activating or deactivating start_frame according to situation
+#this method activating or deactivating start_frame according to situation
     def startFrame(self,checkBox):
 
         if self.start_checkBox.isChecked() == True :
@@ -3008,7 +3140,7 @@ class MainWindow(MainWindow_Ui):
         else :
             self.start_frame.setEnabled(False)
 
-#this methode activating or deactivating end_frame according to situation
+#this method activating or deactivating end_frame according to situation
     def endFrame(self,checkBox):
 
         if self.end_checkBox.isChecked() == True :
@@ -3017,7 +3149,7 @@ class MainWindow(MainWindow_Ui):
             self.end_frame.setEnabled(False)
 
 
-#this methode showing/hiding queue_panel_widget according to queue_panel_show_button text 
+#this method showing/hiding queue_panel_widget according to queue_panel_show_button text 
     def showQueuePanelOptions(self,button):
         if (self.queue_panel_show_button.text() == 'Show options'):
             self.queue_panel_widget_frame.show()
@@ -3031,7 +3163,7 @@ class MainWindow(MainWindow_Ui):
         self.limit_pushButton.setEnabled(True)
  
 
-#this methode is activating or deactivating limit_frame according to limit_checkBox situation
+#this method is activating or deactivating limit_frame according to limit_checkBox situation
     def limitFrame(self , checkBox):
         if self.limit_checkBox.isChecked() == True:
             self.limit_frame.setEnabled(True)
@@ -3047,7 +3179,7 @@ class MainWindow(MainWindow_Ui):
                 self.queue_list_dict[current_category_tree_text].limit_changed = True
 
 
-#this methode is limiting download speed in queue
+#this method is limiting download speed in queue
     def limitPushButtonPressed(self,button):
         self.limit_pushButton.setEnabled(False)
 
@@ -3058,7 +3190,7 @@ class MainWindow(MainWindow_Ui):
         self.queue_list_dict[current_category_tree_text].limit = True
         self.queue_list_dict[current_category_tree_text].limit_changed = True
 
-#this methode is handling user's shutdown request in queue downloading
+#this method is handling user's shutdown request in queue downloading
     def afterPushButtonPressed(self , button):
         #current_category_tree_text is the name of queue that selected by user
         current_category_tree_text = str(current_category_tree_index.data())
@@ -3105,7 +3237,7 @@ class MainWindow(MainWindow_Ui):
             self.threadPool[len(self.threadPool) - 1].start()
  
 
-#this methode is activating or deactivating after_frame according to after_checkBox situation
+#this method is activating or deactivating after_frame according to after_checkBox situation
     def afterFrame(self , checkBox):
         #current_category_tree_text is the name of queue that selected by user
         current_category_tree_text = str(current_category_tree_index.data())
@@ -3127,8 +3259,27 @@ class MainWindow(MainWindow_Ui):
 
 
 #queue_panel_widget
-#this methode checking that queue started or not , and show or hide widgets is queue_panel_widget according to situation
+#this method checking that queue started or not , and it showing or hiding widgets in queue_panel_widget according to situation and set widgets value.
     def queuePanelWidget(self,category):
+        #updating queue_panel_widget items
+        #finding queue_info_file path
+        queue_info_file = os.path.join(queue_info_folder , category)
+
+        #queue_info_dict default format >> queue_info_dict = {'start_time_enable' : 'no' , 'end_time_enable' : 'no' , 'start_minute' : '0' , 'start_hour' : '0' , 'end_hour': '0' , 'end_minute' : '0' , 'reverse' : 'no' , 'limit_speed' : 'yes' , 'limit' : '0K'  , 'after': 'yes' }
+        #reading queue_info_dict
+        queue_info_dict = readDict(queue_info_file)
+    
+ 
+               
+           
+            #after download options
+#             if queue_info_dict['after'] == 'yes':
+#                 self.after_checkBox.setChecked(True)
+#             else:
+#                 self.after_checkBox.setChecked(False)
+ 
+
+
         #checking queue condition
         if str(category) in self.queue_list_dict.keys():
             queue_status = self.queue_list_dict[str(category)].start
@@ -3162,33 +3313,94 @@ class MainWindow(MainWindow_Ui):
                 #enabling limit_frame
                 self.limit_checkBox.setChecked(True)
 
+            else:
+
+                #disabaling limit_frame
+                self.limit_checkBox.setChecked(False)
+
+            #limit speed
+            #limit_checkBox
+#                 if queue_info_dict['limit_speed'] == 'yes':
+#                     self.limit_checkBox.setChecked(True)
+#                 else:
+#                     self.limit_checkBox.setChecked(False)
+
+                limit = str(queue_info_dict['limit'])
+
+            #limit values
+                limit_number = limit[0:-1]
+                limit_unit = limit[-1]
+ 
+            #limit_spinBox
+                self.limit_spinBox.setValue(int(limit_number))
+
+            #limit_comboBox
+                if limit_unit == 'K':
+                    self.limit_comboBox.setCurrentIndex(0)
+                else:
+                    self.limit_comboBox.setCurrentIndex(1)
+ 
+
+            #so user was selected shutdown option , after queue completed.
             if after_status == True:
                 self.after_checkBox.setChecked(True)
 
             else:
-                #disabaling limit_frame
-                self.limit_checkBox.setChecked(False)
-
+                self.after_checkBox.setChecked(False)
         else:     #queue stopped
             self.start_end_frame.show()
             self.limit_after_frame.hide()
+
+            #start time
+            #start_checkBox
+            if queue_info_dict['start_time_enable'] == 'yes':
+                self.start_checkBox.setChecked(True)
+            else:
+                self.start_checkBox.setChecked(False)
+
+            #start_hour_spinBox
+            self.start_hour_spinBox.setValue(int(queue_info_dict['start_hour']))
+
+            #start_minute_spinBox
+            self.start_minute_spinBox.setValue(int(queue_info_dict['start_minute']))
+
+            #end time
+            #end_checkBox
+            if queue_info_dict['end_time_enable'] == 'yes':
+                self.end_checkBox.setChecked(True)
+            else:
+                self.end_checkBox.setChecked(False)
+
+
+            #end_hour_spinBox
+            self.end_hour_spinBox.setValue(int(queue_info_dict['end_hour']))
+
+            #end_minute_spinBox
+            self.end_minute_spinBox.setValue(int(queue_info_dict['end_minute']))
+
+            #reverse_checkBox
+            if queue_info_dict['reverse'] == 'yes' :
+                self.reverse_checkBox.setChecked(True)
+            else:
+                self.reverse_checkBox.setChecked(False)
+ 
  
         self.limitFrame(category)
         self.afterFrame(category)
         self.startFrame(category)
         self.endFrame(category)
 
-#this methode is openning issues page in github 
+#this method is openning issues page in github 
     def reportIssue(self,menu):
         osCommands.xdgOpen('https://github.com/persepolisdm/persepolis/issues')
 
-#this methode is opening releases page in github
+#this method is opening releases page in github
     def newUpdate(self,menu):
         osCommands.xdgOpen('https://github.com/persepolisdm/persepolis/releases')
 
 
-#this methode is called when user pressed moveUpAction
-#this methode is subtituting selected download item with upper one
+#this method is called when user pressed moveUpAction
+#this method is subtituting selected download item with upper one
     def moveUp(self,menu):
         global button_pressed_counter
         button_pressed_counter = button_pressed_counter + 1
@@ -3260,8 +3472,8 @@ class MainWindow(MainWindow_Ui):
                 self.download_table.selectRow(new_row)
 
 
-#this methode is called when user pressed moveUpSelectedAction
-#this methode is subtituting selected  items with upper one
+#this method is called when user pressed moveUpSelectedAction
+#this method is subtituting selected  items with upper one
 
     def moveUpSelected(self , menu):
         global button_pressed_counter
@@ -3352,8 +3564,8 @@ class MainWindow(MainWindow_Ui):
                     self.download_table.setItem(new_row , i , item)
 
 
-#this methode is called if user pressed moveDown action 
-#this methode is subtituting selected download item with lower download item
+#this method is called if user pressed moveDown action 
+#this method is subtituting selected download item with lower download item
     def moveDown(self,menu):
         global button_pressed_counter
         button_pressed_counter = button_pressed_counter + 1
@@ -3422,8 +3634,8 @@ class MainWindow(MainWindow_Ui):
                 self.download_table.selectRow(new_row)
 
 
-#this methode is called if user pressed moveDownSelected action 
-#this methode is subtituting selected download item with lower download item
+#this method is called if user pressed moveDownSelected action 
+#this method is subtituting selected download item with lower download item
     def moveDownSelected(self,menu):
         global button_pressed_counter
         button_pressed_counter = button_pressed_counter + 1

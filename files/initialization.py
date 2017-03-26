@@ -53,6 +53,9 @@ download_info_folder = os.path.join(config_folder , "download_info")
 #category_folder contains some file , and every files named with categories . every file contains gid of downloads for that category
 category_folder = os.path.join(config_folder , 'category_folder')
 
+#queue_info_folder is contains queues information(start time,end time,limit speed , ...)
+queue_info_folder = os.path.join(config_folder , "queue_info")
+
 
 #queue initialization files
 #queues_list contains queues name
@@ -75,12 +78,23 @@ if os_type != 'Windows':
 else:
     persepolis_tmp = os.path.join(str(home_address) , 'AppData','Local','persepolis_tmp')
 
+#removing persepolis_tmp at persepolis startup
 osCommands.removeDir(persepolis_tmp)
+
+
+#creating folders
+for folder in  [ config_folder , download_info_folder ,persepolis_tmp , category_folder , queue_info_folder ]:
+    osCommands.makeDirs(folder)
+
+#creating files
+for file in [queues_list , download_list_file , download_list_file_active , single_downloads_list_file ]:
+    osCommands.touch(file)
+
 
 #lock files perventing to access a file simultaneously
 
 #removing lock files in starting persepolis
-pattern_folder_list = [config_folder , download_info_folder , category_folder]
+pattern_folder_list = [config_folder , download_info_folder , category_folder , queue_info_folder ]
 
 for folder in pattern_folder_list:
     pattern = os.path.join(str(folder) , '*.lock'  )
@@ -88,17 +102,10 @@ for folder in pattern_folder_list:
         osCommands.remove(file)
 
 
-#perseolis_shutdown
-perseolis_shutdown = os.path.join(persepolis_tmp , 'shutdown')
-shutil.rmtree(perseolis_shutdown, ignore_errors=True, onerror=None)
+#persepolis_shutdown
+persepolis_shutdown = os.path.join(persepolis_tmp , 'shutdown')
+shutil.rmtree(persepolis_shutdown, ignore_errors=True, onerror=None)
 
-#creating folders
-for folder in  [ config_folder , download_info_folder ,persepolis_tmp , perseolis_shutdown , category_folder ]:
-    osCommands.makeDirs(folder)
-
-#creating files
-for file in [queues_list , download_list_file , download_list_file_active , single_downloads_list_file ]:
-    osCommands.touch(file)
 
 # refresh logs!
 log_file = os.path.join(str(config_folder), 'persepolisdm.log')
