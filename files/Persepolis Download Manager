@@ -80,9 +80,13 @@ if lock_file_validation:
     from mainwindow import MainWindow
 
 
-    if os_type == 'Linux': # setting "Persepolis Download Manager" name for this process in linux 
-        from setproctitle import setproctitle
-        setproctitle("Persepolis Download Manager")
+    if os_type == 'Linux' or os_type == 'FreeBSD'  or os_type == 'OpenBSD' : # setting "Persepolis Download Manager" name for this process in linux and bsd 
+        try:
+            from setproctitle import setproctitle
+            setproctitle("persepolis")
+        except:
+            print("Warning : setproctitle is not installed!")
+            logger.sendToLog("setproctitle is not installed!", "ERROR")
 
 
 from PyQt5.QtWidgets import QApplication  
