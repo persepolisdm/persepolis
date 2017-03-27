@@ -21,7 +21,9 @@ import time
 import ast
 import shutil
 from newopen import Open , readList , writeList
-import platform , sys, logger
+import platform 
+import sys 
+import logger
 from PyQt5.QtCore import QSettings
 import platform
 
@@ -346,7 +348,8 @@ def downloadStatus(gid):
 
         file_path = downloadCompleteAction(path , download_path ,file_name)
 
-        add_link_dictionary [ 'file_path'] = file_path
+        add_link_dictionary [ 'file_path' ] = file_path
+        add_link_dictionary [ 'final_download_path' ] = file_path
 
         file_name = os.path.basename(file_path) 
 
@@ -402,10 +405,13 @@ def downloadCompleteAction( path ,download_path , file_name):
 
 #move the file to the download folder
     try:
-        shutil.move(str(path) ,str(file_path) )
+        shutil.copy(str(path) ,str(file_path) )
+        os.remove(path)
+
     except:
         print('Persepolis can not move file')
         logger.sendToLog('Persepolis can not move file', "ERROR")
+        file_path = path
 
     return str(file_path)
 
