@@ -13,7 +13,8 @@
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 from functools import partial
-import sys , ast
+import sys 
+import ast
 from PyQt5 import QtCore, QtGui, QtWidgets  
 from PyQt5.QtWidgets import QApplication ,  QAction , QFileDialog , QSystemTrayIcon , QMenu , QTableWidgetItem , QApplication , QInputDialog , QMessageBox 
 from PyQt5.QtGui import QIcon , QColor , QPalette , QStandardItem 
@@ -258,7 +259,7 @@ class Queue(QThread):
         self.parent = parent
         self.start_hour = start_hour
         self.start_minute = start_minute
-        self.end_hour = end_minute
+        self.end_hour = end_hour
         self.end_minute = end_minute
 
     def run(self):
@@ -277,6 +278,7 @@ class Queue(QThread):
             queue_file_lines = f.readlines()
             f.close()
 
+            #download from top to the bottom of the list OR bottom to the top 
             if not(self.parent.reverse_checkBox.isChecked()) :
                 queue_file_lines.reverse()
 
@@ -294,7 +296,7 @@ class Queue(QThread):
                     
                     status = download_info_file_list [1]
 
-                    if status != 'complete':
+                    if status != 'complete': #We find first item! GREAT!
 
             #reading add_link_dictionary
                         add_link_dictionary = download_info_file_list[9]
@@ -318,7 +320,7 @@ class Queue(QThread):
                 download_info_file_list = readList(download_info_file)
 
 
-                if str(download_info_file_list[1]) == 'complete': #if download was completed continues with the next iteration of the loop
+                if str(download_info_file_list[1]) == 'complete': #if download was completed continues with the next iteration of the loop!We don't want to download it two times :)
                     continue
 
             #changing status of download to waiting

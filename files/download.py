@@ -584,8 +584,8 @@ def startTime(start_hour , start_minute , gid):
 
 def endTime(end_hour , end_minute , gid):
     time.sleep(1)
-    print("end time actived " + gid)
-    logger.sendToLog("End time activated " + gid, "INFO")
+    print("end time is actived " + gid)
+    logger.sendToLog("End time is activated " + gid, "INFO")
     sigma_end = sigmaTime(end_hour , end_minute) 
     sigma_now = nowTime()
     download_info_file =  os.path.join(download_info_folder , gid)
