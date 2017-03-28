@@ -3169,6 +3169,7 @@ class MainWindow(MainWindow_Ui):
     def limitFrame(self , checkBox):
         if self.limit_checkBox.isChecked() == True:
             self.limit_frame.setEnabled(True)
+            self.limit_pushButton.setEnabled(True)
         else:
             self.limit_frame.setEnabled(False)
 
