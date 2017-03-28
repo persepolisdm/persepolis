@@ -42,6 +42,7 @@ import osCommands, logger
 import platform
 from copy import deepcopy
 from shutdown import shutDown
+import shutil
 #THIS FILE CREATES MAIN WINDOW
 
 #The GID (or gid) is a key to manage each download. Each download will be assigned a unique GID.
@@ -645,8 +646,6 @@ class MainWindow(MainWindow_Ui):
             f.writelines(str(queue_info_dict))
             f.close()
 
- 
-
 
 #add downloads to the download_table
         f_download_list_file = Open(download_list_file)
@@ -657,7 +656,19 @@ class MainWindow(MainWindow_Ui):
             gid = line.strip()
             self.download_table.insertRow(0)
             download_info_file = os.path.join(download_info_folder , gid)
-            download_info_file_list = readList(download_info_file,'string')
+
+            #checking existance of download_info_file_backup for all "download_info_file"s 
+            download_info_file_backup = str(download_info_file) + "_back" 
+            if not(os.path.isfile(download_info_file_backup)) :
+                shutil.copy(download_info_file , download_info_file_backup)
+
+            try:
+                download_info_file_list = readList(download_info_file,'string')
+            except: #so download_info_file is corrupted
+                shutil.copy(download_info_file_backup , download_info_file)
+                download_info_file_list = readList(download_info_file,'string')
+
+
             for i in range(13):
                 item = QTableWidgetItem(download_info_file_list[i])
                 self.download_table.setItem(0 , i , item)
@@ -1299,6 +1310,11 @@ class MainWindow(MainWindow_Ui):
          
         writeList(download_info_file , download_info_file_list)
 
+        #creating back up file for download_info_file
+        download_info_file_backup = str(download_info_file) + "_back"
+        osCommands.touch(download_info_file_backup)
+        writeList(download_info_file_backup , download_info_file_list)
+
         #highlighting selected category in category_tree
         #finding item 
         for i in range(self.category_tree_model.rowCount()):
@@ -1770,6 +1786,10 @@ class MainWindow(MainWindow_Ui):
             f.close()
             f.remove()
 
+#removing download_info_file_backup
+            download_info_file_backup = str(download_info_file) + "_back"
+            osCommands.remove(download_info_file_backup)
+
 #remove file of download from download temp folder
             if file_name != '***' and status != 'complete' :
                 file_name_path = os.path.join(temp_download_folder ,  str(file_name))
@@ -1928,6 +1948,13 @@ class MainWindow(MainWindow_Ui):
             f = Open(download_info_file)
             f.close()
             f.remove()
+
+#removing download_info_file_backup
+            download_info_file_backup = str(download_info_file) + "_back"
+            osCommands.remove(download_info_file_backup)
+
+
+
 #removing file of download form download temp folder
             if file_name != '***' and status != 'complete' :
                 file_name_path = os.path.join(temp_download_folder , str(file_name))
@@ -2003,6 +2030,11 @@ class MainWindow(MainWindow_Ui):
             f = Open(download_info_file)
             f.close()
             f.remove()
+
+#removing download_info_file_backup
+            download_info_file_backup = str(download_info_file) + "_back"
+            osCommands.remove(download_info_file_backup)
+
 
 #remove file of download form download temp folder
             if file_name != '***' and status != 'complete' :
@@ -2515,6 +2547,12 @@ class MainWindow(MainWindow_Ui):
          
             writeList(download_info_file , download_info_file_list)
         
+            #creating back up file for download_info_file
+            download_info_file_backup = str(download_info_file) + "_back"
+            osCommands.touch(download_info_file_backup)
+            writeList(download_info_file_backup , download_info_file_list)
+
+
             #creating a row in download_table
             self.download_table.insertRow(0)
             j = 0
@@ -2941,8 +2979,15 @@ class MainWindow(MainWindow_Ui):
                             f.writelines(i.strip() + "\n")
                     f.close()
 
+                #removing download_info_file and download_info_file_backup
+                download_info_file = os.path.join(download_info_folder , gid) 
+                osCommands.remove(download_info_file)
 
-           #removing name of the queu from queues_list_file 
+                download_info_file_backup = str(download_info_file) + "_back"
+                osCommands.remove(download_info_file_backup)
+
+
+           #removing name of the queue from queues_list_file 
             f = Open(queues_list_file)
             f_lines = f.readlines()
             f.close()
