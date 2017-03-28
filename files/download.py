@@ -527,8 +527,8 @@ def limitSpeed(gid ,limit):
         answer = server.aria2.changeOption(gid, {'max-download-limit': limit })
     except:
         answer = str("None")
-    print(answer)
-    logger.sendToLog(answer, "INFO")
+    print("Download speed is limited")
+    logger.sendToLog("Download speed is limited", "INFO")
 
 #this function returning  GID of active downloads
 def activeDownloads():

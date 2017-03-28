@@ -351,6 +351,10 @@ class Queue(QThread):
                 self.parent.threadPool[len(self.parent.threadPool) - 1].ARIA2NOTRESPOND.connect(self.parent.aria2NotRespond)
                 sleep(3)
 
+            #
+                if self.limit : #limit download speed if user limited speed for previous download
+                    self.limit_changed = True
+
                 while  status == 'downloading' or status == 'waiting' or status == 'paused' or status == 'scheduled' : #continue loop until download has finished
 
                     sleep(1)
