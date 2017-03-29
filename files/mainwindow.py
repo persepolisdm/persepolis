@@ -3041,6 +3041,63 @@ class MainWindow(MainWindow_Ui):
         self.queue_list_dict[current_category_tree_text].REFRESHTOOLBARSIGNAL.connect(self.toolBarAndContextMenuItems)
 
         self.toolBarAndContextMenuItems(current_category_tree_text)
+
+#updating queue_info_file
+
+        #queue_info_file contains start time and end time information and ... for queue
+        #finding queue_info_file path
+        queue_info_file = os.path.join(queue_info_folder , current_category_tree_text)
+
+        #reading queue_info_dict
+        queue_info_dict = readDict(queue_info_file)
+
+        #queue_info_dict default format >> queue_info_dict = {'start_time_enable' : 'no' , 'end_time_enable' : 'no' , 'start_minute' : '0' , 'start_hour' : '0' , 'end_hour': '0' , 'end_minute' : '0' , 'reverse' : 'no' , 'limit_speed' : 'yes' , 'limit' : '0K'  , 'after': 'yes' }
+
+        #start_checkBox
+        if self.start_checkBox.isChecked() :
+            queue_info_dict['start_time_enable'] = 'yes'
+        else:
+            queue_info_dict['start_time_enable'] = 'no'
+
+        #end_checkBox
+        if self.end_checkBox.isChecked():
+            queue_info_dict['end_time_enable'] = 'yes'
+        else:
+            queue_info_dict['end_time_enable'] = 'no'
+
+
+        #start_hour_spinBox
+        start_hour = self.start_hour_spinBox.value()
+        queue_info_dict['start_hour'] = str(start_hour)
+
+        #start_minute_spinBox
+        start_minute = self.start_minute_spinBox.value()
+        queue_info_dict['start_minute'] = str(start_minute)
+
+        #end_hour_spinBox
+        end_hour = self.end_hour_spinBox.value()
+        queue_info_dict ['end_hour'] = str(end_hour)
+
+        #end_minute_spinBox
+        end_minute = self.end_minute_spinBox.value()
+        queue_info_dict['end_minute'] = str(end_minute)
+
+
+        #reverse_checkBox
+        if self.reverse_checkBox.isChecked():
+            queue_info_dict['reverse'] = 'yes'
+        else:
+            queue_info_dict['reverse'] = 'no'
+
+        
+        #saving values
+        f = Open(queue_info_file , 'w' )
+        f.writelines(str(queue_info_dict))
+        f.close()
+
+
+
+
  
     def stopQueue(self , menu):
         self.stopQueueAction.setEnabled(False)
