@@ -362,11 +362,13 @@ class PreferencesWindow(Setting_Ui):
             self.persepolis_setting.setValue('show-menubar' , 'yes')
             self.parent.menubar.show()
             self.parent.toolBar2.hide()
+            self.parent.showMenuBarAction.setChecked(True)
 
         else:
             self.persepolis_setting.setValue('show-menubar' , 'no')
             self.parent.menubar.hide()
             self.parent.toolBar2.show()
+            self.parent.showMenuBarAction.setChecked(False)
 
 #show_sidepanel_checkbox
         if self.show_sidepanel_checkbox.isChecked() == True:
