@@ -1,61 +1,72 @@
 # -*- coding: utf-8 -*-
 
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU General Public License as published by
-#    the Free Software Foundation, either version 3 of the License, or
-#    (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU General Public License for more details.
-#
-#    You should have received a copy of the GNU General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+"""
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
 
-from PyQt5 import QtWidgets , QtCore
-from PyQt5.QtWidgets import QHBoxLayout ,  QApplication ,  QFileDialog,  QCheckBox , QLineEdit , QPushButton  
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+"""
+
+import platform
+import os
+import ast
+import functools
+
+from PyQt5 import QtWidgets, QtCore
+from PyQt5.QtWidgets import QHBoxLayout,  QApplication,  QFileDialog,  QCheckBox, QLineEdit, QPushButton
 from PyQt5.QtGui import QIcon
-from PyQt5.QtCore import QPoint , QSize , QDir
-import os , ast , functools
+from PyQt5.QtCore import QPoint, QSize, QDir
 from addlink_ui import AddLinkWindow_Ui
-from newopen import Open , readDict
+from newopen import Open, readDict
+
 import osCommands
 import download
-import platform
+
 
 home_address = os.path.expanduser("~")
 
-#finding os platform
+# finding os platform
 os_type = platform.system()
 
-#config_folder    
-if os_type == 'Linux' or os_type == 'FreeBSD'  or os_type == 'OpenBSD' :
-    config_folder = os.path.join(str(home_address) , ".config/persepolis_download_manager")
-elif os_type == 'Darwin':
-    config_folder = os.path.join(str(home_address) , "Library/Application Support/persepolis_download_manager")
-elif os_type == 'Windows' :
-    config_folder = os.path.join(str(home_address) , 'AppData','Local','persepolis_download_manager')
+# config_folder
+if ((os_type == 'Linux') or (os_type == 'FreeBSD') or (os_type == 'OpenBSD')):
+    config_folder = os.path.join(
+        str(home_address), ".config/persepolis_download_manager")
+elif (os_type == 'Darwin'):
+    config_folder = os.path.join(
+        str(home_address), "Library/Application Support/persepolis_download_manager")
+elif (os_type == 'Windows'):
+    config_folder = os.path.join(
+        str(home_address), 'AppData', 'Local', 'persepolis_download_manager')
 
-#queues_list contains queues name
-queues_list_file = os.path.join(config_folder , 'queues_list' )
-
+# queues_list contains queues name
+queues_list_file = os.path.join(config_folder, 'queues_list')
 
 
 class AddLinkWindow(AddLinkWindow_Ui):
-    def __init__(self , callback,persepolis_setting , flashgot_add_link_dictionary = {}):
+    def __init__(self, callback, persepolis_setting, flashgot_add_link_dictionary={}):
         super().__init__(persepolis_setting)
         self.callback = callback
         self.flashgot_add_link_dictionary = flashgot_add_link_dictionary
         self.persepolis_setting = persepolis_setting
-#entry initialization            
 
+        # entry initialization ->
         global connections
-        connections = int(self.persepolis_setting.value('settings/connections'))
+        connections = int(
+            self.persepolis_setting.value('settings/connections'))
         global download_path
-        download_path = str(self.persepolis_setting.value('settings/download_path'))
+        download_path = str(
+            self.persepolis_setting.value('settings/download_path'))
 
-#initialization
+        # initialization ->
         self.connections_spinBox.setValue(connections)
         self.download_folder_lineEdit.setText(download_path)
         self.download_folder_lineEdit.setEnabled(False)
@@ -63,60 +74,67 @@ class AddLinkWindow(AddLinkWindow_Ui):
         self.ok_pushButton.setEnabled(False)
         self.download_later_pushButton.setEnabled(False)
         self.link_lineEdit.textChanged.connect(self.linkLineChanged)
-#AddLink - checking clipboard for link!   
-        if 'link' in self.flashgot_add_link_dictionary : 
-            self.link_lineEdit.setText(str(self.flashgot_add_link_dictionary['link']))
+
+        # AddLink - checking clipboard for link! ->
+        if ('link' in self.flashgot_add_link_dictionary):
+            self.link_lineEdit.setText(
+                str(self.flashgot_add_link_dictionary['link']))
             del self.flashgot_add_link_dictionary['link']
-        else:    
+        else:
             clipboard = QApplication.clipboard()
             text = clipboard.text()
-            if ("tp:/" in text[2:6]) or ("tps:/" in text[2:7]) :
+            if (("tp:/" in text[2:6]) or ("tps:/" in text[2:7])):
                 self.link_lineEdit.setText(str(text))
 
-#ip_lineEdit initialization 
-        settings_ip = self.persepolis_setting.value('add_link_initialization/ip' , None )
-        if settings_ip :
+        # ip_lineEdit initialization ->
+        settings_ip = self.persepolis_setting.value(
+            'add_link_initialization/ip', None)
+        if (settings_ip):
             self.ip_lineEdit.setText(str(settings_ip))
 
-#proxy user lineEdit initialization 
-        settings_proxy_user = self.persepolis_setting.value('add_link_initialization/proxy_user' , None )
-        if settings_proxy_user :
+        # proxy user lineEdit initialization ->
+        settings_proxy_user = self.persepolis_setting.value(
+            'add_link_initialization/proxy_user', None)
+        if (settings_proxy_user):
             self.proxy_user_lineEdit.setText(str(settings_proxy_user))
 
-#port_spinBox initialization 
-        settings_port = self.persepolis_setting.value('add_link_initialization/port' , 0 )
-       
+        # port_spinBox initialization ->
+        settings_port = self.persepolis_setting.value(
+            'add_link_initialization/port', 0)
+
         self.port_spinBox.setValue(int(int(settings_port)))
 
-
-#download UserName initialization
-        settings_download_user = self.persepolis_setting.value('add_link_initialization/download_user' , None )
-        if settings_download_user:
+        # download UserName initialization ->
+        settings_download_user = self.persepolis_setting.value(
+            'add_link_initialization/download_user', None)
+        if (settings_download_user):
             self.download_user_lineEdit.setText(str(settings_download_user))
 
-#finding queues name and adding them to add_queue_comboBox 
+        # finding queues name and adding them to add_queue_comboBox ->
         self.add_queue_comboBox.addItem('Single Downloads')
         f_queues_list = Open(queues_list_file)
         queues_list_file_lines = f_queues_list.readlines()
         f_queues_list.close()
-        for queue in queues_list_file_lines :
+        for queue in queues_list_file_lines:
             queue_strip = queue.strip()
             self.add_queue_comboBox.addItem(str(queue_strip))
 
-        self.add_queue_comboBox.setCurrentIndex(0) 
+        self.add_queue_comboBox.setCurrentIndex(0)
 
-# add_queue_comboBox event
-        self.add_queue_comboBox.currentIndexChanged.connect(self.queueChanged) 
+        # add_queue_comboBox event
+        self.add_queue_comboBox.currentIndexChanged.connect(self.queueChanged)
 
-#connect folder_pushButton
+        # connect folder_pushButton
         self.folder_pushButton.clicked.connect(self.changeFolder)
 
-#connect OK and canel download_later button
-
+        # connect OK and canel download_later button ->
         self.cancel_pushButton.clicked.connect(self.close)
-        self.ok_pushButton.clicked.connect(functools.partial(self.okButtonPressed ,download_later = 'no'))
-        self.download_later_pushButton.clicked.connect(functools.partial(self.okButtonPressed , download_later = 'yes'))
-#frames and checkBoxes
+        self.ok_pushButton.clicked.connect(functools.partial(
+            self.okButtonPressed, download_later='no'))
+        self.download_later_pushButton.clicked.connect(
+            functools.partial(self.okButtonPressed, download_later='yes'))
+
+        # frames and checkBoxes ->
         self.proxy_frame.setEnabled(False)
         self.proxy_checkBox.toggled.connect(self.proxyFrame)
 
@@ -125,101 +143,103 @@ class AddLinkWindow(AddLinkWindow_Ui):
 
         self.limit_frame.setEnabled(False)
         self.limit_checkBox.toggled.connect(self.limitFrame)
-    
+
         self.start_frame.setEnabled(False)
         self.start_checkBox.toggled.connect(self.startFrame)
 
         self.end_frame.setEnabled(False)
         self.end_checkBox.toggled.connect(self.endFrame)
 
-
         self.change_name_lineEdit.setEnabled(False)
         self.change_name_checkBox.toggled.connect(self.changeName)
 
-
-        #set focus to ok button
+        # set focus to ok button
         self.ok_pushButton.setFocus()
 
-#check name of flashgot link 
-        if 'out' in self.flashgot_add_link_dictionary:
-            self.change_name_lineEdit.setText(str(self.flashgot_add_link_dictionary['out']))
+        # check name of flashgot link ->
+        if ('out' in self.flashgot_add_link_dictionary):
+            self.change_name_lineEdit.setText(
+                str(self.flashgot_add_link_dictionary['out']))
             self.change_name_checkBox.setChecked(True)
             del self.flashgot_add_link_dictionary['out']
 
- #setting window size and position
-        size = self.persepolis_setting.value('AddLinkWindow/size' , QSize(520 , 565))
-        position = self.persepolis_setting.value('AddLinkWindow/position' , QPoint(300 , 300))
+ # setting window size and position
+        size = self.persepolis_setting.value(
+            'AddLinkWindow/size', QSize(520, 565))
+        position = self.persepolis_setting.value(
+            'AddLinkWindow/position', QPoint(300, 300))
         self.resize(size)
         self.move(position)
 
-   
-           
-#activate frames if checkBoxes checked
-    def proxyFrame(self,checkBox):
 
-        if self.proxy_checkBox.isChecked() == True :
+# activate frames if checkBoxes checked
+    def proxyFrame(self, checkBox):
+
+        if self.proxy_checkBox.isChecked() == True:
             self.proxy_frame.setEnabled(True)
-        else :
+        else:
             self.proxy_frame.setEnabled(False)
-    def downloadFrame(self,checkBox):
 
-        if self.download_checkBox.isChecked() == True :
+    def downloadFrame(self, checkBox):
+
+        if self.download_checkBox.isChecked() == True:
             self.download_frame.setEnabled(True)
-        else :
+        else:
             self.download_frame.setEnabled(False)
 
-    def limitFrame(self,checkBox):
+    def limitFrame(self, checkBox):
 
-        if self.limit_checkBox.isChecked() == True :
+        if self.limit_checkBox.isChecked() == True:
             self.limit_frame.setEnabled(True)
-        else :
+        else:
             self.limit_frame.setEnabled(False)
 
-    def startFrame(self,checkBox):
+    def startFrame(self, checkBox):
 
-        if self.start_checkBox.isChecked() == True :
+        if self.start_checkBox.isChecked() == True:
             self.start_frame.setEnabled(True)
-        else :
+        else:
             self.start_frame.setEnabled(False)
 
-    def endFrame(self,checkBox):
+    def endFrame(self, checkBox):
 
-        if self.end_checkBox.isChecked() == True :
+        if self.end_checkBox.isChecked() == True:
             self.end_frame.setEnabled(True)
-        else :
+        else:
             self.end_frame.setEnabled(False)
 
-
-
-    def changeFolder(self,button):
-        fname = QFileDialog.getExistingDirectory(self,'Select a directory', download_path )
+    def changeFolder(self, button):
+        fname = QFileDialog.getExistingDirectory(
+            self, 'Select a directory', download_path)
 
         if fname:
-            #Returns pathName with the '/' separators converted to separators that are appropriate for the underlying operating system.
-            #On Windows, toNativeSeparators("c:/winnt/system32") returns "c:\winnt\system32".
+            # Returns pathName with the '/' separators converted to separators that are appropriate for the underlying operating system.
+            # On Windows, toNativeSeparators("c:/winnt/system32") returns
+            # "c:\winnt\system32".
             fname = QDir.toNativeSeparators(fname)
- 
+
         if os.path.isdir(fname):
             self.download_folder_lineEdit.setText(fname)
 
-    def linkLineChanged(self,lineEdit):
-        if str(self.link_lineEdit.text()) == '' :
+    def linkLineChanged(self, lineEdit):
+        if str(self.link_lineEdit.text()) == '':
             self.ok_pushButton.setEnabled(False)
             self.download_later_pushButton.setEnabled(False)
-        else :
+        else:
             self.ok_pushButton.setEnabled(True)
             self.download_later_pushButton.setEnabled(True)
 
-    def changeName(self,checkBoxes):
+    def changeName(self, checkBoxes):
         if self.change_name_checkBox.isChecked() == True:
             self.change_name_lineEdit.setEnabled(True)
         else:
             self.change_name_lineEdit.setEnabled(False)
 
-    def queueChanged(self,combo):
-        #if one of the queues selected by user , start time and end time must be deactivated
-        if self.add_queue_comboBox.currentIndex() != 0 :
-            self.start_checkBox.setCheckState(QtCore.Qt.Unchecked) 
+    def queueChanged(self, combo):
+        # if one of the queues selected by user , start time and end time must
+        # be deactivated
+        if self.add_queue_comboBox.currentIndex() != 0:
+            self.start_checkBox.setCheckState(QtCore.Qt.Unchecked)
             self.start_checkBox.setEnabled(False)
 
             self.end_checkBox.setCheckState(QtCore.Qt.Unchecked)
@@ -228,21 +248,24 @@ class AddLinkWindow(AddLinkWindow_Ui):
         else:
             self.start_checkBox.setEnabled(True)
             self.end_checkBox.setEnabled(True)
-            
 
-    def okButtonPressed(self,button , download_later):
-#writing user's input data to init file
-        self.persepolis_setting.setValue('add_link_initialization/ip' , self.ip_lineEdit.text() )
-        self.persepolis_setting.setValue('add_link_initialization/port' , self.port_spinBox.value())
-        self.persepolis_setting.setValue('add_link_initialization/proxy_user' , self.proxy_user_lineEdit.text())
-        self.persepolis_setting.setValue('add_link_initialization/download_user' , self.download_user_lineEdit.text() )
+    def okButtonPressed(self, button, download_later):
+        # writing user's input data to init file
+        self.persepolis_setting.setValue(
+            'add_link_initialization/ip', self.ip_lineEdit.text())
+        self.persepolis_setting.setValue(
+            'add_link_initialization/port', self.port_spinBox.value())
+        self.persepolis_setting.setValue(
+            'add_link_initialization/proxy_user', self.proxy_user_lineEdit.text())
+        self.persepolis_setting.setValue(
+            'add_link_initialization/download_user', self.download_user_lineEdit.text())
 
-        if self.proxy_checkBox.isChecked() == False :
+        if self.proxy_checkBox.isChecked() == False:
             ip = None
             port = None
             proxy_user = None
             proxy_passwd = None
-        else :
+        else:
             ip = self.ip_lineEdit.text()
             if not(ip):
                 ip = None
@@ -256,10 +279,10 @@ class AddLinkWindow(AddLinkWindow_Ui):
             if not(proxy_passwd):
                 proxy_passwd = None
 
-        if self.download_checkBox.isChecked() == False :
+        if self.download_checkBox.isChecked() == False:
             download_user = None
             download_passwd = None
-        else :
+        else:
             download_user = self.download_user_lineEdit.text()
             if not(download_user):
                 download_user = None
@@ -267,25 +290,25 @@ class AddLinkWindow(AddLinkWindow_Ui):
             if not(download_passwd):
                 download_passwd = None
 
-        if self.limit_checkBox.isChecked() == False :
+        if self.limit_checkBox.isChecked() == False:
             limit = 0
-        else :
-            if self.limit_comboBox.currentText() == "KB/S" :
+        else:
+            if self.limit_comboBox.currentText() == "KB/S":
                 limit = str(self.limit_spinBox.value()) + str("K")
-            else :
+            else:
                 limit = str(self.limit_spinBox.value()) + str("M")
 
-        if self.start_checkBox.isChecked() == False :
+        if self.start_checkBox.isChecked() == False:
             start_hour = None
             start_minute = None
-        else :
+        else:
             start_hour = str(self.start_hour_spinBox.value())
             start_minute = str(self.start_minute_spinBox.value())
 
-        if self.end_checkBox.isChecked() == False :
+        if self.end_checkBox.isChecked() == False:
             end_hour = None
             end_minute = None
-        else :
+        else:
             end_hour = str(self.end_hour_spinBox.value())
             end_minute = str(self.end_minute_spinBox.value())
 
@@ -293,19 +316,17 @@ class AddLinkWindow(AddLinkWindow_Ui):
             out = None
         else:
             out = str(self.change_name_lineEdit.text())
-            
 
         link = self.link_lineEdit.text()
 
         connections = self.connections_spinBox.value()
         download_path = self.download_folder_lineEdit.text()
 
-        if not ('referer' in self.flashgot_add_link_dictionary) :
+        if not ('referer' in self.flashgot_add_link_dictionary):
             self.flashgot_add_link_dictionary['referer'] = None
 
         if not ('header' in self.flashgot_add_link_dictionary):
             self.flashgot_add_link_dictionary['header'] = None
-
 
         if not('user-agent' in self.flashgot_add_link_dictionary):
             self.flashgot_add_link_dictionary['user-agent'] = None
@@ -316,20 +337,20 @@ class AddLinkWindow(AddLinkWindow_Ui):
         final_download_path = None
 
         now_date_list = download.nowDate()
-        self.add_link_dictionary = { 'last_try_date' : now_date_list , 'firs_try_date' : now_date_list , 'out' :out , 'final_download_path':final_download_path , 'start_hour':start_hour ,'start_minute' : start_minute ,'end_hour' : end_hour ,'end_minute':end_minute , 'link':link , 'ip':ip , 'port':port , 'proxy_user':proxy_user , 'proxy_passwd' : proxy_passwd , 'download_user':download_user , 'download_passwd': download_passwd ,'connections':connections , 'limit':limit, 'download_path':download_path }
+        self.add_link_dictionary = {'last_try_date': now_date_list, 'firs_try_date': now_date_list, 'out': out, 'final_download_path': final_download_path, 'start_hour': start_hour, 'start_minute': start_minute, 'end_hour': end_hour, 'end_minute': end_minute,
+                                    'link': link, 'ip': ip, 'port': port, 'proxy_user': proxy_user, 'proxy_passwd': proxy_passwd, 'download_user': download_user, 'download_passwd': download_passwd, 'connections': connections, 'limit': limit, 'download_path': download_path}
         for i in self.flashgot_add_link_dictionary.keys():
             self.add_link_dictionary[i] = self.flashgot_add_link_dictionary[i]
 
-        category = str(self.add_queue_comboBox.currentText()) 
-
+        category = str(self.add_queue_comboBox.currentText())
 
         del self.flashgot_add_link_dictionary
-        self.callback(self.add_link_dictionary , download_later , category)
+        self.callback(self.add_link_dictionary, download_later, category)
 
         self.close()
 
-    def closeEvent(self , event):
-        self.persepolis_setting.setValue('AddLinkWindow/size' , self.size())
-        self.persepolis_setting.setValue('AddLinkWindow/position' , self.pos())
+    def closeEvent(self, event):
+        self.persepolis_setting.setValue('AddLinkWindow/size', self.size())
+        self.persepolis_setting.setValue('AddLinkWindow/position', self.pos())
         self.persepolis_setting.sync()
         self.destroy()

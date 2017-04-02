@@ -14,34 +14,34 @@
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from PyQt5 import QtWidgets , QtGui , QtCore
-from PyQt5.QtWidgets import QPushButton , QApplication , QWidget , QTabWidget , QVBoxLayout , QTableWidget , QAbstractItemView , QLabel , QLineEdit , QHBoxLayout , QSpinBox , QComboBox , QFrame , QCheckBox , QGridLayout
+from PyQt5 import QtWidgets, QtGui, QtCore
+from PyQt5.QtWidgets import QPushButton, QApplication, QWidget, QTabWidget, QVBoxLayout, QTableWidget, QAbstractItemView, QLabel, QLineEdit, QHBoxLayout, QSpinBox, QComboBox, QFrame, QCheckBox, QGridLayout
 from PyQt5.QtGui import QIcon
 from newopen import Open
-import os , ast
-import sys
+import os
+import ast
 
 home_address = os.path.expanduser("~")
 
 
 class TextQueue_Ui(QWidget):
-    def __init__(self,persepolis_setting):
+    def __init__(self, persepolis_setting):
         super().__init__()
 
         self.persepolis_setting = persepolis_setting
-        icons = ':/' + str(self.persepolis_setting.value('settings/icons')) + '/'
+        icons = ':/' + \
+            str(self.persepolis_setting.value('settings/icons')) + '/'
 
-
-        self.setWindowIcon(QIcon.fromTheme('persepolis' ,QIcon(':/icon.svg')))
+        self.setWindowIcon(QIcon.fromTheme('persepolis', QIcon(':/icon.svg')))
         window_verticalLayout = QVBoxLayout()
         self.setLayout(window_verticalLayout)
-#queue_tabWidget
+# queue_tabWidget
         self.queue_tabWidget = QTabWidget(self)
         window_verticalLayout.addWidget(self.queue_tabWidget)
-#links_tab 
+# links_tab
         self.links_tab = QWidget()
         links_tab_verticalLayout = QVBoxLayout(self.links_tab)
-#link table
+# link table
         self.links_table = QTableWidget(self.links_tab)
         links_tab_verticalLayout.addWidget(self.links_table)
 
@@ -50,16 +50,16 @@ class TextQueue_Ui(QWidget):
         self.links_table.verticalHeader().hide()
 
         self.links_table.setColumnCount(3)
-        links_table_header_labels = [ 'File Name'  , 'Download Link' , 'dictionary'] 
+        links_table_header_labels = [
+            'File Name', 'Download Link', 'dictionary']
         self.links_table.setHorizontalHeaderLabels(links_table_header_labels)
-        self.links_table.setColumnHidden(2 , True)
+        self.links_table.setColumnHidden(2, True)
 
-        
         self.links_table.horizontalHeader().setSectionResizeMode(0)
         self.links_table.horizontalHeader().setStretchLastSection(True)
 
 
-#add_queue 
+# add_queue
         add_queue_horizontalLayout = QHBoxLayout()
 
         self.select_all_pushButton = QPushButton(self.links_tab)
@@ -70,7 +70,6 @@ class TextQueue_Ui(QWidget):
 
         add_queue_horizontalLayout.addStretch(1)
 
-
         self.add_queue_label = QLabel(self.links_tab)
         add_queue_horizontalLayout.addWidget(self.add_queue_label)
 
@@ -78,14 +77,14 @@ class TextQueue_Ui(QWidget):
         add_queue_horizontalLayout.addWidget(self.add_queue_comboBox)
 
         links_tab_verticalLayout.addLayout(add_queue_horizontalLayout)
-        self.queue_tabWidget.addTab(self.links_tab , "")
+        self.queue_tabWidget.addTab(self.links_tab, "")
 
 
-#options_tab
+# options_tab
         self.options_tab = QWidget()
         options_tab_verticalLayout = QVBoxLayout(self.options_tab)
 
-#proxy
+# proxy
         proxy_verticalLayout = QVBoxLayout()
 
         self.proxy_checkBox = QCheckBox(self.options_tab)
@@ -127,7 +126,7 @@ class TextQueue_Ui(QWidget):
         proxy_verticalLayout.addWidget(self.proxy_frame)
         options_tab_verticalLayout.addLayout(proxy_verticalLayout)
 
-#download UserName & Password
+# download UserName & Password
         download_horizontalLayout = QHBoxLayout()
         download_horizontalLayout.setContentsMargins(-1, 10, -1, -1)
 
@@ -155,7 +154,7 @@ class TextQueue_Ui(QWidget):
         download_gridLayout.addWidget(self.download_pass_lineEdit, 1, 1, 1, 1)
         download_verticalLayout.addWidget(self.download_frame)
         download_horizontalLayout.addLayout(download_verticalLayout)
-#select folder
+# select folder
         self.folder_frame = QFrame(self.options_tab)
         self.folder_frame.setFrameShape(QFrame.StyledPanel)
         self.folder_frame.setFrameShadow(QFrame.Raised)
@@ -175,10 +174,10 @@ class TextQueue_Ui(QWidget):
         download_horizontalLayout.addWidget(self.folder_frame)
         options_tab_verticalLayout.addLayout(download_horizontalLayout)
 
-        self.queue_tabWidget.addTab(self.options_tab , '')
+        self.queue_tabWidget.addTab(self.options_tab, '')
 
 
-#limit Speed
+# limit Speed
         limit_verticalLayout = QVBoxLayout()
 
         self.limit_checkBox = QCheckBox(self.options_tab)
@@ -206,7 +205,7 @@ class TextQueue_Ui(QWidget):
         limit_connections_horizontalLayout.addLayout(limit_verticalLayout)
 
 
-#number of connections
+# number of connections
         connections_horizontalLayout = QHBoxLayout()
         connections_horizontalLayout.setContentsMargins(-1, 10, -1, -1)
 
@@ -226,30 +225,34 @@ class TextQueue_Ui(QWidget):
         horizontalLayout_3.addWidget(self.connections_spinBox)
         connections_horizontalLayout.addWidget(self.connections_frame)
 
-        limit_connections_horizontalLayout.addLayout(connections_horizontalLayout)
+        limit_connections_horizontalLayout.addLayout(
+            connections_horizontalLayout)
 
-        options_tab_verticalLayout.addLayout(limit_connections_horizontalLayout)
+        options_tab_verticalLayout.addLayout(
+            limit_connections_horizontalLayout)
 
 
-#buttons 
+# buttons
         buttons_horizontalLayout = QHBoxLayout()
         buttons_horizontalLayout.addStretch(1)
-#ok_pushButton
+# ok_pushButton
         self.ok_pushButton = QPushButton(self)
         self.ok_pushButton.setIcon(QIcon(icons + 'ok'))
         buttons_horizontalLayout.addWidget(self.ok_pushButton)
-#cancel_pushButton
+# cancel_pushButton
         self.cancel_pushButton = QPushButton(self)
         self.cancel_pushButton.setIcon(QIcon(icons + 'remove'))
         buttons_horizontalLayout.addWidget(self.cancel_pushButton)
 
         window_verticalLayout.addLayout(buttons_horizontalLayout)
 
-#labels
+# labels
         self.setWindowTitle("Persepolis Download Manager")
 
-        self.queue_tabWidget.setTabText(self.queue_tabWidget.indexOf(self.links_tab) , 'Links' )
-        self.queue_tabWidget.setTabText(self.queue_tabWidget.indexOf(self.options_tab) , 'Download options')
+        self.queue_tabWidget.setTabText(
+            self.queue_tabWidget.indexOf(self.links_tab), 'Links')
+        self.queue_tabWidget.setTabText(
+            self.queue_tabWidget.indexOf(self.options_tab), 'Download options')
 
         self.select_all_pushButton.setText('Select All')
         self.deselect_all_pushButton.setText('Deselect All')
@@ -257,30 +260,28 @@ class TextQueue_Ui(QWidget):
         self.add_queue_label.setText('Add to queue : ')
 
         self.proxy_checkBox.setText('Proxy')
-        self.proxy_pass_label.setText( "Proxy PassWord : ")
-        self.ip_label.setText( "IP  :")
-        self.proxy_user_label.setText( "Proxy UserName : ")
-        self.port_label.setText( "Port:")
+        self.proxy_pass_label.setText("Proxy PassWord : ")
+        self.ip_label.setText("IP  :")
+        self.proxy_user_label.setText("Proxy UserName : ")
+        self.port_label.setText("Port:")
 
-        self.download_checkBox.setText( "Download UserName and PassWord")
-        self.download_user_label.setText( "Download UserName : ")
-        self.download_pass_label.setText( "Download PassWord : ")
+        self.download_checkBox.setText("Download UserName and PassWord")
+        self.download_user_label.setText("Download UserName : ")
+        self.download_pass_label.setText("Download PassWord : ")
 
-        self.folder_pushButton.setText( "Change Download Folder")
-        self.folder_label.setText( "Download Folder : ")
+        self.folder_pushButton.setText("Change Download Folder")
+        self.folder_label.setText("Download Folder : ")
 
-        self.limit_checkBox.setText( "Limit Speed")
+        self.limit_checkBox.setText("Limit Speed")
 
-        self.connections_label.setText( "Number Of Connections :")
+        self.connections_label.setText("Number Of Connections :")
 
         self.ok_pushButton.setText('OK')
         self.cancel_pushButton.setText('Cancel')
 
-
-    def changeIcon(self , icons ):
+    def changeIcon(self, icons):
         icons = ':/' + str(icons) + '/'
 
         self.ok_pushButton.setIcon(QIcon(icons + 'ok'))
         self.cancel_pushButton.setIcon(QIcon(icons + 'remove'))
         self.folder_pushButton.setIcon(QIcon(icons + 'folder'))
-

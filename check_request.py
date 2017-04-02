@@ -15,6 +15,6 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import sys
-import requests 
-sys.exit(0)
+import requests
 
+sys.exit(0)
