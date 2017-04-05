@@ -13,7 +13,8 @@
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import os , ast
+import os
+import ast
 import platform
 from play import playNotification
 from newopen import Open
@@ -21,22 +22,25 @@ from PyQt5.QtCore import QSettings
 
 home_address = os.path.expanduser("~")
 
-#platform
+# platform
 os_type = platform.system()
 
-#config_folder
-if os_type == 'Linux' or os_type == 'FreeBSD'  or os_type == 'OpenBSD' :
-    config_folder = os.path.join(str(home_address) , ".config/persepolis_download_manager")
+# config_folder
+if os_type == 'Linux' or os_type == 'FreeBSD' or os_type == 'OpenBSD':
+    config_folder = os.path.join(
+        str(home_address), ".config/persepolis_download_manager")
 elif os_type == 'Darwin':
-    config_folder = os.path.join(str(home_address) , "Library/Application Support/persepolis_download_manager")
-elif os_type == 'Windows' :
-    config_folder = os.path.join(str(home_address) , 'AppData','Local','persepolis_download_manager')
+    config_folder = os.path.join(
+        str(home_address), "Library/Application Support/persepolis_download_manager")
+elif os_type == 'Windows':
+    config_folder = os.path.join(
+        str(home_address), 'AppData', 'Local', 'persepolis_download_manager')
 
 
-
-#notifySend use notify-send program in user's system for sending notifications
-#and use playNotification function in play.py file for playing sound notifications
-def notifySend(message1,message2,time,sound ,systemtray=None ):
+# notifySend use notify-send program in user's system for sending notifications
+# and use playNotification function in play.py file for playing sound
+# notifications
+def notifySend(message1, message2, time, sound, systemtray=None):
     if sound == 'ok':
         playNotification('notifications/ok.ogg')
     elif sound == 'fail':
@@ -48,8 +52,8 @@ def notifySend(message1,message2,time,sound ,systemtray=None ):
     elif sound == 'queue':
         playNotification('notifications/queue.ogg')
 
-    #load settings
-    persepolis_setting = QSettings('persepolis_download_manager' , 'persepolis')
+    # load settings
+    persepolis_setting = QSettings('persepolis_download_manager', 'persepolis')
 
     enable_notification = persepolis_setting.value('settings/notification')
 
@@ -57,17 +61,17 @@ def notifySend(message1,message2,time,sound ,systemtray=None ):
     message1 = str(message1)
     message2 = str(message2)
 
-#using Qt notification or Native system notification
+# using Qt notification or Native system notification
     if enable_notification == 'QT notification':
-        systemtray.showMessage(message1 , message2 , 0, 10000)
+        systemtray.showMessage(message1, message2, 0, 10000)
     else:
-        if os_type == 'Linux' or os_type == 'FreeBSD'  or os_type == 'OpenBSD' :
-            os.system("notify-send --icon='persepolis' --app-name='Persepolis Download Manager' --expire-time='" + time + "' '" +  message1 +  "' \ '" + message2 +  "' "  )
+        if os_type == 'Linux' or os_type == 'FreeBSD' or os_type == 'OpenBSD':
+            os.system("notify-send --icon='persepolis' --app-name='Persepolis Download Manager' --expire-time='" +
+                      time + "' '" + message1 + "' \ '" + message2 + "' ")
         elif os_type == 'Darwin':
             from mac_notification import notifyMac
 
             notifyMac("Persepolis Download Manager", message1, message2)
 
         elif os_type == 'Windows':
-            systemtray.showMessage(message1 , message2 , 0, 10000)
-           
+            systemtray.showMessage(message1, message2, 0, 10000)

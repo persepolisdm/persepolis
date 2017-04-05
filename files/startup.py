@@ -14,11 +14,12 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import os
-import platform, sys
+import platform
+import sys
 
 home_address = os.path.expanduser("~")
 
-#finding os_type
+# finding os_type
 os_type = platform.system()
 
 if os_type == 'Windows':
@@ -29,7 +30,7 @@ if os_type == 'Windows':
 # check startup
 def checkstartup():
     # check if it is linux
-    if os_type == "Linux" or os_type == "FreeBSD"  or os_type == 'OpenBSD' :
+    if os_type == "Linux" or os_type == "FreeBSD" or os_type == 'OpenBSD':
         # check if the startup exists
         if os.path.exists(home_address + "/.config/autostart/persepolis.desktop"):
             return True
@@ -48,8 +49,9 @@ def checkstartup():
     elif os_type == "Windows":
         # try to open startup key and check persepolis value
         try:
-            aKey = winreg.OpenKey(winreg.HKEY_CURRENT_USER, "Software\\Microsoft\\Windows\\CurrentVersion\\Run", 0, winreg.KEY_ALL_ACCESS)
-            startupvalue = winreg.QueryValueEx(aKey,'persepolis')
+            aKey = winreg.OpenKey(
+                winreg.HKEY_CURRENT_USER, "Software\\Microsoft\\Windows\\CurrentVersion\\Run", 0, winreg.KEY_ALL_ACCESS)
+            startupvalue = winreg.QueryValueEx(aKey, 'persepolis')
             startup = True
         except WindowsError:
             startup = False
@@ -64,9 +66,11 @@ def checkstartup():
             return False
 
 # add startup file
+
+
 def addstartup():
     # check if it is linux
-    if os_type == 'Linux' or os_type == 'FreeBSD' or os_type == 'OpenBSD' :
+    if os_type == 'Linux' or os_type == 'FreeBSD' or os_type == 'OpenBSD':
         entry = '''!/usr/bin/env xdg-open
         [Desktop Entry]
         Name=Persepolis Download Manager
@@ -85,14 +89,17 @@ def addstartup():
 
         # check if the autostart directry exists & create entry
         if os.path.exists(home_address + "/.config/autostart"):
-            startupfile = open(home_address + "/.config/autostart/persepolis.desktop", 'w+')
+            startupfile = open(
+                home_address + "/.config/autostart/persepolis.desktop", 'w+')
             startupfile.write(entry)
-            os.chmod(home_address + "/.config/autostart/persepolis.desktop",0o777)
+            os.chmod(home_address + "/.config/autostart/persepolis.desktop", 0o777)
         if not os.path.exists(home_address + "/.config/autostart"):
-            os.makedirs(home_address + "/.config/autostart",0o777)
-            startupfile = open(home_address + "/.config/autostart/persepolis.desktop", 'w+')
+            os.makedirs(home_address + "/.config/autostart", 0o777)
+            startupfile = open(
+                home_address + "/.config/autostart/persepolis.desktop", 'w+')
             startupfile.write(entry)
-            os.chmod(home_address + "/.config/.autostart/persepolis.desktop",0o777)
+            os.chmod(home_address +
+                     "/.config/.autostart/persepolis.desktop", 0o777)
     # check if it is mac
     elif os_type == "Darwin":
         # OS X
@@ -114,27 +121,33 @@ def addstartup():
 	<true/>
 </dict>
 </plist>\n'''
-        startupfile = open(home_address + '/Library/LaunchAgents/com.persepolisdm.plist', 'w+')
+        startupfile = open(
+            home_address + '/Library/LaunchAgents/com.persepolisdm.plist', 'w+')
         startupfile.write(entry)
-        os.system('launchctl load ' + home_address + "/Library/LaunchAgents/com.persepolisdm.plist")
+        os.system('launchctl load ' + home_address +
+                  "/Library/LaunchAgents/com.persepolisdm.plist")
     # check if it is Windows
     elif os_type == "Windows":
 
         # Connect to the startup path in Registry
-        key = winreg.OpenKey(winreg.HKEY_CURRENT_USER,"Software\\Microsoft\\Windows\\CurrentVersion\\Run",0,winreg.KEY_ALL_ACCESS)
+        key = winreg.OpenKey(winreg.HKEY_CURRENT_USER,
+                             "Software\\Microsoft\\Windows\\CurrentVersion\\Run", 0, winreg.KEY_ALL_ACCESS)
         # find current persepolis exe path
         cwd = os.getcwd()
         persepolisexetray = '"' + cwd + '\Persepolis Download Manager.exe' + '"' + ' --tray'
         # add persepolis to startup
-        winreg.SetValueEx(key, 'persepolis', 0, winreg.REG_SZ,persepolisexetray)
+        winreg.SetValueEx(key, 'persepolis', 0,
+                          winreg.REG_SZ, persepolisexetray)
 
         # Close connection
         winreg.CloseKey(key)
 
 # remove startup file
+
+
 def removestartup():
     # check if it is linux
-    if os_type == 'Linux' or os_type == 'FreeBSD' or os_type == 'OpenBSD' :
+    if os_type == 'Linux' or os_type == 'FreeBSD' or os_type == 'OpenBSD':
 
         # remove it
         os.remove(home_address + "/.config/autostart/persepolis.desktop")
@@ -143,14 +156,17 @@ def removestartup():
     elif os_type == "Darwin":
         # OS X
         if checkstartup():
-            os.system('launchctl unload ' + home_address + "/Library/LaunchAgents/com.persepolisdm.plist")
-            os.remove(home_address + "/Library/LaunchAgents/com.persepolisdm.plist")
+            os.system('launchctl unload ' + home_address +
+                      "/Library/LaunchAgents/com.persepolisdm.plist")
+            os.remove(home_address +
+                      "/Library/LaunchAgents/com.persepolisdm.plist")
 
     # check if it is Windows
     elif os_type == 'Windows':
-        if checkstartup() :
+        if checkstartup():
             # Connect to the startup path in Registry
-            key = winreg.OpenKey(winreg.HKEY_CURRENT_USER,"Software\\Microsoft\\Windows\\CurrentVersion\\Run",0,winreg.KEY_ALL_ACCESS)
+            key = winreg.OpenKey(
+                winreg.HKEY_CURRENT_USER, "Software\\Microsoft\\Windows\\CurrentVersion\\Run", 0, winreg.KEY_ALL_ACCESS)
 
             # remove persepolis from startup
             winreg.DeleteValue(key, 'persepolis')

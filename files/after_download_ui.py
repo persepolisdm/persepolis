@@ -16,7 +16,8 @@
 from PyQt5 import QtWidgets , QtGui
 from PyQt5.QtWidgets import QCheckBox , QWidget , QVBoxLayout , QHBoxLayout , QPushButton , QLabel , QLineEdit  
 from PyQt5.QtGui import QIcon
-import ast , os
+import ast
+import os
 from newopen import Open
 import icons_resource
 
@@ -40,25 +41,25 @@ class AfterDownloadWindow_Ui(QWidget):
 
         self.complete_label = QLabel()
         self.verticalLayout_1.addWidget(self.complete_label)
-#file_name_label
+# file_name_label
         self.file_name_label = QLabel()
         self.verticalLayout_1.addWidget(self.file_name_label)
-#size_label
+# size_label
         self.size_label = QLabel()
         self.verticalLayout_1.addWidget(self.size_label)
 
-#link
+# link
         self.link_label = QLabel()
         self.verticalLayout_1.addWidget(self.link_label)
 
         self.link_lineEdit = QLineEdit()
         self.verticalLayout_1.addWidget(self.link_lineEdit)
-#save_as
+# save_as
         self.save_as_label = QLabel()
         self.verticalLayout_1.addWidget(self.save_as_label)
         self.save_as_lineEdit = QLineEdit()
         self.verticalLayout_1.addWidget(self.save_as_lineEdit)
-#open_pushButtun
+# open_pushButtun
         button_horizontalLayout = QHBoxLayout()
         button_horizontalLayout.setContentsMargins(10, 10, 10, 10)
 
@@ -67,25 +68,24 @@ class AfterDownloadWindow_Ui(QWidget):
         self.open_pushButtun.setIcon(QIcon(icons + 'file'))
         button_horizontalLayout.addWidget(self.open_pushButtun)
 
-#open_folder_pushButtun
+# open_folder_pushButtun
         self.open_folder_pushButtun = QPushButton()
         self.open_folder_pushButtun.setIcon(QIcon(icons + 'folder'))
         button_horizontalLayout.addWidget(self.open_folder_pushButtun)
 
-#ok_pushButton
+# ok_pushButton
         self.ok_pushButton = QPushButton()
         self.ok_pushButton.setIcon(QIcon(icons + 'ok'))
         button_horizontalLayout.addWidget(self.ok_pushButton)
 
         self.verticalLayout_1.addLayout(button_horizontalLayout)
-#dont_show_checkBox
+# dont_show_checkBox
         self.dont_show_checkBox = QCheckBox()
         self.verticalLayout_1.addWidget(self.dont_show_checkBox)
 
-
         self.setLayout(self.verticalLayout_1)
 
-#labels 
+# labels
         self.open_pushButtun.setText("  Open File  ")
         self.open_folder_pushButtun.setText("Open Download Folder")
         self.ok_pushButton.setText("   OK   ")
@@ -100,4 +100,3 @@ class AfterDownloadWindow_Ui(QWidget):
         self.ok_pushButton.setIcon(QIcon(icons + 'ok'))
         self.open_folder_pushButtun.setIcon(QIcon(icons + 'folder'))
         self.open_pushButtun.setIcon(QIcon(icons + 'file'))
-

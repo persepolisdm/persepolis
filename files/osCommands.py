@@ -22,42 +22,47 @@ from PyQt5 import QtCore
 
 os_type = platform.system()
 
+
 def touch(file_path):
-    if not(os.path.isfile(file_path)) :
-        f = open(file_path , 'w') 
+    if not(os.path.isfile(file_path)):
+        f = open(file_path, 'w')
         f.close()
 
-#xdgOpen is openning files or folders
+# xdgOpen is openning files or folders
+
+
 def xdgOpen(file_path):
-    if os_type == 'Linux' or os_type == 'FreeBSD'  or os_type == 'OpenBSD' : #GNU/Linux systems
+    if os_type == 'Linux' or os_type == 'FreeBSD' or os_type == 'OpenBSD':  # GNU/Linux systems
         os.system('xdg-open "' + file_path + '" &')
-    elif os_type == 'Darwin': # OS X systems
-        os.system('open "' + file_path + '" &' )
+    elif os_type == 'Darwin':  # OS X systems
+        os.system('open "' + file_path + '" &')
     elif os_type == 'Windows':
         CREATE_NO_WINDOW = 0x08000000
-        subprocess.Popen(['cmd' , '/C' ,'start', file_path  ,  file_path  ] , shell = False , creationflags = CREATE_NO_WINDOW )
+        subprocess.Popen(['cmd', '/C', 'start', file_path,  file_path],
+                         shell=False, creationflags=CREATE_NO_WINDOW)
 
 
-def remove(file_path): #removing file with path of file_path
+def remove(file_path):  # removing file with path of file_path
     if os.path.isfile(file_path):
         try:
             os.remove(file_path)
-            return 'ok' #function returning  this , if opertation was successful
+            return 'ok'  # function returning  this , if opertation was successful
         except:
-            return 'cant' #function is returning this , if operation was not successful
+            return 'cant'  # function is returning this , if operation was not successful
     else:
-         return 'no' #function is returning this , if file is not existed 
+        return 'no'  # function is returning this , if file is not existed
 
-def removeDir(folder_path): #removeDir is removing folder : folder_path 
-    if os.path.isdir(folder_path): #checking folder_path existance
+
+def removeDir(folder_path):  # removeDir is removing folder : folder_path
+    if os.path.isdir(folder_path):  # checking folder_path existance
         try:
-            shutil.rmtree(folder_path) #removing folder
+            shutil.rmtree(folder_path)  # removing folder
             return 'ok'
         except:
-            return 'cant' #returning 'cant' if removing was not successful
+            return 'cant'  # returning 'cant' if removing was not successful
     else:
-        return 'no' #returning 'no' if file didn't existed
+        return 'no'  # returning 'no' if file didn't existed
 
-def makeDirs(folder_path): #making new folders
-    os.makedirs(folder_path , exist_ok=True)
 
+def makeDirs(folder_path):  # making new folders
+    os.makedirs(folder_path, exist_ok=True)

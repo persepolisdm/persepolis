@@ -1,0 +1,3 @@
+[Default]
+bears = PEP8Bear,PyUnusedCodeBear
+files = about.py,addlink.py,addlink_ui.py,after_download.py,after_download_ui.py,bubble.py,chromium_integration_window.py,compatibility.py,download.py,error_window.py,flashgot_queue.py,icons_resource.py,initialization.py,logger.py,mac_notification.py,mainwindow.py,mainwindow_ui.py,newopen.py,osCommands.py,palettes.py,play.py,progress.py,progress_ui.py,properties.py,setting.py,setting_ui.py,shutdown.py,spider.py,startup.py,text_queue.py,text_queue_ui.py,update.py
