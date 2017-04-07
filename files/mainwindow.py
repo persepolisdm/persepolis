@@ -3506,7 +3506,7 @@ class MainWindow(MainWindow_Ui):
 # this method showing/hiding queue_panel_widget according to
 # queue_panel_show_button text
     def showQueuePanelOptions(self, button):
-        if (self.queue_panel_show_button.text() == 'Show options'):
+        if (self.queue_panel_show_button.text() == 'Show options') or (self.queue_panel_show_button.text() == '&Show options'):
             self.queue_panel_widget_frame.show()
             self.queue_panel_show_button.setText('Hide options')
         else:
