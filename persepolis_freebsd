@@ -15,6 +15,6 @@
 
 cd "/usr/local/share/persepolis"
 
-exec ./Persepolis\ Download\ Manager "$@" 
+./Persepolis\ Download\ Manager "$@" 
 
 
