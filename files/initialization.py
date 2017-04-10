@@ -146,7 +146,7 @@ else:
 download_path = os.path.join(str(home_address), 'Downloads', 'Persepolis')
 
 
-default_setting_dict = {'startup': 'no', 'show-progress': 'yes', 'show-menubar': 'no', 'show-sidepanel': 'yes', 'rpc-port': 6801, 'notification': 'Native notification', 'after-dialog': 'yes', 'tray-icon': 'yes', 'max-tries': 5, 'retry-wait': 0, 'timeout': 60,
+default_setting_dict = {'subfolder': 'yes', 'startup': 'no', 'show-progress': 'yes', 'show-menubar': 'no', 'show-sidepanel': 'yes', 'rpc-port': 6801, 'notification': 'Native notification', 'after-dialog': 'yes', 'tray-icon': 'yes', 'max-tries': 5, 'retry-wait': 0, 'timeout': 60,
                         'connections': 16, 'download_path_temp': download_path_temp, 'download_path': download_path, 'sound': 'yes', 'sound-volume': 90, 'style': 'Fusion', 'color-scheme': 'Persepolis Dark Red', 'icons': 'Archdroid-Red', 'font': 'Ubuntu', 'font-size': 9}
 
 # this loop is checking values in persepolis_setting . if value is not
@@ -163,15 +163,18 @@ persepolis_setting.sync()
 download_path_temp = persepolis_setting.value('download_path_temp')
 download_path = persepolis_setting.value('download_path')
 
-persepolis_setting.endGroup()
 
-folder_list = [download_path_temp]
-for folder in ['Audios', 'Videos', 'Others', 'Documents', 'Compressed']:
-    folder_list.append(os.path.join(download_path, folder))
+folder_list = [download_path_temp, download_path]
+
+if persepolis_setting.value('subfolder') == 'yes':
+    for folder in ['Audios', 'Videos', 'Others', 'Documents', 'Compressed']:
+        folder_list.append(os.path.join(download_path, folder))
 
 for folder in folder_list:
     osCommands.makeDirs(folder)
 
+
+persepolis_setting.endGroup()
 
 # Browser integration for Firefox and chromium and google chrome
 for browser in ['chrome', 'chromium', 'firefox']:

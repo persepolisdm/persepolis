@@ -146,14 +146,10 @@ class PropertiesWindow(AddLinkWindow_Ui):
                 pass
 
 # folder_path
-        if self.add_link_dictionary['final_download_path'] != None:
+        try:
             self.download_folder_lineEdit.setText(
-                str(self.add_link_dictionary['final_download_path']))
-        else:
-            try:
-                self.download_folder_lineEdit.setText(
-                    self.add_link_dictionary['download_path'])
-            except:
+                self.add_link_dictionary['download_path'])
+        except:
                 pass
 
 # connections

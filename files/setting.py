@@ -62,11 +62,18 @@ class PreferencesWindow(Setting_Ui):
         self.rpc_port_spinbox.setValue(
             int(self.persepolis_setting.value('rpc-port')))
 
+# save_as_tab
         self.download_folder_lineEdit.setText(
             str(self.persepolis_setting.value('download_path')))
         self.temp_download_lineEdit.setText(
             str(self.persepolis_setting.value('download_path_temp')))
 
+        if str(self.persepolis_setting.value('subfolder')) == 'yes':
+            self.subfolder_checkBox.setChecked(True)
+        else:
+            self.subfolder_checkBox.setChecked(False)
+
+# notifications_tab
         self.volume_label.setText(
             'Volume : ' + str(self.persepolis_setting.value('sound-volume')))
         self.volume_dial.setValue(
@@ -248,7 +255,7 @@ class PreferencesWindow(Setting_Ui):
         download_path_default = os.path.join(
             str(home_address), 'Downloads', 'Persepolis')
 
-        self.setting_dict = {'startup': 'no', 'show-progress': 'yes', 'show-menubar': 'no', 'show-sidepanel': 'yes', 'rpc-port': 6801, 'notification': 'Native notification', 'after-dialog': 'yes', 'tray-icon': 'yes', 'max-tries': 5, 'retry-wait': 0, 'timeout': 60,
+        self.setting_dict = {'subfolder': 'yes', 'startup': 'no', 'show-progress': 'yes', 'show-menubar': 'no', 'show-sidepanel': 'yes', 'rpc-port': 6801, 'notification': 'Native notification', 'after-dialog': 'yes', 'tray-icon': 'yes', 'max-tries': 5, 'retry-wait': 0, 'timeout': 60,
                              'connections': 16, 'download_path_temp': download_path_temp_default, 'download_path': download_path_default, 'sound': 'yes', 'sound-volume': 100, 'style': 'Fusion', 'color-scheme': 'Persepolis Dark Red', 'icons': 'Archdroid-Red', 'font': 'Ubuntu', 'font-size': 9}
 
         # this loop is checking values in persepolis_setting . if value is not
@@ -263,11 +270,15 @@ class PreferencesWindow(Setting_Ui):
             int(self.setting_dict['connections']))
         self.rpc_port_spinbox.setValue(int(self.setting_dict['rpc-port']))
 
+# save_as_tab
         self.download_folder_lineEdit.setText(
             str(self.setting_dict['download_path']))
         self.temp_download_lineEdit.setText(
             str(self.setting_dict['download_path_temp']))
 
+        self.subfolder_checkBox.setChecked(True)
+
+# notifications_tab
         self.volume_label.setText(
             'Volume : ' + str(self.setting_dict['sound-volume']))
         self.volume_dial.setValue(int(self.setting_dict['sound-volume']))
@@ -449,12 +460,22 @@ class PreferencesWindow(Setting_Ui):
 
 # this section  creates temporary download folder and download folder and
 # download sub folders if they did not existed.
+
+
         download_path_temp = self.persepolis_setting.value(
             'download_path_temp')
         download_path = self.persepolis_setting.value('download_path')
-        folder_list = [download_path_temp]
-        for folder in ['Audios', 'Videos', 'Others', 'Documents', 'Compressed']:
-            folder_list.append(os.path.join(download_path, folder))
+
+        folder_list = [download_path_temp, download_path]
+
+        if self.subfolder_checkBox.isChecked():
+            self.persepolis_setting.setValue('subfolder', 'yes')
+
+            for folder in ['Audios', 'Videos', 'Others', 'Documents', 'Compressed']:
+                folder_list.append(os.path.join(download_path, folder))
+
+        else:
+            self.persepolis_setting.setValue('subfolder', 'no')
 
         for folder in folder_list:
             osCommands.makeDirs(folder)

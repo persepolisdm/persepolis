@@ -353,7 +353,7 @@ def downloadStatus(gid):
 
             if persepolis_setting.value('settings/download_path') == download_path:
                 final_download_path = findDownloadPath(
-                    file_name, download_path)
+                    file_name, download_path, persepolis_setting.value('settings/subfolder'))
                 add_link_dictionary['final_download_path'] = final_download_path
             else:
                 final_download_path = download_path
@@ -436,7 +436,7 @@ def downloadCompleteAction(path, download_path, file_name):
 
 
 # this function is returning folder of download according to file extension
-def findDownloadPath(file_name, download_path):
+def findDownloadPath(file_name, download_path, subfolder):
 
     file_name_split = file_name.split('.')
     file_extension = file_name_split[-1]
@@ -450,20 +450,25 @@ def findDownloadPath(file_name, download_path):
                 'mobi', 'azw', 'azw3', 'azw4', 'kf8', 'chm', 'cbt', 'cbr', 'cbz', 'cb7', 'cba', 'ibooks', 'djvu', 'md']
     compressed = ['a', 'ar', 'cpio', 'shar', 'LBR', 'iso', 'lbr', 'mar', 'tar', 'bz2', 'F', 'gz', 'lz', 'lzma', 'lzo', 'rz', 'sfark', 'sz', 'xz', 'Z', 'z', 'infl', '7z', 's7z', 'ace', 'afa', 'alz', 'apk', 'arc', 'arj', 'b1', 'ba', 'bh', 'cab', 'cfs', 'cpt', 'dar', 'dd', 'dgc', 'dmg', 'ear', 'gca', 'ha', 'hki', 'ice', 'jar', 'kgb', 'lzh', 'lha', 'lzx',
                   'pac', 'partimg', 'paq6', 'paq7', 'paq8', 'pea', 'pim', 'pit', 'qda', 'rar', 'rk', 'sda', 'sea', 'sen', 'sfx', 'sit', 'sitx', 'sqx', 'tar.gz', 'tgz', 'tar.Z', 'tar.bz2', 'tbz2', 'tar.lzma', 'tlz', 'uc', 'uc0', 'uc2', 'ucn', 'ur2', 'ue2', 'uca', 'uha', 'war', 'wim', 'xar', 'xp3', 'yz1', 'zip', 'zipx', 'zoo', 'zpaq', 'zz', 'ecc', 'par', 'par2']
-    if file_extension in audio:
-        return os.path.join(download_path, 'Audios')
 
-    elif file_extension in video:
-        return os.path.join(download_path, 'Videos')
 
-    elif file_extension in document:
-        return os.path.join(download_path, 'Documents')
+    if str(subfolder) == 'yes':
+        if file_extension in audio:
+            return os.path.join(download_path, 'Audios')
 
-    elif file_extension in compressed:
-        return os.path.join(download_path, 'Compressed')
+        elif file_extension in video:
+            return os.path.join(download_path, 'Videos')
 
+        elif file_extension in document:
+            return os.path.join(download_path, 'Documents')
+
+        elif file_extension in compressed:
+            return os.path.join(download_path, 'Compressed')
+
+        else:
+            return os.path.join(download_path, 'Others')
     else:
-        return os.path.join(download_path, 'Others')
+        return download_path
 
 
 # shutdown aria2

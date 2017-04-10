@@ -52,8 +52,7 @@ class AfterDownloadWindow(AfterDownloadWindow_Ui):
 # labels
         add_link_dictionary = self.download_info_file_list[9]
         final_download_path = add_link_dictionary['final_download_path']
-        save_as = final_download_path + "/" + \
-            str(self.download_info_file_list[0])
+        save_as = final_download_path
         self.save_as_lineEdit.setText(save_as)
         self.save_as_lineEdit.setToolTip(save_as)
         link = str(add_link_dictionary['link'])

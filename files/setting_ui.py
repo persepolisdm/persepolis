@@ -132,6 +132,11 @@ class Setting_Ui(QWidget):
         self.temp_horizontalLayout.addWidget(self.temp_download_pushButton)
 
         self.save_as_verticalLayout.addLayout(self.temp_horizontalLayout)
+
+# create subfolder checkBox
+        self.subfolder_checkBox = QCheckBox(self.layoutWidget1)
+        self.save_as_verticalLayout.addWidget(self.subfolder_checkBox)
+        
         self.setting_tabWidget.addTab(self.save_as_tab, "")
 # notifications_tab
         self.notifications_tab = QWidget()
@@ -288,6 +293,8 @@ class Setting_Ui(QWidget):
         self.download_folder_pushButton.setText("Change")
         self.temp_download_label.setText("Temporary Download Folder : ")
         self.temp_download_pushButton.setText("Change")
+        self.subfolder_checkBox.setText("Create subfolders for Music,Videos,... in default download folder")
+
         self.setting_tabWidget.setTabText(
             self.setting_tabWidget.indexOf(self.save_as_tab),  "Save as")
         self.enable_notifications_checkBox.setText(
