@@ -73,6 +73,73 @@
 
 
 
+		<file>Breeze/about.svg</file>		
+		<file>Breeze/add.svg</file>		
+		<file>Breeze/exit.svg</file>		
+		<file>Breeze/folder.svg</file>		
+		<file>Breeze/minimize.svg</file>		
+		<file>Breeze/ok.svg</file>		
+		<file>Breeze/pause.svg</file>		
+		<file>Breeze/play.svg</file>		
+		<file>Breeze/preferences.svg</file>		
+		<file>Breeze/remove.svg</file>		
+		<file>Breeze/setting.svg</file>		
+		<file>Breeze/stop.svg</file>		
+		<file>Breeze/stop_all.svg</file>		
+		<file>Breeze/trash.svg</file>		
+		<file>Breeze/window.svg</file>		
+		<file>Breeze/file.svg</file>		
+        <file>Breeze/multi_remove.svg</file>	
+        <file>Breeze/multi_trash.svg</file>	
+        <file>Breeze/select_all.svg</file>	
+        <file>Breeze/add_queue.svg</file>	
+        <file>Breeze/start_queue.svg</file>	
+        <file>Breeze/stop_queue.svg</file>	
+        <file>Breeze/pause_queue.svg</file>	
+        <file>Breeze/remove_queue.svg</file>	
+        <file>Breeze/menu.svg</file>	
+        <file>Breeze/up.svg</file>	
+        <file>Breeze/down.svg</file>	
+        <file>Breeze/multi_up.svg</file>	
+        <file>Breeze/multi_down.svg</file>	
+        <file>Breeze/browser.svg</file>	
+
+
+
+
+		<file>Breeze-Dark/about.svg</file>		
+		<file>Breeze-Dark/add.svg</file>		
+		<file>Breeze-Dark/exit.svg</file>		
+		<file>Breeze-Dark/folder.svg</file>		
+		<file>Breeze-Dark/minimize.svg</file>		
+		<file>Breeze-Dark/ok.svg</file>		
+		<file>Breeze-Dark/pause.svg</file>		
+		<file>Breeze-Dark/play.svg</file>		
+		<file>Breeze-Dark/preferences.svg</file>		
+		<file>Breeze-Dark/remove.svg</file>		
+		<file>Breeze-Dark/setting.svg</file>		
+		<file>Breeze-Dark/stop.svg</file>		
+		<file>Breeze-Dark/stop_all.svg</file>		
+		<file>Breeze-Dark/trash.svg</file>		
+		<file>Breeze-Dark/window.svg</file>		
+		<file>Breeze-Dark/file.svg</file>		
+        <file>Breeze-Dark/multi_remove.svg</file>	
+        <file>Breeze-Dark/multi_trash.svg</file>	
+        <file>Breeze-Dark/select_all.svg</file>	
+        <file>Breeze-Dark/add_queue.svg</file>	
+        <file>Breeze-Dark/start_queue.svg</file>	
+        <file>Breeze-Dark/stop_queue.svg</file>	
+        <file>Breeze-Dark/pause_queue.svg</file>	
+        <file>Breeze-Dark/remove_queue.svg</file>	
+        <file>Breeze-Dark/menu.svg</file>	
+        <file>Breeze-Dark/up.svg</file>	
+        <file>Breeze-Dark/down.svg</file>	
+        <file>Breeze-Dark/multi_up.svg</file>	
+        <file>Breeze-Dark/multi_down.svg</file>	
+        <file>Breeze-Dark/browser.svg</file>	
+
+
+
 
 
 	</qresource>

@@ -98,7 +98,7 @@ class PreferencesWindow(Setting_Ui):
             str(self.persepolis_setting.value('color-scheme')))
         self.color_comboBox.setCurrentIndex(current_color_index)
 # set icons
-        icons = ['Archdroid-Red', 'Archdroid-Blue']
+        icons = ['Archdroid-Red', 'Archdroid-Blue', 'Breeze', 'Breeze-Dark']
         self.icon_comboBox.addItems(icons)
 
         current_icons_index = self.icon_comboBox.findText(
