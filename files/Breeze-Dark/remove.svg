@@ -21,11 +21,20 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
       </cc:Work>
     </rdf:RDF>
   </metadata>
   <defs
-     id="defs8" />
+     id="defs8">
+    <style
+       id="current-color-scheme"
+       type="text/css">
+      .ColorScheme-Text {
+        color:#f2f2f2;
+      }
+      </style>
+  </defs>
   <sodipodi:namedview
      pagecolor="#ffffff"
      bordercolor="#666666"
@@ -40,14 +49,16 @@
      id="namedview6"
      showgrid="false"
      inkscape:zoom="4.9166667"
-     inkscape:cx="1.6271186"
+     inkscape:cx="-18.977044"
      inkscape:cy="24"
      inkscape:window-x="0"
      inkscape:window-y="32"
      inkscape:window-maximized="1"
      inkscape:current-layer="svg4" />
   <path
-     d="M38 12.83L35.17 10 24 21.17 12.83 10 10 12.83 21.17 24 10 35.17 12.83 38 24 26.83 35.17 38 38 35.17 26.83 24z"
-     id="path2"
-     style="fill:#f2f2f2;fill-opacity:1" />
+     id="path4"
+     class="ColorScheme-Text"
+     d="m 29.872419,17.245072 -4.86717,5.030969 -5.030969,-4.86717 -0.69531,0.71871 5.030969,4.86717 -4.86717,5.030969 0.71871,0.69531 4.86717,-5.030969 5.030969,4.86717 0.69531,-0.71871 -5.030969,-4.86717 4.86717,-5.030969 z"
+     style="color:#f2f2f2;fill:#f2f2f2;fill-opacity:1;stroke:none"
+     inkscape:connector-curvature="0" />
 </svg>
