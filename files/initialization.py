@@ -33,6 +33,7 @@ from compatibility import compatibility
 import glob
 import PyQt5
 from PyQt5.QtCore import QSettings
+from browser_integration import browserIntegration
 
 # initialization
 home_address = os.path.expanduser("~")
@@ -170,6 +171,11 @@ for folder in ['Audios', 'Videos', 'Others', 'Documents', 'Compressed']:
 
 for folder in folder_list:
     osCommands.makeDirs(folder)
+
+
+# Browser integration for Firefox and chromium and google chrome
+for browser in ['chrome', 'chromium', 'firefox']:
+    browserIntegration(browser)
 
 # compatibility
 persepolis_version = float(persepolis_setting.value('version/version', 2.2))

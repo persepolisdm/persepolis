@@ -341,6 +341,7 @@ class MainWindow_Ui(QMainWindow):
         self.download_table_content_widget = QWidget(self)
         download_table_content_widget_verticalLayout = QVBoxLayout(
             self.download_table_content_widget)
+
         self.download_table = DownloadTableWidget(self)
         download_table_content_widget_verticalLayout.addWidget(
             self.download_table)
@@ -350,6 +351,7 @@ class MainWindow_Ui(QMainWindow):
         self.download_table.setSelectionBehavior(QAbstractItemView.SelectRows)
         self.download_table.setEditTriggers(QAbstractItemView.NoEditTriggers)
         self.download_table.verticalHeader().hide()
+
 # hide gid and download dictioanry section
         self.download_table.setColumnHidden(8, True)
         self.download_table.setColumnHidden(9, True)
@@ -357,9 +359,11 @@ class MainWindow_Ui(QMainWindow):
         download_table_header = ['File Name', 'Status', 'Size', 'Downloaded', 'Percentage', 'Connections',
                                  'Transfer rate', 'Estimate time left', 'Gid', 'Info', 'First try date', 'Last try date', 'Category']
         self.download_table.setHorizontalHeaderLabels(download_table_header)
+
 # fixing the size of download_table when window is Maximized!
         self.download_table.horizontalHeader().setSectionResizeMode(0)
         self.download_table.horizontalHeader().setStretchLastSection(True)
+
 # finding number or row that user selected!
         self.download_table.itemSelectionChanged.connect(self.selectedRow)
 

@@ -17,6 +17,7 @@ from PyQt5 import QtWidgets, QtCore
 from PyQt5.QtGui import QIcon
 from PyQt5.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QLabel, QPushButton
 from PyQt5.QtCore import QSize, QPoint
+from browser_integration import browserIntegration
 import platform
 import os
 from newopen import Open
@@ -86,11 +87,25 @@ class ChromiumIntegrationWindow(QWidget):
         chrome_verticalLayout.addWidget(self.chrome_pushButton)
         chrome_verticalLayout.addWidget(self.chrome_label)
 
+    # Firefox
+        firefox_verticalLayout = QVBoxLayout()
+
+        self.firefox_pushButton = QPushButton()
+        self.firefox_pushButton.clicked.connect(
+            partial(self.chromiumPressed, 'firefox'))
+
+        self.firefox_label = QLabel()
+
+        firefox_verticalLayout.addWidget(self.firefox_pushButton)
+        firefox_verticalLayout.addWidget(self.firefox_label)
+
+
     # chromium_chrome_horizontalLayout
         chromium_chrome_horizontalLayout = QHBoxLayout()
 
         chromium_chrome_horizontalLayout.addLayout(chromium_verticalLayout)
         chromium_chrome_horizontalLayout.addLayout(chrome_verticalLayout)
+        chromium_chrome_horizontalLayout.addLayout(firefox_verticalLayout)
 
         window_verticalLayout.addLayout(chromium_chrome_horizontalLayout)
 
@@ -123,6 +138,7 @@ class ChromiumIntegrationWindow(QWidget):
 
         self.chrome_pushButton.setText('Chrome')
         self.chromium_pushButton.setText('Chromium')
+        self.firefox_pushButton.setText('Firefox')
 
         self.ok_pushButton.setText('OK')
 
@@ -137,79 +153,14 @@ class ChromiumIntegrationWindow(QWidget):
 
     def chromiumPressed(self, browser):
 
-        if os_type == 'Linux':
-            exec_path = '/usr/bin/persepolis'
-
-            if browser == 'chromium':
-                native_message_folder = home_address + '/.config/chromium/NativeMessagingHosts'
-            elif browser == 'chrome':
-                native_message_folder = home_address + \
-                    '/.config/google-chrome/NativeMessagingHosts'
-
-        elif os_type == 'FreeBSD' or os_type == 'OpenBSD':
-            exec_path = '/usr/local/bin/persepolis'
-
-            if browser == 'chromium':
-                native_message_folder = home_address + '/.config/chromium/NativeMessagingHosts'
-            elif browser == 'chrome':
-                native_message_folder = home_address + \
-                    '/.config/google-chrome/NativeMessagingHosts'
-
-        elif os_type == 'Darwin':
-            cwd = sys.argv[0]
-            current_directory = os.path.dirname(cwd)
-
-            exec_path = os.path.join(
-                current_directory, 'Persepolis Download Manager')
-
-            if browser == 'chromium':
-                native_message_folder = home_address + \
-                    '/Library/Application Support/Chromium/NativeMessagingHosts'
-            elif browser == 'chrome':
-                native_message_folder = home_address + \
-                    '/Library/Application Support/Google/Chrome/NativeMessagingHosts'
-
-        elif os_type == 'Windows':
-
-            cwd = sys.argv[0]
-            current_directory = os.path.dirname(cwd)
-
-            exec_path = os.path.join(
-                current_directory, 'Persepolis Download Manager.exe')
-
-            # the execution path in jason file for Windows must in form of
-            # c:\\Users\\...\\Persepolis Download Manager.exe , so we need 2
-            # "\" in address
-            exec_path = exec_path.replace('\\', r'\\')
-
-            native_message_folder = os.path.join(
-                home_address, 'AppData\Local\persepolis_download_manager')
-
-        json_file_lines = ['{', '    "name": "com.persepolis.pdmchromewrapper",', '    "description": "Integrate Persepolis with Google Chrome",', '    "path": "' +
-                           str(exec_path) + '",', '    "type": "stdio",', '    "allowed_origins": [', '        "chrome-extension://legimlagjjoghkoedakdjhocbeomojao/"', '    ]', '}']
-
-        native_message_file = os.path.join(
-            native_message_folder, 'com.persepolis.pdmchromewrapper.json')
-
-        osCommands.makeDirs(native_message_folder)
-
-        f = Open(native_message_file, 'w')
-        for i in json_file_lines:
-            f.writelines(str(i) + '\n')
-        f.close()
-
-        if os_type != 'Windows':
-            os.system('chmod +x "' + str(native_message_file) + '"')
-        else:
-            CREATE_NO_WINDOW = 0x08000000
-#             subprocess.Popen(['REG','ADD','"HKCU\\Software\\Google\Chrome\\NativeMessagingHosts\\com.persepolis.pdmchromewrapper.json"', '/ve' , '/t' , 'REG_SZ' ,'/d' , '"' + str(exec_path) + '"' , '/f'] , shell = False ,creationflags = CREATE_NO_WINDOW )
-            os.system(r'REG ADD "HKCU\Software\Google\Chrome\NativeMessagingHosts\com.persepolis.pdmchromewrapper" /ve /t REG_SZ /d "' +
-                      native_message_file + '" /f')
+        browserIntegration(browser)
 
         if browser == 'chromium':
             self.chromium_label.setText('Done!')
         elif browser == 'chrome':
             self.chrome_label.setText('Done!')
+        elif browser == 'firefox':
+            self.firefox_label.setText('Done!')
 
     def changeIcon(self, icons):
         icons = ':/' + str(icons) + '/'
