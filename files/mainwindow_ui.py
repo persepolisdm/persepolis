@@ -364,19 +364,6 @@ class MainWindow_Ui(QMainWindow):
         self.download_table.horizontalHeader().setSectionResizeMode(0)
         self.download_table.horizontalHeader().setStretchLastSection(True)
 
-        # set size of colum in download_table
-        self.download_table.setColumnWidth(0, 300)
-        self.download_table.setColumnWidth(1, 100)
-        self.download_table.setColumnWidth(2, 100)
-        self.download_table.setColumnWidth(3, 120)
-        self.download_table.setColumnWidth(4, 100)
-        self.download_table.setColumnWidth(5, 120)
-        self.download_table.setColumnWidth(6, 100)
-        self.download_table.setColumnWidth(7, 100)
-        self.download_table.setColumnWidth(8, 200)
-        self.download_table.setColumnWidth(9, 200)
-        self.download_table.setColumnWidth(10, 200)
-
 # finding number or row that user selected!
         self.download_table.itemSelectionChanged.connect(self.selectedRow)
 

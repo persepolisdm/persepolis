@@ -844,9 +844,60 @@ class MainWindow(MainWindow_Ui):
             'MainWindow/size', QSize(900, 500))
         position = self.persepolis_setting.value(
             'MainWindow/position', QPoint(300, 300))
+
 # setting window size
         self.resize(size)
         self.move(position)
+
+
+# download_table column size 
+# column 0
+        size = self.persepolis_setting.value(
+            'MainWindow/column0', '300')
+        self.download_table.setColumnWidth(0, int(size))
+#column 1
+        size = self.persepolis_setting.value(
+            'MainWindow/column1', '100')
+        self.download_table.setColumnWidth(1, int(size))
+#column 2
+        size = self.persepolis_setting.value(
+            'MainWindow/column2', '100')
+        self.download_table.setColumnWidth(2, int(size))
+#column 3
+        size = self.persepolis_setting.value(
+            'MainWindow/column3', '120')
+        self.download_table.setColumnWidth(3, int(size))
+#column 4
+        size = self.persepolis_setting.value(
+            'MainWindow/column4', '100')
+        self.download_table.setColumnWidth(4, int(size))
+#column 5
+        size = self.persepolis_setting.value(
+            'MainWindow/column5', '120')
+        self.download_table.setColumnWidth(5, int(size))
+#column 6
+        size = self.persepolis_setting.value(
+            'MainWindow/column6', '100')
+        self.download_table.setColumnWidth(6, int(size))
+#column 7
+        size = self.persepolis_setting.value(
+            'MainWindow/column7', '100')
+        self.download_table.setColumnWidth(7, int(size))
+#column 10
+        size = self.persepolis_setting.value(
+            'MainWindow/column10', '200')
+        self.download_table.setColumnWidth(10, int(size))
+#column 11
+        size = self.persepolis_setting.value(
+            'MainWindow/column11', '200')
+        self.download_table.setColumnWidth(11, int(size))
+#column 12
+        size = self.persepolis_setting.value(
+            'MainWindow/column11', '200')
+        self.download_table.setColumnWidth(12, int(size))
+
+
+
 
 # check reverse_checkBox
         self.reverse_checkBox.setChecked(False)
@@ -1686,8 +1737,25 @@ class MainWindow(MainWindow_Ui):
 # close event
 # when user wants to close application then this function is called
     def closeEvent(self, event):
+        # saving window size  and position
         self.persepolis_setting.setValue('MainWindow/size', self.size())
         self.persepolis_setting.setValue('MainWindow/position', self.pos())
+
+        # saving columns size
+        self.persepolis_setting.setValue('MainWindow/column0', self.download_table.columnWidth(0))
+        self.persepolis_setting.setValue('MainWindow/column1', self.download_table.columnWidth(1))
+        self.persepolis_setting.setValue('MainWindow/column2', self.download_table.columnWidth(2))
+        self.persepolis_setting.setValue('MainWindow/column3', self.download_table.columnWidth(3))
+        self.persepolis_setting.setValue('MainWindow/column4', self.download_table.columnWidth(4))
+        self.persepolis_setting.setValue('MainWindow/column5', self.download_table.columnWidth(5))
+        self.persepolis_setting.setValue('MainWindow/column6', self.download_table.columnWidth(6))
+        self.persepolis_setting.setValue('MainWindow/column7', self.download_table.columnWidth(7))
+        self.persepolis_setting.setValue('MainWindow/column10', self.download_table.columnWidth(10))
+        self.persepolis_setting.setValue('MainWindow/column11', self.download_table.columnWidth(11))
+        self.persepolis_setting.setValue('MainWindow/column12', self.download_table.columnWidth(12))
+
+
+
         self.persepolis_setting.sync()
 
         self.hide()
