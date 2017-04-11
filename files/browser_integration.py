@@ -109,7 +109,7 @@ def browserIntegration(browser):
                             str(exec_path) + '",', '    "type": "stdio",', '    "allowed_origins": [', '        "chrome-extension://legimlagjjoghkoedakdjhocbeomojao/"', '    ]', '}']
     elif browser == 'firefox':
         json_file_lines = ['{', '    "name": "com.persepolis.pdmchromewrapper",', '    "description": "Integrate Persepolis with Firefox",', '    "path": "' +
-        str(exec_path) + '",', '    "type": "stdio",', '    "allowed_origins": [', '        "com.persepolis.pdmchromewrapper@persepolisdm.github.io"', '    ]', '}']
+        str(exec_path) + '",', '    "type": "stdio",', '    "allowed_extensions": [', '        "com.persepolis.pdmchromewrapper@persepolisdm.github.io"', '    ]', '}']
 
 
     native_message_file = os.path.join(
