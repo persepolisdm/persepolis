@@ -900,6 +900,60 @@ class MainWindow(MainWindow_Ui):
         self.download_table.setColumnWidth(12, int(size))
 
 
+        if str(self.persepolis_setting.value('settings/column0')) == 'yes':
+            self.download_table.setColumnHidden(0, False)
+        else:
+            self.download_table.setColumnHidden(0, True)
+
+        if str(self.persepolis_setting.value('settings/column1')) == 'yes':
+            self.download_table.setColumnHidden(1, False)
+        else:
+            self.download_table.setColumnHidden(1, True)
+
+        if str(self.persepolis_setting.value('settings/column2')) == 'yes':
+            self.download_table.setColumnHidden(2, False)
+        else:
+            self.download_table.setColumnHidden(2, True)
+
+        if str(self.persepolis_setting.value('settings/column3')) == 'yes':
+            self.download_table.setColumnHidden(3, False)
+        else:
+            self.download_table.setColumnHidden(3, True)
+
+        if str(self.persepolis_setting.value('settings/column4')) == 'yes':
+            self.download_table.setColumnHidden(4, False)
+        else:
+            self.download_table.setColumnHidden(4, True)
+
+        if str(self.persepolis_setting.value('settings/column5')) == 'yes':
+            self.download_table.setColumnHidden(5, False)
+        else:
+            self.download_table.setColumnHidden(5, True)
+
+        if str(self.persepolis_setting.value('settings/column6')) == 'yes':
+            self.download_table.setColumnHidden(6, False)
+        else:
+            self.download_table.setColumnHidden(6, True)
+
+        if str(self.persepolis_setting.value('settings/column7')) == 'yes':
+            self.download_table.setColumnHidden(7, False)
+        else:
+            self.download_table.setColumnHidden(7, True)
+
+        if str(self.persepolis_setting.value('settings/column10')) == 'yes':
+            self.download_table.setColumnHidden(10, False)
+        else:
+            self.download_table.setColumnHidden(10, True)
+
+        if str(self.persepolis_setting.value('settings/column11')) == 'yes':
+            self.download_table.setColumnHidden(11, False)
+        else:
+            self.download_table.setColumnHidden(11, True)
+
+        if str(self.persepolis_setting.value('settings/column12')) == 'yes':
+            self.download_table.setColumnHidden(12, False)
+        else:
+            self.download_table.setColumnHidden(12, True)
 
 
 # check reverse_checkBox

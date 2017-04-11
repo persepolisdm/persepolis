@@ -178,6 +178,61 @@ class PreferencesWindow(Setting_Ui):
         else:
             self.startup_checkbox.setChecked(False)
 
+# columns_tab
+        if str(self.persepolis_setting.value('column0')) == 'yes':
+            self.column0_checkBox.setChecked(True)
+        else:
+            self.column0_checkBox.setChecked(False)
+
+        if str(self.persepolis_setting.value('column1')) == 'yes':
+            self.column1_checkBox.setChecked(True)
+        else:
+            self.column1_checkBox.setChecked(False)
+
+        if str(self.persepolis_setting.value('column2')) == 'yes':
+            self.column2_checkBox.setChecked(True)
+        else:
+            self.column2_checkBox.setChecked(False)
+
+        if str(self.persepolis_setting.value('column3')) == 'yes':
+            self.column3_checkBox.setChecked(True)
+        else:
+            self.column3_checkBox.setChecked(False)
+
+        if str(self.persepolis_setting.value('column4')) == 'yes':
+            self.column4_checkBox.setChecked(True)
+        else:
+            self.column4_checkBox.setChecked(False)
+
+        if str(self.persepolis_setting.value('column5')) == 'yes':
+            self.column5_checkBox.setChecked(True)
+        else:
+            self.column5_checkBox.setChecked(False)
+
+        if str(self.persepolis_setting.value('column6')) == 'yes':
+            self.column6_checkBox.setChecked(True)
+        else:
+            self.column6_checkBox.setChecked(False)
+
+        if str(self.persepolis_setting.value('column7')) == 'yes':
+            self.column7_checkBox.setChecked(True)
+        else:
+            self.column7_checkBox.setChecked(False)
+
+        if str(self.persepolis_setting.value('column10')) == 'yes':
+            self.column10_checkBox.setChecked(True)
+        else:
+            self.column10_checkBox.setChecked(False)
+
+        if str(self.persepolis_setting.value('column11')) == 'yes':
+            self.column11_checkBox.setChecked(True)
+        else:
+            self.column11_checkBox.setChecked(False)
+
+        if str(self.persepolis_setting.value('column12')) == 'yes':
+            self.column12_checkBox.setChecked(True)
+        else:
+            self.column12_checkBox.setChecked(False)
 
 # ok cancel default button
         self.cancel_pushButton.clicked.connect(self.close)
@@ -255,8 +310,10 @@ class PreferencesWindow(Setting_Ui):
         download_path_default = os.path.join(
             str(home_address), 'Downloads', 'Persepolis')
 
-        self.setting_dict = {'subfolder': 'yes', 'startup': 'no', 'show-progress': 'yes', 'show-menubar': 'no', 'show-sidepanel': 'yes', 'rpc-port': 6801, 'notification': 'Native notification', 'after-dialog': 'yes', 'tray-icon': 'yes', 'max-tries': 5, 'retry-wait': 0, 'timeout': 60,
-                             'connections': 16, 'download_path_temp': download_path_temp_default, 'download_path': download_path_default, 'sound': 'yes', 'sound-volume': 100, 'style': 'Fusion', 'color-scheme': 'Persepolis Dark Red', 'icons': 'Archdroid-Red', 'font': 'Ubuntu', 'font-size': 9}
+        self.setting_dict = {'column0': 'yes', 'column1': 'yes', 'column2': 'yes', 'column3': 'yes', 'column4': 'yes', 'column5': 'yes', 'column6': 'yes', 'column7': 'yes', 'column10': 'yes', 'column11': 'yes', 'column12': 'yes',
+                             'subfolder': 'yes', 'startup': 'no', 'show-progress': 'yes', 'show-menubar': 'no', 'show-sidepanel': 'yes', 'rpc-port': 6801, 'notification': 'Native notification', 'after-dialog': 'yes', 'tray-icon': 'yes',
+                             'max-tries': 5, 'retry-wait': 0, 'timeout': 60, 'connections': 16, 'download_path_temp': download_path_temp_default, 'download_path': download_path_default, 'sound': 'yes', 'sound-volume': 100, 'style': 'Fusion',
+                             'color-scheme': 'Persepolis Dark Red', 'icons': 'Archdroid-Red', 'font': 'Ubuntu', 'font-size': 9}
 
         # this loop is checking values in persepolis_setting . if value is not
         # valid then value replaced by default_setting_dict value
@@ -325,6 +382,21 @@ class PreferencesWindow(Setting_Ui):
 
 # run persepolis at startup checkBox
         self.startup_checkbox.setChecked(False)
+
+# columns_tab
+        self.column0_checkBox.setChecked(True)
+        self.column1_checkBox.setChecked(True)
+        self.column2_checkBox.setChecked(True)
+        self.column3_checkBox.setChecked(True)
+        self.column4_checkBox.setChecked(True)
+        self.column5_checkBox.setChecked(True)
+        self.column6_checkBox.setChecked(True)
+        self.column7_checkBox.setChecked(True)
+        self.column10_checkBox.setChecked(True)
+        self.column11_checkBox.setChecked(True)
+        self.column12_checkBox.setChecked(True)
+
+ 
 
         self.persepolis_setting.endGroup()
 
@@ -484,6 +556,140 @@ class PreferencesWindow(Setting_Ui):
             self.persepolis_setting.setValue('sound', 'yes')
         else:
             self.persepolis_setting.setValue('sound', 'no')
+
+# columns_tab
+        if self.column0_checkBox.isChecked():
+            self.persepolis_setting.setValue('column0', 'yes')
+            self.parent.download_table.setColumnHidden(0, False)
+            
+            if self.parent.download_table.isColumnHidden(0):
+                self.parent.download_table.setColumnWidth(0, 100)
+
+        else:
+            self.persepolis_setting.setValue('column0', 'no')
+            self.parent.download_table.setColumnHidden(0, True)
+
+
+        if self.column1_checkBox.isChecked():
+            self.persepolis_setting.setValue('column1', 'yes')
+            self.parent.download_table.setColumnHidden(1, False)
+            
+            if self.parent.download_table.isColumnHidden(1):
+                self.parent.download_table.setColumnWidth(1, 100)
+
+        else:
+            self.persepolis_setting.setValue('column1', 'no')
+            self.parent.download_table.setColumnHidden(1, True)
+
+
+        if self.column2_checkBox.isChecked():
+            self.persepolis_setting.setValue('column2', 'yes')
+            self.parent.download_table.setColumnHidden(2, False)
+            
+            if self.parent.download_table.isColumnHidden(2):
+                self.parent.download_table.setColumnWidth(2, 100)
+
+        else:
+            self.persepolis_setting.setValue('column2', 'no')
+            self.parent.download_table.setColumnHidden(2, True)
+
+
+        if self.column3_checkBox.isChecked():
+            self.persepolis_setting.setValue('column3', 'yes')
+            self.parent.download_table.setColumnHidden(3, False)
+            
+            if self.parent.download_table.isColumnHidden(3):
+                self.parent.download_table.setColumnWidth(3, 100)
+
+        else:
+            self.persepolis_setting.setValue('column3', 'no')
+            self.parent.download_table.setColumnHidden(3, True)
+
+
+        if self.column4_checkBox.isChecked():
+            self.persepolis_setting.setValue('column4', 'yes')
+            self.parent.download_table.setColumnHidden(4, False)
+            
+            if self.parent.download_table.isColumnHidden(4):
+                self.parent.download_table.setColumnWidth(4, 100)
+
+        else:
+            self.persepolis_setting.setValue('column4', 'no')
+            self.parent.download_table.setColumnHidden(4, True)
+
+
+        if self.column5_checkBox.isChecked():
+            self.persepolis_setting.setValue('column5', 'yes')
+            self.parent.download_table.setColumnHidden(5, False)
+            
+            if self.parent.download_table.isColumnHidden(5):
+                self.parent.download_table.setColumnWidth(5, 100)
+
+        else:
+            self.persepolis_setting.setValue('column5', 'no')
+            self.parent.download_table.setColumnHidden(5, True)
+
+
+        if self.column6_checkBox.isChecked():
+            self.persepolis_setting.setValue('column6', 'yes')
+            self.parent.download_table.setColumnHidden(6, False)
+            
+            if self.parent.download_table.isColumnHidden(6):
+                self.parent.download_table.setColumnWidth(6, 100)
+
+        else:
+            self.persepolis_setting.setValue('column6', 'no')
+            self.parent.download_table.setColumnHidden(6, True)
+
+
+        if self.column7_checkBox.isChecked():
+            self.persepolis_setting.setValue('column7', 'yes')
+            self.parent.download_table.setColumnHidden(7, False)
+            
+            if self.parent.download_table.isColumnHidden(7):
+                self.parent.download_table.setColumnWidth(7, 100)
+
+        else:
+            self.persepolis_setting.setValue('column7', 'no')
+            self.parent.download_table.setColumnHidden(7, True)
+
+
+        if self.column10_checkBox.isChecked():
+            self.persepolis_setting.setValue('column10', 'yes')
+            self.parent.download_table.setColumnHidden(10, False)
+            
+            if self.parent.download_table.isColumnHidden(10):
+                self.parent.download_table.setColumnWidth(10, 100)
+
+        else:
+            self.persepolis_setting.setValue('column10', 'no')
+            self.parent.download_table.setColumnHidden(10, True)
+
+
+        if self.column11_checkBox.isChecked():
+            self.persepolis_setting.setValue('column11', 'yes')
+            self.parent.download_table.setColumnHidden(11, False)
+            
+            if self.parent.download_table.isColumnHidden(11):
+                self.parent.download_table.setColumnWidth(11, 100)
+
+        else:
+            self.persepolis_setting.setValue('column11', 'no')
+            self.parent.download_table.setColumnHidden(11, True)
+
+
+        if self.column12_checkBox.isChecked():
+            self.persepolis_setting.setValue('column12', 'yes')
+            self.parent.download_table.setColumnHidden(12, False)
+            
+            if self.parent.download_table.isColumnHidden(12):
+                self.parent.download_table.setColumnWidth(12, 100)
+
+        else:
+            self.persepolis_setting.setValue('column12', 'no')
+            self.parent.download_table.setColumnHidden(12, True)
+
+
 
         # applying changes
         self.persepolis_setting.endGroup()

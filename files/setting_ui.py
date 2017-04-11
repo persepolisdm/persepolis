@@ -247,6 +247,41 @@ class Setting_Ui(QWidget):
         self.startup_checkbox = QCheckBox()
         self.verticalLayout_3.addWidget(self.startup_checkbox)
 
+# columns_tab
+        self.columns_tab = QWidget()
+        layoutWidget4 = QWidget(self.columns_tab)
+
+        column_verticalLayout = QVBoxLayout(layoutWidget4)
+        column_verticalLayout.setContentsMargins(21, 21, 0, 0)
+
+        # creating checkBox for columns
+        self.show_column_label = QLabel()
+        self.column0_checkBox = QCheckBox()
+        self.column1_checkBox = QCheckBox()
+        self.column2_checkBox = QCheckBox()
+        self.column3_checkBox = QCheckBox()
+        self.column4_checkBox = QCheckBox()
+        self.column5_checkBox = QCheckBox()
+        self.column6_checkBox = QCheckBox()
+        self.column7_checkBox = QCheckBox()
+        self.column10_checkBox = QCheckBox()
+        self.column11_checkBox = QCheckBox()
+        self.column12_checkBox = QCheckBox()
+
+        column_verticalLayout.addWidget(self.show_column_label) 
+        column_verticalLayout.addWidget(self.column0_checkBox) 
+        column_verticalLayout.addWidget(self.column1_checkBox) 
+        column_verticalLayout.addWidget(self.column2_checkBox) 
+        column_verticalLayout.addWidget(self.column3_checkBox) 
+        column_verticalLayout.addWidget(self.column4_checkBox) 
+        column_verticalLayout.addWidget(self.column5_checkBox) 
+        column_verticalLayout.addWidget(self.column6_checkBox) 
+        column_verticalLayout.addWidget(self.column7_checkBox) 
+        column_verticalLayout.addWidget(self.column10_checkBox) 
+        column_verticalLayout.addWidget(self.column11_checkBox) 
+        column_verticalLayout.addWidget(self.column12_checkBox) 
+
+        self.setting_tabWidget.addTab(self.columns_tab, '')
 # defaults_pushButton
         self.defaults_pushButton = QPushButton(self)
         self.horizontalLayout.addWidget(self.defaults_pushButton)
@@ -319,6 +354,26 @@ class Setting_Ui(QWidget):
 
         self.setting_tabWidget.setTabText(
             self.setting_tabWidget.indexOf(self.style_tab),  "Preferences")
+
+# columns_tab
+        self.show_column_label.setText('Show this columns:')
+        self.column0_checkBox.setText('File Name')
+        self.column1_checkBox.setText('Status')
+        self.column2_checkBox.setText('Size')
+        self.column3_checkBox.setText('Downloaded')
+        self.column4_checkBox.setText('Percentage')
+        self.column5_checkBox.setText('Connections')
+        self.column6_checkBox.setText('Transfer rate')
+        self.column7_checkBox.setText('Estimate time left')
+        self.column10_checkBox.setText('First try date')
+        self.column11_checkBox.setText('Last try date')
+        self.column12_checkBox.setText('Category')
+
+        self.setting_tabWidget.setTabText(
+            self.setting_tabWidget.indexOf(self.columns_tab), "Columns customization")
+
+
+# window buttons
         self.defaults_pushButton.setText("Defaults")
         self.cancel_pushButton.setText("Cancel")
         self.ok_pushButton.setText("OK")
