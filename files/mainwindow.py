@@ -789,6 +789,9 @@ class MainWindow(MainWindow_Ui):
         self.threadPool[3].SHOWMAINWINDOWSIGNAL.connect(self.showMainWindow)
         self.threadPool[3].RECONNECTARIASIGNAL.connect(self.reconnectAria)
 
+# finding number or row that user selected!
+        self.download_table.itemSelectionChanged.connect(self.selectedRow)
+
 
 # if user  doubleclicks on an item in download_table , then openFile
 # function  executes

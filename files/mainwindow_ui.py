@@ -364,9 +364,6 @@ class MainWindow_Ui(QMainWindow):
         self.download_table.horizontalHeader().setSectionResizeMode(0)
         self.download_table.horizontalHeader().setStretchLastSection(True)
 
-# finding number or row that user selected!
-        self.download_table.itemSelectionChanged.connect(self.selectedRow)
-
         tabels_splitter.setStretchFactor(0, 2) # category_tree width
         tabels_splitter.setStretchFactor(1, 10)  # ratio of tables's width
         download_table_horizontalLayout.addWidget(tabels_splitter)
