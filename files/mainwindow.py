@@ -16,7 +16,7 @@ from functools import partial
 import sys
 import ast
 from PyQt5 import QtCore, QtGui, QtWidgets
-from PyQt5.QtWidgets import QApplication,  QAction, QFileDialog, QSystemTrayIcon, QMenu, QTableWidgetItem, QApplication, QInputDialog, QMessageBox
+from PyQt5.QtWidgets import QApplication,  QAction, QFileDialog, QSystemTrayIcon, QMenu, QApplication, QInputDialog, QMessageBox
 from PyQt5.QtGui import QIcon, QColor, QPalette, QStandardItem
 from PyQt5.QtCore import QCoreApplication, QRect, QSize, QPoint, QThread, pyqtSignal, Qt
 import os
@@ -30,7 +30,7 @@ from addlink import AddLinkWindow
 from properties import PropertiesWindow
 from progress import ProgressWindow
 import download
-from mainwindow_ui import MainWindow_Ui
+from mainwindow_ui import MainWindow_Ui, QTableWidgetItem
 from newopen import Open, writeList, readList, readDict
 from play import playNotification
 from bubble import notifySend

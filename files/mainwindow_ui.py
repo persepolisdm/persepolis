@@ -26,6 +26,12 @@ import icons_resource
 home_address = os.path.expanduser("~")
 
 
+# align center for items in download table 
+class QTableWidgetItem(QTableWidgetItem):
+    def __init__(self, input):
+        super().__init__(input)
+        self.setTextAlignment(0x0004 | 0x0080)
+
 class MenuWidget(QPushButton):
     def __init__(self, parent):
         super().__init__()
