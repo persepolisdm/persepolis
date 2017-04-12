@@ -73,6 +73,8 @@ class checkupdate(QWidget):
                 # check if it is Windows
                 if os_type == "Windows":
                     winupdatedl() # this function download latest release
+                if os_type == 'Darwin':
+                    webbrowser.open(dictvalue['macdlurl']) # it download latest release for mac
             elif float(serverversion) == float(clientversion):
                 statustext.setText('Latest version is installed :)')
             elif float(serverversion) < float(clientversion):
