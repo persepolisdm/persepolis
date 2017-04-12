@@ -33,14 +33,6 @@ import newopen
 os_type = platform.system()
 home_address = str(os.path.expanduser("~"))
 
-# Foundation for download latest windows installer
-def winupdatedl():
-    # find system architect
-    if platform.architecture()[0] == '64bit':
-        webbrowser.open(dictvalue['win64dlurl'])
-    elif platform.architecture()[0] == '32bit':
-        webbrowser.open(dictvalue['win32dlurl'])
-
 class checkupdate(QWidget):
     def __init__(self, persepolis_setting):
         super().__init__()
@@ -64,6 +56,14 @@ class checkupdate(QWidget):
         clientversion = self.persepolis_setting.value('version/version')
         # get latest stable version
         serverversion = dictvalue['version']
+
+        # Foundation for download latest windows installer
+        def winupdatedl():
+            # find system architect
+            if platform.architecture()[0] == '64bit':
+                webbrowser.open(dictvalue['win64dlurl'])
+            elif platform.architecture()[0] == '32bit':
+                webbrowser.open(dictvalue['win32dlurl'])
 
         # checking function
         def updatecheck():
