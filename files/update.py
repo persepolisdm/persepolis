@@ -40,7 +40,7 @@ if os_type != 'Windows':
     persepolis_tmp = '/tmp/persepolis_' + user_name + '/'
 else:
     persepolis_tmp = os.path.join(
-        str(home_address), 'AppData', 'Local', 'persepolis_tmp')
+        str(home_address), 'AppData', 'Local', 'persepolis_tmp/\/')
 
 class checkupdate(QWidget):
     def __init__(self, persepolis_setting):
