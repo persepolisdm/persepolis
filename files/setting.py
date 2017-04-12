@@ -178,6 +178,14 @@ class PreferencesWindow(Setting_Ui):
         else:
             self.startup_checkbox.setChecked(False)
 
+# font_checkBox
+        if str(self.persepolis_setting.value('custom-font')) == 'yes':
+            self.font_checkBox.setChecked(True)
+        else:
+            self.font_checkBox.setChecked(False)
+        
+        self.fontCheckBoxState(self.font_checkBox)
+
 # columns_tab
         if str(self.persepolis_setting.value('column0')) == 'yes':
             self.column0_checkBox.setChecked(True)
@@ -240,6 +248,9 @@ class PreferencesWindow(Setting_Ui):
             self.defaultsPushButtonPressed)
         self.ok_pushButton.clicked.connect(self.okPushButtonPressed)
 
+# font_checkBox connect
+        self.font_checkBox.stateChanged.connect(self.fontCheckBoxState)
+
 # setting window size and position
         size = self.persepolis_setting.value(
             'PreferencesWindow/size', QSize(578, 465))
@@ -250,6 +261,17 @@ class PreferencesWindow(Setting_Ui):
         self.move(position)
 
         self.persepolis_setting.endGroup()
+
+    def fontCheckBoxState(self,checkBox):
+        # deactive fontComboBox and font_size_spinBox if font_checkBox not checked!
+        if self.font_checkBox.isChecked():
+            self.fontComboBox.setEnabled(True)
+            self.font_size_spinBox.setEnabled(True)
+        else:
+            self.fontComboBox.setEnabled(False)
+            self.font_size_spinBox.setEnabled(False)
+ 
+
 
     def closeEvent(self, event):
         # saving window size and position
@@ -310,7 +332,7 @@ class PreferencesWindow(Setting_Ui):
         download_path_default = os.path.join(
             str(home_address), 'Downloads', 'Persepolis')
 
-        self.setting_dict = {'column0': 'yes', 'column1': 'yes', 'column2': 'yes', 'column3': 'yes', 'column4': 'yes', 'column5': 'yes', 'column6': 'yes', 'column7': 'yes', 'column10': 'yes', 'column11': 'yes', 'column12': 'yes',
+        self.setting_dict = {'custom-font': 'no', 'column0': 'yes', 'column1': 'yes', 'column2': 'yes', 'column3': 'yes', 'column4': 'yes', 'column5': 'yes', 'column6': 'yes', 'column7': 'yes', 'column10': 'yes', 'column11': 'yes', 'column12': 'yes',
                              'subfolder': 'yes', 'startup': 'no', 'show-progress': 'yes', 'show-menubar': 'no', 'show-sidepanel': 'yes', 'rpc-port': 6801, 'notification': 'Native notification', 'after-dialog': 'yes', 'tray-icon': 'yes',
                              'max-tries': 5, 'retry-wait': 0, 'timeout': 60, 'connections': 16, 'download_path_temp': download_path_temp_default, 'download_path': download_path_default, 'sound': 'yes', 'sound-volume': 100, 'style': 'Fusion',
                              'color-scheme': 'Persepolis Dark Red', 'icons': 'Archdroid-Red', 'font': 'Ubuntu', 'font-size': 9}
@@ -452,6 +474,7 @@ class PreferencesWindow(Setting_Ui):
             self.grandparent.setPersepolisColorScheme(color_scheme)
 
 # font and font size
+
         current_font = self.fontComboBox.currentFont()
         current_font = current_font.key()
         current_font = current_font.split(',')
@@ -461,12 +484,18 @@ class PreferencesWindow(Setting_Ui):
         font_size = self.font_size_spinBox.value()
         self.persepolis_setting.setValue('font-size', font_size)
 
+        if self.font_checkBox.isChecked():
+            custom_font = 'yes'
         # if font or font_size changed,set new font , font_size
-        if self.grandparent.persepolis_font != font or int(self.grandparent.persepolis_font_size) != int(font_size):
-            self.grandparent.setPersepolisFont(font, int(font_size))
-            self.grandparent.setPersepolisStyle(style)
-            self.grandparent.setPersepolisColorScheme(color_scheme)
+            if self.grandparent.persepolis_font != font or int(self.grandparent.persepolis_font_size) != int(font_size):
+                self.grandparent.setPersepolisFont(font, int(font_size), custom_font)
+                self.grandparent.setPersepolisStyle(style)
+                self.grandparent.setPersepolisColorScheme(color_scheme)
+        else:
+            custom_font = 'no'
+           
 
+        self.persepolis_setting.setValue('custom-font', custom_font)
 # if user select qt notification  >> enable_system_tray icon
         if self.persepolis_setting.value('notification') == 'QT notification':
             self.enable_system_tray_checkBox.setChecked(True)
@@ -689,7 +718,10 @@ class PreferencesWindow(Setting_Ui):
             self.persepolis_setting.setValue('column12', 'no')
             self.parent.download_table.setColumnHidden(12, True)
 
-
+        restart_messageBox = QMessageBox()                
+        restart_messageBox.setText('<b>Some changes take effect after restarting persepolis</b>')
+        restart_messageBox.setWindowTitle('Restart Persepolis!')
+        restart_messageBox.exec_()
 
         # applying changes
         self.persepolis_setting.endGroup()

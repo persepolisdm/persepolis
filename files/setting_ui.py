@@ -203,9 +203,9 @@ class Setting_Ui(QWidget):
         self.notification_comboBox = QComboBox(self.layoutWidget3)
         self.horizontalLayout_13.addWidget(self.notification_comboBox)
         self.verticalLayout_3.addLayout(self.horizontalLayout_13)
-# font_label
-        self.font_label = QLabel(self.layoutWidget3)
-        self.horizontalLayout_6.addWidget(self.font_label)
+# font_checkBox
+        self.font_checkBox = QCheckBox(self.layoutWidget3)
+        self.horizontalLayout_6.addWidget(self.font_checkBox)
 # fontComboBox
         self.fontComboBox = QFontComboBox(self.layoutWidget3)
         self.horizontalLayout_6.addWidget(self.fontComboBox)
@@ -341,7 +341,7 @@ class Setting_Ui(QWidget):
         self.color_label.setText("Color scheme : ")
         self.icon_label.setText("Icons : ")
         self.notification_label.setText("Notification type : ")
-        self.font_label.setText("Font : ")
+        self.font_checkBox.setText("Font : ")
         self.font_size_label.setText("Size : ")
         self.enable_system_tray_checkBox.setText("Enable system tray icon.")
         self.after_download_checkBox.setText(
