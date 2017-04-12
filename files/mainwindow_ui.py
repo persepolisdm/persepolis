@@ -26,7 +26,7 @@ import icons_resource
 home_address = os.path.expanduser("~")
 
 
-# align center for items in download table 
+# align center for items in download table
 class QTableWidgetItem(QTableWidgetItem):
     def __init__(self, input):
         super().__init__(input)

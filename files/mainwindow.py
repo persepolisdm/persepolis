@@ -44,6 +44,8 @@ import platform
 from copy import deepcopy
 from shutdown import shutDown
 import shutil
+from update import checkupdate
+
 # THIS FILE CREATES MAIN WINDOW
 
 # The GID (or gid) is a key to manage each download. Each download will be assigned a unique GID.
@@ -763,6 +765,7 @@ class MainWindow(MainWindow_Ui):
         self.about_window_list = []
         self.flashgot_queue_window_list = []
         self.browser_integration_window_list = []
+        self.checkupdatewindow_list = []
         self.progress_window_list_dict = {}
 # queue_list_dict contains queue threads >> queue_list_dict[name of queue]
 # = Queue(name of queue , parent)
@@ -853,7 +856,7 @@ class MainWindow(MainWindow_Ui):
         self.move(position)
 
 
-# download_table column size 
+# download_table column size
 # column 0
         size = self.persepolis_setting.value(
             'MainWindow/column0', '300')
@@ -997,7 +1000,7 @@ class MainWindow(MainWindow_Ui):
             for row in range(self.download_table.rowCount()):
                 status_download_table = str(self.download_table.item( row , 1 ).text())
                 gid = self.download_table.item( row , 8).text()
-                if status_download_table == 'downloading': 
+                if status_download_table == 'downloading':
                     new_download = DownloadLink(gid)
                     self.threadPool.append(new_download)
                     self.threadPool[len(self.threadPool) - 1].start()
@@ -1394,7 +1397,7 @@ class MainWindow(MainWindow_Ui):
                     self.propertiesAction.setEnabled(True)
                     self.progressAction.setEnabled(False)
                     self.openDownloadFolderAction.setEnabled(True)
-                    self.openFileAction.setEnabled(True)            
+                    self.openFileAction.setEnabled(True)
                     self.deleteFileAction.setEnabled(True)
 
                 elif status == "stopped" or status == "error":
@@ -2800,7 +2803,7 @@ class MainWindow(MainWindow_Ui):
             f = Open(queues_list_file, 'a')
             f.writelines(queue_name + '\n')
             f.close()
-       
+
         #creating a file for this queue in category_folder
             osCommands.touch(os.path.join(category_folder , queue_name) )
 
@@ -3228,7 +3231,7 @@ class MainWindow(MainWindow_Ui):
                 self.stopQueueAction.setEnabled(True)
                 self.startQueueAction.setEnabled(False)
                 self.removeQueueAction.setEnabled(False)
-            else:            #if queue didn't start 
+            else:            #if queue didn't start
                 self.stopQueueAction.setEnabled(False)
                 self.startQueueAction.setEnabled(True)
                 self.removeQueueAction.setEnabled(True)
@@ -3239,7 +3242,7 @@ class MainWindow(MainWindow_Ui):
 
             for i in self.addlinkAction,self.removeSelectedAction , self.deleteSelectedAction , self.propertiesAction,self.startQueueAction , self.stopQueueAction , self.removeQueueAction  , self.moveUpSelectedAction , self.moveDownSelectedAction , self.minimizeAction , self.exitAction :
                 self.toolBar.addAction(i)
- 
+
             self.toolBar.insertSeparator(self.addlinkAction)
             self.toolBar.insertSeparator(self.startQueueAction)
             self.toolBar.insertSeparator(self.minimizeAction)
@@ -3887,10 +3890,13 @@ class MainWindow(MainWindow_Ui):
     def reportIssue(self, menu):
         osCommands.xdgOpen('https://github.com/persepolisdm/persepolis/issues')
 
-# this method is opening releases page in github
+# this method is opening update menu
     def newUpdate(self, menu):
-        osCommands.xdgOpen(
-            'https://github.com/persepolisdm/persepolis/releases')
+        checkupdatewindow = checkupdate(
+            self.persepolis_setting)
+        self.checkupdatewindow_list.append(checkupdatewindow)
+        self.checkupdatewindow_list[len(
+            self.checkupdatewindow_list) - 1].show()
 
 
 # this method is called when user pressed moveUpAction
