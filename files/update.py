@@ -33,6 +33,15 @@ import newopen
 os_type = platform.system()
 home_address = str(os.path.expanduser("~"))
 
+# persepolis tmp folder (temporary folder)
+if os_type != 'Windows':
+    user_name_split = home_address.split('/')
+    user_name = user_name_split[2]
+    persepolis_tmp = '/tmp/persepolis_' + user_name
+else:
+    persepolis_tmp = os.path.join(
+        str(home_address), 'AppData', 'Local', 'persepolis_tmp')
+
 class checkupdate(QWidget):
     def __init__(self, persepolis_setting):
         super().__init__()
@@ -47,11 +56,11 @@ class checkupdate(QWidget):
         updatesource = urllib.request.urlopen('https://persepolisdm.github.io/version', data=None)
         serverdict = updatesource.read().decode("utf-8")
         # save information to file
-        file = open('serverdictfile', 'w')  # store in tmp
-        file.write(str(serverdict))
-        file.close()
+        fileup = open( persepolis_tmp + 'serverdictfile', 'w')  # store in tmp
+        fileup.write(str(serverdict))
+        fileup.close()
         # read as dictionary
-        dictvalue = newopen.readDict('serverdictfile')  # read from tmp
+        dictvalue = newopen.readDict(persepolis_tmp + 'serverdictfile')  # read from tmp
         # installed version
         clientversion = self.persepolis_setting.value('version/version')
         # get latest stable version
