@@ -75,6 +75,8 @@ class AddLinkWindow(AddLinkWindow_Ui):
         self.download_later_pushButton.setEnabled(False)
         self.link_lineEdit.textChanged.connect(self.linkLineChanged)
 
+        self.options_pushButton.clicked.connect(self.optionsButtonClicked)
+
         # AddLink - checking clipboard for link! ->
         if ('link' in self.flashgot_add_link_dictionary):
             self.link_lineEdit.setText(
@@ -170,6 +172,43 @@ class AddLinkWindow(AddLinkWindow_Ui):
             'AddLinkWindow/position', QPoint(300, 300))
         self.resize(size)
         self.move(position)
+
+        self.minimum_height = self.height()
+
+
+# more options widgets list
+        self.more_options_widgets = [self.proxy_checkBox, self.proxy_frame, self.download_checkBox, self.download_frame, self.folder_frame, self.start_checkBox,
+                                    self.start_frame, self.end_checkBox, self.end_frame, self.limit_checkBox, self.limit_frame, self.connections_frame] 
+        #hiding more_options_widgets
+        for widgets in self.more_options_widgets:
+            widgets.hide()
+
+
+
+# hide and show more options
+
+    def optionsButtonClicked(self, button):
+
+        if self.options_pushButton.text() == 'Show more options' or self.options_pushButton.text() == '&Show more options':
+            self.options_pushButton.setText('Hide options')
+            
+            #unhiding more_options_widgets
+            for widgets in self.more_options_widgets:
+                widgets.show()
+
+            self.layout().setSizeConstraint(QtWidgets.QLayout.SetFixedSize)
+        else:
+            self.options_pushButton.setText('Show more options')
+
+            #hiding more_options_widgets
+            for widgets in self.more_options_widgets:
+                widgets.hide()
+
+            self.layout().setSizeConstraint(QtWidgets.QLayout.SetDefaultConstraint)
+            self.setMinimumSize(QSize(self.width() , self.minimum_height))
+            self.resize(QSize(self.width() , self.minimum_height))
+            
+            
 
 
 # activate frames if checkBoxes checked

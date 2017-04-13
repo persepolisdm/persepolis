@@ -34,10 +34,12 @@ class AddLinkWindow_Ui(QWidget):
         icons = ':/' + \
             str(self.persepolis_setting.value('settings/icons')) + '/'
 
-        self.setMinimumSize(QtCore.QSize(520, 465))
+        self.setMinimumSize(QtCore.QSize(520, 265))
         self.setWindowIcon(QIcon.fromTheme('persepolis', QIcon(':/icon.svg')))
 
         window_verticalLayout = QVBoxLayout()
+        window_verticalLayout.setContentsMargins(-1, 10, -1, -1)
+
 
         self.link_frame = QFrame(self)
         self.link_frame.setFrameShape(QFrame.StyledPanel)
@@ -71,6 +73,8 @@ class AddLinkWindow_Ui(QWidget):
         link_verticalLayout.addLayout(change_name_horizontalLayout)
 
         # add_category ->
+        queue_horizontalLayout = QHBoxLayout()
+
         self.queue_frame = QFrame(self)
         self.queue_frame.setFrameShape(QFrame.StyledPanel)
         self.queue_frame.setFrameShadow(QFrame.Raised)
@@ -83,7 +87,22 @@ class AddLinkWindow_Ui(QWidget):
         self.add_queue_comboBox = QComboBox(self.queue_frame)
         add_queue_horizontalLayout.addWidget(self.add_queue_comboBox)
 
-        window_verticalLayout.addWidget(self.queue_frame)
+        queue_horizontalLayout.addWidget(self.queue_frame)
+        queue_horizontalLayout.addStretch(1)
+
+        window_verticalLayout.addLayout(queue_horizontalLayout)
+
+        # options_pushButton
+        options_horizontalLayout = QHBoxLayout()
+
+        self.options_pushButton = QPushButton(self)
+        self.options_pushButton.setFlat(True)
+
+        options_horizontalLayout.addWidget(self.options_pushButton)
+
+        options_horizontalLayout.addStretch(1)
+
+        window_verticalLayout.addLayout(options_horizontalLayout)
 
         # proxy ->
         proxy_verticalLayout = QVBoxLayout()
@@ -270,10 +289,16 @@ class AddLinkWindow_Ui(QWidget):
         self.connections_spinBox.setProperty("value", 16)
         horizontalLayout_3.addWidget(self.connections_spinBox)
         connections_horizontalLayout.addWidget(self.connections_frame)
+        connections_horizontalLayout.addStretch(1)
 
-        buttons_horizontalLayout = QHBoxLayout()
+        window_verticalLayout.addLayout(connections_horizontalLayout)
+
+
 
         # ok cancel download_later buttons ->
+        buttons_horizontalLayout = QHBoxLayout()
+        buttons_horizontalLayout.addStretch(1)
+
         self.download_later_pushButton = QPushButton(self)
         self.download_later_pushButton.setIcon(QIcon(icons + 'stop'))
 
@@ -287,9 +312,8 @@ class AddLinkWindow_Ui(QWidget):
         buttons_horizontalLayout.addWidget(self.cancel_pushButton)
         buttons_horizontalLayout.addWidget(self.ok_pushButton)
 
-        connections_horizontalLayout.addLayout(buttons_horizontalLayout)
-        window_verticalLayout.addLayout(connections_horizontalLayout)
-
+        window_verticalLayout.addLayout(buttons_horizontalLayout)
+        
         self.setLayout(window_verticalLayout)
 
         # labels ->
@@ -300,6 +324,8 @@ class AddLinkWindow_Ui(QWidget):
         self.add_queue_label.setText("Add to category : ")
 
         self.change_name_checkBox.setText("Change File Name : ")
+
+        self.options_pushButton.setText("Show more options")
 
         self.proxy_checkBox.setText("Proxy")
         self.proxy_pass_label.setText("Proxy PassWord : ")
