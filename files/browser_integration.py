@@ -19,7 +19,6 @@ from newopen import Open
 import osCommands
 import sys
 
-
 os_type = platform.system()
 
 home_address = str(os.path.expanduser("~"))
@@ -96,31 +95,44 @@ def browserIntegration(browser):
         exec_path = os.path.join(
             current_directory, 'Persepolis Download Manager.exe')
 
-            # the execution path in jason file for Windows must in form of
-            # c:\\Users\\...\\Persepolis Download Manager.exe , so we need 2
-            # "\" in address
+        # the execution path in jason file for Windows must in form of
+        # c:\\Users\\...\\Persepolis Download Manager.exe , so we need 2
+        # "\" in address
         exec_path = exec_path.replace('\\', r'\\')
 
         native_message_folder = os.path.join(
             home_address, 'AppData\Local\persepolis_download_manager')
 
+
+    #WebExtension native hosts file prototype
+    webextension_json_connector = {
+        "name": "com.persepolis.pdmchromewrapper",
+        "type": "stdio",
+        "description": "Integrate Persepolis with %s using WebExtensions" % (browser)
+    }
+
+    #Add chrom* keys
     if browser == 'chrome' or browser == 'chromium':
-        json_file_lines = ['{', '    "name": "com.persepolis.pdmchromewrapper",', '    "description": "Integrate Persepolis with Google Chrome",', '    "path": "' +
-                            str(exec_path) + '",', '    "type": "stdio",', '    "allowed_origins": [', '        "chrome-extension://legimlagjjoghkoedakdjhocbeomojao/"', '    ]', '}']
+        webextension_json_connector["path"] = str(exec_path)
+        webextension_json_connector["allowed_origins"] = "chrome-extension://legimlagjjoghkoedakdjhocbeomojao/"
+
+    #Add firefox keys
     elif browser == 'firefox':
-        json_file_lines = ['{', '    "name": "com.persepolis.pdmchromewrapper",', '    "description": "Integrate Persepolis with Firefox",', '    "path": "' +
-        str(exec_path) + '",', '    "type": "stdio",', '    "allowed_extensions": [', '        "com.persepolis.pdmchromewrapper@persepolisdm.github.io"', '    ]', '}']
+        webextension_json_connector["allowed_extensions"] = [
+            "com.persepolis.pdmchromewrapper@persepolisdm.github.io",
+            "com.persepolis.pdmchromewrapper.offline@persepolisdm.github.io"
+        ]
 
-
+    #Build final path
     native_message_file = os.path.join(
         native_message_folder, 'com.persepolis.pdmchromewrapper.json')
 
     osCommands.makeDirs(native_message_folder)
 
+    #Write NMH file
     f = Open(native_message_file, 'w')
-    for i in json_file_lines:
-        f.writelines(str(i) + '\n')
-    f.close()
+    f.write(str(webextension_json_connector))
+
 
     if os_type != 'Windows':
         os.system('chmod +x "' + str(native_message_file) + '"')
