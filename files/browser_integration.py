@@ -146,6 +146,3 @@ def browserIntegration(browser):
         elif browser == 'firefox':
             os.system(r'REG ADD "HKEY_CURRENT_USER\SOFTWARE\Mozilla\NativeMessagingHosts\com.persepolis.pdmchromewrapper" /ve /d "' +
                         native_message_file + '" /f')
- 
-
-
