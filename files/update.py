@@ -37,7 +37,7 @@ home_address = str(os.path.expanduser("~"))
 if os_type != 'Windows':
     user_name_split = home_address.split('/')
     user_name = user_name_split[2]
-    persepolis_tmp = '/tmp/persepolis_' + user_name
+    persepolis_tmp = '/tmp/persepolis_' + user_name + '/'
 else:
     persepolis_tmp = os.path.join(
         str(home_address), 'AppData', 'Local', 'persepolis_tmp')
