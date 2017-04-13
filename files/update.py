@@ -56,7 +56,7 @@ class checkupdate(QWidget):
         updatesource = urllib.request.urlopen('https://persepolisdm.github.io/version', data=None)
         serverdict = updatesource.read().decode("utf-8")
         # save information to file
-        fileup = open( persepolis_tmp + 'serverdictfile', 'w')  # store in tmp
+        fileup = open(persepolis_tmp + 'serverdictfile', 'w')  # store in tmp
         fileup.write(str(serverdict))
         fileup.close()
         # read as dictionary
