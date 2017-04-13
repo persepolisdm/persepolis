@@ -18,21 +18,14 @@ from PyQt5.QtGui import QIcon
 from PyQt5.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QLabel, QPushButton
 from PyQt5.QtCore import QSize, QPoint
 import platform
-import os
-from newopen import Open
-from functools import partial
 import osCommands
-import sys
 import requests
-import webbrowser
 import platform
-import newopen
 import ast
+import osCommands
 
 # finding os_type
 os_type = platform.system()
-home_address = str(os.path.expanduser("~"))
-
 
 
 class checkupdate(QWidget):
@@ -120,12 +113,12 @@ class checkupdate(QWidget):
                     self.winUpdatedl() # this function download latest release
                     # find system architect
                     if platform.architecture()[0] == '64bit':
-                        webbrowser.open(dictvalue['win64dlurl'])
+                        osCommands.xdgOpen(dictvalue['win64dlurl'])
                     elif platform.architecture()[0] == '32bit':
-                        webbrowser.open(dictvalue['win32dlurl'])
+                        osCommands.xdgOpen(dictvalue['win32dlurl'])
 
                 elif os_type == 'Darwin':
-                    webbrowser.open(dictvalue['macdlurl']) # it will download latest release for mac
+                    osCommands.xdgOpen(dictvalue['macdlurl']) # it will download latest release for mac
 
             elif float(server_version) == float(self.client_version):
                 self.status_label.setText('Latest version is installed :)')
