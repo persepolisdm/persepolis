@@ -117,7 +117,7 @@ def browserIntegration(browser):
 
     osCommands.makeDirs(native_message_folder)
 
-    f = Open(native_message_file, 'w')
+    f = open(native_message_file, 'w')
     for i in json_file_lines:
         f.writelines(str(i) + '\n')
     f.close()
