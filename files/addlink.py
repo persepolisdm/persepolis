@@ -216,6 +216,14 @@ class AddLinkWindow(AddLinkWindow_Ui):
 
 # hide and show more options
 
+    def resizeEvent(self, event):
+        height = int(self.height())
+        if height < self.minimum_height:
+            self.minimum_height = height
+
+
+
+
     def optionsButtonClicked(self, button):
 
         if self.options_pushButton.text() == 'Show more options' or self.options_pushButton.text() == '&Show more options':
@@ -418,6 +426,10 @@ class AddLinkWindow(AddLinkWindow_Ui):
         self.close()
 
     def closeEvent(self, event):
+        self.layout().setSizeConstraint(QtWidgets.QLayout.SetDefaultConstraint)
+        self.setMinimumSize(QSize(self.width() , self.minimum_height))
+        self.resize(QSize(self.width() , self.minimum_height))
+ 
         self.persepolis_setting.setValue('AddLinkWindow/size', self.size())
         self.persepolis_setting.setValue('AddLinkWindow/position', self.pos())
         self.persepolis_setting.sync()
