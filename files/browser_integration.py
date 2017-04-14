@@ -113,7 +113,7 @@ def browserIntegration(browser):
 
     # Add chrom* keys
     if browser == 'chrome' or browser == 'chromium':
-        webextension_json_connector["allowed_origins"] = "chrome-extension://legimlagjjoghkoedakdjhocbeomojao/"
+        webextension_json_connector["allowed_origins"] = [ "chrome-extension://legimlagjjoghkoedakdjhocbeomojao/" ]
 
     # Add firefox keys
     elif browser == 'firefox':
