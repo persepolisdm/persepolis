@@ -133,7 +133,7 @@ class ChromiumIntegrationWindow(QWidget):
             "<a href=https://persepolisdm.github.io>https://persepolisdm.github.io</a>")
         self.label3.setText('\nFor Chrome/Chromium :')
         self.label4.setText(
-            '\t1. First make shure that Chrome or Chromium is installed')
+            '\t1. First make sure that Chrome or Chromium is installed')
         self.label5.setText('\t2. Then press appropriate button here:\n')
 
         self.chrome_pushButton.setText('Chrome')
