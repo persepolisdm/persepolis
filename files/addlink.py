@@ -23,12 +23,15 @@ import functools
 from PyQt5 import QtWidgets, QtCore
 from PyQt5.QtWidgets import QHBoxLayout,  QApplication,  QFileDialog,  QCheckBox, QLineEdit, QPushButton
 from PyQt5.QtGui import QIcon
-from PyQt5.QtCore import QPoint, QSize, QDir
+from PyQt5.QtCore import QPoint, QSize, QDir, QThread, pyqtSignal
 from addlink_ui import AddLinkWindow_Ui
 from newopen import Open, readDict
+from functools import partial
 
 import osCommands
 import download
+import spider
+import logger
 
 
 home_address = os.path.expanduser("~")
@@ -51,12 +54,32 @@ elif (os_type == 'Windows'):
 queues_list_file = os.path.join(config_folder, 'queues_list')
 
 
+class AddLinkSpiderThread(QThread):
+    ADDLINKSPIDERSIGNAL = pyqtSignal(str)
+
+    def __init__(self, add_link_dictionary):
+        QThread.__init__(self)
+        self.add_link_dictionary = add_link_dictionary
+
+    def run(self):
+        try :
+            filesize = spider.addLinkSpider(self.add_link_dictionary)
+            self.ADDLINKSPIDERSIGNAL.emit(filesize)
+        except Exception as e:
+            print(str(e))
+            print("Spider couldn't find download information")
+            logger.sendToLog(
+                "Spider couldn't find download information", "ERROR")
+
+
+
 class AddLinkWindow(AddLinkWindow_Ui):
-    def __init__(self, callback, persepolis_setting, flashgot_add_link_dictionary={}):
+    def __init__(self, parent, callback, persepolis_setting, flashgot_add_link_dictionary={}):
         super().__init__(persepolis_setting)
         self.callback = callback
         self.flashgot_add_link_dictionary = flashgot_add_link_dictionary
         self.persepolis_setting = persepolis_setting
+        self.parent = parent
 
         # entry initialization ->
         global connections
@@ -81,7 +104,14 @@ class AddLinkWindow(AddLinkWindow_Ui):
         if ('link' in self.flashgot_add_link_dictionary):
             self.link_lineEdit.setText(
                 str(self.flashgot_add_link_dictionary['link']))
-            del self.flashgot_add_link_dictionary['link']
+
+            # spider is finding file size
+            new_spider = AddLinkSpiderThread(self.flashgot_add_link_dictionary)
+            self.parent.threadPool.append(new_spider)
+            self.parent.threadPool[len(self.parent.threadPool) - 1].start()
+            self.parent.threadPool[len(self.parent.threadPool) - 1].ADDLINKSPIDERSIGNAL.connect(
+                partial(self.parent.addLinkSpiderCallBack, child=self))
+ 
         else:
             clipboard = QApplication.clipboard()
             text = clipboard.text()
@@ -163,11 +193,10 @@ class AddLinkWindow(AddLinkWindow_Ui):
             self.change_name_lineEdit.setText(
                 str(self.flashgot_add_link_dictionary['out']))
             self.change_name_checkBox.setChecked(True)
-            del self.flashgot_add_link_dictionary['out']
 
  # setting window size and position
         size = self.persepolis_setting.value(
-            'AddLinkWindow/size', QSize(520, 565))
+            'AddLinkWindow/size', QSize(520, 265))
         position = self.persepolis_setting.value(
             'AddLinkWindow/position', QPoint(300, 300))
         self.resize(size)

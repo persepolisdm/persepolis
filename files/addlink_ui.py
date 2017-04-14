@@ -90,6 +90,9 @@ class AddLinkWindow_Ui(QWidget):
         queue_horizontalLayout.addWidget(self.queue_frame)
         queue_horizontalLayout.addStretch(1)
 
+        self.size_label = QLabel(self)
+        queue_horizontalLayout.addWidget(self.size_label)
+
         window_verticalLayout.addLayout(queue_horizontalLayout)
 
         # options_pushButton
