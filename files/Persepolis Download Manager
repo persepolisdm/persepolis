@@ -24,6 +24,7 @@ import argparse
 import struct
 import json
 import platform
+import logger
 
 # initialization
 home_address = os.path.expanduser("~")
