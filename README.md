@@ -2,7 +2,7 @@
  
  Persepolis Download Manager is a GUI for aria2.
  
-+ Version : 2.3.3
++ Version : 2.4
 + Written in PYQT5.
 
 
