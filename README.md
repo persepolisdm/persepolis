@@ -8,6 +8,7 @@
 
 ![ScreenShot](https://raw.githubusercontent.com/persepolisdm/persepolis/master/screenshots/persepolis.png)
 
+![ScreenShot](https://raw.githubusercontent.com/persepolisdm/persepolis/master/screenshots/mac.png)
 
 ### Persepolis Website
 
