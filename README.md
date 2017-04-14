@@ -1,12 +1,12 @@
 # Persepolis Download Manager [![Build Status](https://travis-ci.org/persepolisdm/persepolis.svg?branch=master)](https://travis-ci.org/persepolisdm/persepolis)
  
- Persepolis Download Manager is a GUI for aria2.
+ Persepolis Download Manager is a GUI for aria2. 
  
 + Version : 2.4
 + Written in PYQT5.
++ For GNU/Linux and FreeBSD and PCBSD and Mac and Windows.
 
-
-![ScreenShot](http://s1.picofile.com/file/8264685926/persepolis.jpg)
+![ScreenShot](https://raw.githubusercontent.com/persepolisdm/persepolis/master/screenshots/persepolis.png)
 
 
 ### Persepolis Website
@@ -19,6 +19,8 @@ Visit our website for installation instructions
 
 
 ### Persepolis Wiki
+
+How to install Persepolis?
 
 Read [Our Wiki For More Information Including Installers and Development and FAQ](https://github.com/persepolisdm/persepolis/wiki)
 
