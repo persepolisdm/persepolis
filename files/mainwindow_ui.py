@@ -135,6 +135,8 @@ class MenuWidget(QPushButton):
 
         helpMenu.addAction(self.parent.browserAction)
 
+        helpMenu.addAction(self.parent.helpAction)
+
 
 # viewMenu submenus
 
@@ -579,6 +581,11 @@ class MainWindow_Ui(QMainWindow):
         self.browserAction = QAction(QIcon(icons + 'browser'), 'Browser integration',
                                      self, statusTip='Browser inegration', triggered=self.browserIntegration)
         helpMenu.addAction(self.browserAction)
+
+        self.helpAction = QAction(QIcon(icons + 'about'), 'Help',
+                                   self, statusTip='Help', triggered=self.persepolisHelp)
+        helpMenu.addAction(self.helpAction)
+
 
         self.qmenu = MenuWidget(self)
 

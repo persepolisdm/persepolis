@@ -3890,6 +3890,11 @@ class MainWindow(MainWindow_Ui):
     def reportIssue(self, menu):
         osCommands.xdgOpen('https://github.com/persepolisdm/persepolis/issues')
 
+# this method is openning persepolis wiki page in github
+    def persepolisHelp(self, menu):
+        osCommands.xdgOpen('https://github.com/persepolisdm/persepolis/wiki')
+
+
 # this method is opening update menu
     def newUpdate(self, menu):
         checkupdatewindow = checkupdate(
