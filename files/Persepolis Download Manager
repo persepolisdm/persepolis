@@ -198,10 +198,10 @@ if args.chromium != 'no' or args.parent_window:
 
     text_length_bytes = sys.stdin.buffer.read(4)
 
-		# Unpack message length as 4 byte integer.
+    # Unpack message length as 4 byte integer.
     text_length = struct.unpack('i', text_length_bytes)[0]
 
-		# Read the text (JSON object) of the message.
+    # Read the text (JSON object) of the message.
     text = sys.stdin.buffer.read(text_length).decode("utf-8")
     if text:
         if not 'url' in text:

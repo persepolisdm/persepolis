@@ -19,10 +19,10 @@ from newopen import Open
 import osCommands
 import sys
 
-
 os_type = platform.system()
 
 home_address = str(os.path.expanduser("~"))
+
 
 # browser can be firefox or chromium or chrome
 
@@ -38,11 +38,11 @@ def browserIntegration(browser):
 
         elif browser == 'chrome':
             native_message_folder = home_address + \
-                '/.config/google-chrome/NativeMessagingHosts'
+                                    '/.config/google-chrome/NativeMessagingHosts'
 
         elif browser == 'firefox':
             native_message_folder = home_address + \
-                '/.mozilla/native-messaging-hosts'
+                                    '/.mozilla/native-messaging-hosts'
 
 
     # for FreeBSD and OpenBSD
@@ -50,20 +50,19 @@ def browserIntegration(browser):
         # persepolis execution path
         exec_path = '/usr/local/bin/persepolis'
 
-
         # Native Messaging Hosts folder path for every browser
         if browser == 'chromium':
             native_message_folder = home_address + '/.config/chromium/NativeMessagingHosts'
 
         elif browser == 'chrome':
             native_message_folder = home_address + \
-                '/.config/google-chrome/NativeMessagingHosts'
+                                    '/.config/google-chrome/NativeMessagingHosts'
 
         elif browser == 'firefox':
             native_message_folder = home_address + \
-                '/.mozilla/native-messaging-hosts'
+                                    '/.mozilla/native-messaging-hosts'
 
-               
+
     # for Mac OSX
     elif os_type == 'Darwin':
         # finding Persepolis execution path
@@ -76,15 +75,15 @@ def browserIntegration(browser):
         # Native Messaging Hosts folder path for every browser
         if browser == 'chromium':
             native_message_folder = home_address + \
-                '/Library/Application Support/Chromium/NativeMessagingHosts'
+                                    '/Library/Application Support/Chromium/NativeMessagingHosts'
 
         elif browser == 'chrome':
             native_message_folder = home_address + \
-                '/Library/Application Support/Google/Chrome/NativeMessagingHosts'
+                                    '/Library/Application Support/Google/Chrome/NativeMessagingHosts'
 
         elif browser == 'firefox':
             native_message_folder = home_address + \
-                '/Library/Application Support/Mozilla/NativeMessagingHosts'
+                                    '/Library/Application Support/Mozilla/NativeMessagingHosts'
 
 
     # for MicroSoft Windows os (windows 7 , ...)
@@ -96,30 +95,42 @@ def browserIntegration(browser):
         exec_path = os.path.join(
             current_directory, 'Persepolis Download Manager.exe')
 
-            # the execution path in jason file for Windows must in form of
-            # c:\\Users\\...\\Persepolis Download Manager.exe , so we need 2
-            # "\" in address
+        # the execution path in jason file for Windows must in form of
+        # c:\\Users\\...\\Persepolis Download Manager.exe , so we need 2
+        # "\" in address
         exec_path = exec_path.replace('\\', r'\\')
 
         native_message_folder = os.path.join(
             home_address, 'AppData\Local\persepolis_download_manager')
 
+    # WebExtension native hosts file prototype
+    webextension_json_connector = {
+        "name": "com.persepolis.pdmchromewrapper",
+        "type": "stdio",
+        "path": str(exec_path),
+        "description": "Integrate Persepolis with %s using WebExtensions" % (browser)
+    }
+
+    # Add chrom* keys
     if browser == 'chrome' or browser == 'chromium':
-        json_file_lines = ['{', '    "name": "com.persepolis.pdmchromewrapper",', '    "description": "Integrate Persepolis with Google Chrome",', '    "path": "' +
-                            str(exec_path) + '",', '    "type": "stdio",', '    "allowed_origins": [', '        "chrome-extension://legimlagjjoghkoedakdjhocbeomojao/"', '    ]', '}']
+        webextension_json_connector["allowed_origins"] = "chrome-extension://legimlagjjoghkoedakdjhocbeomojao/"
+
+    # Add firefox keys
     elif browser == 'firefox':
-        json_file_lines = ['{', '    "name": "com.persepolis.pdmchromewrapper",', '    "description": "Integrate Persepolis with Firefox",', '    "path": "' +
-        str(exec_path) + '",', '    "type": "stdio",', '    "allowed_extensions": [', '        "com.persepolis.pdmchromewrapper@persepolisdm.github.io"', '    ]', '}']
+        webextension_json_connector["allowed_extensions"] = [
+            "com.persepolis.pdmchromewrapper@persepolisdm.github.io",
+            "com.persepolis.pdmchromewrapper.offline@persepolisdm.github.io"
+        ]
 
-
+    # Build final path
     native_message_file = os.path.join(
         native_message_folder, 'com.persepolis.pdmchromewrapper.json')
 
     osCommands.makeDirs(native_message_folder)
 
+    # Write NMH file
     f = open(native_message_file, 'w')
-    for i in json_file_lines:
-        f.writelines(str(i) + '\n')
+    f.write(str(webextension_json_connector).replace("'", "\""))
     f.close()
 
     if os_type != 'Windows':
@@ -128,12 +139,11 @@ def browserIntegration(browser):
     else:
         # add the key to the windows registry
         if browser == 'chrome' or browser == 'chromium':
-            os.system(r'REG ADD "HKCU\Software\Google\Chrome\NativeMessagingHosts\com.persepolis.pdmchromewrapper" /ve /t REG_SZ /d "' +
-                        native_message_file + '" /f')
+            os.system(
+                r'REG ADD "HKCU\Software\Google\Chrome\NativeMessagingHosts\com.persepolis.pdmchromewrapper" /ve /t REG_SZ /d "' +
+                native_message_file + '" /f')
 
         elif browser == 'firefox':
-            os.system(r'REG ADD "HKEY_CURRENT_USER\SOFTWARE\Mozilla\NativeMessagingHosts\com.persepolis.pdmchromewrapper" /ve /d "' +
-                        native_message_file + '" /f')
- 
-
-
+            os.system(
+                r'REG ADD "HKEY_CURRENT_USER\SOFTWARE\Mozilla\NativeMessagingHosts\com.persepolis.pdmchromewrapper" /ve /d "' +
+                native_message_file + '" /f')
