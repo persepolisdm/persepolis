@@ -70,7 +70,8 @@ program_path="/usr/local/share/persepolis"
 exec_path='/usr/local/bin/'
 chmod +x "./files/Persepolis Download Manager"
 chmod +x "./persepolis_freebsd"
-chmod +x "./Persepolis Download Manager.desktop"
+chmod +x "./persepolis.desktop"
+
 
 gzip -k -9 ./man/persepolis.1
 
@@ -78,7 +79,8 @@ sudo rm -rf "$program_path"
 sudo mkdir -p "$program_path"
 sudo cp -rf  ./files/* "$program_path/"
 sudo cp -rf "./persepolis_freebsd" "$exec_path/persepolis"
-sudo cp -rf "./Persepolis Download Manager.desktop" "/usr/local/share/applications/"
+sudo cp -rf "./persepolis.desktop" "/usr/local/share/applications/"
+sudo rm -rf "/usr/local/share/applications/Persepolis Download Manager.desktop"
 sudo cp -rf "./files/icon.svg" "/usr/local/share/pixmaps/persepolis.svg"
 sudo mv -f "man/persepolis.1.gz" "/usr/local/man/man1/persepolis.1.gz"
 if [ "$?" -eq "0" ];then

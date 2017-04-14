@@ -182,3 +182,55 @@ def queueSpider(add_link_dictionary):
         filename = link.split('/')[-1]
 
     return filename
+
+
+def addLinkSpider(add_link_dictionary):
+    # getting user's download request from add_link_dictionary
+    for i in ['link', 'header', 'out', 'user-agent', 'load-cookies', 'referer']:
+        if not (i in add_link_dictionary):
+            add_link_dictionary[i] = None
+
+    link = add_link_dictionary['link']
+    header = add_link_dictionary['header']
+    user_agent = add_link_dictionary['user-agent']
+    raw_cookies = add_link_dictionary['load-cookies']
+    referer = add_link_dictionary['referer']
+
+    requests_session = requests.Session()  # defining a requests Session
+
+    if raw_cookies != None:  # setting cookies
+        cookie = SimpleCookie()
+        cookie.load(raw_cookies)
+
+        cookies = {key: morsel.value for key, morsel in cookie.items()}
+        requests_session.cookies = cookiejar_from_dict(cookies)
+
+    if referer != None:
+        # setting referer to the session
+        requests_session.headers.update({'referer': referer})
+
+    if user_agent != None:
+        # setting user_agent to the session
+        requests_session.headers.update({'user-agent': user_agent})
+
+    # finding headers
+    response = requests_session.head(link)
+    header = response.headers
+
+    file_size = '***'
+    if 'Content-Length' in header.keys():  # checking if file_size is available
+        file_size = int(header['Content-Length'])
+        if int(file_size/1073741824) != 0:  # converting file_size to KB or MB or GB
+            file_size = file_size/1073741824
+            size_str = str(round(file_size, 2)) + " GB"
+        elif int(file_size/1048576) != 0:
+            size_str = str(int(file_size/1048576)) + " MB"
+        elif int(file_size/1024) != 0:
+            size_str = str(int(file_size/1024)) + " KB"
+        else:
+            size_str = str(file_size)
+        filesize = size_str
+
+
+
+    return filesize

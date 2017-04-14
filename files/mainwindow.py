@@ -1465,7 +1465,7 @@ class MainWindow(MainWindow_Ui):
 # flashgot (Single Download)
     def flashgotAddLink(self, flashgot_add_link_dictionary):
         addlinkwindow = AddLinkWindow(
-            self.callBack, self.persepolis_setting, flashgot_add_link_dictionary)
+            self, self.callBack, self.persepolis_setting, flashgot_add_link_dictionary)
         self.addlinkwindows_list.append(addlinkwindow)
         self.addlinkwindows_list[len(self.addlinkwindows_list) - 1].show()
         self.addlinkwindows_list[len(self.addlinkwindows_list) - 1].raise_()
@@ -1473,7 +1473,7 @@ class MainWindow(MainWindow_Ui):
 
 # This method creates addlinkwindow when user presses plus button in MainWindow
     def addLinkButtonPressed(self, button):
-        addlinkwindow = AddLinkWindow(self.callBack, self.persepolis_setting)
+        addlinkwindow = AddLinkWindow(self, self.callBack, self.persepolis_setting)
         self.addlinkwindows_list.append(addlinkwindow)
         self.addlinkwindows_list[len(self.addlinkwindows_list) - 1].show()
 
@@ -3890,6 +3890,11 @@ class MainWindow(MainWindow_Ui):
     def reportIssue(self, menu):
         osCommands.xdgOpen('https://github.com/persepolisdm/persepolis/issues')
 
+# this method is openning persepolis wiki page in github
+    def persepolisHelp(self, menu):
+        osCommands.xdgOpen('https://github.com/persepolisdm/persepolis/wiki')
+
+
 # this method is opening update menu
     def newUpdate(self, menu):
         checkupdatewindow = checkupdate(
@@ -4262,6 +4267,13 @@ class MainWindow(MainWindow_Ui):
             item.setCheckState(QtCore.Qt.Unchecked)
 
         child.links_table.setItem(int(row_number), 0, item)
+
+# see addlink.py file
+    def addLinkSpiderCallBack(self, filesize, child):
+
+        if str(filesize) != '***':
+            filesize = 'Size: ' + str(filesize)
+            child.size_label.setText(filesize)
 
 # Chrome and Chromium Integration Window
     def browserIntegration(self, menu):

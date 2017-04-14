@@ -66,6 +66,8 @@ class PropertiesWindow(AddLinkWindow_Ui):
         connections = int(
             self.persepolis_setting.value('settings/connections'))
 
+# hiding options_pushButton
+        self.options_pushButton.hide()
 
 # connect folder_pushButton
         self.folder_pushButton.clicked.connect(self.changeFolder)
