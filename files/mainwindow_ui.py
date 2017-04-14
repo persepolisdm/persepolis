@@ -373,7 +373,7 @@ class MainWindow_Ui(QMainWindow):
         self.download_table.horizontalHeader().setSectionResizeMode(0)
         self.download_table.horizontalHeader().setStretchLastSection(True)
 
-        tabels_splitter.setStretchFactor(0, 2) # category_tree width
+        tabels_splitter.setStretchFactor(0, 3) # category_tree width
         tabels_splitter.setStretchFactor(1, 10)  # ratio of tables's width
         download_table_horizontalLayout.addWidget(tabels_splitter)
         self.frame.setLayout(download_table_horizontalLayout)
