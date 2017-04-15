@@ -24,7 +24,6 @@ import argparse
 import struct
 import json
 import platform
-import logger
 
 # initialization
 home_address = os.path.expanduser("~")
@@ -91,7 +90,6 @@ if lock_file_validation:
             setproctitle("persepolis")
         except:
             print("Warning : setproctitle is not installed!")
-            logger.sendToLog("setproctitle is not installed!", "ERROR")
 
 
 from PyQt5.QtWidgets import QApplication  
