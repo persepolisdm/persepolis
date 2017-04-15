@@ -359,7 +359,7 @@ class MainWindow_Ui(QMainWindow):
         self.download_table.setSelectionBehavior(QAbstractItemView.SelectRows)
         self.download_table.setEditTriggers(QAbstractItemView.NoEditTriggers)
         self.download_table.verticalHeader().hide()
-        self.download_table.setSortingEnabled(True)
+#         self.download_table.setSortingEnabled(True)
 
 # hide gid and download dictioanry section
         self.download_table.setColumnHidden(8, True)
