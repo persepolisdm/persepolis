@@ -6,9 +6,14 @@
 + Written in PYQT5.
 + For GNU/Linux and FreeBSD and PCBSD and Mac and Windows.
 
+#### GNU/Linux
 ![ScreenShot](https://raw.githubusercontent.com/persepolisdm/persepolis/master/screenshots/persepolis.png)
 
+#### Mac OSX
 ![ScreenShot](https://raw.githubusercontent.com/persepolisdm/persepolis/master/screenshots/mac.png)
+
+#### MicroSoft Windows
+![ScreenShot](https://raw.githubusercontent.com/persepolisdm/persepolis/master/screenshots/windows.png)
 
 ### Persepolis Website
 
