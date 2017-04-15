@@ -197,12 +197,12 @@ if persepolis_version != 2.4:
                 str(home_address), ".config/persepolis_download_manager")
             shutil.copytree(old_config_folder,  config_folder)
             osCommands.removeDir(old_config_folder)
-            persepolis_setting.setValue('version/version', 2.4)
+            persepolis_setting.setValue('version/version', 2.41)
             persepolis_setting.sync()
         except Exception as e:
             print(e)
             logger.logObj.error("Failed to load configuration!", exc_info=True)
     else:
 
-        persepolis_setting.setValue('version/version', 2.4)
+        persepolis_setting.setValue('version/version', 2.41)
         persepolis_setting.sync()
