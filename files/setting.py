@@ -251,16 +251,16 @@ class PreferencesWindow(Setting_Ui):
 # font_checkBox connect
         self.font_checkBox.stateChanged.connect(self.fontCheckBoxState)
 
+        self.persepolis_setting.endGroup()
 # setting window size and position
         size = self.persepolis_setting.value(
-            'PreferencesWindow/size', QSize(578, 465))
+            'PreferencesWindow/size', QSize(578, 565))
         position = self.persepolis_setting.value(
             'PreferencesWindow/position', QPoint(300, 300))
 
         self.resize(size)
         self.move(position)
 
-        self.persepolis_setting.endGroup()
 
     def fontCheckBoxState(self,checkBox):
         # deactive fontComboBox and font_size_spinBox if font_checkBox not checked!
