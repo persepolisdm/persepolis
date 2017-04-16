@@ -137,13 +137,31 @@ def browserIntegration(browser):
         os.system('chmod +x "' + str(native_message_file) + '"')
 
     else:
+        import winreg
         # add the key to the windows registry
         if browser == 'chrome' or browser == 'chromium':
-            os.system(
-                r'REG ADD "HKCU\Software\Google\Chrome\NativeMessagingHosts\com.persepolis.pdmchromewrapper" /ve /t REG_SZ /d "' +
-                native_message_file + '" /f')
-
+            try:
+                # create pdmchromewrapper key under NativeMessagingHosts
+                winreg.CreateKey(winreg.HKEY_CURRENT_USER, "SOFTWARE\\Google\\Chrome\\NativeMessagingHosts\\com.persepolis.pdmchromewrapper")
+                # open a connection to pdmchromewrapper key
+                gintKey = winreg.OpenKey(winreg.HKEY_CURRENT_USER, "SOFTWARE\\Google\\Chrome\\NativeMessagingHosts\\com.persepolis.pdmchromewrapper", 0, winreg.KEY_ALL_ACCESS)
+                # set native_message_file as key value
+                winreg.SetValueEx(gintKey, '', 0,winreg.REG_SZ, native_message_file)
+                # close connection to pdmchromewrapper
+                winreg.CloseKey(gintKey)
+                return True
+            except WindowsError:
+                return False
         elif browser == 'firefox':
-            os.system(
-                r'REG ADD "HKEY_CURRENT_USER\SOFTWARE\Mozilla\NativeMessagingHosts\com.persepolis.pdmchromewrapper" /ve /d "' +
-                native_message_file + '" /f')
+            try:
+                # create pdmchromewrapper key under NativeMessagingHosts for firefox
+                winreg.CreateKey(winreg.HKEY_CURRENT_USER, "SOFTWARE\\Mozilla\\NativeMessagingHosts\\com.persepolis.pdmchromewrapper")
+                # open a connection to pdmchromewrapper key for firefox
+                fintKey = winreg.OpenKey(winreg.HKEY_CURRENT_USER, "SOFTWARE\\Mozilla\\NativeMessagingHosts\\com.persepolis.pdmchromewrapper", 0, winreg.KEY_ALL_ACCESS)
+                # set native_message_file as key value
+                winreg.SetValueEx(fintKey, '', 0,winreg.REG_SZ, native_message_file)
+                # close connection to pdmchromewrapper
+                winreg.CloseKey(fintKey)
+                return True
+            except WindowsError:
+                return False
