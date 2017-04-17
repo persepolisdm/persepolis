@@ -101,7 +101,7 @@ def browserIntegration(browser):
         exec_path = exec_path.replace('\\', r'\\')
 
         native_message_folder = os.path.join(
-            home_address, 'AppData\Local\persepolis_download_manager')
+            home_address, 'AppData\Local\persepolis_download_manager', str(browser))
 
     # WebExtension native hosts file prototype
     webextension_json_connector = {
