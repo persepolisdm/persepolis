@@ -499,7 +499,7 @@ class MainWindow_Ui(QMainWindow):
         fileMenu.addAction(self.openDownloadFolderAction)
 
         self.deleteFileAction = QAction(QIcon(
-            icons + 'trash'), 'delete file', self, statusTip='delete file', triggered=self.deleteFile)
+            icons + 'trash'), 'Delete file', self, statusTip='Delete file', triggered=self.deleteFile)
         fileMenu.addAction(self.deleteFileAction)
 
         self.openDefaultDownloadFolderAction = QAction(QIcon(
