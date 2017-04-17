@@ -7,13 +7,13 @@
 + For GNU/Linux and FreeBSD and PCBSD and Mac and Windows.
 
 #### GNU/Linux
-![ScreenShot](http://github.io/img/screen/persepolis.png)
+![ScreenShot](https://persepolisdm.github.io/img/screen/persepolis.png)
 
 #### Mac OSX
-![ScreenShot](http://github.io/img/screen/mac.png)
+![ScreenShot](https://persepolisdm.github.io/img/screen/mac.png)
 
 #### MicroSoft Windows
-![ScreenShot](http://github.io/img/screen/windows.png)
+![ScreenShot](https://persepolisdm.github.io/img/screen/windows.png)
 
 ### Persepolis Website
 
