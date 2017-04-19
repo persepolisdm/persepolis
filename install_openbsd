@@ -1,0 +1,85 @@
+#!/bin/sh
+# install Persepolis Download Manager
+
+#    This program is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation, either version 3 of the License, or
+#    (at your option) any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+#
+#    You should have received a copy of the GNU General Public License
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+clear screen
+
+echo "Checking dependencies"
+aria2c --version 1>/dev/null
+if [ "$?" -ne "0" ];then
+    echo "aria2c not installed"
+    echo "Installation Failed!"
+    exit
+fi
+
+install_path=`pwd`
+cd "$install_path"
+chmod +x "./checkpyqt.py"
+chmod +x "./check_request.py"
+
+python3.6 ./checkpyqt.py
+if [ "$?" -ne "0" ];then
+    echo "pyqt5 not installed"
+    echo "Installation Failed!"
+    exit
+fi
+
+python3.6 ./check_request.py
+if [ "$?" -ne "0" ];then
+    echo "python3-requests not installed"
+    echo "Installation Failed!"
+    exit
+fi
+
+if [ "$os_type" != "mac" ];then 
+    notify-send --version 1>/dev/null
+    if [ "$?" -ne "0" ];then
+        echo "libnotify-bin not installed"
+        echo "Installation Failed!"
+        exit
+    fi
+
+    paplay --version 1>/dev/null
+    if [ "$?" -ne "0" ];then
+        echo "pulseaudio not installed"
+        echo "Installation Failed!"
+        exit
+    fi
+fi
+
+program_path="/usr/local/share/persepolis"
+exec_path='/usr/local/bin/'
+chmod +x "./files/persepolisdm"
+chmod +x "./persepolis_bsd"
+chmod +x "./persepolis.desktop"
+
+
+gzip -9 ./man/persepolis.1
+
+doas rm -rf "$program_path"
+doas mkdir -p "$program_path"
+doas cp -rf  ./files/* "$program_path/"
+doas cp -rf "./persepolis_bsd" "$exec_path/persepolis"
+doas cp -rf "./persepolis.desktop" "/usr/local/share/applications/"
+doas rm -rf "/usr/local/share/applications/Persepolis Download Manager.desktop"
+doas cp -rf "./files/icon.svg" "/usr/local/share/pixmaps/persepolis.svg"
+doas mv -f "man/persepolis.1.gz" "/usr/local/man/man1/persepolis.1.gz"
+if [ "$?" -eq "0" ];then
+    echo "Installation compeleted!"
+else
+    echo "Installation Failed"
+fi
+exit
+
