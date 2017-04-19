@@ -69,7 +69,7 @@ fi
 program_path="/usr/local/share/persepolis"
 exec_path='/usr/local/bin/'
 chmod +x "./files/persepolisdm"
-chmod +x "./persepolis_bsd"
+chmod +x "./persepolis_freebsd"
 chmod +x "./persepolis.desktop"
 
 
@@ -78,7 +78,7 @@ gzip -k -9 ./man/persepolis.1
 sudo rm -rf "$program_path"
 sudo mkdir -p "$program_path"
 sudo cp -rf  ./files/* "$program_path/"
-sudo cp -rf "./persepolis_bsd" "$exec_path/persepolis"
+sudo cp -rf "./persepolis_freebsd" "$exec_path/persepolis"
 sudo cp -rf "./persepolis.desktop" "/usr/local/share/applications/"
 sudo rm -rf "/usr/local/share/applications/Persepolis Download Manager.desktop"
 sudo cp -rf "./files/icon.svg" "/usr/local/share/pixmaps/persepolis.svg"
