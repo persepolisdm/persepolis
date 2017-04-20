@@ -60,15 +60,13 @@ if [ "$os_type" != "mac" ];then
 
     paplay --version 1>/dev/null
     if [ "$?" -ne "0" ];then
-        echo "pulseaudio not installed"
-        echo "Installation Failed!"
-        exit
+        echo "paplay not installed"
     fi
 fi
 
 program_path="/usr/share/persepolis"
 exec_path='/usr/bin/'
-chmod +x "./files/persepolisdm"
+chmod +x "./files/Persepolis Download Manager"
 chmod +x "./persepolis"
 chmod +x "./persepolis.desktop"
 

@@ -15,4 +15,4 @@
 
 cd "/usr/local/share/persepolis"
 
-python3.6 ./persepolisdm "$@" 
+python3.6 ./Persepolis\ Download\ Manager "$@" 

@@ -48,8 +48,13 @@ def playNotification(file):
     volume = int((65536 * volume_percent)/100)
 
     if enable_notification == 'yes':
-        if os_type == 'Linux':
-            os.system("paplay --volume='" + str(volume) + "' '" + file + "' &")
+        if os_type == 'Linux' or os_type == 'FreeBSD' or os_type == 'OpenBSD':
+            answer = os.system("paplay --volume='" + str(volume) + "' '" + file + "' &")
+            if answer != 0:
+                print("paplay not installed!Install it for playing sound notification")
+                logger.sendToLog(
+                    "paplay not installed!Install it for playing sound notification", "WARNING")
+
 
         elif os_type == 'Darwin':
             os.system("osascript -e 'set volume alert volume " +
@@ -60,8 +65,3 @@ def playNotification(file):
             CREATE_NO_WINDOW = 0x08000000
             subprocess.Popen(['rundll32', 'user32.dll,MessageBeep'],
                              shell=False, creationflags=CREATE_NO_WINDOW)
-
-        elif os_type == 'FreeBSD' or os_type == 'OpenBSD':
-            print('sorry!no notification sound available for now in FreeBSD and OpenBSD')
-            logger.sendToLog(
-                "Sorry, no notification sound available for now in FreeBSD and OpenBSD", "WARNING")

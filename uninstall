@@ -16,6 +16,7 @@
 
 sudo rm -rf /usr/share/persepolis
 sudo rm -rf /usr/bin/persepolis
+sudo rm -rf /usr/local/bin/persepolis
 sudo rm -rf /usr/share/pixmaps/persepolis.svg
 sudo rm -rf "/usr/share/applications/persepolis.desktop"
 sudo rm -rf "$HOME/.config/persepolis_download_manager/"

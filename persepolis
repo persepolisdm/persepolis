@@ -15,4 +15,6 @@
 
 cd "/usr/share/persepolis"
 
-./persepolisdm "$@" 
+./Persepolis\ Download\ Manager "$@" 
+
+
