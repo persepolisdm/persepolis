@@ -4,7 +4,7 @@
  
 + Version : 2.4.2
 + Written in PYQT5.
-+ For GNU/Linux and FreeBSD and PCBSD and Mac and Windows.
++ For GNU/Linux and FreeBSD and PCBSD and OpenBSD and Mac and Windows.
 
 #### GNU/Linux
 ![ScreenShot](https://persepolisdm.github.io/img/screen/persepolis.png)
@@ -40,28 +40,27 @@ If you have any question and if you want to report a bug or suggest a new featur
 
 ## Contact us
 
-Persepolis code developer : **Alireza Amirsamimi**
+Persepolis lead developer and manager : **Alireza Amirsamimi**
 https://github.com/alireza-amirsamimi
 alireza.amirsamimi@ubuntu.ir
 
-Arch repository maintainer : **Mohammadreza Abdollahzadeh**
+Arch Linux and BSD support : **Mohammadreza Abdollahzadeh**
 https://github.com/morealaz
 morealaz@gmail.com
 
-Launchpad repository maintainer : **Mostafa Asadi**
+Ubuntu and Debian and Windows support : **Mostafa Asadi**
 https://github.com/mostafaasadi
 mostafaasadi73@gmail.com
 
-MacOS X users support : **MohammadAmin Vahedinia**
+Mac OSX support : **MohammadAmin Vahedinia**
 https://github.com/Mr0Null
 mohammadamin@beeit.ir
 
-
-Persepolis website developer : **Sadegh Alirezaie**
+Persepolis website support : **Sadegh Alirezaie**
 https://github.com/Alirezaies
 sadegh@webgo.ir
 
-Chrome/Chromium Integration : **Jafar Akhondali**
+Chrome/Chromium and Firefox addons support: **Jafar Akhondali**
 https://github.com/JafarAkhondali
 jafar.akhondali@yahoo.com
 
