@@ -44,6 +44,13 @@ def browserIntegration(browser):
             native_message_folder = home_address + \
                                     '/.mozilla/native-messaging-hosts'
 
+        elif browser == 'vivaldi':
+            native_message_folder = home_address + \
+                                    '/.config/vivaldi/NativeMessagingHosts'
+
+        elif browser == 'opera':
+            native_message_folder = home_address + \
+                                    '/.config/opera/NativeMessagingHosts'
 
     # for FreeBSD and OpenBSD
     elif os_type == 'FreeBSD' or os_type == 'OpenBSD':
@@ -85,6 +92,13 @@ def browserIntegration(browser):
             native_message_folder = home_address + \
                                     '/Library/Application Support/Mozilla/NativeMessagingHosts'
 
+        elif browser == 'vivaldi':
+            native_message_folder = home_address + \
+                                    '/Library/Application Support/Vivaldi/NativeMessagingHosts'
+
+        elif browser == 'opera':
+            native_message_folder = home_address + \
+                                    '/Library/Application Support/Opera/NativeMessagingHosts/'
 
     # for MicroSoft Windows os (windows 7 , ...)
     elif os_type == 'Windows':
