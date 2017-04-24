@@ -68,6 +68,14 @@ def browserIntegration(browser):
         elif browser == 'firefox':
             native_message_folder = home_address + \
                                     '/.mozilla/native-messaging-hosts'
+        elif browser == 'vivaldi':
+            native_message_folder = home_address + \
+                                    '/.config/vivaldi/NativeMessagingHosts'
+
+        elif browser == 'opera':
+            native_message_folder = home_address + \
+                                    '/.config/opera/NativeMessagingHosts'
+
 
 
     # for Mac OSX
