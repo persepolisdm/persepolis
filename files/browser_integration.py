@@ -161,7 +161,7 @@ def browserIntegration(browser):
     else:
         import winreg
         # add the key to the windows registry
-        if browser == 'chrome' or browser == 'chromium':
+        if browser == 'chrome' or browser == 'chromium' or browser == 'opera':
             try:
                 # create pdmchromewrapper key under NativeMessagingHosts
                 winreg.CreateKey(winreg.HKEY_CURRENT_USER, "SOFTWARE\\Google\\Chrome\\NativeMessagingHosts\\com.persepolis.pdmchromewrapper")
