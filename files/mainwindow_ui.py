@@ -342,6 +342,10 @@ class MainWindow_Ui(QMainWindow):
         queue_panel_verticalLayout.addWidget(self.limit_after_frame)
         category_tree_verticalLayout.addWidget(self.queue_panel_widget)
 
+# keep_awake_checkBox
+        self.keep_awake_checkBox = QCheckBox(self)
+        queue_panel_verticalLayout.addWidget(self.keep_awake_checkBox)
+
         self.category_tree_qwidget.setLayout(category_tree_verticalLayout)
         tabels_splitter.addWidget(self.category_tree_qwidget)
 
@@ -609,6 +613,11 @@ class MainWindow_Ui(QMainWindow):
         self.after_checkBox.setText("After download")
         self.after_comboBox.setItemText(0,  "Shut Down")
 
+        self.keep_awake_checkBox.setText("Keep system awake!")
+        self.keep_awake_checkBox.setToolTip(
+            "<html><head/><body><p>This option is preventing system from going to sleep.\
+            This is necessary if your power manager is suspending system automatically. </p></body></html>")
+ 
         self.after_pushButton.setText("Apply")
 
     def changeIcon(self, icons):

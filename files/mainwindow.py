@@ -17,7 +17,7 @@ import sys
 import ast
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import QApplication,  QAction, QFileDialog, QSystemTrayIcon, QMenu, QApplication, QInputDialog, QMessageBox
-from PyQt5.QtGui import QIcon, QColor, QPalette, QStandardItem
+from PyQt5.QtGui import QIcon, QColor, QPalette, QStandardItem, QCursor
 from PyQt5.QtCore import QCoreApplication, QRect, QSize, QPoint, QThread, pyqtSignal, Qt
 import os
 from time import sleep
@@ -597,6 +597,46 @@ class ShutDownThread(QThread):
         shutDown(self.gid, self.password)
 
 
+# this thread is keeping system awake! because if system sleeps , then internet connection is disconnected!
+# stxariategy is simple! a loop is checking mouse position every 60 seconds. 
+# if mouse position didn't change, cursor is moved by QCursor.setPos() (see keepAwake method) ! so this is keeping system awake! 
+# 
+class KeepAwakeThread(QThread):
+
+    KEEPSYSTEMAWAKESIGNAL = pyqtSignal(bool)
+
+    def __init__(self):
+        QThread.__init__(self)
+
+    def run(self):
+        while True:
+
+            while shutdown_notification == 0 and aria_startup_answer != 'ready':
+                sleep(1)
+
+            old_cursor_array = [0, 0]
+            add = True
+
+            while shutdown_notification != 1:
+                sleep(60)
+
+                # finding cursor position
+                cursor_position = QCursor.pos()
+                new_cursor_array = [int(cursor_position.x()) , int(cursor_position.y())]
+
+                if new_cursor_array == old_cursor_array : 
+                # So cursor position didn't change for 60 second.
+                    if add : # Moving mouse position one time +10 pixel and one time -10 pixel! 
+                        self.KEEPSYSTEMAWAKESIGNAL.emit(add)
+                        add = False
+                    else:
+                        self.KEEPSYSTEMAWAKESIGNAL.emit(add)
+                        add = True
+
+                old_cursor_array = new_cursor_array
+
+ 
+
 class MainWindow(MainWindow_Ui):
     def __init__(self, start_in_tray, persepolis_main, persepolis_setting):
         super().__init__(persepolis_setting)
@@ -792,6 +832,13 @@ class MainWindow(MainWindow_Ui):
         self.threadPool[3].SHOWMAINWINDOWSIGNAL.connect(self.showMainWindow)
         self.threadPool[3].RECONNECTARIASIGNAL.connect(self.reconnectAria)
 
+# keepAwake
+        keep_awake = KeepAwakeThread()
+        self.threadPool.append(keep_awake)
+        self.threadPool[len(self.threadPool) - 1].start()
+        self.threadPool[len(self.threadPool) - 1].KEEPSYSTEMAWAKESIGNAL.connect(self.keepAwake)
+
+
 # finding number or row that user selected!
         self.download_table.itemSelectionChanged.connect(self.selectedRow)
 
@@ -843,6 +890,14 @@ class MainWindow(MainWindow_Ui):
         # It will be enabled after aria2 startup!(see startAriaMessage method)
         # .This line added for solving crash problems on startup
         self.category_tree_qwidget.setEnabled(False)
+
+# keep_awake_checkBox
+        if str(self.persepolis_setting.value('settings/awake')) == 'yes':
+            self.keep_awake_checkBox.setChecked(True)
+        else:
+            self.keep_awake_checkBox.setChecked(False)
+
+        self.keep_awake_checkBox.toggled.connect(self.keepAwakeCheckBoxToggled)
 
 
 # finding windows_size
@@ -1019,6 +1074,31 @@ class MainWindow(MainWindow_Ui):
     def aria2Disconnected(self):
         global aria2_disconnected
         aria2_disconnected = 1
+
+
+# read KeepAwakeThread for more information
+    def keepAwake(self, add):
+        # finding cursor position
+        cursor_position = QCursor.pos()
+        cursor_array = [int(cursor_position.x()) , int(cursor_position.y())]
+
+        if add == True and self.keep_awake_checkBox.isChecked() == True: # Moving mouse position one time +1 pixel and one time -1 pixel! 
+            QCursor.setPos(cursor_array[0] + 1, cursor_array[1] + 1)
+        else:
+            QCursor.setPos(cursor_array[0] - 1, cursor_array[1] - 1)
+
+# if keep_awake_checkBox toggled by user , this method is called.
+    def keepAwakeCheckBoxToggled(self, checkbox):
+        if self.keep_awake_checkBox.isChecked():
+            self.persepolis_setting.setValue('settings/awake', 'yes')
+            self.keep_awake_checkBox.setChecked(True)
+        else:
+            self.persepolis_setting.setValue('settings/awake', 'no')
+            self.keep_awake_checkBox.setChecked(False)
+
+        self.persepolis_setting.sync()
+
+
 
     def checkDownloadInfo(self, gid):
 

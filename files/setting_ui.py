@@ -247,6 +247,10 @@ class Setting_Ui(QWidget):
         self.startup_checkbox = QCheckBox()
         self.verticalLayout_3.addWidget(self.startup_checkbox)
 
+# keep system awake
+        self.keep_awake_checkBox = QCheckBox()
+        self.verticalLayout_3.addWidget(self.keep_awake_checkBox)
+
 # columns_tab
         self.columns_tab = QWidget()
         layoutWidget4 = QWidget(self.columns_tab)
@@ -352,6 +356,11 @@ class Setting_Ui(QWidget):
             "Show download's progress window")
         self.startup_checkbox.setText("Run Persepolis at startup")
 
+        self.keep_awake_checkBox.setText("Keep system awake!")
+        self.keep_awake_checkBox.setToolTip(
+            "<html><head/><body><p>This option is preventing system from going to sleep.\
+            This is necessary if your power manager is suspending system automatically. </p></body></html>")
+ 
         self.setting_tabWidget.setTabText(
             self.setting_tabWidget.indexOf(self.style_tab),  "Preferences")
 

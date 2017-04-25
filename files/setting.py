@@ -186,6 +186,12 @@ class PreferencesWindow(Setting_Ui):
         
         self.fontCheckBoxState(self.font_checkBox)
 
+# keep_awake_checkBox
+        if str(self.persepolis_setting.value('awake')) == 'yes':
+            self.keep_awake_checkBox.setChecked(True)
+        else:
+            self.keep_awake_checkBox.setChecked(False)
+
 # columns_tab
         if str(self.persepolis_setting.value('column0')) == 'yes':
             self.column0_checkBox.setChecked(True)
@@ -332,7 +338,7 @@ class PreferencesWindow(Setting_Ui):
         download_path_default = os.path.join(
             str(home_address), 'Downloads', 'Persepolis')
 
-        self.setting_dict = {'custom-font': 'no', 'column0': 'yes', 'column1': 'yes', 'column2': 'yes', 'column3': 'yes', 'column4': 'yes', 'column5': 'yes', 'column6': 'yes', 'column7': 'yes', 'column10': 'yes', 'column11': 'yes', 'column12': 'yes',
+        self.setting_dict = { 'awake': 'no', 'custom-font': 'no', 'column0': 'yes', 'column1': 'yes', 'column2': 'yes', 'column3': 'yes', 'column4': 'yes', 'column5': 'yes', 'column6': 'yes', 'column7': 'yes', 'column10': 'yes', 'column11': 'yes', 'column12': 'yes',
                              'subfolder': 'yes', 'startup': 'no', 'show-progress': 'yes', 'show-menubar': 'no', 'show-sidepanel': 'yes', 'rpc-port': 6801, 'notification': 'Native notification', 'after-dialog': 'yes', 'tray-icon': 'yes',
                              'max-tries': 5, 'retry-wait': 0, 'timeout': 60, 'connections': 16, 'download_path_temp': download_path_temp_default, 'download_path': download_path_default, 'sound': 'yes', 'sound-volume': 100, 'style': 'Fusion',
                              'color-scheme': 'Persepolis Dark Red', 'icons': 'Archdroid-Red', 'font': 'Ubuntu', 'font-size': 9}
@@ -404,6 +410,9 @@ class PreferencesWindow(Setting_Ui):
 
 # run persepolis at startup checkBox
         self.startup_checkbox.setChecked(False)
+
+# keep_awake_checkBox
+        self.keep_awake_checkBox.setChecked(False)
 
 # columns_tab
         self.column0_checkBox.setChecked(True)
@@ -558,6 +567,14 @@ class PreferencesWindow(Setting_Ui):
 
                 startup.removestartup()  # removing Persepolis from system's startup
 
+
+# keep_awake_checkBox
+        if self.keep_awake_checkBox.isChecked():
+            self.persepolis_setting.setValue('awake', 'yes')
+            self.parent.keep_awake_checkBox.setChecked(True)
+        else:
+            self.persepolis_setting.setValue('awake', 'no')
+            self.parent.keep_awake_checkBox.setChecked(False)
 
 # this section  creates temporary download folder and download folder and
 # download sub folders if they did not existed.
