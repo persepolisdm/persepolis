@@ -76,7 +76,6 @@ class ChromiumIntegrationWindow(QWidget):
         chromium_verticalLayout.addWidget(self.chromium_label)
 
     # chrome
-        chrome_verticalLayout = QVBoxLayout()
 
         self.chrome_pushButton = QPushButton()
         self.chrome_pushButton.clicked.connect(
@@ -84,8 +83,8 @@ class ChromiumIntegrationWindow(QWidget):
 
         self.chrome_label = QLabel()
 
-        chrome_verticalLayout.addWidget(self.chrome_pushButton)
-        chrome_verticalLayout.addWidget(self.chrome_label)
+        chromium_verticalLayout.addWidget(self.chrome_pushButton)
+        chromium_verticalLayout.addWidget(self.chrome_label)
 
     # Firefox
         firefox_verticalLayout = QVBoxLayout()
@@ -95,17 +94,44 @@ class ChromiumIntegrationWindow(QWidget):
             partial(self.chromiumPressed, 'firefox'))
 
         self.firefox_label = QLabel()
-
         firefox_verticalLayout.addWidget(self.firefox_pushButton)
         firefox_verticalLayout.addWidget(self.firefox_label)
+
+
+    # opera
+        opera_verticalLayout = QVBoxLayout()
+
+        self.opera_pushButton = QPushButton()
+        self.opera_pushButton.clicked.connect(
+            partial(self.chromiumPressed, 'opera'))
+
+        self.opera_label = QLabel()
+
+        opera_verticalLayout.addWidget(self.opera_pushButton)
+        opera_verticalLayout.addWidget(self.opera_label)
+
+    # vivaldi
+
+        self.vivaldi_pushButton = QPushButton()
+        self.vivaldi_pushButton.clicked.connect(
+            partial(self.chromiumPressed, 'vivaldi'))
+
+        self.vivaldi_label = QLabel()
+
+        opera_verticalLayout.addWidget(self.vivaldi_pushButton)
+        opera_verticalLayout.addWidget(self.vivaldi_label)
+
+
+
+        
 
 
     # chromium_chrome_horizontalLayout
         chromium_chrome_horizontalLayout = QHBoxLayout()
 
         chromium_chrome_horizontalLayout.addLayout(chromium_verticalLayout)
-        chromium_chrome_horizontalLayout.addLayout(chrome_verticalLayout)
         chromium_chrome_horizontalLayout.addLayout(firefox_verticalLayout)
+        chromium_chrome_horizontalLayout.addLayout(opera_verticalLayout)
 
         window_verticalLayout.addLayout(chromium_chrome_horizontalLayout)
 
@@ -139,6 +165,8 @@ class ChromiumIntegrationWindow(QWidget):
         self.chrome_pushButton.setText('Chrome')
         self.chromium_pushButton.setText('Chromium')
         self.firefox_pushButton.setText('Firefox')
+        self.opera_pushButton.setText('Opera')
+        self.vivaldi_pushButton.setText('Vivaldi')
 
         self.ok_pushButton.setText('OK')
 
@@ -146,7 +174,7 @@ class ChromiumIntegrationWindow(QWidget):
         size = self.persepolis_setting.value(
             'ChromiumIntegrationWindow/size', QSize(363, 300))
         position = self.persepolis_setting.value(
-            'ChromiumIntegrationWindow/position', QPoint(300, 300))
+            'ChromiumIntegrationWindow/position', QPoint(400, 300))
 
         self.resize(size)
         self.move(position)
@@ -161,6 +189,12 @@ class ChromiumIntegrationWindow(QWidget):
             self.chrome_label.setText('Done!')
         elif browser == 'firefox':
             self.firefox_label.setText('Done!')
+        elif browser == 'opera':
+            self.opera_label.setText('Done!')
+        elif browser == 'vivaldi':
+            self.vivaldi_label.setText('Done!')
+
+
 
     def changeIcon(self, icons):
         icons = ':/' + str(icons) + '/'

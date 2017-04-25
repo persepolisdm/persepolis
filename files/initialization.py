@@ -179,7 +179,7 @@ for folder in folder_list:
 persepolis_setting.endGroup()
 
 # Browser integration for Firefox and chromium and google chrome
-for browser in ['chrome', 'chromium', 'firefox']:
+for browser in ['chrome', 'chromium', 'opera', 'vivaldi', 'firefox']:
     browserIntegration(browser)
 
 # compatibility

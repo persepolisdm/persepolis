@@ -598,7 +598,7 @@ class ShutDownThread(QThread):
 
 
 # this thread is keeping system awake! because if system sleeps , then internet connection is disconnected!
-# stxariategy is simple! a loop is checking mouse position every 60 seconds. 
+# stxariategy is simple! a loop is checking mouse position every 20 seconds. 
 # if mouse position didn't change, cursor is moved by QCursor.setPos() (see keepAwake method) ! so this is keeping system awake! 
 # 
 class KeepAwakeThread(QThread):
@@ -618,7 +618,7 @@ class KeepAwakeThread(QThread):
             add = True
 
             while shutdown_notification != 1:
-                sleep(60)
+                sleep(20)
 
                 # finding cursor position
                 cursor_position = QCursor.pos()

@@ -122,8 +122,13 @@ def browserIntegration(browser):
         # "\" in address
         exec_path = exec_path.replace('\\', r'\\')
 
-        native_message_folder = os.path.join(
-            home_address, 'AppData\Local\persepolis_download_manager', str(browser))
+        if browser == 'chrome' or browser == 'chromium' or browser == 'opera' or browser == 'vivaldi':
+            native_message_folder = os.path.join(
+                home_address, 'AppData\Local\persepolis_download_manager', 'chrome')
+        else:
+            native_message_folder = os.path.join(
+                home_address, 'AppData\Local\persepolis_download_manager', 'firefox')
+ 
 
     # WebExtension native hosts file prototype
     webextension_json_connector = {
@@ -134,7 +139,7 @@ def browserIntegration(browser):
     }
 
     # Add chrom* keys
-    if browser == 'chrome' or browser == 'chromium':
+    if browser == 'chrome' or browser == 'chromium' or browser == 'opera' or browser == 'vivaldi':
         webextension_json_connector["allowed_origins"] = [ "chrome-extension://legimlagjjoghkoedakdjhocbeomojao/" ]
 
     # Add firefox keys
@@ -161,7 +166,7 @@ def browserIntegration(browser):
     else:
         import winreg
         # add the key to the windows registry
-        if browser == 'chrome' or browser == 'chromium' or browser == 'opera':
+        if browser == 'chrome' or browser == 'chromium' or browser == 'opera' or browser == 'vivaldi':
             try:
                 # create pdmchromewrapper key under NativeMessagingHosts
                 winreg.CreateKey(winreg.HKEY_CURRENT_USER, "SOFTWARE\\Google\\Chrome\\NativeMessagingHosts\\com.persepolis.pdmchromewrapper")
