@@ -14,7 +14,7 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from newopen import Open, readList, writeList, readDict
-from after_download_ui import AfterDownloadWindow_Ui
+from src.gui.after_download_ui import AfterDownloadWindow_Ui
 from PyQt5 import QtCore
 from PyQt5.QtCore import QSize, QPoint
 import os

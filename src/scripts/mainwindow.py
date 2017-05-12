@@ -30,13 +30,13 @@ from addlink import AddLinkWindow
 from properties import PropertiesWindow
 from progress import ProgressWindow
 import download
-from mainwindow_ui import MainWindow_Ui, QTableWidgetItem
+from src.gui.mainwindow_ui import MainWindow_Ui, QTableWidgetItem
 from newopen import Open, writeList, readList, readDict
 from play import playNotification
 from bubble import notifySend
 from setting import PreferencesWindow
 from about import AboutWindow
-import icons_resource
+import src.gui.icons_resource
 import spider
 import osCommands
 import logger

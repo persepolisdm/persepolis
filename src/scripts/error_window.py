@@ -18,7 +18,7 @@ from PyQt5.QtWidgets import QWidget, QTextEdit, QVBoxLayout, QHBoxLayout, QPushB
 from PyQt5.QtGui import QIcon
 import os
 from newopen import Open
-import icons_resource
+import src.gui.icons_resource
 import osCommands
 import platform
 

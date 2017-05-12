@@ -23,7 +23,7 @@ from PyQt5.QtWidgets import QWidget
 from PyQt5.QtGui import QIcon
 from PyQt5.QtCore import QSize, QPoint
 from newopen import Open, readDict
-import icons_resource
+import src.gui.icons_resource
 
 home_address = os.path.expanduser("~")
 

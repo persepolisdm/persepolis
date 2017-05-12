@@ -20,7 +20,7 @@ from PyQt5.QtWidgets import QWidget, QSizePolicy
 from PyQt5.QtGui import QIcon
 import ast
 import os
-from newopen import Open
+from src.scripts.newopen import Open
 
 home_address = os.path.expanduser("~")
 

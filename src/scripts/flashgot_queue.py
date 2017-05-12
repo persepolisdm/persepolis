@@ -13,20 +13,22 @@
 #
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-from text_queue_ui import TextQueue_Ui
-from PyQt5 import QtWidgets , QtCore , QtGui
-from PyQt5.QtGui import QIcon
-from PyQt5.QtWidgets import QTableWidgetItem , QFileDialog
-from PyQt5.QtCore import QDir , QPoint , QSize, QThread , pyqtSignal
-from newopen import Open , readDict
-import download
-import ast , os 
-import osCommands, logger
-import spider
+from src.gui.text_queue_ui import TextQueue_Ui
 from functools import partial
+from PyQt5 import QtWidgets, QtCore, QtGui
+from PyQt5.QtGui import QIcon
+from PyQt5.QtWidgets import QTableWidgetItem, QFileDialog
+from PyQt5.QtCore import QPoint, QSize, QThread, pyqtSignal, QDir
+from newopen import Open, readDict
+import download
+import ast
+import os
+import osCommands
+import logger
+import spider
 import platform
 
-# This thread finds filename
+os_type = platform.system()
 
 
 class QueueSpiderThread(QThread):
@@ -37,20 +39,16 @@ class QueueSpiderThread(QThread):
         self.add_link_dictionary = add_link_dictionary
 
     def run(self):
-        try:
+        try :
             filename = spider.queueSpider(self.add_link_dictionary)
             self.QUEUESPIDERRETURNEDFILENAME.emit(filename)
-        except Exception as e:
-            print(e)
+        except:
             print("Spider couldn't find download information")
-            logger.logObj.error(
-                "Spider couldn't find download information", exc_info=True)
+            logger.sendToLog(
+                "Spider couldn't find download information", "ERROR")
 
 
 home_address = os.path.expanduser("~")
-
-os_type = platform.system()
-
 
 # config_folder
 if os_type == 'Linux' or os_type == 'FreeBSD' or os_type == 'OpenBSD':
@@ -67,44 +65,40 @@ elif os_type == 'Windows':
 queues_list_file = os.path.join(config_folder, 'queues_list')
 
 
-class TextQueue(TextQueue_Ui):
-    def __init__(self, parent, file_path, callback, persepolis_setting):
+class FlashgotQueue(TextQueue_Ui):
+    def __init__(self, parent, flashgot_lines, callback, persepolis_setting):
         super().__init__(persepolis_setting)
         self.persepolis_setting = persepolis_setting
         self.callback = callback
-        self.file_path = file_path
         self.parent = parent
+        self.flashgot_lines = flashgot_lines
 
         global icons
         icons = ':/' + \
             str(self.persepolis_setting.value('settings/icons')) + '/'
 
-        # reading text file lines and finding links.
-        f = Open(self.file_path)
-        f_links_list = f.readlines()
-        f.close()
-
-        f_links_list.reverse()
-        # checking links! links must start with http or https or ftp
-        link_list = []
-        for link in f_links_list:
-            text = link.strip()
-            if ("tp:/" in text[2:6]) or ("tps:/" in text[2:7]):
-                link_list.append(text)
+        self.flashgot_lines.reverse()
 
         k = 1
-        for link in link_list:
+        for i in range(len(self.flashgot_lines)):
+            flashgot_add_link_dictionary_str = flashgot_lines[i].strip()
+            flashgot_add_link_dictionary = ast.literal_eval(
+                flashgot_add_link_dictionary_str)
+
+            # adding row to links_table
             self.links_table.insertRow(0)
 
             # file_name
-            file_name = '***'
-            flashgot_add_link_dictionary = {'link': link}
+            if 'out' in flashgot_add_link_dictionary:
+                file_name = str(flashgot_add_link_dictionary['out'])
+            else:
+                file_name = '***'
             # spider is finding file name
-            new_spider = QueueSpiderThread(flashgot_add_link_dictionary)
-            self.parent.threadPool.append(new_spider)
-            self.parent.threadPool[len(self.parent.threadPool) - 1].start()
-            self.parent.threadPool[len(self.parent.threadPool) - 1].QUEUESPIDERRETURNEDFILENAME.connect(
-                partial(self.parent.queueSpiderCallBack, child=self, row_number=len(link_list) - k))
+                new_spider = QueueSpiderThread(flashgot_add_link_dictionary)
+                self.parent.threadPool.append(new_spider)
+                self.parent.threadPool[len(self.parent.threadPool) - 1].start()
+                self.parent.threadPool[len(self.parent.threadPool) - 1].QUEUESPIDERRETURNEDFILENAME.connect(
+                    partial(self.parent.queueSpiderCallBack, child=self, row_number=len(self.flashgot_lines) - k))
             k = k + 1
 
             item = QTableWidgetItem(file_name)
@@ -116,9 +110,16 @@ class TextQueue(TextQueue_Ui):
             # inserting file_name
             self.links_table.setItem(0, 0, item)
 
-            # inserting link
+            # finding link
+            link = str(flashgot_add_link_dictionary['link'])
             item = QTableWidgetItem(str(link))
+
+            # inserting link
             self.links_table.setItem(0, 1, item)
+
+            # inserting add_link_dictionary
+            item = QTableWidgetItem(flashgot_add_link_dictionary_str)
+            self.links_table.setItem(0, 2, item)
 
         # finding queues name and adding them to add_queue_comboBox
         f_queues_list = Open(queues_list_file)
@@ -335,11 +336,9 @@ class TextQueue(TextQueue_Ui):
         connections = self.connections_spinBox.value()
         download_path = self.download_folder_lineEdit.text()
 
-        final_download_path = None
-
         now_date_list = download.nowDate()
 
-        add_link_dictionary = {'referer': None, 'header': None, 'user-agent': None, 'load-cookies': None, 'last_try_date': now_date_list, 'firs_try_date': now_date_list, 'out': None, 'final_download_path': final_download_path, 'start_hour': None, 'start_minute': None,
+        add_link_dictionary = {'referer': None, 'header': None, 'user-agent': None, 'load-cookies': None, 'last_try_date': now_date_list, 'firs_try_date': now_date_list, 'out': None, 'final_download_path': None, 'start_hour': None, 'start_minute': None,
                                'end_hour': None, 'end_minute': None, 'ip': ip, 'port': port, 'proxy_user': proxy_user, 'proxy_passwd': proxy_passwd, 'download_user': download_user, 'download_passwd': download_passwd, 'connections': connections, 'limit': limit, 'download_path': download_path}
 
 # finding checked links in links_table
@@ -347,13 +346,34 @@ class TextQueue(TextQueue_Ui):
         i = 0
         for row in range(self.links_table.rowCount()):
             item = self.links_table.item(row, 0)
-            if (item.checkState() == 2):
+            if (item.checkState() == 2):  # it means item is checked
                 link = self.links_table.item(row, 1).text()
                 self.add_link_dictionary_list.append(
                     add_link_dictionary.copy())
                 self.add_link_dictionary_list[i]['link'] = str(link)
-                self.add_link_dictionary_list[i]['out'] = self.links_table.item(
+
+                flashgot_add_link_dictionary_str = self.links_table.item(
+                    row, 2).text()
+                flashgot_add_link_dictionary = ast.literal_eval(
+                    flashgot_add_link_dictionary_str)
+
+                if not ('referer' in flashgot_add_link_dictionary):
+                    flashgot_add_link_dictionary['referer'] = None
+
+                if not ('header' in flashgot_add_link_dictionary):
+                    flashgot_add_link_dictionary['header'] = None
+
+                if not('user-agent' in flashgot_add_link_dictionary):
+                    flashgot_add_link_dictionary['user-agent'] = None
+
+                if not('load-cookies' in flashgot_add_link_dictionary):
+                    flashgot_add_link_dictionary['load-cookies'] = None
+
+                flashgot_add_link_dictionary['out'] = self.links_table.item(
                     row, 0).text()
+
+                for j in flashgot_add_link_dictionary.keys():
+                    self.add_link_dictionary_list[i][j] = flashgot_add_link_dictionary[j]
 
                 i = i + 1
 

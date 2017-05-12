@@ -19,7 +19,7 @@ from PyQt5.QtGui import QIcon, QStandardItemModel, QStandardItem
 from PyQt5.QtCore import QCoreApplication, QRect, QSize, Qt
 import ast
 import os
-from newopen import Open
+from src.scripts.newopen import Open
 import icons_resource
 
 
