@@ -41,16 +41,31 @@ elif os_type == 'Windows':
 # and use playNotification function in play.py file for playing sound
 # notifications
 def notifySend(message1, message2, time, sound, systemtray=None):
+    cwd = os.path.abspath(__file__)
+    scripts_path = os.path.dirname(cwd)
+    src_path = os.path.dirname(scripts_path)
+    notifications_path = os.path.join(src_path, 'notifications')
+
     if sound == 'ok':
-        playNotification('notifications/ok.ogg')
+        file = os.path.join(notifications_path, 'ok.ogg')
+        playNotification(str(file))
+
     elif sound == 'fail':
-        playNotification('notifications/fail.ogg')
+        file = os.path.join(notifications_path, 'fail.ogg')
+        playNotification(str(file))
+
     elif sound == 'warning':
-        playNotification('notifications/you.ogg')
+        file = os.path.join(notifications_path, 'you.ogg')
+        playNotification(str(file))
+
     elif sound == 'critical':
-        playNotification('notifications/connection.ogg')
+        file = os.path.join(notifications_path, 'connection.ogg')
+        playNotification(str(file))
+
     elif sound == 'queue':
-        playNotification('notifications/queue.ogg')
+        file = os.path.join(notifications_path, 'queue.ogg')
+        playNotification(str(file))
+
 
     # load settings
     persepolis_setting = QSettings('persepolis_download_manager', 'persepolis')

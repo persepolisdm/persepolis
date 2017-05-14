@@ -66,7 +66,12 @@ class AfterDownloadWindow(AfterDownloadWindow_Ui):
         size = "<b>Size</b> : " + str(download_info_file_list[2])
         self.size_label.setText(size)
 # play notifications
-        playNotification('notifications/ok.ogg')
+        cwd = os.path.abspath(__file__)
+        scripts_path = os.path.dirname(cwd)
+        src_path = os.path.dirname(scripts_path)
+        notifications_path = os.path.join(src_path, 'notifications', 'ok.ogg')
+
+        playNotification(str(notifications_path))
 
 # disabling link_lineEdit and save_as_lineEdit
         self.link_lineEdit.setEnabled(False)
