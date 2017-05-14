@@ -14,10 +14,24 @@
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from newopen import Open
-import osCommands
-import os
 import sys
+import os
+
+cwd = os.path.abspath(__file__)
+test_dir = os.path.dirname(cwd)
+parent_dir = os.path.dirname(test_dir) 
+src_path = os.path.join(parent_dir , 'src')
+scripts_path = os.path.join(src_path, 'scripts')
+gui_path = os.path.join(src_path, 'gui')
+
+sys.path.insert(0, parent_dir)
+sys.path.insert(0, src_path)
+sys.path.insert(0, scripts_path)
+sys.path.insert(0, gui_path)
+
+
+from src.scripts.newopen import Open
+import src.scripts.osCommands
 import time
 import ast
 import argparse
@@ -80,8 +94,8 @@ else: #for windows
         lock_file_validation = True
 
 if lock_file_validation: 
-    import initialization
-    from mainwindow import MainWindow
+    import src.scripts.initialization
+    from src.scripts.mainwindow import MainWindow
 
 
     if os_type == 'Linux' or os_type == 'FreeBSD'  or os_type == 'OpenBSD' : # setting "Persepolis Download Manager" name for this process in linux and bsd 
@@ -95,10 +109,10 @@ if lock_file_validation:
 from PyQt5.QtWidgets import QApplication  
 from PyQt5.QtGui import QFont   
 from PyQt5.QtCore import QCoreApplication , QSettings
-from palettes import DarkRedPallete , DarkBluePallete , ArcDarkRedPallete , ArcDarkBluePallete , LightRedPallete , LightBluePallete
-from bubble import notifySend
-import osCommands
-from error_window import ErrorWindow
+from src.gui.palettes import DarkRedPallete , DarkBluePallete , ArcDarkRedPallete , ArcDarkBluePallete , LightRedPallete , LightBluePallete
+from src.scripts.bubble import notifySend
+import src.scripts.osCommands
+from src.scripts.error_window import ErrorWindow
 import traceback
 
 
