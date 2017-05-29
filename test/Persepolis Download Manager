@@ -59,7 +59,7 @@ for path in [parent_dir, src_path, scripts_path, gui_path]:
 
 
 from src.scripts.newopen import Open
-import src.scripts.osCommands
+from src.scripts import osCommands
 import time
 import ast
 import argparse
