@@ -70,6 +70,7 @@ LONG_DESCRIPTION = f.readlines()
 
 f.close()
 
+
 # finding current directory
 cwd = os.path.abspath(__file__)
 setup_dir = os.path.dirname(cwd)
@@ -115,4 +116,9 @@ setup(
         ('share/pixmaps/', ['icons/icon.svg']),
         ('bin/', ['bin/persepolis'])
         ],
+    entry_points={
+        'console_scripts': [
+              'persepolis = persepolis.__main__:main'
+        ]
+    }
 )
