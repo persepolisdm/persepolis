@@ -88,7 +88,7 @@ for folder in [src_pycache, gui_pycache, scripts_pycache]:
 
 # Creating man page file
 persepolis_man_page = os.path.join(setup_dir, 'man', 'persepolis.1')
-os.system('gzip -k -9 "'
+os.system('gzip -f -k -9 "'
         + persepolis_man_page
         + '"')
 print('man page file is generated!')
