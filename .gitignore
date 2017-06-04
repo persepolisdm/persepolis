@@ -2,3 +2,6 @@ __pycache__/
 *.pyc
 .env
 *.orig
+root/
+build/
+persepolis.egg-info/

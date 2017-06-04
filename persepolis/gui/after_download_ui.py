@@ -18,7 +18,7 @@ from PyQt5.QtWidgets import QCheckBox , QWidget , QVBoxLayout , QHBoxLayout , QP
 from PyQt5.QtGui import QIcon
 import ast
 import os
-from src.scripts.newopen import Open
+from persepolis.scripts.newopen import Open
 import icons_resource
 
 home_address = os.path.expanduser("~")

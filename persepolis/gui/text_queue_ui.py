@@ -17,7 +17,7 @@
 from PyQt5 import QtWidgets, QtGui, QtCore
 from PyQt5.QtWidgets import QPushButton, QApplication, QWidget, QTabWidget, QVBoxLayout, QTableWidget, QAbstractItemView, QLabel, QLineEdit, QHBoxLayout, QSpinBox, QComboBox, QFrame, QCheckBox, QGridLayout
 from PyQt5.QtGui import QIcon
-from src.scripts.newopen import Open
+from persepolis.scripts.newopen import Open
 import os
 import ast
 

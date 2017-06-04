@@ -17,7 +17,7 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import QWidget, QSizePolicy,  QInputDialog
 from PyQt5.QtCore import QSize, QPoint, QThread
-from src.gui.progress_ui import ProgressWindow_Ui
+from persepolis.gui.progress_ui import ProgressWindow_Ui
 import os
 import time
 import ast

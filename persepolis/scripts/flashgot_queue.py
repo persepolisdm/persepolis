@@ -13,7 +13,7 @@
 #
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-from src.gui.text_queue_ui import TextQueue_Ui
+from persepolis.gui.text_queue_ui import TextQueue_Ui
 from functools import partial
 from PyQt5 import QtWidgets, QtCore, QtGui
 from PyQt5.QtGui import QIcon

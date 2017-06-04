@@ -1,54 +1,23 @@
-# -*- coding: utf-8 -*-
+#!/usr/bin/env python
+# coding: utf-8
 
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU General Public License as published by
-#    the Free Software Foundation, either version 3 of the License, or
-#    (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU General Public License for more details.
-#
-#    You should have received a copy of the GNU General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import platform
+import os.path
+import warnings
 import sys
-import os
+import platform
 import shutil
-
 # finding os platform
 os_type = platform.system()
 
 
-# installation path
-if os_type == 'Linux':
-    print('GNU/Linux distribution detected!')
-    bin_path = '/usr/bin/persepolis'
-    share_path = '/usr/share/persepolis/'
-    pixamps_path = '/usr/share/pixmaps/persepolis.svg'
-    applications_path = '/usr/share/applications/persepolis.desktop'
-    man_path = '/usr/share/man/man1/persepolis.1.gz'
-
-elif os_type == 'FreeBSD' or os_type == 'OpenBSD':
-    print('BSD distribution detected!')
-    bin_path = '/usr/local/bin/persepolis'
-    share_path = '/usr/local/share/persepolis/'
-    pixamps_path = '/usr/local/share/pixmaps/persepolis.svg'
-    applications_path = '/usr/local/share/applications/persepolis.desktop'
-    man_path = '/usr/local/share/man/man1/persepolis.1.gz'
-
+if os_type == 'Linux' or os_type == 'FreeBSD' or os_type == 'OpenBSD':
+    from setuptools import setup, Command, find_packages
+    setuptools_available = True
+    print(os_type + " detected!")
 else:
-    print('Exit!')
-    sys.exit(0)
-
-uid = os.getuid()
-if uid != 0:
-    print('Error: please run this file as root user!')
+    print('This script is only work for GNU/Linux or BSD!')
     sys.exit(1)
-
-
 
 # Checking dependencies!
 try:
@@ -91,110 +60,59 @@ if answer != 0:
 else:
     print('paplay is found!')
 
+
+
+DESCRIPTION = 'Persepolis Download Manager'
+
+f = open('README.md' , 'r')
+
+LONG_DESCRIPTION = f.readlines()
+
+f.close()
+
 # finding current directory
 cwd = os.path.abspath(__file__)
 setup_dir = os.path.dirname(cwd)
 
-# adding shebang to bin/persepolis_exec
-if os_type == 'OpenBSD':
-    shebang = '#!/usr/local/bin/python3.6'
-else:
-    shebang = '#!/usr/bin/env python3'
-
-persepolis_exec_path = os.path.join(setup_dir ,'bin' ,'Persepolis Download Manager')
-f = open(persepolis_exec_path, 'r')
-f_lines = f.readlines()
-f.close()
-
-persepolis_path = os.path.join(setup_dir, 'bin', 'persepolis')
-f = open(persepolis_path , 'w')
-f.writelines(str(shebang) + '\n')
-
-for line in f_lines:
-    f.writelines(str(line))
-
-f.close()
-
-# making persepolis executable
-os.system('chmod +x "'
-        + persepolis_path 
-        + '"' )
-print('persepolis file is generated in: \n '
-        + persepolis_path)
-
-# moving persepolis executable file to persepolis_bin
-if os.path.isfile(bin_path):
-    os.remove(bin_path)
-
-shutil.move(persepolis_path, bin_path)
-
-print('persepolis file is moved to:\n '
-        + bin_path)
-
-
-# Creating share_folder contents
-share_folder = os.path.join(setup_dir, 'persepolis')
-if os.path.isdir(share_folder):
-    shutil.rmtree(share_folder)
-
-os.mkdir(share_folder)
-
-src_path = os.path.join(setup_dir, 'src')
-
-share_src_path = os.path.join(share_folder , 'src')
-shutil.copytree(src_path, share_src_path)
-
-
-src_pycache = os.path.join(share_folder, 'src', '__pycache__')
-gui_pycache = os.path.join(share_folder, 'src', 'gui', '__pycache__')
-scripts_pycache = os.path.join(share_folder, 'src', 'scripts', '__pycache__')
+#clearing __pycache__
+src_pycache = os.path.join(setup_dir, 'persepolis', '__pycache__')
+gui_pycache = os.path.join(setup_dir, 'persepolis', 'gui', '__pycache__')
+scripts_pycache = os.path.join(setup_dir, 'persepolis', 'scripts', '__pycache__')
 
 for folder in [src_pycache, gui_pycache, scripts_pycache]:
     if os.path.isdir(folder):
         shutil.rmtree(folder)
-print('persepolis share folder contents is generated!')
-
-# copying share_folder to share_path
-if os.path.isdir(share_path):
-    shutil.rmtree(share_path)
-
-shutil.copytree(share_folder, share_path)
-shutil.rmtree(share_folder)
-
-print('persepolis share folder is copied!')
+        print(str(folder)
+            + 'removed!')
 
 
-# copying persepolis.desktop
-persepolis_desktop_path = os.path.join(setup_dir, 'xdg', 'persepolis.desktop')
-os.system('chmod +x "'
-        + persepolis_desktop_path
-        + '"')
-if os.path.isfile(applications_path):
-    os.remove(applications_path)
-
-shutil.copy(persepolis_desktop_path, applications_path)
-
-print('persepolis desktop file is copied!')
-
-# copying man page
 # Creating man page file
 persepolis_man_page = os.path.join(setup_dir, 'man', 'persepolis.1')
 os.system('gzip -k -9 "'
         + persepolis_man_page
         + '"')
 print('man page file is generated!')
-persepolis_man_file = os.path.join(setup_dir, 'man', 'persepolis.1.gz')
-if os.path.isfile(man_path):
-    os.remove(man_path)
 
-shutil.move(persepolis_man_file, man_path)
-
-print('man page file is copied!')
-
-# copying icon file
-icon_path = os.path.join(setup_dir, 'icons', 'icon.svg')
-shutil.copy(icon_path, pixamps_path)
-
-print('persepolis icon file is copied!')
-
-print('installation is finished!')
+setup(
+    name = 'persepolis',
+    version = '2.4.2',
+    license = 'GPL3',
+    description = DESCRIPTION,
+    long_description = DESCRIPTION,
+    include_package_data=True,
+    url = 'https://github.com/persepolisdm/persepolis',
+    author = 'AliReza AmirSamimi',
+    author_email = 'alireza.amirsamimi@gmail.com',
+    maintainer = 'AliReza AmirSamimi',
+    maintainer_email = 'alireza.amirsamimi@gmail.com',
+    packages = (
+        'persepolis',
+        'persepolis.scripts', 'persepolis.gui',
+        ),
+    data_files = [
+        ('share/man/man1/', ['man/persepolis.1.gz']),
+        ('share/applications/', ['xdg/persepolis.desktop']),
+        ('share/pixmaps/', ['icons/icon.svg']),
+        ('bin/', ['bin/persepolis'])
+        ],
+)

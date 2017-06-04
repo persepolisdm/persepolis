@@ -13,7 +13,7 @@
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from src.gui.setting_ui import Setting_Ui
+from persepolis.gui.setting_ui import Setting_Ui
 import ast
 import os
 import copy

@@ -36,30 +36,38 @@ run_dir = os.path.dirname(cwd)
 if os.path.basename(run_dir) == 'test':
     print('persepolis is run in test folder')
     parent_dir = os.path.dirname(run_dir) 
-    src_path = os.path.join(parent_dir , 'src')
-    scripts_path = os.path.join(src_path, 'scripts')
-    gui_path = os.path.join(src_path, 'gui')
+    persepolis_path = os.path.join(parent_dir , 'persepolis')
+    scripts_path = os.path.join(persepolis_path, 'scripts')
+    gui_path = os.path.join(persepolis_path, 'gui')
 
 # if persepolis run in bin folder
 elif os.path.basename(run_dir) == 'bin':
     if os_type == 'Linux':
         parent_dir = '/usr/share/persepolis/' 
-        src_path = os.path.join(parent_dir , 'src')
-        scripts_path = os.path.join(src_path, 'scripts')
-        gui_path = os.path.join(src_path, 'gui')
+        persepolis_path = os.path.join(parent_dir , 'persepolis')
+        scripts_path = os.path.join(persepolis_path, 'scripts')
+        gui_path = os.path.join(persepolis_path, 'gui')
     elif os_type == 'FreeBSD' or os_type == 'OpenBSD':
         parent_dir = '/usr/local/share/persepolis/' 
-        src_path = os.path.join(parent_dir , 'src')
-        scripts_path = os.path.join(src_path, 'scripts')
-        gui_path = os.path.join(src_path, 'gui')
+        persepolis_path = os.path.join(parent_dir , 'persepolis')
+        scripts_path = os.path.join(persepolis_path, 'scripts')
+        gui_path = os.path.join(persepolis_path, 'gui')
 
+elif os.path.basename(run_dir) == 'scripts':
+    print('persepolis is run in scripts folder')
+    persepolis_path = os.path.dirname(run_dir) 
+    parent_dir = os.path.dirname(persepolis_path)
+    scripts_path = os.path.join(persepolis_path, 'scripts')
+    gui_path = os.path.join(persepolis_path, 'gui')
 
-for path in [parent_dir, src_path, scripts_path, gui_path]:
+#
+
+for path in [parent_dir, persepolis_path, scripts_path, gui_path]:
     sys.path.insert(0, path)
 
 
-from src.scripts.newopen import Open
-from src.scripts import osCommands
+from persepolis.scripts.newopen import Open
+from persepolis.scripts import osCommands
 import time
 import ast
 import argparse
@@ -118,8 +126,8 @@ else: # for windows
         lock_file_validation = True
 
 if lock_file_validation: 
-    import src.scripts.initialization
-    from src.scripts.mainwindow import MainWindow
+    import persepolis.scripts.initialization
+    from persepolis.scripts.mainwindow import MainWindow
 
 
     if os_type == 'Linux' or os_type == 'FreeBSD'  or os_type == 'OpenBSD': # setting "Persepolis Download Manager" name for this process in linux and bsd 
@@ -133,10 +141,10 @@ if lock_file_validation:
 from PyQt5.QtWidgets import QApplication  
 from PyQt5.QtGui import QFont   
 from PyQt5.QtCore import QCoreApplication, QSettings
-from src.gui.palettes import DarkRedPallete, DarkBluePallete, ArcDarkRedPallete, ArcDarkBluePallete, LightRedPallete, LightBluePallete
-from src.scripts.bubble import notifySend
-import src.scripts.osCommands
-from src.scripts.error_window import ErrorWindow
+from persepolis.gui.palettes import DarkRedPallete, DarkBluePallete, ArcDarkRedPallete, ArcDarkBluePallete, LightRedPallete, LightBluePallete
+from persepolis.scripts.bubble import notifySend
+import persepolis.scripts.osCommands
+from persepolis.scripts.error_window import ErrorWindow
 import traceback
 
 

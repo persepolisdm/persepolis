@@ -30,13 +30,13 @@ from addlink import AddLinkWindow
 from properties import PropertiesWindow
 from progress import ProgressWindow
 import download
-from src.gui.mainwindow_ui import MainWindow_Ui, QTableWidgetItem
+from persepolis.gui.mainwindow_ui import MainWindow_Ui, QTableWidgetItem
 from newopen import Open, writeList, readList, readDict
 from play import playNotification
 from bubble import notifySend
 from setting import PreferencesWindow
 from about import AboutWindow
-import src.gui.icons_resource
+import persepolis.gui.icons_resource
 import spider
 import osCommands
 import logger

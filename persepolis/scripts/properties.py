@@ -20,7 +20,7 @@ from PyQt5.QtCore import QSize, QPoint, QDir
 import os
 import ast
 from newopen import Open, writeList, readList, readDict
-from src.gui.addlink_ui import AddLinkWindow_Ui
+from persepolis.gui.addlink_ui import AddLinkWindow_Ui
 import platform
 
 os_type = platform.system()
