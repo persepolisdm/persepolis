@@ -129,7 +129,7 @@ setup(
     data_files = DATA_FILES,
     entry_points={
         'console_scripts': [
-              'persepolis = persepolis.__main__:main'
+              'persepolis = persepolis.__main__'
         ]
     }
 )
