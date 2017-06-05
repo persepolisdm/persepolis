@@ -20,7 +20,7 @@ if os_type == 'Linux':
     for folder in  glob.glob(pattern):
         path_list.append(folder)
 
-elif os_type == 'FreeBSD' or os_type = 'OpenBSD':
+elif os_type == 'FreeBSD' or os_type == 'OpenBSD':
     path_list = ['/usr/local/share/man/man1/persepolis.1.gz',
     '/usr/local/share/pixmaps/persepolis.svg',
     '/usr/local/share/applications/persepolis.desktop',

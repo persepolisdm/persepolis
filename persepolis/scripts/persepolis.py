@@ -28,45 +28,8 @@ if os_type == 'Linux' or os_type == 'FreeBSD'  or os_type == 'OpenBSD' or os_typ
         sys.exit(1)
 
 
-
-cwd = os.path.abspath(__file__)
-run_dir = os.path.dirname(cwd)
-# if persepolis run in test folder
-if os.path.basename(run_dir) == 'test':
-    print('persepolis is run in test folder')
-    parent_dir = os.path.dirname(run_dir) 
-    persepolis_path = os.path.join(parent_dir , 'persepolis')
-    scripts_path = os.path.join(persepolis_path, 'scripts')
-    gui_path = os.path.join(persepolis_path, 'gui')
-
-# if persepolis run in bin folder
-elif os.path.basename(run_dir) == 'bin':
-    if os_type == 'Linux':
-        parent_dir = '/usr/share/persepolis/' 
-        persepolis_path = os.path.join(parent_dir , 'persepolis')
-        scripts_path = os.path.join(persepolis_path, 'scripts')
-        gui_path = os.path.join(persepolis_path, 'gui')
-    elif os_type == 'FreeBSD' or os_type == 'OpenBSD':
-        parent_dir = '/usr/local/share/persepolis/' 
-        persepolis_path = os.path.join(parent_dir , 'persepolis')
-        scripts_path = os.path.join(persepolis_path, 'scripts')
-        gui_path = os.path.join(persepolis_path, 'gui')
-
-elif os.path.basename(run_dir) == 'scripts':
-    print('persepolis is run in scripts folder')
-    persepolis_path = os.path.dirname(run_dir) 
-    parent_dir = os.path.dirname(persepolis_path)
-    scripts_path = os.path.join(persepolis_path, 'scripts')
-    gui_path = os.path.join(persepolis_path, 'gui')
-
-#
-
-for path in [parent_dir, persepolis_path, scripts_path, gui_path]:
-    sys.path.insert(0, path)
-
-
-from persepolis.scripts.newopen import Open
-from persepolis.scripts import osCommands
+from newopen import Open
+import osCommands
 import time
 import ast
 import argparse
@@ -125,8 +88,8 @@ else: # for windows
         lock_file_validation = True
 
 if lock_file_validation: 
-    import persepolis.scripts.initialization
-    from persepolis.scripts.mainwindow import MainWindow
+    import initialization
+    from mainwindow import MainWindow
 
 
     if os_type == 'Linux' or os_type == 'FreeBSD'  or os_type == 'OpenBSD': # setting "Persepolis Download Manager" name for this process in linux and bsd 
@@ -315,12 +278,10 @@ if ('link' in add_link_dictionary):
     flashgot_ready = os.path.join(persepolis_tmp, 'persepolis-flashgot-ready')
     osCommands.touch(flashgot_ready)
 
-
-
-if lock_file_validation: # if lock_file is existed , it means persepolis is still running! 
-# setting color_scheme and style
-# see palettes.py and setting.py
-    if __name__ == "__main__":
+def main():
+    if lock_file_validation: # if lock_file is existed , it means persepolis is still running! 
+    # setting color_scheme and style
+    # see palettes.py and setting.py
 
         persepolis_download_manager = PersepolisApplication(sys.argv)
 
@@ -361,15 +322,13 @@ if lock_file_validation: # if lock_file is existed , it means persepolis is stil
         sys.exit(persepolis_download_manager.exec_())
 
     else:
-         sys.exit(0)
-else:
-    print('persepolis is still running')
-# this section warns user that program is still running and no need to run it again
-# and creating a file to notify mainwindow for showing
-    if not('link' in add_link_dictionary):
-        show_window_file = os.path.join(persepolis_tmp, 'show-window')
-        f = open(show_window_file, 'w')
-        f.close()
-    sys.exit(0)
+        print('persepolis is still running')
+    # this section warns user that program is still running and no need to run it again
+    # and creating a file to notify mainwindow for showing
+        if not('link' in add_link_dictionary):
+            show_window_file = os.path.join(persepolis_tmp, 'show-window')
+            f = open(show_window_file, 'w')
+            f.close()
+        sys.exit(0)
 
 

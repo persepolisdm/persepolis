@@ -7,6 +7,8 @@ import warnings
 import sys
 import platform
 import shutil
+
+
 # finding os platform
 os_type = platform.system()
 
@@ -111,10 +113,9 @@ setup(
         'persepolis.scripts', 'persepolis.gui',
         ),
     data_files = [
-        ('share/man/man1/', ['man/persepolis.1.gz']),
-        ('share/applications/', ['xdg/persepolis.desktop']),
-        ('share/pixmaps/', ['icons/icon.svg']),
-        ('bin/', ['bin/persepolis'])
+        ('/usr/share/man/man1/', ['man/persepolis.1.gz']),
+        ('/usr/share/applications/', ['xdg/persepolis.desktop']),
+        ('/usr/share/pixmaps/', ['icons/icon.svg'])
         ],
     entry_points={
         'console_scripts': [
