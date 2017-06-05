@@ -72,6 +72,20 @@ LONG_DESCRIPTION = f.readlines()
 
 f.close()
 
+if os_type == 'Linux':
+    DATA_FILES = [
+        ('/usr/share/man/man1/', ['man/persepolis.1.gz']),
+        ('/usr/share/applications/', ['xdg/persepolis.desktop']),
+        ('/usr/share/pixmaps/', ['icons/icon.svg'])
+        ]
+elif os_type == 'FreeBSD' or os_type == 'OpenBSD':
+    DATA_FILES = [
+        ('/usr/local/share/man/man1/', ['man/persepolis.1.gz']),
+        ('/usr/local/share/applications/', ['xdg/persepolis.desktop']),
+        ('/usr/local/share/pixmaps/', ['icons/icon.svg'])
+        ]
+
+
 
 # finding current directory
 cwd = os.path.abspath(__file__)
@@ -86,7 +100,7 @@ for folder in [src_pycache, gui_pycache, scripts_pycache]:
     if os.path.isdir(folder):
         shutil.rmtree(folder)
         print(str(folder)
-            + 'removed!')
+            + ' is removed!')
 
 
 # Creating man page file
@@ -112,14 +126,18 @@ setup(
         'persepolis',
         'persepolis.scripts', 'persepolis.gui',
         ),
-    data_files = [
-        ('/usr/share/man/man1/', ['man/persepolis.1.gz']),
-        ('/usr/share/applications/', ['xdg/persepolis.desktop']),
-        ('/usr/share/pixmaps/', ['icons/icon.svg'])
-        ],
+    data_files = DATA_FILES,
     entry_points={
         'console_scripts': [
               'persepolis = persepolis.__main__:main'
         ]
     }
 )
+# clearing after installation finished!
+for folder in  [ 'build', 'dist', 'root', 'persepolis.egg-info']:
+    if os.path.isdir(folder):
+        shutil.rmtree(folder)
+        print(str(folder)
+            + ' is removed!')
+
+
