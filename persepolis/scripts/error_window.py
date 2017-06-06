@@ -43,7 +43,7 @@ class ErrorWindow(QWidget):
         super().__init__()
 # finding windows_size
         self.setMinimumSize(QtCore.QSize(363, 300))
-        self.setWindowIcon(QIcon.fromTheme('persepolis', QIcon(':/icon.svg')))
+        self.setWindowIcon(QIcon.fromTheme('persepolis', QIcon(':/persepolis.svg')))
         self.setWindowTitle('Persepolis Download Manager')
 
         verticalLayout = QVBoxLayout(self)

@@ -76,13 +76,13 @@ if os_type == 'Linux':
     DATA_FILES = [
         ('/usr/share/man/man1/', ['man/persepolis.1.gz']),
         ('/usr/share/applications/', ['xdg/persepolis.desktop']),
-        ('/usr/share/pixmaps/', ['icons/icon.svg'])
+        ('/usr/share/pixmaps/', ['icons/persepolis.svg'])
         ]
 elif os_type == 'FreeBSD' or os_type == 'OpenBSD':
     DATA_FILES = [
         ('/usr/local/share/man/man1/', ['man/persepolis.1.gz']),
         ('/usr/local/share/applications/', ['xdg/persepolis.desktop']),
-        ('/usr/local/share/pixmaps/', ['icons/icon.svg'])
+        ('/usr/local/share/pixmaps/', ['icons/persepolis.svg'])
         ]
 
 

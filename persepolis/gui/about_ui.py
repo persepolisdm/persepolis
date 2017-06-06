@@ -31,7 +31,7 @@ class AboutWindow_Ui(QWidget):
             str(self.persepolis_setting.value('settings/icons')) + '/'
 
         self.setMinimumSize(QtCore.QSize(363, 300))
-        self.setWindowIcon(QIcon.fromTheme('persepolis', QIcon(':/icon.svg')))
+        self.setWindowIcon(QIcon.fromTheme('persepolis', QIcon(':/persepolis.svg')))
         self.setLayoutDirection(QtCore.Qt.LeftToRight)
         self.gridLayout = QtWidgets.QGridLayout(self)
         self.verticalLayout_2 = QtWidgets.QVBoxLayout()

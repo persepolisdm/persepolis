@@ -650,7 +650,7 @@ class MainWindow(MainWindow_Ui):
 # system_tray_icon
         self.system_tray_icon = QSystemTrayIcon()
         self.system_tray_icon.setIcon(
-            QIcon.fromTheme('persepolis', QIcon(':/icon.svg')))
+            QIcon.fromTheme('persepolis', QIcon(':/persepolis.svg')))
         system_tray_menu = QMenu()
         system_tray_menu.addAction(self.addlinkAction)
         system_tray_menu.addAction(self.stopAllAction)

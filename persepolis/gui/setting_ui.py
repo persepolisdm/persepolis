@@ -29,7 +29,7 @@ class Setting_Ui(QWidget):
     def __init__(self, persepolis_setting):
         super().__init__()
         icon = QtGui.QIcon()
-        self.setWindowIcon(QIcon.fromTheme('persepolis', QIcon(':/icon.svg')))
+        self.setWindowIcon(QIcon.fromTheme('persepolis', QIcon(':/persepolis.svg')))
         self.setWindowTitle('Preferences')
 
         global icons

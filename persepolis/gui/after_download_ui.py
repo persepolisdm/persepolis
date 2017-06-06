@@ -33,7 +33,7 @@ class AfterDownloadWindow_Ui(QWidget):
 
         icons = ':/' + str(self.persepolis_setting.value('settings/icons')) + '/'
 
-        self.setWindowIcon(QIcon.fromTheme('persepolis' ,QIcon(':/icon.svg')))
+        self.setWindowIcon(QIcon.fromTheme('persepolis' ,QIcon(':/persepolis.svg')))
         self.setWindowTitle("Persepolis Download Manager")
 #complete_label
         self.verticalLayout_1 = QVBoxLayout()

@@ -38,7 +38,7 @@ class ChromiumIntegrationWindow(QWidget):
         self.persepolis_setting = persepolis_setting
         icons = ':/' + \
             str(self.persepolis_setting.value('settings/icons')) + '/'
-        self.setWindowIcon(QIcon.fromTheme('persepolis', QIcon(':/icon.svg')))
+        self.setWindowIcon(QIcon.fromTheme('persepolis', QIcon(':/persepolis.svg')))
         self.setWindowTitle('Browser integration')
 
         window_verticalLayout = QVBoxLayout(self)

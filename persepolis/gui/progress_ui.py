@@ -34,7 +34,7 @@ class ProgressWindow_Ui(QWidget):
 # window
         self.setMinimumSize(QtCore.QSize(595, 284))
 
-        self.setWindowIcon(QIcon.fromTheme('persepolis', QIcon(':/icon.svg')))
+        self.setWindowIcon(QIcon.fromTheme('persepolis', QIcon(':/persepolis.svg')))
         self.setWindowTitle("Persepolis Download Manager")
 
         self.gridLayout = QtWidgets.QGridLayout(self)

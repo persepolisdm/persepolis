@@ -32,7 +32,7 @@ class TextQueue_Ui(QWidget):
         icons = ':/' + \
             str(self.persepolis_setting.value('settings/icons')) + '/'
 
-        self.setWindowIcon(QIcon.fromTheme('persepolis', QIcon(':/icon.svg')))
+        self.setWindowIcon(QIcon.fromTheme('persepolis', QIcon(':/persepolis.svg')))
         window_verticalLayout = QVBoxLayout()
         self.setLayout(window_verticalLayout)
 # queue_tabWidget
