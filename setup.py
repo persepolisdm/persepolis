@@ -22,6 +22,7 @@ else:
     sys.exit(1)
 
 # Checking dependencies!
+# PyQt5
 try:
     import PyQt5
     print('python3-pyqt5 is found')
@@ -29,6 +30,7 @@ except:
     print('Error : python3-pyqt5 is not installed!')
     sys.exit(1)
 
+# python3-requests
 try:
     import requests 
     print('python3-requests is found!')
@@ -36,12 +38,14 @@ except:
     print('Error : requests is not installed!')
     sys.exit(1)
 
+# python3-setproctitle
 try:
     import setproctitle
     print('python3-setproctitle is found!')
 except:
     print("Warning: setproctitle is not installed!")
 
+# aria2
 answer = os.system('aria2c --version 1>/dev/null')
 if answer != 0:
     print("Error aria2 not installed!")
@@ -49,6 +53,7 @@ if answer != 0:
 else:
     print('aria2 is found!')
 
+# libnotify-bin
 answer = os.system('notify-send --version 1>/dev/null')
 if answer != 0:
     print("Error libnotify-bin is not installed!")
@@ -56,14 +61,24 @@ if answer != 0:
 else:
     print('libnotify-bin is found!')
 
+# paplay
 answer = os.system('paplay --version 1>/dev/null')
 if answer != 0:
     print("Warning: paplay not installed!You need pulseaudio for sound notifications!")
 else:
     print('paplay is found!')
 
+# sound-theme-freedesktop
+if os_type == 'Linux':
+    notifications_path = '/usr/share/sounds/freedesktop/stereo/'
+elif os_type == 'FreeBSD' or os_type == 'OpenBSD':
+    notifications_path = '/usr/local/share/sounds/freedesktop/stereo/'
 
-
+if os.path.isdir(notifications_path):
+    print('sound-theme-freedesktop is found!')
+else:
+    print('Warning: sound-theme-freedesktop is not installed! you need this package for sound notifications!')
+ 
 DESCRIPTION = 'Persepolis Download Manager'
 
 f = open('README.md' , 'r')
