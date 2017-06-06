@@ -1279,11 +1279,16 @@ class MainWindow(MainWindow_Ui):
                         f.writelines('canceled')
                         f.close()
 
-# showing download compelete dialog
-# check user's Preferences
                     self.persepolis_setting.sync()
                     if progress_window.status == "complete":
+                        # play notification
+                        notifySend("Download Complete", str(
+                            download_info_file_list[0]), 10000, 'ok', systemtray=self.system_tray_icon)
+
+                        # check user's Preferences
                         if self.persepolis_setting.value('settings/after-dialog') == 'yes':
+
+                            # showing download compelete dialog
                             afterdownloadwindow = AfterDownloadWindow(
                                 download_info_file_list, self.persepolis_setting)
                             self.afterdownload_list.append(afterdownloadwindow)
@@ -1291,10 +1296,6 @@ class MainWindow(MainWindow_Ui):
                                 self.afterdownload_list) - 1].show()
                             self.afterdownload_list[len(
                                 self.afterdownload_list) - 1].raise_()
-
-                        else:
-                            notifySend("Download Complete", str(
-                                download_info_file_list[0]), 10000, 'ok', systemtray=self.system_tray_icon)
 
                 # downloaded
                 downloaded = "<b>Downloaded</b> : " + \

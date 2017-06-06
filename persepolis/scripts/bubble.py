@@ -41,29 +41,32 @@ elif os_type == 'Windows':
 # and use playNotification function in play.py file for playing sound
 # notifications
 def notifySend(message1, message2, time, sound, systemtray=None):
-    cwd = os.path.abspath(__file__)
-    scripts_path = os.path.dirname(cwd)
-    src_path = os.path.dirname(scripts_path)
-    notifications_path = os.path.join(src_path, 'notifications')
+    if os_type == 'Linux':
+        notifications_path = '/usr/share/sounds/freedesktop/stereo/'
+    elif os_type == 'FreeBSD' or os_type == 'OpenBSD':
+        notifications_path = '/usr/local/share/sounds/freedesktop/stereo/'
+    else:
+        notifications_path = ''
+
 
     if sound == 'ok':
-        file = os.path.join(notifications_path, 'ok.ogg')
+        file = os.path.join(notifications_path, 'complete.oga')
         playNotification(str(file))
 
     elif sound == 'fail':
-        file = os.path.join(notifications_path, 'fail.ogg')
+        file = os.path.join(notifications_path, 'dialog-error.oga')
         playNotification(str(file))
 
     elif sound == 'warning':
-        file = os.path.join(notifications_path, 'you.ogg')
+        file = os.path.join(notifications_path, 'bell.oga')
         playNotification(str(file))
 
     elif sound == 'critical':
-        file = os.path.join(notifications_path, 'connection.ogg')
+        file = os.path.join(notifications_path, 'power-plug.oga')
         playNotification(str(file))
 
     elif sound == 'queue':
-        file = os.path.join(notifications_path, 'queue.ogg')
+        file = os.path.join(notifications_path, 'dialog-information.oga')
         playNotification(str(file))
 
 
