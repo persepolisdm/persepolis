@@ -1,0 +1,146 @@
+<!DOCTYPE RCC><RCC version="1.0">
+	<qresource prefix="/">
+
+        <file>persepolis.svg</file>
+        <file>persepolis.png</file>
+
+		<file>Archdroid-Blue/about.svg</file>		
+		<file>Archdroid-Blue/add.svg</file>		
+		<file>Archdroid-Blue/exit.svg</file>		
+		<file>Archdroid-Blue/folder.svg</file>		
+		<file>Archdroid-Blue/minimize.svg</file>		
+		<file>Archdroid-Blue/ok.svg</file>		
+		<file>Archdroid-Blue/pause.svg</file>		
+		<file>Archdroid-Blue/play.svg</file>		
+		<file>Archdroid-Blue/preferences.svg</file>		
+		<file>Archdroid-Blue/remove.svg</file>		
+		<file>Archdroid-Blue/setting.svg</file>		
+		<file>Archdroid-Blue/stop.svg</file>		
+		<file>Archdroid-Blue/stop_all.svg</file>		
+		<file>Archdroid-Blue/trash.svg</file>		
+		<file>Archdroid-Blue/window.svg</file>		
+		<file>Archdroid-Blue/file.svg</file>		
+        <file>Archdroid-Blue/multi_remove.svg</file>	
+        <file>Archdroid-Blue/multi_trash.svg</file>	
+        <file>Archdroid-Blue/select_all.svg</file>	
+        <file>Archdroid-Blue/add_queue.svg</file>	
+        <file>Archdroid-Blue/start_queue.svg</file>	
+        <file>Archdroid-Blue/stop_queue.svg</file>	
+        <file>Archdroid-Blue/pause_queue.svg</file>	
+        <file>Archdroid-Blue/remove_queue.svg</file>	
+        <file>Archdroid-Blue/menu.svg</file>	
+        <file>Archdroid-Blue/up.svg</file>	
+        <file>Archdroid-Blue/down.svg</file>	
+        <file>Archdroid-Blue/multi_up.svg</file>	
+        <file>Archdroid-Blue/multi_down.svg</file>	
+        <file>Archdroid-Blue/browser.svg</file>	
+
+
+
+
+
+		<file>Archdroid-Red/about.svg</file>		
+		<file>Archdroid-Red/add.svg</file>		
+		<file>Archdroid-Red/exit.svg</file>		
+		<file>Archdroid-Red/folder.svg</file>		
+		<file>Archdroid-Red/minimize.svg</file>		
+		<file>Archdroid-Red/ok.svg</file>		
+		<file>Archdroid-Red/pause.svg</file>		
+		<file>Archdroid-Red/play.svg</file>		
+		<file>Archdroid-Red/preferences.svg</file>		
+		<file>Archdroid-Red/remove.svg</file>		
+		<file>Archdroid-Red/setting.svg</file>		
+		<file>Archdroid-Red/stop.svg</file>		
+		<file>Archdroid-Red/stop_all.svg</file>		
+		<file>Archdroid-Red/trash.svg</file>		
+		<file>Archdroid-Red/window.svg</file>		
+		<file>Archdroid-Red/file.svg</file>		
+        <file>Archdroid-Red/multi_remove.svg</file>	
+        <file>Archdroid-Red/multi_trash.svg</file>	
+        <file>Archdroid-Red/select_all.svg</file>	
+        <file>Archdroid-Red/add_queue.svg</file>	
+        <file>Archdroid-Red/start_queue.svg</file>	
+        <file>Archdroid-Red/stop_queue.svg</file>	
+        <file>Archdroid-Red/pause_queue.svg</file>	
+        <file>Archdroid-Red/remove_queue.svg</file>	
+        <file>Archdroid-Red/menu.svg</file>	
+        <file>Archdroid-Red/up.svg</file>	
+        <file>Archdroid-Red/down.svg</file>	
+        <file>Archdroid-Red/multi_up.svg</file>	
+        <file>Archdroid-Red/multi_down.svg</file>	
+        <file>Archdroid-Red/browser.svg</file>	
+
+
+
+
+		<file>Breeze/about.svg</file>		
+		<file>Breeze/add.svg</file>		
+		<file>Breeze/exit.svg</file>		
+		<file>Breeze/folder.svg</file>		
+		<file>Breeze/minimize.svg</file>		
+		<file>Breeze/ok.svg</file>		
+		<file>Breeze/pause.svg</file>		
+		<file>Breeze/play.svg</file>		
+		<file>Breeze/preferences.svg</file>		
+		<file>Breeze/remove.svg</file>		
+		<file>Breeze/setting.svg</file>		
+		<file>Breeze/stop.svg</file>		
+		<file>Breeze/stop_all.svg</file>		
+		<file>Breeze/trash.svg</file>		
+		<file>Breeze/window.svg</file>		
+		<file>Breeze/file.svg</file>		
+        <file>Breeze/multi_remove.svg</file>	
+        <file>Breeze/multi_trash.svg</file>	
+        <file>Breeze/select_all.svg</file>	
+        <file>Breeze/add_queue.svg</file>	
+        <file>Breeze/start_queue.svg</file>	
+        <file>Breeze/stop_queue.svg</file>	
+        <file>Breeze/pause_queue.svg</file>	
+        <file>Breeze/remove_queue.svg</file>	
+        <file>Breeze/menu.svg</file>	
+        <file>Breeze/up.svg</file>	
+        <file>Breeze/down.svg</file>	
+        <file>Breeze/multi_up.svg</file>	
+        <file>Breeze/multi_down.svg</file>	
+        <file>Breeze/browser.svg</file>	
+
+
+
+
+		<file>Breeze-Dark/about.svg</file>		
+		<file>Breeze-Dark/add.svg</file>		
+		<file>Breeze-Dark/exit.svg</file>		
+		<file>Breeze-Dark/folder.svg</file>		
+		<file>Breeze-Dark/minimize.svg</file>		
+		<file>Breeze-Dark/ok.svg</file>		
+		<file>Breeze-Dark/pause.svg</file>		
+		<file>Breeze-Dark/play.svg</file>		
+		<file>Breeze-Dark/preferences.svg</file>		
+		<file>Breeze-Dark/remove.svg</file>		
+		<file>Breeze-Dark/setting.svg</file>		
+		<file>Breeze-Dark/stop.svg</file>		
+		<file>Breeze-Dark/stop_all.svg</file>		
+		<file>Breeze-Dark/trash.svg</file>		
+		<file>Breeze-Dark/window.svg</file>		
+		<file>Breeze-Dark/file.svg</file>		
+        <file>Breeze-Dark/multi_remove.svg</file>	
+        <file>Breeze-Dark/multi_trash.svg</file>	
+        <file>Breeze-Dark/select_all.svg</file>	
+        <file>Breeze-Dark/add_queue.svg</file>	
+        <file>Breeze-Dark/start_queue.svg</file>	
+        <file>Breeze-Dark/stop_queue.svg</file>	
+        <file>Breeze-Dark/pause_queue.svg</file>	
+        <file>Breeze-Dark/remove_queue.svg</file>	
+        <file>Breeze-Dark/menu.svg</file>	
+        <file>Breeze-Dark/up.svg</file>	
+        <file>Breeze-Dark/down.svg</file>	
+        <file>Breeze-Dark/multi_up.svg</file>	
+        <file>Breeze-Dark/multi_down.svg</file>	
+        <file>Breeze-Dark/browser.svg</file>	
+
+
+
+
+
+	</qresource>
+</RCC>

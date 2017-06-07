@@ -1,4 +1,8 @@
-
+__pycache__/
 *.pyc
 .env
 *.orig
+root/
+build/
+persepolis.egg-info/
+man/persepolis.1.gz
