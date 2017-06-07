@@ -154,5 +154,5 @@ for folder in  [ 'build', 'dist', 'root', 'persepolis.egg-info']:
         shutil.rmtree(folder)
         print(str(folder)
             + ' is removed!')
-
+os.remove('man/persepolis.1.gz')
 
