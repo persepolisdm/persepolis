@@ -11,5 +11,4 @@ before_install:
 install:
   - pip3 install requests
 script:
- - bash install
- - man persepolis
+ - sudo python3 setup.py install
