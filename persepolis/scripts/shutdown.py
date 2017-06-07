@@ -13,10 +13,10 @@
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import os
-from newopen import Open
+from persepolis.scripts.newopen import Open
 from time import sleep
-import osCommands
-import logger
+from persepolis.scripts import osCommands
+from persepolis.scripts import logger
 import platform
 import subprocess
 

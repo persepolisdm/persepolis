@@ -16,8 +16,8 @@
 import os
 import ast
 import platform
-from play import playNotification
-from newopen import Open
+from persepolis.scripts.play import playNotification
+from persepolis.scripts.newopen import Open
 from PyQt5.QtCore import QSettings
 
 home_address = os.path.expanduser("~")
@@ -87,7 +87,7 @@ def notifySend(message1, message2, time, sound, systemtray=None):
             os.system("notify-send --icon='persepolis' --app-name='Persepolis Download Manager' --expire-time='" +
                       time + "' '" + message1 + "' \ '" + message2 + "' ")
         elif os_type == 'Darwin':
-            from mac_notification import notifyMac
+            from persepolis.scripts.mac_notification import notifyMac
 
             notifyMac("Persepolis Download Manager", message1, message2)
 

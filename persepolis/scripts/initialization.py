@@ -26,14 +26,14 @@
 import os
 import shutil
 import ast
-from newopen import Open
-import osCommands
+from persepolis.scripts.newopen import Open
+from persepolis.scripts import osCommands
 import platform
-from compatibility import compatibility
+from persepolis.scripts.compatibility import compatibility
 import glob
 import PyQt5
 from PyQt5.QtCore import QSettings
-from browser_integration import browserIntegration
+from persepolis.scripts.browser_integration import browserIntegration
 
 # initialization
 home_address = os.path.expanduser("~")
@@ -126,7 +126,7 @@ f = open(log_file, 'w')
 f.writelines('Persepolis Download Manager\n')
 f.close()
 
-import logger
+from persepolis.scripts import logger
 
 
 #import persepolis_setting

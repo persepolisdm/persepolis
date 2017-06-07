@@ -18,11 +18,10 @@ from PyQt5.QtGui import QIcon
 from PyQt5.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QLabel, QPushButton
 from PyQt5.QtCore import QSize, QPoint
 import platform
-import osCommands
+from persepolis.scripts import osCommands
 import requests
 import platform
 import ast
-import osCommands
 
 # finding os_type
 os_type = platform.system()

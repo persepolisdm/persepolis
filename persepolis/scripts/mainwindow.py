@@ -22,29 +22,29 @@ from PyQt5.QtCore import QCoreApplication, QRect, QSize, QPoint, QThread, pyqtSi
 import os
 from time import sleep
 import random
-from after_download import AfterDownloadWindow
-from chromium_integration_window import ChromiumIntegrationWindow
-from text_queue import TextQueue
-from flashgot_queue import FlashgotQueue
-from addlink import AddLinkWindow
-from properties import PropertiesWindow
-from progress import ProgressWindow
-import download
+from persepolis.scripts.after_download import AfterDownloadWindow
+from persepolis.scripts.chromium_integration_window import ChromiumIntegrationWindow
+from persepolis.scripts.text_queue import TextQueue
+from persepolis.scripts.flashgot_queue import FlashgotQueue
+from persepolis.scripts.addlink import AddLinkWindow
+from persepolis.scripts.properties import PropertiesWindow
+from persepolis.scripts.progress import ProgressWindow
+from persepolis.scripts import download
 from persepolis.gui.mainwindow_ui import MainWindow_Ui, QTableWidgetItem
-from newopen import Open, writeList, readList, readDict
-from play import playNotification
-from bubble import notifySend
-from setting import PreferencesWindow
-from about import AboutWindow
-import persepolis.gui.icons_resource
-import spider
-import osCommands
-import logger
+from persepolis.scripts.newopen import Open, writeList, readList, readDict
+from persepolis.scripts.play import playNotification
+from persepolis.scripts.bubble import notifySend
+from persepolis.scripts.setting import PreferencesWindow
+from persepolis.scripts.about import AboutWindow
+from persepolis.gui import icons_resource
+from persepolis.scripts import spider
+from persepolis.scripts import osCommands
+from persepolis.scripts import logger
 import platform
 from copy import deepcopy
-from shutdown import shutDown
+from persepolis.scripts.shutdown import shutDown
 import shutil
-from update import checkupdate
+from persepolis.scripts.update import checkupdate
 
 # THIS FILE CREATES MAIN WINDOW
 

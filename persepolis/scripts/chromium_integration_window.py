@@ -17,12 +17,12 @@ from PyQt5 import QtWidgets, QtCore
 from PyQt5.QtGui import QIcon
 from PyQt5.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QLabel, QPushButton
 from PyQt5.QtCore import QSize, QPoint
-from browser_integration import browserIntegration
+from persepolis.scripts.browser_integration import browserIntegration
 import platform
 import os
-from newopen import Open
+from persepolis.scripts.newopen import Open
 from functools import partial
-import osCommands
+from persepolis.scripts import osCommands
 import sys
 
 

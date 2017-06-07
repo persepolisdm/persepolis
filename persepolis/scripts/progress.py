@@ -21,11 +21,11 @@ from persepolis.gui.progress_ui import ProgressWindow_Ui
 import os
 import time
 import ast
-from newopen import Open, readList, writeList, readDict
-import download
-from bubble import notifySend
+from persepolis.scripts.newopen import Open, readList, writeList, readDict
+from persepolis.scripts import download
+from persepolis.scripts.bubble import notifySend
 import platform
-from shutdown import shutDown
+from persepolis.scripts.shutdown import shutDown
 
 os_type = platform.system()
 

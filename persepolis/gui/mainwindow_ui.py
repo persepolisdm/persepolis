@@ -20,7 +20,7 @@ from PyQt5.QtCore import QCoreApplication, QRect, QSize, Qt
 import ast
 import os
 from persepolis.scripts.newopen import Open
-import icons_resource
+from persepolis.gui import icons_resource
 
 
 home_address = os.path.expanduser("~")

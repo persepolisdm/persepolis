@@ -19,7 +19,7 @@ from PyQt5.QtWidgets import QFileDialog
 from PyQt5.QtCore import QSize, QPoint, QDir
 import os
 import ast
-from newopen import Open, writeList, readList, readDict
+from persepolis.scripts.newopen import Open, writeList, readList, readDict
 from persepolis.gui.addlink_ui import AddLinkWindow_Ui
 import platform
 

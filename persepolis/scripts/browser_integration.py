@@ -15,8 +15,8 @@
 
 import platform
 import os
-from newopen import Open
-import osCommands
+from persepolis.scripts.newopen import Open
+from persepolis.scripts import osCommands
 import sys
 
 os_type = platform.system()

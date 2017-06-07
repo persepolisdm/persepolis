@@ -1,7 +1,7 @@
 import logging
 import platform
 import os
-import osCommands
+from persepolis.scripts import osCommands
 
 os_type = platform.system()
 

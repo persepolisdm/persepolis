@@ -15,7 +15,7 @@
 import time
 import os
 import ast
-from newopen import Open
+from persepolis.scripts.newopen import Open
 # this script for compatibility between Version 2.0 and 2.1 and 2.2 and
 # 2.3 of persepolis
 home_address = os.path.expanduser("~")

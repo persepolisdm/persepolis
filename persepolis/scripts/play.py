@@ -13,8 +13,8 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import os
-import logger
-from newopen import Open
+from persepolis.scripts import logger
+from persepolis.scripts.newopen import Open
 import platform
 from PyQt5.QtCore import QSettings
 import subprocess

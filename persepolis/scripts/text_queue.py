@@ -18,11 +18,11 @@ from PyQt5 import QtWidgets , QtCore , QtGui
 from PyQt5.QtGui import QIcon
 from PyQt5.QtWidgets import QTableWidgetItem , QFileDialog
 from PyQt5.QtCore import QDir , QPoint , QSize, QThread , pyqtSignal
-from newopen import Open , readDict
-import download
+from persepolis.scripts.newopen import Open , readDict
+from persepolis.scripts import download
 import ast , os 
-import osCommands, logger
-import spider
+from persepolis.scripts import osCommands, logger
+from persepolis.scripts import spider
 from functools import partial
 import platform
 

@@ -19,13 +19,13 @@ from PyQt5 import QtWidgets, QtCore, QtGui
 from PyQt5.QtGui import QIcon
 from PyQt5.QtWidgets import QTableWidgetItem, QFileDialog
 from PyQt5.QtCore import QPoint, QSize, QThread, pyqtSignal, QDir
-from newopen import Open, readDict
-import download
+from persepolis.scripts.newopen import Open, readDict
+from persepolis.scripts import download
 import ast
 import os
-import osCommands
-import logger
-import spider
+from persepolis.scripts import osCommands
+from persepolis.scripts import logger
+from persepolis.scripts import spider
 import platform
 
 os_type = platform.system()

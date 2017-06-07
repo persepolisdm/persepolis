@@ -13,14 +13,14 @@
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from newopen import Open, readList, writeList, readDict
+from persepolis.scripts.newopen import Open, readList, writeList, readDict
 from persepolis.gui.after_download_ui import AfterDownloadWindow_Ui
 from PyQt5 import QtCore
 from PyQt5.QtCore import QSize, QPoint
 import os
 import ast
-from play import playNotification
-import osCommands
+from persepolis.scripts.play import playNotification
+from persepolis.scripts import osCommands
 import platform
 
 os_type = platform.system()

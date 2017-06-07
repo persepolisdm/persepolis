@@ -12,7 +12,6 @@
 #
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
 import sys
 import os
 import platform
@@ -28,8 +27,8 @@ if os_type == 'Linux' or os_type == 'FreeBSD'  or os_type == 'OpenBSD' or os_typ
         sys.exit(1)
 
 
-from newopen import Open
-import osCommands
+from persepolis.scripts.newopen import Open
+from persepolis.scripts import osCommands
 import time
 import ast
 import argparse
@@ -88,8 +87,8 @@ else: # for windows
         lock_file_validation = True
 
 if lock_file_validation: 
-    import initialization
-    from mainwindow import MainWindow
+    from persepolis.scripts import initialization
+    from persepolis.scripts.mainwindow import MainWindow
 
 
     if os_type == 'Linux' or os_type == 'FreeBSD'  or os_type == 'OpenBSD': # setting "Persepolis Download Manager" name for this process in linux and bsd 
@@ -105,7 +104,6 @@ from PyQt5.QtGui import QFont
 from PyQt5.QtCore import QCoreApplication, QSettings
 from persepolis.gui.palettes import DarkRedPallete, DarkBluePallete, ArcDarkRedPallete, ArcDarkBluePallete, LightRedPallete, LightBluePallete
 from persepolis.scripts.bubble import notifySend
-import persepolis.scripts.osCommands
 from persepolis.scripts.error_window import ErrorWindow
 import traceback
 

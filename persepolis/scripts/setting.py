@@ -21,10 +21,10 @@ from PyQt5 import QtWidgets
 from PyQt5.QtWidgets import QFileDialog, QStyleFactory, QMessageBox
 from PyQt5.QtGui import QFont
 from PyQt5.QtCore import QSize, QPoint, QDir
-from newopen import Open, readDict
-import osCommands
+from persepolis.scripts.newopen import Open, readDict
+from persepolis.scripts import osCommands
 import platform
-import startup
+from persepolis.scripts import startup
 
 home_address = os.path.expanduser("~")
 os_type = platform.system()

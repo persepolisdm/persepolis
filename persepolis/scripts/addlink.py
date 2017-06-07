@@ -25,13 +25,13 @@ from PyQt5.QtWidgets import QHBoxLayout,  QApplication,  QFileDialog,  QCheckBox
 from PyQt5.QtGui import QIcon
 from PyQt5.QtCore import QPoint, QSize, QDir, QThread, pyqtSignal
 from persepolis.gui.addlink_ui import AddLinkWindow_Ui
-from newopen import Open, readDict
+from persepolis.scripts.newopen import Open, readDict
 from functools import partial
 
-import osCommands
-import download
-import spider
-import logger
+from persepolis.scripts import osCommands
+from persepolis.scripts import download
+from persepolis.scripts import spider
+from persepolis.scripts import logger
 
 
 home_address = os.path.expanduser("~")

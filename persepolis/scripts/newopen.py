@@ -18,7 +18,7 @@ import ast
 import random
 import shutil
 from time import sleep
-import osCommands
+from persepolis.scripts import osCommands
 import platform
 
 os_type = platform.system()

@@ -19,10 +19,10 @@ import os
 import time
 import ast
 import shutil
-from newopen import Open, readList, writeList
+from persepolis.scripts.newopen import Open, readList, writeList
 import platform
 import sys
-import logger
+from persepolis.scripts import logger
 from PyQt5.QtCore import QSettings
 import platform
 

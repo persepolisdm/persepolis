@@ -15,7 +15,7 @@
 
 import os
 import requests
-from newopen import Open, readList, writeList
+from persepolis.scripts.newopen import Open, readList, writeList
 from http.cookies import SimpleCookie
 from requests.cookies import cookiejar_from_dict
 from requests import Session
