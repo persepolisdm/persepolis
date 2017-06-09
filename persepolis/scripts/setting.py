@@ -257,6 +257,14 @@ class PreferencesWindow(Setting_Ui):
 # font_checkBox connect
         self.font_checkBox.stateChanged.connect(self.fontCheckBoxState)
 
+# saving initial value of self.persepolis_setting in self.first_key_value_dict
+# at the end! in the okPushButtonPressed method, first_key_value_dict will compared with second_key_value_dict. 
+# if any thing changed , then a message box notify user about "some changes take effect after restarting persepolis".
+        self.first_key_value_dict = {}
+        for member in self.persepolis_setting.allKeys():
+            self.first_key_value_dict[member] = str(self.persepolis_setting.value(member)) 
+
+
         self.persepolis_setting.endGroup()
 # setting window size and position
         size = self.persepolis_setting.value(
@@ -735,10 +743,18 @@ class PreferencesWindow(Setting_Ui):
             self.persepolis_setting.setValue('column12', 'no')
             self.parent.download_table.setColumnHidden(12, True)
 
-        restart_messageBox = QMessageBox()                
-        restart_messageBox.setText('<b>Some changes take effect after restarting persepolis</b>')
-        restart_messageBox.setWindowTitle('Restart Persepolis!')
-        restart_messageBox.exec_()
+        # saving value of persepolis_setting in second_key_value_dict.
+        self.second_key_value_dict = {}
+        for member in self.persepolis_setting.allKeys():
+            self.second_key_value_dict[member] = str(self.persepolis_setting.value(member)) 
+
+        # comparing first_key_value_dict with second_key_value_dict
+        # if any thing changed, then notify user about "Some changes take effect after restarting persepolis"
+        if self.first_key_value_dict != self.second_key_value_dict:
+            restart_messageBox = QMessageBox()                
+            restart_messageBox.setText('<b>Some changes take effect after restarting persepolis</b>')
+            restart_messageBox.setWindowTitle('Restart Persepolis!')
+            restart_messageBox.exec_()
 
         # applying changes
         self.persepolis_setting.endGroup()
