@@ -143,7 +143,7 @@ class AddLinkWindow_Ui(QWidget):
         gridLayout.addWidget(self.port_label, 2, 0, 1, 1)
 
         self.port_spinBox = QSpinBox(self.proxy_frame)
-        self.port_spinBox.setMaximum(9999)
+        self.port_spinBox.setMaximum(65535)
         self.port_spinBox.setSingleStep(1)
         gridLayout.addWidget(self.port_spinBox, 2, 1, 1, 1)
         proxy_verticalLayout.addWidget(self.proxy_frame)
