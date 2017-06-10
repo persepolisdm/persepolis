@@ -1,12 +1,9 @@
 language: python
 dist: zesty
 sudo: required
-python:
-  - "3.6"
-virtualenv:
-  system_site_packages: true
 before_install:
   - sudo apt-get -qq update
+  - sudo apt-get install -y python3
   - sudo apt-get install -y aria2
   - sudo apt-get install -y sound-theme-freedesktop     
   - sudo apt-get install -y libnotify-bin
