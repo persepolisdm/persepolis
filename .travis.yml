@@ -1,5 +1,5 @@
 language: python
-dist: zesty
+dist: jessie
 sudo: required
 before_install:
   - sudo apt-get -qq update
