@@ -312,7 +312,7 @@ def main():
             else:
                 mainwindow.show()
 
-        except Exception :
+        except Exception:
             # Resetting persepolis
             error_window = ErrorWindow(str(traceback.format_exc()))
             error_window.show()
