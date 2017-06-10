@@ -222,7 +222,10 @@ if args.chromium != 'no' or args.parent_window:
 
             if 'filename' in data.keys() and data['filename'] != '':
                 args.name = os.path.basename(str(data['filename']))
-
+                
+            if 'useragent' in data.keys():
+                args.agent = data['useragent']
+                
             if 'cookies' in data.keys():
                 args.cookie = data['cookies']
 
