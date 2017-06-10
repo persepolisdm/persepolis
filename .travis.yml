@@ -7,6 +7,13 @@ virtualenv:
   system_site_packages: true
 before_install:
   - sudo apt-get -qq update
-  - sudo apt-get install -y aria2 sound-theme-freedesktop libnotify-bin python3-pyqt5 libqt5svg5 python3-requests python3-setproctitle python3-setuptools
+  - sudo apt-get install -y aria2
+  - sudo apt-get install -y sound-theme-freedesktop     
+  - sudo apt-get install -y libnotify-bin
+  - sudo apt-get install -y python3-pyqt5
+  - sudo apt-get install -y libqt5svg5
+  - sudo apt-get install -y python3-requests
+  - sudo apt-get install -y python3-setproctitle
+  - sudo apt-get install -y python3-setuptools
 script:
  - sudo python3 setup.py install
