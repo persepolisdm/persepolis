@@ -2,7 +2,7 @@ language: python
 dist: zesty
 sudo: required
 python:
-  - "3.4"
+  - "3.6"
 virtualenv:
   system_site_packages: true
 before_install:
