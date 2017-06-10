@@ -1,5 +1,5 @@
 language: python
-dist: jessie
+dist: zesty
 sudo: required
 python:
   - "3.4"
