@@ -1,6 +1,10 @@
 language: python
-dist: jessie
+dist: trusty
 sudo: required
+python:
+  - "3.4"
+virtualenv:
+  system_site_packages: true
 python:
   - "3.4"
 before_install:
@@ -11,10 +15,9 @@ before_install:
   - sudo apt-get install -y libnotify-bin
   - sudo apt-get install -y libqt5svg5
   - sudo apt-get install -y python3-setuptools
-install:
-  - pip3 install requests
-  - pip3 install pyqt5
-  - pip3 install setproctitle
+  - sudo pip3 install requests
+  - sudo pip3 install pyqt5
+  - sudo pip3 install setproctitle
 
 script:
  - sudo python3 setup.py install
