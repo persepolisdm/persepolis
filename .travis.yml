@@ -3,10 +3,10 @@ dist: trusty
 sudo: required
 python:
   - "3.4"
+  - "3.5"
+  - "3.6"
 virtualenv:
   system_site_packages: true
-python:
-  - "3.4"
 before_install:
   - sudo apt-get -qq update
   - sudo apt-get install -y python3
@@ -16,8 +16,8 @@ before_install:
   - sudo apt-get install -y libqt5svg5
   - sudo apt-get install -y python3-setuptools
   - sudo apt-get install -y python3-pip
+  - sudo apt-get install -y python3-pyqt5
   - sudo pip3 install requests
-  - sudo pip3 install pyqt5
   - sudo pip3 install setproctitle
 
 script:
