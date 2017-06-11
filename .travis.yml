@@ -15,6 +15,7 @@ before_install:
   - sudo apt-get install -y libnotify-bin
   - sudo apt-get install -y libqt5svg5
   - sudo apt-get install -y python3-setuptools
+  - sudo apt-get install -y python3-pip
   - sudo pip3 install requests
   - sudo pip3 install pyqt5
   - sudo pip3 install setproctitle
