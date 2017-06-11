@@ -15,8 +15,10 @@ before_install:
   - sudo apt-get install -y python3-setuptools
   - sudo apt-get install -y python3-pip
   - sudo apt-get install -y python3-pyqt5
+  - sudo apt-get install -y pulseaudio
   - sudo pip3 install requests
   - sudo pip3 install setproctitle
 
 script:
  - sudo python3 setup.py install
+ - persepolis
