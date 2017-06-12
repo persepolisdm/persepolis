@@ -1082,10 +1082,12 @@ class MainWindow(MainWindow_Ui):
         cursor_position = QCursor.pos()
         cursor_array = [int(cursor_position.x()) , int(cursor_position.y())]
 
-        if add == True and self.keep_awake_checkBox.isChecked() == True: # Moving mouse position one time +1 pixel and one time -1 pixel! 
-            QCursor.setPos(cursor_array[0] + 1, cursor_array[1] + 1)
-        else:
-            QCursor.setPos(cursor_array[0] - 1, cursor_array[1] - 1)
+        print(self.persepolis_setting.value('settings/awake'))
+        if self.persepolis_setting.value('settings/awake') == 'yes':
+            if add == True and self.keep_awake_checkBox.isChecked() == True: # Moving mouse position one time +1 pixel and one time -1 pixel! 
+                QCursor.setPos(cursor_array[0] + 1, cursor_array[1] + 1)
+            else:
+                QCursor.setPos(cursor_array[0] - 1, cursor_array[1] - 1)
 
 # if keep_awake_checkBox toggled by user , this method is called.
     def keepAwakeCheckBoxToggled(self, checkbox):
