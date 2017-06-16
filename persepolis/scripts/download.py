@@ -25,6 +25,7 @@ import sys
 from persepolis.scripts import logger
 from PyQt5.QtCore import QSettings
 import platform
+import urllib
 
 home_address = os.path.expanduser("~")
 
@@ -237,7 +238,7 @@ def downloadStatus(gid):
         file_status = ast.literal_eval(file_status)
         path = str(file_status['path'])
 
-        file_name = os.path.basename(path)
+        file_name = urllib.unquote(os.path.basename(path)) 
 
         if not(file_name):
             file_name = None
@@ -369,7 +370,7 @@ def downloadStatus(gid):
         add_link_dictionary['file_path'] = file_path
         add_link_dictionary['final_download_path'] = file_path
 
-        file_name = os.path.basename(file_path)
+        file_name = urllib.unquote(os.path.basename(file_path)) 
 
 # rename active status to downloading
     if (status_str == "active"):
