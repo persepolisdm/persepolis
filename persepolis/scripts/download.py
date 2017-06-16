@@ -25,7 +25,7 @@ import sys
 from persepolis.scripts import logger
 from PyQt5.QtCore import QSettings
 import platform
-import urllib
+import urllib.parse
 
 home_address = os.path.expanduser("~")
 
