@@ -81,12 +81,6 @@ else:
  
 DESCRIPTION = 'Persepolis Download Manager'
 
-f = open('README.md' , 'r')
-
-LONG_DESCRIPTION = f.readlines()
-
-f.close()
-
 if os_type == 'Linux':
     DATA_FILES = [
         ('/usr/share/man/man1/', ['man/persepolis.1.gz']),
