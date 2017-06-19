@@ -104,14 +104,7 @@ class AddLinkWindow(AddLinkWindow_Ui):
         if ('link' in self.flashgot_add_link_dictionary):
             self.link_lineEdit.setText(
                 str(self.flashgot_add_link_dictionary['link']))
-
-#             # spider is finding file size
-#             new_spider = AddLinkSpiderThread(self.flashgot_add_link_dictionary)
-#             self.parent.threadPool.append(new_spider)
-#             self.parent.threadPool[len(self.parent.threadPool) - 1].start()
-#             self.parent.threadPool[len(self.parent.threadPool) - 1].ADDLINKSPIDERSIGNAL.connect(
-#                 partial(self.parent.addLinkSpiderCallBack, child=self))
-#  
+ 
         else:
             clipboard = QApplication.clipboard()
             text = clipboard.text()
@@ -190,9 +183,10 @@ class AddLinkWindow(AddLinkWindow_Ui):
 
         # check name of flashgot link ->
         if ('out' in self.flashgot_add_link_dictionary):
-            self.change_name_lineEdit.setText(
-                str(self.flashgot_add_link_dictionary['out']))
-            self.change_name_checkBox.setChecked(True)
+            if str(self.flashgot_add_link_dictionary['out']) != 'None':
+                self.change_name_lineEdit.setText(
+                    str(self.flashgot_add_link_dictionary['out']))
+                self.change_name_checkBox.setChecked(True)
 
 # setting window size and position
         size = self.persepolis_setting.value(
