@@ -1296,8 +1296,13 @@ class MainWindow(MainWindow_Ui):
                             self.afterdownload_list.append(afterdownloadwindow)
                             self.afterdownload_list[len(
                                 self.afterdownload_list) - 1].show()
+
+                            # bringing AfterDownloadWindow on top
                             self.afterdownload_list[len(
                                 self.afterdownload_list) - 1].raise_()
+                            self.afterdownload_list[len(
+                                self.afterdownload_list) - 1].activateWindow()
+
 
                 # downloaded
                 downloaded = "<b>Downloaded</b> : " + \
@@ -1551,7 +1556,9 @@ class MainWindow(MainWindow_Ui):
             self, self.callBack, self.persepolis_setting, flashgot_add_link_dictionary)
         self.addlinkwindows_list.append(addlinkwindow)
         self.addlinkwindows_list[len(self.addlinkwindows_list) - 1].show()
+        # bringing addlinkwindow on top
         self.addlinkwindows_list[len(self.addlinkwindows_list) - 1].raise_()
+        self.addlinkwindows_list[len(self.addlinkwindows_list) - 1].activateWindow()
 
 
 # This method creates addlinkwindow when user presses plus button in MainWindow
@@ -2923,8 +2930,13 @@ class MainWindow(MainWindow_Ui):
         self.flashgot_queue_window_list.append(flashgot_queue_window)
         self.flashgot_queue_window_list[len(
             self.flashgot_queue_window_list) - 1].show()
+
+        # bringing flashgot_queue_window on top
         self.flashgot_queue_window_list[len(
             self.flashgot_queue_window_list) - 1].raise_()
+        self.flashgot_queue_window_list[len(
+            self.flashgot_queue_window_list) - 1].activateWindow()
+
 
 
 # this method is importing text file for creating queue . text file must
