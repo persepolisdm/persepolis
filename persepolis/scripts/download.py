@@ -140,7 +140,7 @@ def downloadAria(gid):
     if cookies != None:
         semicolon_split_cookies = cookies.split('; ')
         for i in semicolon_split_cookies:
-            equal_split_cookie = i.split('=')
+            equal_split_cookie = i.split('=',1)
             join_cookie = ':'.join(equal_split_cookie)
             if i != '':
                 header_list.append(join_cookie)
@@ -148,7 +148,7 @@ def downloadAria(gid):
     if header != None:
         semicolon_split_header = header.split('; ')
         for i in semicolon_split_header:
-            equal_split_header = i.split('=')
+            equal_split_header = i.split('=',1)
             join_header = ':'.join(equal_split_header)
             if i != '':
                 header_list.append(join_header)
