@@ -97,7 +97,7 @@ def aria2Version():
     try:
         answer = server.aria2.getVersion()
     except:
-        print("aria2 not respond!")
+        print("aria2 did not respond!")
         logger.sendToLog("Aria2 didn't respond!", "ERROR")
         answer = "did not respond"
     return answer

@@ -164,14 +164,24 @@ class StartAria2Thread(QThread):
         # ARIA2RESPONDSIGNAL emitting yes , then startAriaMessage function
         # changing aria_startup_answer to 'Ready'
         global aria_startup_answer
-        for i in range(5):
-            answer = download.startAria()
-            if answer == 'did not respond' and i != 4:
-                signal_str = 'try again'
-                self.ARIA2RESPONDSIGNAL.emit(signal_str)
-                sleep(2)
-            else:
-                break
+
+        # checking that aria2 is running or not!
+        answer = download.aria2Version()
+
+        # if Aria2 wasn't started before, so start it!
+        if answer == 'did not respond':
+            print('Starting Aria2')
+            logger.sendToLog(
+                            "Starting Aria2", "INFO")
+ 
+            for i in range(5):
+                answer = download.startAria()
+                if answer == 'did not respond' and i != 4:
+                    signal_str = 'try again'
+                    self.ARIA2RESPONDSIGNAL.emit(signal_str)
+                    sleep(2)
+                else:
+                    break
 
         # if Aria2 doesn't respond to Persepolis ,ARIA2RESPONDSIGNAL is
         # emitting no
@@ -179,7 +189,10 @@ class StartAria2Thread(QThread):
             signal_str = 'no'
         else:
             signal_str = 'yes'
-
+            print('Aria2 is running')
+            logger.sendToLog(
+                            "Aria2 is running", "INFO")
+ 
         self.ARIA2RESPONDSIGNAL.emit(signal_str)
 
 
@@ -795,7 +808,7 @@ class MainWindow(MainWindow_Ui):
                 download_info_file_list[9] = add_link_dictionary
                 writeList(download_info_file, download_info_file_list)
 
-# defining some lists and dictionaries for runinng addlinkwindows and
+# defining some lists and dictionaries for running addlinkwindows and
 # propertieswindows and propertieswindows , ...
         self.addlinkwindows_list = []
         self.propertieswindows_list = []
