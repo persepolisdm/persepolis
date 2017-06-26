@@ -137,13 +137,7 @@ def downloadAria(gid):
 
     # making header option
     header_list = []
-    if cookies != None:
-        semicolon_split_cookies = cookies.split('; ')
-        for i in semicolon_split_cookies:
-            equal_split_cookie = i.split('=',1)
-            join_cookie = ':'.join(equal_split_cookie)
-            if i != '':
-                header_list.append(join_cookie)
+    header_list.append("Cookie: " + str(cookies))
 
     if header != None:
         semicolon_split_header = header.split('; ')
@@ -195,18 +189,34 @@ def downloadAria(gid):
 
     if start_time_status != 'stopped':
         # sending download request to aria2
-        if link[0:5] != "https":
-            aria_dict = {'gid': gid, 'max-tries': str(persepolis_setting.value('settings/max-tries')), 'retry-wait': int(persepolis_setting.value('settings/retry-wait')), 'timeout': int(persepolis_setting.value('settings/timeout')), 'header': header_list, 'out': out, 'user-agent': user_agent,  'referer': referer,  'all-proxy': ip_port,
-                         'max-download-limit': limit, 'all-proxy-user': str(proxy_user), 'all-proxy-passwd': str(proxy_passwd), 'http-user': str(download_user), 'http-passwd': str(download_passwd), 'split': '16', 'max-connection-per-server': str(connections), 'min-split-size': '1M', 'continue': 'true', 'dir': str(download_path_temp)}
-        else:
-            aria_dict = {'gid': gid, 'max-tries': str(persepolis_setting.value('settings/max-tries')), 'retry-wait': int(persepolis_setting.value('settings/retry-wait')), 'timeout': int(persepolis_setting.value('settings/timeout')), 'header': header_list, 'out': out, 'user-agent': user_agent,
-                         'referer': referer,  'all-proxy': ip_port, 'max-download-limit': limit, 'all-proxy-user': str(proxy_user), 'all-proxy-passwd': str(proxy_passwd), 'split': '16', 'max-connection-per-server': str(connections), 'min-split-size': '1M', 'continue': 'true', 'dir': str(download_path_temp)}
+        aria_dict = {
+            'gid': gid,
+            'max-tries': str(persepolis_setting.value('settings/max-tries')),
+            'retry-wait': int(persepolis_setting.value('settings/retry-wait')),
+            'timeout': int(persepolis_setting.value('settings/timeout')),
+            'header': header_list,
+            'out': out,
+            'user-agent': user_agent,
+            'referer': referer,
+            'all-proxy': ip_port,
+            'max-download-limit': limit,
+            'all-proxy-user': str(proxy_user),
+            'all-proxy-passwd': str(proxy_passwd),
+            'http-user': str(download_user),
+            'http-passwd': str(download_passwd),
+            'split': '16',
+            'max-connection-per-server': str(connections),
+            'min-split-size': '1M',
+            'continue': 'true',
+            'dir': str(download_path_temp)
+        }
+
+        if not link.startswith("https"):
+            aria_dict ['http-user']= str(download_user)
+            aria_dict ['http-passwd']= str(download_passwd)
 
         try:
-            if ("http" in link[0:5]):
-                answer = server.aria2.addUri([link], aria_dict)
-            else:
-                answer = server.aria2.addUri([link], aria_dict)
+            answer = server.aria2.addUri([link], aria_dict)
 
             print(answer + " Starts")
             logger.sendToLog(answer + " Starts", 'INFO')
