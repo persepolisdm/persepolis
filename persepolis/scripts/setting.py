@@ -550,10 +550,10 @@ class PreferencesWindow(Setting_Ui):
 
 # show_sidepanel_checkbox
         if self.show_sidepanel_checkbox.isChecked() == True:
-            self.persepolis_setting.setValue('show_sidepanel', 'yes')
+            self.persepolis_setting.setValue('show-sidepanel', 'yes')
             self.parent.category_tree_qwidget.show()
         else:
-            self.persepolis_setting.setValue('show_sidepanel', 'no')
+            self.persepolis_setting.setValue('show-sidepanel', 'no')
             self.parent.category_tree_qwidget.hide()
 
 # show_progress_window_checkbox
