@@ -17,7 +17,7 @@
 import os
 
 from PyQt5 import QtCore, QtGui, QtWidgets
-from PyQt5.QtWidgets import QPushButton, QComboBox, QSpinBox, QVBoxLayout, QHBoxLayout, QLabel, QApplication, QWidget, QFileDialog, QMessageBox, QSizePolicy, QGridLayout, QCheckBox, QFrame, QLineEdit, QPushButton
+from PyQt5.QtWidgets import QDoubleSpinBox, QPushButton, QComboBox, QSpinBox, QVBoxLayout, QHBoxLayout, QLabel, QApplication, QWidget, QFileDialog, QMessageBox, QSizePolicy, QGridLayout, QCheckBox, QFrame, QLineEdit, QPushButton
 from PyQt5.QtGui import QIcon
 from persepolis.scripts.newopen import Open
 from persepolis.gui import icons_resource
@@ -261,7 +261,7 @@ class AddLinkWindow_Ui(QWidget):
 
         horizontalLayout_4 = QHBoxLayout(self.limit_frame)
 
-        self.limit_spinBox = QSpinBox(self.limit_frame)
+        self.limit_spinBox = QDoubleSpinBox(self.limit_frame)
         self.limit_spinBox.setMinimum(1)
         self.limit_spinBox.setMaximum(1023)
         horizontalLayout_4.addWidget(self.limit_spinBox)

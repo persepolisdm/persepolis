@@ -188,7 +188,7 @@ class PropertiesWindow(AddLinkWindow_Ui):
             self.limit_checkBox.setChecked(True)
             limit_number = limit[0:-1]
             limit_unit = limit[-1]
-            self.limit_spinBox.setValue(int(limit_number))
+            self.limit_spinBox.setValue(float(limit_number))
             if limit_unit == "K":
                 self.limit_comboBox.setCurrentIndex(0)
             else:

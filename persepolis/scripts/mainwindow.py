@@ -3936,7 +3936,7 @@ class MainWindow(MainWindow_Ui):
                 limit_unit = limit[-1]
 
             # limit_spinBox
-                self.limit_spinBox.setValue(int(limit_number))
+                self.limit_spinBox.setValue(float(limit_number))
 
             # limit_comboBox
                 if limit_unit == 'K':

@@ -14,7 +14,7 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from PyQt5 import QtCore, QtGui, QtWidgets
-from PyQt5.QtWidgets import QPushButton, QComboBox,  QMenu, QTreeView, QSplitter, QSizePolicy, QGridLayout, QHBoxLayout, QVBoxLayout, QMenu, QTableWidgetItem, QAbstractItemView, QApplication, QToolBar, QMenuBar, QStatusBar, QTableWidget, QAction, QMainWindow, QWidget, QFrame, QAbstractItemView, QCheckBox, QSpinBox, QLabel
+from PyQt5.QtWidgets import QDoubleSpinBox, QPushButton, QComboBox,  QMenu, QTreeView, QSplitter, QSizePolicy, QGridLayout, QHBoxLayout, QVBoxLayout, QMenu, QTableWidgetItem, QAbstractItemView, QApplication, QToolBar, QMenuBar, QStatusBar, QTableWidget, QAction, QMainWindow, QWidget, QFrame, QAbstractItemView, QCheckBox, QSpinBox, QLabel
 from PyQt5.QtGui import QIcon, QStandardItemModel, QStandardItem
 from PyQt5.QtCore import QCoreApplication, QRect, QSize, Qt
 import ast
@@ -306,7 +306,7 @@ class MainWindow_Ui(QMainWindow):
         limit_frame_verticalLayout = QVBoxLayout(self.limit_frame)
 # limit_spinBox
         limit_frame_horizontalLayout = QHBoxLayout()
-        self.limit_spinBox = QSpinBox(self)
+        self.limit_spinBox = QDoubleSpinBox(self)
         self.limit_spinBox.setMinimum(1)
         self.limit_spinBox.setMaximum(1023)
         limit_frame_horizontalLayout.addWidget(self.limit_spinBox)

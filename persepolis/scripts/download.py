@@ -120,7 +120,7 @@ def downloadAria(gid):
     download_user = add_link_dictionary['download_user']
     download_passwd = add_link_dictionary['download_passwd']
     connections = add_link_dictionary['connections']
-    limit = add_link_dictionary['limit']
+    limit = str(add_link_dictionary['limit'])
     start_hour = add_link_dictionary['start_hour']
     start_minute = add_link_dictionary['start_minute']
     end_hour = add_link_dictionary['end_hour']
@@ -139,6 +139,19 @@ def downloadAria(gid):
     header_list = []
     header_list.append("Cookie: " + str(cookies))
 
+# converting Mega to Kilo, RPC does not Support floating point numbers. 
+    if limit != '0':
+        limit_number = limit[:-1]
+        limit_number = float(limit_number)
+        limit_unit = limit[-1]
+        if limit_unit == 'K':
+            limit_number = round(limit_number)
+        else:
+            limit_number = round(1024*limit_number)
+            limit_unit = 'K'
+        limit = str(limit_number) + limit_unit
+
+ 
     if header != None:
         semicolon_split_header = header.split('; ')
         for i in semicolon_split_header:
@@ -564,13 +577,26 @@ def downloadUnpause(gid):
 
 
 def limitSpeed(gid, limit):
+    limit = str(limit)
+# converting Mega to Kilo, RPC does not Support floating point numbers. 
+    if limit != '0':
+        limit_number = limit[:-1]
+        limit_number = float(limit_number)
+        limit_unit = limit[-1]
+        if limit_unit == 'K':
+            limit_number = round(limit_number)
+        else:
+            limit_number = round(1024*limit_number)
+            limit_unit = 'K'
+        limit = str(limit_number) + limit_unit
+
     try:
         answer = server.aria2.changeOption(gid, {'max-download-limit': limit})
+        print("Download speed limit value is changed")
+        logger.sendToLog("Download speed limit  value is changed", "INFO")
+
     except:
         str("None")
-    print("Download speed is limited")
-    logger.sendToLog("Download speed is limited", "INFO")
-
 # this function returning  GID of active downloads
 
 
