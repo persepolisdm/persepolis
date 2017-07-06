@@ -3179,7 +3179,18 @@ class MainWindow(MainWindow_Ui):
             gid = line.strip()
             self.download_table.insertRow(0)
             download_info_file = os.path.join(download_info_folder, gid)
-            download_info_file_list = readList(download_info_file, 'string')
+
+            # retry to open file if error occured!    
+            ii = 0
+            while ii != 10:
+                try:
+                    download_info_file_list = readList(download_info_file, 'string')
+                    ii = 10
+                except:
+                    print('failed to open')
+                    sleep(0.1)
+                    ii = ii + 1
+
             for i in range(13):
                 item = QTableWidgetItem(download_info_file_list[i])
 
