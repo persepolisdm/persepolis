@@ -3616,7 +3616,13 @@ class MainWindow(MainWindow_Ui):
                     if self.queue_list_dict[category].start:
                         status = 'downloading'  # It means queue is in download progress
 
-                if (item.checkState() == 2) and (status == 'error' or status == 'stopped' or status == 'complete'):
+                if category == new_category : # It means item is already in new_category! so no need to transfer item again.
+                    existance = 'yes'
+                else:
+                    existance = 'no'
+
+                # checkState 2 means item is checked by user.
+                if (item.checkState() == 2) and (status == 'error' or status == 'stopped' or status == 'complete') and (existance == 'no'):
                     gid = self.download_table.item(row, 8).text()
                     gid_list.append(gid)
                 if not (status == 'error' or status == 'stopped' or status == 'complete'):
