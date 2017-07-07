@@ -479,16 +479,9 @@ class PreferencesWindow(Setting_Ui):
         style = str(self.style_comboBox.currentText())
         self.persepolis_setting.setValue('style', style)
 
-        if style != self.grandparent.persepolis_style:  # if style changed,then set new style
-            self.grandparent.setPersepolisStyle(style)
-
 # color_scheme
         color_scheme = self.color_comboBox.currentText()
         self.persepolis_setting.setValue('color-scheme', color_scheme)
-
-        # if color_scheme changed , then set new color_scheme
-        if color_scheme != self.grandparent.persepolis_color_scheme:
-            self.grandparent.setPersepolisColorScheme(color_scheme)
 
 # font and font size
 
@@ -503,11 +496,6 @@ class PreferencesWindow(Setting_Ui):
 
         if self.font_checkBox.isChecked():
             custom_font = 'yes'
-        # if font or font_size changed,set new font , font_size
-            if self.grandparent.persepolis_font != font or int(self.grandparent.persepolis_font_size) != int(font_size):
-                self.grandparent.setPersepolisFont(font, int(font_size), custom_font)
-                self.grandparent.setPersepolisStyle(style)
-                self.grandparent.setPersepolisColorScheme(color_scheme)
         else:
             custom_font = 'no'
            
@@ -749,10 +737,16 @@ class PreferencesWindow(Setting_Ui):
             self.second_key_value_dict[member] = str(self.persepolis_setting.value(member)) 
 
         # comparing first_key_value_dict with second_key_value_dict
-        # if any thing changed, then notify user about "Some changes take effect after restarting persepolis"
-        if self.first_key_value_dict != self.second_key_value_dict:
+        show_message_box = False
+        for key in self.first_key_value_dict.keys():
+            if self.first_key_value_dict[key] != self.second_key_value_dict[key]:
+                if key in ['download_path_temp', 'download_path', 'custom-font', 'rpc-port', 'max-tries', 'retry-wait', 'timeout', 'connections', 'style', 'font', 'font-size', 'color-scheme']:
+                    show_message_box = True
+
+        # if any thing changed that needs restarting, then notify user about "Some changes take effect after restarting persepolis"
+        if show_message_box:
             restart_messageBox = QMessageBox()                
-            restart_messageBox.setText('<b>Some changes take effect after restarting persepolis</b>')
+            restart_messageBox.setText('<b><center>Restart Persepolis Please!</center></b><br><center>Some changes take effect after restarting persepolis</center>')
             restart_messageBox.setWindowTitle('Restart Persepolis!')
             restart_messageBox.exec_()
 
