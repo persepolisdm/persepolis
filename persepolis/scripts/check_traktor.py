@@ -9,7 +9,10 @@ class OS:
 
 class Tor:
     def __init__(self):
-        self.tor = which('tor')
+        if OS().system() == 'linux':
+            self.tor = which('tor')
+        else:
+            self.tor = None
 
     def check_tor(self):
         """ True If Tor Is Installed """
