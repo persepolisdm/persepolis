@@ -21,7 +21,7 @@ class Tor:
         proxy = proxy.decode('utf-8')
         proxy = proxy.split('\n')[0]
 
-        if proxy == 'manual':
+        if proxy == 'manual' and self.check_tor():
             tor = subprocess.check_output('gsettings', 'get', 'org.gnome.system.proxy.socks', 'port')
             tor = tor.decode('utf-8')
             tor = tor.split('\n')[0]
