@@ -38,7 +38,7 @@ class Tor:
 
     def check_tor(self):
         """ True If Tor Is Installed """
-        return (self.tor is None)
+        return (self.tor is not None)
 
     def socks_tor(self):
         """ Checks If Socks Proxy Is Configured For Tor """
