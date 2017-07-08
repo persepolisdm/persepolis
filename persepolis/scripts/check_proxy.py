@@ -27,8 +27,6 @@ class Proxy:
             return ('manual')
         return None
 
-
-
 class Tor:
     def __init__(self):
         if platform.system() == 'linux':
