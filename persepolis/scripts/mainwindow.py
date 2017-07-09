@@ -20,6 +20,7 @@ from PyQt5.QtWidgets import QApplication,  QAction, QFileDialog, QSystemTrayIcon
 from PyQt5.QtGui import QIcon, QColor, QPalette, QStandardItem, QCursor
 from PyQt5.QtCore import QCoreApplication, QRect, QSize, QPoint, QThread, pyqtSignal, Qt
 import os
+import time
 from time import sleep
 import random
 from persepolis.scripts.after_download import AfterDownloadWindow
@@ -293,7 +294,7 @@ class DownloadLink(QThread):
                 self.ARIA2NOTRESPOND.emit()
 
 
-# this thread managing queue and sending download request to aria2
+# this thread is managing queue and sending download request to aria2
 class Queue(QThread):
     # this signal emited when download status of queue changes to stop
     REFRESHTOOLBARSIGNAL = pyqtSignal(str)
@@ -317,6 +318,7 @@ class Queue(QThread):
 
         queue_file = os.path.join(category_folder, self.category)
 
+        queue_counter = 0 
         for counter in range(5):  # queue is repeating 5 times! and everty times load queue list again! It is helping for checking new downloads in queue and retrying failed downloads
             # getting list of gid in queue
             f = Open(queue_file)
@@ -358,6 +360,7 @@ class Queue(QThread):
 
                         break
 
+            
             for line in queue_file_lines:
                 gid = line.strip()
 
@@ -370,22 +373,45 @@ class Queue(QThread):
                 # of the loop!We don't want to download it two times :)
                 if str(download_info_file_list[1]) == 'complete':
                     continue
-
+                
+                queue_counter = queue_counter + 1
             # changing status of download to waiting
                 status = 'waiting'
                 download_info_file_list[1] = status
+                # reading add_link_dictionary
+                add_link_dictionary = download_info_file_list[9]
+
 
                 if self.end_hour != None:  # it means user was set end time for download
-
-                    # reading add_link_dictionary
-                    add_link_dictionary = download_info_file_list[9]
 
                 # setting end_hour and end_minute
                     add_link_dictionary['end_hour'] = self.end_hour
                     add_link_dictionary['end_minute'] = self.end_minute
 
-                # writing changes to download_info_file_list
-                    download_info_file_list[9] = add_link_dictionary
+            # finding wait_queue value
+            # user can set sleep time between download items in queue. see preferences window!
+                wait_queue_list = self.parent.persepolis_setting.value('settings/wait-queue') 
+                wait_queue_hour = int(wait_queue_list[0])
+                wait_queue_minute = int(wait_queue_list[1])
+
+                # checking if user set sleep time between downloads in queue in setting window.
+                # if queue_counter is 1 , it means we are in the first download item in queue.
+                # and no need to wait for first item.
+                if (wait_queue_hour != 0 or wait_queue_minute != 0) and queue_counter != 1:  
+                    now_time_hour = int(time.strftime("%H"))
+                    now_time_minute = int(time.strftime("%M"))
+                    now_time_second = int(time.strftime("%S"))
+                        
+                    # add extra minute if we are in seond half of minute
+                    if now_time_second > 30:
+                        now_time_minute = now_time_minute + 1
+
+                    add_link_dictionary['start_hour'] = str(wait_queue_hour + now_time_hour) 
+                    add_link_dictionary['start_minute'] = str(wait_queue_minute + now_time_minute)
+
+            # writing changes to download_info_file_list
+                download_info_file_list[9] = add_link_dictionary
+
 
             # writing new download_info_file_list to download_info_file
                 writeList(download_info_file, download_info_file_list)

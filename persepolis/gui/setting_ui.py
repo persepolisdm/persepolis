@@ -15,7 +15,7 @@
 
 
 from PyQt5 import QtCore, QtGui, QtWidgets
-from PyQt5.QtWidgets import QCheckBox, QVBoxLayout, QHBoxLayout, QFrame, QWidget, QLabel, QLineEdit, QTabWidget, QSpinBox, QPushButton, QDial, QComboBox, QFontComboBox, QSpacerItem, QSizePolicy
+from PyQt5.QtWidgets import QDateTimeEdit, QCheckBox, QVBoxLayout, QHBoxLayout, QFrame, QWidget, QLabel, QLineEdit, QTabWidget, QSpinBox, QPushButton, QDial, QComboBox, QFontComboBox, QSpacerItem, QSizePolicy
 from PyQt5.QtGui import QIcon
 import ast
 import os
@@ -92,8 +92,24 @@ class Setting_Ui(QWidget):
         self.rpc_port_spinbox.setMinimum(1024)
         self.rpc_port_spinbox.setMaximum(65535)
         self.rpc_horizontalLayout.addWidget(self.rpc_port_spinbox)
+
         self.download_options_verticalLayout.addLayout(
             self.rpc_horizontalLayout)
+
+
+# wait_queue
+        wait_queue_horizontalLayout = QHBoxLayout() 
+
+        self.wait_queue_label = QLabel(self.layoutWidget)
+        wait_queue_horizontalLayout.addWidget(self.wait_queue_label)
+
+        self.wait_queue_time = QDateTimeEdit(self.layoutWidget)
+        self.wait_queue_time.setDisplayFormat('H:mm')
+        wait_queue_horizontalLayout.addWidget(self.wait_queue_time)
+        
+        self.download_options_verticalLayout.addLayout(
+            wait_queue_horizontalLayout) 
+
 
         self.setting_tabWidget.addTab(self.download_options_tab, "")
 # save_as_tab
@@ -302,64 +318,86 @@ class Setting_Ui(QWidget):
         self.setting_tabWidget.setCurrentIndex(3)
 
         self.setWindowTitle("Preferences")
+
         self.tries_label.setToolTip(
             "<html><head/><body><p>Set number of tries if download failed.</p></body></html>")
         self.tries_label.setText("Number of tries : ")
         self.tries_spinBox.setToolTip(
             "<html><head/><body><p>Set number of tries if download failed.</p></body></html>")
+
         self.wait_label.setToolTip(
             "<html><head/><body><p>Set the seconds to wait between retries. Download manager will  retry  downloads  when  the  HTTP  server  returns  a  503 response.</p></body></html>")
         self.wait_label.setText("Wait between retries (seconds) : ")
         self.wait_spinBox.setToolTip(
             "<html><head/><body><p>Set the seconds to wait between retries. Download manager will  retry  downloads  when  the  HTTP  server  returns  a  503 response.</p></body></html>")
+
         self.time_out_label.setToolTip(
             "<html><head/><body><p>Set timeout in seconds. </p></body></html>")
         self.time_out_label.setText("Time out (seconds) : ")
         self.time_out_spinBox.setToolTip(
             "<html><head/><body><p>Set timeout in seconds. </p></body></html>")
+
         self.connections_label.setToolTip(
             "<html><head/><body><p>Using multiple connections can help speed up your download.</p></body></html>")
         self.connections_label.setText("Number of connections : ")
         self.connections_spinBox.setToolTip(
             "<html><head/><body><p>Using multiple connections can help speed up your download.</p></body></html>")
+
         self.rpc_port_label.setText("RPC port number : ")
         self.rpc_port_spinbox.setToolTip(
             "<html><head/><body><p> Specify a port number for JSON-RPC/XML-RPC server to listen to. Possible Values: 1024 - 65535 Default: 6801 </p></body></html>")
+
+        self.wait_queue_label.setText('Wait between every downloads in queue:')
+
         self.setting_tabWidget.setTabText(self.setting_tabWidget.indexOf(
             self.download_options_tab),  "Download Options")
 
         self.download_folder_label.setText("Download Folder : ")
         self.download_folder_pushButton.setText("Change")
+
         self.temp_download_label.setText("Temporary Download Folder : ")
         self.temp_download_pushButton.setText("Change")
+
         self.subfolder_checkBox.setText("Create subfolders for Music,Videos,... in default download folder")
 
         self.setting_tabWidget.setTabText(
             self.setting_tabWidget.indexOf(self.save_as_tab),  "Save as")
+
         self.enable_notifications_checkBox.setText(
             "Enable notification sounds")
+
         self.volume_label.setText("Volume : ")
+
         self.setting_tabWidget.setTabText(self.setting_tabWidget.indexOf(
             self.notifications_tab),  "Notifications")
+
         self.style_label.setText("Style : ")
         self.color_label.setText("Color scheme : ")
         self.icon_label.setText("Icons : ")
+
         self.notification_label.setText("Notification type : ")
+
         self.font_checkBox.setText("Font : ")
         self.font_size_label.setText("Size : ")
+
         self.enable_system_tray_checkBox.setText("Enable system tray icon.")
         self.after_download_checkBox.setText(
             "Show download complete dialog,when download has finished.")
+
         self.show_menubar_checkbox.setText("Show menubar.")
         self.show_sidepanel_checkbox.setText("Show side panel.")
         self.show_progress_window_checkbox.setText(
             "Show download's progress window")
+
         self.startup_checkbox.setText("Run Persepolis at startup")
 
         self.keep_awake_checkBox.setText("Keep system awake!")
         self.keep_awake_checkBox.setToolTip(
             "<html><head/><body><p>This option is preventing system from going to sleep.\
             This is necessary if your power manager is suspending system automatically. </p></body></html>")
+ 
+        self.wait_queue_time.setToolTip(
+                "<html><head/><body><p>Format HH:MM</p></body></html>")
  
         self.setting_tabWidget.setTabText(
             self.setting_tabWidget.indexOf(self.style_tab),  "Preferences")

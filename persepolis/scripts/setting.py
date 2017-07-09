@@ -20,7 +20,7 @@ import copy
 from PyQt5 import QtWidgets
 from PyQt5.QtWidgets import QFileDialog, QStyleFactory, QMessageBox
 from PyQt5.QtGui import QFont
-from PyQt5.QtCore import QSize, QPoint, QDir
+from PyQt5.QtCore import QTime, QSize, QPoint, QDir
 from persepolis.scripts.newopen import Open, readDict
 from persepolis.scripts import osCommands
 import platform
@@ -62,12 +62,18 @@ class PreferencesWindow(Setting_Ui):
         self.rpc_port_spinbox.setValue(
             int(self.persepolis_setting.value('rpc-port')))
 
+# wait_queue
+        wait_queue_list = self.persepolis_setting.value('wait-queue')
+        q_time = QTime(int(wait_queue_list[0]), int(wait_queue_list[1]))
+        self.wait_queue_time.setTime(q_time)
+
 # save_as_tab
         self.download_folder_lineEdit.setText(
             str(self.persepolis_setting.value('download_path')))
         self.temp_download_lineEdit.setText(
             str(self.persepolis_setting.value('download_path_temp')))
 
+# subfolder
         if str(self.persepolis_setting.value('subfolder')) == 'yes':
             self.subfolder_checkBox.setChecked(True)
         else:
@@ -346,7 +352,7 @@ class PreferencesWindow(Setting_Ui):
         download_path_default = os.path.join(
             str(home_address), 'Downloads', 'Persepolis')
 
-        self.setting_dict = { 'awake': 'no', 'custom-font': 'no', 'column0': 'yes', 'column1': 'yes', 'column2': 'yes', 'column3': 'yes', 'column4': 'yes', 'column5': 'yes', 'column6': 'yes', 'column7': 'yes', 'column10': 'yes', 'column11': 'yes', 'column12': 'yes',
+        self.setting_dict = {'wait-queue': [0, 0], 'awake': 'no', 'custom-font': 'no', 'column0': 'yes', 'column1': 'yes', 'column2': 'yes', 'column3': 'yes', 'column4': 'yes', 'column5': 'yes', 'column6': 'yes', 'column7': 'yes', 'column10': 'yes', 'column11': 'yes', 'column12': 'yes',
                              'subfolder': 'yes', 'startup': 'no', 'show-progress': 'yes', 'show-menubar': 'no', 'show-sidepanel': 'yes', 'rpc-port': 6801, 'notification': 'Native notification', 'after-dialog': 'yes', 'tray-icon': 'yes',
                              'max-tries': 5, 'retry-wait': 0, 'timeout': 60, 'connections': 16, 'download_path_temp': download_path_temp_default, 'download_path': download_path_default, 'sound': 'yes', 'sound-volume': 100, 'style': 'Fusion',
                              'color-scheme': 'Persepolis Dark Red', 'icons': 'Archdroid-Red', 'font': 'Ubuntu', 'font-size': 9}
@@ -362,6 +368,11 @@ class PreferencesWindow(Setting_Ui):
         self.connections_spinBox.setValue(
             int(self.setting_dict['connections']))
         self.rpc_port_spinbox.setValue(int(self.setting_dict['rpc-port']))
+
+# wait-queue
+        wait_queue_list = self.setting_dict['wait-queue']
+        q_time = QTime(wait_queue_list[0], wait_queue_list[1])
+        self.wait_queue_time.setTime(q_time)
 
 # save_as_tab
         self.download_folder_lineEdit.setText(
@@ -461,7 +472,8 @@ class PreferencesWindow(Setting_Ui):
             'sound-volume', self.volume_dial.value())
         self.persepolis_setting.setValue(
             'notification', self.notification_comboBox.currentText())
-
+        self.persepolis_setting.setValue(
+            'wait-queue', self.wait_queue_time.text().split(':'))
 # changing icons
 
         icons = self.icon_comboBox.currentText()

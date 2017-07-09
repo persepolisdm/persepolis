@@ -431,7 +431,7 @@ def downloadStatus(gid):
 
 
 # download complete actions!
-# this methode is returning file_path of file in the user's download folder
+# this method is returning file_path of file in the user's download folder
 def downloadCompleteAction(path, download_path, file_name):
     i = 1
     file_path = os.path.join(download_path, file_name)
@@ -626,13 +626,13 @@ def nowDate():
 def sigmaTime(hour, minute):
     return (int(hour)*60 + int(minute))
 
-#nowTime returns now time!
+# nowTime returns now time!
 def nowTime():
     now_time_hour = time.strftime("%H")
     now_time_minute = time.strftime("%M")
     return sigmaTime(now_time_hour, now_time_minute)
 
-
+# this method is create sleep time,if user set "start time" for download.  
 def startTime(start_hour, start_minute, gid):
     print("Download starts at " + start_hour + ":" + start_minute)
     logger.sendToLog("Download starts at " + start_hour +
