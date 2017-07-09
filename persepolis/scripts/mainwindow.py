@@ -406,8 +406,19 @@ class Queue(QThread):
                     if now_time_second > 30:
                         now_time_minute = now_time_minute + 1
 
-                    add_link_dictionary['start_hour'] = str(wait_queue_hour + now_time_hour) 
-                    add_link_dictionary['start_minute'] = str(wait_queue_minute + now_time_minute)
+                    # hour value can not be more than 23 and minute value can not be more than 59.
+                    sigma_minute = wait_queue_minute + now_time_minute
+                    sigma_hour = wait_queue_hour + now_time_hour
+                    if sigma_minute > 59:
+                        sigma_minute = sigma_minute - 60
+                        sigma_hour = sigma_hour + 1
+
+                    if sigma_hour > 23:
+                        sigma_hour = sigma_hour - 24
+
+                    # setting sigma_hour and sigma_minute for download start time!
+                    add_link_dictionary['start_hour'] = str(sigma_hour) 
+                    add_link_dictionary['start_minute'] = str(sigma_minute)
 
             # writing changes to download_info_file_list
                 download_info_file_list[9] = add_link_dictionary
