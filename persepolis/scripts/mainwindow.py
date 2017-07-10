@@ -2235,6 +2235,32 @@ class MainWindow(MainWindow_Ui):
 # this method is deleting download file from hard disk and removing
 # download item
     def deleteFile(self, menu):
+        # showing Warning message to the user.
+        # checking persepolis_setting first!
+        # perhaps user was checking "do not show this message again"
+        delete_warning_message = self.persepolis_setting.value(
+            'MainWindow/delete-warning', 'yes')
+
+        if delete_warning_message == 'yes':
+            self.msgBox = QMessageBox()
+            self.msgBox.setText("<b><center>This operation will delete \
+                    downloaded files from your hard disk<br>PERMANENTLY!</center></b>")
+            self.msgBox.setInformativeText("<center>Do you want to continue?</center>")
+            self.msgBox.setStandardButtons(QMessageBox.Yes | QMessageBox.No)
+            self.msgBox.setIcon(QMessageBox.Warning)
+            dont_show_checkBox = QtWidgets.QCheckBox("don't show this message again")
+            self.msgBox.setCheckBox(dont_show_checkBox)
+            reply = self.msgBox.exec_()
+
+            # if user checks "do not show this message again!", change persepolis_setting!
+            if self.msgBox.checkBox().isChecked():
+                self.persepolis_setting.setValue(
+                        'MainWindow/delete-warning', 'no')
+
+            # do nothing if user clicks NO
+            if reply != QMessageBox.Yes:
+                return
+
         # if checking_flag is equal to 1, it means that user pressed remove or
         # delete button or ... . so checking download information must be
         # stopped until job is done!
