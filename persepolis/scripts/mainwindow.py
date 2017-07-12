@@ -24,7 +24,6 @@ import time
 from time import sleep
 import random
 from persepolis.scripts.after_download import AfterDownloadWindow
-from persepolis.scripts.chromium_integration_window import ChromiumIntegrationWindow
 from persepolis.scripts.text_queue import TextQueue
 from persepolis.scripts.flashgot_queue import FlashgotQueue
 from persepolis.scripts.addlink import AddLinkWindow
@@ -854,7 +853,6 @@ class MainWindow(MainWindow_Ui):
         self.text_queue_window_list = []
         self.about_window_list = []
         self.flashgot_queue_window_list = []
-        self.browser_integration_window_list = []
         self.checkupdatewindow_list = []
         self.progress_window_list_dict = {}
 # queue_list_dict contains queue threads >> queue_list_dict[name of queue]
@@ -4490,10 +4488,4 @@ class MainWindow(MainWindow_Ui):
             filesize = 'Size: ' + str(filesize)
             child.size_label.setText(filesize)
 
-# Chrome and Chromium Integration Window
-    def browserIntegration(self, menu):
-        browser_integration_window = ChromiumIntegrationWindow(
-            self.persepolis_setting)
-        self.browser_integration_window_list.append(browser_integration_window)
-        self.browser_integration_window_list[len(
-            self.browser_integration_window_list) - 1].show()
+
