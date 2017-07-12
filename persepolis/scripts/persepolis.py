@@ -316,8 +316,12 @@ def main():
                 mainwindow.show()
 
         except Exception:
+            from persepolis.scripts import logger
+            error_message = str(traceback.format_exc())
+            logger.sendToLog(error_message, "ERROR")
+
             # Resetting persepolis
-            error_window = ErrorWindow(str(traceback.format_exc()))
+            error_window = ErrorWindow(error_message)
             error_window.show()
          
         sys.exit(persepolis_download_manager.exec_())
