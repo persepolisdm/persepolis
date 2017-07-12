@@ -3493,6 +3493,33 @@ class MainWindow(MainWindow_Ui):
 
 # this method removes the queue that selected in category_tree
     def removeQueue(self, menu):
+        # showing Warning message to the user.
+        # checking persepolis_setting first!
+        # perhaps user was checking "do not show this message again"
+        remove_warning_message = self.persepolis_setting.value(
+            'MainWindow/remove-queue-warning', 'yes')
+
+        if remove_warning_message == 'yes':
+            self.remove_queue_msgBox = QMessageBox()
+            self.remove_queue_msgBox.setText('<b><center>This operation will remove \
+                    all download items in this queue<br>from "All Downloads" list!</center></b>')
+            self.remove_queue_msgBox.setInformativeText("<center>Do you want to continue?</center>")
+            self.remove_queue_msgBox.setStandardButtons(QMessageBox.Yes | QMessageBox.No)
+            self.remove_queue_msgBox.setIcon(QMessageBox.Warning)
+            dont_show_checkBox = QtWidgets.QCheckBox("don't show this message again")
+            self.remove_queue_msgBox.setCheckBox(dont_show_checkBox)
+            reply = self.remove_queue_msgBox.exec_()
+
+            # if user checks "do not show this message again!", change persepolis_setting!
+            if self.remove_queue_msgBox.checkBox().isChecked():
+                self.persepolis_setting.setValue(
+                        'MainWindow/remove-queue-warning', 'no')
+
+            # do nothing if user clicks NO
+            if reply != QMessageBox.Yes:
+                return
+
+
         # finding name of queue
         current_category_tree_text = str(current_category_tree_index.data())
 
@@ -3515,8 +3542,8 @@ class MainWindow(MainWindow_Ui):
 
             for j in gid_list:
                 gid = j.strip()
-                # removing gid from download_list_file ,
-                # download_list_file_active
+                # removing gid from download_list_file 
+                # and download_list_file_active
                 for file in [download_list_file, download_list_file_active]:
                     f = Open(file)
                     f_lines = f.readlines()
