@@ -31,6 +31,7 @@ from persepolis.scripts.properties import PropertiesWindow
 from persepolis.scripts.progress import ProgressWindow
 from persepolis.scripts import download
 from persepolis.gui.mainwindow_ui import MainWindow_Ui, QTableWidgetItem
+from persepolis.scripts.log_window import LogWindow
 from persepolis.scripts.newopen import Open, writeList, readList, readDict
 from persepolis.scripts.play import playNotification
 from persepolis.scripts.bubble import notifySend
@@ -854,6 +855,7 @@ class MainWindow(MainWindow_Ui):
         self.about_window_list = []
         self.flashgot_queue_window_list = []
         self.checkupdatewindow_list = []
+        self.logwindow_list = []
         self.progress_window_list_dict = {}
 # queue_list_dict contains queue threads >> queue_list_dict[name of queue]
 # = Queue(name of queue , parent)
@@ -4115,6 +4117,15 @@ class MainWindow(MainWindow_Ui):
         self.checkupdatewindow_list.append(checkupdatewindow)
         self.checkupdatewindow_list[len(
             self.checkupdatewindow_list) - 1].show()
+
+
+# this method is opening LogWindow 
+    def showLog(self, menu):
+        logwindow = LogWindow(
+            self.persepolis_setting)
+        self.logwindow_list.append(logwindow)
+        self.logwindow_list[len(
+            self.logwindow_list) - 1].show()
 
 
 # this method is called when user pressed moveUpAction

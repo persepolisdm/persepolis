@@ -133,6 +133,8 @@ class MenuWidget(QPushButton):
 
         helpMenu.addAction(self.parent.updateAction)
 
+        helpMenu.addAction(self.parent.logAction)
+
         helpMenu.addAction(self.parent.helpAction)
 
 
@@ -361,7 +363,6 @@ class MainWindow_Ui(QMainWindow):
         self.download_table.setSelectionBehavior(QAbstractItemView.SelectRows)
         self.download_table.setEditTriggers(QAbstractItemView.NoEditTriggers)
         self.download_table.verticalHeader().hide()
-#         self.download_table.setSortingEnabled(True)
 
 # hide gid and download dictioanry section
         self.download_table.setColumnHidden(8, True)
@@ -580,9 +581,16 @@ class MainWindow_Ui(QMainWindow):
                                     self, statusTip='Check for newer release', triggered=self.newUpdate)
         helpMenu.addAction(self.updateAction)
 
+        self.logAction = QAction(QIcon(icons + 'about'), 'Show log file',
+                                   self, statusTip='Help', triggered=self.showLog)
+        helpMenu.addAction(self.logAction)
+
+
+
         self.helpAction = QAction(QIcon(icons + 'about'), 'Help',
                                    self, statusTip='Help', triggered=self.persepolisHelp)
         helpMenu.addAction(self.helpAction)
+
 
 
         self.qmenu = MenuWidget(self)
