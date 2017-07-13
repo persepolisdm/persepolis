@@ -4,10 +4,12 @@ import urllib, requests,os
 
 # get proxy function
 def getproxy():
+    # get desktop
+    desktop = os.environ.get('XDG_CURRENT_DESKTOP')
     # check if it is KDE
-    if os.environ.get('XDG_CURRENT_DESKTOP') == 'KDE' :
+    if desktop == 'KDE' :
         # all print just for debugung
-        print(os.environ.get('XDG_CURRENT_DESKTOP'))
+        print(desktop)
 
         # creat empty list for proxies
         proxy = {}
@@ -133,7 +135,7 @@ def getproxy():
         # get socks proxy
         try:
             # if it is gnome
-            if os.environ.get('XDG_CURRENT_DESKTOP') == 'GNOME' :
+            if desktop == 'GNOME' or desktop == 'Unity:Unity7' :
                 socksProxyIp = 'socks:' + proxy['all'].split(':')[1]
                 socksProxyPort = proxy['all'].split(':')[2].replace("/", "").replace("\n", "")
                 # all print just for debugung
