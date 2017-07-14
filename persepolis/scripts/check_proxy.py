@@ -1,11 +1,25 @@
-import urllib, requests,os
+import urllib 
+import requests
+import os
+from persepolis.scripts import logger
+import platform
+
+os_type = platform.system()
 
 # TODO: mac os socks proxy
 
 # get proxy function
-def getproxy():
-    # get desktop
+def getProxy():
+    # finding desktop environment
     desktop = os.environ.get('XDG_CURRENT_DESKTOP')
+    if os_type == 'Linux' or os_type == 'FreeBSD' or os_type == 'OpenBSD':
+        if desktop == None:
+            desktop_message = 'Desktop Environment not detected!'
+        else:
+            desktop_message = 'Desktop environment: ' + str(desktop)
+
+        logger.sendToLog(desktop_message, "INFO")
+
     # check if it is KDE
     if desktop == 'KDE' :
         # all print just for debugung
@@ -18,13 +32,15 @@ def getproxy():
 
         # read kde plasma proxy config file
         try:
-            with open(home_address + '/.config/kioslaverc') as proxyfile:
+            plasma_proxy_config_file_path = os.path.join(home_address, '.config', 'kioslaverc') 
+            with open(plasma_proxy_config_file_path) as proxyfile:
                 for line in proxyfile:
                     name, var = line.partition("=")[::2]
                     proxy[name.strip()] = str(var)
         except Exception as e:
             # all print just for debugung
-            print("Error")
+            print("Error - Proxy is not detected")
+
 
         # check proxy enabled as manually
         if proxy['ProxyType'].split('\n')[0] == '1' :
@@ -156,12 +172,9 @@ def getproxy():
         # check if just socks proxy exists
         if not any ([httpProxyIp , ftpProxyIp , httpsProxyIp]) and socksProxyIp :
             # all print just for debugung
-            print("persepolis doesn't suport socks!")
+            print("persepolis doesn't support socks!")
        # atleast there is another proxy except socks
         else:
             # all print just for debugung
             print('no problem')
 
-
-if __name__ == '__main__':
-    getproxy()
