@@ -83,7 +83,8 @@ Categories=Qt;Network;
 StartupNotify=true
 Exec=persepolis --tray
 Icon=persepolis
-StartupWMClass=persepolis-download-manager'''
+StartupWMClass=persepolis-download-Manager
+'''
 
         # check if the autostart directry exists & create entry
         if os.path.exists(home_address + "/.config/autostart"):
