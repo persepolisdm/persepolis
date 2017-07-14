@@ -42,21 +42,21 @@ def getProxy():
             # get ftp proxy
             try :
                 proxy['ftpProxyPort'] = proxysource['ftpProxy'].split(' ')[1].replace("/", "").replace("\n", "")
-                proxy['ftpProxyIp'] = proxysource['ftpProxy'].split(' ')[0]
+                proxy['ftpProxyIp'] = proxysource['ftpProxy'].split(' ')[0].split('//')[1]
             except Exception as e :
                 None
 
             # get http proxy
             try:
                 proxy['httpProxyPort'] = proxysource['httpProxy'].split(' ')[1].replace("/", "").replace("\n", "")
-                proxy['httpProxyIp'] = proxysource['httpProxy'].split(' ')[0]
+                proxy['httpProxyIp'] = proxysource['httpProxy'].split(' ')[0].split('//')[1]
             except Exception as e :
                 None
 
             # get https proxy
             try:
-                proxy['httpsProxyPort'] = proxy['httpsProxy'].split(' ')[1].replace("/", "").replace("\n", "")
-                proxy['httpsProxyIp'] = proxysource['httpsProxy'].split(' ')[0]
+                proxy['httpsProxyPort'] = proxysource['httpsProxy'].split(' ')[1].replace("/", "").replace("\n", "")
+                proxy['httpsProxyIp'] = proxysource['httpsProxy'].split(' ')[0].split('//')[1]
             except Exception as e:
                 None
 
