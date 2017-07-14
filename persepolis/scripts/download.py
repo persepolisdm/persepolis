@@ -26,6 +26,7 @@ from persepolis.scripts import logger
 from PyQt5.QtCore import QSettings
 import platform
 import urllib.parse
+import traceback
 
 home_address = os.path.expanduser("~")
 
@@ -237,8 +238,13 @@ def downloadAria(gid):
                 endTime(end_hour, end_minute, gid)
 
         except:
-            print("None Starts")
-            logger.sendToLog("None Starts", "INFO")
+            print("Download did not start")
+            logger.sendToLog("Download did not start", "ERROR")
+            error_message = str(traceback.format_exc())
+            logger.sendToLog(error_message, "ERROR")
+            print(error_message)
+
+
 # if request was unsuccessful return None!
             return 'None'
     else:
