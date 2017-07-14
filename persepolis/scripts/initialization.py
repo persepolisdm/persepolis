@@ -22,7 +22,7 @@
 # it is represented as a hex string of 16 characters (e.g., 2089b05ecca3d829).
 # Normally, aria2 generates this GID for each download, but the user can
 # specify GIDs manually
-
+import time
 import os
 import shutil
 import ast
@@ -119,14 +119,31 @@ for folder in pattern_folder_list:
         osCommands.remove(file)
 
 
+from persepolis.scripts import logger
 # refresh logs!
 log_file = os.path.join(str(config_folder), 'persepolisdm.log')
 
-f = open(log_file, 'w')
-f.writelines('Persepolis Download Manager\n')
-f.close()
+# getting current time
+current_time = time.strftime('%Y/%m/%d %H:%M:%S')
 
-from persepolis.scripts import logger
+# finding number of lines in log_file
+with open(log_file) as f:
+    lines = sum(1 for _ in f)
+
+# if number of lines in log_file is more than 200, then clean log_file
+if lines < 200:
+    f = open(log_file, 'a')
+    f.writelines('Persepolis Download Manager, '\
+            + current_time\
+            +'\n')
+    f.close()
+else: 
+    f = open(log_file, 'w')
+    f.writelines('Persepolis Download Manager, '\
+            + current_time\
+            +'\n')
+    f.close()
+
 
 
 #import persepolis_setting

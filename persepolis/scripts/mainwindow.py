@@ -24,7 +24,6 @@ import time
 from time import sleep
 import random
 from persepolis.scripts.after_download import AfterDownloadWindow
-from persepolis.scripts.chromium_integration_window import ChromiumIntegrationWindow
 from persepolis.scripts.text_queue import TextQueue
 from persepolis.scripts.flashgot_queue import FlashgotQueue
 from persepolis.scripts.addlink import AddLinkWindow
@@ -32,6 +31,7 @@ from persepolis.scripts.properties import PropertiesWindow
 from persepolis.scripts.progress import ProgressWindow
 from persepolis.scripts import download
 from persepolis.gui.mainwindow_ui import MainWindow_Ui, QTableWidgetItem
+from persepolis.scripts.log_window import LogWindow
 from persepolis.scripts.newopen import Open, writeList, readList, readDict
 from persepolis.scripts.play import playNotification
 from persepolis.scripts.bubble import notifySend
@@ -854,8 +854,8 @@ class MainWindow(MainWindow_Ui):
         self.text_queue_window_list = []
         self.about_window_list = []
         self.flashgot_queue_window_list = []
-        self.browser_integration_window_list = []
         self.checkupdatewindow_list = []
+        self.logwindow_list = []
         self.progress_window_list_dict = {}
 # queue_list_dict contains queue threads >> queue_list_dict[name of queue]
 # = Queue(name of queue , parent)
@@ -4119,6 +4119,15 @@ class MainWindow(MainWindow_Ui):
             self.checkupdatewindow_list) - 1].show()
 
 
+# this method is opening LogWindow 
+    def showLog(self, menu):
+        logwindow = LogWindow(
+            self.persepolis_setting)
+        self.logwindow_list.append(logwindow)
+        self.logwindow_list[len(
+            self.logwindow_list) - 1].show()
+
+
 # this method is called when user pressed moveUpAction
 # this method is subtituting selected download item with upper one
     def moveUp(self, menu):
@@ -4490,10 +4499,4 @@ class MainWindow(MainWindow_Ui):
             filesize = 'Size: ' + str(filesize)
             child.size_label.setText(filesize)
 
-# Chrome and Chromium Integration Window
-    def browserIntegration(self, menu):
-        browser_integration_window = ChromiumIntegrationWindow(
-            self.persepolis_setting)
-        self.browser_integration_window_list.append(browser_integration_window)
-        self.browser_integration_window_list[len(
-            self.browser_integration_window_list) - 1].show()
+
