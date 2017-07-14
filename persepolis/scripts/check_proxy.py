@@ -91,4 +91,3 @@ def getProxy():
             None
 
     return proxy
-print(getProxy())
