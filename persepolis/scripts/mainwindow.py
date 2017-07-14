@@ -1082,12 +1082,17 @@ class MainWindow(MainWindow_Ui):
         elif message == 'try again':
             self.statusbar.showMessage(
                 "Aria2 didn't respond! be patient!Persepolis tries again in 2 seconds!")
+            logger.sendToLog(
+                "Aria2 didn't respond! be patient!Persepolis tries again in 2 seconds!",
+                "WARNING") 
+
         else:
             self.statusbar.showMessage('Error...')
             notifySend('Persepolis can not connect to Aria2', 'Check your network & Restart Persepolis',
                        10000, 'critical', systemtray=self.system_tray_icon)
-            self.propertiesAction.setEnabled(True)
+            logger.sendToLog('Persepolis can not connect to Aria2', 'ERROR')
 
+            self.propertiesAction.setEnabled(True)
             self.category_tree_qwidget.setEnabled(True)
 
     def reconnectAria(self, message):
@@ -1099,8 +1104,11 @@ class MainWindow(MainWindow_Ui):
             self.statusbar.showMessage('Error...')
             notifySend('Persepolis can not connect to Aria2', 'Restart Persepolis',
                        10000, 'critical', systemtray=self.system_tray_icon)
+            logger.sendToLog('Persepolis can not connect to Aria2', 'ERROR')
         else:
             self.statusbar.showMessage('Reconnecting aria2...')
+            logger.sendToLog('Reconnecting Aria2 ...', 'INFO')
+
             #this section is checking download status of items in download table , if status is downloading then restarting this download.
             for row in range(self.download_table.rowCount()):
                 status_download_table = str(self.download_table.item( row , 1 ).text())
@@ -1117,6 +1125,7 @@ class MainWindow(MainWindow_Ui):
 
             self.statusbar.showMessage(
                 'Persepolis reconnected aria2 successfully')
+            logger.sendToLog('Persepolis reconnected aria2 successfully', 'INFO')
 
 # when this function is called , aria2_disconnected value is changing to
 # 1! and it means that aria2 rpc connection disconnected.so CheckingThread
