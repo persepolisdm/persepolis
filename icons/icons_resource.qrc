@@ -34,7 +34,7 @@
         <file>Archdroid-Blue/multi_up.svg</file>	
         <file>Archdroid-Blue/multi_down.svg</file>	
         <file>Archdroid-Blue/clipboard.svg</file>	
-
+        <file>Archdroid-Blue/refresh.svg</file>
 
 
 
@@ -69,7 +69,7 @@
         <file>Archdroid-Red/multi_up.svg</file>	
         <file>Archdroid-Red/multi_down.svg</file>	
         <file>Archdroid-Red/clipboard.svg</file>	
-
+        <file>Archdroid-Red/refresh.svg</file>
 
 
 		<file>Breeze/about.svg</file>		
@@ -102,7 +102,7 @@
         <file>Breeze/multi_up.svg</file>	
         <file>Breeze/multi_down.svg</file>	
         <file>Breeze/clipboard.svg</file>	
-
+        <file>Breeze/refresh.svg</file>
 
 
 		<file>Breeze-Dark/about.svg</file>		
@@ -135,7 +135,7 @@
         <file>Breeze-Dark/multi_up.svg</file>	
         <file>Breeze-Dark/multi_down.svg</file>	
         <file>Breeze-Dark/clipboard.svg</file>	
-
+        <file>Breeze-Dark/refresh.svg</file>
 
 
 

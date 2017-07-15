@@ -46,9 +46,9 @@ class LogWindow(LogWindow_Ui):
         self.copy_log_pushButton.setEnabled(False)
 
 # log file address
-        log_file = os.path.join(str(config_folder), 'persepolisdm.log')
+        self.log_file = os.path.join(str(config_folder), 'persepolisdm.log')
 
-        f = Open(log_file, 'r')
+        f = Open(self.log_file, 'r')
         f_lines = f.readlines()
         f.close()
 
@@ -69,6 +69,9 @@ class LogWindow(LogWindow_Ui):
 
         self.close_pushButton.clicked.connect(
             self.closePushButtonPressed)
+
+        self.refresh_log_pushButton.clicked.connect(
+            self.refreshLogPushButtonPressed)
 
 
 
@@ -100,6 +103,19 @@ class LogWindow(LogWindow_Ui):
 #         clipboard = QApplication.clipboard()
 #         clipboard.setText(self.text)
         self.text_edit.copy()
+
+# this method is refresh log messages in text_edit
+    def refreshLogPushButtonPressed(self, button):
+        f = Open(self.log_file, 'r')
+        f_lines = f.readlines()
+        f.close()
+
+        self.text = 'Log File:\n'
+        for line in f_lines:
+            self.text = self.text + str(line) + '\n'
+
+        self.text_edit.clear()
+        self.text_edit.insertPlainText(self.text)
 
 
     def closeEvent(self, event):
