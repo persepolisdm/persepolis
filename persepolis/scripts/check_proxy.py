@@ -92,4 +92,6 @@ def getProxy():
             logger.sendToLog('no ftp proxy detected', 'INFO')
 
     # return results
+    proxy_log_message = 'proxy: ' + str(proxy) 
+    logger.sendToLog(proxy_log_message, 'INFO')
     return proxy
