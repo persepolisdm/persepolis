@@ -446,6 +446,22 @@ class Queue(QThread):
                     try:
                         download_info_file_list = readList(download_info_file)
                         status = str(download_info_file_list[1])
+                        if status == 'error':
+                            add_link_dictionary = download_info_file_list[9]
+                            # writing error_message in log file
+                            error_message = 'Download failed - GID : '\
+                                    + str(gid)\
+                                    + '/nMessage : '\
+                                    + str(add_link_dictionary['error'])
+                            
+                            logger.sendToLog(error_message, 'ERROR')
+
+                        elif status == 'complete':
+                            compelete_message = 'Download complete - GID : '\
+                                    + str(gid)
+                            logger.sendToLog(compelete_message, 'INFO')
+
+
                     except:
                         status = 'downloading'
 
@@ -502,6 +518,8 @@ class Queue(QThread):
                     notifySend("Persepolis", "Queue Stopped!", 10000,
                                'no', systemtray=self.parent.system_tray_icon)
 
+                    logger.sendToLog('Queue stopped', 'INFO')
+
                     break
 
             if self.break_for_loop:
@@ -527,6 +545,8 @@ class Queue(QThread):
 
             notifySend("Persepolis", 'Queue completed!', 10000,
                        'queue', systemtray=self.parent.system_tray_icon)
+            logger.sendToLog('Queue completed', 'INFO')
+
             self.stop = True
             self.limit = False
             self.limit_changed = False
@@ -1295,11 +1315,27 @@ class MainWindow(MainWindow_Ui):
                     del self.progress_window_list_dict[gid]
 
                     if progress_window.status == "stopped":
+                        # writing message in log
+                        stop_message = 'Download stoped - GID : '\
+                                + str(gid)
+
+                        logger.sendToLog(stop_message, 'INFO')
+
                         # showing notification
                         notifySend("Download Stopped", str(
                             download_info_file_list[0]), 10000, 'no', systemtray=self.system_tray_icon)
 
+
+
                     elif progress_window.status == "error":
+                        # writing error_message in log file
+                        error_message = 'Download failed - GID : '\
+                                + str(gid)\
+                                + '/nMessage : '\
+                                + str(add_link_dictionary['error'])
+
+                        logger.sendToLog(error_message, 'ERROR')
+
                         # showing notification
                         notifySend("Error - " + add_link_dictionary['error'], str(
                             download_info_file_list[0]), 10000, 'fail', systemtray=self.system_tray_icon)
@@ -1342,6 +1378,12 @@ class MainWindow(MainWindow_Ui):
 
                     self.persepolis_setting.sync()
                     if progress_window.status == "complete":
+                        # writing message in log file
+                        compelete_message = 'Download compelete - GID : '\
+                                + str(gid)
+
+                        logger.sendToLog(compelete_message, 'INFO')
+
                         # play notification
                         notifySend("Download Complete", str(
                             download_info_file_list[0]), 10000, 'ok', systemtray=self.system_tray_icon)

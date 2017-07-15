@@ -412,6 +412,7 @@ def downloadStatus(gid):
     if (status_str == "error"):
         add_link_dictionary["error"] = str(download_status['errorMessage'])
 
+
     if (status_str == "None"):
         status_str = None
 
