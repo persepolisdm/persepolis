@@ -1,7 +1,7 @@
 import urllib
 import requests
 import os
-# from persepolis.scripts import logger
+from persepolis.scripts import logger
 import platform
 
 os_type = platform.system()
@@ -13,11 +13,12 @@ def getProxy():
     proxy = {}
     if os_type == 'Linux' or os_type == 'FreeBSD' or os_type == 'OpenBSD':
         if desktop == None:
-            desktop_message = 'Desktop Environment not detected!'
+            desktop_env_type = 'Desktop Environment not detected!'
         else:
-            desktop_message = 'Desktop environment: ' + str(desktop)
+            desktop_env_type = 'Desktop environment: ' + str(desktop)
 
-        # logger.sendToLog(desktop_message, "INFO")
+        logger.sendToLog(desktop_env_type, "INFO")
+        print(desktop_env_type)
 
     # check if it is KDE
     if desktop == 'KDE' :
@@ -33,36 +34,36 @@ def getProxy():
                 for line in proxyfile:
                     name, var = line.partition("=")[::2]
                     proxysource[name.strip()] = str(var)
-        except Exception as e:
-            # logger.sendToLog('no proxy detected on KDE', 'INFO')
-            None
+        except:
+            logger.sendToLog('no proxy detected', 'INFO')
 
         # check proxy enabled as manually
         if proxysource['ProxyType'].split('\n')[0] == '1' :
             # get ftp proxy
-            try :
+            try:
                 proxy['ftpProxyPort'] = proxysource['ftpProxy'].split(' ')[1].replace("/", "").replace("\n", "")
                 proxy['ftpProxyIp'] = proxysource['ftpProxy'].split(' ')[0].split('//')[1]
-            except Exception as e :
-                None
+            except:
+                logger.sendToLog('no manuall ftp proxy detected', 'INFO')
+
 
             # get http proxy
             try:
                 proxy['httpProxyPort'] = proxysource['httpProxy'].split(' ')[1].replace("/", "").replace("\n", "")
                 proxy['httpProxyIp'] = proxysource['httpProxy'].split(' ')[0].split('//')[1]
-            except Exception as e :
-                None
+            except:
+                logger.sendToLog('no manuall http proxy detected', 'INFO')
 
             # get https proxy
             try:
                 proxy['httpsProxyPort'] = proxysource['httpsProxy'].split(' ')[1].replace("/", "").replace("\n", "")
                 proxy['httpsProxyIp'] = proxysource['httpsProxy'].split(' ')[0].split('//')[1]
-            except Exception as e:
-                None
+            except:
+                logger.sendToLog('no manuall https proxy detected', 'INFO')
 
         # proxy disabled
         else:
-            None
+            logger.sendToLog('no manuall proxy detected', 'INFO')
 
 
     # if it is windows,mac and other linux desktop
@@ -73,21 +74,22 @@ def getProxy():
         try:
             proxy['httpProxyIp'] = proxysource['http'].split(':')[1].replace('//','')
             proxy['httpProxyPort'] = proxysource['http'].split(':')[2].replace("/", "").replace("\n", "")
-        except Exception as e :
-            None
+        except:
+            logger.sendToLog('no http proxy detected', 'INFO')
 
         # get https proxy
         try:
             proxy['httpsProxyIp'] = proxysource['https'].split(':')[1].replace('//','')
             proxy['httpsProxyPort'] = proxysource['https'].split(':')[2].replace("/", "").replace("\n", "")
-        except Exception as e :
-            None
+        except:
+            logger.sendToLog('no https proxy detected', 'INFO')
 
         # get ftp proxy
         try:
             proxy['ftpProxyIp'] = proxysource['ftp'].split(':')[1].replace('//','')
             proxy['ftpProxyPort'] = proxysource['ftp'].split(':')[2].replace("/", "").replace("\n", "")
-        except Exception as e :
-            None
+        except:
+            logger.sendToLog('no ftp proxy detected', 'INFO')
 
+    # return results
     return proxy
