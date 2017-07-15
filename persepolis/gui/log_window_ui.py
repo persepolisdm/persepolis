@@ -31,35 +31,47 @@ class LogWindow_Ui(QWidget):
 # finding windows_size
         self.setMinimumSize(QtCore.QSize(620, 300))
         self.setWindowIcon(QIcon.fromTheme('persepolis', QIcon(':/persepolis.svg')))
-        self.setWindowTitle('Persepolis Log')
 
         verticalLayout = QVBoxLayout(self)
         horizontalLayout = QHBoxLayout()
         horizontalLayout.addStretch(1)
 
+# text_edit
         self.text_edit = QTextEdit(self)
         self.text_edit.setReadOnly(True)
 
         verticalLayout.addWidget(self.text_edit)
 
+# refresh_log_pushButton
+        self.refresh_log_pushButton = QPushButton(self)
+        self.refresh_log_pushButton.setIcon(QIcon(icons + 'refresh'))
+        horizontalLayout.addWidget(self.refresh_log_pushButton)
+
+# report_pushButton
         self.report_pushButton = QPushButton(self)
-        self.report_pushButton.setText("Report Issue")
         self.report_pushButton.setIcon(QIcon(icons + 'about'))
         horizontalLayout.addWidget(self.report_pushButton)
 
         self.copy_log_pushButton = QPushButton(self)
 
-        self.copy_log_pushButton.setText('Copy  selected to clipboard')
+# copy_log_pushButton
         self.copy_log_pushButton.setIcon(QIcon(icons + 'clipboard'))
         horizontalLayout.addWidget(self.copy_log_pushButton)
 
+# close_pushButton
         self.close_pushButton = QPushButton(self)
-        self.close_pushButton.setText('close')
         self.close_pushButton.setIcon(QIcon(icons + 'remove'))
         horizontalLayout.addWidget(self.close_pushButton)
 
         verticalLayout.addLayout(horizontalLayout)
 
+# set labels
+
+        self.setWindowTitle('Persepolis Log')
+        self.close_pushButton.setText('close')
+        self.copy_log_pushButton.setText('Copy  selected to clipboard')
+        self.report_pushButton.setText("Report Issue")
+        self.refresh_log_pushButton.setText('Refresh log messages')
     def changeIcon(self, icons):
         icons = ':/' + str(icons) + '/'
 
