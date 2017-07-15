@@ -107,10 +107,10 @@ def getProxy():
         try:
             # if it is gnome or unity
             if desktop == 'GNOME' or desktop == 'Unity:Unity7' :
-                socksProxy = proxy['all'].split(':')[1].replace('//','')
+                socksProxy = proxysource['all'].split(':')[1].replace('//','')
             # other desktop except KDE
             else:
-                socksProxy = proxy['socks'].split(':')[1].replace('//','')
+                socksProxy = proxysource['socks'].split(':')[1].replace('//','')
         except Exception as e :
             socksProxy = False
 
