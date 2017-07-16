@@ -85,16 +85,24 @@ class PreferencesWindow(Setting_Ui):
         self.volume_dial.setValue(
             int(self.persepolis_setting.value('sound-volume')))
 # set style
+        # if style_comboBox is changed, self.styleComboBoxChanged is called.
+        self.style_comboBox.currentIndexChanged.connect(self.styleComboBoxChanged)
+
+
+        # finding available styles(It's depends on operating system and desktop environments).
         available_styles = QStyleFactory.keys()
         for style in available_styles:
             self.style_comboBox.addItem(style)
 
+        # System >> for system default style
+        # when user select System for style section, the default system style is using.
         self.style_comboBox.addItem('System')
 
         current_style_index = self.style_comboBox.findText(
             str(self.persepolis_setting.value('style')))
         if current_style_index != -1:
             self.style_comboBox.setCurrentIndex(current_style_index)
+
 # set color_scheme
         color_scheme = ['System', 'Persepolis Dark Red', 'Persepolis Dark Blue', 'Persepolis ArcDark Red',
                         'Persepolis ArcDark Blue', 'Persepolis Light Red', 'Persepolis Light Blue']
@@ -280,6 +288,23 @@ class PreferencesWindow(Setting_Ui):
 
         self.resize(size)
         self.move(position)
+
+# active color_comboBox only when user is select "Fusion" style.
+    def styleComboBoxChanged(self, index):
+        selected_style = self.style_comboBox.currentText()
+        if selected_style != 'Fusion':
+            current_color_index = self.color_comboBox.findText('System')
+            self.color_comboBox.setCurrentIndex(current_color_index)
+
+            # disable color_comboBox
+            self.color_comboBox.setEnabled(False)
+        else:
+            # enable color_comboBox
+            self.color_comboBox.setEnabled(True)
+
+    
+
+
 
 
     def fontCheckBoxState(self,checkBox):
