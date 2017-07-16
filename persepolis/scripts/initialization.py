@@ -34,7 +34,6 @@ import glob
 import PyQt5
 from PyQt5.QtCore import QSettings
 from persepolis.scripts.browser_integration import browserIntegration
-from persepolis.scripts.check_proxy import getProxy
 
 # initialization
 home_address = os.path.expanduser("~")
@@ -207,6 +206,8 @@ for folder in folder_list:
 persepolis_setting.endGroup()
 
 # print proxy information
+from persepolis.scripts.check_proxy import getProxy
+
 proxy = getProxy()
 proxy_log_message = 'proxy: ' + str(proxy)
 print(proxy)
