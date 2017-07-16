@@ -4,10 +4,15 @@ import os
 from persepolis.scripts import logger
 import platform
 
+# finding platform
 os_type = platform.system()
+platform = 'platform : ' + os_type
+logger.sendToLog(platform, "INFO")
 
 # get proxy function
 def getProxy():
+    socksProxy = False
+
     # finding desktop environment
     desktop = os.environ.get('XDG_CURRENT_DESKTOP')
     proxy = {}
@@ -24,7 +29,8 @@ def getProxy():
     if desktop == 'KDE' :
         # creat empty list for proxies
         proxysource = {}
-        # user home directory
+
+        # user home directory path
         home_address = os.path.expanduser("~")
 
         # read kde plasma proxy config file
@@ -45,7 +51,6 @@ def getProxy():
                 proxy['ftpProxyIp'] = proxysource['ftpProxy'].split(' ')[0].split('//')[1]
             except:
                 logger.sendToLog('no manuall ftp proxy detected', 'INFO')
-                proxy['ftpProxyIp'] = False
 
             # get http proxy
             try:
@@ -53,7 +58,6 @@ def getProxy():
                 proxy['httpProxyIp'] = proxysource['httpProxy'].split(' ')[0].split('//')[1]
             except:
                 logger.sendToLog('no manuall http proxy detected', 'INFO')
-                proxy['httpProxyIp'] = False
 
             # get https proxy
             try:
@@ -61,13 +65,12 @@ def getProxy():
                 proxy['httpsProxyIp'] = proxysource['httpsProxy'].split(' ')[0].split('//')[1]
             except:
                 logger.sendToLog('no manuall https proxy detected', 'INFO')
-                proxy['httpsProxyIp'] = False
 
             # get socks proxy
             try:
                 socksProxy = proxysource['socksProxy'].split(' ')[0].split('//')[1]
 
-            except Exception as e:
+            except:
                 socksProxy = False
 
         # proxy disabled
@@ -85,7 +88,6 @@ def getProxy():
             proxy['httpProxyPort'] = proxysource['http'].split(':')[2].replace("/", "").replace("\n", "")
         except:
             logger.sendToLog('no http proxy detected', 'INFO')
-            proxy['httpProxyIp'] = False
 
         # get https proxy
         try:
@@ -93,7 +95,6 @@ def getProxy():
             proxy['httpsProxyPort'] = proxysource['https'].split(':')[2].replace("/", "").replace("\n", "")
         except:
             logger.sendToLog('no https proxy detected', 'INFO')
-            proxy['httpsProxyIp'] = False
 
         # get ftp proxy
         try:
@@ -101,7 +102,6 @@ def getProxy():
             proxy['ftpProxyPort'] = proxysource['ftp'].split(':')[2].replace("/", "").replace("\n", "")
         except:
             logger.sendToLog('no ftp proxy detected', 'INFO')
-            proxy['ftpProxyIp'] = False
 
         # get socks proxy
         try:
@@ -111,17 +111,25 @@ def getProxy():
             # other desktop except KDE
             else:
                 socksProxy = proxysource['socks'].split(':')[1].replace('//','')
-        except Exception as e :
+        except:
             socksProxy = False
 
     # check if just socks proxy exists
-    if not any ([proxy['httpProxyIp'] , proxy['httpsProxyIp'] , proxy['ftpProxyIp']]) and socksProxy :
+    key_is_available = False
+    key_list = ['httpProxyIp', 'httpsProxyIp', 'ftpProxyIp']
+    for key in key_list:
+        if key in proxy.keys():
+            key_is_available = True
+
+
+    if not key_is_available and socksProxy :
         # all print just for debugung
-        print("persepolis doesn't suport socks!")
-    # atleast there is another proxy except socks
-    else:
-        # all print just for debugung
-        print('no problem')
+        socks_message = "persepolis and aria2 don't support socks\n\
+        you must convert socks proxy to http proxy.\n\
+        Please read this for more help:\n\
+            https://github.com/persepolisdm/persepolis/wiki/Privoxy"
+        print(socks_message)
+        logger.sendToLog(socks_message, 'ERROR')
 
     # return results
     proxy_log_message = 'proxy: ' + str(proxy)
