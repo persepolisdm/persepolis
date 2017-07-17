@@ -178,6 +178,10 @@ parser.add_argument('--version', action='version', version='Persepolis Download 
 args = parser.parse_args()
 
 # Mozilla firefox flashgot will send download information whith terminal arguments(link , referer , cookie , agent , headers , name )
+# persepolis plugins (for chromium and chrome and opera and vivaldi and firefox) are using native message host system for 
+# sending download information to persepolis.
+# see this repo for more information:
+#   https://github.com/persepolisdm/Persepolis-WebExtension
 
 # if --execute >> yes  >>> persepolis main window  will starts 
 # if --execute >> no >>> persepolis started before!
@@ -185,7 +189,7 @@ args = parser.parse_args()
 
 add_link_dictionary = {}
 if args.chromium != 'no' or args.parent_window:
-#
+
 # Platform specific configuration
     if os_type == "Windows":
   # Set the default I/O mode to O_BINARY in windows
@@ -245,13 +249,12 @@ if args.default:
     print ('Persepolis restored default')
     sys.exit(0)
 
-if args.tray:
-    start_in_tray = 'yes'
-else:
-    start_in_tray = 'no'
 
 if args.link :
     add_link_dictionary ['link'] = "".join(args.link)
+    
+# if plugins call persepolis, then start persepolis in system tray 
+    args.tray = True
 
 if args.referer :
     add_link_dictionary['referer'] = "".join(args.referer)
@@ -267,9 +270,9 @@ if args.headers :
 
 if args.name :
     add_link_dictionary ['out'] = "".join(args.name)
-# when flashgot calls persepolis  then persepolis is creating a request file in /tmp folder . this file contains download informations
+# when flashgot calls persepolis  then persepolis is creating a request file in /tmp folder . this file contains download information
 # persepolis mainwindow checks /tmp for flashgot request file every 2 seconds ( see CheckFlashgot class in mainwindow.py )
-# when requset received by CheckFlashgot, a popup window (AddLinkWindow) is coming up and window is getting additional download informations from user (port , proxy , ...) and download starts and request file deleted
+# when requset received by CheckFlashgot, a popup window (AddLinkWindow) is coming up and window is getting additional download information from user (port , proxy , ...) and download starts and request file deleted
 if ('link' in add_link_dictionary):   
     # adding add_link_dictionary to persepolis-flashgot
     flashgot_file = os.path.join(persepolis_tmp, 'persepolis-flashgot')
@@ -278,6 +281,12 @@ if ('link' in add_link_dictionary):
     f.close()
     flashgot_ready = os.path.join(persepolis_tmp, 'persepolis-flashgot-ready')
     osCommands.touch(flashgot_ready)
+
+if args.tray:
+    start_in_tray = 'yes'
+else:
+    start_in_tray = 'no'
+
 
 def main():
     if lock_file_validation: # if lock_file is existed , it means persepolis is still running! 
