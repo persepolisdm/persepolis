@@ -151,7 +151,7 @@ flashgot_file = os.path.join(persepolis_tmp, 'persepolis-flashgot')
 
 show_window_file = os.path.join(persepolis_tmp, 'show-window')
 
-# starting aria2 when Persepolis starts
+# start aria2 when Persepolis starts
 
 
 class StartAria2Thread(QThread):
@@ -215,8 +215,9 @@ class CheckSelectedRowThread(QThread):
 class CheckDownloadInfoThread(QThread):
     DOWNLOAD_INFO_SIGNAL = pyqtSignal(str)
 
-    def __init__(self):
+    def __init__(self, parent):
         QThread.__init__(self)
+        self.parent = parent
 
     def run(self):
         global checking_flag
@@ -244,10 +245,32 @@ class CheckDownloadInfoThread(QThread):
                         if checking_flag == 1:
                             break
                         try:
-                            answer = download.downloadStatus(gid)
+                            answer_list = download.downloadStatus(gid)
+                            answer = answer_list[0]
                         except:
                             answer = 'None'
+
+
                         if answer == 'ready':
+
+                            # finding row of this gid!
+                            row = None
+                            for i in range(self.parent.download_table.rowCount()):
+                                row_gid = self.parent.download_table.item(i, 8).text()
+                                if gid == row_gid:
+                                    row = i
+                                    break
+                            try:
+                                status = self.parent.download_table.item(row, 1).text()
+                            except:
+                                status = 'invalid'
+                                continue
+
+                            new_status = answer_list[1]
+                            if (status == new_status) and (status != 'downloading'):
+                                continue
+
+                            print(status)
                             sleep(0.2)
                             download_info_file = os.path.join(
                                 download_info_folder, gid)
@@ -261,6 +284,7 @@ class CheckDownloadInfoThread(QThread):
 # spider finds file size and file name of download file .
 # spider works similiar to spider in wget.
 class SpiderThread(QThread):
+    SPIDERSIGNAL = pyqtSignal()
     def __init__(self, add_link_dictionary, gid):
         QThread.__init__(self)
         self.add_link_dictionary = add_link_dictionary
@@ -882,7 +906,7 @@ class MainWindow(MainWindow_Ui):
         self.queue_list_dict = {}
 
 # CheckDownloadInfoThread
-        check_download_info = CheckDownloadInfoThread()
+        check_download_info = CheckDownloadInfoThread(self)
         self.threadPool.append(check_download_info)
         self.threadPool[1].start()
         self.threadPool[1].DOWNLOAD_INFO_SIGNAL.connect(self.checkDownloadInfo)
@@ -1814,6 +1838,9 @@ class MainWindow(MainWindow_Ui):
                 self.threadPool[len(self.threadPool) - 1].start()
                 self.threadPool[len(self.threadPool) -
                                 1].ARIA2NOTRESPOND.connect(self.aria2NotRespond)
+
+                item = QTableWidgetItem('waiting')
+                self.download_table.setItem(selected_row_return, 1, item)
 
                 sleep(1)
                 # new progress_window

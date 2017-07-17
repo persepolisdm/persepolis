@@ -411,7 +411,7 @@ def downloadStatus(gid):
 
     if (status_str == "error"):
         add_link_dictionary["error"] = str(download_status['errorMessage'])
-
+        server.aria2.removeDownloadResult(gid)
 
     if (status_str == "None"):
         status_str = None
@@ -434,7 +434,7 @@ def downloadStatus(gid):
 
     writeList(download_info_file, download_info_file_list)
 
-    return 'ready'
+    return ['ready', download_info_file_list[1]]
 
 
 # download complete actions!
