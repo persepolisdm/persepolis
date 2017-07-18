@@ -73,7 +73,8 @@ class LogWindow(LogWindow_Ui):
         self.refresh_log_pushButton.clicked.connect(
             self.refreshLogPushButtonPressed)
 
-
+        self.clear_log_pushButton.clicked.connect(
+            self.clearLogPushButtonPressed)
 
 # setting window size and position
         size = self.persepolis_setting.value(
@@ -84,6 +85,15 @@ class LogWindow(LogWindow_Ui):
         self.move(position)
 
         self.minimum_height = self.height()
+
+    def clearLogPushButtonPressed(self, button):
+        f = Open(self.log_file, 'w')
+        f.close()
+
+        self.text = 'Log File:\n'
+
+        self.text_edit.clear()
+        self.text_edit.insertPlainText(self.text)
 
 
 
