@@ -264,13 +264,11 @@ class CheckDownloadInfoThread(QThread):
                                 status = self.parent.download_table.item(row, 1).text()
                             except:
                                 status = 'invalid'
-                                continue
 
                             new_status = answer_list[1]
                             if (status == new_status) and (status != 'downloading'):
                                 continue
 
-                            print(status)
                             sleep(0.2)
                             download_info_file = os.path.join(
                                 download_info_folder, gid)

@@ -42,6 +42,10 @@ class LogWindow_Ui(QWidget):
 
         verticalLayout.addWidget(self.text_edit)
 
+# clear_log_pushButton
+        self.clear_log_pushButton = QPushButton(self)
+        horizontalLayout.addWidget(self.clear_log_pushButton)
+
 # refresh_log_pushButton
         self.refresh_log_pushButton = QPushButton(self)
         self.refresh_log_pushButton.setIcon(QIcon(icons + 'refresh'))
@@ -72,6 +76,7 @@ class LogWindow_Ui(QWidget):
         self.copy_log_pushButton.setText('Copy  selected to clipboard')
         self.report_pushButton.setText("Report Issue")
         self.refresh_log_pushButton.setText('Refresh log messages')
+        self.clear_log_pushButton.setText('Clear log messages')
     def changeIcon(self, icons):
         icons = ':/' + str(icons) + '/'
 
