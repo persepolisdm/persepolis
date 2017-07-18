@@ -11,7 +11,7 @@ logger.sendToLog(platform, "INFO")
 
 # get proxy function
 def getProxy():
-    socksProxy = False
+    socks_proxy = False
 
     # finding desktop environment
     desktop = os.environ.get('XDG_CURRENT_DESKTOP')
@@ -47,31 +47,31 @@ def getProxy():
         if proxysource['ProxyType'].split('\n')[0] == '1' :
             # get ftp proxy
             try:
-                proxy['ftpProxyPort'] = proxysource['ftpProxy'].split(' ')[1].replace("/", "").replace("\n", "")
-                proxy['ftpProxyIp'] = proxysource['ftpProxy'].split(' ')[0].split('//')[1]
+                proxy['ftp_proxy_port'] = proxysource['ftpProxy'].split(' ')[1].replace("/", "").replace("\n", "")
+                proxy['ftp_proxy_ip'] = proxysource['ftpProxy'].split(' ')[0].split('//')[1]
             except:
                 logger.sendToLog('no manuall ftp proxy detected', 'INFO')
 
             # get http proxy
             try:
-                proxy['httpProxyPort'] = proxysource['httpProxy'].split(' ')[1].replace("/", "").replace("\n", "")
-                proxy['httpProxyIp'] = proxysource['httpProxy'].split(' ')[0].split('//')[1]
+                proxy['http_proxy_port'] = proxysource['httpProxy'].split(' ')[1].replace("/", "").replace("\n", "")
+                proxy['http_proxy_ip'] = proxysource['httpProxy'].split(' ')[0].split('//')[1]
             except:
                 logger.sendToLog('no manuall http proxy detected', 'INFO')
 
             # get https proxy
             try:
-                proxy['httpsProxyPort'] = proxysource['httpsProxy'].split(' ')[1].replace("/", "").replace("\n", "")
-                proxy['httpsProxyIp'] = proxysource['httpsProxy'].split(' ')[0].split('//')[1]
+                proxy['https_proxy_port'] = proxysource['httpsProxy'].split(' ')[1].replace("/", "").replace("\n", "")
+                proxy['https_proxy_ip'] = proxysource['httpsProxy'].split(' ')[0].split('//')[1]
             except:
                 logger.sendToLog('no manuall https proxy detected', 'INFO')
 
             # get socks proxy
             try:
-                socksProxy = proxysource['socksProxy'].split(' ')[0].split('//')[1]
+                socks_proxy = proxysource['socksProxy'].split(' ')[0].split('//')[1]
 
             except:
-                socksProxy = False
+                socks_proxy = False
 
         # proxy disabled
         else:
@@ -84,22 +84,22 @@ def getProxy():
         proxysource = urllib.request.getproxies()
         # get http proxy
         try:
-            proxy['httpProxyIp'] = proxysource['http'].split(':')[1].replace('//','')
-            proxy['httpProxyPort'] = proxysource['http'].split(':')[2].replace("/", "").replace("\n", "")
+            proxy['http_proxy_ip'] = proxysource['http'].split(':')[1].replace('//','')
+            proxy['http_proxy_port'] = proxysource['http'].split(':')[2].replace("/", "").replace("\n", "")
         except:
             logger.sendToLog('no http proxy detected', 'INFO')
 
         # get https proxy
         try:
-            proxy['httpsProxyIp'] = proxysource['https'].split(':')[1].replace('//','')
-            proxy['httpsProxyPort'] = proxysource['https'].split(':')[2].replace("/", "").replace("\n", "")
+            proxy['https_proxy_ip'] = proxysource['https'].split(':')[1].replace('//','')
+            proxy['https_proxy_port'] = proxysource['https'].split(':')[2].replace("/", "").replace("\n", "")
         except:
             logger.sendToLog('no https proxy detected', 'INFO')
 
         # get ftp proxy
         try:
-            proxy['ftpProxyIp'] = proxysource['ftp'].split(':')[1].replace('//','')
-            proxy['ftpProxyPort'] = proxysource['ftp'].split(':')[2].replace("/", "").replace("\n", "")
+            proxy['ftp_proxy_ip'] = proxysource['ftp'].split(':')[1].replace('//','')
+            proxy['ftp_proxy_port'] = proxysource['ftp'].split(':')[2].replace("/", "").replace("\n", "")
         except:
             logger.sendToLog('no ftp proxy detected', 'INFO')
 
@@ -107,22 +107,28 @@ def getProxy():
         try:
             # if it is gnome or unity
             if desktop == 'GNOME' or desktop == 'Unity:Unity7' :
-                socksProxy = proxysource['all'].split(':')[1].replace('//','')
-            # other desktop except KDE
+                socks_proxy = proxysource['all'].split(':')[1].replace('//','')
+            # if it is Mac OS
+            elif os_type == 'Darwin' :
+                if os.system("scutil --proxy | grep SOCKSEnable | awk \'{ print $3 }\' ") == "1" :
+                    socks_proxy = True
+                else:
+                    socks_proxy = False
+            # others except KDE,Mac OS,gnome,unity7
             else:
-                socksProxy = proxysource['socks'].split(':')[1].replace('//','')
+                socks_proxy = proxysource['socks'].split(':')[1].replace('//','')
         except:
-            socksProxy = False
+            socks_proxy = False
 
     # check if just socks proxy exists
     key_is_available = False
-    key_list = ['httpProxyIp', 'httpsProxyIp', 'ftpProxyIp']
+    key_list = ['http_proxy_ip', 'https_proxy_ip', 'ftp_proxy_ip']
     for key in key_list:
         if key in proxy.keys():
             key_is_available = True
 
 
-    if not key_is_available and socksProxy :
+    if not key_is_available and socks_proxy :
         # all print just for debugung
         socks_message = "persepolis and aria2 don't support socks\n\
         you must convert socks proxy to http proxy.\n\
