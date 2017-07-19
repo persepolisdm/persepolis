@@ -382,11 +382,6 @@ class PreferencesWindow(Setting_Ui):
                              'max-tries': 5, 'retry-wait': 0, 'timeout': 60, 'connections': 16, 'download_path_temp': download_path_temp_default, 'download_path': download_path_default, 'sound': 'yes', 'sound-volume': 100, 'style': 'Fusion',
                              'color-scheme': 'Persepolis Dark Red', 'icons': 'Archdroid-Red', 'font': 'Ubuntu', 'font-size': 9}
 
-        # this loop is checking values in persepolis_setting . if value is not
-        # valid then value replaced by default_setting_dict value
-        for key in self.setting_dict.keys():
-            self.persepolis_setting.setValue(key, self.setting_dict[key])
-
         self.tries_spinBox.setValue(int(self.setting_dict['max-tries']))
         self.wait_spinBox.setValue(int(self.setting_dict['retry-wait']))
         self.time_out_spinBox.setValue(int(self.setting_dict['timeout']))
@@ -429,6 +424,7 @@ class PreferencesWindow(Setting_Ui):
         self.notification_comboBox.setCurrentIndex(current_notification_index)
 
 # set font
+        self.font_checkBox.setChecked(False)
         font_setting = QFont()
         font_setting.setFamily(str(self.setting_dict['font']))
         self.fontComboBox.setCurrentFont(font_setting)
