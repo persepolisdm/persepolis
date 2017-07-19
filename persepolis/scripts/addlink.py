@@ -224,13 +224,27 @@ class AddLinkWindow(AddLinkWindow_Ui):
         # get system proxy information
         system_proxy_dict = getProxy()
 
+        enable_proxy_frame = False
+
         # ip
         if 'http_proxy_ip' in system_proxy_dict.keys():
             self.ip_lineEdit.setText(str(system_proxy_dict['http_proxy_ip']))
+            enable_proxy_frame = True
 
         # port
         if 'http_proxy_port' in system_proxy_dict.keys():
             self.port_spinBox.setValue(int(system_proxy_dict['http_proxy_port']))
+            enable_proxy_frame = True
+
+        # enable proxy frame if http_proxy_ip or http_proxy_port is valid.
+        if enable_proxy_frame:
+            self.proxy_checkBox.setChecked(True)
+            self.detect_proxy_label.setText('')
+        else:
+            self.proxy_checkBox.setChecked(False)
+            self.detect_proxy_label.setText('Detecting proxy setting was unsuccessful!')
+
+
 
 
     def optionsButtonClicked(self, button):

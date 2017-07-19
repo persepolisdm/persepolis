@@ -114,8 +114,10 @@ class AddLinkWindow_Ui(QWidget):
 
         self.proxy_checkBox = QCheckBox(self)
         self.detect_proxy_pushButton = QPushButton(self)
+        self.detect_proxy_label = QLabel(self)
 
         proxy_horizontalLayout.addWidget(self.proxy_checkBox)
+        proxy_horizontalLayout.addWidget(self.detect_proxy_label)
         proxy_horizontalLayout.addWidget(self.detect_proxy_pushButton)
 
         proxy_verticalLayout.addLayout(proxy_horizontalLayout)
