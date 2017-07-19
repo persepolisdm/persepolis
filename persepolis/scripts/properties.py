@@ -69,6 +69,9 @@ class PropertiesWindow(AddLinkWindow_Ui):
 # hiding options_pushButton
         self.options_pushButton.hide()
 
+# hiding detect_proxy_pushButton
+        self.detect_proxy_pushButton.hide()
+
 # connect folder_pushButton
         self.folder_pushButton.clicked.connect(self.changeFolder)
         self.download_folder_lineEdit.setEnabled(False)
