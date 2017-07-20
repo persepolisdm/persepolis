@@ -244,7 +244,7 @@ class PropertiesWindow(AddLinkWindow_Ui):
             self.detect_proxy_label.setText('')
         else:
             self.proxy_checkBox.setChecked(False)
-            self.detect_proxy_label.setText('Detecting proxy setting was unsuccessful!')
+            self.detect_proxy_label.setText('No proxy detected!')
 
 
 
