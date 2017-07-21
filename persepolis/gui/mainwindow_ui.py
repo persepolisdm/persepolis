@@ -14,7 +14,7 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from PyQt5 import QtCore, QtGui, QtWidgets
-from PyQt5.QtWidgets import QPushButton, QComboBox,  QMenu, QTreeView, QSplitter, QSizePolicy, QGridLayout, QHBoxLayout, QVBoxLayout, QMenu, QTableWidgetItem, QAbstractItemView, QApplication, QToolBar, QMenuBar, QStatusBar, QTableWidget, QAction, QMainWindow, QWidget, QFrame, QAbstractItemView, QCheckBox, QSpinBox, QLabel
+from PyQt5.QtWidgets import QDoubleSpinBox, QPushButton, QComboBox,  QMenu, QTreeView, QSplitter, QSizePolicy, QGridLayout, QHBoxLayout, QVBoxLayout, QMenu, QTableWidgetItem, QAbstractItemView, QApplication, QToolBar, QMenuBar, QStatusBar, QTableWidget, QAction, QMainWindow, QWidget, QFrame, QAbstractItemView, QCheckBox, QSpinBox, QLabel
 from PyQt5.QtGui import QIcon, QStandardItemModel, QStandardItem
 from PyQt5.QtCore import QCoreApplication, QRect, QSize, Qt
 import ast
@@ -133,7 +133,7 @@ class MenuWidget(QPushButton):
 
         helpMenu.addAction(self.parent.updateAction)
 
-        helpMenu.addAction(self.parent.browserAction)
+        helpMenu.addAction(self.parent.logAction)
 
         helpMenu.addAction(self.parent.helpAction)
 
@@ -306,7 +306,7 @@ class MainWindow_Ui(QMainWindow):
         limit_frame_verticalLayout = QVBoxLayout(self.limit_frame)
 # limit_spinBox
         limit_frame_horizontalLayout = QHBoxLayout()
-        self.limit_spinBox = QSpinBox(self)
+        self.limit_spinBox = QDoubleSpinBox(self)
         self.limit_spinBox.setMinimum(1)
         self.limit_spinBox.setMaximum(1023)
         limit_frame_horizontalLayout.addWidget(self.limit_spinBox)
@@ -363,7 +363,6 @@ class MainWindow_Ui(QMainWindow):
         self.download_table.setSelectionBehavior(QAbstractItemView.SelectRows)
         self.download_table.setEditTriggers(QAbstractItemView.NoEditTriggers)
         self.download_table.verticalHeader().hide()
-#         self.download_table.setSortingEnabled(True)
 
 # hide gid and download dictioanry section
         self.download_table.setColumnHidden(8, True)
@@ -582,13 +581,16 @@ class MainWindow_Ui(QMainWindow):
                                     self, statusTip='Check for newer release', triggered=self.newUpdate)
         helpMenu.addAction(self.updateAction)
 
-        self.browserAction = QAction(QIcon(icons + 'browser'), 'Browser integration',
-                                     self, statusTip='Browser inegration', triggered=self.browserIntegration)
-        helpMenu.addAction(self.browserAction)
+        self.logAction = QAction(QIcon(icons + 'about'), 'Show log file',
+                                   self, statusTip='Help', triggered=self.showLog)
+        helpMenu.addAction(self.logAction)
+
+
 
         self.helpAction = QAction(QIcon(icons + 'about'), 'Help',
                                    self, statusTip='Help', triggered=self.persepolisHelp)
         helpMenu.addAction(self.helpAction)
+
 
 
         self.qmenu = MenuWidget(self)
@@ -624,6 +626,6 @@ class MainWindow_Ui(QMainWindow):
         icons = ':/' + str(icons) + '/'
 
         action_icon_dict = {self.stopAllAction: 'stop_all', self.minimizeAction: 'minimize', self.addlinkAction: 'add', self.addtextfileAction: 'file', self.resumeAction: 'play', self.pauseAction: 'pause', self.stopAction: 'stop', self.removeAction: 'remove', self.propertiesAction: 'setting', self.progressAction: 'window', self.openFileAction: 'file', self.openDownloadFolderAction: 'folder', self.deleteFileAction: 'trash', self.openDefaultDownloadFolderAction: 'folder', self.exitAction: 'exit',
-                            self.selectAllAction: 'select_all', self.removeSelectedAction: 'multi_remove', self.deleteSelectedAction: 'multi_trash', self.createQueueAction: 'add_queue', self.removeQueueAction: 'remove_queue', self.startQueueAction: 'start_queue', self.stopQueueAction: 'stop_queue', self.moveUpAction: 'up', self.moveDownAction: 'down', self.preferencesAction: 'preferences', self.aboutAction: 'about', self.issueAction: 'about', self.updateAction: 'about', self.browserAction: 'browser', self.qmenu: 'menu'}
+                            self.selectAllAction: 'select_all', self.removeSelectedAction: 'multi_remove', self.deleteSelectedAction: 'multi_trash', self.createQueueAction: 'add_queue', self.removeQueueAction: 'remove_queue', self.startQueueAction: 'start_queue', self.stopQueueAction: 'stop_queue', self.moveUpAction: 'up', self.moveDownAction: 'down', self.preferencesAction: 'preferences', self.aboutAction: 'about', self.issueAction: 'about', self.updateAction: 'about', self.qmenu: 'menu'}
         for key in action_icon_dict.keys():
             key.setIcon(QIcon(icons + str(action_icon_dict[key])))

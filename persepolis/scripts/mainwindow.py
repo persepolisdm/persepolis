@@ -20,10 +20,10 @@ from PyQt5.QtWidgets import QApplication,  QAction, QFileDialog, QSystemTrayIcon
 from PyQt5.QtGui import QIcon, QColor, QPalette, QStandardItem, QCursor
 from PyQt5.QtCore import QCoreApplication, QRect, QSize, QPoint, QThread, pyqtSignal, Qt
 import os
+import time
 from time import sleep
 import random
 from persepolis.scripts.after_download import AfterDownloadWindow
-from persepolis.scripts.chromium_integration_window import ChromiumIntegrationWindow
 from persepolis.scripts.text_queue import TextQueue
 from persepolis.scripts.flashgot_queue import FlashgotQueue
 from persepolis.scripts.addlink import AddLinkWindow
@@ -31,6 +31,7 @@ from persepolis.scripts.properties import PropertiesWindow
 from persepolis.scripts.progress import ProgressWindow
 from persepolis.scripts import download
 from persepolis.gui.mainwindow_ui import MainWindow_Ui, QTableWidgetItem
+from persepolis.scripts.log_window import LogWindow
 from persepolis.scripts.newopen import Open, writeList, readList, readDict
 from persepolis.scripts.play import playNotification
 from persepolis.scripts.bubble import notifySend
@@ -150,7 +151,7 @@ flashgot_file = os.path.join(persepolis_tmp, 'persepolis-flashgot')
 
 show_window_file = os.path.join(persepolis_tmp, 'show-window')
 
-# starting aria2 when Persepolis starts
+# start aria2 when Persepolis starts
 
 
 class StartAria2Thread(QThread):
@@ -164,14 +165,24 @@ class StartAria2Thread(QThread):
         # ARIA2RESPONDSIGNAL emitting yes , then startAriaMessage function
         # changing aria_startup_answer to 'Ready'
         global aria_startup_answer
-        for i in range(5):
-            answer = download.startAria()
-            if answer == 'did not respond' and i != 4:
-                signal_str = 'try again'
-                self.ARIA2RESPONDSIGNAL.emit(signal_str)
-                sleep(2)
-            else:
-                break
+
+        # checking that aria2 is running or not!
+        answer = download.aria2Version()
+
+        # if Aria2 wasn't started before, so start it!
+        if answer == 'did not respond':
+            print('Starting Aria2')
+            logger.sendToLog(
+                            "Starting Aria2", "INFO")
+ 
+            for i in range(5):
+                answer = download.startAria()
+                if answer == 'did not respond' and i != 4:
+                    signal_str = 'try again'
+                    self.ARIA2RESPONDSIGNAL.emit(signal_str)
+                    sleep(2)
+                else:
+                    break
 
         # if Aria2 doesn't respond to Persepolis ,ARIA2RESPONDSIGNAL is
         # emitting no
@@ -179,7 +190,10 @@ class StartAria2Thread(QThread):
             signal_str = 'no'
         else:
             signal_str = 'yes'
-
+            print('Aria2 is running')
+            logger.sendToLog(
+                            "Aria2 is running", "INFO")
+ 
         self.ARIA2RESPONDSIGNAL.emit(signal_str)
 
 
@@ -201,8 +215,9 @@ class CheckSelectedRowThread(QThread):
 class CheckDownloadInfoThread(QThread):
     DOWNLOAD_INFO_SIGNAL = pyqtSignal(str)
 
-    def __init__(self):
+    def __init__(self, parent):
         QThread.__init__(self)
+        self.parent = parent
 
     def run(self):
         global checking_flag
@@ -230,10 +245,30 @@ class CheckDownloadInfoThread(QThread):
                         if checking_flag == 1:
                             break
                         try:
-                            answer = download.downloadStatus(gid)
+                            answer_list = download.downloadStatus(gid)
+                            answer = answer_list[0]
                         except:
                             answer = 'None'
+
+
                         if answer == 'ready':
+
+                            # finding row of this gid!
+                            row = None
+                            for i in range(self.parent.download_table.rowCount()):
+                                row_gid = self.parent.download_table.item(i, 8).text()
+                                if gid == row_gid:
+                                    row = i
+                                    break
+                            try:
+                                status = self.parent.download_table.item(row, 1).text()
+                            except:
+                                status = 'invalid'
+
+                            new_status = answer_list[1]
+                            if (status == new_status) and (status != 'downloading'):
+                                continue
+
                             sleep(0.2)
                             download_info_file = os.path.join(
                                 download_info_folder, gid)
@@ -247,6 +282,7 @@ class CheckDownloadInfoThread(QThread):
 # spider finds file size and file name of download file .
 # spider works similiar to spider in wget.
 class SpiderThread(QThread):
+    SPIDERSIGNAL = pyqtSignal()
     def __init__(self, add_link_dictionary, gid):
         QThread.__init__(self)
         self.add_link_dictionary = add_link_dictionary
@@ -280,7 +316,7 @@ class DownloadLink(QThread):
                 self.ARIA2NOTRESPOND.emit()
 
 
-# this thread managing queue and sending download request to aria2
+# this thread is managing queue and sending download request to aria2
 class Queue(QThread):
     # this signal emited when download status of queue changes to stop
     REFRESHTOOLBARSIGNAL = pyqtSignal(str)
@@ -304,6 +340,7 @@ class Queue(QThread):
 
         queue_file = os.path.join(category_folder, self.category)
 
+        queue_counter = 0 
         for counter in range(5):  # queue is repeating 5 times! and everty times load queue list again! It is helping for checking new downloads in queue and retrying failed downloads
             # getting list of gid in queue
             f = Open(queue_file)
@@ -345,6 +382,7 @@ class Queue(QThread):
 
                         break
 
+            
             for line in queue_file_lines:
                 gid = line.strip()
 
@@ -357,22 +395,56 @@ class Queue(QThread):
                 # of the loop!We don't want to download it two times :)
                 if str(download_info_file_list[1]) == 'complete':
                     continue
-
+                
+                queue_counter = queue_counter + 1
             # changing status of download to waiting
                 status = 'waiting'
                 download_info_file_list[1] = status
+                # reading add_link_dictionary
+                add_link_dictionary = download_info_file_list[9]
+
 
                 if self.end_hour != None:  # it means user was set end time for download
-
-                    # reading add_link_dictionary
-                    add_link_dictionary = download_info_file_list[9]
 
                 # setting end_hour and end_minute
                     add_link_dictionary['end_hour'] = self.end_hour
                     add_link_dictionary['end_minute'] = self.end_minute
 
-                # writing changes to download_info_file_list
-                    download_info_file_list[9] = add_link_dictionary
+            # finding wait_queue value
+            # user can set sleep time between download items in queue. see preferences window!
+                wait_queue_list = self.parent.persepolis_setting.value('settings/wait-queue') 
+                wait_queue_hour = int(wait_queue_list[0])
+                wait_queue_minute = int(wait_queue_list[1])
+
+                # checking if user set sleep time between downloads in queue in setting window.
+                # if queue_counter is 1 , it means we are in the first download item in queue.
+                # and no need to wait for first item.
+                if (wait_queue_hour != 0 or wait_queue_minute != 0) and queue_counter != 1:  
+                    now_time_hour = int(time.strftime("%H"))
+                    now_time_minute = int(time.strftime("%M"))
+                    now_time_second = int(time.strftime("%S"))
+                        
+                    # add extra minute if we are in seond half of minute
+                    if now_time_second > 30:
+                        now_time_minute = now_time_minute + 1
+
+                    # hour value can not be more than 23 and minute value can not be more than 59.
+                    sigma_minute = wait_queue_minute + now_time_minute
+                    sigma_hour = wait_queue_hour + now_time_hour
+                    if sigma_minute > 59:
+                        sigma_minute = sigma_minute - 60
+                        sigma_hour = sigma_hour + 1
+
+                    if sigma_hour > 23:
+                        sigma_hour = sigma_hour - 24
+
+                    # setting sigma_hour and sigma_minute for download start time!
+                    add_link_dictionary['start_hour'] = str(sigma_hour) 
+                    add_link_dictionary['start_minute'] = str(sigma_minute)
+
+            # writing changes to download_info_file_list
+                download_info_file_list[9] = add_link_dictionary
+
 
             # writing new download_info_file_list to download_info_file
                 writeList(download_info_file, download_info_file_list)
@@ -396,6 +468,22 @@ class Queue(QThread):
                     try:
                         download_info_file_list = readList(download_info_file)
                         status = str(download_info_file_list[1])
+                        if status == 'error':
+                            add_link_dictionary = download_info_file_list[9]
+                            # writing error_message in log file
+                            error_message = 'Download failed - GID : '\
+                                    + str(gid)\
+                                    + '/nMessage : '\
+                                    + str(add_link_dictionary['error'])
+                            
+                            logger.sendToLog(error_message, 'ERROR')
+
+                        elif status == 'complete':
+                            compelete_message = 'Download complete - GID : '\
+                                    + str(gid)
+                            logger.sendToLog(compelete_message, 'INFO')
+
+
                     except:
                         status = 'downloading'
 
@@ -452,6 +540,8 @@ class Queue(QThread):
                     notifySend("Persepolis", "Queue Stopped!", 10000,
                                'no', systemtray=self.parent.system_tray_icon)
 
+                    logger.sendToLog('Queue stopped', 'INFO')
+
                     break
 
             if self.break_for_loop:
@@ -477,6 +567,8 @@ class Queue(QThread):
 
             notifySend("Persepolis", 'Queue completed!', 10000,
                        'queue', systemtray=self.parent.system_tray_icon)
+            logger.sendToLog('Queue completed', 'INFO')
+
             self.stop = True
             self.limit = False
             self.limit_changed = False
@@ -795,7 +887,7 @@ class MainWindow(MainWindow_Ui):
                 download_info_file_list[9] = add_link_dictionary
                 writeList(download_info_file, download_info_file_list)
 
-# defining some lists and dictionaries for runinng addlinkwindows and
+# defining some lists and dictionaries for running addlinkwindows and
 # propertieswindows and propertieswindows , ...
         self.addlinkwindows_list = []
         self.propertieswindows_list = []
@@ -804,15 +896,15 @@ class MainWindow(MainWindow_Ui):
         self.text_queue_window_list = []
         self.about_window_list = []
         self.flashgot_queue_window_list = []
-        self.browser_integration_window_list = []
         self.checkupdatewindow_list = []
+        self.logwindow_list = []
         self.progress_window_list_dict = {}
 # queue_list_dict contains queue threads >> queue_list_dict[name of queue]
 # = Queue(name of queue , parent)
         self.queue_list_dict = {}
 
 # CheckDownloadInfoThread
-        check_download_info = CheckDownloadInfoThread()
+        check_download_info = CheckDownloadInfoThread(self)
         self.threadPool.append(check_download_info)
         self.threadPool[1].start()
         self.threadPool[1].DOWNLOAD_INFO_SIGNAL.connect(self.checkDownloadInfo)
@@ -1032,12 +1124,17 @@ class MainWindow(MainWindow_Ui):
         elif message == 'try again':
             self.statusbar.showMessage(
                 "Aria2 didn't respond! be patient!Persepolis tries again in 2 seconds!")
+            logger.sendToLog(
+                "Aria2 didn't respond! be patient!Persepolis tries again in 2 seconds!",
+                "WARNING") 
+
         else:
             self.statusbar.showMessage('Error...')
             notifySend('Persepolis can not connect to Aria2', 'Check your network & Restart Persepolis',
                        10000, 'critical', systemtray=self.system_tray_icon)
-            self.propertiesAction.setEnabled(True)
+            logger.sendToLog('Persepolis can not connect to Aria2', 'ERROR')
 
+            self.propertiesAction.setEnabled(True)
             self.category_tree_qwidget.setEnabled(True)
 
     def reconnectAria(self, message):
@@ -1049,8 +1146,11 @@ class MainWindow(MainWindow_Ui):
             self.statusbar.showMessage('Error...')
             notifySend('Persepolis can not connect to Aria2', 'Restart Persepolis',
                        10000, 'critical', systemtray=self.system_tray_icon)
+            logger.sendToLog('Persepolis can not connect to Aria2', 'ERROR')
         else:
             self.statusbar.showMessage('Reconnecting aria2...')
+            logger.sendToLog('Reconnecting Aria2 ...', 'INFO')
+
             #this section is checking download status of items in download table , if status is downloading then restarting this download.
             for row in range(self.download_table.rowCount()):
                 status_download_table = str(self.download_table.item( row , 1 ).text())
@@ -1067,6 +1167,7 @@ class MainWindow(MainWindow_Ui):
 
             self.statusbar.showMessage(
                 'Persepolis reconnected aria2 successfully')
+            logger.sendToLog('Persepolis reconnected aria2 successfully', 'INFO')
 
 # when this function is called , aria2_disconnected value is changing to
 # 1! and it means that aria2 rpc connection disconnected.so CheckingThread
@@ -1236,11 +1337,27 @@ class MainWindow(MainWindow_Ui):
                     del self.progress_window_list_dict[gid]
 
                     if progress_window.status == "stopped":
+                        # writing message in log
+                        stop_message = 'Download stoped - GID : '\
+                                + str(gid)
+
+                        logger.sendToLog(stop_message, 'INFO')
+
                         # showing notification
                         notifySend("Download Stopped", str(
                             download_info_file_list[0]), 10000, 'no', systemtray=self.system_tray_icon)
 
+
+
                     elif progress_window.status == "error":
+                        # writing error_message in log file
+                        error_message = 'Download failed - GID : '\
+                                + str(gid)\
+                                + '/nMessage : '\
+                                + str(add_link_dictionary['error'])
+
+                        logger.sendToLog(error_message, 'ERROR')
+
                         # showing notification
                         notifySend("Error - " + add_link_dictionary['error'], str(
                             download_info_file_list[0]), 10000, 'fail', systemtray=self.system_tray_icon)
@@ -1283,6 +1400,12 @@ class MainWindow(MainWindow_Ui):
 
                     self.persepolis_setting.sync()
                     if progress_window.status == "complete":
+                        # writing message in log file
+                        compelete_message = 'Download compelete - GID : '\
+                                + str(gid)
+
+                        logger.sendToLog(compelete_message, 'INFO')
+
                         # play notification
                         notifySend("Download Complete", str(
                             download_info_file_list[0]), 10000, 'ok', systemtray=self.system_tray_icon)
@@ -1296,8 +1419,13 @@ class MainWindow(MainWindow_Ui):
                             self.afterdownload_list.append(afterdownloadwindow)
                             self.afterdownload_list[len(
                                 self.afterdownload_list) - 1].show()
+
+                            # bringing AfterDownloadWindow on top
                             self.afterdownload_list[len(
                                 self.afterdownload_list) - 1].raise_()
+                            self.afterdownload_list[len(
+                                self.afterdownload_list) - 1].activateWindow()
+
 
                 # downloaded
                 downloaded = "<b>Downloaded</b> : " + \
@@ -1551,7 +1679,9 @@ class MainWindow(MainWindow_Ui):
             self, self.callBack, self.persepolis_setting, flashgot_add_link_dictionary)
         self.addlinkwindows_list.append(addlinkwindow)
         self.addlinkwindows_list[len(self.addlinkwindows_list) - 1].show()
+        # bringing addlinkwindow on top
         self.addlinkwindows_list[len(self.addlinkwindows_list) - 1].raise_()
+        self.addlinkwindows_list[len(self.addlinkwindows_list) - 1].activateWindow()
 
 
 # This method creates addlinkwindow when user presses plus button in MainWindow
@@ -1706,6 +1836,9 @@ class MainWindow(MainWindow_Ui):
                 self.threadPool[len(self.threadPool) - 1].start()
                 self.threadPool[len(self.threadPool) -
                                 1].ARIA2NOTRESPOND.connect(self.aria2NotRespond)
+
+                item = QTableWidgetItem('waiting')
+                self.download_table.setItem(selected_row_return, 1, item)
 
                 sleep(1)
                 # new progress_window
@@ -2178,6 +2311,32 @@ class MainWindow(MainWindow_Ui):
 # this method is deleting download file from hard disk and removing
 # download item
     def deleteFile(self, menu):
+        # showing Warning message to the user.
+        # checking persepolis_setting first!
+        # perhaps user was checking "do not show this message again"
+        delete_warning_message = self.persepolis_setting.value(
+            'MainWindow/delete-warning', 'yes')
+
+        if delete_warning_message == 'yes':
+            self.msgBox = QMessageBox()
+            self.msgBox.setText("<b><center>This operation will delete \
+                    downloaded files from your hard disk<br>PERMANENTLY!</center></b>")
+            self.msgBox.setInformativeText("<center>Do you want to continue?</center>")
+            self.msgBox.setStandardButtons(QMessageBox.Yes | QMessageBox.No)
+            self.msgBox.setIcon(QMessageBox.Warning)
+            dont_show_checkBox = QtWidgets.QCheckBox("don't show this message again")
+            self.msgBox.setCheckBox(dont_show_checkBox)
+            reply = self.msgBox.exec_()
+
+            # if user checks "do not show this message again!", change persepolis_setting!
+            if self.msgBox.checkBox().isChecked():
+                self.persepolis_setting.setValue(
+                        'MainWindow/delete-warning', 'no')
+
+            # do nothing if user clicks NO
+            if reply != QMessageBox.Yes:
+                return
+
         # if checking_flag is equal to 1, it means that user pressed remove or
         # delete button or ... . so checking download information must be
         # stopped until job is done!
@@ -2356,6 +2515,33 @@ class MainWindow(MainWindow_Ui):
 
 # this method is called when user presses 'delete selected items'
     def deleteSelected(self, menu):
+        # showing Warning message to the user.
+        # checking persepolis_setting first!
+        # perhaps user was checking "do not show this message again"
+        delete_warning_message = self.persepolis_setting.value(
+            'MainWindow/delete-warning', 'yes')
+
+        if delete_warning_message == 'yes':
+            self.msgBox = QMessageBox()
+            self.msgBox.setText("<b><center>This operation will delete \
+                    downloaded files from your hard disk<br>PERMANENTLY!</center></b>")
+            self.msgBox.setInformativeText("<center>Do you want to continue?</center>")
+            self.msgBox.setStandardButtons(QMessageBox.Yes | QMessageBox.No)
+            self.msgBox.setIcon(QMessageBox.Warning)
+            dont_show_checkBox = QtWidgets.QCheckBox("don't show this message again")
+            self.msgBox.setCheckBox(dont_show_checkBox)
+            reply = self.msgBox.exec_()
+
+            # if user checks "do not show this message again!", change persepolis_setting!
+            if self.msgBox.checkBox().isChecked():
+                self.persepolis_setting.setValue(
+                        'MainWindow/delete-warning', 'no')
+
+            # do nothing if user clicks NO
+            if reply != QMessageBox.Yes:
+                return
+
+
         # if checking_flag is equal to 1, it means that user pressed remove or
         # delete button or ... . so checking download information must be
         # stopped until job is done!
@@ -2923,8 +3109,13 @@ class MainWindow(MainWindow_Ui):
         self.flashgot_queue_window_list.append(flashgot_queue_window)
         self.flashgot_queue_window_list[len(
             self.flashgot_queue_window_list) - 1].show()
+
+        # bringing flashgot_queue_window on top
         self.flashgot_queue_window_list[len(
             self.flashgot_queue_window_list) - 1].raise_()
+        self.flashgot_queue_window_list[len(
+            self.flashgot_queue_window_list) - 1].activateWindow()
+
 
 
 # this method is importing text file for creating queue . text file must
@@ -3154,7 +3345,18 @@ class MainWindow(MainWindow_Ui):
             gid = line.strip()
             self.download_table.insertRow(0)
             download_info_file = os.path.join(download_info_folder, gid)
-            download_info_file_list = readList(download_info_file, 'string')
+
+            # retry to open file if error occured!    
+            ii = 0
+            while ii != 10:
+                try:
+                    download_info_file_list = readList(download_info_file, 'string')
+                    ii = 10
+                except:
+                    print('failed to open')
+                    sleep(0.1)
+                    ii = ii + 1
+
             for i in range(13):
                 item = QTableWidgetItem(download_info_file_list[i])
 
@@ -3394,6 +3596,33 @@ class MainWindow(MainWindow_Ui):
 
 # this method removes the queue that selected in category_tree
     def removeQueue(self, menu):
+        # showing Warning message to the user.
+        # checking persepolis_setting first!
+        # perhaps user was checking "do not show this message again"
+        remove_warning_message = self.persepolis_setting.value(
+            'MainWindow/remove-queue-warning', 'yes')
+
+        if remove_warning_message == 'yes':
+            self.remove_queue_msgBox = QMessageBox()
+            self.remove_queue_msgBox.setText('<b><center>This operation will remove \
+                    all download items in this queue<br>from "All Downloads" list!</center></b>')
+            self.remove_queue_msgBox.setInformativeText("<center>Do you want to continue?</center>")
+            self.remove_queue_msgBox.setStandardButtons(QMessageBox.Yes | QMessageBox.No)
+            self.remove_queue_msgBox.setIcon(QMessageBox.Warning)
+            dont_show_checkBox = QtWidgets.QCheckBox("don't show this message again")
+            self.remove_queue_msgBox.setCheckBox(dont_show_checkBox)
+            reply = self.remove_queue_msgBox.exec_()
+
+            # if user checks "do not show this message again!", change persepolis_setting!
+            if self.remove_queue_msgBox.checkBox().isChecked():
+                self.persepolis_setting.setValue(
+                        'MainWindow/remove-queue-warning', 'no')
+
+            # do nothing if user clicks NO
+            if reply != QMessageBox.Yes:
+                return
+
+
         # finding name of queue
         current_category_tree_text = str(current_category_tree_index.data())
 
@@ -3416,8 +3645,8 @@ class MainWindow(MainWindow_Ui):
 
             for j in gid_list:
                 gid = j.strip()
-                # removing gid from download_list_file ,
-                # download_list_file_active
+                # removing gid from download_list_file 
+                # and download_list_file_active
                 for file in [download_list_file, download_list_file_active]:
                     f = Open(file)
                     f_lines = f.readlines()
@@ -3591,7 +3820,13 @@ class MainWindow(MainWindow_Ui):
                     if self.queue_list_dict[category].start:
                         status = 'downloading'  # It means queue is in download progress
 
-                if (item.checkState() == 2) and (status == 'error' or status == 'stopped' or status == 'complete'):
+                if category == new_category : # It means item is already in new_category! so no need to transfer item again.
+                    existance = 'yes'
+                else:
+                    existance = 'no'
+
+                # checkState 2 means item is checked by user.
+                if (item.checkState() == 2) and (status == 'error' or status == 'stopped' or status == 'complete') and (existance == 'no'):
                     gid = self.download_table.item(row, 8).text()
                     gid_list.append(gid)
                 if not (status == 'error' or status == 'stopped' or status == 'complete'):
@@ -3911,7 +4146,7 @@ class MainWindow(MainWindow_Ui):
                 limit_unit = limit[-1]
 
             # limit_spinBox
-                self.limit_spinBox.setValue(int(limit_number))
+                self.limit_spinBox.setValue(float(limit_number))
 
             # limit_comboBox
                 if limit_unit == 'K':
@@ -3985,6 +4220,15 @@ class MainWindow(MainWindow_Ui):
         self.checkupdatewindow_list.append(checkupdatewindow)
         self.checkupdatewindow_list[len(
             self.checkupdatewindow_list) - 1].show()
+
+
+# this method is opening LogWindow 
+    def showLog(self, menu):
+        logwindow = LogWindow(
+            self.persepolis_setting)
+        self.logwindow_list.append(logwindow)
+        self.logwindow_list[len(
+            self.logwindow_list) - 1].show()
 
 
 # this method is called when user pressed moveUpAction
@@ -4358,10 +4602,4 @@ class MainWindow(MainWindow_Ui):
             filesize = 'Size: ' + str(filesize)
             child.size_label.setText(filesize)
 
-# Chrome and Chromium Integration Window
-    def browserIntegration(self, menu):
-        browser_integration_window = ChromiumIntegrationWindow(
-            self.persepolis_setting)
-        self.browser_integration_window_list.append(browser_integration_window)
-        self.browser_integration_window_list[len(
-            self.browser_integration_window_list) - 1].show()
+

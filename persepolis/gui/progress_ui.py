@@ -93,7 +93,7 @@ class ProgressWindow_Ui(QWidget):
         self.verticalLayout_2.setContentsMargins(0, 0, 0, 0)
         self.horizontalLayout = QtWidgets.QHBoxLayout()
 # limit_spinBox
-        self.limit_spinBox = QtWidgets.QSpinBox(self.widget1)
+        self.limit_spinBox = QtWidgets.QDoubleSpinBox(self.widget1)
         self.limit_spinBox.setMinimum(1)
         self.limit_spinBox.setMaximum(1023)
         self.horizontalLayout.addWidget(self.limit_spinBox)

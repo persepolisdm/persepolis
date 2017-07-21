@@ -17,7 +17,7 @@
 import os
 
 from PyQt5 import QtCore, QtGui, QtWidgets
-from PyQt5.QtWidgets import QPushButton, QComboBox, QSpinBox, QVBoxLayout, QHBoxLayout, QLabel, QApplication, QWidget, QFileDialog, QMessageBox, QSizePolicy, QGridLayout, QCheckBox, QFrame, QLineEdit, QPushButton
+from PyQt5.QtWidgets import QDoubleSpinBox, QPushButton, QComboBox, QSpinBox, QVBoxLayout, QHBoxLayout, QLabel, QApplication, QWidget, QFileDialog, QMessageBox, QSizePolicy, QGridLayout, QCheckBox, QFrame, QLineEdit, QPushButton
 from PyQt5.QtGui import QIcon
 from persepolis.scripts.newopen import Open
 from persepolis.gui import icons_resource
@@ -110,8 +110,17 @@ class AddLinkWindow_Ui(QWidget):
         # proxy ->
         proxy_verticalLayout = QVBoxLayout()
 
+        proxy_horizontalLayout = QHBoxLayout()
+
         self.proxy_checkBox = QCheckBox(self)
-        proxy_verticalLayout.addWidget(self.proxy_checkBox)
+        self.detect_proxy_pushButton = QPushButton(self)
+        self.detect_proxy_label = QLabel(self)
+
+        proxy_horizontalLayout.addWidget(self.proxy_checkBox)
+        proxy_horizontalLayout.addWidget(self.detect_proxy_label)
+        proxy_horizontalLayout.addWidget(self.detect_proxy_pushButton)
+
+        proxy_verticalLayout.addLayout(proxy_horizontalLayout)
 
         self.proxy_frame = QFrame(self)
         self.proxy_frame.setFrameShape(QFrame.StyledPanel)
@@ -261,7 +270,7 @@ class AddLinkWindow_Ui(QWidget):
 
         horizontalLayout_4 = QHBoxLayout(self.limit_frame)
 
-        self.limit_spinBox = QSpinBox(self.limit_frame)
+        self.limit_spinBox = QDoubleSpinBox(self.limit_frame)
         self.limit_spinBox.setMinimum(1)
         self.limit_spinBox.setMaximum(1023)
         horizontalLayout_4.addWidget(self.limit_spinBox)
@@ -330,6 +339,7 @@ class AddLinkWindow_Ui(QWidget):
 
         self.options_pushButton.setText("Show more options")
 
+        self.detect_proxy_pushButton.setText("Detect system proxy setting")
         self.proxy_checkBox.setText("Proxy")
         self.proxy_pass_label.setText("Proxy PassWord : ")
         self.ip_label.setText("IP : ")

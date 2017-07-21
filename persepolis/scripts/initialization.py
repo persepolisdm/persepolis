@@ -22,7 +22,7 @@
 # it is represented as a hex string of 16 characters (e.g., 2089b05ecca3d829).
 # Normally, aria2 generates this GID for each download, but the user can
 # specify GIDs manually
-
+import time
 import os
 import shutil
 import ast
@@ -119,14 +119,41 @@ for folder in pattern_folder_list:
         osCommands.remove(file)
 
 
+from persepolis.scripts import logger
 # refresh logs!
 log_file = os.path.join(str(config_folder), 'persepolisdm.log')
 
-f = open(log_file, 'w')
-f.writelines('Persepolis Download Manager\n')
-f.close()
+# getting current time
+current_time = time.strftime('%Y/%m/%d %H:%M:%S')
 
-from persepolis.scripts import logger
+# finding number of lines in log_file
+with open(log_file) as f:
+    lines = sum(1 for _ in f)
+
+# if number of lines in log_file is more than 300, then clean first 200 line in log_file
+if lines < 300:
+    f = open(log_file, 'a')
+    f.writelines('Persepolis Download Manager, '\
+            + current_time\
+            +'\n')
+    f.close()
+else: # delete first 200 lines 
+    f = open(log_file, 'r')
+    f_lines = f.readlines()
+    f.close()
+
+    line_counter = 1
+    f = open(log_file, 'w')
+    f.writelines('Persepolis Download Manager, '\
+        + current_time\
+        +'\n')
+    for line in f_lines:
+        if line_counter > 200:
+            f.writelines(str(line))
+
+        line_counter = line_counter + 1
+    f.close()
+
 
 
 #import persepolis_setting
@@ -146,7 +173,7 @@ else:
 download_path = os.path.join(str(home_address), 'Downloads', 'Persepolis')
 
 
-default_setting_dict = {'awake': 'no', 'custom-font': 'no', 'column0': 'yes', 'column1': 'yes', 'column2': 'yes', 'column3': 'yes', 'column4': 'yes', 'column5': 'yes', 'column6': 'yes', 'column7': 'yes', 'column10': 'yes', 'column11': 'yes', 'column12': 'yes',
+default_setting_dict = {'wait-queue': [0, 0], 'awake': 'no', 'custom-font': 'no', 'column0': 'yes', 'column1': 'yes', 'column2': 'yes', 'column3': 'yes', 'column4': 'yes', 'column5': 'yes', 'column6': 'yes', 'column7': 'yes', 'column10': 'yes', 'column11': 'yes', 'column12': 'yes',
                              'subfolder': 'yes', 'startup': 'no', 'show-progress': 'yes', 'show-menubar': 'no', 'show-sidepanel': 'yes', 'rpc-port': 6801, 'notification': 'Native notification', 'after-dialog': 'yes', 'tray-icon': 'yes',
                              'max-tries': 5, 'retry-wait': 0, 'timeout': 60, 'connections': 16, 'download_path_temp': download_path_temp, 'download_path': download_path, 'sound': 'yes', 'sound-volume': 100, 'style': 'Fusion',
                              'color-scheme': 'Persepolis Dark Red', 'icons': 'Archdroid-Red', 'font': 'Ubuntu', 'font-size': 9}
@@ -178,6 +205,13 @@ for folder in folder_list:
 
 persepolis_setting.endGroup()
 
+# print proxy information
+from persepolis.scripts.check_proxy import getProxy
+
+proxy = getProxy()
+proxy_log_message = 'proxy: ' + str(proxy)
+print(proxy)
+
 # Browser integration for Firefox and chromium and google chrome
 for browser in ['chrome', 'chromium', 'opera', 'vivaldi', 'firefox']:
     browserIntegration(browser)
@@ -206,5 +240,5 @@ if persepolis_version != 2.4:
 
         persepolis_setting.setValue('version/version', 2.41)
 
-persepolis_setting.setValue('version/version', 2.42)
+persepolis_setting.setValue('version/version', 2.42) 
 persepolis_setting.sync()

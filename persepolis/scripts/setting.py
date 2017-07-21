@@ -20,7 +20,7 @@ import copy
 from PyQt5 import QtWidgets
 from PyQt5.QtWidgets import QFileDialog, QStyleFactory, QMessageBox
 from PyQt5.QtGui import QFont
-from PyQt5.QtCore import QSize, QPoint, QDir
+from PyQt5.QtCore import QTime, QSize, QPoint, QDir
 from persepolis.scripts.newopen import Open, readDict
 from persepolis.scripts import osCommands
 import platform
@@ -62,12 +62,18 @@ class PreferencesWindow(Setting_Ui):
         self.rpc_port_spinbox.setValue(
             int(self.persepolis_setting.value('rpc-port')))
 
+# wait_queue
+        wait_queue_list = self.persepolis_setting.value('wait-queue')
+        q_time = QTime(int(wait_queue_list[0]), int(wait_queue_list[1]))
+        self.wait_queue_time.setTime(q_time)
+
 # save_as_tab
         self.download_folder_lineEdit.setText(
             str(self.persepolis_setting.value('download_path')))
         self.temp_download_lineEdit.setText(
             str(self.persepolis_setting.value('download_path_temp')))
 
+# subfolder
         if str(self.persepolis_setting.value('subfolder')) == 'yes':
             self.subfolder_checkBox.setChecked(True)
         else:
@@ -79,16 +85,24 @@ class PreferencesWindow(Setting_Ui):
         self.volume_dial.setValue(
             int(self.persepolis_setting.value('sound-volume')))
 # set style
+        # if style_comboBox is changed, self.styleComboBoxChanged is called.
+        self.style_comboBox.currentIndexChanged.connect(self.styleComboBoxChanged)
+
+
+        # finding available styles(It's depends on operating system and desktop environments).
         available_styles = QStyleFactory.keys()
         for style in available_styles:
             self.style_comboBox.addItem(style)
 
+        # System >> for system default style
+        # when user select System for style section, the default system style is using.
         self.style_comboBox.addItem('System')
 
         current_style_index = self.style_comboBox.findText(
             str(self.persepolis_setting.value('style')))
         if current_style_index != -1:
             self.style_comboBox.setCurrentIndex(current_style_index)
+
 # set color_scheme
         color_scheme = ['System', 'Persepolis Dark Red', 'Persepolis Dark Blue', 'Persepolis ArcDark Red',
                         'Persepolis ArcDark Blue', 'Persepolis Light Red', 'Persepolis Light Blue']
@@ -275,6 +289,23 @@ class PreferencesWindow(Setting_Ui):
         self.resize(size)
         self.move(position)
 
+# active color_comboBox only when user is select "Fusion" style.
+    def styleComboBoxChanged(self, index):
+        selected_style = self.style_comboBox.currentText()
+        if selected_style != 'Fusion':
+            current_color_index = self.color_comboBox.findText('System')
+            self.color_comboBox.setCurrentIndex(current_color_index)
+
+            # disable color_comboBox
+            self.color_comboBox.setEnabled(False)
+        else:
+            # enable color_comboBox
+            self.color_comboBox.setEnabled(True)
+
+    
+
+
+
 
     def fontCheckBoxState(self,checkBox):
         # deactive fontComboBox and font_size_spinBox if font_checkBox not checked!
@@ -346,15 +377,10 @@ class PreferencesWindow(Setting_Ui):
         download_path_default = os.path.join(
             str(home_address), 'Downloads', 'Persepolis')
 
-        self.setting_dict = { 'awake': 'no', 'custom-font': 'no', 'column0': 'yes', 'column1': 'yes', 'column2': 'yes', 'column3': 'yes', 'column4': 'yes', 'column5': 'yes', 'column6': 'yes', 'column7': 'yes', 'column10': 'yes', 'column11': 'yes', 'column12': 'yes',
+        self.setting_dict = {'wait-queue': [0, 0], 'awake': 'no', 'custom-font': 'no', 'column0': 'yes', 'column1': 'yes', 'column2': 'yes', 'column3': 'yes', 'column4': 'yes', 'column5': 'yes', 'column6': 'yes', 'column7': 'yes', 'column10': 'yes', 'column11': 'yes', 'column12': 'yes',
                              'subfolder': 'yes', 'startup': 'no', 'show-progress': 'yes', 'show-menubar': 'no', 'show-sidepanel': 'yes', 'rpc-port': 6801, 'notification': 'Native notification', 'after-dialog': 'yes', 'tray-icon': 'yes',
                              'max-tries': 5, 'retry-wait': 0, 'timeout': 60, 'connections': 16, 'download_path_temp': download_path_temp_default, 'download_path': download_path_default, 'sound': 'yes', 'sound-volume': 100, 'style': 'Fusion',
                              'color-scheme': 'Persepolis Dark Red', 'icons': 'Archdroid-Red', 'font': 'Ubuntu', 'font-size': 9}
-
-        # this loop is checking values in persepolis_setting . if value is not
-        # valid then value replaced by default_setting_dict value
-        for key in self.setting_dict.keys():
-            self.persepolis_setting.setValue(key, self.setting_dict[key])
 
         self.tries_spinBox.setValue(int(self.setting_dict['max-tries']))
         self.wait_spinBox.setValue(int(self.setting_dict['retry-wait']))
@@ -362,6 +388,11 @@ class PreferencesWindow(Setting_Ui):
         self.connections_spinBox.setValue(
             int(self.setting_dict['connections']))
         self.rpc_port_spinbox.setValue(int(self.setting_dict['rpc-port']))
+
+# wait-queue
+        wait_queue_list = self.setting_dict['wait-queue']
+        q_time = QTime(wait_queue_list[0], wait_queue_list[1])
+        self.wait_queue_time.setTime(q_time)
 
 # save_as_tab
         self.download_folder_lineEdit.setText(
@@ -393,6 +424,7 @@ class PreferencesWindow(Setting_Ui):
         self.notification_comboBox.setCurrentIndex(current_notification_index)
 
 # set font
+        self.font_checkBox.setChecked(False)
         font_setting = QFont()
         font_setting.setFamily(str(self.setting_dict['font']))
         self.fontComboBox.setCurrentFont(font_setting)
@@ -461,7 +493,8 @@ class PreferencesWindow(Setting_Ui):
             'sound-volume', self.volume_dial.value())
         self.persepolis_setting.setValue(
             'notification', self.notification_comboBox.currentText())
-
+        self.persepolis_setting.setValue(
+            'wait-queue', self.wait_queue_time.text().split(':'))
 # changing icons
 
         icons = self.icon_comboBox.currentText()
@@ -469,7 +502,7 @@ class PreferencesWindow(Setting_Ui):
 
         if icons != self.current_icon:  # it means icons changed
 
-            for list in [self.parent.browser_integration_window_list, self.parent.about_window_list, self.parent.addlinkwindows_list, self.parent.propertieswindows_list, self.parent.afterdownload_list, self.parent.text_queue_window_list, self.parent.progress_window_list]:
+            for list in [self.parent.logwindow_list, self.parent.about_window_list, self.parent.addlinkwindows_list, self.parent.propertieswindows_list, self.parent.afterdownload_list, self.parent.text_queue_window_list, self.parent.progress_window_list]:
                 for window in list:
                     window.changeIcon(icons)
 
@@ -479,16 +512,9 @@ class PreferencesWindow(Setting_Ui):
         style = str(self.style_comboBox.currentText())
         self.persepolis_setting.setValue('style', style)
 
-        if style != self.grandparent.persepolis_style:  # if style changed,then set new style
-            self.grandparent.setPersepolisStyle(style)
-
 # color_scheme
         color_scheme = self.color_comboBox.currentText()
         self.persepolis_setting.setValue('color-scheme', color_scheme)
-
-        # if color_scheme changed , then set new color_scheme
-        if color_scheme != self.grandparent.persepolis_color_scheme:
-            self.grandparent.setPersepolisColorScheme(color_scheme)
 
 # font and font size
 
@@ -503,11 +529,6 @@ class PreferencesWindow(Setting_Ui):
 
         if self.font_checkBox.isChecked():
             custom_font = 'yes'
-        # if font or font_size changed,set new font , font_size
-            if self.grandparent.persepolis_font != font or int(self.grandparent.persepolis_font_size) != int(font_size):
-                self.grandparent.setPersepolisFont(font, int(font_size), custom_font)
-                self.grandparent.setPersepolisStyle(style)
-                self.grandparent.setPersepolisColorScheme(color_scheme)
         else:
             custom_font = 'no'
            
@@ -550,10 +571,10 @@ class PreferencesWindow(Setting_Ui):
 
 # show_sidepanel_checkbox
         if self.show_sidepanel_checkbox.isChecked() == True:
-            self.persepolis_setting.setValue('show_sidepanel', 'yes')
+            self.persepolis_setting.setValue('show-sidepanel', 'yes')
             self.parent.category_tree_qwidget.show()
         else:
-            self.persepolis_setting.setValue('show_sidepanel', 'no')
+            self.persepolis_setting.setValue('show-sidepanel', 'no')
             self.parent.category_tree_qwidget.hide()
 
 # show_progress_window_checkbox
@@ -749,10 +770,16 @@ class PreferencesWindow(Setting_Ui):
             self.second_key_value_dict[member] = str(self.persepolis_setting.value(member)) 
 
         # comparing first_key_value_dict with second_key_value_dict
-        # if any thing changed, then notify user about "Some changes take effect after restarting persepolis"
-        if self.first_key_value_dict != self.second_key_value_dict:
+        show_message_box = False
+        for key in self.first_key_value_dict.keys():
+            if self.first_key_value_dict[key] != self.second_key_value_dict[key]:
+                if key in ['download_path_temp', 'download_path', 'custom-font', 'rpc-port', 'max-tries', 'retry-wait', 'timeout', 'connections', 'style', 'font', 'font-size', 'color-scheme']:
+                    show_message_box = True
+
+        # if any thing changed that needs restarting, then notify user about "Some changes take effect after restarting persepolis"
+        if show_message_box:
             restart_messageBox = QMessageBox()                
-            restart_messageBox.setText('<b>Some changes take effect after restarting persepolis</b>')
+            restart_messageBox.setText('<b><center>Restart Persepolis Please!</center></b><br><center>Some changes take effect after restarting persepolis</center>')
             restart_messageBox.setWindowTitle('Restart Persepolis!')
             restart_messageBox.exec_()
 

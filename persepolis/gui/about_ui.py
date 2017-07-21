@@ -40,7 +40,7 @@ class AboutWindow_Ui(QWidget):
         self.icon_label.setMaximumSize(QtCore.QSize(100, 100))
         self.icon_label.setFrameShape(QtWidgets.QFrame.NoFrame)
         self.icon_label.setText("")
-        self.icon_label.setPixmap(QtGui.QPixmap(":/icon.png"))
+        self.icon_label.setPixmap(QtGui.QPixmap(":/persepolis.png"))
         self.icon_label.setScaledContents(True)
         self.icon_label.setAlignment(QtCore.Qt.AlignCenter)
         self.horizontalLayout_2.addWidget(self.icon_label)
@@ -107,7 +107,7 @@ class AboutWindow_Ui(QWidget):
 
         self.setWindowTitle("About Persepolis")
         self.title_label.setText("Persepolis Download Manager")
-        self.version_label.setText("Version 2.4.2")
+        self.version_label.setText("Version 2.5a0")
         self.name_label.setText(
             "\nAliReza AmirSamimi\nMohammadreza Abdollahzadeh\nSadegh Alirezaie\nMostafa Asadi\nMohammadAmin Vahedinia\nJafar Akhondali")
         self.site2_label.setText(

@@ -25,6 +25,8 @@ import sys
 from persepolis.scripts import logger
 from PyQt5.QtCore import QSettings
 import platform
+import urllib.parse
+import traceback
 
 home_address = os.path.expanduser("~")
 
@@ -96,7 +98,7 @@ def aria2Version():
     try:
         answer = server.aria2.getVersion()
     except:
-        print("aria2 not respond!")
+        print("aria2 did not respond!")
         logger.sendToLog("Aria2 didn't respond!", "ERROR")
         answer = "did not respond"
     return answer
@@ -119,7 +121,7 @@ def downloadAria(gid):
     download_user = add_link_dictionary['download_user']
     download_passwd = add_link_dictionary['download_passwd']
     connections = add_link_dictionary['connections']
-    limit = add_link_dictionary['limit']
+    limit = str(add_link_dictionary['limit'])
     start_hour = add_link_dictionary['start_hour']
     start_minute = add_link_dictionary['start_minute']
     end_hour = add_link_dictionary['end_hour']
@@ -136,18 +138,25 @@ def downloadAria(gid):
 
     # making header option
     header_list = []
-    if cookies != None:
-        semicolon_split_cookies = cookies.split('; ')
-        for i in semicolon_split_cookies:
-            equal_split_cookie = i.split('=')
-            join_cookie = ':'.join(equal_split_cookie)
-            if i != '':
-                header_list.append(join_cookie)
+    header_list.append("Cookie: " + str(cookies))
 
+# converting Mega to Kilo, RPC does not Support floating point numbers. 
+    if limit != '0':
+        limit_number = limit[:-1]
+        limit_number = float(limit_number)
+        limit_unit = limit[-1]
+        if limit_unit == 'K':
+            limit_number = round(limit_number)
+        else:
+            limit_number = round(1024*limit_number)
+            limit_unit = 'K'
+        limit = str(limit_number) + limit_unit
+
+ 
     if header != None:
         semicolon_split_header = header.split('; ')
         for i in semicolon_split_header:
-            equal_split_header = i.split('=')
+            equal_split_header = i.split('=',1)
             join_header = ':'.join(equal_split_header)
             if i != '':
                 header_list.append(join_header)
@@ -194,18 +203,34 @@ def downloadAria(gid):
 
     if start_time_status != 'stopped':
         # sending download request to aria2
-        if link[0:5] != "https":
-            aria_dict = {'gid': gid, 'max-tries': str(persepolis_setting.value('settings/max-tries')), 'retry-wait': int(persepolis_setting.value('settings/retry-wait')), 'timeout': int(persepolis_setting.value('settings/timeout')), 'header': header_list, 'out': out, 'user-agent': user_agent,  'referer': referer,  'all-proxy': ip_port,
-                         'max-download-limit': limit, 'all-proxy-user': str(proxy_user), 'all-proxy-passwd': str(proxy_passwd), 'http-user': str(download_user), 'http-passwd': str(download_passwd), 'split': '16', 'max-connection-per-server': str(connections), 'min-split-size': '1M', 'continue': 'true', 'dir': str(download_path_temp)}
-        else:
-            aria_dict = {'gid': gid, 'max-tries': str(persepolis_setting.value('settings/max-tries')), 'retry-wait': int(persepolis_setting.value('settings/retry-wait')), 'timeout': int(persepolis_setting.value('settings/timeout')), 'header': header_list, 'out': out, 'user-agent': user_agent,
-                         'referer': referer,  'all-proxy': ip_port, 'max-download-limit': limit, 'all-proxy-user': str(proxy_user), 'all-proxy-passwd': str(proxy_passwd), 'split': '16', 'max-connection-per-server': str(connections), 'min-split-size': '1M', 'continue': 'true', 'dir': str(download_path_temp)}
+        aria_dict = {
+            'gid': gid,
+            'max-tries': str(persepolis_setting.value('settings/max-tries')),
+            'retry-wait': int(persepolis_setting.value('settings/retry-wait')),
+            'timeout': int(persepolis_setting.value('settings/timeout')),
+            'header': header_list,
+            'out': out,
+            'user-agent': user_agent,
+            'referer': referer,
+            'all-proxy': ip_port,
+            'max-download-limit': limit,
+            'all-proxy-user': str(proxy_user),
+            'all-proxy-passwd': str(proxy_passwd),
+            'http-user': str(download_user),
+            'http-passwd': str(download_passwd),
+            'split': '16',
+            'max-connection-per-server': str(connections),
+            'min-split-size': '1M',
+            'continue': 'true',
+            'dir': str(download_path_temp)
+        }
+
+        if not link.startswith("https"):
+            aria_dict ['http-user']= str(download_user)
+            aria_dict ['http-passwd']= str(download_passwd)
 
         try:
-            if ("http" in link[0:5]):
-                answer = server.aria2.addUri([link], aria_dict)
-            else:
-                answer = server.aria2.addUri([link], aria_dict)
+            answer = server.aria2.addUri([link], aria_dict)
 
             print(answer + " Starts")
             logger.sendToLog(answer + " Starts", 'INFO')
@@ -213,8 +238,13 @@ def downloadAria(gid):
                 endTime(end_hour, end_minute, gid)
 
         except:
-            print("None Starts")
-            logger.sendToLog("None Starts", "INFO")
+            print("Download did not start")
+            logger.sendToLog("Download did not start", "ERROR")
+            error_message = str(traceback.format_exc())
+            logger.sendToLog(error_message, "ERROR")
+            print(error_message)
+
+
 # if request was unsuccessful return None!
             return 'None'
     else:
@@ -237,7 +267,7 @@ def downloadStatus(gid):
         file_status = ast.literal_eval(file_status)
         path = str(file_status['path'])
 
-        file_name = os.path.basename(path)
+        file_name = urllib.parse.unquote(os.path.basename(path))
 
         if not(file_name):
             file_name = None
@@ -369,7 +399,7 @@ def downloadStatus(gid):
         add_link_dictionary['file_path'] = file_path
         add_link_dictionary['final_download_path'] = file_path
 
-        file_name = os.path.basename(file_path)
+        file_name = urllib.parse.unquote(os.path.basename(file_path))
 
 # rename active status to downloading
     if (status_str == "active"):
@@ -381,6 +411,7 @@ def downloadStatus(gid):
 
     if (status_str == "error"):
         add_link_dictionary["error"] = str(download_status['errorMessage'])
+        server.aria2.removeDownloadResult(gid)
 
     if (status_str == "None"):
         status_str = None
@@ -403,11 +434,11 @@ def downloadStatus(gid):
 
     writeList(download_info_file, download_info_file_list)
 
-    return 'ready'
+    return ['ready', download_info_file_list[1]]
 
 
 # download complete actions!
-# this methode is returning file_path of file in the user's download folder
+# this method is returning file_path of file in the user's download folder
 def downloadCompleteAction(path, download_path, file_name):
     i = 1
     file_path = os.path.join(download_path, file_name)
@@ -446,7 +477,7 @@ def findDownloadPath(file_name, download_path, subfolder):
              'm4p', 'mmf', 'mp3', 'mpc', 'msv', 'ogg', 'oga', 'opus', 'ra', 'raw', 'sln', 'tta', 'vox', 'wav', 'wma', 'wv']
     video = ['3g2', '3gp', 'asf', 'avi', 'drc', 'flv', 'm4v', 'mkv', 'mng', 'mov', 'qt', 'mp4', 'm4p', 'mpg', 'mp2',
              'mpeg', 'mpe', 'mpv', 'm2v', 'mxf', 'nsv', 'ogv', 'rmvb', 'roq', 'svi', 'vob', 'webm', 'wmv', 'yuv', 'rm']
-    document = ['doc', 'docx', 'html', 'htm', 'fb2', 'odt', 'sxw', 'pdf', 'ps', 'rtf', 'tex', 'txt', 'epub',
+    document = ['doc', 'docx', 'html', 'htm', 'fb2', 'odt', 'sxw', 'pdf', 'ps', 'rtf', 'tex', 'txt', 'epub', 'pub'
                 'mobi', 'azw', 'azw3', 'azw4', 'kf8', 'chm', 'cbt', 'cbr', 'cbz', 'cb7', 'cba', 'ibooks', 'djvu', 'md']
     compressed = ['a', 'ar', 'cpio', 'shar', 'LBR', 'iso', 'lbr', 'mar', 'tar', 'bz2', 'F', 'gz', 'lz', 'lzma', 'lzo', 'rz', 'sfark', 'sz', 'xz', 'Z', 'z', 'infl', '7z', 's7z', 'ace', 'afa', 'alz', 'apk', 'arc', 'arj', 'b1', 'ba', 'bh', 'cab', 'cfs', 'cpt', 'dar', 'dd', 'dgc', 'dmg', 'ear', 'gca', 'ha', 'hki', 'ice', 'jar', 'kgb', 'lzh', 'lha', 'lzx',
                   'pac', 'partimg', 'paq6', 'paq7', 'paq8', 'pea', 'pim', 'pit', 'qda', 'rar', 'rk', 'sda', 'sea', 'sen', 'sfx', 'sit', 'sitx', 'sqx', 'tar.gz', 'tgz', 'tar.Z', 'tar.bz2', 'tbz2', 'tar.lzma', 'tlz', 'uc', 'uc0', 'uc2', 'ucn', 'ur2', 'ue2', 'uca', 'uha', 'war', 'wim', 'xar', 'xp3', 'yz1', 'zip', 'zipx', 'zoo', 'zpaq', 'zz', 'ecc', 'par', 'par2']
@@ -553,13 +584,26 @@ def downloadUnpause(gid):
 
 
 def limitSpeed(gid, limit):
+    limit = str(limit)
+# converting Mega to Kilo, RPC does not Support floating point numbers. 
+    if limit != '0':
+        limit_number = limit[:-1]
+        limit_number = float(limit_number)
+        limit_unit = limit[-1]
+        if limit_unit == 'K':
+            limit_number = round(limit_number)
+        else:
+            limit_number = round(1024*limit_number)
+            limit_unit = 'K'
+        limit = str(limit_number) + limit_unit
+
     try:
         answer = server.aria2.changeOption(gid, {'max-download-limit': limit})
+        print("Download speed limit value is changed")
+        logger.sendToLog("Download speed limit  value is changed", "INFO")
+
     except:
         str("None")
-    print("Download speed is limited")
-    logger.sendToLog("Download speed is limited", "INFO")
-
 # this function returning  GID of active downloads
 
 
@@ -589,13 +633,13 @@ def nowDate():
 def sigmaTime(hour, minute):
     return (int(hour)*60 + int(minute))
 
-#nowTime returns now time!
+# nowTime returns now time!
 def nowTime():
     now_time_hour = time.strftime("%H")
     now_time_minute = time.strftime("%M")
     return sigmaTime(now_time_hour, now_time_minute)
 
-
+# this method is create sleep time,if user set "start time" for download.  
 def startTime(start_hour, start_minute, gid):
     print("Download starts at " + start_hour + ":" + start_minute)
     logger.sendToLog("Download starts at " + start_hour +

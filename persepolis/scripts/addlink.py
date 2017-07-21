@@ -32,7 +32,7 @@ from persepolis.scripts import osCommands
 from persepolis.scripts import download
 from persepolis.scripts import spider
 from persepolis.scripts import logger
-
+from persepolis.scripts.check_proxy import getProxy
 
 home_address = os.path.expanduser("~")
 
@@ -104,19 +104,16 @@ class AddLinkWindow(AddLinkWindow_Ui):
         if ('link' in self.flashgot_add_link_dictionary):
             self.link_lineEdit.setText(
                 str(self.flashgot_add_link_dictionary['link']))
-
-            # spider is finding file size
-            new_spider = AddLinkSpiderThread(self.flashgot_add_link_dictionary)
-            self.parent.threadPool.append(new_spider)
-            self.parent.threadPool[len(self.parent.threadPool) - 1].start()
-            self.parent.threadPool[len(self.parent.threadPool) - 1].ADDLINKSPIDERSIGNAL.connect(
-                partial(self.parent.addLinkSpiderCallBack, child=self))
  
         else:
             clipboard = QApplication.clipboard()
             text = clipboard.text()
             if (("tp:/" in text[2:6]) or ("tps:/" in text[2:7])):
                 self.link_lineEdit.setText(str(text))
+
+        # detect_proxy_pushButton 
+        self.detect_proxy_pushButton.clicked.connect(
+                self.detectProxy)
 
         # ip_lineEdit initialization ->
         settings_ip = self.persepolis_setting.value(
@@ -190,11 +187,12 @@ class AddLinkWindow(AddLinkWindow_Ui):
 
         # check name of flashgot link ->
         if ('out' in self.flashgot_add_link_dictionary):
-            self.change_name_lineEdit.setText(
-                str(self.flashgot_add_link_dictionary['out']))
-            self.change_name_checkBox.setChecked(True)
+            if str(self.flashgot_add_link_dictionary['out']) != 'None':
+                self.change_name_lineEdit.setText(
+                    str(self.flashgot_add_link_dictionary['out']))
+                self.change_name_checkBox.setChecked(True)
 
- # setting window size and position
+# setting window size and position
         size = self.persepolis_setting.value(
             'AddLinkWindow/size', QSize(520, 265))
         position = self.persepolis_setting.value(
@@ -206,7 +204,7 @@ class AddLinkWindow(AddLinkWindow_Ui):
 
 
 # more options widgets list
-        self.more_options_widgets = [self.proxy_checkBox, self.proxy_frame, self.download_checkBox, self.download_frame, self.folder_frame, self.start_checkBox,
+        self.more_options_widgets = [self.proxy_checkBox, self.detect_proxy_pushButton, self.proxy_frame, self.download_checkBox, self.download_frame, self.folder_frame, self.start_checkBox,
                                     self.start_frame, self.end_checkBox, self.end_frame, self.limit_checkBox, self.limit_frame, self.connections_frame] 
         #hiding more_options_widgets
         for widgets in self.more_options_widgets:
@@ -220,6 +218,31 @@ class AddLinkWindow(AddLinkWindow_Ui):
         height = int(self.height())
         if height < self.minimum_height:
             self.minimum_height = height
+
+# detected system proxy setting, and set ip_lineEdit and port_spinBox
+    def detectProxy(self, button):
+        # get system proxy information
+        system_proxy_dict = getProxy()
+
+        enable_proxy_frame = False
+
+        # ip
+        if 'http_proxy_ip' in system_proxy_dict.keys():
+            self.ip_lineEdit.setText(str(system_proxy_dict['http_proxy_ip']))
+            enable_proxy_frame = True
+
+        # port
+        if 'http_proxy_port' in system_proxy_dict.keys():
+            self.port_spinBox.setValue(int(system_proxy_dict['http_proxy_port']))
+            enable_proxy_frame = True
+
+        # enable proxy frame if http_proxy_ip or http_proxy_port is valid.
+        if enable_proxy_frame:
+            self.proxy_checkBox.setChecked(True)
+            self.detect_proxy_label.setText('')
+        else:
+            self.proxy_checkBox.setChecked(False)
+            self.detect_proxy_label.setText('No proxy detected!')
 
 
 
@@ -301,7 +324,17 @@ class AddLinkWindow(AddLinkWindow_Ui):
         if str(self.link_lineEdit.text()) == '':
             self.ok_pushButton.setEnabled(False)
             self.download_later_pushButton.setEnabled(False)
-        else:
+        else: # finding file size
+
+            self.flashgot_add_link_dictionary['link'] = str(self.link_lineEdit.text())
+
+            # spider is finding file size
+            new_spider = AddLinkSpiderThread(self.flashgot_add_link_dictionary)
+            self.parent.threadPool.append(new_spider)
+            self.parent.threadPool[len(self.parent.threadPool) - 1].start()
+            self.parent.threadPool[len(self.parent.threadPool) - 1].ADDLINKSPIDERSIGNAL.connect(
+                partial(self.parent.addLinkSpiderCallBack, child=self))
+ 
             self.ok_pushButton.setEnabled(True)
             self.download_later_pushButton.setEnabled(True)
 

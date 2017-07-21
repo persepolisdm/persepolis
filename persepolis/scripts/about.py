@@ -22,7 +22,7 @@ import persepolis.gui.icons_resource
 from persepolis.gui.about_ui import AboutWindow_Ui
 
 class AboutWindow(AboutWindow_Ui):
-    def __init__(self,persepolis_setting):
+    def __init__(self, persepolis_setting):
         super().__init__(persepolis_setting)
 
         self.persepolis_setting = persepolis_setting

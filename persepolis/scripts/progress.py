@@ -97,11 +97,11 @@ class ProgressWindow(ProgressWindow_Ui):
             download_info_file_list_len = len(download_info_file_list)
 
         add_link_dictionary = download_info_file_list[9]
-        limit = add_link_dictionary['limit']
-        if limit != 0:
+        limit = str(add_link_dictionary['limit'])
+        if limit != '0':
             limit_number = limit[:-1]
             limit_unit = limit[-1]
-            self.limit_spinBox.setValue(int(limit_number))
+            self.limit_spinBox.setValue(float(limit_number))
             if limit_unit == 'K':
                 self.after_comboBox.setCurrentIndex(0)
             else:

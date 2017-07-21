@@ -174,10 +174,14 @@ parser.add_argument('--default', action='store_true', help='restore default sett
 parser.add_argument('--clear', action='store_true', help='Clear download list and user setting!')
 parser.add_argument('--tray', action='store_true', help="Persepolis is starting in tray icon. It's useful when you want to put persepolis in system's startup.")
 parser.add_argument('--parent-window', action='store', nargs = 1, help='this switch is used for chrome native messaging in Windows')
-parser.add_argument('--version', action='version', version='Persepolis Download Manager 2.4.2')
+parser.add_argument('--version', action='version', version='Persepolis Download Manager 2.5a0')
 args = parser.parse_args()
 
 # Mozilla firefox flashgot will send download information whith terminal arguments(link , referer , cookie , agent , headers , name )
+# persepolis plugins (for chromium and chrome and opera and vivaldi and firefox) are using native message host system for 
+# sending download information to persepolis.
+# see this repo for more information:
+#   https://github.com/persepolisdm/Persepolis-WebExtension
 
 # if --execute >> yes  >>> persepolis main window  will starts 
 # if --execute >> no >>> persepolis started before!
@@ -185,7 +189,7 @@ args = parser.parse_args()
 
 add_link_dictionary = {}
 if args.chromium != 'no' or args.parent_window:
-#
+
 # Platform specific configuration
     if os_type == "Windows":
   # Set the default I/O mode to O_BINARY in windows
@@ -245,13 +249,12 @@ if args.default:
     print ('Persepolis restored default')
     sys.exit(0)
 
-if args.tray:
-    start_in_tray = 'yes'
-else:
-    start_in_tray = 'no'
 
 if args.link :
     add_link_dictionary ['link'] = "".join(args.link)
+    
+# if plugins call persepolis, then start persepolis in system tray 
+    args.tray = True
 
 if args.referer :
     add_link_dictionary['referer'] = "".join(args.referer)
@@ -267,9 +270,9 @@ if args.headers :
 
 if args.name :
     add_link_dictionary ['out'] = "".join(args.name)
-# when flashgot calls persepolis  then persepolis is creating a request file in /tmp folder . this file contains download informations
+# when flashgot calls persepolis  then persepolis is creating a request file in /tmp folder . this file contains download information
 # persepolis mainwindow checks /tmp for flashgot request file every 2 seconds ( see CheckFlashgot class in mainwindow.py )
-# when requset received by CheckFlashgot, a popup window (AddLinkWindow) is coming up and window is getting additional download informations from user (port , proxy , ...) and download starts and request file deleted
+# when requset received by CheckFlashgot, a popup window (AddLinkWindow) is coming up and window is getting additional download information from user (port , proxy , ...) and download starts and request file deleted
 if ('link' in add_link_dictionary):   
     # adding add_link_dictionary to persepolis-flashgot
     flashgot_file = os.path.join(persepolis_tmp, 'persepolis-flashgot')
@@ -278,6 +281,12 @@ if ('link' in add_link_dictionary):
     f.close()
     flashgot_ready = os.path.join(persepolis_tmp, 'persepolis-flashgot-ready')
     osCommands.touch(flashgot_ready)
+
+if args.tray:
+    start_in_tray = 'yes'
+else:
+    start_in_tray = 'no'
+
 
 def main():
     if lock_file_validation: # if lock_file is existed , it means persepolis is still running! 
@@ -316,8 +325,12 @@ def main():
                 mainwindow.show()
 
         except Exception:
+            from persepolis.scripts import logger
+            error_message = str(traceback.format_exc())
+            logger.sendToLog(error_message, "ERROR")
+
             # Resetting persepolis
-            error_window = ErrorWindow(str(traceback.format_exc()))
+            error_window = ErrorWindow(error_message)
             error_window.show()
          
         sys.exit(persepolis_download_manager.exec_())
