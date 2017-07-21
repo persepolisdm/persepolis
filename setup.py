@@ -8,10 +8,8 @@ import sys
 import platform
 import shutil
 
-
 # finding os platform
 os_type = platform.system()
-
 
 if os_type == 'Linux' or os_type == 'FreeBSD' or os_type == 'OpenBSD':
     from setuptools import setup, Command, find_packages
@@ -79,6 +77,9 @@ if os.path.isdir(notifications_path):
 else:
     print('Warning: sound-theme-freedesktop is not installed! you need this package for sound notifications!')
  
+
+
+
 DESCRIPTION = 'Persepolis Download Manager'
 
 if os_type == 'Linux':
@@ -121,7 +122,7 @@ print('man page file is generated!')
 
 setup(
     name = 'persepolis',
-    version = '2.4.2',
+    version = '2.5a0',
     license = 'GPL3',
     description = DESCRIPTION,
     long_description = DESCRIPTION,

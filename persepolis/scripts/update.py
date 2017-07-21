@@ -48,7 +48,7 @@ class checkupdate(QWidget):
         self.update_label.setAlignment(QtCore.Qt.AlignCenter)
 
         # second line text
-        self.version_label = QLabel('This is Persepolis Download Manager version 2.4.2')
+        self.version_label = QLabel('This is Persepolis Download Manager version 2.5a0')
         self.version_label.setAlignment(QtCore.Qt.AlignCenter)
 
         # release link
