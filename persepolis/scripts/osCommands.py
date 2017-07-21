@@ -19,6 +19,7 @@ import shutil
 import subprocess
 import PyQt5
 from PyQt5 import QtCore
+from send2trash import send2trash
 
 os_type = platform.system()
 
@@ -45,7 +46,7 @@ def xdgOpen(file_path):
 def remove(file_path):  # removing file with path of file_path
     if os.path.isfile(file_path):
         try:
-            os.remove(file_path)
+            send2trash(file_path)
             return 'ok'  # function returning  this , if opertation was successful
         except:
             return 'cant'  # function is returning this , if operation was not successful
