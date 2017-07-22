@@ -113,18 +113,18 @@ def getProxy():
             elif os_type == 'Darwin' :
 
                 import subprocess
-                validKeys = ['SOCKSEnable', 'SOCKSProxy', 'SOCKSPort']
+                validKeys = ['SOCKSEnable']
 
                 # get proxies list using scutil command and parse it in tmp list
-                tmp_proxies_list = {}
+                mac_tmp_proxies_list = {}
                 proxyList = subprocess.run(['scutil', '--proxy'], stdout=subprocess.PIPE)
                 for line in proxyList.stdout.decode('utf-8').split('\n'):
                     words = line.split()
                     if len(words) == 3 and words[0] in validKeys:
-                        tmp_proxies_list[words[0]] = words[2]
+                        mac_tmp_proxies_list[words[0]] = words[2]
 
-                if tmp_proxies_list['SOCKSEnable'] is '1' :
-                    socks_proxy = tmp_proxies_list['SOCKSProxy']
+                if mac_tmp_proxies_list['SOCKSEnable'] is '1' :
+                    socks_proxy = True
                 else:
                     socks_proxy = False
             # others except KDE,Mac OS,gnome,unity7
