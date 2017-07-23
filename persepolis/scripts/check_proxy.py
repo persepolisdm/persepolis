@@ -112,7 +112,6 @@ def getProxy():
             # if it is Mac OS
             elif os_type == 'Darwin' :
 
-                import subprocess
                 validKeys = ['SOCKSEnable']
 
                 # get proxies list using scutil command and parse it in tmp list
