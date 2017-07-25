@@ -240,5 +240,5 @@ if persepolis_version != 2.4:
 
         persepolis_setting.setValue('version/version', 2.41)
 
-persepolis_setting.setValue('version/version', 2.42)
+persepolis_setting.setValue('version/version', 2.42) 
 persepolis_setting.sync()

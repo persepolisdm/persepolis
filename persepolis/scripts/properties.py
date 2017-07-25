@@ -22,6 +22,7 @@ import ast
 from persepolis.scripts.newopen import Open, writeList, readList, readDict
 from persepolis.gui.addlink_ui import AddLinkWindow_Ui
 import platform
+from persepolis.scripts.check_proxy import getProxy
 
 os_type = platform.system()
 
@@ -68,6 +69,10 @@ class PropertiesWindow(AddLinkWindow_Ui):
 
 # hiding options_pushButton
         self.options_pushButton.hide()
+
+# detect_proxy_pushButton
+        self.detect_proxy_pushButton.clicked.connect(
+                self.detectProxy)
 
 # connect folder_pushButton
         self.folder_pushButton.clicked.connect(self.changeFolder)
@@ -215,6 +220,33 @@ class PropertiesWindow(AddLinkWindow_Ui):
             'PropertiesWindow/position', QPoint(300, 300))
         self.resize(size)
         self.move(position)
+
+# detected system proxy setting, and set ip_lineEdit and port_spinBox
+    def detectProxy(self, button):
+        # get system proxy information
+        system_proxy_dict = getProxy()
+
+        enable_proxy_frame = False
+
+        # ip
+        if 'http_proxy_ip' in system_proxy_dict.keys():
+            self.ip_lineEdit.setText(str(system_proxy_dict['http_proxy_ip']))
+            enable_proxy_frame = True
+
+        # port
+        if 'http_proxy_port' in system_proxy_dict.keys():
+            self.port_spinBox.setValue(int(system_proxy_dict['http_proxy_port']))
+            enable_proxy_frame = True
+
+        # enable proxy frame if http_proxy_ip or http_proxy_port is valid.
+        if enable_proxy_frame:
+            self.proxy_checkBox.setChecked(True)
+            self.detect_proxy_label.setText('')
+        else:
+            self.proxy_checkBox.setChecked(False)
+            self.detect_proxy_label.setText('No proxy detected!')
+
+
 
 
 # activate frames if checkBoxes checked

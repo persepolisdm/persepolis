@@ -110,8 +110,17 @@ class AddLinkWindow_Ui(QWidget):
         # proxy ->
         proxy_verticalLayout = QVBoxLayout()
 
+        proxy_horizontalLayout = QHBoxLayout()
+
         self.proxy_checkBox = QCheckBox(self)
-        proxy_verticalLayout.addWidget(self.proxy_checkBox)
+        self.detect_proxy_pushButton = QPushButton(self)
+        self.detect_proxy_label = QLabel(self)
+
+        proxy_horizontalLayout.addWidget(self.proxy_checkBox)
+        proxy_horizontalLayout.addWidget(self.detect_proxy_label)
+        proxy_horizontalLayout.addWidget(self.detect_proxy_pushButton)
+
+        proxy_verticalLayout.addLayout(proxy_horizontalLayout)
 
         self.proxy_frame = QFrame(self)
         self.proxy_frame.setFrameShape(QFrame.StyledPanel)
@@ -330,6 +339,7 @@ class AddLinkWindow_Ui(QWidget):
 
         self.options_pushButton.setText("Show more options")
 
+        self.detect_proxy_pushButton.setText("Detect system proxy setting")
         self.proxy_checkBox.setText("Proxy")
         self.proxy_pass_label.setText("Proxy PassWord : ")
         self.ip_label.setText("IP : ")

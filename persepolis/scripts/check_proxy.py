@@ -3,6 +3,7 @@ import requests
 import os
 from persepolis.scripts import logger
 import platform
+import subprocess
 
 # finding platform
 os_type = platform.system()
@@ -110,7 +111,18 @@ def getProxy():
                 socks_proxy = proxysource['all'].split(':')[1].replace('//','')
             # if it is Mac OS
             elif os_type == 'Darwin' :
-                if os.system("scutil --proxy | grep SOCKSEnable | awk \'{ print $3 }\' ") == "1" :
+
+                validKeys = ['SOCKSEnable']
+
+                # get proxies list using scutil command and parse it in tmp list
+                mac_tmp_proxies_list = {}
+                proxyList = subprocess.run(['scutil', '--proxy'], stdout=subprocess.PIPE)
+                for line in proxyList.stdout.decode('utf-8').split('\n'):
+                    words = line.split()
+                    if len(words) == 3 and words[0] in validKeys:
+                        mac_tmp_proxies_list[words[0]] = words[2]
+
+                if mac_tmp_proxies_list['SOCKSEnable'] is '1' :
                     socks_proxy = True
                 else:
                     socks_proxy = False
