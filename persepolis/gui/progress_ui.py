@@ -18,6 +18,7 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import QWidget, QSizePolicy
 from PyQt5.QtGui import QIcon
+from PyQt5.QtCore import QTranslator, QCoreApplication
 import ast
 import os
 from persepolis.scripts.newopen import Open

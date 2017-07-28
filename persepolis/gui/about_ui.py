@@ -17,7 +17,7 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import QWidget
 from PyQt5.QtGui import QIcon
-from PyQt5.QtCore import QSize, QPoint
+from PyQt5.QtCore import QSize, QPoint, QTranslator, QCoreApplication
 from persepolis.gui import icons_resource
 
 

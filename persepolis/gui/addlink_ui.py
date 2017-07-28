@@ -21,6 +21,7 @@ from PyQt5.QtWidgets import QDoubleSpinBox, QPushButton, QComboBox, QSpinBox, QV
 from PyQt5.QtGui import QIcon
 from persepolis.scripts.newopen import Open
 from persepolis.gui import icons_resource
+from PyQt5.QtCore import QTranslator, QCoreApplication
 
 home_address = os.path.expanduser("~")
 
