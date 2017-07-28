@@ -30,11 +30,17 @@ class AfterDownloadWindow_Ui(QWidget):
         super().__init__()
 
         self.persepolis_setting = persepolis_setting
+# add support for other languages
+# TO DO: change LOCALE with user selected locale
+        locale_path = "locales/LOCALE/after_download_ui.qm"
+        self.translator = QTranslator()
+        self.translator.load(locale_path)
+        QCoreApplication.installTranslator(self.translator)
 
         icons = ':/' + str(self.persepolis_setting.value('settings/icons')) + '/'
 
         self.setWindowIcon(QIcon.fromTheme('persepolis' ,QIcon(':/persepolis.svg')))
-        self.setWindowTitle("Persepolis Download Manager")
+        self.setWindowTitle(QCoreApplication.translate("after_download_ui_tr", "Persepolis Download Manager"))
 #complete_label
         self.verticalLayout_1 = QVBoxLayout()
         self.verticalLayout_1.setContentsMargins(21, 21, 21, 21)
@@ -86,13 +92,13 @@ class AfterDownloadWindow_Ui(QWidget):
         self.setLayout(self.verticalLayout_1)
 
 # labels
-        self.open_pushButtun.setText("  Open File  ")
-        self.open_folder_pushButtun.setText("Open Download Folder")
-        self.ok_pushButton.setText("   OK   ")
-        self.dont_show_checkBox.setText("Don't show this message again.")
-        self.complete_label.setText("<b>Download Completed!</b>")
-        self.save_as_label.setText("<b>Save as</b> : ")
-        self.link_label.setText("<b>Link</b> : " ) 
+        self.open_pushButtun.setText(QCoreApplication.translate("after_download_ui_tr", "  Open File  "))
+        self.open_folder_pushButtun.setText(QCoreApplication.translate("after_download_ui_tr", "Open Download Folder"))
+        self.ok_pushButton.setText(QCoreApplication.translate("after_download_ui_tr", "   OK   "))
+        self.dont_show_checkBox.setText(QCoreApplication.translate("after_download_ui_tr", "Don't show this message again."))
+        self.complete_label.setText(QCoreApplication.translate("after_download_ui_tr", "<b>Download Completed!</b>"))
+        self.save_as_label.setText(QCoreApplication.translate("after_download_ui_tr", "<b>Save as</b> : "))
+        self.link_label.setText(QCoreApplication.translate("after_download_ui_tr", "<b>Link</b> : " ))
 
 
     def changeIcon(self , icons ):
