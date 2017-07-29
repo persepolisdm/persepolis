@@ -113,10 +113,10 @@ class AboutWindow_Ui(QWidget):
 
         QtCore.QMetaObject.connectSlotsByName(self)
 
-        self.setWindowTitle(QCoreApplication.translate("about_ui_tr", "About Persepolis"))
-        self.title_label.setText(QCoreApplication.translate("about_ui_tr", "Persepolis Download Manager"))
-        self.version_label.setText(QCoreApplication.translate("about_ui_tr", "Version 2.5a0"))
-        self.name_label.setText(QCoreApplication.translate("about_ui_tr", 
+        self.setWindowTitle(QCoreApplication.translate("ui_tr", "About Persepolis"))
+        self.title_label.setText(QCoreApplication.translate("ui_tr", "Persepolis Download Manager"))
+        self.version_label.setText(QCoreApplication.translate("ui_tr", "Version 2.5a0"))
+        self.name_label.setText(QCoreApplication.translate("ui_tr", 
             "\nAliReza AmirSamimi\nMohammadreza Abdollahzadeh\nSadegh Alirezaie\nMostafa Asadi\nMohammadAmin Vahedinia\nJafar Akhondali"))
         self.site2_label.setText(
             "<a href=https://persepolisdm.github.io>https://persepolisdm.github.io</a>")
@@ -124,6 +124,6 @@ class AboutWindow_Ui(QWidget):
             "<a href=https://telegram.me/persepolisdm>https://telegram.me/persepolisdm</a>")
         self.twitter_label.setText(
             "<a href=https://twitter.com/persepolisdm>https://twitter.com/persepolisdm</a>")
-        self.pushButton.setText(QCoreApplication.translate("about_ui_tr", "Ok"))
+        self.pushButton.setText(QCoreApplication.translate("ui_tr", "Ok"))
 
 

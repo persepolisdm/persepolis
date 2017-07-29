@@ -39,7 +39,7 @@ class Setting_Ui(QWidget):
         QCoreApplication.installTranslator(self.translator)
         
         self.setWindowIcon(QIcon.fromTheme('persepolis', QIcon(':/persepolis.svg')))
-        self.setWindowTitle(QCoreApplication.translate("setting_ui_tr", 'Preferences'))
+        self.setWindowTitle(QCoreApplication.translate("ui_tr", 'Preferences'))
 
         global icons
         icons = ':/' + str(persepolis_setting.value('settings/icons')) + '/'
@@ -326,110 +326,110 @@ class Setting_Ui(QWidget):
         self.verticalLayout_2.addLayout(self.horizontalLayout)
         self.setting_tabWidget.setCurrentIndex(3)
 
-        self.setWindowTitle(QCoreApplication.translate("setting_ui_tr", "Preferences"))
+        self.setWindowTitle(QCoreApplication.translate("ui_tr", "Preferences"))
 
-        self.tries_label.setToolTip(QCoreApplication.translate("setting_ui_tr", 
+        self.tries_label.setToolTip(QCoreApplication.translate("ui_tr", 
             "<html><head/><body><p>Set number of tries if download failed.</p></body></html>"))
-        self.tries_label.setText(QCoreApplication.translate("setting_ui_tr", "Number of tries : "))
-        self.tries_spinBox.setToolTip(QCoreApplication.translate("setting_ui_tr", 
+        self.tries_label.setText(QCoreApplication.translate("ui_tr", "Number of tries : "))
+        self.tries_spinBox.setToolTip(QCoreApplication.translate("ui_tr", 
             "<html><head/><body><p>Set number of tries if download failed.</p></body></html>"))
 
-        self.wait_label.setToolTip(QCoreApplication.translate("setting_ui_tr", 
+        self.wait_label.setToolTip(QCoreApplication.translate("ui_tr", 
             "<html><head/><body><p>Set the seconds to wait between retries. Download manager will  retry  downloads  when  the  HTTP  server  returns  a  503 response.</p></body></html>"))
-        self.wait_label.setText(QCoreApplication.translate("setting_ui_tr", "Wait between retries (seconds) : "))
-        self.wait_spinBox.setToolTip(QCoreApplication.translate("setting_ui_tr", 
+        self.wait_label.setText(QCoreApplication.translate("ui_tr", "Wait between retries (seconds) : "))
+        self.wait_spinBox.setToolTip(QCoreApplication.translate("ui_tr", 
             "<html><head/><body><p>Set the seconds to wait between retries. Download manager will  retry  downloads  when  the  HTTP  server  returns  a  503 response.</p></body></html>"))
 
-        self.time_out_label.setToolTip(QCoreApplication.translate("setting_ui_tr", 
+        self.time_out_label.setToolTip(QCoreApplication.translate("ui_tr", 
             "<html><head/><body><p>Set timeout in seconds. </p></body></html>"))
-        self.time_out_label.setText(QCoreApplication.translate("setting_ui_tr", "Time out (seconds) : "))
-        self.time_out_spinBox.setToolTip(QCoreApplication.translate("setting_ui_tr", 
+        self.time_out_label.setText(QCoreApplication.translate("ui_tr", "Time out (seconds) : "))
+        self.time_out_spinBox.setToolTip(QCoreApplication.translate("ui_tr", 
             "<html><head/><body><p>Set timeout in seconds. </p></body></html>"))
 
-        self.connections_label.setToolTip(QCoreApplication.translate("setting_ui_tr", 
+        self.connections_label.setToolTip(QCoreApplication.translate("ui_tr", 
             "<html><head/><body><p>Using multiple connections can help speed up your download.</p></body></html>"))
-        self.connections_label.setText(QCoreApplication.translate("setting_ui_tr", "Number of connections : "))
-        self.connections_spinBox.setToolTip(QCoreApplication.translate("setting_ui_tr", 
+        self.connections_label.setText(QCoreApplication.translate("ui_tr", "Number of connections : "))
+        self.connections_spinBox.setToolTip(QCoreApplication.translate("ui_tr", 
             "<html><head/><body><p>Using multiple connections can help speed up your download.</p></body></html>"))
 
-        self.rpc_port_label.setText(QCoreApplication.translate("setting_ui_tr", "RPC port number : "))
-        self.rpc_port_spinbox.setToolTip(QCoreApplication.translate("setting_ui_tr", 
+        self.rpc_port_label.setText(QCoreApplication.translate("ui_tr", "RPC port number : "))
+        self.rpc_port_spinbox.setToolTip(QCoreApplication.translate("ui_tr", 
             "<html><head/><body><p> Specify a port number for JSON-RPC/XML-RPC server to listen to. Possible Values: 1024 - 65535 Default: 6801 </p></body></html>"))
 
-        self.wait_queue_label.setText(QCoreApplication.translate("setting_ui_tr", 'Wait between every downloads in queue:'))
+        self.wait_queue_label.setText(QCoreApplication.translate("ui_tr", 'Wait between every downloads in queue:'))
 
         self.setting_tabWidget.setTabText(self.setting_tabWidget.indexOf(
-            self.download_options_tab),  QCoreApplication.translate("setting_ui_tr", "Download Options"))
+            self.download_options_tab),  QCoreApplication.translate("ui_tr", "Download Options"))
 
-        self.download_folder_label.setText(QCoreApplication.translate("setting_ui_tr", "Download Folder : "))
-        self.download_folder_pushButton.setText(QCoreApplication.translate("setting_ui_tr", "Change"))
+        self.download_folder_label.setText(QCoreApplication.translate("ui_tr", "Download Folder : "))
+        self.download_folder_pushButton.setText(QCoreApplication.translate("ui_tr", "Change"))
 
-        self.temp_download_label.setText(QCoreApplication.translate("setting_ui_tr", "Temporary Download Folder : "))
-        self.temp_download_pushButton.setText(QCoreApplication.translate("setting_ui_tr", "Change"))
+        self.temp_download_label.setText(QCoreApplication.translate("ui_tr", "Temporary Download Folder : "))
+        self.temp_download_pushButton.setText(QCoreApplication.translate("ui_tr", "Change"))
 
-        self.subfolder_checkBox.setText(QCoreApplication.translate("setting_ui_tr", "Create subfolders for Music,Videos,... in default download folder"))
+        self.subfolder_checkBox.setText(QCoreApplication.translate("ui_tr", "Create subfolders for Music,Videos,... in default download folder"))
 
         self.setting_tabWidget.setTabText(
-            self.setting_tabWidget.indexOf(self.save_as_tab),  QCoreApplication.translate("setting_ui_tr", "Save as"))
+            self.setting_tabWidget.indexOf(self.save_as_tab),  QCoreApplication.translate("ui_tr", "Save as"))
 
-        self.enable_notifications_checkBox.setText(QCoreApplication.translate("setting_ui_tr", 
+        self.enable_notifications_checkBox.setText(QCoreApplication.translate("ui_tr", 
             "Enable notification sounds"))
 
-        self.volume_label.setText(QCoreApplication.translate("setting_ui_tr", "Volume : "))
+        self.volume_label.setText(QCoreApplication.translate("ui_tr", "Volume : "))
 
         self.setting_tabWidget.setTabText(self.setting_tabWidget.indexOf(
-            self.notifications_tab),  QCoreApplication.translate("setting_ui_tr", "Notifications"))
+            self.notifications_tab),  QCoreApplication.translate("ui_tr", "Notifications"))
 
-        self.style_label.setText(QCoreApplication.translate("setting_ui_tr", "Style : "))
-        self.color_label.setText(QCoreApplication.translate("setting_ui_tr", "Color scheme : "))
-        self.icon_label.setText(QCoreApplication.translate("setting_ui_tr", "Icons : "))
+        self.style_label.setText(QCoreApplication.translate("ui_tr", "Style : "))
+        self.color_label.setText(QCoreApplication.translate("ui_tr", "Color scheme : "))
+        self.icon_label.setText(QCoreApplication.translate("ui_tr", "Icons : "))
 
-        self.notification_label.setText(QCoreApplication.translate("setting_ui_tr", "Notification type : "))
+        self.notification_label.setText(QCoreApplication.translate("ui_tr", "Notification type : "))
 
-        self.font_checkBox.setText(QCoreApplication.translate("setting_ui_tr", "Font : "))
-        self.font_size_label.setText(QCoreApplication.translate("setting_ui_tr", "Size : "))
+        self.font_checkBox.setText(QCoreApplication.translate("ui_tr", "Font : "))
+        self.font_size_label.setText(QCoreApplication.translate("ui_tr", "Size : "))
 
-        self.enable_system_tray_checkBox.setText(QCoreApplication.translate("setting_ui_tr", "Enable system tray icon."))
-        self.after_download_checkBox.setText(QCoreApplication.translate("setting_ui_tr", 
+        self.enable_system_tray_checkBox.setText(QCoreApplication.translate("ui_tr", "Enable system tray icon."))
+        self.after_download_checkBox.setText(QCoreApplication.translate("ui_tr", 
             "Show download complete dialog,when download has finished."))
 
-        self.show_menubar_checkbox.setText(QCoreApplication.translate("setting_ui_tr", "Show menubar."))
-        self.show_sidepanel_checkbox.setText(QCoreApplication.translate("setting_ui_tr", "Show side panel."))
-        self.show_progress_window_checkbox.setText(QCoreApplication.translate("setting_ui_tr", 
+        self.show_menubar_checkbox.setText(QCoreApplication.translate("ui_tr", "Show menubar."))
+        self.show_sidepanel_checkbox.setText(QCoreApplication.translate("ui_tr", "Show side panel."))
+        self.show_progress_window_checkbox.setText(QCoreApplication.translate("ui_tr", 
             "Show download's progress window"))
 
-        self.startup_checkbox.setText(QCoreApplication.translate("setting_ui_tr", "Run Persepolis at startup"))
+        self.startup_checkbox.setText(QCoreApplication.translate("ui_tr", "Run Persepolis at startup"))
 
-        self.keep_awake_checkBox.setText(QCoreApplication.translate("setting_ui_tr", "Keep system awake!"))
-        self.keep_awake_checkBox.setToolTip(QCoreApplication.translate("setting_ui_tr", 
+        self.keep_awake_checkBox.setText(QCoreApplication.translate("ui_tr", "Keep system awake!"))
+        self.keep_awake_checkBox.setToolTip(QCoreApplication.translate("ui_tr", 
             "<html><head/><body><p>This option is preventing system from going to sleep.\
             This is necessary if your power manager is suspending system automatically. </p></body></html>"))
  
-        self.wait_queue_time.setToolTip(QCoreApplication.translate("setting_ui_tr", 
+        self.wait_queue_time.setToolTip(QCoreApplication.translate("ui_tr", 
                 "<html><head/><body><p>Format HH:MM</p></body></html>"))
  
         self.setting_tabWidget.setTabText(
-            self.setting_tabWidget.indexOf(self.style_tab),  QCoreApplication.translate("setting_ui_tr", "Preferences"))
+            self.setting_tabWidget.indexOf(self.style_tab),  QCoreApplication.translate("ui_tr", "Preferences"))
 
 # columns_tab
-        self.show_column_label.setText(QCoreApplication.translate("setting_ui_tr", 'Show this columns:'))
-        self.column0_checkBox.setText(QCoreApplication.translate("setting_ui_tr", 'File Name'))
-        self.column1_checkBox.setText(QCoreApplication.translate("setting_ui_tr", 'Status'))
-        self.column2_checkBox.setText(QCoreApplication.translate("setting_ui_tr", 'Size'))
-        self.column3_checkBox.setText(QCoreApplication.translate("setting_ui_tr", 'Downloaded'))
-        self.column4_checkBox.setText(QCoreApplication.translate("setting_ui_tr", 'Percentage'))
-        self.column5_checkBox.setText(QCoreApplication.translate("setting_ui_tr", 'Connections'))
-        self.column6_checkBox.setText(QCoreApplication.translate("setting_ui_tr", 'Transfer rate'))
-        self.column7_checkBox.setText(QCoreApplication.translate("setting_ui_tr", 'Estimate time left'))
-        self.column10_checkBox.setText(QCoreApplication.translate("setting_ui_tr", 'First try date'))
-        self.column11_checkBox.setText(QCoreApplication.translate("setting_ui_tr", 'Last try date'))
-        self.column12_checkBox.setText(QCoreApplication.translate("setting_ui_tr", 'Category'))
+        self.show_column_label.setText(QCoreApplication.translate("ui_tr", 'Show this columns:'))
+        self.column0_checkBox.setText(QCoreApplication.translate("ui_tr", 'File Name'))
+        self.column1_checkBox.setText(QCoreApplication.translate("ui_tr", 'Status'))
+        self.column2_checkBox.setText(QCoreApplication.translate("ui_tr", 'Size'))
+        self.column3_checkBox.setText(QCoreApplication.translate("ui_tr", 'Downloaded'))
+        self.column4_checkBox.setText(QCoreApplication.translate("ui_tr", 'Percentage'))
+        self.column5_checkBox.setText(QCoreApplication.translate("ui_tr", 'Connections'))
+        self.column6_checkBox.setText(QCoreApplication.translate("ui_tr", 'Transfer rate'))
+        self.column7_checkBox.setText(QCoreApplication.translate("ui_tr", 'Estimate time left'))
+        self.column10_checkBox.setText(QCoreApplication.translate("ui_tr", 'First try date'))
+        self.column11_checkBox.setText(QCoreApplication.translate("ui_tr", 'Last try date'))
+        self.column12_checkBox.setText(QCoreApplication.translate("ui_tr", 'Category'))
 
         self.setting_tabWidget.setTabText(
-            self.setting_tabWidget.indexOf(self.columns_tab), QCoreApplication.translate("setting_ui_tr", "Columns customization"))
+            self.setting_tabWidget.indexOf(self.columns_tab), QCoreApplication.translate("ui_tr", "Columns customization"))
 
 
 # window buttons
-        self.defaults_pushButton.setText(QCoreApplication.translate("setting_ui_tr", "Defaults"))
-        self.cancel_pushButton.setText(QCoreApplication.translate("setting_ui_tr", "Cancel"))
-        self.ok_pushButton.setText(QCoreApplication.translate("setting_ui_tr", "OK"))
+        self.defaults_pushButton.setText(QCoreApplication.translate("ui_tr", "Defaults"))
+        self.cancel_pushButton.setText(QCoreApplication.translate("ui_tr", "Cancel"))
+        self.ok_pushButton.setText(QCoreApplication.translate("ui_tr", "OK"))

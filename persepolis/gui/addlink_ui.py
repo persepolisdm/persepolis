@@ -338,45 +338,45 @@ class AddLinkWindow_Ui(QWidget):
         self.setLayout(window_verticalLayout)
 
         # labels ->
-        self.setWindowTitle(QCoreApplication.translate("addlink_ui_tr", "Enter Your Link"))
+        self.setWindowTitle(QCoreApplication.translate("ui_tr", "Enter Your Link"))
 
-        self.link_label.setText(QCoreApplication.translate("addlink_ui_tr", "Download Link : "))
+        self.link_label.setText(QCoreApplication.translate("ui_tr", "Download Link : "))
 
-        self.add_queue_label.setText(QCoreApplication.translate("addlink_ui_tr", "Add to category : "))
+        self.add_queue_label.setText(QCoreApplication.translate("ui_tr", "Add to category : "))
 
-        self.change_name_checkBox.setText(QCoreApplication.translate("addlink_ui_tr", "Change File Name : "))
+        self.change_name_checkBox.setText(QCoreApplication.translate("ui_tr", "Change File Name : "))
 
-        self.options_pushButton.setText(QCoreApplication.translate("addlink_ui_tr", "Show more options"))
+        self.options_pushButton.setText(QCoreApplication.translate("ui_tr", "Show more options"))
 
-        self.detect_proxy_pushButton.setText(QCoreApplication.translate("addlink_ui_tr", "Detect system proxy setting"))
-        self.proxy_checkBox.setText(QCoreApplication.translate("addlink_ui_tr", "Proxy"))
-        self.proxy_pass_label.setText(QCoreApplication.translate("addlink_ui_tr", "Proxy PassWord : "))
-        self.ip_label.setText(QCoreApplication.translate("addlink_ui_tr", "IP : "))
-        self.proxy_user_label.setText(QCoreApplication.translate("addlink_ui_tr", "Proxy UserName : "))
-        self.port_label.setText(QCoreApplication.translate("addlink_ui_tr", "Port:"))
+        self.detect_proxy_pushButton.setText(QCoreApplication.translate("ui_tr", "Detect system proxy setting"))
+        self.proxy_checkBox.setText(QCoreApplication.translate("ui_tr", "Proxy"))
+        self.proxy_pass_label.setText(QCoreApplication.translate("ui_tr", "Proxy PassWord : "))
+        self.ip_label.setText(QCoreApplication.translate("ui_tr", "IP : "))
+        self.proxy_user_label.setText(QCoreApplication.translate("ui_tr", "Proxy UserName : "))
+        self.port_label.setText(QCoreApplication.translate("ui_tr", "Port:"))
 
-        self.download_checkBox.setText(QCoreApplication.translate("addlink_ui_tr", "Download UserName and PassWord"))
-        self.download_user_label.setText(QCoreApplication.translate("addlink_ui_tr", "Download UserName : "))
-        self.download_pass_label.setText(QCoreApplication.translate("addlink_ui_tr", "Download PassWord : "))
+        self.download_checkBox.setText(QCoreApplication.translate("ui_tr", "Download UserName and PassWord"))
+        self.download_user_label.setText(QCoreApplication.translate("ui_tr", "Download UserName : "))
+        self.download_pass_label.setText(QCoreApplication.translate("ui_tr", "Download PassWord : "))
 
-        self.folder_pushButton.setText(QCoreApplication.translate("addlink_ui_tr", "Change Download Folder"))
-        self.folder_label.setText(QCoreApplication.translate("addlink_ui_tr", "Download Folder : "))
+        self.folder_pushButton.setText(QCoreApplication.translate("ui_tr", "Change Download Folder"))
+        self.folder_label.setText(QCoreApplication.translate("ui_tr", "Download Folder : "))
 
-        self.start_checkBox.setText(QCoreApplication.translate("addlink_ui_tr", "Start Time"))
-        self.start_label.setText(QCoreApplication.translate("addlink_ui_tr", ":"))
-        self.end_checkBox.setText(QCoreApplication.translate("addlink_ui_tr", "End Time"))
-        self.end_label.setText(QCoreApplication.translate("addlink_ui_tr", ":"))
+        self.start_checkBox.setText(QCoreApplication.translate("ui_tr", "Start Time"))
+        self.start_label.setText(QCoreApplication.translate("ui_tr", ":"))
+        self.end_checkBox.setText(QCoreApplication.translate("ui_tr", "End Time"))
+        self.end_label.setText(QCoreApplication.translate("ui_tr", ":"))
 
-        self.limit_checkBox.setText(QCoreApplication.translate("addlink_ui_tr", "Limit Speed"))
+        self.limit_checkBox.setText(QCoreApplication.translate("ui_tr", "Limit Speed"))
         self.limit_comboBox.setItemText(0, "KB/S")
         self.limit_comboBox.setItemText(1, "MB/S")
 
-        self.connections_label.setText(QCoreApplication.translate("addlink_ui_tr", "Number Of Connections :"))
+        self.connections_label.setText(QCoreApplication.translate("ui_tr", "Number Of Connections :"))
 
-        self.cancel_pushButton.setText(QCoreApplication.translate("addlink_ui_tr", "Cancel"))
-        self.ok_pushButton.setText(QCoreApplication.translate("addlink_ui_tr", "OK"))
+        self.cancel_pushButton.setText(QCoreApplication.translate("ui_tr", "Cancel"))
+        self.ok_pushButton.setText(QCoreApplication.translate("ui_tr", "OK"))
 
-        self.download_later_pushButton.setText(QCoreApplication.translate("addlink_ui_tr", "Download later"))
+        self.download_later_pushButton.setText(QCoreApplication.translate("ui_tr", "Download later"))
 
     def changeIcon(self, icons):
         icons = ':/' + str(icons) + '/'
