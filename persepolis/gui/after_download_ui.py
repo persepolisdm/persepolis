@@ -19,6 +19,7 @@ from PyQt5.QtGui import QIcon
 from PyQt5.QtCore import QTranslator, QCoreApplication
 import ast
 import os
+import pkg_resources
 from persepolis.scripts.newopen import Open
 from persepolis.gui import icons_resource
 
@@ -33,7 +34,7 @@ class AfterDownloadWindow_Ui(QWidget):
         self.persepolis_setting = persepolis_setting
 # add support for other languages
 # TO DO: change LOCALE with user selected locale
-        locale_path = "locales/LOCALE/after_download_ui.qm"
+        locale_path = pkg_resources.resource_filename(__name__, "locales/LOCALE/after_download_ui.qm")
         self.translator = QTranslator()
         self.translator.load(locale_path)
         QCoreApplication.installTranslator(self.translator)

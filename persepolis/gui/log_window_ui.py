@@ -13,6 +13,8 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
+import pkg_resources
+
 from PyQt5 import QtGui, QtWidgets, QtCore
 from PyQt5.QtWidgets import QWidget, QTextEdit, QVBoxLayout, QHBoxLayout, QPushButton, QLabel
 from PyQt5.QtGui import QIcon
@@ -27,7 +29,7 @@ class LogWindow_Ui(QWidget):
         self.persepolis_setting = persepolis_setting
 # add support for other languages
 # TO DO: change LOCALE with user selected locale
-        locale_path = "locales/LOCALE/log_window_ui.qm"
+        locale_path = pkg_resources.resource_filename(__name__, "locales/LOCALE/log_window_ui.qm")
         self.translator = QTranslator()
         self.translator.load(locale_path)
         

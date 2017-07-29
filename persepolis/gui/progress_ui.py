@@ -21,6 +21,7 @@ from PyQt5.QtGui import QIcon
 from PyQt5.QtCore import QTranslator, QCoreApplication
 import ast
 import os
+import pkg_resources
 from persepolis.scripts.newopen import Open
 
 home_address = os.path.expanduser("~")
@@ -34,7 +35,7 @@ class ProgressWindow_Ui(QWidget):
         
 # add support for other languages
 # TO DO: change LOCALE with user selected locale
-        locale_path = "locales/LOCALE/progress_ui.qm"
+        locale_path = pkg_resources.resource_filename(__name__, "locales/LOCALE/progress_ui.qm")
         self.translator = QTranslator()
         self.translator.load(locale_path)
         QCoreApplication.installTranslator(self.translator)

@@ -13,6 +13,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
+import pkg_resources
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import QWidget
@@ -29,7 +30,7 @@ class AboutWindow_Ui(QWidget):
         
 # add support for other languages
 # TO DO: change LOCALE with user selected locale
-        locale_path = "locales/LOCALE/about_ui.qm"
+        locale_path = pkg_resources.resource_filename(__name__, "locales/LOCALE/about_ui.qm")
         self.translator = QTranslator()
         self.translator.load(locale_path)
         QCoreApplication.installTranslator(self.translator)

@@ -21,6 +21,7 @@ from PyQt5.QtCore import QTranslator, QCoreApplication
 from persepolis.scripts.newopen import Open
 import os
 import ast
+import pkg_resources
 
 home_address = os.path.expanduser("~")
 
@@ -31,7 +32,7 @@ class TextQueue_Ui(QWidget):
 
 # add support for other languages
 # TO DO: change LOCALE with user selected locale
-        locale_path = "locales/LOCALE/text_queue_ui.qm"
+        locale_path = locale_path = pkg_resources.resource_filename(__name__, "locales/LOCALE/text_queue_ui.qm")
         self.translator = QTranslator()
         self.translator.load(locale_path)
         QCoreApplication.installTranslator(self.translator)
