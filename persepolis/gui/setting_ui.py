@@ -98,7 +98,7 @@ class Setting_Ui(QWidget):
 
 
 # wait_queue
-        wait_queue_horizontalLayout = QHBoxLayout() 
+        wait_queue_horizontalLayout = QHBoxLayout()
 
         self.wait_queue_label = QLabel(self.layoutWidget)
         wait_queue_horizontalLayout.addWidget(self.wait_queue_label)
@@ -106,9 +106,9 @@ class Setting_Ui(QWidget):
         self.wait_queue_time = QDateTimeEdit(self.layoutWidget)
         self.wait_queue_time.setDisplayFormat('H:mm')
         wait_queue_horizontalLayout.addWidget(self.wait_queue_time)
-        
+
         self.download_options_verticalLayout.addLayout(
-            wait_queue_horizontalLayout) 
+            wait_queue_horizontalLayout)
 
 
         self.setting_tabWidget.addTab(self.download_options_tab, "")
@@ -152,7 +152,7 @@ class Setting_Ui(QWidget):
 # create subfolder checkBox
         self.subfolder_checkBox = QCheckBox(self.layoutWidget1)
         self.save_as_verticalLayout.addWidget(self.subfolder_checkBox)
-        
+
         self.setting_tabWidget.addTab(self.save_as_tab, "")
 # notifications_tab
         self.notifications_tab = QWidget()
@@ -193,6 +193,18 @@ class Setting_Ui(QWidget):
 
         self.verticalLayout_3.addLayout(self.horizontalLayout_8)
         self.horizontalLayout_7 = QHBoxLayout()
+
+# language_combox
+        self.lang_label = QLabel(self.layoutWidget3)
+        self.horizontalLayout_7.addWidget(self.lang_label)
+        self.lang_comboBox = QComboBox(self.layoutWidget3)
+        self.horizontalLayout_7.addWidget(self.lang_comboBox)
+
+# language_label
+        self.verticalLayout_3.addLayout(self.horizontalLayout_7)
+        self.horizontalLayout_7 = QHBoxLayout()
+        self.lang_label.setText("language :")
+
 # color_label
         self.color_label = QLabel(self.layoutWidget3)
         self.horizontalLayout_7.addWidget(self.color_label)
@@ -288,18 +300,18 @@ class Setting_Ui(QWidget):
         self.column11_checkBox = QCheckBox()
         self.column12_checkBox = QCheckBox()
 
-        column_verticalLayout.addWidget(self.show_column_label) 
-        column_verticalLayout.addWidget(self.column0_checkBox) 
-        column_verticalLayout.addWidget(self.column1_checkBox) 
-        column_verticalLayout.addWidget(self.column2_checkBox) 
-        column_verticalLayout.addWidget(self.column3_checkBox) 
-        column_verticalLayout.addWidget(self.column4_checkBox) 
-        column_verticalLayout.addWidget(self.column5_checkBox) 
-        column_verticalLayout.addWidget(self.column6_checkBox) 
-        column_verticalLayout.addWidget(self.column7_checkBox) 
-        column_verticalLayout.addWidget(self.column10_checkBox) 
-        column_verticalLayout.addWidget(self.column11_checkBox) 
-        column_verticalLayout.addWidget(self.column12_checkBox) 
+        column_verticalLayout.addWidget(self.show_column_label)
+        column_verticalLayout.addWidget(self.column0_checkBox)
+        column_verticalLayout.addWidget(self.column1_checkBox)
+        column_verticalLayout.addWidget(self.column2_checkBox)
+        column_verticalLayout.addWidget(self.column3_checkBox)
+        column_verticalLayout.addWidget(self.column4_checkBox)
+        column_verticalLayout.addWidget(self.column5_checkBox)
+        column_verticalLayout.addWidget(self.column6_checkBox)
+        column_verticalLayout.addWidget(self.column7_checkBox)
+        column_verticalLayout.addWidget(self.column10_checkBox)
+        column_verticalLayout.addWidget(self.column11_checkBox)
+        column_verticalLayout.addWidget(self.column12_checkBox)
 
         self.setting_tabWidget.addTab(self.columns_tab, '')
 # defaults_pushButton
@@ -395,10 +407,10 @@ class Setting_Ui(QWidget):
         self.keep_awake_checkBox.setToolTip(
             "<html><head/><body><p>This option is preventing system from going to sleep.\
             This is necessary if your power manager is suspending system automatically. </p></body></html>")
- 
+
         self.wait_queue_time.setToolTip(
                 "<html><head/><body><p>Format HH:MM</p></body></html>")
- 
+
         self.setting_tabWidget.setTabText(
             self.setting_tabWidget.indexOf(self.style_tab),  "Preferences")
 
