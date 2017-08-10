@@ -34,30 +34,48 @@ sqlite_connection = sqlite3.connect(data_base_path)
 sqlite_cursor = sqlite_connection.cursor()
 
 
-# contains addlink window download information
-add_link_table = sqlite_cursor.execute("""CREATE TABLE IF NOT EXISTS WITHOUT ROWID addlink(
-                                                                                            gid NOT NULL TEXT PRIMARY KEY,
-                                                                                            last_try_date TEXT,
-                                                                                            firs_try_date TEXT,
-                                                                                            out TEXT,
-                                                                                            final_download_path TEXT,
-                                                                                            start_hour TEXT,
-                                                                                            start_minute TEXT,
-                                                                                            end_hour TEXT,
-                                                                                            end_minute TEXT,
-                                                                                            link TEXT,
-                                                                                            ip TEXT,
-                                                                                            port TEXT,
-                                                                                            proxy_user TEXT,
-                                                                                            proxy_passwd TEXT,
-                                                                                            download_user TEXT,
-                                                                                            download_passwd TEXT,
-                                                                                            connections TEXT,
-                                                                                            limit TEXT,
-                                                                                            download_path TEXT
-                                                                                            )""") 
+# add_link_table contains addlink window download information
+sqlite_cursor.execute("""CREATE TABLE IF NOT EXISTS WITHOUT ROWID addlink(
+                                                                            gid NOT NULL TEXT PRIMARY KEY,
+                                                                            last_try_date TEXT,
+                                                                            firs_try_date TEXT,
+                                                                            out TEXT,
+                                                                            final_download_path TEXT,
+                                                                            start_hour TEXT,
+                                                                            start_minute TEXT,
+                                                                            end_hour TEXT,
+                                                                            end_minute TEXT,
+                                                                            link TEXT,
+                                                                            ip TEXT,
+                                                                            port TEXT,
+                                                                            proxy_user TEXT,
+                                                                            proxy_passwd TEXT,
+                                                                            download_user TEXT,
+                                                                            download_passwd TEXT,
+                                                                            connections TEXT,
+                                                                            limit TEXT,
+                                                                            download_path TEXT
+                                                                            )""") 
+#       ['file_name' ,
+        # 'status' , 'size' , 'downloaded size' ,'download percentage' ,
+        # 'number of connections' ,'Transfer rate' , 'estimate_time_left' ,
+        # 'gid' , 'add_link_dictionary' , 'firs_try_date' , 'last_try_date']
 
-# contains download table download items information
+
+# download table contains download table download items information
+sqlite_cursor.execute("""CREATE TABLE IF NOT EXISTS WITHOUT ROWID download_table(
+                                                                                file_name TEXT,
+                                                                                status TEXT,
+                                                                                size TEXT,
+                                                                                downloaded_size TEXT,
+                                                                                percent TEXT,
+                                                                                connections TEXT,
+                                                                                rate TEXT,
+                                                                                estimate_time_left TEXT,
+                                                                                gid NOT NULL TEXT PRIMARY KEY,
+                                                                                firs_try_date TEXT,
+                                                                                last_try_date TEXT
+                                                                                )""")
 
 # contains gid of downloads and download situation (active or not active) and category of download
 
