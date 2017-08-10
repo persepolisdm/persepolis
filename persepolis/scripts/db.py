@@ -34,9 +34,27 @@ sqlite_connection = sqlite3.connect(data_base_path)
 sqlite_cursor = sqlite_connection.cursor()
 
 
+# download table contains download table download items information
+sqlite_cursor.execute("""CREATE TABLE IF NOT EXISTS WITHOUT ROWID download_table(
+                                                                                ID INTEGER PRIMARY KEY,
+                                                                                file_name TEXT,
+                                                                                status TEXT,
+                                                                                size TEXT,
+                                                                                downloaded_size TEXT,
+                                                                                percent TEXT,
+                                                                                connections TEXT,
+                                                                                rate TEXT,
+                                                                                estimate_time_left TEXT,
+                                                                                gid TEXT,
+                                                                                firs_try_date TEXT,
+                                                                                last_try_date TEXT
+                                                                                )""")
+
+
 # add_link_table contains addlink window download information
 sqlite_cursor.execute("""CREATE TABLE IF NOT EXISTS WITHOUT ROWID addlink(
-                                                                            gid NOT NULL TEXT PRIMARY KEY,
+                                                                            ID INTEGER PRIMARY KEY,
+                                                                            gid TEXT,
                                                                             last_try_date TEXT,
                                                                             firs_try_date TEXT,
                                                                             out TEXT,
@@ -56,30 +74,9 @@ sqlite_cursor.execute("""CREATE TABLE IF NOT EXISTS WITHOUT ROWID addlink(
                                                                             limit TEXT,
                                                                             download_path TEXT
                                                                             )""") 
-#       ['file_name' ,
-        # 'status' , 'size' , 'downloaded size' ,'download percentage' ,
-        # 'number of connections' ,'Transfer rate' , 'estimate_time_left' ,
-        # 'gid' , 'add_link_dictionary' , 'firs_try_date' , 'last_try_date']
-
-
-# download table contains download table download items information
-sqlite_cursor.execute("""CREATE TABLE IF NOT EXISTS WITHOUT ROWID download_table(
-                                                                                file_name TEXT,
-                                                                                status TEXT,
-                                                                                size TEXT,
-                                                                                downloaded_size TEXT,
-                                                                                percent TEXT,
-                                                                                connections TEXT,
-                                                                                rate TEXT,
-                                                                                estimate_time_left TEXT,
-                                                                                gid NOT NULL TEXT PRIMARY KEY,
-                                                                                firs_try_date TEXT,
-                                                                                last_try_date TEXT
+# queues_list contains name of categories
+sqlite_cursor.execute("""CREATE TABLE IF NOT EXISTS WITHOUT ROWID queues_list(
+                                                                                queue_name
                                                                                 )""")
-
-# contains gid of downloads and download situation (active or not active) and category of download
-
-# contains name of categories
-
 
 
