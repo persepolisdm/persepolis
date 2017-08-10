@@ -35,7 +35,7 @@ sqlite_cursor = sqlite_connection.cursor()
 
 
 # download table contains download table download items information
-sqlite_cursor.execute("""CREATE TABLE IF NOT EXISTS WITHOUT ROWID download_table(
+sqlite_cursor.execute("""CREATE TABLE IF NOT EXISTS download_table(
                                                                                 ID INTEGER PRIMARY KEY,
                                                                                 file_name TEXT,
                                                                                 status TEXT,
@@ -52,7 +52,7 @@ sqlite_cursor.execute("""CREATE TABLE IF NOT EXISTS WITHOUT ROWID download_table
 
 
 # add_link_table contains addlink window download information
-sqlite_cursor.execute("""CREATE TABLE IF NOT EXISTS WITHOUT ROWID addlink(
+sqlite_cursor.execute("""CREATE TABLE IF NOT EXISTS addlink(
                                                                             ID INTEGER PRIMARY KEY,
                                                                             gid TEXT,
                                                                             last_try_date TEXT,
@@ -75,8 +75,8 @@ sqlite_cursor.execute("""CREATE TABLE IF NOT EXISTS WITHOUT ROWID addlink(
                                                                             download_path TEXT
                                                                             )""") 
 # queues_list contains name of categories
-sqlite_cursor.execute("""CREATE TABLE IF NOT EXISTS WITHOUT ROWID queues_list(
-                                                                                queue_name
-                                                                                )""")
+sqlite_cursor.execute("""CREATE TABLE IF NOT EXISTS queues_list(
+                                                                queue_name
+                                                                )""")
 
 
