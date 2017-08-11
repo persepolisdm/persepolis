@@ -36,7 +36,6 @@ sqlite_cursor = sqlite_connection.cursor()
 def createTables():
 # download table contains download table download items information
     sqlite_cursor.execute("""CREATE TABLE IF NOT EXISTS download_table(
-                                                                                ID INTEGER PRIMARY KEY,
                                                                                 file_name TEXT,
                                                                                 status TEXT,
                                                                                 size TEXT,
@@ -45,7 +44,7 @@ def createTables():
                                                                                 connections TEXT,
                                                                                 rate TEXT,
                                                                                 estimate_time_left TEXT,
-                                                                                gid TEXT,
+                                                                                gid TEXT PRIMARY KEY,
                                                                                 firs_try_date TEXT,
                                                                                 last_try_date TEXT
                                                                                 )""")
@@ -72,7 +71,10 @@ def createTables():
                                                                             download_passwd TEXT,
                                                                             connections TEXT,
                                                                             limit TEXT,
-                                                                            download_path TEXT
+                                                                            download_path TEXT,
+                                                                            FOREIGN KEY(gid) REFERENCES download_table(gid) 
+                                                                            ON UPDATE CASCADE 
+                                                                            ON DELETE CASCADE 
                                                                             )""") 
 # queues_list contains name of categories
     sqlite_cursor.execute("""CREATE TABLE IF NOT EXISTS queues_list(
