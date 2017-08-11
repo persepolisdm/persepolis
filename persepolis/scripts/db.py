@@ -79,4 +79,7 @@ def createTables():
                                                                 queue_name
                                                                 )""")
 
-
+# close connections
+def closeConnections():
+    sqlite_cursor.close()
+    sqlite_connection.close()
