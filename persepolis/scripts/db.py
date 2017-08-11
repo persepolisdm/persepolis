@@ -81,6 +81,83 @@ def createTables():
                                                                 queue_name
                                                                 )""")
 
+def insertDownloadTable(file_name, status, size, downloaded_size,
+                        percent, connections, rate, estimate_time_left,
+                        gid, firs_try_date, last_try_date):
+    sqlite_cursor.execute("""INSERT INTO download_table VALUES(
+                                                                :file_name,
+                                                                :status,
+                                                                :size,
+                                                                :downloaded_size,
+                                                                :percent,
+                                                                :connections,
+                                                                :rate,
+                                                                :estimate_time_left,
+                                                                :gid,
+                                                                :firs_try_date,
+                                                                :last_try_date
+                                                                )""", {
+                                                                    'file_name': file_name,
+                                                                    'status': status,
+                                                                    'size': size,
+                                                                    'downloaded_size': downloaded_size,
+                                                                    'percent': percent,
+                                                                    'connections': connections,
+                                                                    'rate': rate,
+                                                                    'estimate_time_left': estimate_time_left,
+                                                                    'gid': gid,
+                                                                    'firs_try_date': firs_try_date,
+                                                                    'last_try_date': last_try_date
+                                                                    })
+    sqlite_connection.commit()
+
+def insertAddLinkTable(gid, last_try_date, firs_try_date, out, final_download_path,
+                        start_hour, start_minute, end_hour, end_minute, link,
+                        ip, port, proxy_user, proxy_passwd, download_user,
+                        download_passwd, connections, limit, download_path):
+    sqlite_cursor.execute("""INSERT INTO addlink VALUES(NULL,
+                                                        :gid,
+                                                        :last_try_date,
+                                                        :firs_try_date,
+                                                        :out,
+                                                        :final_download_path,
+                                                        :start_hour,
+                                                        :start_minute,
+                                                        :end_hour,
+                                                        :end_minute,
+                                                        :link,
+                                                        :ip,
+                                                        :port,
+                                                        :proxy_user,
+                                                        :proxy_passwd,
+                                                        :download_user,
+                                                        :download_passwd,
+                                                        :connections,
+                                                        :limit,
+                                                        :download_path
+                                                        )""", {
+                                                            'gid' :gid,
+                                                            'last_try_date': last_try_date,
+                                                            'firs_try_date': firs_try_date,
+                                                            'out': out,
+                                                            'final_download_path': final_download_path,
+                                                            'start_hour': start_hour,
+                                                            'start_minute': start_minute,
+                                                            'end_hour': end_hour,
+                                                            'end_minute': end_minute,
+                                                            'link': link,
+                                                            'ip': ip,
+                                                            'port': port,
+                                                            'proxy_user': proxy_user,
+                                                            'proxy_passwd': proxy_passwd,
+                                                            'download_user': download_user,
+                                                            'download_passwd': download_passwd,
+                                                            'connections': connections,
+                                                            'limit': limit,
+                                                            'download_path' :download_path
+                                                            })
+    sqlite_connection.commit() 
+
 # close connections
 def closeConnections():
     sqlite_cursor.close()
