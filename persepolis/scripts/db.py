@@ -50,8 +50,8 @@ def createTables():
                                                                                 )""")
 
 
-# add_link_table contains addlink window download information
-    sqlite_cursor.execute("""CREATE TABLE IF NOT EXISTS addlink(
+# addlink_table contains addlink window download information
+    sqlite_cursor.execute("""CREATE TABLE IF NOT EXISTS addlink_table(
                                                                             ID INTEGER PRIMARY KEY,
                                                                             gid TEXT,
                                                                             last_try_date TEXT,
@@ -80,10 +80,11 @@ def createTables():
     sqlite_cursor.execute("""CREATE TABLE IF NOT EXISTS queues_list(
                                                                 queue_name
                                                                 )""")
-
+# insert in to download_table in persepolis.db
 def insertDownloadTable(file_name, status, size, downloaded_size,
                         percent, connections, rate, estimate_time_left,
                         gid, firs_try_date, last_try_date):
+
     sqlite_cursor.execute("""INSERT INTO download_table VALUES(
                                                                 :file_name,
                                                                 :status,
@@ -110,12 +111,13 @@ def insertDownloadTable(file_name, status, size, downloaded_size,
                                                                     'last_try_date': last_try_date
                                                                     })
     sqlite_connection.commit()
-
+# insert in addlink table in persepolis.db 
 def insertAddLinkTable(gid, last_try_date, firs_try_date, out, final_download_path,
                         start_hour, start_minute, end_hour, end_minute, link,
                         ip, port, proxy_user, proxy_passwd, download_user,
                         download_passwd, connections, limit, download_path):
-    sqlite_cursor.execute("""INSERT INTO addlink VALUES(NULL,
+
+    sqlite_cursor.execute("""INSERT INTO addlink_table VALUES(NULL,
                                                         :gid,
                                                         :last_try_date,
                                                         :firs_try_date,
@@ -157,6 +159,18 @@ def insertAddLinkTable(gid, last_try_date, firs_try_date, out, final_download_pa
                                                             'download_path' :download_path
                                                             })
     sqlite_connection.commit() 
+    
+# return download information in download_table with special gid.
+def searchGidInDownloadTable(gid):
+    sqlite_cursor.execute("""SELECT * FROM download_table WHERE gid = {}""".format(str(gid)))
+    return sqlite_cursor.fetchall()
+
+    
+# return download information in addlink_table with special gid.
+def searchGidInAddLinkTable(gid):
+    sqlite_cursor.execute("""SELECT * FROM addlink_table WHERE gid = {}""".format(str(gid)))
+    return sqlite_cursor.fetchall()
+
 
 # close connections
 def closeConnections():
