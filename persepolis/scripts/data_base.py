@@ -224,6 +224,9 @@ def searchGidInAddLinkTable(gid):
     sqlite_cursor.execute("""SELECT * FROM addlink_table WHERE gid = {}""".format(str(gid)))
     return sqlite_cursor.fetchall()
 
+# return category information in category_table
+def searchCategoryInCategoryTable(category):
+    sqlite_cursor.execute("""SELECT * FROM category_table WHERE gid = {}""".format(str(category)))
 
 # close connections
 def closeConnections():
