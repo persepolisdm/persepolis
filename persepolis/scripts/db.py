@@ -34,6 +34,12 @@ sqlite_connection = sqlite3.connect(data_base_path)
 sqlite_cursor = sqlite_connection.cursor()
 
 def createTables():
+# queues_list contains name of categories
+    sqlite_cursor.execute("""CREATE TABLE IF NOT EXISTS category_table(
+                                                                category TEXT PRIMARY KEY
+                                                                        )""")
+
+
 # download table contains download table download items information
     sqlite_cursor.execute("""CREATE TABLE IF NOT EXISTS download_table(
                                                                                 file_name TEXT,
@@ -46,7 +52,11 @@ def createTables():
                                                                                 estimate_time_left TEXT,
                                                                                 gid TEXT PRIMARY KEY,
                                                                                 firs_try_date TEXT,
-                                                                                last_try_date TEXT
+                                                                                last_try_date TEXT,
+                                                                                category TEXT,
+                                                                                FOREIGN KEY(category) REFERENCES category_table(category)
+                                                                                ON UPDATE CASCADE
+                                                                                ON DELETE CASCADE
                                                                                 )""")
 
 
@@ -76,10 +86,6 @@ def createTables():
                                                                             ON UPDATE CASCADE 
                                                                             ON DELETE CASCADE 
                                                                             )""") 
-# queues_list contains name of categories
-    sqlite_cursor.execute("""CREATE TABLE IF NOT EXISTS queues_list(
-                                                                queue_name
-                                                                )""")
 # insert in to download_table in persepolis.db
 def insertDownloadTable(file_name, status, size, downloaded_size,
                         percent, connections, rate, estimate_time_left,
@@ -96,7 +102,8 @@ def insertDownloadTable(file_name, status, size, downloaded_size,
                                                                 :estimate_time_left,
                                                                 :gid,
                                                                 :firs_try_date,
-                                                                :last_try_date
+                                                                :last_try_date,
+                                                                :category
                                                                 )""", {
                                                                     'file_name': file_name,
                                                                     'status': status,
@@ -108,7 +115,8 @@ def insertDownloadTable(file_name, status, size, downloaded_size,
                                                                     'estimate_time_left': estimate_time_left,
                                                                     'gid': gid,
                                                                     'firs_try_date': firs_try_date,
-                                                                    'last_try_date': last_try_date
+                                                                    'last_try_date': last_try_date,
+                                                                    'category': category
                                                                     })
     sqlite_connection.commit()
 # insert in addlink table in persepolis.db 
