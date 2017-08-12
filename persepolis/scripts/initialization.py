@@ -34,6 +34,7 @@ import glob
 import PyQt5
 from PyQt5.QtCore import QSettings
 from persepolis.scripts.browser_integration import browserIntegration
+import persepolis.scripts.data_base
 
 # initialization
 home_address = os.path.expanduser("~")

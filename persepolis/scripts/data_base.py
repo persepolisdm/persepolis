@@ -33,10 +33,21 @@ elif os_type == 'Windows':
 sqlite_connection = sqlite3.connect(data_base_path)
 sqlite_cursor = sqlite_connection.cursor()
 
+
 def createTables():
-# queues_list contains name of categories
+# queues_list contains name of categories and category settings
     sqlite_cursor.execute("""CREATE TABLE IF NOT EXISTS category_table(
-                                                                category TEXT PRIMARY KEY
+                                                                category TEXT PRIMARY KEY,
+                                                                start_time_enable TEXT,
+                                                                start_hour TEXT,
+                                                                start_minute TEXT,
+                                                                end_time_enable TEXT,
+                                                                end_hour TEXT,
+                                                                end_minute TEXT,
+                                                                reverse TEXT,
+                                                                limit_enable TEXT,
+                                                                limit_value TEXT,
+                                                                after_downloads TEXT
                                                                         )""")
 
 
@@ -86,8 +97,40 @@ def createTables():
                                                                             ON UPDATE CASCADE 
                                                                             ON DELETE CASCADE 
                                                                             )""") 
+# insert new category in category_table
+def insertInCategoryTable(category, start_time_enable,start_hour,start_minute,
+                            end_time_enable, end_hour, end_minute, reverse,
+                            limit_enable, limit_value, after_downloads):    
+    sqlite_cursor.execute("""INSERT INTO category_table VALUES(
+                                                            :category,
+                                                            :start_time_enable,
+                                                            :start_hour,
+                                                            :start_minute,
+                                                            :end_time_enable,
+                                                            :end_hour,
+                                                            :end_minute,
+                                                            :reverse,
+                                                            :limit_enable,
+                                                            :limit_value,
+                                                            :after_downloads
+                                                            )""", {
+                                                                'category': category,
+                                                                'start_time_enable': start_time_enable,
+                                                                'start_hour': start_hour,
+                                                                'start_minute': start_minute,
+                                                                'end_time_enable': end_time_enable,
+                                                                'end_hour': end_hour,
+                                                                'end_minute': end_minute,
+                                                                'reverse': reverse,
+                                                                'limit_enable': limit_enable,
+                                                                'limit_value': limit_value,
+                                                                'after_downloads': after_downloads
+                                                                })
+    sqlite_connection.commit()
+ 
+
 # insert in to download_table in persepolis.db
-def insertDownloadTable(file_name, status, size, downloaded_size,
+def insertInDownloadTable(file_name, status, size, downloaded_size,
                         percent, connections, rate, estimate_time_left,
                         gid, firs_try_date, last_try_date):
 
@@ -120,7 +163,7 @@ def insertDownloadTable(file_name, status, size, downloaded_size,
                                                                     })
     sqlite_connection.commit()
 # insert in addlink table in persepolis.db 
-def insertAddLinkTable(gid, last_try_date, firs_try_date, out, final_download_path,
+def insertInAddLinkTable(gid, last_try_date, firs_try_date, out, final_download_path,
                         start_hour, start_minute, end_hour, end_minute, link,
                         ip, port, proxy_user, proxy_passwd, download_user,
                         download_passwd, connections, limit, download_path):
@@ -168,6 +211,8 @@ def insertAddLinkTable(gid, last_try_date, firs_try_date, out, final_download_pa
                                                             })
     sqlite_connection.commit() 
     
+ 
+
 # return download information in download_table with special gid.
 def searchGidInDownloadTable(gid):
     sqlite_cursor.execute("""SELECT * FROM download_table WHERE gid = {}""".format(str(gid)))
