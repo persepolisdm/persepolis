@@ -20,23 +20,44 @@ import sqlite3
 
 # download manager data_base path .
 if os_type == 'Linux' or os_type == 'FreeBSD' or os_type == 'OpenBSD':
-    data_base_path = os.path.join(
+    persepolis_db_path = os.path.join(
         str(home_address), ".config/persepolis_download_manager/persepolis.db")
 elif os_type == 'Darwin':
-    data_base_path = os.path.join(
+    persepolis_db_path = os.path.join(
         str(home_address), "Library/Application Support/persepolis_download_manager/persepolis.db")
 elif os_type == 'Windows':
-    data_base_path = os.path.join(
+    persepolis_db_path = os.path.join(
         str(home_address), 'AppData', 'Local', 'persepolis_download_manager', 'persepolis.db')
 
+# persepolis_db_connection
+persepolis_db_connection = sqlite3.connect(persepolis_db_path)
 
-sqlite_connection = sqlite3.connect(data_base_path)
-sqlite_cursor = sqlite_connection.cursor()
+# persepolis_db_cursor
+persepolis_db_cursor = persepolis_db_connection.cursor()
 
+
+
+# persepolis tmp folder path
+if os_type != 'Windows':
+    user_name_split = home_address.split('/')
+    user_name = user_name_split[2]
+    persepolis_tmp = '/tmp/persepolis_' + user_name
+else:
+    persepolis_tmp = os.path.join(
+        str(home_address), 'AppData', 'Local', 'persepolis_tmp')
+
+# plugins.db is store links, when browser plugins are send new links.
+plugins_db_path = os.path.join(persepolis_tmp, 'plugins.db')
+
+# plugins_db_connection
+plugins_db_connection = sqlite3.connect(plugins_db_path)
+
+# plugins_db_cursor
+plugins_db_cursor = plugins_db_connection.cursor()
 
 def createTables():
 # queues_list contains name of categories and category settings
-    sqlite_cursor.execute("""CREATE TABLE IF NOT EXISTS category_table(
+    persepolis_db_cursor.execute("""CREATE TABLE IF NOT EXISTS category_table(
                                                                 category TEXT PRIMARY KEY,
                                                                 start_time_enable TEXT,
                                                                 start_hour TEXT,
@@ -52,7 +73,7 @@ def createTables():
 
 
 # download table contains download table download items information
-    sqlite_cursor.execute("""CREATE TABLE IF NOT EXISTS download_table(
+    persepolis_db_cursor.execute("""CREATE TABLE IF NOT EXISTS download_table(
                                                                                 file_name TEXT,
                                                                                 status TEXT,
                                                                                 size TEXT,
@@ -72,7 +93,7 @@ def createTables():
 
 
 # addlink_table contains addlink window download information
-    sqlite_cursor.execute("""CREATE TABLE IF NOT EXISTS addlink_table(
+    persepolis_db_cursor.execute("""CREATE TABLE IF NOT EXISTS addlink_table(
                                                                             ID INTEGER PRIMARY KEY,
                                                                             gid TEXT,
                                                                             last_try_date TEXT,
@@ -93,15 +114,53 @@ def createTables():
                                                                             connections TEXT,
                                                                             limit TEXT,
                                                                             download_path TEXT,
+                                                                            referer TEXT,
+                                                                            load_cookies TEXT,
+                                                                            user_agent TEXT,
+                                                                            header TEXT,
                                                                             FOREIGN KEY(gid) REFERENCES download_table(gid) 
                                                                             ON UPDATE CASCADE 
                                                                             ON DELETE CASCADE 
                                                                             )""") 
+
+# plugins_table contains links that sends by browser plugins. 
+    plugins_db_cursor.execute("""CREATE TABLE IF NOT EXISTS plugins_table(
+                                                                            ID INTEGER PRIMARY KEY,
+                                                                            link TEXT,
+                                                                            referer TEXT,
+                                                                            load_cookies TEXT,
+                                                                            user_agent TEXT,
+                                                                            header TEXT,
+                                                                            out TEXT,
+                                                                            status TEXT
+                                                                            )""") 
+# insert new item in plugins_table
+def insertInPluginsTable(link, referer, load_cookies, user_agent, header, out):
+    plugins_db_cursor.execute("""INSERT INTO plugins_table VALUES(
+                                                                NULL,
+                                                                :link,
+                                                                :referer,
+                                                                :load_cookies,
+                                                                :user_agent,
+                                                                :header,
+                                                                :out,
+                                                                'new'
+                                                                    )""", {
+                                                                        'link': link,
+                                                                        'referer': referer,
+                                                                        'load_cookies': load_cookies,
+                                                                        'user_agent': user_agent,
+                                                                        'header': header,
+                                                                        'out': out
+                                                                        })
+
+    plugins_db_connection.commit()
+
 # insert new category in category_table
 def insertInCategoryTable(category, start_time_enable,start_hour,start_minute,
                             end_time_enable, end_hour, end_minute, reverse,
                             limit_enable, limit_value, after_downloads):    
-    sqlite_cursor.execute("""INSERT INTO category_table VALUES(
+    persepolis_db_cursor.execute("""INSERT INTO category_table VALUES(
                                                             :category,
                                                             :start_time_enable,
                                                             :start_hour,
@@ -126,7 +185,7 @@ def insertInCategoryTable(category, start_time_enable,start_hour,start_minute,
                                                                 'limit_value': limit_value,
                                                                 'after_downloads': after_downloads
                                                                 })
-    sqlite_connection.commit()
+    persepolis_db_connection.commit()
  
 
 # insert in to download_table in persepolis.db
@@ -134,7 +193,7 @@ def insertInDownloadTable(file_name, status, size, downloaded_size,
                         percent, connections, rate, estimate_time_left,
                         gid, firs_try_date, last_try_date):
 
-    sqlite_cursor.execute("""INSERT INTO download_table VALUES(
+    persepolis_db_cursor.execute("""INSERT INTO download_table VALUES(
                                                                 :file_name,
                                                                 :status,
                                                                 :size,
@@ -161,14 +220,15 @@ def insertInDownloadTable(file_name, status, size, downloaded_size,
                                                                     'last_try_date': last_try_date,
                                                                     'category': category
                                                                     })
-    sqlite_connection.commit()
+    persepolis_db_connection.commit()
 # insert in addlink table in persepolis.db 
 def insertInAddLinkTable(gid, last_try_date, firs_try_date, out, final_download_path,
                         start_hour, start_minute, end_hour, end_minute, link,
                         ip, port, proxy_user, proxy_passwd, download_user,
-                        download_passwd, connections, limit, download_path):
+                        download_passwd, connections, limit, download_path,
+                        referer, load_cookies, user_agent, header):
 
-    sqlite_cursor.execute("""INSERT INTO addlink_table VALUES(NULL,
+    persepolis_db_cursor.execute("""INSERT INTO addlink_table VALUES(NULL,
                                                         :gid,
                                                         :last_try_date,
                                                         :firs_try_date,
@@ -187,7 +247,11 @@ def insertInAddLinkTable(gid, last_try_date, firs_try_date, out, final_download_
                                                         :download_passwd,
                                                         :connections,
                                                         :limit,
-                                                        :download_path
+                                                        :download_path,
+                                                        :referer,
+                                                        :load_cookies,
+                                                        :user_agent,
+                                                        :header
                                                         )""", {
                                                             'gid' :gid,
                                                             'last_try_date': last_try_date,
@@ -207,28 +271,32 @@ def insertInAddLinkTable(gid, last_try_date, firs_try_date, out, final_download_
                                                             'download_passwd': download_passwd,
                                                             'connections': connections,
                                                             'limit': limit,
-                                                            'download_path' :download_path
+                                                            'download_path' :download_path,
+                                                            'referer': referer,
+                                                            'load_cookies': load_cookies,
+                                                            'user_agent': user_agent,
+                                                            'header': header
                                                             })
-    sqlite_connection.commit() 
+    persepolis_db_connection.commit() 
     
  
 
 # return download information in download_table with special gid.
 def searchGidInDownloadTable(gid):
-    sqlite_cursor.execute("""SELECT * FROM download_table WHERE gid = {}""".format(str(gid)))
-    return sqlite_cursor.fetchall()
+    persepolis_db_cursor.execute("""SELECT * FROM download_table WHERE gid = {}""".format(str(gid)))
+    return persepolis_db_cursor.fetchall()
 
     
 # return download information in addlink_table with special gid.
 def searchGidInAddLinkTable(gid):
-    sqlite_cursor.execute("""SELECT * FROM addlink_table WHERE gid = {}""".format(str(gid)))
-    return sqlite_cursor.fetchall()
+    persepolis_db_cursor.execute("""SELECT * FROM addlink_table WHERE gid = {}""".format(str(gid)))
+    return persepolis_db_cursor.fetchall()
 
 # return category information in category_table
 def searchCategoryInCategoryTable(category):
-    sqlite_cursor.execute("""SELECT * FROM category_table WHERE gid = {}""".format(str(category)))
+    persepolis_db_cursor.execute("""SELECT * FROM category_table WHERE gid = {}""".format(str(category)))
 
 # close connections
 def closeConnections():
-    sqlite_cursor.close()
-    sqlite_connection.close()
+    persepolis_db_cursor.close()
+    persepolis_db_connection.close()
