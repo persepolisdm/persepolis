@@ -70,6 +70,11 @@ for folder in [config_folder, persepolis_tmp, persepolis_shutdown]:
 # create data base
 data_base.createTables()
 
+# close connections
+data_base.closeConnections()
+
+
+
 # persepolisdm.log file contains persepolis log.
 from persepolis.scripts import logger
 
