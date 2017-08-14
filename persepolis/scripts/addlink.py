@@ -17,7 +17,6 @@
 
 import platform
 import os
-import ast
 import functools
 
 from PyQt5 import QtWidgets, QtCore
@@ -28,7 +27,6 @@ from persepolis.gui.addlink_ui import AddLinkWindow_Ui
 from persepolis.scripts.newopen import Open, readDict
 from functools import partial
 
-from persepolis.scripts import osCommands
 from persepolis.scripts import download
 from persepolis.scripts import spider
 from persepolis.scripts import logger
@@ -160,10 +158,10 @@ class AddLinkWindow(AddLinkWindow_Ui):
 
         # connect OK and canel download_later button ->
         self.cancel_pushButton.clicked.connect(self.close)
-        self.ok_pushButton.clicked.connect(functools.partial(
+        self.ok_pushButton.clicked.connect(partial(
             self.okButtonPressed, download_later='no'))
         self.download_later_pushButton.clicked.connect(
-            functools.partial(self.okButtonPressed, download_later='yes'))
+            partial(self.okButtonPressed, download_later='yes'))
 
         # frames and checkBoxes ->
         self.proxy_frame.setEnabled(False)
