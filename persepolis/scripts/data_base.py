@@ -300,3 +300,5 @@ def searchCategoryInCategoryTable(category):
 def closeConnections():
     persepolis_db_cursor.close()
     persepolis_db_connection.close()
+    plugins_db_connection.close()
+    plugins_db_cursor.close()

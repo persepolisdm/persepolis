@@ -262,31 +262,49 @@ if args.link :
 
 if args.referer :
     add_link_dictionary['referer'] = "".join(args.referer)
+else:
+    add_link_dictionary['referer'] = None
 
 if args.cookie :
     add_link_dictionary['load-cookies'] = "".join(args.cookie)
+else:
+    add_link_dictionary['load-cookies'] = None
 
 if args.agent :
     add_link_dictionary['user-agent'] = "".join(args.agent)
+else:
+    add_link_dictionary['user-agent'] = None
 
 if args.headers :
     add_link_dictionary['header'] = "".join(args.headers)
+else:
+    add_link_dictionary['header'] = None
 
 if args.name :
     add_link_dictionary ['out'] = "".join(args.name)
+else:
+    add_link_dictionary['out'] = None
 
-# when flashgot calls persepolis  then persepolis is creating a request file in /tmp folder . this file contains download information
+# when browser plugins calls persepolis then persepolis is creating a request file in /tmp folder 
+# and link information added to plugins_db.db file( see data_base.py for more information).
 # persepolis mainwindow checks /tmp for flashgot request file every 2 seconds ( see CheckFlashgot class in mainwindow.py )
 # when requset received by CheckFlashgot, a popup window (AddLinkWindow) is coming up and window is getting additional download information
 # from user (port , proxy , ...) and download starts and request file deleted
+
 if ('link' in add_link_dictionary):   
     # add add_link_dictionary to persepolis-flashgot
-    flashgot_file = os.path.join(persepolis_tmp, 'persepolis-flashgot')
-    f = open(flashgot_file, "a")
-    f.writelines(str(add_link_dictionary) + '\n')
-    f.close()
+
+    from persepolis.scripts import data_base
+
+    # add new link information to plugins_table in plugins.db file in /tmp .
+    data_base.insertInPluginsTable(add_link_dictionary['link'], add_link_dictionary['referer'], add_link_dictionary['load-cookies'],
+                                    add_link_dictionary['user-agent'], add_link_dictionary['header'], add_link_dictionary['out'])
+    # Job is done! close connections.
+    data_base.closeConnections()
+
     flashgot_ready = os.path.join(persepolis_tmp, 'persepolis-flashgot-ready')
     osCommands.touch(flashgot_ready)
+
 
 if args.tray:
     start_in_tray = 'yes'

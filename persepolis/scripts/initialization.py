@@ -24,7 +24,7 @@ import platform
 from persepolis.scripts.compatibility import compatibility
 from PyQt5.QtCore import QSettings
 from persepolis.scripts.browser_integration import browserIntegration
-import persepolis.scripts import data_base
+from persepolis.scripts import data_base
 
 # initialization
 
