@@ -74,26 +74,28 @@ class AddLinkSpiderThread(QThread):
 
 
 class AddLinkWindow(AddLinkWindow_Ui):
-    def __init__(self, parent, callback, persepolis_setting, flashgot_add_link_dictionary={}):
+    def __init__(self, parent, callback, persepolis_setting, plugin_add_link_dictionary={}):
         super().__init__(persepolis_setting)
         self.callback = callback
-        self.flashgot_add_link_dictionary = flashgot_add_link_dictionary
+        self.plugin_add_link_dictionary = plugin_add_link_dictionary
         self.persepolis_setting = persepolis_setting
         self.parent = parent
 
         # entry initialization ->
-        global connections
+        # connections
         connections = int(
             self.persepolis_setting.value('settings/connections'))
-        global download_path
+
+        self.connections_spinBox.setValue(connections)
+
+        #download_path
         download_path = str(
             self.persepolis_setting.value('settings/download_path'))
 
-        # initialization ->
-        self.connections_spinBox.setValue(connections)
         self.download_folder_lineEdit.setText(download_path)
         self.download_folder_lineEdit.setEnabled(False)
 
+        # enable ok button only if link_lineEdit is not empty!
         self.ok_pushButton.setEnabled(False)
         self.download_later_pushButton.setEnabled(False)
         self.link_lineEdit.textChanged.connect(self.linkLineChanged)
@@ -101,9 +103,9 @@ class AddLinkWindow(AddLinkWindow_Ui):
         self.options_pushButton.clicked.connect(self.optionsButtonClicked)
 
         # AddLink - checking clipboard for link! ->
-        if ('link' in self.flashgot_add_link_dictionary):
+        if ('link' in self.plugin_add_link_dictionary):
             self.link_lineEdit.setText(
-                str(self.flashgot_add_link_dictionary['link']))
+                str(self.plugin_add_link_dictionary['link']))
  
         else:
             clipboard = QApplication.clipboard()
@@ -186,13 +188,13 @@ class AddLinkWindow(AddLinkWindow_Ui):
         self.ok_pushButton.setFocus()
 
         # check name of flashgot link ->
-        if ('out' in self.flashgot_add_link_dictionary):
-            if str(self.flashgot_add_link_dictionary['out']) != 'None':
+        if ('out' in self.plugin_add_link_dictionary):
+            if str(self.plugin_add_link_dictionary['out']) != 'None':
                 self.change_name_lineEdit.setText(
-                    str(self.flashgot_add_link_dictionary['out']))
+                    str(self.plugin_add_link_dictionary['out']))
                 self.change_name_checkBox.setChecked(True)
 
-# setting window size and position
+# set window size and position
         size = self.persepolis_setting.value(
             'AddLinkWindow/size', QSize(520, 265))
         position = self.persepolis_setting.value(
@@ -204,9 +206,10 @@ class AddLinkWindow(AddLinkWindow_Ui):
 
 
 # more options widgets list
-        self.more_options_widgets = [self.proxy_checkBox, self.detect_proxy_pushButton, self.proxy_frame, self.download_checkBox, self.download_frame, self.folder_frame, self.start_checkBox,
-                                    self.start_frame, self.end_checkBox, self.end_frame, self.limit_checkBox, self.limit_frame, self.connections_frame] 
-        #hiding more_options_widgets
+        self.more_options_widgets = [self.proxy_checkBox, self.detect_proxy_pushButton, self.proxy_frame, self.download_checkBox,
+                                    self.download_frame, self.folder_frame, self.start_checkBox,self.start_frame, self.end_checkBox,
+                                    self.end_frame, self.limit_checkBox, self.limit_frame, self.connections_frame] 
+        # hide more_options_widgets
         for widgets in self.more_options_widgets:
             widgets.hide()
 
@@ -219,7 +222,7 @@ class AddLinkWindow(AddLinkWindow_Ui):
         if height < self.minimum_height:
             self.minimum_height = height
 
-# detected system proxy setting, and set ip_lineEdit and port_spinBox
+# detect system proxy setting, and set ip_lineEdit and port_spinBox
     def detectProxy(self, button):
         # get system proxy information
         system_proxy_dict = getProxy()
@@ -246,13 +249,13 @@ class AddLinkWindow(AddLinkWindow_Ui):
 
 
 
-
+# Show more options 
     def optionsButtonClicked(self, button):
 
         if self.options_pushButton.text() == 'Show more options' or self.options_pushButton.text() == '&Show more options':
             self.options_pushButton.setText('Hide options')
             
-            #unhiding more_options_widgets
+            #unhide more_options_widgets
             for widgets in self.more_options_widgets:
                 widgets.show()
 
@@ -260,7 +263,7 @@ class AddLinkWindow(AddLinkWindow_Ui):
         else:
             self.options_pushButton.setText('Show more options')
 
-            #hiding more_options_widgets
+            #hide more_options_widgets
             for widgets in self.more_options_widgets:
                 widgets.hide()
 
@@ -271,7 +274,7 @@ class AddLinkWindow(AddLinkWindow_Ui):
             
 
 
-# activate frames if checkBoxes checked
+# active frames if checkBoxes are checked
     def proxyFrame(self, checkBox):
 
         if self.proxy_checkBox.isChecked() == True:
@@ -308,6 +311,10 @@ class AddLinkWindow(AddLinkWindow_Ui):
             self.end_frame.setEnabled(False)
 
     def changeFolder(self, button):
+        # get download_path from lineEdit
+        download_path = self.download_folder_lineEdit.text()
+
+        # open select folder dialog
         fname = QFileDialog.getExistingDirectory(
             self, 'Select a directory', download_path)
 
@@ -320,16 +327,17 @@ class AddLinkWindow(AddLinkWindow_Ui):
         if os.path.isdir(fname):
             self.download_folder_lineEdit.setText(fname)
 
+# enable when link_lineEdit is not empty and find size of file.
     def linkLineChanged(self, lineEdit):
         if str(self.link_lineEdit.text()) == '':
             self.ok_pushButton.setEnabled(False)
             self.download_later_pushButton.setEnabled(False)
-        else: # finding file size
+        else: # find file size
 
-            self.flashgot_add_link_dictionary['link'] = str(self.link_lineEdit.text())
+            self.plugin_add_link_dictionary['link'] = str(self.link_lineEdit.text())
 
             # spider is finding file size
-            new_spider = AddLinkSpiderThread(self.flashgot_add_link_dictionary)
+            new_spider = AddLinkSpiderThread(self.plugin_add_link_dictionary)
             self.parent.threadPool.append(new_spider)
             self.parent.threadPool[len(self.parent.threadPool) - 1].start()
             self.parent.threadPool[len(self.parent.threadPool) - 1].ADDLINKSPIDERSIGNAL.connect(
@@ -338,6 +346,7 @@ class AddLinkWindow(AddLinkWindow_Ui):
             self.ok_pushButton.setEnabled(True)
             self.download_later_pushButton.setEnabled(True)
 
+# enable change_name_lineEdit if change_name_checkBox is checked. 
     def changeName(self, checkBoxes):
         if self.change_name_checkBox.isChecked() == True:
             self.change_name_lineEdit.setEnabled(True)
@@ -358,8 +367,9 @@ class AddLinkWindow(AddLinkWindow_Ui):
             self.start_checkBox.setEnabled(True)
             self.end_checkBox.setEnabled(True)
 
+# user commited information, so get information from AddLinkWindow and return them!
     def okButtonPressed(self, button, download_later):
-        # writing user's input data to init file
+        # write user's new inputs in persepolis_setting for next time :)
         self.persepolis_setting.setValue(
             'add_link_initialization/ip', self.ip_lineEdit.text())
         self.persepolis_setting.setValue(
@@ -369,6 +379,7 @@ class AddLinkWindow(AddLinkWindow_Ui):
         self.persepolis_setting.setValue(
             'add_link_initialization/download_user', self.download_user_lineEdit.text())
 
+        # get proxy information
         if self.proxy_checkBox.isChecked() == False:
             ip = None
             port = None
@@ -388,6 +399,7 @@ class AddLinkWindow(AddLinkWindow_Ui):
             if not(proxy_passwd):
                 proxy_passwd = None
 
+        # get download username and password information
         if self.download_checkBox.isChecked() == False:
             download_user = None
             download_passwd = None
@@ -399,6 +411,7 @@ class AddLinkWindow(AddLinkWindow_Ui):
             if not(download_passwd):
                 download_passwd = None
 
+        # check that if user limits download speed.
         if self.limit_checkBox.isChecked() == False:
             limit = 0
         else:
@@ -407,6 +420,7 @@ class AddLinkWindow(AddLinkWindow_Ui):
             else:
                 limit = str(self.limit_spinBox.value()) + str("M")
 
+        # get start time for download if user set that.
         if self.start_checkBox.isChecked() == False:
             start_hour = None
             start_minute = None
@@ -414,6 +428,7 @@ class AddLinkWindow(AddLinkWindow_Ui):
             start_hour = str(self.start_hour_spinBox.value())
             start_minute = str(self.start_minute_spinBox.value())
 
+        # get end time for download if user set that.
         if self.end_checkBox.isChecked() == False:
             end_hour = None
             end_minute = None
@@ -421,43 +436,62 @@ class AddLinkWindow(AddLinkWindow_Ui):
             end_hour = str(self.end_hour_spinBox.value())
             end_minute = str(self.end_minute_spinBox.value())
 
+        # check that if user set new name for download file.
         if self.change_name_checkBox.isChecked() == False:
             out = None
         else:
             out = str(self.change_name_lineEdit.text())
 
+        # get download link
         link = self.link_lineEdit.text()
 
+        # get number of connections
         connections = self.connections_spinBox.value()
+
+        # get download_path
         download_path = self.download_folder_lineEdit.text()
 
-        if not ('referer' in self.flashgot_add_link_dictionary):
-            self.flashgot_add_link_dictionary['referer'] = None
+        # get referer and header and user-agent and load-cookies in plugin_add_link_dictionary if exits.
+        if not ('referer' in self.plugin_add_link_dictionary):
+            self.plugin_add_link_dictionary['referer'] = None
 
-        if not ('header' in self.flashgot_add_link_dictionary):
-            self.flashgot_add_link_dictionary['header'] = None
+        if not ('header' in self.plugin_add_link_dictionary):
+            self.plugin_add_link_dictionary['header'] = None
 
-        if not('user-agent' in self.flashgot_add_link_dictionary):
-            self.flashgot_add_link_dictionary['user-agent'] = None
+        if not('user-agent' in self.plugin_add_link_dictionary):
+            self.plugin_add_link_dictionary['user-agent'] = None
 
-        if not('load-cookies' in self.flashgot_add_link_dictionary):
-            self.flashgot_add_link_dictionary['load-cookies'] = None
+        if not('load-cookies' in self.plugin_add_link_dictionary):
+            self.plugin_add_link_dictionary['load-cookies'] = None
 
         final_download_path = None
 
         now_date_list = download.nowDate()
-        self.add_link_dictionary = {'last_try_date': now_date_list, 'firs_try_date': now_date_list, 'out': out, 'final_download_path': final_download_path, 'start_hour': start_hour, 'start_minute': start_minute, 'end_hour': end_hour, 'end_minute': end_minute,
-                                    'link': link, 'ip': ip, 'port': port, 'proxy_user': proxy_user, 'proxy_passwd': proxy_passwd, 'download_user': download_user, 'download_passwd': download_passwd, 'connections': connections, 'limit': limit, 'download_path': download_path}
-        for i in self.flashgot_add_link_dictionary.keys():
-            self.add_link_dictionary[i] = self.flashgot_add_link_dictionary[i]
+        # save information in a dictionary(add_link_dictionary).
+        self.add_link_dictionary = {'last_try_date': now_date_list, 'firs_try_date': now_date_list, 'out': out,
+                                    'final_download_path': final_download_path, 'start_hour': start_hour,
+                                    'start_minute': start_minute, 'end_hour': end_hour, 'end_minute': end_minute,
+                                    'link': link, 'ip': ip, 'port': port, 'proxy_user': proxy_user, 'proxy_passwd': proxy_passwd,
+                                    'download_user': download_user, 'download_passwd': download_passwd, 'connections': connections,
+                                    'limit': limit, 'download_path': download_path}
 
+        # add plugin_add_link_dictionary information to add_link_dictionary.
+        for i in self.plugin_add_link_dictionary.keys():
+            self.add_link_dictionary[i] = self.plugin_add_link_dictionary[i]
+
+        # get category of download
         category = str(self.add_queue_comboBox.currentText())
 
-        del self.flashgot_add_link_dictionary
-        self.callback(self.add_link_dictionary, download_later, category)
+        del self.plugin_add_link_dictionary
 
+        # return information to mainwindow
+        self.callback(self.add_link_dictionary, download_later, category)
+        
+        # close window
         self.close()
 
+
+# save size and position of window, when user closes the window.
     def closeEvent(self, event):
         self.layout().setSizeConstraint(QtWidgets.QLayout.SetDefaultConstraint)
         self.setMinimumSize(QSize(self.width() , self.minimum_height))

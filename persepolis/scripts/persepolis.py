@@ -302,8 +302,8 @@ if ('link' in add_link_dictionary):
     # Job is done! close connections.
     data_base.closeConnections()
 
-    flashgot_ready = os.path.join(persepolis_tmp, 'persepolis-flashgot-ready')
-    osCommands.touch(flashgot_ready)
+    plugin_ready = os.path.join(persepolis_tmp, 'persepolis-flashgot-ready')
+    osCommands.touch(plugin_ready)
 
 
 if args.tray:
