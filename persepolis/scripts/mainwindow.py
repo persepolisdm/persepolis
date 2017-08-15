@@ -12,6 +12,7 @@
 #
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
 from functools import partial
 import sys
 import ast
@@ -152,8 +153,6 @@ flashgot_file = os.path.join(persepolis_tmp, 'persepolis-flashgot')
 show_window_file = os.path.join(persepolis_tmp, 'show-window')
 
 # start aria2 when Persepolis starts
-
-
 class StartAria2Thread(QThread):
     ARIA2RESPONDSIGNAL = pyqtSignal(str)
 
@@ -164,17 +163,22 @@ class StartAria2Thread(QThread):
         # aria_startup_answer is None when Persepolis starts! and after
         # ARIA2RESPONDSIGNAL emitting yes , then startAriaMessage function
         # changing aria_startup_answer to 'Ready'
+        # ARIA2RESPONDSIGNAL have 3 conditions >>> 
+        # 1. no (aria didn't respond) 2. yes(aria is respond) 3.try again(Persepolis retry to connecting aria2)
         global aria_startup_answer
 
-        # checking that aria2 is running or not!
+        # check that aria2 is running or not!
         answer = download.aria2Version()
 
         # if Aria2 wasn't started before, so start it!
         if answer == 'did not respond':
             print('Starting Aria2')
+
+            # write in log file.
             logger.sendToLog(
                             "Starting Aria2", "INFO")
  
+            # try 5 time if aria2 doesn't respond!
             for i in range(5):
                 answer = download.startAria()
                 if answer == 'did not respond' and i != 4:
@@ -189,11 +193,15 @@ class StartAria2Thread(QThread):
         if answer == 'did not respond':
             signal_str = 'no'
         else:
+            # Aria2 is responding :)
             signal_str = 'yes'
             print('Aria2 is running')
             logger.sendToLog(
                             "Aria2 is running", "INFO")
  
+        # emit the signal
+        # ARIA2RESPONDSIGNAL have 3 conditions >>> 
+        # 1. no (aria didn't respond) 2. yes(aria is respond) 3.try again(Persepolis retry to connecting aria2)
         self.ARIA2RESPONDSIGNAL.emit(signal_str)
 
 
@@ -743,25 +751,40 @@ class MainWindow(MainWindow_Ui):
         self.system_tray_icon = QSystemTrayIcon()
         self.system_tray_icon.setIcon(
             QIcon.fromTheme('persepolis', QIcon(':/persepolis.svg')))
+
+        # menu of system tray icon
         system_tray_menu = QMenu()
         system_tray_menu.addAction(self.addlinkAction)
         system_tray_menu.addAction(self.stopAllAction)
         system_tray_menu.addAction(self.minimizeAction)
         system_tray_menu.addAction(self.exitAction)
         self.system_tray_icon.setContextMenu(system_tray_menu)
+
+        # if system tray icon pressed: 
         self.system_tray_icon.activated.connect(self.systemTrayPressed)
+
+        # show system_tray_icon
         self.system_tray_icon.show()
+
+        # check trayAction
         self.trayAction.setChecked(True)
+
+        # set tooltip for system_tray_icon
         self.system_tray_icon.setToolTip('Persepolis Download Manager')
 
+        # check user preference for showing or hiding system_tray_icon
         if self.persepolis_setting.value('settings/tray-icon') != 'yes' and start_in_tray == 'no':
             self.minimizeAction.setEnabled(False)
             self.trayAction.setChecked(False)
             self.system_tray_icon.hide()
+
+        # hide MainWindow if start_in_tray is equal to "yes"
         if start_in_tray == 'yes':
             self.minimizeAction.setText('Show main Window')
             self.minimizeAction.setIcon(QIcon(icons + 'window'))
 
+        # check user preference for showing or hiding menubar.
+        # (It's not for mac osx or DE that have global menu like kde plasma)
         if self.persepolis_setting.value('settings/show-menubar') == 'yes':
             self.menubar.show()
             self.showMenuBarAction.setChecked(True)
@@ -774,6 +797,7 @@ class MainWindow(MainWindow_Ui):
         if platform.system() == 'Darwin':
             self.showMenuBarAction.setEnabled(False)
 
+        # check user preferences for showing or hiding sidepanel. 
         if self.persepolis_setting.value('settings/show-sidepanel') == 'yes':
             self.category_tree_qwidget.show()
             self.showSidePanelAction.setChecked(True)
@@ -782,19 +806,21 @@ class MainWindow(MainWindow_Ui):
             self.showSidePanelAction.setChecked(False)
 
 
-# statusbar
+# set message for statusbar
         self.statusbar.showMessage('Please Wait ...')
+
         self.checkSelectedRow()
 
 
-# threads
+# list of threads
         self.threadPool = []
-# starting aria
+
+# start aria2 
         start_aria = StartAria2Thread()
         self.threadPool.append(start_aria)
         self.threadPool[0].start()
         self.threadPool[0].ARIA2RESPONDSIGNAL.connect(self.startAriaMessage)
-
+###################################################################################################
 # initializing
 # add queues to category_tree
         f = Open(queues_list_file)
