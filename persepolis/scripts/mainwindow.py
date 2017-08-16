@@ -840,7 +840,6 @@ class MainWindow(MainWindow_Ui):
             new_queue_category.setEditable(False)
             self.category_tree_model.appendRow(new_queue_category)
 
-#########################################################################################################
         
 # add download items to the download_table
         # read download items from data base
@@ -851,6 +850,9 @@ class MainWindow(MainWindow_Ui):
             for i in range(13):
                 item = QTableWidgetItem(str(row[i]))
                 self.download_table.setItem(0, i, item)
+
+
+#########################################################################################################
 
 # defining some lists and dictionaries for running addlinkwindows and
 # propertieswindows and propertieswindows , ...
