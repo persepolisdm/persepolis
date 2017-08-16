@@ -47,6 +47,7 @@ from copy import deepcopy
 from persepolis.scripts.shutdown import shutDown
 import shutil
 from persepolis.scripts.update import checkupdate
+from persepolis.scripts import data_base
 
 # THIS FILE CREATES MAIN WINDOW
 
@@ -820,98 +821,36 @@ class MainWindow(MainWindow_Ui):
         self.threadPool.append(start_aria)
         self.threadPool[0].start()
         self.threadPool[0].ARIA2RESPONDSIGNAL.connect(self.startAriaMessage)
-###################################################################################################
+
 # initializing
-# add queues to category_tree
-        f = Open(queues_list_file)
-        queues_list = f.readlines()
-        f.close()
-        for line in queues_list:
-            queue_name = line.strip()
-            new_queue_category = QStandardItem(queue_name)
+
+        # check tables in data_base, and change required values to default value.
+        # see data_base.py for more information.
+        data_base.setDBTablesToDefaultValue()
+
+        # get queues name from data base
+        queues_tuple = data_base.categoriesTuple()
+
+        # add queues to category_tree(left side panel)
+        for tuple in queues_tuple:
+            new_queue_category = QStandardItem(str(tuple[0]))
             font = QtGui.QFont()
             font.setBold(True)
             new_queue_category.setFont(font)
             new_queue_category.setEditable(False)
             self.category_tree_model.appendRow(new_queue_category)
 
-            # queue_info_file contains start time and end time information and ... for queue
-            # queue_info_file path
-            queue_info_file = os.path.join(queue_info_folder, queue_name)
-            osCommands.touch(queue_info_file)
+#########################################################################################################
+        
+# add download items to the download_table
+        # read download items from data base
+        download_table_rows = data_base.retrnAllItemsInDownloadTable()
 
-            # checking queue_info_file for all queues
-            try:
-                queue_info_dict = readDict(queue_info_file)
-            except:  # using default queue_info_dict if any error occured!
-                # default queue_info_dict
-                queue_info_dict = {'start_time_enable': 'no', 'end_time_enable': 'no', 'start_minute': '0', 'start_hour': '0',
-                                   'end_hour': '0', 'end_minute': '0', 'reverse': 'no', 'limit_speed': 'yes', 'limit': '0K', 'after': 'yes'}
-
-            # changing start_time_enable , end_time_enable , reverse ,
-            # limit_speed , after to no !
-            for i in ['start_time_enable', 'end_time_enable', 'reverse', 'limit_speed', 'after']:
-                queue_info_dict[str(i)] = 'no'
-
-            f = Open(queue_info_file, 'w')
-            f.writelines(str(queue_info_dict))
-            f.close()
-
-
-# add downloads to the download_table
-        f_download_list_file = Open(download_list_file)
-        download_list_file_lines = f_download_list_file.readlines()
-        f_download_list_file.close()
-
-        for line in download_list_file_lines:
-            gid = line.strip()
-            self.download_table.insertRow(0)
-            download_info_file = os.path.join(download_info_folder, gid)
-
-            # checking existance of download_info_file_backup for all
-            # "download_info_file"s
-            download_info_file_backup = str(download_info_file) + "_back"
-            if not(os.path.isfile(download_info_file_backup)):
-                shutil.copy(download_info_file, download_info_file_backup)
-
-            try:
-                download_info_file_list = readList(
-                    download_info_file, 'string')
-            except:  # so download_info_file is corrupted
-                shutil.copy(download_info_file_backup, download_info_file)
-                download_info_file_list = readList(
-                    download_info_file, 'string')
-
+        # insert items in download_table 
+        for row in download_table_rows:
             for i in range(13):
-                item = QTableWidgetItem(download_info_file_list[i])
+                item = QTableWidgetItem(str(row[i]))
                 self.download_table.setItem(0, i, item)
-
-        row_numbers = self.download_table.rowCount()
-        for row in range(row_numbers):
-            status = self.download_table.item(row, 1).text()
-            if (status != "complete" and status != "error"):
-                gid = self.download_table.item(row, 8).text()
-                add_link_dictionary_str = self.download_table.item(
-                    row, 9).text()
-                add_link_dictionary = ast.literal_eval(
-                    add_link_dictionary_str.strip())
-                add_link_dictionary['start_hour'] = None
-                add_link_dictionary['start_minute'] = None
-                add_link_dictionary['end_hour'] = None
-                add_link_dictionary['end_minute'] = None
-                add_link_dictionary['after_download'] = 'None'
-
-                download_info_file = os.path.join(download_info_folder, gid)
-                download_info_file_list = readList(
-                    download_info_file, 'string')
-
-                for i in range(13):
-                    if i == 1:
-                        download_info_file_list[i] = 'stopped'
-                        item = QTableWidgetItem('stopped')
-                        self.download_table.setItem(row, i, item)
-                download_info_file_list[9] = add_link_dictionary
-                writeList(download_info_file, download_info_file_list)
 
 # defining some lists and dictionaries for running addlinkwindows and
 # propertieswindows and propertieswindows , ...
