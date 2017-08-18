@@ -28,9 +28,6 @@ elif os_type == 'Windows':
     config_folder = os.path.join(
         str(home_address), 'AppData', 'Local', 'persepolis_download_manager')
 
-# persepolis main data base path
-persepolis_db_path = os.path.join(config_folder, 'persepolis.db')
-
 # persepolis tmp folder path
 if os_type != 'Windows':
     user_name_split = home_address.split('/')
@@ -40,12 +37,14 @@ else:
     persepolis_tmp = os.path.join(
         str(home_address), 'AppData', 'Local', 'persepolis_tmp')
 
-# plugins.db is store links, when browser plugins are send new links.
-plugins_db_path = os.path.join(persepolis_tmp, 'plugins.db')
 
-   
+# plugins.db is store links, when browser plugins are send new links.
+# This class is managing plugin.db   
 class PluginsDB():
     def __init__(self):
+        # plugins.db file path
+        plugins_db_path = os.path.join(persepolis_tmp, 'plugins.db')
+
         # plugins_db_connection
         self.plugins_db_connection = sqlite3.connect(plugins_db_path)
 
@@ -92,10 +91,13 @@ class PluginsDB():
         self.plugins_db_cursor.close()
 
 
-
-
+# persepolis main data base contains downloads information
+# This class is managing persepolis.db 
 class PersepolisDB():
     def __init__(self):
+        # persepolis.db file path 
+        persepolis_db_path = os.path.join(config_folder, 'persepolis.db')
+
         # persepolis_db_connection
         self.persepolis_db_connection = sqlite3.connect(persepolis_db_path)
 
@@ -310,7 +312,7 @@ class PersepolisDB():
         return self.persepolis_db_cursor.fetchall()
 
     # return all items in download_db_table
-    def retrnAllItemsInDownloadTable(self):
+    def returnAllItemsInDownloadTable(self):
         self.persepolis_db_cursor.execute("""SELECT * FROM download_db_table""")
         return self.persepolis_db_cursor.fetchall()
 

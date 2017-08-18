@@ -294,14 +294,18 @@ else:
 if ('link' in add_link_dictionary):   
     # add add_link_dictionary to persepolis-flashgot
 
-    from persepolis.scripts import data_base
+    from persepolis.scripts import PluginsDB
+    
+    # create an object for PluginsDB
+    plugins_db = PluginsDB()
 
-    # add new link information to plugins_table in plugins.db file in /tmp .
-    data_base.insertInPluginsTable(add_link_dictionary['link'], add_link_dictionary['referer'], add_link_dictionary['load-cookies'],
+    # add new link information to plugins_table in plugins.db file.
+    plugins_db.insertInPluginsTable(add_link_dictionary['link'], add_link_dictionary['referer'], add_link_dictionary['load-cookies'],
                                     add_link_dictionary['user-agent'], add_link_dictionary['header'], add_link_dictionary['out'])
     # Job is done! close connections.
-    data_base.closeConnections()
+    plugins_db.closeConnections()
 
+    # notify that a link is added!
     plugin_ready = os.path.join(persepolis_tmp, 'persepolis-flashgot-ready')
     osCommands.touch(plugin_ready)
 

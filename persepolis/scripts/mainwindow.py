@@ -47,7 +47,7 @@ from copy import deepcopy
 from persepolis.scripts.shutdown import shutDown
 import shutil
 from persepolis.scripts.update import checkupdate
-from persepolis.scripts import data_base
+from persepolis.scripts.data_base import PluginsDB, PersepolisDB
 
 # THIS FILE CREATES MAIN WINDOW
 
@@ -58,16 +58,19 @@ from persepolis.scripts import data_base
 # specify GIDs manually
 
 
-# shutdown_notification = 0 >> persepolis running , 1 >> persepolis is
-# ready for close(closeEvent called) , 2 >> OK, let's close application!
+
+# shutdown_notification = 0 >> persepolis is running 
+# 1 >> persepolis is ready for closing(closeEvent called) 
+# 2 >> OK, let's close application!
+
 global shutdown_notification
 shutdown_notification = 0
 
-# checking_flag : 0 >> normal situation ; 1 >> remove button or delete
-# button pressed or sorting form viewMenu selected by user ; 2 >>
-# check_download_info function is stopping until remove operation done ; 3
-# >> deleteFileAction is done it's job and It is called
-# removeButtonPressed function
+# checking_flag : 0 >> normal situation ;
+# 1 >> remove button or delete button pressed or sorting form viewMenu selected by user ;
+# 2 >> check_download_info function is stopping until remove operation done ;
+# 3 >> deleteFileAction is done it's job and It is called removeButtonPressed. 
+
 global checking_flag
 checking_flag = 0
 # when rpc connection between persepolis and aria is disconnected >>
@@ -233,18 +236,34 @@ class CheckDownloadInfoThread(QThread):
         global shutdown_notification
         while True:
 
+# shutdown_notification = 0 >> persepolis is running 
+# 1 >> persepolis is ready for closing(closeEvent called) 
+# 2 >> OK, let's close application!
+
+
+# checking_flag : 0 >> normal situation ;
+# 1 >> remove button or delete button pressed or sorting form viewMenu selected by user ;
+# 2 >> check_download_info function is stopping until remove operation done ;
+# 3 >> deleteFileAction is done it's job and It is called removeButtonPressed. 
+
+
+
+            # whait until aria is ready! 
             while shutdown_notification == 0 and aria_startup_answer != 'ready':
                 sleep(1)
 
             while shutdown_notification != 1:
                 # if checking_flag is equal to 1, it means that user pressed
                 # remove or delete button . so checking download information
-                # must stop until removing done!
+                # must stop until removing done! It avoids possiblity of crashing!
                 if checking_flag == 1:
+                    # Ok loop is stoped!
                     checking_flag = 2
+
+                    # check that when job is done!
                     while checking_flag != 0:
                         sleep(0.2)
-                sleep(0.1)
+########################################################################
                 f = Open(download_list_file_active)
                 download_list_file_active_lines = f.readlines()
                 f.close()
@@ -824,12 +843,15 @@ class MainWindow(MainWindow_Ui):
 
 # initializing
 
+        # create an object for PersepolisDB
+        persepolis_db = PersepolisDB()
+
         # check tables in data_base, and change required values to default value.
         # see data_base.py for more information.
-        data_base.setDBTablesToDefaultValue()
+        persepolis_db.setDBTablesToDefaultValue()
 
         # get queues name from data base
-        queues_tuple = data_base.categoriesTuple()
+        queues_tuple = persepolis_db.categoriesTuple()
 
         # add queues to category_tree(left side panel)
         for tuple in queues_tuple:
@@ -843,7 +865,7 @@ class MainWindow(MainWindow_Ui):
         
 # add download items to the download_table
         # read download items from data base
-        download_table_rows = data_base.retrnAllItemsInDownloadTable()
+        download_table_rows = persepolis_db.returnAllItemsInDownloadTable()
 
         # insert items in download_table 
         for row in download_table_rows:
@@ -866,8 +888,8 @@ class MainWindow(MainWindow_Ui):
         self.checkupdatewindow_list = []
         self.logwindow_list = []
         self.progress_window_list_dict = {}
+
 # queue_list_dict contains queue threads >> queue_list_dict[name of queue]
-# = Queue(name of queue , parent)
         self.queue_list_dict = {}
 
 # CheckDownloadInfoThread

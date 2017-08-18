@@ -24,8 +24,7 @@ import platform
 from persepolis.scripts.compatibility import compatibility
 from PyQt5.QtCore import QSettings
 from persepolis.scripts.browser_integration import browserIntegration
-from persepolis.scripts import data_base
-
+from persepolis.scripts.data_base import PersepolisDB, PluginsDB
 # initialization
 
 # user home address
@@ -67,12 +66,23 @@ persepolis_shutdown = os.path.join(persepolis_tmp, 'shutdown')
 for folder in [config_folder, persepolis_tmp, persepolis_shutdown]:
     osCommands.makeDirs(folder)
 
-# create data base
-data_base.createTables()
+# create an object for PersepolisDB
+persepolis_db = PersepolisDB()
+
+# create tables
+persepolis_db.createTables()
 
 # close connections
-data_base.closeConnections()
+persepolis_db.closeConnections()
 
+# create an object for PluginsDB
+plugins_db = PluginsDB()
+
+# create tables
+plugins_db.createTables()
+
+# close connections
+plugins_db.closeConnections()
 
 
 # persepolisdm.log file contains persepolis log.
