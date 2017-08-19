@@ -252,6 +252,10 @@ def downloadAria(gid):
         print("Download Canceled")
         logger.sendToLog("Download Canceled", "INFO")
 
+def tellActive():
+    downloads_status = server.aria2.tellActive(
+            ['status', 'connections', 'errorCode', 'errorMessage', 'downloadSpeed', 'connections', 'dir', 'totalLength', 'completedLength', 'files'])           
+
 
 def downloadStatus(gid):
     try:
