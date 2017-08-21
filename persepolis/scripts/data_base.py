@@ -109,11 +109,9 @@ class PersepolisDB():
         self.persepolis_db_cursor.execute("""CREATE TABLE IF NOT EXISTS category_db_table(
                                                                         category TEXT PRIMARY KEY,
                                                                         start_time_enable TEXT,
-                                                                        start_hour TEXT,
-                                                                        start_minute TEXT,
+                                                                        start_time TEXT,
                                                                         end_time_enable TEXT,
-                                                                        end_hour TEXT,
-                                                                        end_minute TEXT,
+                                                                        end_time TEXT,
                                                                         reverse TEXT,
                                                                         limit_enable TEXT,
                                                                         limit_value TEXT,
@@ -146,14 +144,9 @@ class PersepolisDB():
         self.persepolis_db_cursor.execute("""CREATE TABLE IF NOT EXISTS addlink_db_table(
                                                                                 ID INTEGER PRIMARY KEY,
                                                                                 gid TEXT,
-                                                                                last_try_date TEXT,
-                                                                                firs_try_date TEXT,
                                                                                 out TEXT,
-                                                                                final_download_path TEXT,
-                                                                                start_hour TEXT,
-                                                                                start_minute TEXT,
-                                                                                end_hour TEXT,
-                                                                                end_minute TEXT,
+                                                                                start_time TEXT,
+                                                                                end_time TEXT,
                                                                                 link TEXT,
                                                                                 ip TEXT,
                                                                                 port TEXT,
@@ -169,6 +162,7 @@ class PersepolisDB():
                                                                                 user_agent TEXT,
                                                                                 header TEXT,
                                                                                 after_download TEXT,
+                                                                                error TEXT,
                                                                                 FOREIGN KEY(gid) REFERENCES download_db_table(gid) 
                                                                                 ON UPDATE CASCADE 
                                                                                 ON DELETE CASCADE 
@@ -176,18 +170,16 @@ class PersepolisDB():
 
 
     # insert new category in category_db_table
-    def insertInCategoryTable(self, category, start_time_enable,start_hour,
-                            start_minute,end_time_enable, end_hour, end_minute,
+    def insertInCategoryTable(self, category, start_time_enable, start_time,
+                            end_time_enable, end_time, 
                             reverse, limit_enable, limit_value, after_download):    
 
         self.persepolis_db_cursor.execute("""INSERT INTO category_db_table VALUES(
                                                                             :category,
                                                                             :start_time_enable,
-                                                                            :start_hour,
-                                                                            :start_minute,
+                                                                            :start_time,
                                                                             :end_time_enable,
-                                                                            :end_hour,
-                                                                            :end_minute,
+                                                                            :end_time,
                                                                             :reverse,
                                                                             :limit_enable,
                                                                             :limit_value,
@@ -195,11 +187,9 @@ class PersepolisDB():
                                                                             )""", {
                                                                                 'category': category,
                                                                                 'start_time_enable': start_time_enable,
-                                                                                'start_hour': start_hour,
-                                                                                'start_minute': start_minute,
+                                                                                'start_time': start_time,
                                                                                 'end_time_enable': end_time_enable,
-                                                                                'end_hour': end_hour,
-                                                                                'end_minute': end_minute,
+                                                                                'end_time': end_time,
                                                                                 'reverse': reverse,
                                                                                 'limit_enable': limit_enable,
                                                                                 'limit_value': limit_value,
@@ -245,22 +235,17 @@ class PersepolisDB():
         self.persepolis_db_connection.commit()
 
     # insert in addlink table in persepolis.db 
-    def insertInAddLinkTable(self, gid, last_try_date, firs_try_date, out, final_download_path,
-                            start_hour, start_minute, end_hour, end_minute, link,
+    def insertInAddLinkTable(self, gid, out, 
+                            start_time, end_time, link,
                             ip, port, proxy_user, proxy_passwd, download_user,
                             download_passwd, connections, limit, download_path,
-                            referer, load_cookies, user_agent, header, after_download):
+                            referer, load_cookies, user_agent, header, after_download, error):
 
         self.persepolis_db_cursor.execute("""INSERT INTO addlink_db_table VALUES(NULL,
                                                                                 :gid,
-                                                                                :last_try_date,
-                                                                                :firs_try_date,
                                                                                 :out,
-                                                                                :final_download_path,
-                                                                                :start_hour,
-                                                                                :start_minute,
-                                                                                :end_hour,
-                                                                                :end_minute,
+                                                                                :start_time,
+                                                                                :end_time,
                                                                                 :link,
                                                                                 :ip,
                                                                                 :port,
@@ -276,16 +261,12 @@ class PersepolisDB():
                                                                                 :user_agent,
                                                                                 :header,
                                                                                 :after_download
+                                                                                :error
                                                                                 )""", {
                                                                                     'gid' :gid,
-                                                                                    'last_try_date': last_try_date,
-                                                                                    'firs_try_date': firs_try_date,
                                                                                     'out': out,
-                                                                                    'final_download_path': final_download_path,
-                                                                                    'start_hour': start_hour,
-                                                                                    'start_minute': start_minute,
-                                                                                    'end_hour': end_hour,
-                                                                                    'end_minute': end_minute,
+                                                                                    'start_time': start_time,
+                                                                                    'end_minute': end_time,
                                                                                     'link': link,
                                                                                     'ip': ip,
                                                                                     'port': port,
@@ -300,7 +281,8 @@ class PersepolisDB():
                                                                                     'load_cookies': load_cookies,
                                                                                     'user_agent': user_agent,
                                                                                     'header': header,
-                                                                                    'after_download': after_download
+                                                                                    'after_download': after_download,
+                                                                                    'error': error
                                                                                     })
     self.persepolis_db_connection.commit() 
     
@@ -320,7 +302,31 @@ class PersepolisDB():
     # return download information in addlink_db_table with special gid.
     def searchGidInAddLinkTable(self, gid):
         self.persepolis_db_cursor.execute("""SELECT * FROM addlink_db_table WHERE gid = {}""".format(str(gid)))
-        return self.persepolis_db_cursor.fetchall()
+        list = self.persepolis_db_cursor.fetchall()
+        tuple = list[0]
+        dict = {
+                'gid' :tuple[0],
+                'out': tuple[1],
+                'start_time': tuple[2],
+                'end_minute': tuple[4],
+                'link': tuple[5],
+                'ip': tuple[6],
+                'port': tuple[7],
+                'proxy_user': tuple[8],
+                'proxy_passwd': tuple[9],
+                'download_user': tuple[10],
+                'download_passwd': tuple[11],
+                'connections': tuple[12],
+                'limit': tuple[13],
+                'download_path' : tuple[13],
+                'referer': tuple[14],
+                'load_cookies': tuple[15],
+                'user_agent': tuple[16],
+                'header': tuple[17],
+                'after_download': tuple[18],
+                'error': tuple[19]
+                }
+	return dict
 
     # return category information in category_db_table
     def searchCategoryInCategoryTable(self, category):
@@ -328,7 +334,7 @@ class PersepolisDB():
         return self.persepolis_db_cursor.fetchall()
 
     # return categories name 
-    def categoriesTuple(self):
+    def categoriesList(self):
         self.persepolis_db_cursor.execute("""SELECT category FROM category_db_table""")
         return self.persepolis_db_cursor.fetchall() 
 
@@ -351,6 +357,10 @@ class PersepolisDB():
     
         self.persepolis_db_connection.commit()
 
+    def findActiveDownloads(self):
+        # find download items is download_db_table with status = "downloading" or satatus = "waiting"
+        self.persepolis_db_cursor.execute("""SELECT gid FROM download_db_table WHERE status = 'downloading' OR status = 'waiting'""")
+        return self.persepolis_db_cursor.fetchall()
 
     # close connections
     def closeConnections(self):

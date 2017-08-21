@@ -252,19 +252,99 @@ def downloadAria(gid):
         print("Download Canceled")
         logger.sendToLog("Download Canceled", "INFO")
 
+# this function returns list of download information
 def tellActive():
-    downloads_status = server.aria2.tellActive(
-            ['status', 'connections', 'errorCode', 'errorMessage', 'downloadSpeed', 'connections', 'dir', 'totalLength', 'completedLength', 'files'])           
+    # get download information from aria2
+    try:
+        downloads_status = server.aria2.tellActive(
+            ['gid', 'status', 'connections', 'errorCode', 'errorMessage', 'downloadSpeed', 'connections', 'dir', 'totalLength', 'completedLength', 'files'])           
+    except:
+        download_status = []
 
+    download_status_list = []
+    gid_list = []
 
-def downloadStatus(gid):
+    # convert download information in desired format.
+    for dict in download_status:
+        converted_info_dict = convertDownloadInformation(dict)
+
+        # add gid of download as key to converted_info_dict
+        converted_info_dict ['gid'] = dict['gid'] 
+
+        # add gid to gid_list
+        gid_list.append(dict['gid'])
+
+        # add converted information to download_status_list
+        download_status_list.append(converted_info_dict)
+        
+    # return results
+    return gid_list, download_status_list
+
+# this function returns download status that specified by gid!
+def tellStatus(gid, persepolis_db):
+    # get download status from aria2
     try:
         download_status = server.aria2.tellStatus(
             gid, ['status', 'connections', 'errorCode', 'errorMessage', 'downloadSpeed', 'connections', 'dir', 'totalLength', 'completedLength', 'files'])
     except:
-        download_status = {'status': None, 'connections': None, 'errorCode': None, 'errorMessage': None,
-                           'downloadSpeed': None, 'connections': None, 'dir': None, 'totalLength': None, 'completedLength': None, 'files': None}
+        download_status = None 
+        return download_status
+
+    # convert download_status in desired format
+    converted_info_dict = convertDownloadInformation(download_status)
+
+
+# if download has completed , then move file to the download folder
+    if (converted_info_dict['status'] == "complete"):
+ 
+        # find download_path from addlink_db_table in data_base
+        add_link_dictionary = persepolis_db.searchGidInAddLinkTable(gid)
+
+        persepolis_setting.sync()
+
+        download_path = add_link_dictionary['download_path']
+
+        # if user specified download_path is not equal to persepolis_setting download_path, 
+        # then subfolder must added to download path. 
+        if persepolis_setting.value('settings/download_path') == download_path:
+            download_path = findDownloadPath(
+                file_name, download_path, persepolis_setting.value('settings/subfolder'))
+                add_link_dictionary['final_download_path'] = final_download_path
+
+        file_path = downloadCompleteAction(path, download_path, file_name)
+######################################
+    if (status_str == "error"):
+        add_link_dictionary["error"] = str(download_status['errorMessage'])
+        server.aria2.removeDownloadResult(gid)
+
+    if (status_str == "None"):
+        status_str = None
+
+# setting firs_try_date and last_try_date
+    date_list = add_link_dictionary['firs_try_date']
+    firs_try_date = str(date_list[0]) + '/' + str(date_list[1]) + '/' + str(
+        date_list[2]) + ' , ' + str(date_list[3]) + ':' + str(date_list[4]) + ':' + str(date_list[5])
+
+    date_list = add_link_dictionary['last_try_date']
+    last_try_date = str(date_list[0]) + '/' + str(date_list[1]) + '/' + str(
+        date_list[2]) + ' , ' + str(date_list[3]) + ':' + str(date_list[4]) + ':' + str(date_list[5])
+
+    download_info = [file_name, status_str, size_str, downloaded_str,  percent_str, connections_str,
+                     download_speed_str, estimate_time_left_str, None, add_link_dictionary, firs_try_date, last_try_date]
+
+    for i in range(12):
+        if download_info[i] != None:
+            download_info_file_list[i] = download_info[i]
+
+    writeList(download_info_file, download_info_file_list)
+
+    return ['ready', download_info_file_list[1]]
+
+# this function converts download information that received from aria2 in desired format.
+def convertDownloadInformation(download_status):
 # file_status contains name of download file
+
+    # find file_name
     try:
         file_status = str(download_status['files'])
         file_status = file_status[1:-1]
@@ -281,15 +361,20 @@ def downloadStatus(gid):
     for i in download_status.keys():
         if not(download_status[i]):
             download_status[i] = None
+
+    # find file_size        
     try:
         file_size = float(download_status['totalLength'])
     except:
         file_size = None
+
+    # find downloaded size
     try:
         downloaded = float(download_status['completedLength'])
     except:
         downloaded = None
 
+    # convert file_size and downloaded_size to KB and MB and GB
     if (downloaded != None and file_size != None and file_size != 0):
         file_size_back = file_size
         if int(file_size/1073741824) != 0:
@@ -311,6 +396,8 @@ def downloadStatus(gid):
             downloaded_str = str(int(downloaded/1024)) + " KB"
         else:
             downloaded_str = str(downloaded)
+
+    # find download percent from file_size and downloaded_size
         file_size = file_size_back
         downloaded = downloaded_back
         percent = int(downloaded * 100 / file_size)
@@ -320,11 +407,14 @@ def downloadStatus(gid):
         size_str = None
         downloaded_str = None
 
+    # find download_speed
     try:
         download_speed = int(download_status['downloadSpeed'])
     except:
         download_speed = 0
 
+    # convert download_speed to desired units.
+    # and find estimate_time_left
     if (downloaded != None and download_speed != 0):
         estimate_time_left = int((file_size - downloaded)/download_speed)
         if int((download_speed/1073741824)) != 0:
@@ -357,53 +447,17 @@ def downloadStatus(gid):
         download_speed_str = "0"
         estimate_time_left_str = None
 
+    # find number of connections
     try:
         connections_str = str(download_status['connections'])
     except:
         connections_str = None
 
+    # find status of download
     try:
         status_str = str(download_status['status'])
     except:
         status_str = None
-
-    download_info_file = os.path.join(download_info_folder, gid)
-    download_info_file_list = readList(download_info_file)
-
-    add_link_dictionary = download_info_file_list[9]
-
-    download_path = add_link_dictionary['download_path']
-    final_download_path = add_link_dictionary['final_download_path']
-
-
-# if final_download_path did not defined and download_path equaled to user
-# default download folder then this section is finding final_download_path
-# according to file extension
-    if final_download_path == None:
-        if file_name != None:
-            # finding default download_path
-
-            persepolis_setting.sync()
-
-            if persepolis_setting.value('settings/download_path') == download_path:
-                final_download_path = findDownloadPath(
-                    file_name, download_path, persepolis_setting.value('settings/subfolder'))
-                add_link_dictionary['final_download_path'] = final_download_path
-            else:
-                final_download_path = download_path
-                add_link_dictionary['final_download_path'] = final_download_path
-
-# if download has completed , then move file to the download folder
-    if (status_str == "complete"):
-        if final_download_path != None:
-            download_path = final_download_path
-
-        file_path = downloadCompleteAction(path, download_path, file_name)
-
-        add_link_dictionary['file_path'] = file_path
-        add_link_dictionary['final_download_path'] = file_path
-
-        file_name = urllib.parse.unquote(os.path.basename(file_path))
 
 # rename active status to downloading
     if (status_str == "active"):
@@ -413,33 +467,23 @@ def downloadStatus(gid):
     if (status_str == "removed"):
         status_str = "stopped"
 
-    if (status_str == "error"):
-        add_link_dictionary["error"] = str(download_status['errorMessage'])
-        server.aria2.removeDownloadResult(gid)
-
     if (status_str == "None"):
         status_str = None
 
-# setting firs_try_date and last_try_date
-    date_list = add_link_dictionary['firs_try_date']
-    firs_try_date = str(date_list[0]) + '/' + str(date_list[1]) + '/' + str(
-        date_list[2]) + ' , ' + str(date_list[3]) + ':' + str(date_list[4]) + ':' + str(date_list[5])
 
-    date_list = add_link_dictionary['last_try_date']
-    last_try_date = str(date_list[0]) + '/' + str(date_list[1]) + '/' + str(
-        date_list[2]) + ' , ' + str(date_list[3]) + ':' + str(date_list[4]) + ':' + str(date_list[5])
+# return information in dictionary format
+    download_info = {
+                    'file_name': file_name,
+                    'status': status_str,
+                    'size': size_str,
+                    'downloaded_size': downloaded_str,
+                    'percent': percent_str,
+                    'connections': connections_str,
+                    'rate': download_speed_str,
+                    'estimate_time_left': estimate_time_left_str,
+                    }
 
-    download_info = [file_name, status_str, size_str, downloaded_str,  percent_str, connections_str,
-                     download_speed_str, estimate_time_left_str, None, add_link_dictionary, firs_try_date, last_try_date]
-
-    for i in range(12):
-        if download_info[i] != None:
-            download_info_file_list[i] = download_info[i]
-
-    writeList(download_info_file, download_info_file_list)
-
-    return ['ready', download_info_file_list[1]]
-
+    return download_info
 
 # download complete actions!
 # this method is returning file_path of file in the user's download folder

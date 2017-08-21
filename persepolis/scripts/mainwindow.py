@@ -263,15 +263,25 @@ class CheckDownloadInfoThread(QThread):
                     # check that when job is done!
                     while checking_flag != 0:
                         sleep(0.2)
-########################################################################
-                f = Open(download_list_file_active)
-                download_list_file_active_lines = f.readlines()
-                f.close()
-                if len(download_list_file_active_lines) != 0:
-                    for line in download_list_file_active_lines:
-                        gid = line.strip()
-                        if checking_flag == 1:
-                            break
+
+                # find active downloads
+                # output of this method is a list of tuples
+                active_gid_list = self.parent.persepolis_db.findActiveDownloads()
+
+                # get download status of active downloads from aria2
+                gid_list, download_status_list = download.tellActive()
+
+                if len(active_gid_list) != 0:
+                    for row in active_gid_list:
+                        gid = row[0]
+
+                        # if gid not in gid_list, so download is completed or stopped or error occured!
+                        # so we must get download information with tellStatus function.  
+                        if gid not in gid_list:  
+                            download.tellStatus(gid, self.parent.persepolis_db)
+
+####################################################
+
                         try:
                             answer_list = download.downloadStatus(gid)
                             answer = answer_list[0]
@@ -844,17 +854,17 @@ class MainWindow(MainWindow_Ui):
 # initializing
 
         # create an object for PersepolisDB
-        persepolis_db = PersepolisDB()
+        self.persepolis_db = PersepolisDB()
 
         # check tables in data_base, and change required values to default value.
         # see data_base.py for more information.
-        persepolis_db.setDBTablesToDefaultValue()
+        self.persepolis_db.setDBTablesToDefaultValue()
 
         # get queues name from data base
-        queues_tuple = persepolis_db.categoriesTuple()
+        queues_list = self.persepolis_db.categoriesList()
 
         # add queues to category_tree(left side panel)
-        for tuple in queues_tuple:
+        for tuple in queues_list:
             new_queue_category = QStandardItem(str(tuple[0]))
             font = QtGui.QFont()
             font.setBold(True)
@@ -865,7 +875,7 @@ class MainWindow(MainWindow_Ui):
         
 # add download items to the download_table
         # read download items from data base
-        download_table_rows = persepolis_db.returnAllItemsInDownloadTable()
+        download_table_rows = self.persepolis_db.returnAllItemsInDownloadTable()
 
         # insert items in download_table 
         for row in download_table_rows:
