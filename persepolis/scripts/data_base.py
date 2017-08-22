@@ -328,6 +328,57 @@ class PersepolisDB():
                 }
 	return dict
 
+# this method is updating addlink_db_table
+    def updateAddLinkTable(self,list):
+        keys_list = ['gid',
+                    'out',
+                    'start_time',
+                    'end_minute',
+                    'link',
+                    'ip',
+                    'port',
+                    'proxy_user',
+                    'proxy_passwd',
+                    'download_user',
+                    'download_passwd',
+                    'connections',
+                    'limit',
+                    'download_path',
+                    'referer',
+                    'load_cookies',
+                    'user_agent',
+                    'header',
+                    'after_download',
+                    'error'
+                        ]
+
+        for dict in list:
+            for key in keys_list:  
+                if key not in dict.keys():
+                    dict[key] = None 
+
+                self.persepolis_db_cursor.execute("""UPDATE addlink_db_table SET    out = coalesce(:out, out),
+                                                                                start_time = coalesce(:start_time, start_time),
+                                                                                end_time = coalesce(:end_time, end_time),
+                                                                                link = coalesce(:link, link),
+                                                                                ip = coalesce(:ip, ip),
+                                                                                port = coalesce(:port, port),
+                                                                                proxy_user = coalesce(:proxy_user, proxy_user),
+                                                                                proxy_passwd = coalesce(:proxy_passwd, proxy_passwd),
+                                                                                download_user = coalesce(:download_user, download_user),
+                                                                                download_passwd = coalesce(:download_passwd, download_passwd),
+                                                                                connections = coalesce(:connections, connections),
+                                                                                limit = coalesce(:limit, limit),
+                                                                                download_path = coalesce(:download_path, download_path),
+                                                                                referer = coalesce(:referer, referer),
+                                                                                load_cookies = coalesce(:load_cookies, load_cookies),
+                                                                                user_agent = coalesce(:user_agent, user_agent),
+                                                                                header = coalesce(:header, header),
+                                                                                after_download = coalesce(:after_download , after_download),
+                                                                                error = coalesce(:error, error)
+                                                                                WHERE gid = :gid""", dict)                                                                                    })
+        self.persepolis_db_connection.commit() 
+
     # return category information in category_db_table
     def searchCategoryInCategoryTable(self, category):
         self.persepolis_db_cursor.execute("""SELECT * FROM category_db_table WHERE category = {}""".format(str(category)))

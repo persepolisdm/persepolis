@@ -304,14 +304,15 @@ def tellStatus(gid, persepolis_db):
 
         download_path = add_link_dictionary['download_path']
 
-        # if user specified download_path is not equal to persepolis_setting download_path, 
+        # if user specified download_path is equal to persepolis_setting download_path, 
         # then subfolder must added to download path. 
         if persepolis_setting.value('settings/download_path') == download_path:
             download_path = findDownloadPath(
                 file_name, download_path, persepolis_setting.value('settings/subfolder'))
-                add_link_dictionary['final_download_path'] = final_download_path
 
         file_path = downloadCompleteAction(path, download_path, file_name)
+        add_link_dictionary['download_path'] = download_path
+        persepolis_db.updateAddLinkTable([add_link_dictionary])
 ######################################
     if (status_str == "error"):
         add_link_dictionary["error"] = str(download_status['errorMessage'])
@@ -487,6 +488,7 @@ def convertDownloadInformation(download_status):
 
 # download complete actions!
 # this method is returning file_path of file in the user's download folder
+# and move downloaded file after download completion.
 def downloadCompleteAction(path, download_path, file_name):
     i = 1
     file_path = os.path.join(download_path, file_name)
@@ -501,7 +503,7 @@ def downloadCompleteAction(path, download_path, file_name):
         file_path = os.path.join(download_path, new_name)
         i = i + 1
 
-#move the file to the download folder
+# move the file to the download folder
     try:
         shutil.copy(str(path) ,str(file_path) )
         os.remove(path)
