@@ -269,6 +269,10 @@ class CheckDownloadInfoThread(QThread):
                 active_gid_list = self.parent.persepolis_db.findActiveDownloads()
 
                 # get download status of active downloads from aria2
+                # download_status_list is a list that contains some dictionaries.  
+                # every dictionary contains download information. 
+                # gid_list is a list that contains gid of downloads in download_status_list. 
+                # see download.py file for more information. 
                 gid_list, download_status_list = download.tellActive()
 
                 if len(active_gid_list) != 0:
@@ -276,10 +280,15 @@ class CheckDownloadInfoThread(QThread):
                         gid = row[0]
 
                         # if gid not in gid_list, so download is completed or stopped or error occured!
+                        # because aria2 returns active downloads status with tellActive function in download.py file. 
+                        # and compelete or stopped or errored downloads are not active downloads. 
                         # so we must get download information with tellStatus function.  
+                        # see download.py file (tellStatus and tellActive functions) for more information. 
                         if gid not in gid_list:  
-                            download.tellStatus(gid, self.parent.persepolis_db)
-
+                            returned_dict = download.tellStatus(gid, self.parent.persepolis_db)
+                            download_status_list.append(returned_dict)
+                            gid_list.append(gid)
+# now we have a list that contains all download information. ^^^^^^^^^^^^^^ 
 ####################################################
 
                         try:

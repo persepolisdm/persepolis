@@ -268,9 +268,6 @@ def tellActive():
     for dict in download_status:
         converted_info_dict = convertDownloadInformation(dict)
 
-        # add gid of download as key to converted_info_dict
-        converted_info_dict ['gid'] = dict['gid'] 
-
         # add gid to gid_list
         gid_list.append(dict['gid'])
 
@@ -286,6 +283,7 @@ def tellStatus(gid, persepolis_db):
     try:
         download_status = server.aria2.tellStatus(
             gid, ['status', 'connections', 'errorCode', 'errorMessage', 'downloadSpeed', 'connections', 'dir', 'totalLength', 'completedLength', 'files'])
+        download_status['gid'] = str(gid)
     except:
         download_status = None 
         return download_status
@@ -311,42 +309,28 @@ def tellStatus(gid, persepolis_db):
                 file_name, download_path, persepolis_setting.value('settings/subfolder'))
 
         file_path = downloadCompleteAction(path, download_path, file_name)
-        add_link_dictionary['download_path'] = download_path
+
+        # update download_path in addlink_db_table
+        add_link_dictionary['download_path'] = file_path
         persepolis_db.updateAddLinkTable([add_link_dictionary])
-######################################
-    if (status_str == "error"):
-        add_link_dictionary["error"] = str(download_status['errorMessage'])
+
+# if an error occured!
+    if (converted_info_dict['status'] == "error"):
+        # add errorMessage to converted_info_dict
+        converted_info_dict['error'] = str(download_status['errorMessage'])
+
+        # remove download from aria2
         server.aria2.removeDownloadResult(gid)
 
-    if (status_str == "None"):
-        status_str = None
-
-# setting firs_try_date and last_try_date
-    date_list = add_link_dictionary['firs_try_date']
-    firs_try_date = str(date_list[0]) + '/' + str(date_list[1]) + '/' + str(
-        date_list[2]) + ' , ' + str(date_list[3]) + ':' + str(date_list[4]) + ':' + str(date_list[5])
-
-    date_list = add_link_dictionary['last_try_date']
-    last_try_date = str(date_list[0]) + '/' + str(date_list[1]) + '/' + str(
-        date_list[2]) + ' , ' + str(date_list[3]) + ':' + str(date_list[4]) + ':' + str(date_list[5])
-
-    download_info = [file_name, status_str, size_str, downloaded_str,  percent_str, connections_str,
-                     download_speed_str, estimate_time_left_str, None, add_link_dictionary, firs_try_date, last_try_date]
-
-    for i in range(12):
-        if download_info[i] != None:
-            download_info_file_list[i] = download_info[i]
-
-    writeList(download_info_file, download_info_file_list)
-
-    return ['ready', download_info_file_list[1]]
+    # return results in dictionary format
+    return converted_info_dict 
 
 # this function converts download information that received from aria2 in desired format.
+# input format must be a dictionary. 
 def convertDownloadInformation(download_status):
-# file_status contains name of download file
-
     # find file_name
     try:
+    # file_status contains name of download file
         file_status = str(download_status['files'])
         file_status = file_status[1:-1]
         file_status = ast.literal_eval(file_status)
@@ -474,6 +458,7 @@ def convertDownloadInformation(download_status):
 
 # return information in dictionary format
     download_info = {
+                    'gid': download_status['gid'],
                     'file_name': file_name,
                     'status': status_str,
                     'size': size_str,

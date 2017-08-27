@@ -162,7 +162,6 @@ class PersepolisDB():
                                                                                 user_agent TEXT,
                                                                                 header TEXT,
                                                                                 after_download TEXT,
-                                                                                error TEXT,
                                                                                 FOREIGN KEY(gid) REFERENCES download_db_table(gid) 
                                                                                 ON UPDATE CASCADE 
                                                                                 ON DELETE CASCADE 
@@ -239,7 +238,7 @@ class PersepolisDB():
                             start_time, end_time, link,
                             ip, port, proxy_user, proxy_passwd, download_user,
                             download_passwd, connections, limit, download_path,
-                            referer, load_cookies, user_agent, header, after_download, error):
+                            referer, load_cookies, user_agent, header, after_download):
 
         self.persepolis_db_cursor.execute("""INSERT INTO addlink_db_table VALUES(NULL,
                                                                                 :gid,
@@ -261,7 +260,6 @@ class PersepolisDB():
                                                                                 :user_agent,
                                                                                 :header,
                                                                                 :after_download
-                                                                                :error
                                                                                 )""", {
                                                                                     'gid' :gid,
                                                                                     'out': out,
@@ -281,8 +279,7 @@ class PersepolisDB():
                                                                                     'load_cookies': load_cookies,
                                                                                     'user_agent': user_agent,
                                                                                     'header': header,
-                                                                                    'after_download': after_download,
-                                                                                    'error': error
+                                                                                    'after_download': after_download
                                                                                     })
     self.persepolis_db_connection.commit() 
     
@@ -323,8 +320,7 @@ class PersepolisDB():
                 'load_cookies': tuple[15],
                 'user_agent': tuple[16],
                 'header': tuple[17],
-                'after_download': tuple[18],
-                'error': tuple[19]
+                'after_download': tuple[18]
                 }
 	return dict
 
@@ -348,8 +344,7 @@ class PersepolisDB():
                     'load_cookies',
                     'user_agent',
                     'header',
-                    'after_download',
-                    'error'
+                    'after_download'
                         ]
 
         for dict in list:
@@ -374,8 +369,7 @@ class PersepolisDB():
                                                                                 load_cookies = coalesce(:load_cookies, load_cookies),
                                                                                 user_agent = coalesce(:user_agent, user_agent),
                                                                                 header = coalesce(:header, header),
-                                                                                after_download = coalesce(:after_download , after_download),
-                                                                                error = coalesce(:error, error)
+                                                                                after_download = coalesce(:after_download , after_download)
                                                                                 WHERE gid = :gid""", dict)                                                                                    })
         self.persepolis_db_connection.commit() 
 
