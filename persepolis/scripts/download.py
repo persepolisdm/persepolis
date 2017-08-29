@@ -28,6 +28,11 @@ import platform
 import urllib.parse
 import traceback
 
+# Before reading this file, please read this link! 
+# this link helps you to understand this codes:
+# https://aria2.github.io/manual/en/html/aria2c.html#rpc-interface
+
+
 home_address = os.path.expanduser("~")
 
 os_type = platform.system()
@@ -259,7 +264,7 @@ def tellActive():
         downloads_status = server.aria2.tellActive(
             ['gid', 'status', 'connections', 'errorCode', 'errorMessage', 'downloadSpeed', 'connections', 'dir', 'totalLength', 'completedLength', 'files'])           
     except:
-        download_status = []
+        return None, None
 
     download_status_list = []
     gid_list = []
@@ -285,8 +290,7 @@ def tellStatus(gid, persepolis_db):
             gid, ['status', 'connections', 'errorCode', 'errorMessage', 'downloadSpeed', 'connections', 'dir', 'totalLength', 'completedLength', 'files'])
         download_status['gid'] = str(gid)
     except:
-        download_status = None 
-        return download_status
+        return None
 
     # convert download_status in desired format
     converted_info_dict = convertDownloadInformation(download_status)
@@ -330,7 +334,7 @@ def tellStatus(gid, persepolis_db):
 def convertDownloadInformation(download_status):
     # find file_name
     try:
-    # file_status contains name of download file
+    # file_status contains name of download file and link of download file
         file_status = str(download_status['files'])
         file_status = file_status[1:-1]
         file_status = ast.literal_eval(file_status)
@@ -340,8 +344,17 @@ def convertDownloadInformation(download_status):
 
         if not(file_name):
             file_name = None
+
+        uris = str(file_status['uris'])
+        uri = uris[0]
+        link = uri['uri']
+
     except:
+
         file_name = None
+        link = None
+
+
 
     for i in download_status.keys():
         if not(download_status[i]):
@@ -467,6 +480,7 @@ def convertDownloadInformation(download_status):
                     'connections': connections_str,
                     'rate': download_speed_str,
                     'estimate_time_left': estimate_time_left_str,
+                    'link': link
                     }
 
     return download_info

@@ -324,8 +324,51 @@ class PersepolisDB():
                 }
 	return dict
 
-# this method is updating addlink_db_table
-    def updateAddLinkTable(self,list):
+# this method updates download_db_table
+    def updateDownloadTable(self, list):
+        keys_list = ['file_name',
+                    'status',
+                    'size',
+                    'downloaded_size',
+                    'percent',
+                    'connections',
+                    'rate',
+                    'estimate_time_left',
+                    'gid',
+                    'link',
+                    'firs_try_date',
+                    'last_try_date',
+                    'category'
+                    ]
+
+        for dict in list:
+            for key in keys_list:
+                # if a key is missed in dict, 
+                # then add this key to the dict and assign None value for the key. 
+                if key not in dict.keys():
+                    dict[key] = None
+
+                # update data base if value for the keys is not None
+                self.persepolis_db_cursor.execute("""UPDATE download_db_table SET   file_name = coalesce(:file_name, file_name),
+                                                                                    status = coalesce(:status, status),
+                                                                                    size = coalesce(:size, size),
+                                                                                    downloaded_size = coalesce(:downloaded_size, downloaded_size),
+                                                                                    percent = coalesce(:percent, percent),
+                                                                                    connections = coalesce(:connections, connections),
+                                                                                    rate = coalesce(:rate, rate),
+                                                                                    estimate_time_left = coalesce(:estimate_time_left, estimate_time_left),
+                                                                                    link = coalesce(:link, link),
+                                                                                    first_try_date = coalesce(:firs_try_date, firs_try_date),
+                                                                                    last_try_date = coalesce(:last_try_date, last_try_date),
+                                                                                    category = coalesce(:category, category)
+                                                                                    WHERE gid = :gid""", dict)
+
+    # commit the changes
+    self.persepolis_db_connection.commit()
+
+
+# this method updates addlink_db_table
+    def updateAddLinkTable(self, list):
         keys_list = ['gid',
                     'out',
                     'start_time',
@@ -349,9 +392,12 @@ class PersepolisDB():
 
         for dict in list:
             for key in keys_list:  
+                # if a key is missed in dict, 
+                # then add this key to the dict and assign None value for the key. 
                 if key not in dict.keys():
                     dict[key] = None 
 
+                # update data base if value for the keys is not None
                 self.persepolis_db_cursor.execute("""UPDATE addlink_db_table SET    out = coalesce(:out, out),
                                                                                 start_time = coalesce(:start_time, start_time),
                                                                                 end_time = coalesce(:end_time, end_time),
@@ -371,7 +417,18 @@ class PersepolisDB():
                                                                                 header = coalesce(:header, header),
                                                                                 after_download = coalesce(:after_download , after_download)
                                                                                 WHERE gid = :gid""", dict)                                                                                    })
+        # commit the changes!
         self.persepolis_db_connection.commit() 
+    
+    def setDefaultGidInAddlinkTable(self, gid):
+        # change value of start_time and end_time and after_download for special gid
+        self.persepolis_db_cursor.execute("""UPDATE addlink_db_table SET start_time = NULL,
+                                                                        end_time = NULL,
+                                                                        after_download = NULL
+                                                                        WHERE gid = ? """, (gid))
+        self.persepolis_db_connection.commit()
+
+
 
     # return category information in category_db_table
     def searchCategoryInCategoryTable(self, category):
@@ -395,10 +452,12 @@ class PersepolisDB():
         self.persepolis_db_cursor.execute("""UPDATE download_db_table SET status = 'stopped' 
                                         WHERE status NOT IN ('compelete', 'error')""")
 
-    # change start_hour and start_minute and end_hour and end_minute and
+    # change start_time and end_time and
     # after_download value to None in addlink_db_table!
-        self.persepolis_db_cursor.execute("""UPDATE addlink_db_table SET start_hour = NULL, start_minute = NULL,
-                                    end_hour = NULL, end_minute = NULL, after_download = NULL""")
+        self.persepolis_db_cursor.execute("""UPDATE addlink_db_table SET start_time = NULL,
+                                                                        end_time = NULL,
+                                                                        after_download = NULL
+                                                                                        """)
     
         self.persepolis_db_connection.commit()
 
