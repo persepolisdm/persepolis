@@ -179,7 +179,7 @@ parser.add_argument('--parent-window', action='store', nargs = 1, help='this swi
 parser.add_argument('--version', action='version', version='Persepolis Download Manager 2.5a0')
 args = parser.parse_args()
 
-# Mozilla firefox flashgot is sending download information whith terminal arguments(link , referer , cookie , agent , headers , name )
+# Mozilla firefox plugin is sending download information whith terminal arguments(link , referer , cookie , agent , headers , name )
 # persepolis plugins (for chromium and chrome and opera and vivaldi and firefox) are using native message host system for 
 # sending download information to persepolis.
 # see this repo for more information:
@@ -287,13 +287,13 @@ else:
 
 # when browser plugins calls persepolis then persepolis is creating a request file in /tmp folder 
 # and link information added to plugins_db.db file( see data_base.py for more information).
-# persepolis mainwindow checks /tmp for flashgot request file every 2 seconds ( see CheckFlashgot class in mainwindow.py )
-# when requset received by CheckFlashgot, a popup window (AddLinkWindow) is coming up and window is getting additional download information
+# persepolis mainwindow checks /tmp for plugins request file every 2 seconds ( see CheckingThread class in mainwindow.py )
+# when requset received in CheckingThread, a popup window (AddLinkWindow) is coming up and window is getting additional download information
 # from user (port , proxy , ...) and download starts and request file deleted
 
 if ('link' in add_link_dictionary):   
-    # add add_link_dictionary to persepolis-flashgot
 
+    # add add_link_dictionary to plugins_db.
     from persepolis.scripts import PluginsDB
     
     # create an object for PluginsDB
@@ -306,7 +306,7 @@ if ('link' in add_link_dictionary):
     plugins_db.closeConnections()
 
     # notify that a link is added!
-    plugin_ready = os.path.join(persepolis_tmp, 'persepolis-flashgot-ready')
+    plugin_ready = os.path.join(persepolis_tmp, 'persepolis-plugin-ready')
     osCommands.touch(plugin_ready)
 
 
@@ -377,11 +377,13 @@ def main():
 
 
     # this section warns user that program is still running and no need to run it again
-    # and creating a file to notify mainwindow for showing
+    # and creating a file to notify mainwindow for showing itself!
+    # (see CheckingThread in mainwindow.py for more information)
         if not('link' in add_link_dictionary):
             show_window_file = os.path.join(persepolis_tmp, 'show-window')
             f = open(show_window_file, 'w')
             f.close()
+
         sys.exit(0)
 
 

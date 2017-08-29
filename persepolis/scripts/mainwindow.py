@@ -85,8 +85,8 @@ aria_startup_answer = 'None'
 global button_pressed_counter
 button_pressed_counter = 0
 
-global flashgot_checked_links
-flashgot_checked_links = False
+global plugin_links_checked
+plugin_links_checked = False
 
 home_address = os.path.expanduser("~")
 
@@ -149,8 +149,8 @@ queue_info_folder = os.path.join(config_folder, "queue_info")
 # single_downloads_list_file contains gid of non categorised downloads
 single_downloads_list_file = os.path.join(category_folder, "Single Downloads")
 
-# see persepolis file for show_window_file and flashgot_ready and flashgot_file
-flashgot_ready = os.path.join(persepolis_tmp, 'persepolis-flashgot-ready')
+# see persepolis.py file for show_window_file and plugin_ready and flashgot_file
+plugin_ready = os.path.join(persepolis_tmp, 'persepolis-plugin-ready')
 
 flashgot_file = os.path.join(persepolis_tmp, 'persepolis-flashgot')
 
@@ -225,6 +225,8 @@ class CheckSelectedRowThread(QThread):
 
 
 # This thread is getting download information from aria2 and updating database
+# this class is checking aria2 rpc connection! if aria rpc is not
+# available , this class restarts aria!
 class CheckDownloadInfoThread(QThread):
     DOWNLOAD_INFO_SIGNAL = pyqtSignal(list)
     RECONNECTARIASIGNAL = pyqtSignal(str)
@@ -640,13 +642,12 @@ class Queue(QThread):
                 self.REFRESHTOOLBARSIGNAL.emit(self.category)
 
 
-# CheckingThread have 3 duty!
-# 1-this class is checking that if user called flashgot .
-# 2-assume that user executed program before . if user is clicking on persepolis icon in menu this tread emits SHOWMAINWINDOWSIGNAL
-# 3-this class is checking aria2 rpc connection! if aria rpc is not
-# availabile , this class restarts aria!
+# CheckingThread have 2 duty!
+# 1-this class is checking that if user add a link with browsers plugin.
+# 2-assume that user executed program before .
+# if user is clicking on persepolis icon in menu this tread emits SHOWMAINWINDOWSIGNAL
 class CheckingThread(QThread):
-    CHECKFLASHGOTSIGNAL = pyqtSignal()
+    CHECKPLUGINDBSIGNAL = pyqtSignal()
     SHOWMAINWINDOWSIGNAL = pyqtSignal()
 
     def __init__(self):
@@ -654,55 +655,38 @@ class CheckingThread(QThread):
 
     def run(self):
         global shutdown_notification
-        global flashgot_checked_links
+        global plugin_links_checked
+
+# shutdown_notification = 0 >> persepolis is running 
+# 1 >> persepolis is ready for closing(closeEvent called) 
+# 2 >> OK, let's close application!
+
         while shutdown_notification == 0 and aria_startup_answer != 'ready':
             sleep(2)
-        j = 0
+
         while shutdown_notification == 0:
 
             # it means , user clicked on persepolis icon and persepolis is
             # still running. see persepolis file for more details.
-            if os.path.isfile(show_window_file) == True:
+            if os.path.isfile(show_window_file):
+                # OK! we catch notification! remove show_window_file now!
                 osCommands.remove(show_window_file)
+
+                # emit a singnal to notify MainWindow for showing itself!
                 self.SHOWMAINWINDOWSIGNAL.emit()
 
-            sleep(1)
+            # It means new browser plugin call is available!
+            if os.path.isfile(plugin_ready):
 
-            # It means new flashgot call is available!
-            if os.path.isfile(flashgot_ready) == True:
-                size = 0
-                # This loop check that is size of persepolis-flashgot changed or not.
-                # if it's changed , we have queue request and loop waits until
-                # all links inserted in persepolis-flashgot file
+                # OK! We catch notification! remove plugin_ready file
+                osCommands.remove(plugin_ready)
 
-                while size != os.path.getsize(flashgot_file):
-                    size = os.path.getsize(flashgot_file)
-                    sleep(0.3)
-
-                # When checkFlashgot method considered request , then
-                # flashgot_checked_links is changed to True
-                flashgot_checked_links = False
-                self.CHECKFLASHGOTSIGNAL.emit()  # notifiying that we have flashgot request
-                while flashgot_checked_links != True:  # wait for persepolis consideration!
+                # When checkPluginCall method considered request , then
+                # plugin_links_checked is changed to True
+                plugin_links_checked = False
+                self.CHECKPLUGINDBSIGNAL.emit()  # notifiying that we have flashgot request
+                while plugin_links_checked != True:  # wait for persepolis consideration!
                     sleep(0.5)
-
-            j = j + 1
-# every 39 seconds
-            if j == 39 or aria2_disconnected == 1:
-                j = 0
-                aria2_disconnected = 0
-                # checking aria2 availability by aria2Version function
-                answer = download.aria2Version()
-                if answer == 'did not respond':
-                    for i in range(5):
-                        answer = download.startAria()  # starting aria2
-                        if answer == 'did not respond' and i != 4:  # checking answer
-                            sleep(2)
-                        else:
-                            break
-                    # emitting answer , if answer is 'did not respond' , it
-                    # means that reconnecting aria was not successful
-                    self.RECONNECTARIASIGNAL.emit(str(answer))
 
 
 # if checking_flag is equal to 1, it means that user pressed remove or delete button or ... . so checking download information must be stopped until job is done!
@@ -875,6 +859,8 @@ class MainWindow(MainWindow_Ui):
         self.threadPool[0].ARIA2RESPONDSIGNAL.connect(self.startAriaMessage)
 
 # initializing
+        # create an object for PluginsDB
+        self.plugins_db = PluginsDB()
 
         # create an object for PersepolisDB
         self.persepolis_db = PersepolisDB()
@@ -907,8 +893,6 @@ class MainWindow(MainWindow_Ui):
                 self.download_table.setItem(0, i, item)
 
 
-#########################################################################################################
-
 # defining some lists and dictionaries for running addlinkwindows and
 # propertieswindows and propertieswindows , ...
         self.addlinkwindows_list = []
@@ -937,15 +921,16 @@ class MainWindow(MainWindow_Ui):
         self.threadPool.append(check_selected_row)
         self.threadPool[2].start()
         self.threadPool[2].CHECKSELECTEDROWSIGNAL.connect(
-            self.checkSelectedRow)
+                                    self.checkSelectedRow)
 
 # CheckingThread
         check_flashgot = CheckingThread()
         self.threadPool.append(check_flashgot)
         self.threadPool[3].start()
-        self.threadPool[3].CHECKFLASHGOTSIGNAL.connect(self.checkFlashgot)
+        self.threadPool[3].CHECKPLUGINDBSIGNAL.connect(self.checkPluginCall)
         self.threadPool[3].SHOWMAINWINDOWSIGNAL.connect(self.showMainWindow)
 
+#######################################
 # keepAwake
         keep_awake = KeepAwakeThread()
         self.threadPool.append(keep_awake)
@@ -1529,14 +1514,16 @@ class MainWindow(MainWindow_Ui):
 
         return selected_row_return
 
+# this method actives/deactives QActions according to selected row!
     def checkSelectedRow(self):
         try:
+            # find row number
             item = self.download_table.selectedItems()
             selected_row_return = self.download_table.row(item[1])
         except:
             selected_row_return = None
 
-        if selected_row_return != None:
+        if selected_row_return:
             status = self.download_table.item(selected_row_return, 1).text()
             category = self.download_table.item(selected_row_return, 12).text()
 
@@ -1665,32 +1652,28 @@ class MainWindow(MainWindow_Ui):
             self.deleteFileAction.setEnabled(False)
 
 
-# when new user requests download with flashgot , this method called
-    def checkFlashgot(self):
-        global flashgot_checked_links
-        # this lines extract add_link_dictionary from persepolis-flashgot
-        f = Open(flashgot_file)
-        flashgot_lines = f.readlines()
-        f.close()
+# when user requests calls persepolis with browser plugin,
+# this method is called by CheckingThread.
+    def checkPluginCall(self):
+        global plugin_links_checked
 
-        # job is done! remove files!
-        f.remove()
-        osCommands.remove(flashgot_ready)
+        # get new links from plugins_db
+        list_of_links = self.plugins_db.returnNewLinks() 
 
-        # notifiying that job is done!and links are extracted flashgot_file
-        flashgot_checked_links = True
+        # notify that job is done!and new links received form plugins_db 
+        plugin_links_checked = True
 
-        if len(flashgot_lines) == 1:  # It means we have only one request from flashgot
-            flashgot_add_link_dictionary_str = flashgot_lines[0].strip()
-            flashgot_add_link_dictionary = ast.literal_eval(
-                flashgot_add_link_dictionary_str)
+        if len(list_of_links) == 1:  # It means we have only one link in list_of_links
 
-            # this line calls flashgotAddLink method with
-            # flashgot_add_link_dictionary
-            self.flashgotAddLink(flashgot_add_link_dictionary)
+            # this line calls flashgotAddLink method and send a dictionary that contains
+            # link information
+            self.flashgotAddLink(list_of_links[0])
 
-        else:  # we have queue request from flashgot
-            self.flashgotQueue(flashgot_lines)
+        else:  # we have queue request from browser plugin
+            self.flashgotQueue(list_of_links)
+
+        # TODO rewrite flashgotAddLink and flashgotQueue
+        ###################################
 
 # this method creates an addlinkwindow when user calls Persepolis whith
 # flashgot (Single Download)

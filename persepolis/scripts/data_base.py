@@ -85,6 +85,39 @@ class PluginsDB():
 
         self.plugins_db_connection.commit()
 
+# this method returns all new links in plugins_db_table
+    def returnNewLinks(self):
+        self.plugins_db_cursor.execute("""SELECT link, referer, load_cookies, user_agent, header, out
+                                            FROM plugins_db_table
+                                            WHERE status = 'new'""")
+
+        list = self.plugins_db_cursor.fetchall()
+
+        # chang all rows status to 'old'
+        self.plugins_db_cursor.execute("""UPDATE plugins_db_table SET status = 'old'
+                                            WHERE status = 'new'""")
+
+        # commit changes
+        self.plugins_db_connection.commit()
+
+        # create new_list
+        new_list = []
+
+        # put the information in tuples in dictionary format and add it to new_list
+        for tuple in list:
+            dict = {'link': tuple[0],
+                    'referer': tuple[1],
+                    'load_cookies': tuple[2],
+                    'user_agent': tuple[3],
+                    'header': tuple[4],
+                    'out': tuple[5]
+                    }
+
+            new_list.append(dict)
+
+        # return results
+        return new_list
+
     # close connections
     def closeConnections(self):
         self.plugins_db_connection.close()
