@@ -187,7 +187,7 @@ class AddLinkWindow(AddLinkWindow_Ui):
 
         # check name of flashgot link ->
         if ('out' in self.plugin_add_link_dictionary):
-            if str(self.plugin_add_link_dictionary['out']) != 'None':
+            if self.plugin_add_link_dictionary['out']:
                 self.change_name_lineEdit.setText(
                     str(self.plugin_add_link_dictionary['out']))
                 self.change_name_checkBox.setChecked(True)

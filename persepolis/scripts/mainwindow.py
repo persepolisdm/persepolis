@@ -901,7 +901,7 @@ class MainWindow(MainWindow_Ui):
         self.afterdownload_list = []
         self.text_queue_window_list = []
         self.about_window_list = []
-        self.flashgot_queue_window_list = []
+        self.plugin_queue_window_list = []
         self.checkupdatewindow_list = []
         self.logwindow_list = []
         self.progress_window_list_dict = {}
@@ -1665,24 +1665,24 @@ class MainWindow(MainWindow_Ui):
 
         if len(list_of_links) == 1:  # It means we have only one link in list_of_links
 
-            # this line calls flashgotAddLink method and send a dictionary that contains
+            # this line calls pluginAddLink method and send a dictionary that contains
             # link information
-            self.flashgotAddLink(list_of_links[0])
+            self.pluginAddLink(list_of_links[0])
 
         else:  # we have queue request from browser plugin
-            self.flashgotQueue(list_of_links)
+            self.pluginQueue(list_of_links)
 
-        # TODO rewrite flashgotAddLink and flashgotQueue
-        ###################################
 
 # this method creates an addlinkwindow when user calls Persepolis whith
-# flashgot (Single Download)
-    def flashgotAddLink(self, flashgot_add_link_dictionary):
+# browsers plugin (Single Download)
+    def pluginAddLink(self, add_link_dictionary):
+        # create an object for AddLinkWindow and add it to addlinkwindows_list. 
         addlinkwindow = AddLinkWindow(
-            self, self.callBack, self.persepolis_setting, flashgot_add_link_dictionary)
+            self, self.callBack, self.persepolis_setting, add_link_dictionary)
         self.addlinkwindows_list.append(addlinkwindow)
         self.addlinkwindows_list[len(self.addlinkwindows_list) - 1].show()
-        # bringing addlinkwindow on top
+
+        # bring addlinkwindow on top
         self.addlinkwindows_list[len(self.addlinkwindows_list) - 1].raise_()
         self.addlinkwindows_list[len(self.addlinkwindows_list) - 1].activateWindow()
 
@@ -3106,19 +3106,21 @@ class MainWindow(MainWindow_Ui):
             # return queue_name
             return queue_name
 
-    def flashgotQueue(self, flashgot_lines):
-        flashgot_queue_window = FlashgotQueue(
-            self, flashgot_lines, self.queueCallback, self.persepolis_setting)
-        self.flashgot_queue_window_list.append(flashgot_queue_window)
-        self.flashgot_queue_window_list[len(
-            self.flashgot_queue_window_list) - 1].show()
+# ths method creates a FlashgotQueue window for list of links.
+    def pluginQueue(self, list_of_links):
+        # create window
+        plugin_queue_window = FlashgotQueue(
+            self, list_of_links, self.queueCallback, self.persepolis_setting)
+        self.plugin_queue_window_list.append(plugin_queue_window)
+        self.plugin_queue_window_list[len(
+            self.plugin_queue_window_list) - 1].show()
 
-        # bringing flashgot_queue_window on top
-        self.flashgot_queue_window_list[len(
-            self.flashgot_queue_window_list) - 1].raise_()
-        self.flashgot_queue_window_list[len(
-            self.flashgot_queue_window_list) - 1].activateWindow()
-
+        # bring plugin_queue_window on top
+        self.plugin_queue_window_list[len(
+            self.plugin_queue_window_list) - 1].raise_()
+        self.plugin_queue_window_list[len(
+            self.plugin_queue_window_list) - 1].activateWindow()
+# TODO FlashgotQueue file must be checked and callbacks must be checked
 
 
 # this method is importing text file for creating queue . text file must
