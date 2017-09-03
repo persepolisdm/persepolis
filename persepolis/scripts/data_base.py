@@ -496,7 +496,8 @@ class PersepolisDB():
 
     def findActiveDownloads(self):
         # find download items is download_db_table with status = "downloading" or satatus = "waiting"
-        self.persepolis_db_cursor.execute("""SELECT gid FROM download_db_table WHERE status = 'downloading' OR status = 'waiting'""")
+        self.persepolis_db_cursor.execute("""SELECT gid FROM download_db_table WHERE status = 'downloading' OR status = 'waiting' 
+                                            OR status = 'scheduled'""")
         return self.persepolis_db_cursor.fetchall()
 
     # close connections

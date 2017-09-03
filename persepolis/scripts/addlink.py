@@ -420,19 +420,15 @@ class AddLinkWindow(AddLinkWindow_Ui):
 
         # get start time for download if user set that.
         if self.start_checkBox.isChecked() == False:
-            start_hour = None
-            start_minute = None
+            start_time = None
         else:
-            start_hour = str(self.start_hour_spinBox.value())
-            start_minute = str(self.start_minute_spinBox.value())
+            start_time = self.start_time_qDataTimeEdit.text()
 
         # get end time for download if user set that.
         if self.end_checkBox.isChecked() == False:
-            end_hour = None
-            end_minute = None
+            end_time = None
         else:
-            end_hour = str(self.end_hour_spinBox.value())
-            end_minute = str(self.end_minute_spinBox.value())
+            end_time = self.end_time_qDateTimeEdit.text()
 
         # check that if user set new name for download file.
         if self.change_name_checkBox.isChecked() == False:
@@ -462,16 +458,13 @@ class AddLinkWindow(AddLinkWindow_Ui):
         if not('load-cookies' in self.plugin_add_link_dictionary):
             self.plugin_add_link_dictionary['load-cookies'] = None
 
-        final_download_path = None
-
         now_date_list = download.nowDate()
         # save information in a dictionary(add_link_dictionary).
         self.add_link_dictionary = {'last_try_date': now_date_list, 'firs_try_date': now_date_list, 'out': out,
-                                    'final_download_path': final_download_path, 'start_hour': start_hour,
-                                    'start_minute': start_minute, 'end_hour': end_hour, 'end_minute': end_minute,
-                                    'link': link, 'ip': ip, 'port': port, 'proxy_user': proxy_user, 'proxy_passwd': proxy_passwd,
-                                    'download_user': download_user, 'download_passwd': download_passwd, 'connections': connections,
-                                    'limit': limit, 'download_path': download_path}
+                                    'start_time': start_time, 'end_time': end_time, 'link': link, 'ip': ip,
+                                    'port': port, 'proxy_user': proxy_user, 'proxy_passwd': proxy_passwd, 
+                                    'download_user': download_user, 'download_passwd': download_passwd,
+                                    'connections': connections, 'limit': limit, 'download_path': download_path}
 
         # add plugin_add_link_dictionary information to add_link_dictionary.
         for i in self.plugin_add_link_dictionary.keys():

@@ -1843,6 +1843,11 @@ class MainWindow(MainWindow_Ui):
                 item = QTableWidgetItem('waiting')
                 self.download_table.setItem(selected_row_return, 1, item)
 
+                now_date = download.nowDate()
+
+                item = QTableWidgetItem(now_date)
+                self.download_table.setItem(selected_row_return, 12, item)
+#####################################
                 sleep(1)
                 # new progress_window
                 self.progressBarOpen(gid)

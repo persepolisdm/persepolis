@@ -127,20 +127,15 @@ def downloadAria(gid):
     download_passwd = add_link_dictionary['download_passwd']
     connections = add_link_dictionary['connections']
     limit = str(add_link_dictionary['limit'])
-    start_hour = add_link_dictionary['start_hour']
-    start_minute = add_link_dictionary['start_minute']
-    end_hour = add_link_dictionary['end_hour']
-    end_minute = add_link_dictionary['end_minute']
+    start_time = add_link_dictionary['start_time']
+    end_time = add_link_dictionary['end_time']
     header = add_link_dictionary['header']
     out = add_link_dictionary['out']
     user_agent = add_link_dictionary['user-agent']
     cookies = add_link_dictionary['load-cookies']
     referer = add_link_dictionary['referer']
 
-    # setting time and date for last_try_date
-    now_date_list = nowDate()
-    add_link_dictionary['last_try_date'] = now_date_list
-
+###########################################
     # making header option
     header_list = []
     header_list.append("Cookie: " + str(cookies))
@@ -169,7 +164,7 @@ def downloadAria(gid):
     if len(header_list) == 0:
         header_list = None
 
-    if start_hour != None:
+    if start_time != None:
         download_info_file_list[1] = "scheduled"
 
     # writing new informations on download_info_file
@@ -181,7 +176,7 @@ def downloadAria(gid):
     else:
         ip_port = ""
 
-    if start_hour != None:
+    if start_time != None:
         start_time_status = startTime(start_hour, start_minute, gid)
     else:
         start_time_status = "downloading"
@@ -671,10 +666,9 @@ def activeDownloads():
 
 
 def nowDate():
-    date_list = []
-    for i in ['%Y', '%m', '%d', '%H', '%M', '%S']:
-        date_list.append(time.strftime(i))
-    return date_list
+    date = time.strftime("%Y/%m/%d , %H:%M:%S")
+    return date
+
 # sigmaTime get hours and minutes for input . convert hours to minutes and
 # return summation in minutes
 
