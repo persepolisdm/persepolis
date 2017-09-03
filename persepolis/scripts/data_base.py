@@ -321,7 +321,24 @@ class PersepolisDB():
     # return download information in download_db_table with special gid.
     def searchGidInDownloadTable(self, gid):
         self.persepolis_db_cursor.execute("""SELECT * FROM download_db_table WHERE gid = {}""".format(str(gid)))
-        return self.persepolis_db_cursor.fetchall()
+        list = self.persepolis_db_cursor.fetchall()
+        tuple = list[0]
+        dict = {'file_name': tuple[0],
+                'status': tuple[1],
+                'size': tuple[2],
+                'downloaded_size': tuple[3],
+                'percent': tuple[4],
+                'connections': tuple[5],
+                'rate': tuple[6],
+                'estimate_time_left': tuple[7],
+                'gid': tuple[8],
+                'link': tuple[9],
+                'firs_try_date': tuple[10],
+                'last_try_date': tuple[11],
+                'category': tuple[12]}
+
+        # return results
+        return dict
 
     # return all items in download_db_table
     def returnAllItemsInDownloadTable(self):
@@ -334,8 +351,7 @@ class PersepolisDB():
         self.persepolis_db_cursor.execute("""SELECT * FROM addlink_db_table WHERE gid = {}""".format(str(gid)))
         list = self.persepolis_db_cursor.fetchall()
         tuple = list[0]
-        dict = {
-                'gid' :tuple[0],
+        dict = {'gid' :tuple[0],
                 'out': tuple[1],
                 'start_time': tuple[2],
                 'end_minute': tuple[4],
@@ -353,8 +369,8 @@ class PersepolisDB():
                 'load_cookies': tuple[15],
                 'user_agent': tuple[16],
                 'header': tuple[17],
-                'after_download': tuple[18]
-                }
+                'after_download': tuple[18]}
+
 	return dict
 
 # this method updates download_db_table
@@ -495,9 +511,9 @@ class PersepolisDB():
         self.persepolis_db_connection.commit()
 
     def findActiveDownloads(self):
-        # find download items is download_db_table with status = "downloading" or satatus = "waiting"
+        # find download items is download_db_table with status = "downloading" or "waiting" or paused or scheduled
         self.persepolis_db_cursor.execute("""SELECT gid FROM download_db_table WHERE status = 'downloading' OR status = 'waiting' 
-                                            OR status = 'scheduled'""")
+                                            OR status = 'scheduled' OR status = 'paused'""")
         return self.persepolis_db_cursor.fetchall()
 
     # close connections

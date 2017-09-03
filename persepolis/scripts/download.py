@@ -111,12 +111,10 @@ def aria2Version():
 # this function is sending download request to aria2
 
 
-def downloadAria(gid):
+def downloadAria(gid, parent):
     # add_link_dictionary is a dictionary that contains user download request
     # information
-    download_info_file = os.path.join(download_info_folder, gid)
-    download_info_file_list = readList(download_info_file)
-    add_link_dictionary = download_info_file_list[9]
+    add_link_dictionary = parent.persepolis_db.searchGidInAddLinkTable(gid)
 
     link = add_link_dictionary['link']
     ip = add_link_dictionary['ip']
@@ -135,12 +133,13 @@ def downloadAria(gid):
     cookies = add_link_dictionary['load-cookies']
     referer = add_link_dictionary['referer']
 
-###########################################
+
+
     # making header option
     header_list = []
     header_list.append("Cookie: " + str(cookies))
 
-# converting Mega to Kilo, RPC does not Support floating point numbers. 
+# convert Mega to Kilo, RPC does not Support floating point numbers. 
     if limit != '0':
         limit_number = limit[:-1]
         limit_number = float(limit_number)
@@ -152,7 +151,7 @@ def downloadAria(gid):
             limit_unit = 'K'
         limit = str(limit_number) + limit_unit
 
- 
+# create header list 
     if header != None:
         semicolon_split_header = header.split('; ')
         for i in semicolon_split_header:
@@ -164,30 +163,42 @@ def downloadAria(gid):
     if len(header_list) == 0:
         header_list = None
 
-    if start_time != None:
-        download_info_file_list[1] = "scheduled"
+# update status and last_try_date in data_base 
+    if start_time:
+        status = "scheduled"
+    else:
+        status = "waiting"
 
-    # writing new informations on download_info_file
-    download_info_file_list[9] = add_link_dictionary
-    writeList(download_info_file, download_info_file_list)
+    # get last_try_date
+    now_date = download.nowDate()
 
+
+    # update data_base
+    dict = {'gid': gid, 'status': status, 'last_try_date': now_date}
+    parent.persepolis_db.updateDownloadTable([dict])
+
+
+    # create ip_port from ip and port
+    # for example "127.0.0.1:8118"
     if ip:
         ip_port = str(ip) + ":" + str(port)
     else:
         ip_port = ""
 
-    if start_time != None:
-        start_time_status = startTime(start_hour, start_minute, gid)
+    # call startTime if start_time is available
+    # startTime creates sleep loop if user set start_time
+    # see startTime function for more information. 
+    if start_time:
+        start_time_status = startTime(start_time, gid, parent)
     else:
         start_time_status = "downloading"
 
     if start_time_status == "scheduled":
-        # reading new limit option before starting download! perhaps user
-        # changed this in progress bar window
-        download_info_file_list = readList(download_info_file)
-        add_link_dictionary = download_info_file_list[9]
-
+        # read limit value again from data_base before starting download!
+        # perhaps user changed this in progress bar window
+        add_link_dictionary = parent.persepolis_db.searchGidInAddLinkTable(gid)
         limit = add_link_dictionary['limit']
+#################################
 
 # eliminating start_hour and start_minute!
         add_link_dictionary['start_hour'] = None
@@ -673,41 +684,46 @@ def nowDate():
 # return summation in minutes
 
 
-def sigmaTime(hour, minute):
+def sigmaTime(time):
+    hour, minute = time.split(":")
     return (int(hour)*60 + int(minute))
 
 # nowTime returns now time!
 def nowTime():
-    now_time_hour = time.strftime("%H")
-    now_time_minute = time.strftime("%M")
-    return sigmaTime(now_time_hour, now_time_minute)
+    now_time = time.strftime("%H:%M")
+    return sigmaTime(now_time)
 
 # this method is create sleep time,if user set "start time" for download.  
-def startTime(start_hour, start_minute, gid):
-    print("Download starts at " + start_hour + ":" + start_minute)
-    logger.sendToLog("Download starts at " + start_hour +
-                     ":" + start_minute, "INFO")
-    sigma_start = sigmaTime(start_hour, start_minute)  # getting sima time
-    sigma_now = nowTime()  # getting sigma now time
-    # getting download_info_file path
-    download_info_file = os.path.join(download_info_folder, gid)
+def startTime(start_time, gid, parent):
+    # write some messages
+    print("Download starts at " + start_time)
+    logger.sendToLog("Download starts at " + start_time, "INFO")
+
+    # get sigma
+    sigma_start = sigmaTime(start_time) 
+
+    # get sigma now time
+    sigma_now = nowTime()  
+
     status = 'scheduled'  # defining status
     while sigma_start != sigma_now:  # this loop is countinuing until download time arrival!
         time.sleep(2.1)
         sigma_now = nowTime()
-        try:  # this part is reading download informations for finding download status , perhaps user canceled download! try command used for avoiding some problems when readList reading files
-            download_info_file_list = readList(download_info_file)
-        except:
-            download_info_file_list = ['some_name', 'scheduled']
 
-        # if download_info_file_list[1] = stopped >> it means that user
-        # canceled download , and loop is breaking!
-        if download_info_file_list[1] == 'stopped':
+        # check download status from data_base
+        dict = parent.persepolis_db.searchGidInDownloadTable(gid)
+        data_base_download_status = dict['status']
+        
+        # if data_base_download_status = stopped >> it means that user
+        # canceled download , and loop must be breaked!
+        if data_base_download_status == 'stopped':
             status = 'stopped'
             break
         else:
             status = 'scheduled'
-    return status  # if user canceled download , then 'stopped' returns and if download time arrived then 'scheduled' returns!
+
+# if user canceled download , then return 'stopped' and if download time arrived then return 'scheduled'!
+    return status  
 
 
 def endTime(end_hour, end_minute, gid):

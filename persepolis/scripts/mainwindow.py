@@ -367,14 +367,15 @@ class SpiderThread(QThread):
 class DownloadLink(QThread):
     ARIA2NOTRESPOND = pyqtSignal()
 
-    def __init__(self, gid):
+    def __init__(self, gid, parent):
         QThread.__init__(self)
         self.gid = gid
+        self.parent = parent
 
     def run(self):
         # if request is not successful then persepolis is checking rpc
         # connection whith download.aria2Version() function
-        answer = download.downloadAria(self.gid)
+        answer = download.downloadAria(self.gid, self.parent)
         if answer == 'None':
             version_answer = download.aria2Version()
             if version_answer == 'did not respond':
@@ -1158,16 +1159,18 @@ class MainWindow(MainWindow_Ui):
             self.statusbar.showMessage('Reconnecting aria2...')
             logger.sendToLog('Reconnecting Aria2 ...', 'INFO')
 
-            #this section is checking download status of items in download table , if status is downloading then restarting this download.
+            #this section is checking download status of items in download table , if status is downloading then restarts this download.
             for row in range(self.download_table.rowCount()):
                 status_download_table = str(self.download_table.item( row , 1 ).text())
                 gid = self.download_table.item( row , 8).text()
+
                 if status_download_table == 'downloading':
-                    new_download = DownloadLink(gid)
+                    new_download = DownloadLink(gid, self)
                     self.threadPool.append(new_download)
                     self.threadPool[len(self.threadPool) - 1].start()
                     self.threadPool[len(
                         self.threadPool) - 1].ARIA2NOTRESPOND.connect(self.aria2NotRespond)
+
             # if status is paused , then this section is stopping download.
                 if status_download_table == 'paused':
                     download.downloadStop(gid)
@@ -1404,9 +1407,14 @@ class MainWindow(MainWindow_Ui):
                 self.persepolis_db.setDefaultGidInAddlinkTable(gid)
 
 
-                # TODO I must add more comments about system shutdown here!
-                # send shutdown signal to the shutdown script(if user
-                # selected shutdown for after download)
+                # if user selectes shutdown option after download progress 
+                # a file(shutdown_file) will be created with the name of gid in
+                # this folder "persepolis_tmp/shutdown/"
+                # and "wait" word will be written in this file.
+                # (see ShutDownThread and shutdown.py for more information)
+                # shutDown methode is checking that file every second .
+                # when "wait" changes to "shutdown" in that file then script is
+                # shutting down system
                 shutdown_file = os.path.join(
                         persepolis_tmp, 'shutdown', gid)
 
@@ -1425,6 +1433,8 @@ class MainWindow(MainWindow_Ui):
                                15000, 'warning', systemtray=self.system_tray_icon)
 
                     # write "shutdown" message in shutdown_file >> Shutdown system!
+                    # send shutdown signal to the shutdown script(if user
+                    # selected shutdown for after download)
                     f = Open(shutdown_file, 'w')
                     f.writelines('shutdown')
                     f.close()
@@ -1834,21 +1844,11 @@ class MainWindow(MainWindow_Ui):
 
             else:
                 # new download thread
-                new_download = DownloadLink(gid)
+                new_download = DownloadLink(gid, self)
                 self.threadPool.append(new_download)
                 self.threadPool[len(self.threadPool) - 1].start()
-                self.threadPool[len(self.threadPool) -
-                                1].ARIA2NOTRESPOND.connect(self.aria2NotRespond)
+                self.threadPool[len(self.threadPool) - 1].ARIA2NOTRESPOND.connect(self.aria2NotRespond)
 
-                item = QTableWidgetItem('waiting')
-                self.download_table.setItem(selected_row_return, 1, item)
-
-                now_date = download.nowDate()
-
-                item = QTableWidgetItem(now_date)
-                self.download_table.setItem(selected_row_return, 12, item)
-#####################################
-                sleep(1)
                 # new progress_window
                 self.progressBarOpen(gid)
 
@@ -2001,11 +2001,15 @@ class MainWindow(MainWindow_Ui):
 
 # This method creates new ProgressWindow
     def progressBarOpen(self, gid):
+
+        # create a progress_window
         progress_window = ProgressWindow(
-            parent=self, gid=gid, persepolis_setting=self.persepolis_setting)  # creating a progress window
-        # adding progress window to progress_window_list
+            parent=self, gid=gid, persepolis_setting=self.persepolis_setting)  
+
+        # add progress window to progress_window_list
         self.progress_window_list.append(progress_window)
         member_number = len(self.progress_window_list) - 1
+
         # in progress_window_list_dict , key is gid and value is member's
         # rank(number) in progress_window_list
         self.progress_window_list_dict[gid] = member_number
