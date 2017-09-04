@@ -47,32 +47,29 @@ elif os_type == 'Windows':
     config_folder = os.path.join(
         str(home_address), 'AppData', 'Local', 'persepolis_download_manager')
 
-download_info_folder = os.path.join(config_folder, "download_info")
-
-download_list_file = os.path.join(config_folder, "download_list_file")
-
-download_list_file_active = os.path.join(
-    config_folder, "download_list_file_active")
-
-# setting
+# persepolis setting
 persepolis_setting = QSettings('persepolis_download_manager', 'persepolis')
 
+# host is localhost
 host = 'localhost'
+
+# get port from persepolis_setting
 port = int(persepolis_setting.value('settings/rpc-port'))
 
-# RPC
+# xml rpc
 SERVER_URI_FORMAT = 'http://{}:{:d}/rpc'
 server_uri = SERVER_URI_FORMAT.format(host, port)
 server = xmlrpc.client.ServerProxy(server_uri, allow_none=True)
 
-# starting aria2 with RPC
-
-
+# start aria2 with RPC
 def startAria():
+    # in Linux and BSD
     if os_type == 'Linux' or os_type == 'FreeBSD' or os_type == 'OpenBSD':
         os.system("aria2c --version 1> /dev/null")
         os.system("aria2c --no-conf  --enable-rpc --rpc-listen-port '" +
                   str(port) + "' --rpc-max-request-size=2M --rpc-listen-all --quiet=true &")
+
+    # in macintosh
     elif os_type == 'Darwin':
         cwd = sys.argv[0]
         cwd = os.path.dirname(cwd)
@@ -81,6 +78,7 @@ def startAria():
         os.system("'" + aria2d + "' --no-conf  --enable-rpc --rpc-listen-port '" +
                   str(port) + "' --rpc-max-request-size=2M --rpc-listen-all --quiet=true &")
 
+    # in Windows
     elif os_type == 'Windows':
         NO_WINDOW = 0x08000000
         cwd = sys.argv[0]
@@ -92,28 +90,32 @@ def startAria():
                           '--rpc-max-request-size=2M', '--rpc-listen-all', '--quiet=true'], shell=False, creationflags=NO_WINDOW)
 
     time.sleep(2)
+
+    # check that starting is successful or not!
     answer = aria2Version()
+
+    # return result
     return answer
 
-# checking aria2 release version . Persepolis is usig this function to
-# check that aria2 RPC conection is available or not
-
-
+# check aria2 release version . Persepolis uses this function to
+# check that aria2 RPC conection is available or not. 
 def aria2Version():
     try:
         answer = server.aria2.getVersion()
     except:
+        # write ERROR messages in terminal and log
         print("aria2 did not respond!")
         logger.sendToLog("Aria2 didn't respond!", "ERROR")
         answer = "did not respond"
+
     return answer
 
-# this function is sending download request to aria2
-
-
+# this function sends download request to aria2
 def downloadAria(gid, parent):
     # add_link_dictionary is a dictionary that contains user download request
-    # information
+    # information. 
+
+    # get information from data_base
     add_link_dictionary = parent.persepolis_db.searchGidInAddLinkTable(gid)
 
     link = add_link_dictionary['link']
@@ -135,7 +137,7 @@ def downloadAria(gid, parent):
 
 
 
-    # making header option
+    # make header option
     header_list = []
     header_list.append("Cookie: " + str(cookies))
 
@@ -178,7 +180,7 @@ def downloadAria(gid, parent):
     parent.persepolis_db.updateDownloadTable([dict])
 
 
-    # create ip_port from ip and port
+    # create ip_port from ip and port in desired format. 
     # for example "127.0.0.1:8118"
     if ip:
         ip_port = str(ip) + ":" + str(port)
@@ -198,22 +200,16 @@ def downloadAria(gid, parent):
         # perhaps user changed this in progress bar window
         add_link_dictionary = parent.persepolis_db.searchGidInAddLinkTable(gid)
         limit = add_link_dictionary['limit']
-#################################
 
-# eliminating start_hour and start_minute!
-        add_link_dictionary['start_hour'] = None
-        add_link_dictionary['start_minute'] = None
-        download_info_file_list[9] = add_link_dictionary
-        writeList(download_info_file, download_info_file_list)
+# set start_time value to None in data_base!
+        parent.persepolis_db.setDefaultGidInAddlinkTable(gid, start_time = True)
 
-
-# finding download_path_temp from persepolis_setting
+# find download_path_temp from persepolis_setting
     persepolis_setting.sync()
-    download_path_temp = persepolis_setting.value(
-        'settings/download_path_temp')
+    download_path_temp = persepolis_setting.value('settings/download_path_temp')
 
     if start_time_status != 'stopped':
-        # sending download request to aria2
+        # send download request to aria2
         aria_dict = {
             'gid': gid,
             'max-tries': str(persepolis_setting.value('settings/max-tries')),
@@ -245,10 +241,16 @@ def downloadAria(gid, parent):
 
             print(answer + " Starts")
             logger.sendToLog(answer + " Starts", 'INFO')
-            if end_hour != None:
-                endTime(end_hour, end_minute, gid)
+            if end_time:
+                endTime(end_time, gid, parent)
 
         except:
+
+            # write error status in data_base
+            dict = {'gid': gid, 'status': 'error'}
+            parent.persepolis_db.updateDownloadTable([dict])
+
+            # write ERROR messages in log
             print("Download did not start")
             logger.sendToLog("Download did not start", "ERROR")
             error_message = str(traceback.format_exc())
@@ -256,8 +258,8 @@ def downloadAria(gid, parent):
             print(error_message)
 
 
-# if request was unsuccessful return None!
-            return 'None'
+            # return None!
+            return None
     else:
         # if start_time_status is "stopped" it means download Canceled by user
         print("Download Canceled")
@@ -521,23 +523,38 @@ def downloadCompleteAction(path, download_path, file_name):
     return str(file_path)
 
 
-# this function is returning folder of download according to file extension
+# this function returns folder of download according to file extension
 def findDownloadPath(file_name, download_path, subfolder):
 
     file_name_split = file_name.split('.')
     file_extension = file_name_split[-1]
-    # converting extension letters to lower case
+
+    # convert extension letters to lower case
+    # for example "JPG" will be converted in "jpg"
     file_extension = file_extension.lower()
+
+    # audio formats
     audio = ['act', 'aiff', 'aac', 'amr', 'ape', 'au', 'awb', 'dct', 'dss', 'dvf', 'flac', 'gsm', 'iklax', 'ivs', 'm4a',
              'm4p', 'mmf', 'mp3', 'mpc', 'msv', 'ogg', 'oga', 'opus', 'ra', 'raw', 'sln', 'tta', 'vox', 'wav', 'wma', 'wv']
+
+    # video formats
     video = ['3g2', '3gp', 'asf', 'avi', 'drc', 'flv', 'm4v', 'mkv', 'mng', 'mov', 'qt', 'mp4', 'm4p', 'mpg', 'mp2',
              'mpeg', 'mpe', 'mpv', 'm2v', 'mxf', 'nsv', 'ogv', 'rmvb', 'roq', 'svi', 'vob', 'webm', 'wmv', 'yuv', 'rm']
+
+    # document formats
     document = ['doc', 'docx', 'html', 'htm', 'fb2', 'odt', 'sxw', 'pdf', 'ps', 'rtf', 'tex', 'txt', 'epub', 'pub'
                 'mobi', 'azw', 'azw3', 'azw4', 'kf8', 'chm', 'cbt', 'cbr', 'cbz', 'cb7', 'cba', 'ibooks', 'djvu', 'md']
-    compressed = ['a', 'ar', 'cpio', 'shar', 'LBR', 'iso', 'lbr', 'mar', 'tar', 'bz2', 'F', 'gz', 'lz', 'lzma', 'lzo', 'rz', 'sfark', 'sz', 'xz', 'Z', 'z', 'infl', '7z', 's7z', 'ace', 'afa', 'alz', 'apk', 'arc', 'arj', 'b1', 'ba', 'bh', 'cab', 'cfs', 'cpt', 'dar', 'dd', 'dgc', 'dmg', 'ear', 'gca', 'ha', 'hki', 'ice', 'jar', 'kgb', 'lzh', 'lha', 'lzx',
-                  'pac', 'partimg', 'paq6', 'paq7', 'paq8', 'pea', 'pim', 'pit', 'qda', 'rar', 'rk', 'sda', 'sea', 'sen', 'sfx', 'sit', 'sitx', 'sqx', 'tar.gz', 'tgz', 'tar.Z', 'tar.bz2', 'tbz2', 'tar.lzma', 'tlz', 'uc', 'uc0', 'uc2', 'ucn', 'ur2', 'ue2', 'uca', 'uha', 'war', 'wim', 'xar', 'xp3', 'yz1', 'zip', 'zipx', 'zoo', 'zpaq', 'zz', 'ecc', 'par', 'par2']
 
+    # compressed formats
+    compressed = ['a', 'ar', 'cpio', 'shar', 'LBR', 'iso', 'lbr', 'mar', 'tar', 'bz2', 'F', 'gz', 'lz', 'lzma', 'lzo',
+            'rz', 'sfark', 'sz', 'xz', 'Z', 'z', 'infl', '7z', 's7z', 'ace', 'afa', 'alz', 'apk', 'arc', 'arj', 'b1',
+            'ba', 'bh', 'cab', 'cfs', 'cpt', 'dar', 'dd', 'dgc', 'dmg', 'ear', 'gca', 'ha', 'hki', 'ice', 'jar', 'kgb',
+            'lzh', 'lha', 'lzx', 'pac', 'partimg', 'paq6', 'paq7', 'paq8', 'pea', 'pim', 'pit', 'qda', 'rar', 'rk', 'sda',
+            'sea', 'sen', 'sfx', 'sit', 'sitx', 'sqx', 'tar.gz', 'tgz', 'tar.Z', 'tar.bz2', 'tbz2', 'tar.lzma', 'tlz', 'uc',
+            'uc0', 'uc2', 'ucn', 'ur2', 'ue2', 'uca', 'uha', 'war', 'wim', 'xar', 'xp3', 'yz1', 'zip', 'zipx', 'zoo', 'zpaq',
+            'zz', 'ecc', 'par', 'par2']
 
+    # return download_path
     if str(subfolder) == 'yes':
         if file_extension in audio:
             return os.path.join(download_path, 'Audios')
@@ -563,13 +580,13 @@ def shutDown():
         answer = server.aria2.shutdown()
         print("Aria2 Shutdown : " + str(answer))
         logger.sendToLog("Aria2 Shutdown : " + str(answer), "INFO")
-        return 'ok'
+        return True 
     except:
         print("Aria2 Shutdown Error")
         logger.sendToLog("Aria2 Shutdown Error", "ERROR")
-        return 'error'
+        return False
 
-
+##############
 # downloadStop stops download completely
 def downloadStop(gid):
     download_info_file = os.path.join(download_info_folder, gid)
@@ -699,14 +716,16 @@ def startTime(start_time, gid, parent):
     print("Download starts at " + start_time)
     logger.sendToLog("Download starts at " + start_time, "INFO")
 
-    # get sigma
+    # start_time that specified by user
     sigma_start = sigmaTime(start_time) 
 
-    # get sigma now time
+    # get current time
     sigma_now = nowTime()  
 
-    status = 'scheduled'  # defining status
-    while sigma_start != sigma_now:  # this loop is countinuing until download time arrival!
+    status = 'scheduled'
+
+  # this loop is countinuing until download time arrival!
+    while sigma_start != sigma_now:
         time.sleep(2.1)
         sigma_now = nowTime()
 
@@ -726,54 +745,52 @@ def startTime(start_time, gid, parent):
     return status  
 
 
-def endTime(end_hour, end_minute, gid):
-    time.sleep(1)
+def endTime(end_time, gid, parent):
     print("end time is actived " + gid)
     logger.sendToLog("End time is activated " + gid, "INFO")
-    sigma_end = sigmaTime(end_hour, end_minute)
-    sigma_now = nowTime()
-    download_info_file = os.path.join(download_info_folder, gid)
+    sigma_end = sigmaTime(end_time)
 
+    # get current time
+    sigma_now = nowTime()
+
+    # while current time is not equal to end_time, continue the loop
     while sigma_end != sigma_now:
-        status_file = 'no'
-# waiting for start downloading :
-        while status_file == 'no':
-            time.sleep(0.5)
-            try:
-                download_info_file_list = readList(download_info_file)
-                status_file = 'yes'
-                status = download_info_file_list[1]
-            except:
-                status_file = 'no'
-# checking download's status
+
+        # get download status from data_base
+        dict = parent.persepolis_db.searchGidInDownloadTable(gid) 
+        status = dict['status']
+
+        # check download status
         if status == 'downloading' or status == 'paused' or status == 'waiting':
+            # download continues!
             answer = 'continue'
         else:
+            # Download completed or stopped by user
+            # so break the loop
             answer = 'end'
             print("Download ended before! " + str(gid))
             logger.sendToLog("Download has been finished! " + str(gid), "INFO")
             break
 
+        # get current time
         sigma_now = nowTime()
         time.sleep(2.1)
 
+    # Time is up!
     if answer != 'end':
         print("Time is Up")
         logger.sendToLog("Time is up!", "INFO")
         answer = downloadStop(gid)
         i = 0
-        # trying to stop download 10 times
+        # try to stop download 10 times
         while answer == 'None' and (i <= 9):
             time.sleep(1)
             answer = downloadStop(gid)
             i = i + 1
+
+        # If aria2c not respond, so kill it. R.I.P :)) 
         if (answer == 'None') and (os_type != 'Windows'):
             os.system("killall aria2c")
 
-        download_info_file_list = readList(download_info_file)
-        add_link_dictionary = download_info_file_list[9]
-        add_link_dictionary['end_hour'] = None
-        add_link_dictionary['end_minute'] = None
-        download_info_file_list[9] = add_link_dictionary
-        download_info_file_list[1] = "stopped"
-        writeList(download_info_file, download_info_file_list)
+        # change end_time value to None in data_base
+        parent.persepolis_db.setDefaultGidInAddlinkTable(gid, end_time = True)

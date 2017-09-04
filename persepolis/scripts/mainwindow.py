@@ -290,11 +290,16 @@ class CheckDownloadInfoThread(QThread):
                         # and compelete or stopped or errored downloads are not active downloads. 
                         # so we must get download information with tellStatus function.  
                         # see download.py file (tellStatus and tellActive functions) for more information. 
+                        # if aria do not return download information with tellStatus and tellActive,
+                        # then perhaps some error occured.so download information must be in data_base. 
                         if gid not in gid_list:  
                             returned_dict = download.tellStatus(gid, self.parent.persepolis_db)
                             if returned_dict:
                                 download_status_list.append(returned_dict)
-                                gid_list.append(gid)
+                            else:
+                                # check data_base
+                                returned_dict = self.parent.persepolis_db.searchGidInDownloadTable(gid)
+                                download_status_list.append(returned_dict)
 
                             # if returned_dict in None, check for availability of RPC connection.
                             else:
@@ -376,8 +381,10 @@ class DownloadLink(QThread):
         # if request is not successful then persepolis is checking rpc
         # connection whith download.aria2Version() function
         answer = download.downloadAria(self.gid, self.parent)
-        if answer == 'None':
+        if not(answer):
             version_answer = download.aria2Version()
+
+            # TODO version_answer must be changed to True or false or None and version number
             if version_answer == 'did not respond':
                 self.ARIA2NOTRESPOND.emit()
 
@@ -619,8 +626,9 @@ class Queue(QThread):
 # select shutdown for after download)
             if self.after == True:
                 answer = download.shutDown()
-# KILL aria2c if didn't respond
-                if (answer == 'error') and (os_type != 'Windows'):
+
+# KILL aria2c if didn't respond. R.I.P :))
+                if not(answer) and (os_type != 'Windows'):
                     os.system('killall aria2c')
 
                 shutdown_file = os.path.join(
@@ -1404,7 +1412,7 @@ class MainWindow(MainWindow_Ui):
 
                 # set "None" for start_time and end_time and after_download value 
                 # in data_base, because download has finished
-                self.persepolis_db.setDefaultGidInAddlinkTable(gid)
+                self.persepolis_db.setDefaultGidInAddlinkTable(gid, start_time = True, end_time = True, after_download = True)
 
 
                 # if user selectes shutdown option after download progress 
@@ -1424,8 +1432,8 @@ class MainWindow(MainWindow_Ui):
                     # shutdown aria!
                     answer = download.shutDown()
 
-                    # KILL aria2c in Unix like systems, if didn't respond
-                    if (answer == 'error') and (os_type != 'Windows'):
+                    # KILL aria2c in Unix like systems, if didn't respond. R.I.P :))
+                    if not(answer) and (os_type != 'Windows'):
                         os.system('killall aria2c')
 
                     # send notification
