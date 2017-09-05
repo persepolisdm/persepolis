@@ -293,7 +293,7 @@ class CheckDownloadInfoThread(QThread):
                         # if aria do not return download information with tellStatus and tellActive,
                         # then perhaps some error occured.so download information must be in data_base. 
                         if gid not in gid_list:  
-                            returned_dict = download.tellStatus(gid, self.parent.persepolis_db)
+                            returned_dict = download.tellStatus(gid, self.parent)
                             if returned_dict:
                                 download_status_list.append(returned_dict)
                             else:
@@ -561,7 +561,7 @@ class Queue(QThread):
                         status = 'downloading'
 
                     if self.stop == True:  # it means user stopped queue
-                        answer = download.downloadStop(gid)
+                        answer = download.downloadStop(gid, self.parent)
                     # if aria2 did not respond , then this function is checking
                     # for aria2 availability , and if aria2 disconnected then
                     # aria2Disconnected is executed
@@ -1181,7 +1181,7 @@ class MainWindow(MainWindow_Ui):
 
             # if status is paused , then this section is stopping download.
                 if status_download_table == 'paused':
-                    download.downloadStop(gid)
+                    download.downloadStop(gid, self)
 
             self.statusbar.showMessage(
                 'Persepolis reconnected aria2 successfully')
@@ -1874,7 +1874,7 @@ class MainWindow(MainWindow_Ui):
 
         if selected_row_return != None:
             gid = self.download_table.item(selected_row_return, 8).text()
-            answer = download.downloadStop(gid)
+            answer = download.downloadStop(gid, self)
 # if aria2 did not respond , then this function is checking for aria2
 # availability , and if aria2 disconnected then aria2Disconnected is
 # executed
@@ -1901,7 +1901,7 @@ class MainWindow(MainWindow_Ui):
                 version_answer = download.aria2Version()
                 if version_answer == 'did not respond':
                     self.aria2Disconnected()
-                    download.downloadStop(gid)
+                    download.downloadStop(gid, self)
                     notifySend("Aria2 disconnected!", "Persepolis is trying to connect!be patient!",
                                10000, 'warning', systemtray=self.system_tray_icon)
                 else:
@@ -2161,7 +2161,7 @@ class MainWindow(MainWindow_Ui):
             download_info_file_list = readList(download_info_file)
             status = download_info_file_list[1]
             if status == 'downloading' or status == 'paused' or status == 'waiting':  # checking status of downloads
-                answer = download.downloadStop(gid)
+                answer = download.downloadStop(gid, self)
                 # if aria2 did not respond , then this function is checking for
                 # aria2 availability , and if aria2 disconnected then
                 # aria2Disconnected is executed

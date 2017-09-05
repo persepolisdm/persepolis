@@ -152,7 +152,7 @@ class ProgressWindow(ProgressWindow_Ui):
                 version_answer = download.aria2Version()
                 if version_answer == 'did not respond':
                     self.parent.aria2Disconnected()
-                    download.downloadStop(self.gid)
+                    download.downloadStop(self.gid, self.parent)
                     notifySend("Aria2 disconnected!", "Persepolis is trying to connect!be patient!",
                                10000, 'warning', systemtray=self.parent.system_tray_icon)
                 else:
@@ -160,7 +160,7 @@ class ProgressWindow(ProgressWindow_Ui):
                                'critical', systemtray=self.parent.system_tray_icon)
 
     def stopPushButtonPressed(self, button):
-        answer = download.downloadStop(self.gid)
+        answer = download.downloadStop(self.gid, self.parent)
 # if aria2 did not respond , then this function is checking for aria2
 # availability , and if aria2 disconnected then aria2Disconnected is
 # executed

@@ -202,7 +202,7 @@ def downloadAria(gid, parent):
         limit = add_link_dictionary['limit']
 
 # set start_time value to None in data_base!
-        parent.persepolis_db.setDefaultGidInAddlinkTable(gid, start_time = True)
+        parent.persepolis_db.setDefaultGidInAddlinkTable(gid, start_time=True)
 
 # find download_path_temp from persepolis_setting
     persepolis_setting.sync()
@@ -291,7 +291,7 @@ def tellActive():
     return gid_list, download_status_list
 
 # this function returns download status that specified by gid!
-def tellStatus(gid, persepolis_db):
+def tellStatus(gid, parent):
     # get download status from aria2
     try:
         download_status = server.aria2.tellStatus(
@@ -308,7 +308,7 @@ def tellStatus(gid, persepolis_db):
     if (converted_info_dict['status'] == "complete"):
  
         # find download_path from addlink_db_table in data_base
-        add_link_dictionary = persepolis_db.searchGidInAddLinkTable(gid)
+        add_link_dictionary = parent.persepolis_db.searchGidInAddLinkTable(gid)
 
         persepolis_setting.sync()
 
@@ -324,7 +324,7 @@ def tellStatus(gid, persepolis_db):
 
         # update download_path in addlink_db_table
         add_link_dictionary['download_path'] = file_path
-        persepolis_db.updateAddLinkTable([add_link_dictionary])
+        parent.persepolis_db.updateAddLinkTable([add_link_dictionary])
 
 # if an error occured!
     if (converted_info_dict['status'] == "error"):
@@ -586,40 +586,47 @@ def shutDown():
         logger.sendToLog("Aria2 Shutdown Error", "ERROR")
         return False
 
-##############
 # downloadStop stops download completely
-def downloadStop(gid):
-    download_info_file = os.path.join(download_info_folder, gid)
-    download_info_file_list = readList(download_info_file)
-# if status is scheduled so download request is not sended to aria2 yet!
-    status = download_info_file_list[1]
+# this function sends remove request to aria2
+# and changes status of download to "stopped" in data_base
+def downloadStop(gid, parent):
+    # get download status from data_base
+    dict = parent.persepolis_db.searchGidInDownloadTable(gid)
+    status = dict['status']
+
+    # if status is "scheduled", then download request has not been sended to aria2!
+    # so no need to send stop request to aria2. 
+    # if status in not "scheduled" so stop request must be sended to aria2. 
     if status != 'scheduled':
         try:
-            # this section is sending request to aria2 to removing download.
-            # see aria2 documentation for more informations
+            # send remove download request to aira2. 
+            # see aria2 documentation for more informations.
             answer = server.aria2.remove(gid)
             if status == 'downloading':
                 server.aria2.removeDownloadResult(gid)
         except:
-            answer = str("None")
+            answer = "None"
+
+        # write a messages in log and terminal
         print(answer + " stopped")
         logger.sendToLog(answer + " stopped", "INFO")
+
+    # if download has not been completed yet,
+    # so just chang status of download to "stopped" in data base.
     else:
         answer = 'stopped'
 
     if status != 'complete':
-        add_link_dictionary = download_info_file_list[9]
-        add_link_dictionary['start_hour'] = None
-        add_link_dictionary['start_minute'] = None
-        add_link_dictionary['end_hour'] = None
-        add_link_dictionary['end_minute'] = None
-        add_link_dictionary['after_download'] = 'None'
+        # change end_time and after_download value to None in date base
+        parent.persepolis_db.setDefaultGidInAddlinkTable(gid, end_time=True, after_download=True)
 
-        download_info_file_list[1] = "stopped"
-        download_info_file_list[9] = add_link_dictionary
-        writeList(download_info_file, download_info_file_list)
+        # change status of download to "stopped" in data base
+        dict = {'gid': gid, 'status': 'stopped'}        
+        parent.persepolis_db.updateAddLinkTable([dict])
+
     return answer
 
+##############
 
 # downloadPause pauses download
 def downloadPause(gid):
@@ -780,12 +787,12 @@ def endTime(end_time, gid, parent):
     if answer != 'end':
         print("Time is Up")
         logger.sendToLog("Time is up!", "INFO")
-        answer = downloadStop(gid)
+        answer = downloadStop(gid, parent)
         i = 0
         # try to stop download 10 times
         while answer == 'None' and (i <= 9):
             time.sleep(1)
-            answer = downloadStop(gid)
+            answer = downloadStop(gid, parent)
             i = i + 1
 
         # If aria2c not respond, so kill it. R.I.P :)) 
@@ -793,4 +800,4 @@ def endTime(end_time, gid, parent):
             os.system("killall aria2c")
 
         # change end_time value to None in data_base
-        parent.persepolis_db.setDefaultGidInAddlinkTable(gid, end_time = True)
+        parent.persepolis_db.setDefaultGidInAddlinkTable(gid, end_time=True)

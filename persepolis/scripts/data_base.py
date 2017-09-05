@@ -469,7 +469,7 @@ class PersepolisDB():
         # commit the changes!
         self.persepolis_db_connection.commit() 
     
-    def setDefaultGidInAddlinkTable(self, gid, start_time = False, end_time = False, after_download = False):
+    def setDefaultGidInAddlinkTable(self, gid, start_time=False, end_time=False, after_download=False):
         # change value of start_time and end_time and after_download for special gid to NULL value
         if start_time:
             self.persepolis_db_cursor.execute("""UPDATE addlink_db_table SET start_time = NULL
