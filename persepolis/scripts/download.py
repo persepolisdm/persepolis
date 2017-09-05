@@ -617,8 +617,9 @@ def downloadStop(gid, parent):
         answer = 'stopped'
 
     if status != 'complete':
-        # change end_time and after_download value to None in date base
-        parent.persepolis_db.setDefaultGidInAddlinkTable(gid, end_time=True, after_download=True)
+        # change start_time end_time and after_download value to None in date base
+        parent.persepolis_db.setDefaultGidInAddlinkTable(gid, 
+                start_time=True, end_time=True, after_download=True)
 
         # change status of download to "stopped" in data base
         dict = {'gid': gid, 'status': 'stopped'}        
