@@ -132,7 +132,7 @@ class ProgressWindow(ProgressWindow_Ui):
 # if aria2 did not respond , then this function is checking for aria2
 # availability , and if aria2 disconnected then aria2Disconnected is
 # executed
-            if answer == 'None':
+            if not(answer):
                 version_answer = download.aria2Version()
                 if version_answer == 'did not respond':
                     self.parent.aria2Disconnected()
@@ -148,7 +148,7 @@ class ProgressWindow(ProgressWindow_Ui):
 # if aria2 did not respond , then this function is checking for aria2
 # availability , and if aria2 disconnected then aria2Disconnected is
 # executed
-            if answer == 'None':
+            if not(answer):
                 version_answer = download.aria2Version()
                 if version_answer == 'did not respond':
                     self.parent.aria2Disconnected()

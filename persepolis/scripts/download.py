@@ -19,12 +19,10 @@ import os
 import time
 import ast
 import shutil
-from persepolis.scripts.newopen import Open, readList, writeList
 import platform
 import sys
 from persepolis.scripts import logger
 from PyQt5.QtCore import QSettings
-import platform
 import urllib.parse
 import traceback
 
@@ -627,45 +625,39 @@ def downloadStop(gid, parent):
 
     return answer
 
-##############
 
 # downloadPause pauses download
 def downloadPause(gid):
-    download_info_file = os.path.join(download_info_folder, gid)
-    readList(download_info_file)
-# this section is sending pause request to aira2 . see aria2 documentation
-# for more informations
+# see aria2 documentation for more information
+
+# send pause request to aira2 .
     try:
         answer = server.aria2.pause(gid)
-        version_answer = 'ok'
     except:
-        answer = str("None")
+        answer = None
 
-    print(answer + " paused")
-    logger.sendToLog(answer + " paused", "INFO")
+    print(str(answer) + " paused")
+    logger.sendToLog(str(answer) + " paused", "INFO")
     return answer
 
 
 # downloadUnpause unpauses download
 def downloadUnpause(gid):
-    download_info_file = os.path.join(download_info_folder, gid)
-    readList(download_info_file)
-# this section is sending unpause request to aria2 . see aria2
-# documentation for more informations.
     try:
+        # send unpause request to aria2
         answer = server.aria2.unpause(gid)
-        version_answer = 'ok'
     except:
-        answer = str("None")
+        answer = None
 
+    print(str(answer) + " unpaused")
+    logger.sendToLog(str(answer) + " unpaused", "INFO")
+ 
     return answer
 
-# limiting download speed
-
-
+#  limitSpeed limits download speed
 def limitSpeed(gid, limit):
     limit = str(limit)
-# converting Mega to Kilo, RPC does not Support floating point numbers. 
+# convert Mega to Kilo, RPC does not Support floating point numbers. 
     if limit != '0':
         limit_number = limit[:-1]
         limit_number = float(limit_number)
@@ -678,47 +670,54 @@ def limitSpeed(gid, limit):
         limit = str(limit_number) + limit_unit
 
     try:
-        answer = server.aria2.changeOption(gid, {'max-download-limit': limit})
+        server.aria2.changeOption(gid, {'max-download-limit': limit})
         print("Download speed limit value is changed")
         logger.sendToLog("Download speed limit  value is changed", "INFO")
 
     except:
-        str("None")
-# this function returning  GID of active downloads
+        print("speed limitation operation was unsuccessful")
+        logger.sendToLog("Speed limitation was unsuccessful", "ERROR")
 
 
+# this function returns GID of active downloads in list format. 
 def activeDownloads():
     try:
         answer = server.aria2.tellActive(['gid'])
     except:
         answer = []
+
     active_gids = []
     for i in answer:
+        # extract gid from dictionary
         dict = i
         gid = dict['gid']
+
+        # add gid to list
         active_gids.append(gid)
 
+    # return results
     return active_gids
 
 
+# This function returns data and time in string format
+# for example >> 2017/09/09 , 13:12:26
 def nowDate():
     date = time.strftime("%Y/%m/%d , %H:%M:%S")
     return date
 
-# sigmaTime get hours and minutes for input . convert hours to minutes and
-# return summation in minutes
-
-
+# sigmaTime gets hours and minutes for input. 
+# and converts hours to minutes and returns summation in minutes
+# input format is HH:MM
 def sigmaTime(time):
     hour, minute = time.split(":")
     return (int(hour)*60 + int(minute))
 
-# nowTime returns now time!
+# nowTime returns now time in HH:MM format!
 def nowTime():
     now_time = time.strftime("%H:%M")
     return sigmaTime(now_time)
 
-# this method is create sleep time,if user set "start time" for download.  
+# this function creates sleep time,if user sets "start time" for download.  
 def startTime(start_time, gid, parent):
     # write some messages
     print("Download starts at " + start_time)

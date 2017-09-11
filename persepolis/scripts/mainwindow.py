@@ -1822,25 +1822,28 @@ class MainWindow(MainWindow_Ui):
             self.threadPool.append(new_spider)
             self.threadPool[len(self.threadPool) - 1].start()
 
-# when user presses resume button this method called
+# when user presses resume button this method is called
     def resumeButtonPressed(self, button):
         self.resumeAction.setEnabled(False)
-        selected_row_return = self.selectedRow()  # finding user selected row
+
+        # find user selected row
+        selected_row_return = self.selectedRow()  
 
         if selected_row_return != None:
+            # find download gid
             gid = self.download_table.item(selected_row_return, 8).text()
             download_status = self.download_table.item(
                 selected_row_return, 1).text()
 
 # this 'if' checks status of download before resuming! If download status
-# is 'paused' then download must resumed and if status isn't 'paused' new
-# download thread must created !
+# is 'paused' then download must be resumed and if status isn't 'paused' new
+# download thread must be created !
             if download_status == "paused":
                 answer = download.downloadUnpause(gid)
-# if aria2 did not respond , then this function is checking for aria2
+# if aria2 did not respond , then this function checks for aria2
 # availability , and if aria2 disconnected then aria2Disconnected is
-# executed
-                if answer == 'None':
+# called. 
+                if not(answer):
                     version_answer = download.aria2Version()
                     if version_answer == 'did not respond':
                         self.aria2Disconnected()
@@ -1851,13 +1854,13 @@ class MainWindow(MainWindow_Ui):
                                    10000, 'warning', systemtray=self.system_tray_icon)
 
             else:
-                # new download thread
+                # create new download thread
                 new_download = DownloadLink(gid, self)
                 self.threadPool.append(new_download)
                 self.threadPool[len(self.threadPool) - 1].start()
                 self.threadPool[len(self.threadPool) - 1].ARIA2NOTRESPOND.connect(self.aria2NotRespond)
 
-                # new progress_window
+                # create new progress_window
                 self.progressBarOpen(gid)
 
 
@@ -1889,15 +1892,20 @@ class MainWindow(MainWindow_Ui):
 # this method called if user presses pause button in MainWindow
     def pauseButtonPressed(self, button):
         self.pauseAction.setEnabled(False)
-        selected_row_return = self.selectedRow()  # finding user selected row
+
+        # find selected row
+        selected_row_return = self.selectedRow()  
 
         if selected_row_return != None:
+            # find download gid
             gid = self.download_table.item(selected_row_return, 8).text()
+
+            # send pause request to aria2
             answer = download.downloadPause(gid)
-# if aria2 did not respond , then this function is checking for aria2
-# availability , and if aria2 disconnected then aria2Disconnected is
-# executed
-            if answer == 'None':
+
+            # if aria2 did not respond , then check aria2 availability!
+            # and if aria2 disconnected then call aria2Disconnected
+            if not(answer):
                 version_answer = download.aria2Version()
                 if version_answer == 'did not respond':
                     self.aria2Disconnected()
