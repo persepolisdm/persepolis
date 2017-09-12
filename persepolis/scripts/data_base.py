@@ -231,9 +231,7 @@ class PersepolisDB():
  
 
     # insert in to download_db_table in persepolis.db
-    def insertInDownloadTable(self, file_name, status, size, downloaded_size,
-                            percent, connections, rate, estimate_time_left,
-                            gid, link, firs_try_date, last_try_date):
+    def insertInDownloadTable(self, dict):
 
         self.persepolis_db_cursor.execute("""INSERT INTO download_db_table VALUES(
                                                                             :file_name,
@@ -249,30 +247,13 @@ class PersepolisDB():
                                                                             :firs_try_date,
                                                                             :last_try_date,
                                                                             :category
-                                                                            )""", {
-                                                                                'file_name': file_name,
-                                                                                'status': status,
-                                                                                'size': size,
-                                                                                'downloaded_size': downloaded_size,
-                                                                                'percent': percent,
-                                                                                'connections': connections,
-                                                                                'rate': rate,
-                                                                                'estimate_time_left': estimate_time_left,
-                                                                                'gid': gid,
-                                                                                'link': link,
-                                                                                'firs_try_date': firs_try_date,
-                                                                                'last_try_date': last_try_date,
-                                                                                'category': category
-                                                                                    })
+                                                                            )""", dict)
         self.persepolis_db_connection.commit()
 
     # insert in addlink table in persepolis.db 
-    def insertInAddLinkTable(self, gid, out, 
-                            start_time, end_time, link,
-                            ip, port, proxy_user, proxy_passwd, download_user,
-                            download_passwd, connections, limit, download_path,
-                            referer, load_cookies, user_agent, header, after_download):
+    def insertInAddLinkTable(self, dict):
 
+        # first column and after download column is NULL
         self.persepolis_db_cursor.execute("""INSERT INTO addlink_db_table VALUES(NULL,
                                                                                 :gid,
                                                                                 :out,
@@ -292,28 +273,8 @@ class PersepolisDB():
                                                                                 :load_cookies,
                                                                                 :user_agent,
                                                                                 :header,
-                                                                                :after_download
-                                                                                )""", {
-                                                                                    'gid' :gid,
-                                                                                    'out': out,
-                                                                                    'start_time': start_time,
-                                                                                    'end_minute': end_time,
-                                                                                    'link': link,
-                                                                                    'ip': ip,
-                                                                                    'port': port,
-                                                                                    'proxy_user': proxy_user,
-                                                                                    'proxy_passwd': proxy_passwd,
-                                                                                    'download_user': download_user,
-                                                                                    'download_passwd': download_passwd,
-                                                                                    'connections': connections,
-                                                                                    'limit': limit,
-                                                                                    'download_path' :download_path,
-                                                                                    'referer': referer,
-                                                                                    'load_cookies': load_cookies,
-                                                                                    'user_agent': user_agent,
-                                                                                    'header': header,
-                                                                                    'after_download': after_download
-                                                                                    })
+                                                                                NULL
+                                                                                )""", dict)
     self.persepolis_db_connection.commit() 
     
  
@@ -322,7 +283,12 @@ class PersepolisDB():
     def searchGidInDownloadTable(self, gid):
         self.persepolis_db_cursor.execute("""SELECT * FROM download_db_table WHERE gid = {}""".format(str(gid)))
         list = self.persepolis_db_cursor.fetchall()
-        tuple = list[0]
+
+        if list:
+            tuple = list[0]
+        else:
+            return None
+
         dict = {'file_name': tuple[0],
                 'status': tuple[1],
                 'size': tuple[2],
@@ -350,7 +316,11 @@ class PersepolisDB():
     def searchGidInAddLinkTable(self, gid):
         self.persepolis_db_cursor.execute("""SELECT * FROM addlink_db_table WHERE gid = {}""".format(str(gid)))
         list = self.persepolis_db_cursor.fetchall()
-        tuple = list[0]
+        if list:
+            tuple = list[0]
+        else:
+            return None
+
         dict = {'gid' :tuple[0],
                 'out': tuple[1],
                 'start_time': tuple[2],

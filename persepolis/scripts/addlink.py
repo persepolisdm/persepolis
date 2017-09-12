@@ -159,9 +159,9 @@ class AddLinkWindow(AddLinkWindow_Ui):
         # connect OK and canel download_later button ->
         self.cancel_pushButton.clicked.connect(self.close)
         self.ok_pushButton.clicked.connect(partial(
-            self.okButtonPressed, download_later='no'))
+            self.okButtonPressed, download_later=False))
         self.download_later_pushButton.clicked.connect(
-            partial(self.okButtonPressed, download_later='yes'))
+            partial(self.okButtonPressed, download_later=True))
 
         # frames and checkBoxes ->
         self.proxy_frame.setEnabled(False)
@@ -458,10 +458,8 @@ class AddLinkWindow(AddLinkWindow_Ui):
         if not('load-cookies' in self.plugin_add_link_dictionary):
             self.plugin_add_link_dictionary['load-cookies'] = None
 
-        now_date_list = download.nowDate()
         # save information in a dictionary(add_link_dictionary).
-        self.add_link_dictionary = {'last_try_date': now_date_list, 'firs_try_date': now_date_list, 'out': out,
-                                    'start_time': start_time, 'end_time': end_time, 'link': link, 'ip': ip,
+        self.add_link_dictionary = {'out': out, 'start_time': start_time, 'end_time': end_time, 'link': link, 'ip': ip,
                                     'port': port, 'proxy_user': proxy_user, 'proxy_passwd': proxy_passwd, 
                                     'download_user': download_user, 'download_passwd': download_passwd,
                                     'connections': connections, 'limit': limit, 'download_path': download_path}

@@ -34,16 +34,6 @@ import traceback
 home_address = os.path.expanduser("~")
 
 os_type = platform.system()
-# download manager config folder .
-if os_type == 'Linux' or os_type == 'FreeBSD' or os_type == 'OpenBSD':
-    config_folder = os.path.join(
-        str(home_address), ".config/persepolis_download_manager")
-elif os_type == 'Darwin':
-    config_folder = os.path.join(
-        str(home_address), "Library/Application Support/persepolis_download_manager")
-elif os_type == 'Windows':
-    config_folder = os.path.join(
-        str(home_address), 'AppData', 'Local', 'persepolis_download_manager')
 
 # persepolis setting
 persepolis_setting = QSettings('persepolis_download_manager', 'persepolis')

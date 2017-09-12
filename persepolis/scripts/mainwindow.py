@@ -353,15 +353,22 @@ class CheckDownloadInfoThread(QThread):
 # spider works similiar to spider in wget.
 class SpiderThread(QThread):
     SPIDERSIGNAL = pyqtSignal()
-    def __init__(self, add_link_dictionary, gid):
+    def __init__(self, add_link_dictionary, parent):
         QThread.__init__(self)
         self.add_link_dictionary = add_link_dictionary
-        self.gid = gid
+        self.parent = parent
 
     def run(self):
         try:
-            spider.spider(self.add_link_dictionary, self.gid)
+            # get file_name and file size with spider
+            file_name, size = spider.spider(self.add_link_dictionary)
+
+            # update data base
+            dict = {'file_name': file_name, 'size': size, 'gid': self.add_link_dictionary['gid']}
+            self.parent.persepolis_db.updateDownloadTable([dict])
+
         except:
+            # write ERROR message
             print("Spider couldn't find download information")
             logger.sendToLog(
                 "Spider couldn't find download information", "ERROR")
@@ -523,7 +530,7 @@ class Queue(QThread):
                 writeList(download_info_file, download_info_file_list)
 
             # starting new thread for download
-                new_download = DownloadLink(gid)
+                new_download = DownloadLink(gid, self.parent)
                 self.parent.threadPool.append(new_download)
                 self.parent.threadPool[len(self.parent.threadPool) - 1].start()
                 self.parent.threadPool[len(
@@ -1502,18 +1509,26 @@ class MainWindow(MainWindow_Ui):
         link_clipborad.setText(str(link_string), mode=link_clipborad.Clipboard)
         self.addLinkButtonPressed(button=link_clipborad)
 
+# aria2 identifies each download by the ID called GID.
+# The GID must be hex string of 16 characters,
+# thus [0-9a-zA-Z] are allowed and leading zeros must 
+# not be stripped. The GID all 0 is reserved and must
+# not be used. The GID must be unique, otherwise error 
+# is reported and the download is not added.
+# gidGenerator generates GID for downloads
     def gidGenerator(self):
-        my_gid = hex(random.randint(1152921504606846976, 18446744073709551615))
-        my_gid = my_gid[2:18]
-        my_gid = str(my_gid)
-        f = Open(download_list_file_active)
-        active_gid_list = f.readlines()
-        f.close()
-        while my_gid in active_gid_list:
-            my_gid = self.gidGenerator()
-        active_gids = download.activeDownloads()
-        while my_gid in active_gids:
-            my_gid = self.gidGenerator()
+        return_list = True
+        # this loop repeats until we have a unique GID
+        while return_list:
+
+        # generate a random hex value between 1152921504606846976 and 18446744073709551615
+        # for download GID
+            my_gid = hex(random.randint(1152921504606846976, 18446744073709551615))
+            my_gid = my_gid[2:18]
+            my_gid = str(my_gid)
+
+        # check my_gid used before or not!
+            return_list = self.persepolis_db.searchGidInDownloadTable(my_gid)
 
         return my_gid
 
@@ -1716,101 +1731,106 @@ class MainWindow(MainWindow_Ui):
         category = str(category)
         # aria2 identifies each download by the ID called GID. The GID must be
         # hex string of 16 characters.
+        # if user presses ok button on add link window , a gid generates for download. 
         gid = self.gidGenerator()
+
+        # add gid to add_link_dictionary
+        add_link_dictionary['gid'] = gid
 
         # download_info_file_list is a list that contains ['file_name' ,
         # 'status' , 'size' , 'downloaded size' ,'download percentage' ,
         # 'number of connections' ,'Transfer rate' , 'estimate_time_left' ,
-        # 'gid' , 'add_link_dictionary' , 'firs_try_date' , 'last_try_date']
+        # 'gid' , 'link' , 'firs_try_date' , 'last_try_date']
 
         # if user or flashgot defined filename then file_name is valid in
         # add_link_dictionary['out']
-        if add_link_dictionary['out'] != None:
+        if add_link_dictionary['out']:
             file_name = add_link_dictionary['out']
         else:
             file_name = '***'
 
         # If user selected a queue in add_link window , then download must be
-        # added to queue and and download must  be started with queue so >>
-        # download_later == yes
+        # added to queue and and download must be started with queue so >>
+        # download_later = True
         if str(category) != 'Single Downloads':
-            download_later = 'yes'
+            download_later = True 
 
-        if download_later == 'no':
-            download_info_file_list = [file_name, 'waiting', '***', '***', '***',
-                                       '***', '***', '***', gid, add_link_dictionary, '***', '***', category]
+        if not(download_later):
+            status = 'waiting'
         else:
-            download_info_file_list = [file_name, 'stopped', '***', '***', '***',
-                                       '***', '***', '***', gid, add_link_dictionary, '***', '***', category]
+            status = 'stopped'
 
-        # if user pushs ok button on add link window , a gid is generating for
-        # download and a file (with name of gid) is creating in
-        # download_info_folder . this file is containing
-        # download_info_file_list
-        download_info_file = os.path.join(download_info_folder, gid)
-        osCommands.touch(download_info_file)
 
-        writeList(download_info_file, download_info_file_list)
+        list = [file_name, status, '***', '***', '***',
+                '***', '***', '***', gid, add_link_dictionary['link'], '***', '***', category]
 
-        # creating back up file for download_info_file
-        download_info_file_backup = str(download_info_file) + "_back"
-        osCommands.touch(download_info_file_backup)
-        writeList(download_info_file_backup, download_info_file_list)
+        dict = {'file_name': file_name,
+                'status': status,
+                'size': '***',
+                'downloaded_size': '***',
+                'percent': '***',
+                'connections': '***',
+                'rate': '***',
+                'estimate_time_left': '***',
+                'gid': gid,
+                'link': add_link_dictionary['link'],
+                'firs_try_date': '***',
+                'last_try_date': '***',
+                'category': category}
 
-        # highlighting selected category in category_tree
-        # finding item
+        # write information in data_base
+        self.persepolis_db.insertInDownloadTable(dict)
+        self.persepolis_db.insertInAddLinkTable(add_link_dictionary)
+        
+
+        # find selected category in left side panel
         for i in range(self.category_tree_model.rowCount()):
             category_tree_item_text = str(
                 self.category_tree_model.index(i, 0).data())
             if category_tree_item_text == category:
                 category_index = i
                 break
-        # highliting
+
+        # highlight selected category in category_tree
         category_tree_model_index = self.category_tree_model.index(
             category_index, 0)
         self.category_tree.setCurrentIndex(category_tree_model_index)
         self.categoryTreeSelected(category_tree_model_index)
 
-        # creating a row in download_table
+        # create a row in download_table for new download
         self.download_table.insertRow(0)
         j = 0
-        download_info_file_list[9] = str(download_info_file_list[9])
-        for i in download_info_file_list:
+        # add item in list to the row
+        for i in list:
             item = QTableWidgetItem(i)
             self.download_table.setItem(0, j, item)
             j = j + 1
 
-        # this section adds checkBox to the row , if user selected selectAction
+        # add checkBox to the row , if user selected selectAction
         if self.selectAction.isChecked() == True:
             item = self.download_table.item(0, 0)
             item.setFlags(QtCore.Qt.ItemIsUserCheckable |
                           QtCore.Qt.ItemIsEnabled)
             item.setCheckState(QtCore.Qt.Unchecked)
 
-        # adding gid to download_list_file , download_list_file_active , category_gid_list_file
-        # defining category_gid_list_file
-        category_gid_list_file = os.path.join(category_folder, category)
-
-        for i in [download_list_file, download_list_file_active, category_gid_list_file]:
-            f = Open(i, "a")
-            f.writelines(gid + "\n")
-            f.close()
-
         # if user didn't press download_later_pushButton in add_link window
-        # then this section is creating new qthread for new download!
-        if download_later == 'no':
-            new_download = DownloadLink(gid)
+        # then create new qthread for new download!
+        if not(download_later):
+            new_download = DownloadLink(gid, self)
             self.threadPool.append(new_download)
             self.threadPool[len(self.threadPool) - 1].start()
             self.threadPool[len(self.threadPool) -
                             1].ARIA2NOTRESPOND.connect(self.aria2NotRespond)
-        # opening progress window for download.
+
+        # open progress window for download.
             self.progressBarOpen(gid)
-        # notifiying user for scheduled download or download starting.
-            if add_link_dictionary['start_hour'] == None:
+
+        # notifiy user 
+            # check that download scheduled or not
+            if not(add_link_dictionary['start_time']):
                 message = "Download Starts"
             else:
-                new_spider = SpiderThread(add_link_dictionary, gid)
+                new_spider = SpiderThread(add_link_dictionary, self)
                 self.threadPool.append(new_spider)
                 self.threadPool[len(self.threadPool) - 1].start()
                 message = "Download Scheduled"
@@ -1818,9 +1838,11 @@ class MainWindow(MainWindow_Ui):
                        systemtray=self.system_tray_icon)
 
         else:
-            new_spider = SpiderThread(add_link_dictionary, gid)
+            new_spider = SpiderThread(add_link_dictionary, self)
             self.threadPool.append(new_spider)
             self.threadPool[len(self.threadPool) - 1].start()
+
+###########
 
 # when user presses resume button this method is called
     def resumeButtonPressed(self, button):
@@ -2030,12 +2052,12 @@ class MainWindow(MainWindow_Ui):
         # rank(number) in progress_window_list
         self.progress_window_list_dict[gid] = member_number
 
-        # checking user preferences
+        # check user preferences
         if str(self.persepolis_setting.value('settings/show-progress')) == 'yes':
-            # showing progress window
+            # show progress window
             self.progress_window_list[member_number].show()
         else:
-            # hiding progress window
+            # hide progress window
             self.progress_window_list[member_number].hide()
 
 # close event
@@ -3242,7 +3264,7 @@ class MainWindow(MainWindow_Ui):
                 f.close()
 
             # spider is finding file size and file name
-            new_spider = SpiderThread(add_link_dictionary, gid)
+            new_spider = SpiderThread(add_link_dictionary, self)
             self.threadPool.append(new_spider)
             self.threadPool[len(self.threadPool) - 1].start()
 

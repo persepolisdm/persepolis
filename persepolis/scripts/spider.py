@@ -47,9 +47,9 @@ download_list_file_active = os.path.join(
 # http://docs.python-requests.org/en/master/
 
 
-# spider function finding name of file and file size from header
-def spider(add_link_dictionary, gid):
-    # getting user's download request from add_link_dictionary
+# spider function finds name of file and file size from header
+def spider(add_link_dictionary):
+    # get user's download request from add_link_dictionary
     link = add_link_dictionary['link']
     ip = add_link_dictionary['ip']
     port = add_link_dictionary['port']
@@ -63,55 +63,64 @@ def spider(add_link_dictionary, gid):
     raw_cookies = add_link_dictionary['load-cookies']
     referer = add_link_dictionary['referer']
 
-    if out == '***':
-        out = None
-
-    requests_session = requests.Session()  # defining a requests Session
+    # defin a requests session
+    requests_session = requests.Session() 
     if ip:
         ip_port = 'http://' + str(ip) + ":" + str(port)
         if proxy_user:
             ip_port = 'http://' + proxy_user + ':' + proxy_passwd + '@' + ip_port
-        # setting proxy to the session
+        # set proxy to the session
         requests_session.proxies = {'http': ip_port}
 
     if download_user:
-        # setting download user pass to the session
+        # set download user pass to the session
         requests_session.auth(download_user, download_passwd)
 
-    if raw_cookies != None:  # setting cookies
+    # set cookies
+    if raw_cookies:  
         cookie = SimpleCookie()
         cookie.load(raw_cookies)
 
         cookies = {key: morsel.value for key, morsel in cookie.items()}
         requests_session.cookies = cookiejar_from_dict(cookies)
 
-    if referer != None :
+    # set referer
+    if referer:
         requests_session.headers.update({'referer': referer }) #setting referer to the session
 
-    if user_agent != None :
+    # set user_agent
+    if user_agent:
         requests_session.headers.update({'user-agent':user_agent }) #setting user_agent to the session
         
-    #finding headers
+    #find headers
     response = requests_session.head(link)   
     header = response.headers
-    filename = '***'
-    filesize = '***'
+
+    filename = None
+    filesize = None
     if 'Content-Disposition' in header.keys():  # checking if filename is available
         content_disposition = header['Content-Disposition']
         if content_disposition.find('filename') != -1:
             filename_splited = content_disposition.split('filename=')
             filename_splited = filename_splited[-1]
+
             # getting file name in desired format
             filename = filename_splited[1:-1]
 
-    if filename == '***':
+    if not(filename):
         filename = link.split('/')[-1]
-    if out != None:
+
+    # if user set file name before in add_link_dictionary['out'],
+    # then set "out" for filename
+    if out:
         filename = out
 
-    if 'Content-Length' in header.keys():  # checking if file_size is available
+    # check if file_size is available
+    if 'Content-Length' in header.keys():  
         file_size = int(header['Content-Length'])
-        if int(file_size/1073741824) != 0:  # converting file_size to KB or MB or GB
+
+        # convert file_size to KB or MB or GB
+        if int(file_size/1073741824) != 0:  
             file_size = file_size/1073741824
             size_str = str(round(file_size, 2)) + " GB"
         elif int(file_size/1048576) != 0:
@@ -122,21 +131,11 @@ def spider(add_link_dictionary, gid):
             size_str = str(file_size)
         filesize = size_str
 
-    download_info_file = os.path.join(download_info_folder, gid)
-    download_info_file_list = readList(download_info_file)
+    # return results
+    return filename, filesize    
 
-    download_info = [filename, None, filesize, None,  None,
-                     None, None, None, None, None, None, None, None]
-
-    for i in range(13):
-        if download_info[i] != None:
-            download_info_file_list[i] = download_info[i]
-
-    writeList(download_info_file, download_info_file_list)
 
 # this function finds and returns name of the file
-
-
 def queueSpider(add_link_dictionary):
     # getting user's download request from add_link_dictionary
     for i in ['link', 'header', 'out', 'user-agent', 'load-cookies', 'referer']:
