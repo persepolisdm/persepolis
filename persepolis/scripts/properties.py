@@ -16,7 +16,7 @@
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import QFileDialog
-from PyQt5.QtCore import QSize, QPoint, QDir
+from PyQt5.QtCore import QSize, QPoint, QDir, QTime
 import os
 import ast
 from persepolis.scripts.newopen import Open, writeList, readList, readDict
@@ -52,9 +52,10 @@ setting_file = os.path.join(config_folder, 'setting')
 
 
 class PropertiesWindow(AddLinkWindow_Ui):
-    def __init__(self, callback, gid, persepolis_setting):
+    def __init__(self, callback, gid, persepolis_setting, parent):
         super().__init__(persepolis_setting)
 
+        self.parent = parent
         self.persepolis_setting = persepolis_setting
         self.download_later_pushButton.hide()  # hiding download_later_pushButton
         self.change_name_checkBox.hide()  # hiding change_name_checkBox
@@ -102,13 +103,16 @@ class PropertiesWindow(AddLinkWindow_Ui):
         self.end_checkBox.toggled.connect(self.endFrame)
 
 
+        # get information from data base
+        self.add_link_dictionary = self.parent.persepolis_db.searchGidInAddLinkTable(self.gid)
+
+        self.download_table_dict = self.parent.persepolis_db.searchGidInDownloadTable(gid)
+
 # initialization
         self.connections_spinBox.setValue(connections)
-        download_info_file = download_info_folder + "/" + self.gid
-        download_info_file_list = readList(download_info_file)
-        self.add_link_dictionary = download_info_file_list[9]
+        
 # disable folder_frame when download is complete
-        status = download_info_file_list[1]
+        status = self.download_table_dict['status']
         if status == 'complete':
             self.folder_frame.setEnabled(False)
 
@@ -117,7 +121,7 @@ class PropertiesWindow(AddLinkWindow_Ui):
         self.link_lineEdit.setText(self.add_link_dictionary['link'])
 
 # ip_lineEdit initialization
-        if self.add_link_dictionary['ip'] != None:
+        if self.add_link_dictionary['ip']:
             self.proxy_checkBox.setChecked(True)
             self.ip_lineEdit.setText(self.add_link_dictionary['ip'])
 # port_spinBox initialization
@@ -141,7 +145,7 @@ class PropertiesWindow(AddLinkWindow_Ui):
 
 
 # download UserName initialization
-        if self.add_link_dictionary['download_user'] != None:
+        if self.add_link_dictionary['download_user']:
             self.download_checkBox.setChecked(True)
             self.download_user_lineEdit.setText(
                 self.add_link_dictionary['download_user'])
@@ -166,17 +170,13 @@ class PropertiesWindow(AddLinkWindow_Ui):
         except:
             pass
 
-# finding categories name and adding them to add_queue_comboBox
-        self.add_queue_comboBox.addItem('Single Downloads')
-        f_queues_list = Open(queues_list_file)
-        queues_list_file_lines = f_queues_list.readlines()
-        f_queues_list.close()
-        for queue in queues_list_file_lines:
-            queue_strip = queue.strip()
-            self.add_queue_comboBox.addItem(str(queue_strip))
+# get categories name and add them to add_queue_comboBox
+        categories_list = self.parent.persepolis_db.categoriesList()
+        for queue in categories_list:
+            self.add_queue_comboBox.addItem(str(queue))
 
     # finding current queue and setting it!
-        self.current_category = str(download_info_file_list[12])
+        self.current_category = self.download_table_dict['category'] 
 
         current_category_index = self.add_queue_comboBox.findText(
             self.current_category)
@@ -198,22 +198,29 @@ class PropertiesWindow(AddLinkWindow_Ui):
                 self.limit_comboBox.setCurrentIndex(0)
             else:
                 self.limit_comboBox.setCurrentIndex(1)
-# start_time
-        if self.add_link_dictionary['start_hour'] != None:
-            self.start_checkBox.setChecked(True)
-            self.start_hour_spinBox.setValue(
-                int(self.add_link_dictionary['start_hour']))
-            self.start_minute_spinBox.setValue(
-                int(self.add_link_dictionary['start_minute']))
-# end_time
-        if self.add_link_dictionary['end_hour'] != None:
-            self.end_checkBox.setChecked(True)
-            self.end_hour_spinBox.setValue(
-                int(self.add_link_dictionary['end_hour']))
-            self.end_minute_spinBox.setValue(
-                int(self.add_link_dictionary['end_minute']))
 
- # setting window size and position
+# start_time
+        if self.add_link_dictionary['start_time']:
+            # get hour and minute
+            hour, minute = self.add_link_dictionary['start_time'].split(':')
+            
+            # set time
+            q_time = QTime(int(hour), int(minute))
+            self.start_time_qDataTimeEdit.setTime(q_time)
+
+            self.start_checkBox.setChecked(True)
+# end_time
+        if self.add_link_dictionary['end_time']:
+            # get hour and minute
+            hour, minute = self.add_link_dictionary['end_time'].split(':')
+
+            # set time
+            q_time = QTime(int(hour), int(minute))
+            self.end_time_qDateTimeEdit(q_time)
+
+            self.end_checkBox.setChecked(True)
+
+ # set window size and position
         size = self.persepolis_setting.value(
             'PropertiesWindow/size', QSize(700, 500))
         position = self.persepolis_setting.value(
@@ -221,7 +228,7 @@ class PropertiesWindow(AddLinkWindow_Ui):
         self.resize(size)
         self.move(position)
 
-# detected system proxy setting, and set ip_lineEdit and port_spinBox
+# detect system proxy setting, and set ip_lineEdit and port_spinBox
     def detectProxy(self, button):
         # get system proxy information
         system_proxy_dict = getProxy()
@@ -252,35 +259,35 @@ class PropertiesWindow(AddLinkWindow_Ui):
 # activate frames if checkBoxes checked
     def proxyFrame(self, checkBox):
 
-        if self.proxy_checkBox.isChecked() == True:
+        if self.proxy_checkBox.isChecked():
             self.proxy_frame.setEnabled(True)
         else:
             self.proxy_frame.setEnabled(False)
 
     def downloadFrame(self, checkBox):
 
-        if self.download_checkBox.isChecked() == True:
+        if self.download_checkBox.isChecked():
             self.download_frame.setEnabled(True)
         else:
             self.download_frame.setEnabled(False)
 
     def limitFrame(self, checkBox):
 
-        if self.limit_checkBox.isChecked() == True:
+        if self.limit_checkBox.isChecked():
             self.limit_frame.setEnabled(True)
         else:
             self.limit_frame.setEnabled(False)
 
     def startFrame(self, checkBox):
 
-        if self.start_checkBox.isChecked() == True:
+        if self.start_checkBox.isChecked():
             self.start_frame.setEnabled(True)
         else:
             self.start_frame.setEnabled(False)
 
     def endFrame(self, checkBox):
 
-        if self.end_checkBox.isChecked() == True:
+        if self.end_checkBox.isChecked():
             self.end_frame.setEnabled(True)
         else:
             self.end_frame.setEnabled(False)
@@ -317,7 +324,7 @@ class PropertiesWindow(AddLinkWindow_Ui):
             self.end_checkBox.setEnabled(True)
 
     def okButtonPressed(self, button):
-        if self.proxy_checkBox.isChecked() == False:
+        if not(self.proxy_checkBox.isChecked()):
             ip = None
             port = None
             proxy_user = None
@@ -336,7 +343,7 @@ class PropertiesWindow(AddLinkWindow_Ui):
             if not(proxy_passwd):
                 proxy_passwd = None
 
-        if self.download_checkBox.isChecked() == False:
+        if not(self.download_checkBox.isChecked()):
             download_user = None
             download_passwd = None
         else:
@@ -347,7 +354,7 @@ class PropertiesWindow(AddLinkWindow_Ui):
             if not(download_passwd):
                 download_passwd = None
 
-        if self.limit_checkBox.isChecked() == False:
+        if not(self.limit_checkBox.isChecked()):
             limit = 0
         else:
             if self.limit_comboBox.currentText() == "KB/S":
@@ -355,28 +362,22 @@ class PropertiesWindow(AddLinkWindow_Ui):
             else:
                 limit = str(self.limit_spinBox.value()) + str("M")
 
-        if self.start_checkBox.isChecked() == False:
-            start_hour = None
-            start_minute = None
+        if not(self.start_checkBox.isChecked()):
+            start_time = None
         else:
-            start_hour = str(self.start_hour_spinBox.value())
-            start_minute = str(self.start_minute_spinBox.value())
+            start_time = self.start_time_qDataTimeEdit.text()
 
-        if self.end_checkBox.isChecked() == False:
-            end_hour = None
-            end_minute = None
+        if not(self.end_checkBox.isChecked()):
+            end_time = None
         else:
-            end_hour = str(self.end_hour_spinBox.value())
-            end_minute = str(self.end_minute_spinBox.value())
+            end_time = self.end_time_qDateTimeEdit.text()
 
         link = self.link_lineEdit.text()
         connections = self.connections_spinBox.value()
         download_path = self.download_folder_lineEdit.text()
-
-        self.add_link_dictionary['start_hour'] = start_hour
-        self.add_link_dictionary['start_minute'] = start_minute
-        self.add_link_dictionary['end_hour'] = end_hour
-        self.add_link_dictionary['end_minute'] = end_minute
+ 
+        self.add_link_dictionary['start_time'] = start_time
+        self.add_link_dictionary['end_time'] = end_time
         self.add_link_dictionary['link'] = link
         self.add_link_dictionary['ip'] = ip
         self.add_link_dictionary['port'] = port
@@ -390,30 +391,14 @@ class PropertiesWindow(AddLinkWindow_Ui):
 
         new_category = str(self.add_queue_comboBox.currentText())
         if new_category != self.current_category:  # it means category changed
-            # first download must eliminated form former category
-            # reading current_category
-            current_category_file = os.path.join(
-                category_folder, self.current_category)
+            self.download_table_dict['category'] = new_category
 
-            f = Open(current_category_file)
-            f_list = f.readlines()
-            f.close()
-            # eliminating gid of download from current_category_file
-            f = Open(current_category_file, 'w')
-            for line in f_list:
-                gid = line.strip()
-                if gid != self.gid:
-                    f.writelines(gid + '\n')
+            # update data base
+            self.parent.persepolis_db.updateDownloadTable([self.download_table_dict])
 
-            f.close()
-
-            # adding download to the new category
-            new_category_file = os.path.join(
-                category_folder, str(new_category))
-
-            f = Open(new_category_file, 'a')
-            f.writelines(self.gid + '\n')
-            f.close()
+        # TODO add a compromisation for chec that if any thing changed
+        # update data base
+        self.parent.persepolis_db.updateAddLinkTable([self.add_link_dictionary])
 
         self.callback(self.add_link_dictionary, self.gid, new_category)
 

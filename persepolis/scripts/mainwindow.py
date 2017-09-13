@@ -888,6 +888,7 @@ class MainWindow(MainWindow_Ui):
         # get queues name from data base
         queues_list = self.persepolis_db.categoriesList()
 
+        #TODO adding 'Single Downloads' to category_db_table in data base
         # add queues to category_tree(left side panel)
         for tuple in queues_list:
             new_queue_category = QStandardItem(str(tuple[0]))
@@ -1842,7 +1843,6 @@ class MainWindow(MainWindow_Ui):
             self.threadPool.append(new_spider)
             self.threadPool[len(self.threadPool) - 1].start()
 
-###########
 
 # when user presses resume button this method is called
     def resumeButtonPressed(self, button):
@@ -1851,7 +1851,7 @@ class MainWindow(MainWindow_Ui):
         # find user selected row
         selected_row_return = self.selectedRow()  
 
-        if selected_row_return != None:
+        if selected_row_return:
             # find download gid
             gid = self.download_table.item(selected_row_return, 8).text()
             download_status = self.download_table.item(
@@ -1897,7 +1897,7 @@ class MainWindow(MainWindow_Ui):
         self.stopAction.setEnabled(False)
         selected_row_return = self.selectedRow()  # finding user selected row
 
-        if selected_row_return != None:
+        if selected_row_return:
             gid = self.download_table.item(selected_row_return, 8).text()
             answer = download.downloadStop(gid, self)
 # if aria2 did not respond , then this function is checking for aria2
@@ -1918,7 +1918,7 @@ class MainWindow(MainWindow_Ui):
         # find selected row
         selected_row_return = self.selectedRow()  
 
-        if selected_row_return != None:
+        if selected_row_return:
             # find download gid
             gid = self.download_table.item(selected_row_return, 8).text()
 
@@ -1943,16 +1943,13 @@ class MainWindow(MainWindow_Ui):
         self.propertiesAction.setEnabled(False)
         selected_row_return = self.selectedRow()  # finding user selected row
 
-        if selected_row_return != None:
-            # finding gid of download
-            add_link_dictionary_str = self.download_table.item(
-                selected_row_return, 9).text()
-            add_link_dictionary = ast.literal_eval(add_link_dictionary_str)
+        if selected_row_return:
+            # find gid of download
             gid = self.download_table.item(selected_row_return, 8).text()
 
             # creating propertieswindow
             propertieswindow = PropertiesWindow(
-                self.propertiesCallback, gid, self.persepolis_setting)
+                self.propertiesCallback, gid, self.persepolis_setting, self)
             self.propertieswindows_list.append(propertieswindow)
             self.propertieswindows_list[len(
                 self.propertieswindows_list) - 1].show()
@@ -1970,51 +1967,46 @@ class MainWindow(MainWindow_Ui):
             self.threadPool[len(self.threadPool) - 1].QTABLEREADY.connect(
                 partial(self.propertiesCallback2, add_link_dictionary, gid, category))
         else:
+            # TODO this line must be checked
             self.removeSelected2(self, add_link_dictionary, gid, category)
 
     def propertiesCallback2(self, add_link_dictionary, gid, category):
         # current_category_tree_text is current category that highlited by user
-        # is the left side panel
+        # in the left side panel
         current_category_tree_text = str(
             self.category_tree.currentIndex().data())
 
-        selected_row_return = self.selectedRow()  # finding user selected row
+        selected_row_return = self.selectedRow()  # find user selected row
 
-        # finding current category before changing
+        # find current category before changing
         current_category = self.download_table.item(
             selected_row_return, 12).text()
 
- # finding checked rows! and append gid of checked rows to gid_list
 
-        download_info_file = os.path.join(download_info_folder, gid)
-        download_info_file_list = readList(download_info_file)
-        download_info_file_list[9] = add_link_dictionary
-        download_info_file_list[12] = str(category)
-
-        # updating download_info_file
-        writeList(download_info_file, download_info_file_list)
-
-# updating category in download_table
-# finding row of this gid!
+# find row of this gid!
+        row = None
         for i in range(self.download_table.rowCount()):
             row_gid = self.download_table.item(i, 8).text()
             if gid == row_gid:
                 row = i
                 break
 
-        if current_category_tree_text == 'All Downloads':
-            item = QTableWidgetItem(str(category))
-            self.download_table.setItem(row, 12, item)
-        elif (str(current_category) != str(category)):
+        if row:
+            if current_category_tree_text == 'All Downloads':
+                # update category in download_table
+                item = QTableWidgetItem(str(category))
+                self.download_table.setItem(row, 12, item)
 
-            # removing row from download_table
-            self.download_table.removeRow(row)
+            elif (str(current_category) != str(category)):
+                # remove row from download_table
+                self.download_table.removeRow(row)
 
 
-# telling the CheckDownloadInfoThread that job is done!
+# tell the CheckDownloadInfoThread that job is done!
         global checking_flag
         checking_flag = 0
 
+###########
 
 # This method called if user presses "show/hide progress window" button in
 # MainWindow
