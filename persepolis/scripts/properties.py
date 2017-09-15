@@ -18,37 +18,8 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import QFileDialog
 from PyQt5.QtCore import QSize, QPoint, QDir, QTime
 import os
-import ast
-from persepolis.scripts.newopen import Open, writeList, readList, readDict
 from persepolis.gui.addlink_ui import AddLinkWindow_Ui
-import platform
 from persepolis.scripts.check_proxy import getProxy
-
-os_type = platform.system()
-
-
-home_address = os.path.expanduser("~")
-
-# config_folder
-if os_type == 'Linux' or os_type == 'FreeBSD' or os_type == 'OpenBSD':
-    config_folder = os.path.join(
-        str(home_address), ".config/persepolis_download_manager")
-elif os_type == 'Darwin':
-    config_folder = os.path.join(
-        str(home_address), "Library/Application Support/persepolis_download_manager")
-elif os_type == 'Windows':
-    config_folder = os.path.join(
-        str(home_address), 'AppData', 'Local', 'persepolis_download_manager')
-
-
-download_info_folder = os.path.join(config_folder, "download_info")
-
-queues_list_file = os.path.join(config_folder, 'queues_list')
-category_folder = os.path.join(config_folder, 'category_folder')
-
-
-# setting
-setting_file = os.path.join(config_folder, 'setting')
 
 
 class PropertiesWindow(AddLinkWindow_Ui):
@@ -57,16 +28,12 @@ class PropertiesWindow(AddLinkWindow_Ui):
 
         self.parent = parent
         self.persepolis_setting = persepolis_setting
-        self.download_later_pushButton.hide()  # hiding download_later_pushButton
-        self.change_name_checkBox.hide()  # hiding change_name_checkBox
-        self.change_name_lineEdit.hide()  # hiding change_name_lineEdit
+        self.download_later_pushButton.hide()  # hide download_later_pushButton
+        self.change_name_checkBox.hide()  # hide change_name_checkBox
+        self.change_name_lineEdit.hide()  # hide change_name_lineEdit
 
         self.callback = callback
         self.gid = gid
-
-        global connections
-        connections = int(
-            self.persepolis_setting.value('settings/connections'))
 
 # hiding options_pushButton
         self.options_pushButton.hide()
@@ -108,9 +75,12 @@ class PropertiesWindow(AddLinkWindow_Ui):
 
         self.download_table_dict = self.parent.persepolis_db.searchGidInDownloadTable(gid)
 
+        # create a copy from add_link_dictionary for checking changes finally!
+        self.add_link_dictionary_backup = {}
+        for key in self.add_link_dictionary.allKeys():
+            self.add_link_dictionary_backup[key] = self.add_link_dictionary[key]
+
 # initialization
-        self.connections_spinBox.setValue(connections)
-        
 # disable folder_frame when download is complete
         status = self.download_table_dict['status']
         if status == 'complete':
@@ -390,22 +360,32 @@ class PropertiesWindow(AddLinkWindow_Ui):
         self.add_link_dictionary['connections'] = connections
 
         new_category = str(self.add_queue_comboBox.currentText())
-        if new_category != self.current_category:  # it means category changed
+
+        # it means category changed and data base must be updated.
+        if new_category != self.current_category:  
             self.download_table_dict['category'] = new_category
 
             # update data base
             self.parent.persepolis_db.updateDownloadTable([self.download_table_dict])
 
-        # TODO add a compromisation for chec that if any thing changed
-        # update data base
-        self.parent.persepolis_db.updateAddLinkTable([self.add_link_dictionary])
+        # if any thing in add_link_dictionary is changed,then update data base!
+        for key in self.add_link_dictionary.allKeys():
+            if self.add_link_dictionary[key] != self.add_link_dictionary_backup[key]:
+                
+                # update data base
+                self.parent.persepolis_db.updateAddLinkTable([self.add_link_dictionary])
 
+                # break the loop
+                break
+
+        # callback to mainwindow
         self.callback(self.add_link_dictionary, self.gid, new_category)
 
+        # close window
         self.close()
 
     def closeEvent(self, event):
-        # saving window size and position
+        # save window size and position
         self.persepolis_setting.setValue('PropertiesWindow/size', self.size())
         self.persepolis_setting.setValue(
             'PropertiesWindow/position', self.pos())
