@@ -19,10 +19,8 @@ import os
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import QQDateTimeEdit, DoubleSpinBox, QPushButton, QComboBox, QSpinBox, QVBoxLayout, QHBoxLayout, QLabel, QApplication, QWidget, QFileDialog, QMessageBox, QSizePolicy, QGridLayout, QCheckBox, QFrame, QLineEdit, QPushButton
 from PyQt5.QtGui import QIcon
-from persepolis.scripts.newopen import Open
 from persepolis.gui import icons_resource
 
-home_address = os.path.expanduser("~")
 
 
 class AddLinkWindow_Ui(QWidget):
@@ -30,7 +28,7 @@ class AddLinkWindow_Ui(QWidget):
         super().__init__()
         self.persepolis_setting = persepolis_setting
 
-        # window ->
+        # get icons name
         icons = ':/' + \
             str(self.persepolis_setting.value('settings/icons')) + '/'
 
