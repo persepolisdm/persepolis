@@ -15,41 +15,16 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 
-import platform
 import os
-import functools
-
 from PyQt5 import QtWidgets, QtCore
 from PyQt5.QtWidgets import QHBoxLayout,  QApplication,  QFileDialog,  QCheckBox, QLineEdit, QPushButton
 from PyQt5.QtGui import QIcon
 from PyQt5.QtCore import QPoint, QSize, QDir, QThread, pyqtSignal
 from persepolis.gui.addlink_ui import AddLinkWindow_Ui
-from persepolis.scripts.newopen import Open, readDict
 from functools import partial
-
-from persepolis.scripts import download
 from persepolis.scripts import spider
 from persepolis.scripts import logger
 from persepolis.scripts.check_proxy import getProxy
-
-home_address = os.path.expanduser("~")
-
-# finding os platform
-os_type = platform.system()
-
-# config_folder
-if ((os_type == 'Linux') or (os_type == 'FreeBSD') or (os_type == 'OpenBSD')):
-    config_folder = os.path.join(
-        str(home_address), ".config/persepolis_download_manager")
-elif (os_type == 'Darwin'):
-    config_folder = os.path.join(
-        str(home_address), "Library/Application Support/persepolis_download_manager")
-elif (os_type == 'Windows'):
-    config_folder = os.path.join(
-        str(home_address), 'AppData', 'Local', 'persepolis_download_manager')
-
-# queues_list contains queues name
-queues_list_file = os.path.join(config_folder, 'queues_list')
 
 
 class AddLinkSpiderThread(QThread):
@@ -62,7 +37,8 @@ class AddLinkSpiderThread(QThread):
     def run(self):
         try :
             filesize = spider.addLinkSpider(self.add_link_dictionary)
-            self.ADDLINKSPIDERSIGNAL.emit(filesize)
+            if filesize:
+                self.ADDLINKSPIDERSIGNAL.emit(filesize)
         except Exception as e:
             print(str(e))
             print("Spider couldn't find download information")
@@ -79,14 +55,15 @@ class AddLinkWindow(AddLinkWindow_Ui):
         self.persepolis_setting = persepolis_setting
         self.parent = parent
 
-        # entry initialization ->
+        # entry initialization 
+        # read values from persepolis_setting
         # connections
         connections = int(
             self.persepolis_setting.value('settings/connections'))
 
         self.connections_spinBox.setValue(connections)
 
-        #download_path
+        # download_path
         download_path = str(
             self.persepolis_setting.value('settings/download_path'))
 
@@ -94,18 +71,23 @@ class AddLinkWindow(AddLinkWindow_Ui):
         self.download_folder_lineEdit.setEnabled(False)
 
         # enable ok button only if link_lineEdit is not empty!
+        # see linkLineChanged method.
         self.ok_pushButton.setEnabled(False)
         self.download_later_pushButton.setEnabled(False)
         self.link_lineEdit.textChanged.connect(self.linkLineChanged)
 
         self.options_pushButton.clicked.connect(self.optionsButtonClicked)
 
-        # AddLink - checking clipboard for link! ->
+        # if browsers plugin didn't send any links
+        # then check clipboard for link!
         if ('link' in self.plugin_add_link_dictionary):
+            # check plugin_add_link_dictionary for link!
+            # "link" key-value must be checked
             self.link_lineEdit.setText(
                 str(self.plugin_add_link_dictionary['link']))
  
         else:
+            # check clipboard
             clipboard = QApplication.clipboard()
             text = clipboard.text()
             if (("tp:/" in text[2:6]) or ("tps:/" in text[2:7])):
@@ -139,14 +121,10 @@ class AddLinkWindow(AddLinkWindow_Ui):
         if (settings_download_user):
             self.download_user_lineEdit.setText(str(settings_download_user))
 
-        # finding queues name and adding them to add_queue_comboBox ->
-        self.add_queue_comboBox.addItem('Single Downloads')
-        f_queues_list = Open(queues_list_file)
-        queues_list_file_lines = f_queues_list.readlines()
-        f_queues_list.close()
-        for queue in queues_list_file_lines:
-            queue_strip = queue.strip()
-            self.add_queue_comboBox.addItem(str(queue_strip))
+# get categories name and add them to add_queue_comboBox
+        categories_list = self.parent.persepolis_db.categoriesList()
+        for queue in categories_list:
+            self.add_queue_comboBox.addItem(str(queue))
 
         self.add_queue_comboBox.setCurrentIndex(0)
 
@@ -185,7 +163,9 @@ class AddLinkWindow(AddLinkWindow_Ui):
         # set focus to ok button
         self.ok_pushButton.setFocus()
 
-        # check name of flashgot link ->
+        # check plugin_add_link_dictionary for finding file name
+        # perhaps plugin sended file name in plugin_add_link_dictionary
+        # for finding file name "out" key must be checked
         if ('out' in self.plugin_add_link_dictionary):
             if self.plugin_add_link_dictionary['out']:
                 self.change_name_lineEdit.setText(
@@ -365,8 +345,10 @@ class AddLinkWindow(AddLinkWindow_Ui):
             self.start_checkBox.setEnabled(True)
             self.end_checkBox.setEnabled(True)
 
-# user commited information, so get information from AddLinkWindow and return them!
     def okButtonPressed(self, button, download_later):
+    # user commited information by pressing ok_pushButton, so get information
+    # from AddLinkWindow and return them to the mainwindow with callback!
+
         # write user's new inputs in persepolis_setting for next time :)
         self.persepolis_setting.setValue(
             'add_link_initialization/ip', self.ip_lineEdit.text())
@@ -378,7 +360,7 @@ class AddLinkWindow(AddLinkWindow_Ui):
             'add_link_initialization/download_user', self.download_user_lineEdit.text())
 
         # get proxy information
-        if self.proxy_checkBox.isChecked() == False:
+        if not(self.proxy_checkBox.isChecked()):
             ip = None
             port = None
             proxy_user = None
@@ -398,7 +380,7 @@ class AddLinkWindow(AddLinkWindow_Ui):
                 proxy_passwd = None
 
         # get download username and password information
-        if self.download_checkBox.isChecked() == False:
+        if not(self.download_checkBox.isChecked()):
             download_user = None
             download_passwd = None
         else:
@@ -410,7 +392,7 @@ class AddLinkWindow(AddLinkWindow_Ui):
                 download_passwd = None
 
         # check that if user limits download speed.
-        if self.limit_checkBox.isChecked() == False:
+        if not(self.limit_checkBox.isChecked()):
             limit = 0
         else:
             if self.limit_comboBox.currentText() == "KB/S":
@@ -419,19 +401,19 @@ class AddLinkWindow(AddLinkWindow_Ui):
                 limit = str(self.limit_spinBox.value()) + str("M")
 
         # get start time for download if user set that.
-        if self.start_checkBox.isChecked() == False:
+        if not(self.start_checkBox.isChecked()):
             start_time = None
         else:
             start_time = self.start_time_qDataTimeEdit.text()
 
         # get end time for download if user set that.
-        if self.end_checkBox.isChecked() == False:
+        if not(self.end_checkBox.isChecked()):
             end_time = None
         else:
             end_time = self.end_time_qDateTimeEdit.text()
 
         # check that if user set new name for download file.
-        if self.change_name_checkBox.isChecked() == False:
+        if not(self.change_name_checkBox.isChecked()):
             out = None
         else:
             out = str(self.change_name_lineEdit.text())
@@ -446,10 +428,10 @@ class AddLinkWindow(AddLinkWindow_Ui):
         download_path = self.download_folder_lineEdit.text()
 
         # get referer and header and user-agent and load-cookies in plugin_add_link_dictionary if exits.
-        if not ('referer' in self.plugin_add_link_dictionary):
+        if not('referer' in self.plugin_add_link_dictionary):
             self.plugin_add_link_dictionary['referer'] = None
 
-        if not ('header' in self.plugin_add_link_dictionary):
+        if not('header' in self.plugin_add_link_dictionary):
             self.plugin_add_link_dictionary['header'] = None
 
         if not('user-agent' in self.plugin_add_link_dictionary):

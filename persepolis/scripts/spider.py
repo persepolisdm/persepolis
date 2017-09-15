@@ -43,7 +43,7 @@ download_list_file = os.path.join(config_folder, "download_list_file")
 download_list_file_active = os.path.join(
     config_folder, "download_list_file_active")
 
-# for more informations about "requests" library , please see
+# for more information about "requests" library , please see
 # http://docs.python-requests.org/en/master/
 
 
@@ -184,7 +184,7 @@ def queueSpider(add_link_dictionary):
 
 
 def addLinkSpider(add_link_dictionary):
-    # getting user's download request from add_link_dictionary
+    # get user's download information from add_link_dictionary
     for i in ['link', 'header', 'out', 'user-agent', 'load-cookies', 'referer']:
         if not (i in add_link_dictionary):
             add_link_dictionary[i] = None
@@ -197,26 +197,26 @@ def addLinkSpider(add_link_dictionary):
 
     requests_session = requests.Session()  # defining a requests Session
 
-    if raw_cookies != None:  # setting cookies
+    if raw_cookies:  # set cookies
         cookie = SimpleCookie()
         cookie.load(raw_cookies)
 
         cookies = {key: morsel.value for key, morsel in cookie.items()}
         requests_session.cookies = cookiejar_from_dict(cookies)
 
-    if referer != None:
-        # setting referer to the session
+    if referer:
+        # set referer to the session
         requests_session.headers.update({'referer': referer})
 
-    if user_agent != None:
-        # setting user_agent to the session
+    if user_agent:
+        # set user_agent to the session
         requests_session.headers.update({'user-agent': user_agent})
 
-    # finding headers
+    # find headers
     response = requests_session.head(link)
     header = response.headers
 
-    file_size = '***'
+    file_size = None 
     if 'Content-Length' in header.keys():  # checking if file_size is available
         file_size = int(header['Content-Length'])
         if int(file_size/1073741824) != 0:  # converting file_size to KB or MB or GB
