@@ -39,6 +39,10 @@ class AddLinkSpiderThread(QThread):
             filesize = spider.addLinkSpider(self.add_link_dictionary)
             if filesize:
                 self.ADDLINKSPIDERSIGNAL.emit(filesize)
+            else:
+                print("Spider couldn't find download information")
+                logger.sendToLog(
+                    "Spider couldn't find download information", "ERROR")
         except Exception as e:
             print(str(e))
             print("Spider couldn't find download information")

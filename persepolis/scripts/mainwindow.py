@@ -2008,11 +2008,11 @@ class MainWindow(MainWindow_Ui):
 
 ###########
 
-# This method called if user presses "show/hide progress window" button in
+# This method is called if user presses "show/hide progress window" button in
 # MainWindow
     def progressButtonPressed(self, button):
-        selected_row_return = self.selectedRow()  # finding user selected row
-        if selected_row_return != None:
+        selected_row_return = self.selectedRow()  # find user selected row
+        if selected_row_return:
             gid = self.download_table.item(selected_row_return, 8).text()
         # if gid is in self.progress_window_list_dict , it means that progress
         # window  for this gid (for this download) is created before and it's
@@ -2021,7 +2021,7 @@ class MainWindow(MainWindow_Ui):
                 member_number = self.progress_window_list_dict[gid]
                 # if window is visible >> hide it , and if window is hide >>
                 # make it visible!
-                if self.progress_window_list[member_number].isVisible() == False:
+                if not(self.progress_window_list[member_number].isVisible()):
                     self.progress_window_list[member_number].show()
                 else:
                     self.progress_window_list[member_number].hide()
@@ -3084,25 +3084,25 @@ class MainWindow(MainWindow_Ui):
     def createQueue(self, item):
         text, ok = QInputDialog.getText(
             self, 'Queue', 'Enter queue name:', text='queue')
+
         if not(ok):
             return None
+
         queue_name = str(text)
         if ok and queue_name != '' and queue_name != 'Single Downloads':
             # check queue_name if existed!
-            f = Open(queues_list_file)
-            f_lines = f.readlines()
-            f.close()
-            for line in f_lines:
-                name = str(line.strip())
-                if name == queue_name:  # showng Error if queue existed before
-                    error_messageBox = QMessageBox()
-                    error_messageBox.setText(
-                        '<b>"' + queue_name + '</b>" is already existed!')
-                    error_messageBox.setWindowTitle('Error!')
-                    error_messageBox.exec_()
-                    return None
+            answer = self.persepolis_db.searchCategoryInCategoryTable(queue_name)
 
-         # inserting items in category_tree
+            # show Error window if queue existed before
+            if answer:  
+                error_messageBox = QMessageBox()
+                error_messageBox.setText(
+                    '<b>"' + queue_name + '</b>" is already existed!')
+                error_messageBox.setWindowTitle('Error!')
+                error_messageBox.exec_()
+                return None
+
+         # insert new item in category_tree
             new_queue_category = QStandardItem(queue_name)
             font = QtGui.QFont()
             font.setBold(True)
@@ -3110,26 +3110,22 @@ class MainWindow(MainWindow_Ui):
             new_queue_category.setEditable(False)
             self.category_tree_model.appendRow(new_queue_category)
 
-        # adding queue name to queues_list_file
-            f = Open(queues_list_file, 'a')
-            f.writelines(queue_name + '\n')
-            f.close()
+            dict = {'category': queue_name,
+                    'start_time_enable': 'no',
+                    'start_time': '0:0',
+                    'end_time_enable': 'no',
+                    'end_time': '0:0',
+                    'reverse': 'no',
+                    'limit_enable': 'no',
+                    'limit_value': '0K',
+                    'after_download': 'no'
+                    }
 
-        #creating a file for this queue in category_folder
-            osCommands.touch(os.path.join(category_folder , queue_name) )
+            # insert new category in data base
+            self.persepolis_db.insertInCategoryTable(dict)
 
-        #creating a file for queue information in queue_info_folder
-            queue_info_file = os.path.join(queue_info_folder , queue_name)
-
-        #queue_info_file contains start time and end time information and ... for queue
-            queue_info_dict = {'start_time_enable' : 'no' , 'end_time_enable' : 'no' , 'start_minute' : '0' , 'start_hour' : '0' , 'end_hour': '0' , 'end_minute' : '0' , 'reverse' : 'no' , 'limit_speed' : 'yes' , 'limit' : '0K' , 'after' : 'yes' }
-
-            f = Open(queue_info_file , 'w' )
-            f.writelines(str(queue_info_dict))
-            f.close()
-
-        # highlighting selected category in category_tree
-        # finding item
+        # highlight new category in category_tree
+        # find item
             for i in range(self.category_tree_model.rowCount()):
                 category_tree_item_text = str(
                     self.category_tree_model.index(i, 0).data())
@@ -3144,6 +3140,8 @@ class MainWindow(MainWindow_Ui):
 
             # return queue_name
             return queue_name
+
+###################
 
 # ths method creates a FlashgotQueue window for list of links.
     def pluginQueue(self, list_of_links):
@@ -3162,16 +3160,19 @@ class MainWindow(MainWindow_Ui):
 # TODO FlashgotQueue file must be checked and callbacks must be checked
 
 
-# this method is importing text file for creating queue . text file must
-# contain links . 1 link per line!
+# this method is importing a text file for creating queue .
+# text file must contain links . 1 link per line!
     def importText(self, item):
-        # getting file path
+        # get file path
         f_path, filters = QFileDialog.getOpenFileName(
             self, 'Select the text file that contains links')
-        if os.path.isfile(str(f_path)) == True:
-            # creating a text_queue_window for getting information.
+
+        # if path is correct:
+        if os.path.isfile(str(f_path)):
+            # create a text_queue_window for getting information.
             text_queue_window = TextQueue(
                 self, f_path, self.queueCallback, self.persepolis_setting)
+
             self.text_queue_window_list.append(text_queue_window)
             self.text_queue_window_list[len(
                 self.text_queue_window_list) - 1].show()

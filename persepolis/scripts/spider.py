@@ -13,35 +13,11 @@
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import os
 import requests
-from persepolis.scripts.newopen import Open, readList, writeList
 from http.cookies import SimpleCookie
 from requests.cookies import cookiejar_from_dict
 from requests import Session
-import platform
 
-os_type = platform.system()
-
-
-home_address = os.path.expanduser("~")
-
-# config_folder
-if os_type == 'Linux' or os_type == 'FreeBSD' or os_type == 'OpenBSD':
-    config_folder = os.path.join(
-        str(home_address), ".config/persepolis_download_manager")
-elif os_type == 'Darwin':
-    config_folder = os.path.join(
-        str(home_address), "Library/Application Support/persepolis_download_manager")
-elif os_type == 'Windows':
-    config_folder = os.path.join(
-        str(home_address), 'AppData', 'Local', 'persepolis_download_manager')
-
-
-download_info_folder = os.path.join(config_folder, "download_info")
-download_list_file = os.path.join(config_folder, "download_list_file")
-download_list_file_active = os.path.join(
-    config_folder, "download_list_file_active")
 
 # for more information about "requests" library , please see
 # http://docs.python-requests.org/en/master/
@@ -135,9 +111,9 @@ def spider(add_link_dictionary):
     return filename, filesize    
 
 
-# this function finds and returns name of the file
+# this function finds and returns file name for links.
 def queueSpider(add_link_dictionary):
-    # getting user's download request from add_link_dictionary
+    # get download information from add_link_dictionary
     for i in ['link', 'header', 'out', 'user-agent', 'load-cookies', 'referer']:
         if not (i in add_link_dictionary):
             add_link_dictionary[i] = None
@@ -150,25 +126,25 @@ def queueSpider(add_link_dictionary):
 
     requests_session = requests.Session()  # defining a requests Session
 
-    if raw_cookies != None:  # setting cookies
+    if raw_cookies:  # set cookies
         cookie = SimpleCookie()
         cookie.load(raw_cookies)
 
         cookies = {key: morsel.value for key, morsel in cookie.items()}
         requests_session.cookies = cookiejar_from_dict(cookies)
 
-    if referer != None:
-        # setting referer to the session
+    if referer:
+        # set referer to the session
         requests_session.headers.update({'referer': referer})
 
-    if user_agent != None:
-        # setting user_agent to the session
+    if user_agent:
+        # set user_agent to the session
         requests_session.headers.update({'user-agent': user_agent})
 
-    # finding headers
+    # find headers
     response = requests_session.head(link)
     header = response.headers
-    filename = '***'
+    filename = None 
     if 'Content-Disposition' in header.keys():  # checking if filename is available
         content_disposition = header['Content-Disposition']
         if content_disposition.find('filename') != -1:
@@ -177,7 +153,7 @@ def queueSpider(add_link_dictionary):
             # getting file name in desired format
             filename = filename_splited[1:-1]
 
-    if filename == '***':
+    if not(filename):
         filename = link.split('/')[-1]
 
     return filename

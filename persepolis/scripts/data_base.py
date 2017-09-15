@@ -202,9 +202,7 @@ class PersepolisDB():
 
 
     # insert new category in category_db_table
-    def insertInCategoryTable(self, category, start_time_enable, start_time,
-                            end_time_enable, end_time, 
-                            reverse, limit_enable, limit_value, after_download):    
+    def insertInCategoryTable(self, dict):    
 
         self.persepolis_db_cursor.execute("""INSERT INTO category_db_table VALUES(
                                                                             :category,
@@ -216,17 +214,7 @@ class PersepolisDB():
                                                                             :limit_enable,
                                                                             :limit_value,
                                                                             :after_download
-                                                                            )""", {
-                                                                                'category': category,
-                                                                                'start_time_enable': start_time_enable,
-                                                                                'start_time': start_time,
-                                                                                'end_time_enable': end_time_enable,
-                                                                                'end_time': end_time,
-                                                                                'reverse': reverse,
-                                                                                'limit_enable': limit_enable,
-                                                                                'limit_value': limit_value,
-                                                                                'after_download': after_download
-                                                                                })
+                                                                            )""", dict)
         self.persepolis_db_connection.commit()
  
 
@@ -301,7 +289,8 @@ class PersepolisDB():
                 'link': tuple[9],
                 'firs_try_date': tuple[10],
                 'last_try_date': tuple[11],
-                'category': tuple[12]}
+                'category': tuple[12]
+                }
 
         # return results
         return dict
@@ -321,9 +310,9 @@ class PersepolisDB():
         else:
             return None
 
-        dict = {'gid' :tuple[0],
-                'out': tuple[1],
-                'start_time': tuple[2],
+        dict = {'gid' :tuple[1],
+                'out': tuple[2],
+                'start_time': tuple[3],
                 'end_minute': tuple[4],
                 'link': tuple[5],
                 'ip': tuple[6],
@@ -339,7 +328,8 @@ class PersepolisDB():
                 'load_cookies': tuple[15],
                 'user_agent': tuple[16],
                 'header': tuple[17],
-                'after_download': tuple[18]}
+                'after_download': tuple[18]
+                }
 
 	return dict
 
@@ -458,7 +448,27 @@ class PersepolisDB():
     # return category information in category_db_table
     def searchCategoryInCategoryTable(self, category):
         self.persepolis_db_cursor.execute("""SELECT * FROM category_db_table WHERE category = {}""".format(str(category)))
-        return self.persepolis_db_cursor.fetchall()
+        list = self.persepolis_db_cursor.fetchall()
+
+        if list:
+            tuple = list[0]
+        else:
+            return None
+
+        # create a dictionary from results
+        dict = {'category': tuple[0],
+                'start_time_enable': tuple[1],
+                'start_time': tuple[2],
+                'end_time_enable': tuple[3],
+                'end_time': tuple[4],
+                'reverse': tuple[5],
+                'limit_enable': tuple[6],
+                'limit_value': tuple[7],
+                'after_download': tuple[8]
+                }
+
+        # return dictionary
+        return dict
 
     # return categories name 
     def categoriesList(self):
