@@ -1694,7 +1694,7 @@ class MainWindow(MainWindow_Ui):
         # get new links from plugins_db
         list_of_links = self.plugins_db.returnNewLinks() 
 
-        # notify that job is done!and new links received form plugins_db 
+        # notify that job is done!and new links can be received form plugins_db 
         plugin_links_checked = True
 
         if len(list_of_links) == 1:  # It means we have only one link in list_of_links
@@ -3143,7 +3143,7 @@ class MainWindow(MainWindow_Ui):
 
 ###################
 
-# ths method creates a FlashgotQueue window for list of links.
+# this method creates a FlashgotQueue window for list of links.
     def pluginQueue(self, list_of_links):
         # create window
         plugin_queue_window = FlashgotQueue(

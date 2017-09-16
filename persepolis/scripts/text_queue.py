@@ -19,10 +19,9 @@ from PyQt5.QtGui import QIcon
 from PyQt5.QtWidgets import QTableWidgetItem , QFileDialog
 from PyQt5.QtCore import QDir , QPoint , QSize, QThread , pyqtSignal
 import os 
-from persepolis.scripts import osCommands, logger
+from persepolis.scripts import logger
 from persepolis.scripts import spider
 from functools import partial
-import platform
 
 # This thread finds filename
 class QueueSpiderThread(QThread):

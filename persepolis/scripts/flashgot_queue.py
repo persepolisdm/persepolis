@@ -13,129 +13,104 @@
 #
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
 from persepolis.gui.text_queue_ui import TextQueue_Ui
 from functools import partial
 from PyQt5 import QtWidgets, QtCore, QtGui
 from PyQt5.QtGui import QIcon
 from PyQt5.QtWidgets import QTableWidgetItem, QFileDialog
 from PyQt5.QtCore import QPoint, QSize, QThread, pyqtSignal, QDir
-from persepolis.scripts.newopen import Open, readDict
-from persepolis.scripts import download
-import ast
 import os
-from persepolis.scripts import osCommands
 from persepolis.scripts import logger
 from persepolis.scripts import spider
-import platform
-
-os_type = platform.system()
 
 
+# This thread finds filename
 class QueueSpiderThread(QThread):
     QUEUESPIDERRETURNEDFILENAME = pyqtSignal(str)
 
-    def __init__(self, add_link_dictionary):
+    def __init__(self, dict):
         QThread.__init__(self)
-        self.add_link_dictionary = add_link_dictionary
+        self.dict = dict
 
     def run(self):
-        try :
-            filename = spider.queueSpider(self.add_link_dictionary)
-            self.QUEUESPIDERRETURNEDFILENAME.emit(filename)
-        except:
+        try:
+            filename = spider.queueSpider(self.dict)
+            if filename:
+                self.QUEUESPIDERRETURNEDFILENAME.emit(filename)
+            else:
+                print("Spider couldn't find download information")
+                logger.logObj.error(
+                    "Spider couldn't find download information", exc_info=True)
+
+        except Exception as e:
+            print(e)
             print("Spider couldn't find download information")
-            logger.sendToLog(
-                "Spider couldn't find download information", "ERROR")
+            logger.logObj.error(
+                "Spider couldn't find download information", exc_info=True)
 
-
-home_address = os.path.expanduser("~")
-
-# config_folder
-if os_type == 'Linux' or os_type == 'FreeBSD' or os_type == 'OpenBSD':
-    config_folder = os.path.join(
-        str(home_address), ".config/persepolis_download_manager")
-elif os_type == 'Darwin':
-    config_folder = os.path.join(
-        str(home_address), "Library/Application Support/persepolis_download_manager")
-elif os_type == 'Windows':
-    config_folder = os.path.join(
-        str(home_address), 'AppData', 'Local', 'persepolis_download_manager')
-
-
-queues_list_file = os.path.join(config_folder, 'queues_list')
 
 
 class FlashgotQueue(TextQueue_Ui):
-    def __init__(self, parent, flashgot_lines, callback, persepolis_setting):
+    def __init__(self, parent, list_of_links, callback, persepolis_setting):
         super().__init__(persepolis_setting)
         self.persepolis_setting = persepolis_setting
         self.callback = callback
         self.parent = parent
-        self.flashgot_lines = flashgot_lines
+        self.list_of_links = list_of_links
 
         global icons
         icons = ':/' + \
             str(self.persepolis_setting.value('settings/icons')) + '/'
 
-        self.flashgot_lines.reverse()
+        self.list_of_links.reverse()
 
         k = 1
-        for i in range(len(self.flashgot_lines)):
-            flashgot_add_link_dictionary_str = flashgot_lines[i].strip()
-            flashgot_add_link_dictionary = ast.literal_eval(
-                flashgot_add_link_dictionary_str)
-
-            # adding row to links_table
+        for dict in self.list_of_links:
+            # add row to the links_table
             self.links_table.insertRow(0)
 
             # file_name
-            if 'out' in flashgot_add_link_dictionary:
-                file_name = str(flashgot_add_link_dictionary['out'])
+            if 'out' in dict:
+                file_name = dict['out']
             else:
                 file_name = '***'
-            # spider is finding file name
-                new_spider = QueueSpiderThread(flashgot_add_link_dictionary)
+
+            # spider finds file name
+                new_spider = QueueSpiderThread(dict)
                 self.parent.threadPool.append(new_spider)
                 self.parent.threadPool[len(self.parent.threadPool) - 1].start()
                 self.parent.threadPool[len(self.parent.threadPool) - 1].QUEUESPIDERRETURNEDFILENAME.connect(
-                    partial(self.parent.queueSpiderCallBack, child=self, row_number=len(self.flashgot_lines) - k))
+                    partial(self.parent.queueSpiderCallBack, child=self, row_number=len(self.list_of_links) - k))
             k = k + 1
 
             item = QTableWidgetItem(file_name)
-            # adding checkbox to the item
+            # add checkbox to the item
             item.setFlags(QtCore.Qt.ItemIsUserCheckable |
                           QtCore.Qt.ItemIsEnabled)
             item.setCheckState(QtCore.Qt.Checked)
 
-            # inserting file_name
+            # insert file_name
             self.links_table.setItem(0, 0, item)
 
-            # finding link
-            link = str(flashgot_add_link_dictionary['link'])
+            # find link
+            link = dict['link']
             item = QTableWidgetItem(str(link))
 
-            # inserting link
+            # insert link
             self.links_table.setItem(0, 1, item)
 
-            # inserting add_link_dictionary
-            item = QTableWidgetItem(flashgot_add_link_dictionary_str)
-            self.links_table.setItem(0, 2, item)
-
-        # finding queues name and adding them to add_queue_comboBox
-        f_queues_list = Open(queues_list_file)
-        queues_list_file_lines = f_queues_list.readlines()
-        f_queues_list.close()
-        for queue in queues_list_file_lines:
-            queue_strip = queue.strip()
-            self.add_queue_comboBox.addItem(str(queue_strip))
-
-        self.add_queue_comboBox.addItem('Single Downloads')
+# get categories name and add them to add_queue_comboBox
+        categories_list = self.parent.persepolis_db.categoriesList()
+ 
+        for queue in categories_list:
+            self.add_queue_comboBox.addItem(queue)
 
         self.add_queue_comboBox.addItem(
             QIcon(icons + 'add_queue'), 'Create new queue')
 
-# entry initialization
 
+# entry initialization
         global connections
         connections = int(
             self.persepolis_setting.value('settings/connections'))
@@ -205,38 +180,39 @@ class FlashgotQueue(TextQueue_Ui):
 # add_queue_comboBox event
         self.add_queue_comboBox.currentIndexChanged.connect(self.queueChanged)
 
-# setting window size and position
+# set window size and position
         size = self.persepolis_setting.value('TextQueue/size', QSize(700, 500))
         position = self.persepolis_setting.value(
             'TextQueue/position', QPoint(300, 300))
         self.resize(size)
         self.move(position)
 
+# this method selects all links in links_table
     def selectAll(self, button):
         for i in range(self.links_table.rowCount()):
             item = self.links_table.item(i, 0)
             item.setCheckState(QtCore.Qt.Checked)
 
+# this method uncheckes all check boxes
     def deselectAll(self, button):
         for i in range(self.links_table.rowCount()):
             item = self.links_table.item(i, 0)
             item.setCheckState(QtCore.Qt.Unchecked)
 
+# this method is called, when user changes add_queue_comboBox
     def queueChanged(self, combo):
         if str(self.add_queue_comboBox.currentText()) == 'Create new queue':
+            # if user want to create new queue, then call createQueue method from mainwindow(parent)
             new_queue = self.parent.createQueue(combo)
-            if new_queue != None:
-                # clearing comboBox
-                self.add_queue_comboBox.clear()
-                # loading queue list again!
-                f_queues_list = Open(queues_list_file)
-                queues_list_file_lines = f_queues_list.readlines()
-                f_queues_list.close()
-                for queue in queues_list_file_lines:
-                    queue_strip = queue.strip()
-                    self.add_queue_comboBox.addItem(str(queue_strip))
 
-                self.add_queue_comboBox.addItem('Single Downloads')
+            if new_queue:
+                # clear comboBox
+                self.add_queue_comboBox.clear()
+
+                # load queue list again!
+                queues_list = self.parent.persepolis_db.categoriesList()
+                for queue in queues_list:
+                    self.add_queue_comboBox.addItem(queue)
 
                 self.add_queue_comboBox.addItem(
                     QIcon(icons + 'add_queue'), 'Create new queue')
@@ -247,7 +223,8 @@ class FlashgotQueue(TextQueue_Ui):
             else:
                 self.add_queue_comboBox.setCurrentIndex(0)
 
- # activate frames if checkBoxes checked
+
+# activate frames if checkBoxes checked
     def proxyFrame(self, checkBox):
 
         if self.proxy_checkBox.isChecked() == True:
@@ -282,8 +259,9 @@ class FlashgotQueue(TextQueue_Ui):
         if os.path.isdir(fname):
             self.download_folder_lineEdit.setText(fname)
 
+
     def okButtonPressed(self, button):
-        # writing user's input data to init file
+        # write user's input data to init file
         self.persepolis_setting.setValue(
             'add_link_initialization/ip', self.ip_lineEdit.text())
         self.persepolis_setting.setValue(
@@ -293,7 +271,7 @@ class FlashgotQueue(TextQueue_Ui):
         self.persepolis_setting.setValue(
             'add_link_initialization/download_user', self.download_user_lineEdit.text())
 
-        if self.proxy_checkBox.isChecked() == False:
+        if not(self.proxy_checkBox.isChecked()):
             ip = None
             port = None
             proxy_user = None
@@ -312,7 +290,7 @@ class FlashgotQueue(TextQueue_Ui):
             if not(proxy_passwd):
                 proxy_passwd = None
 
-        if self.download_checkBox.isChecked() == False:
+        if not(self.download_checkBox.isChecked()):
             download_user = None
             download_passwd = None
         else:
@@ -323,7 +301,7 @@ class FlashgotQueue(TextQueue_Ui):
             if not(download_passwd):
                 download_passwd = None
 
-        if self.limit_checkBox.isChecked() == False:
+        if not(self.limit_checkBox.isChecked()):
             limit = 0
         else:
             if self.limit_comboBox.currentText() == "KB/S":
@@ -336,51 +314,69 @@ class FlashgotQueue(TextQueue_Ui):
         connections = self.connections_spinBox.value()
         download_path = self.download_folder_lineEdit.text()
 
-        now_date_list = download.nowDate()
+        dict = {'out': None,
+                'start_time': None,
+                'end_minute': None,
+                'link': None,
+                'ip': ip,
+                'port': port,
+                'proxy_user': proxy_user,
+                'proxy_passwd': proxy_passwd,
+                'download_user': download_user,
+                'download_passwd': download_passwd,
+                'connections': connections,
+                'limit': limit,
+                'download_path' : download_path,
+                'referer': None,
+                'load_cookies': None,
+                'user_agent': None,
+                'header': None,
+                'after_download': None
+                }
 
-        add_link_dictionary = {'referer': None, 'header': None, 'user-agent': None, 'load-cookies': None, 'last_try_date': now_date_list, 'firs_try_date': now_date_list, 'out': None, 'final_download_path': None, 'start_hour': None, 'start_minute': None,
-                               'end_hour': None, 'end_minute': None, 'ip': ip, 'port': port, 'proxy_user': proxy_user, 'proxy_passwd': proxy_passwd, 'download_user': download_user, 'download_passwd': download_passwd, 'connections': connections, 'limit': limit, 'download_path': download_path}
 
-# finding checked links in links_table
+# find checked links in links_table
+
+        self.list_of_links.reverse()
         self.add_link_dictionary_list = []
         i = 0
         for row in range(self.links_table.rowCount()):
             item = self.links_table.item(row, 0)
-            if (item.checkState() == 2):  # it means item is checked
-                link = self.links_table.item(row, 1).text()
+
+            # if item is checked
+            if (item.checkState() == 2):
+                # Create a copy from dict and add it to add_link_dictionary_list
                 self.add_link_dictionary_list.append(
-                    add_link_dictionary.copy())
+                    dict.copy())
+
+                # get link and add it to dict
+                link = self.links_table.item(row, 1).text()
                 self.add_link_dictionary_list[i]['link'] = str(link)
 
-                flashgot_add_link_dictionary_str = self.links_table.item(
-                    row, 2).text()
-                flashgot_add_link_dictionary = ast.literal_eval(
-                    flashgot_add_link_dictionary_str)
-
-                if not ('referer' in flashgot_add_link_dictionary):
-                    flashgot_add_link_dictionary['referer'] = None
-
-                if not ('header' in flashgot_add_link_dictionary):
-                    flashgot_add_link_dictionary['header'] = None
-
-                if not('user-agent' in flashgot_add_link_dictionary):
-                    flashgot_add_link_dictionary['user-agent'] = None
-
-                if not('load-cookies' in flashgot_add_link_dictionary):
-                    flashgot_add_link_dictionary['load-cookies'] = None
-
-                flashgot_add_link_dictionary['out'] = self.links_table.item(
+                # add file name to the dict
+                self.add_link_dictionary_list[i]['out'] = self.links_table.item(
                     row, 0).text()
 
-                for j in flashgot_add_link_dictionary.keys():
-                    self.add_link_dictionary_list[i][j] = flashgot_add_link_dictionary[j]
+                # TODO : this line must be checked!
+                dict = self.list_of_links[row]
+
+                keys_list = ['referer', 'header', 'user-agent', 'load_cookies']
+                for key in keys_list:
+                    if key in dict:
+                        self.add_link_dictionary_list[i][key] = dict[key]
 
                 i = i + 1
 
+
+        # reverse list
         self.add_link_dictionary_list.reverse()
+
+        # Create callback for mainwindow
         self.callback(self.add_link_dictionary_list, category)
 
+        # close window
         self.close()
+
 
     def closeEvent(self, event):
         self.persepolis_setting.setValue('TextQueue/size', self.size())

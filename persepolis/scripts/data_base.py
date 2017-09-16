@@ -105,17 +105,19 @@ class PluginsDB():
 
         # put the information in tuples in dictionary format and add it to new_list
         for tuple in list:
-            dict = {'link': tuple[0],
-                    'referer': tuple[1],
-                    'load_cookies': tuple[2],
-                    'user_agent': tuple[3],
-                    'header': tuple[4],
-                    'out': tuple[5]
+            dict = {'link': tuple[1],
+                    'referer': tuple[2],
+                    'load_cookies': tuple[3],
+                    'user_agent': tuple[4],
+                    'header': tuple[5],
+                    'out': tuple[6]
                     }
 
             new_list.append(dict)
 
-        # return results
+        # return results in list format!
+        # every member of this list is a dictionary.
+        # every dictionary contains download information
         return new_list
 
     # close connections
