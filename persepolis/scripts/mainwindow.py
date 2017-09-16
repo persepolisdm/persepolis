@@ -1741,7 +1741,7 @@ class MainWindow(MainWindow_Ui):
         # download_info_file_list is a list that contains ['file_name' ,
         # 'status' , 'size' , 'downloaded size' ,'download percentage' ,
         # 'number of connections' ,'Transfer rate' , 'estimate_time_left' ,
-        # 'gid' , 'link' , 'firs_try_date' , 'last_try_date']
+        # 'gid' , 'link' , 'firs_try_date' , 'last_try_date', 'category']
 
         # if user or flashgot defined filename then file_name is valid in
         # add_link_dictionary['out']
@@ -1761,9 +1761,11 @@ class MainWindow(MainWindow_Ui):
         else:
             status = 'stopped'
 
+        # get now time and date
+        date = download.nowDate()
 
         list = [file_name, status, '***', '***', '***',
-                '***', '***', '***', gid, add_link_dictionary['link'], '***', '***', category]
+                '***', '***', '***', gid, add_link_dictionary['link'], date, date, category]
 
         dict = {'file_name': file_name,
                 'status': status,
@@ -1775,8 +1777,8 @@ class MainWindow(MainWindow_Ui):
                 'estimate_time_left': '***',
                 'gid': gid,
                 'link': add_link_dictionary['link'],
-                'firs_try_date': '***',
-                'last_try_date': '***',
+                'firs_try_date': date, 
+                'last_try_date': date,
                 'category': category}
 
         # write information in data_base
@@ -3141,7 +3143,6 @@ class MainWindow(MainWindow_Ui):
             # return queue_name
             return queue_name
 
-###################
 
 # this method creates a FlashgotQueue window for list of links.
     def pluginQueue(self, list_of_links):
@@ -3178,88 +3179,104 @@ class MainWindow(MainWindow_Ui):
                 self.text_queue_window_list) - 1].show()
 
 
-# callback of text_queue_window.See importText method for more information.
+
+# callback of text_queue_window and plugin_queue_window.AboutWindowi
+# See importText and pluginQueue method for more information.
     def queueCallback(self, add_link_dictionary_list, category):
         # defining path of category_file
         selected_category = str(category)
-        category_file = os.path.join(category_folder, selected_category)
 
-        # highlighting selected category in category_tree
-        # finding item
+        # highlight selected category in category_tree
+        # find item
         for i in range(self.category_tree_model.rowCount()):
             category_tree_item_text = str(
                 self.category_tree_model.index(i, 0).data())
             if category_tree_item_text == selected_category:
                 category_index = i
                 break
-        # highliting
+            
+        # highlight item
         category_tree_model_index = self.category_tree_model.index(
             category_index, 0)
         self.category_tree.setCurrentIndex(category_tree_model_index)
         self.categoryTreeSelected(category_tree_model_index)
 
-        # creating download_info_file for every add_link_dictionary in
-        # add_link_dictionary_list
+        download_table_list = []
+
+        # get now time and date
+        date = download.nowDate()
+
+        # add dictionary of downloads to data base
         for add_link_dictionary in add_link_dictionary_list:
 
             # aria2 identifies each download by the ID called GID. The GID must
             # be hex string of 16 characters.
             gid = self.gidGenerator()
 
+            add_link_dictionary['gid'] = gid
+
             # download_info_file_list is a list that contains ['file_name' ,
             # 'status' , 'size' , 'downloaded size' ,'download percentage' ,
             # 'number of connections' ,'Transfer rate' , 'estimate_time_left' ,
-            # 'gid' , 'add_link_dictionary' , 'firs_try_date' ,
-            # 'last_try_date']
-            try:
-                file_name = str(add_link_dictionary['out'])
-            except:
+            # 'gid' , 'link' , 'firs_try_date' , 'last_try_date', 'category']
+
+            # if user or flashgot defined filename then file_name is valid in
+            # add_link_dictionary['out']
+            if add_link_dictionary['out']:
+                file_name = add_link_dictionary['out']
+            else:
                 file_name = '***'
 
-            download_info_file_list = [file_name, 'stopped', '***', '***', '***', '***',
-                                       '***', '***', gid, add_link_dictionary, '***', '***', selected_category]
+            list = [file_name, 'stopped', '***', '***', '***',
+                    '***', '***', '***', gid, add_link_dictionary['link'],
+                    date, date, category]
 
-            # gid is generating for download and a file (with name of gid) is
-            # creating in download_info_folder . this file is containing
-            # download_info_file_list
-            download_info_file = os.path.join(download_info_folder, gid)
-            osCommands.touch(download_info_file)
+            dict = {'file_name': file_name,
+                    'status': 'stopped',
+                    'size': '***',
+                    'downloaded_size': '***',
+                    'percent': '***',
+                    'connections': '***',
+                    'rate': '***',
+                    'estimate_time_left': '***',
+                    'gid': gid,
+                    'link': add_link_dictionary['link'],
+                    'firs_try_date': date,
+                    'last_try_date': date,
+                    'category': category}
 
-            writeList(download_info_file, download_info_file_list)
+            download_table_list.append(dict)
 
-            # creating back up file for download_info_file
-            download_info_file_backup = str(download_info_file) + "_back"
-            osCommands.touch(download_info_file_backup)
-            writeList(download_info_file_backup, download_info_file_list)
 
-            # creating a row in download_table
+            # create a row in download_table
             self.download_table.insertRow(0)
             j = 0
-            download_info_file_list[9] = str(download_info_file_list[9])
-            for i in download_info_file_list:
+            for i in list:
                 item = QTableWidgetItem(i)
                 self.download_table.setItem(0, j, item)
                 j = j + 1
 
-            # this section is adding checkBox to the row , if user selected
+            # this section adds checkBox to the row , if user selected
             # selectAction
-            if self.selectAction.isChecked() == True:
+            if self.selectAction.isChecked():
                 item = self.download_table.item(0, 0)
                 item.setFlags(QtCore.Qt.ItemIsUserCheckable |
                               QtCore.Qt.ItemIsEnabled)
                 item.setCheckState(QtCore.Qt.Unchecked)
 
-            # adding gid of download to download_list_file and
-            # download_list_file_active and category_file
-            for i in [download_list_file, download_list_file_active, category_file]:
-                f = Open(i, "a")
-                f.writelines(gid + "\n")
-                f.close()
-
             # spider is finding file size and file name
             new_spider = SpiderThread(add_link_dictionary, self)
             self.threadPool.append(new_spider)
             self.threadPool[len(self.threadPool) - 1].start()
+
+
+
+        # write information in data_base
+        self.persepolis_db.insertInDownloadTable(download_table_list)
+        self.persepolis_db.insertInAddLinkTable(add_link_dictionary_list)
+ 
+
+###################
 
 # this method is called , when user is clicking on an item in
 # category_tree (left side panel)
