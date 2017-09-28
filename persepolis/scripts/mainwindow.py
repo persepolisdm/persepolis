@@ -3187,7 +3187,7 @@ class MainWindow(MainWindow_Ui):
         selected_category = str(category)
 
         # highlight selected category in category_tree
-        # find item
+        # first of all find category_index of item!
         for i in range(self.category_tree_model.rowCount()):
             category_tree_item_text = str(
                 self.category_tree_model.index(i, 0).data())
@@ -3195,9 +3195,11 @@ class MainWindow(MainWindow_Ui):
                 category_index = i
                 break
             
-        # highlight item
+        # second: find category_tree_model_index 
         category_tree_model_index = self.category_tree_model.index(
             category_index, 0)
+
+        # third: highlight item
         self.category_tree.setCurrentIndex(category_tree_model_index)
         self.categoryTreeSelected(category_tree_model_index)
 
@@ -3245,8 +3247,8 @@ class MainWindow(MainWindow_Ui):
                     'last_try_date': date,
                     'category': category}
 
+            # add dict to download_table_list
             download_table_list.append(dict)
-
 
             # create a row in download_table
             self.download_table.insertRow(0)
@@ -3276,7 +3278,6 @@ class MainWindow(MainWindow_Ui):
         self.persepolis_db.insertInAddLinkTable(add_link_dictionary_list)
  
 
-###################
 
 # this method is called , when user is clicking on an item in
 # category_tree (left side panel)
@@ -3299,7 +3300,7 @@ class MainWindow(MainWindow_Ui):
     def categoryTreeSelected2(self, new_selection):
         global current_category_tree_index
 
-# clearing download_table
+# clear download_table
         self.download_table.setRowCount(0)
 
 
@@ -3311,57 +3312,39 @@ class MainWindow(MainWindow_Ui):
         # finding name of old_selection_index
         old_category_tree_item_text = str(old_selection_index.data())
 
-        # queue_info_file contains start time and end time information and ... for queue
-        # finding queue_info_file path
-        queue_info_file = os.path.join(
-            queue_info_folder, old_category_tree_item_text)
-
-        # queue_info_dict default format >> queue_info_dict =
-        # {'start_time_enable' : 'no' , 'end_time_enable' : 'no' ,
-        # 'start_minute' : '0' , 'start_hour' : '0' , 'end_hour': '0' ,
-        # 'end_minute' : '0' , 'reverse' : 'no' , 'limit_speed' : 'yes' ,
-        # 'limit' : '0K'  , 'after': 'yes' }
-        queue_info_dict = {}
+        queue_dict = {}
 
         # start_checkBox
         if self.start_checkBox.isChecked():
-            queue_info_dict['start_time_enable'] = 'yes'
+            queue_dict['start_time_enable'] = 'yes'
         else:
-            queue_info_dict['start_time_enable'] = 'no'
+            queue_dict['start_time_enable'] = 'no'
 
         # end_checkBox
         if self.end_checkBox.isChecked():
-            queue_info_dict['end_time_enable'] = 'yes'
+            queue_dict['end_time_enable'] = 'yes'
         else:
-            queue_info_dict['end_time_enable'] = 'no'
+            queue_dict['end_time_enable'] = 'no'
 
-        # start_hour_spinBox
-        start_hour = self.start_hour_spinBox.value()
-        queue_info_dict['start_hour'] = str(start_hour)
+        # start_time_qDataTimeEdit
+        start_time = self.start_time_qDataTimeEdit.text()
+        queue_dict['start_time'] = str(start_time)
 
-        # start_minute_spinBox
-        start_minute = self.start_minute_spinBox.value()
-        queue_info_dict['start_minute'] = str(start_minute)
-
-        # end_hour_spinBox
-        end_hour = self.end_hour_spinBox.value()
-        queue_info_dict['end_hour'] = str(end_hour)
-
-        # end_minute_spinBox
-        end_minute = self.end_minute_spinBox.value()
-        queue_info_dict['end_minute'] = str(end_minute)
+        # end_time_qDateTimeEdit
+        end_time = self.end_time_qDateTimeEdit.text()
+        queue_dict['end_time'] = str(end_time)
 
         # reverse_checkBox
         if self.reverse_checkBox.isChecked():
-            queue_info_dict['reverse'] = 'yes'
+            queue_dict['reverse'] = 'yes'
         else:
-            queue_info_dict['reverse'] = 'no'
+            queue_dict['reverse'] = 'no'
 
         # limit_checkBox
         if self.limit_checkBox.isChecked():
-            queue_info_dict['limit_speed'] = 'yes'
+            queue_dict['limit_enable'] = 'yes'
         else:
-            queue_info_dict['limit_speed'] = 'no'
+            queue_dict['limit_enable'] = 'no'
 
         #limit_comboBox and limit_spinBox
         if self.limit_comboBox.currentText() == "KB/S":
@@ -3369,20 +3352,21 @@ class MainWindow(MainWindow_Ui):
         else:
             limit = str(self.limit_spinBox.value()) + str("M")
 
-        queue_info_dict['limit'] = str(limit)
+        queue_dict['limit_value'] = str(limit)
 
         # after_checkBox
         if self.after_checkBox.isChecked():
-            queue_info_dict['after'] = 'yes'
+            queue_dict['after_download'] = 'yes'
         else:
-            queue_info_dict['after'] = 'no'
+            queue_dict['after_download'] = 'no'
 
-        if old_selection_index.data() != None:  # if old_selection_index.data() is equal to None >> It means queue deleted! and no text (data) available for it
-            # saving values
-            f = Open(queue_info_file, 'w')
-            f.writelines(str(queue_info_dict))
-            f.close()
+        # if old_selection_index.data() is equal to None >> It means queue deleted! and no text (data) available for it
+        if old_selection_index.data():  
+            # update data_base
+            self.persepolis_db.updateCategoryTable([queue_dict])
+    
 
+###################
 
 # updating download_table
         current_category_tree_index = new_selection

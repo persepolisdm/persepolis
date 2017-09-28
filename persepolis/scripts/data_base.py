@@ -378,6 +378,41 @@ class PersepolisDB():
     self.persepolis_db_connection.commit()
 
 
+# this method updates category_db_table
+    def updateCategoryTable(self, list):
+        keys_list = ['category',
+                    'start_time_enable',
+                    'start_time',
+                    'end_time_enable',
+                    'end_time',
+                    'reverse',
+                    'limit_enable',
+                    'limit_value',
+                    'after_download'
+                    ]
+
+	for dict in list:
+            for key in keys_list:
+                # if a key is missed in dict, 
+                # then add this key to the dict and assign None value for the key. 
+                if key not in dict.keys():
+                    dict[key] = None
+
+                # update data base if value for the keys is not None
+                self.persepolis_db_cursor.execute("""UPDATE category_db_table SET   start_time_enable = coalesce(:start_time_enable, start_time_enable),
+                                                                                    start_time = coalesce(:start_time, start_time),
+                                                                                    end_time_enable = coalesce(:end_time_enable, end_time_enable),
+                                                                                    end_time = coalesce(:end_time, end_time),
+                                                                                    reverse = coalesce(:reverse, reverse),
+                                                                                    limit_enable = coalesce(:limit_enable, limit_enable),
+                                                                                    limit_value = coalesce(:limit_value, limit_value),
+                                                                                    after_download = coalesce(:after_download, after_download)
+                                                                                    WHERE category = :category""", dict)
+
+    # commit the changes
+    self.persepolis_db_connection.commit()
+
+
 # this method updates addlink_db_table
     def updateAddLinkTable(self, list):
         keys_list = ['gid',
