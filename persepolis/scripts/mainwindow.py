@@ -890,8 +890,8 @@ class MainWindow(MainWindow_Ui):
 
         #TODO adding 'Single Downloads' to category_db_table in data base
         # add queues to category_tree(left side panel)
-        for tuple in queues_list:
-            new_queue_category = QStandardItem(str(tuple[0]))
+        for category_name in queues_list:
+            new_queue_category = QStandardItem(category_name)
             font = QtGui.QFont()
             font.setBold(True)
             new_queue_category.setFont(font)
@@ -3312,7 +3312,7 @@ class MainWindow(MainWindow_Ui):
         # finding name of old_selection_index
         old_category_tree_item_text = str(old_selection_index.data())
 
-        queue_dict = {}
+        queue_dict = {'category': old_category_tree_item_text}
 
         # start_checkBox
         if self.start_checkBox.isChecked():
@@ -3346,7 +3346,7 @@ class MainWindow(MainWindow_Ui):
         else:
             queue_dict['limit_enable'] = 'no'
 
-        #limit_comboBox and limit_spinBox
+        # limit_comboBox and limit_spinBox
         if self.limit_comboBox.currentText() == "KB/S":
             limit = str(self.limit_spinBox.value()) + str("K")
         else:
@@ -3365,83 +3365,68 @@ class MainWindow(MainWindow_Ui):
             # update data_base
             self.persepolis_db.updateCategoryTable([queue_dict])
     
-
-###################
-
-# updating download_table
+        # update download_table
         current_category_tree_index = new_selection
 
-        # finding category name
+        # find category
         current_category_tree_text = str(
             self.category_tree.currentIndex().data())
 
-        # findin path of gid_list_file , gid_list_file cantains gid of
+        # find path of gid_list_file , gid_list_file cantains gid of
         # downloads for selected category
         if current_category_tree_text == 'All Downloads':
-            gid_list_file = download_list_file
+            # read download items from data base
+            download_table_rows = self.persepolis_db.returnAllItemsInDownloadTable()
         else:
-            gid_list_file = os.path.join(
-                category_folder, current_category_tree_text)
+            download_table_rows = self.persepolis_db.searchCategoryInDownloadTable()
 
-        f_download_list_file = Open(gid_list_file)
-        download_list_file_lines = f_download_list_file.readlines()
-        f_download_list_file.close()
 
-        for line in download_list_file_lines:
-            gid = line.strip()
-            self.download_table.insertRow(0)
-            download_info_file = os.path.join(download_info_folder, gid)
-
-            # retry to open file if error occured!    
-            ii = 0
-            while ii != 10:
-                try:
-                    download_info_file_list = readList(download_info_file, 'string')
-                    ii = 10
-                except:
-                    print('failed to open')
-                    sleep(0.1)
-                    ii = ii + 1
-
+        # insert items in download_table 
+        for row in download_table_rows:
             for i in range(13):
-                item = QTableWidgetItem(download_info_file_list[i])
+                item = QTableWidgetItem(str(row[i]))
 
-                # adding checkbox to download rows if selectAction is checked
+                # add checkbox to download rows if selectAction is checked
                 # in edit menu
-                if self.selectAction.isChecked() == True and i == 0:
+                if self.selectAction.isChecked() and i == 0:
                     item.setFlags(QtCore.Qt.ItemIsUserCheckable |
                                   QtCore.Qt.ItemIsEnabled)
                     item.setCheckState(QtCore.Qt.Unchecked)
 
                 self.download_table.setItem(0, i, item)
 
-# telling the CheckDownloadInfoThread that job is done!
+# tell the CheckDownloadInfoThread that job is done!
         global checking_flag
         checking_flag = 0
 
-# updating toolBar and tablewidget_menu items
+# update toolBar and tablewidget_menu items
         self.toolBarAndContextMenuItems(str(current_category_tree_text))
 
+###################
 
-# this method changing toolabr and cotext menu items when new item
+# this method changes toolabr and context menu items when new item
 # highlited by user in category_tree
     def toolBarAndContextMenuItems(self, category):
+        # clear toolBar
         self.toolBar.clear()
+
+        # clear context menu of download_table
         self.download_table.tablewidget_menu.clear()
+
+        # clear context menu of category_tree
         self.category_tree.category_tree_menu.clear()
 
-        # adding selectAction to context menu
+        # add selectAction to context menu
         self.download_table.tablewidget_menu.addAction(self.selectAction)
 
         queueAction = QAction(QIcon(icons + 'add'), 'Single Downloads', self,
                               statusTip="Add to Single Downloads", triggered=partial(self.addToQueue, 'Single Downloads'))
 
-        # checking if user checked selection mode
-        if self.selectAction.isChecked() == True:
+        # check if user checked selection mode
+        if self.selectAction.isChecked():
             mode = 'selection'
             self.download_table.sendMenu = self.download_table.tablewidget_menu.addMenu(
                 'Send selected downloads to')
-
         else:
             mode = 'None'
             self.download_table.sendMenu = self.download_table.tablewidget_menu.addMenu(
@@ -3450,40 +3435,54 @@ class MainWindow(MainWindow_Ui):
         if category != 'Single Downloads':
             self.download_table.sendMenu.addAction(queueAction)
 
-        # adding sendMenu items
-        f = Open(queues_list_file)
-        f_lines = f.readlines()
-        f.close()
-        for i in f_lines:
-            if i.strip() != category:
-                queueAction = QAction(QIcon(icons + 'add_queue'), str(i.strip()), self, statusTip="Add to" + str(
-                    i.strip()), triggered=partial(self.addToQueue, str(i.strip())))
+        # get categories list from data base
+        categories_list = self.persepolis_db.categoriesList()
+
+        # add categories name to sendMenu
+        for category_name in categories_list:
+            if category_name != category:
+                queueAction = QAction(QIcon(icons + 'add_queue'), category_name, self, statusTip="Add to" + category_name,
+                        triggered=partial(self.addToQueue, category_name))
+
                 self.download_table.sendMenu.addAction(queueAction)
 
         if category == 'All Downloads' and mode == 'None':
 
-            # hiding queue_panel_widget(left side down panel)
+            # hide queue_panel_widget(left side down panel)
             self.queue_panel_widget.hide()
 
-            # updating toolBar
-            for i in self.addlinkAction, self.resumeAction, self.pauseAction, self.stopAction, self.removeAction, self.deleteFileAction, self.propertiesAction, self.progressAction, self.minimizeAction, self.exitAction:
+            # update toolBar
+            list = [self.addlinkAction, self.resumeAction, self.pauseAction,
+                    self.stopAction, self.removeAction, self.deleteFileAction,
+                    self.propertiesAction, self.progressAction, self.minimizeAction,
+                    self.exitAction]
+
+            for i in list:
                 self.toolBar.addAction(i)
 
             self.toolBar.insertSeparator(self.addlinkAction)
             self.toolBar.insertSeparator(self.resumeAction)
             self.toolBar.insertSeparator(self.removeSelectedAction)
             self.toolBar.insertSeparator(self.exitAction)
-
+########
 
 # add actions to download_table's context menu
-            for action in [self.openFileAction, self.openDownloadFolderAction, self.resumeAction, self.pauseAction, self.stopAction, self.removeAction, self.deleteFileAction, self.propertiesAction, self.progressAction]:
+            list = [self.openFileAction, self.openDownloadFolderAction, self.resumeAction,
+                    self.pauseAction, self.stopAction, self.removeAction, self.deleteFileAction,
+                    self.propertiesAction, self.progressAction]
+
+            for action in list :
                 self.download_table.tablewidget_menu.addAction(action)
 
         elif category == 'All Downloads' and mode == 'selection':
 
             self.queue_panel_widget.hide()
 
-            for i in self.addlinkAction, self.resumeAction, self.pauseAction, self.stopAction, self.removeSelectedAction, self.deleteSelectedAction, self.propertiesAction, self.progressAction, self.minimizeAction, self.exitAction:
+            list = [self.addlinkAction, self.resumeAction, self.pauseAction,
+                    self.stopAction, self.removeSelectedAction, self.deleteSelectedAction,
+                    self.propertiesAction, self.progressAction, self.minimizeAction, self.exitAction]
+
+            for i in list:
                 self.toolBar.addAction(i)
 
             self.toolBar.insertSeparator(self.addlinkAction)
@@ -3494,14 +3493,22 @@ class MainWindow(MainWindow_Ui):
 
 
 # add actions to download_table's context menu
-            for action in [self.openFileAction, self.openDownloadFolderAction, self.resumeAction, self.pauseAction, self.stopAction, self.removeSelectedAction, self.deleteSelectedAction, self.propertiesAction, self.progressAction]:
+            list = [self.openFileAction, self.openDownloadFolderAction, self.resumeAction,
+                    self.pauseAction, self.stopAction, self.removeSelectedAction,
+                    self.deleteSelectedAction, self.propertiesAction, self.progressAction]
+
+            for action in list:
                 self.download_table.tablewidget_menu.addAction(action)
 
         if category == 'Single Downloads' and mode == 'None':
 
             self.queue_panel_widget.hide()
 
-            for i in self.addlinkAction, self.resumeAction, self.pauseAction, self.stopAction, self.removeAction, self.deleteFileAction, self.propertiesAction, self.progressAction, self.minimizeAction, self.exitAction:
+            list = [self.addlinkAction, self.resumeAction, self.pauseAction, self.stopAction,
+                    self.removeAction, self.deleteFileAction, self.propertiesAction,
+                    self.progressAction, self.minimizeAction, self.exitAction]
+
+            for i in list:
                 self.toolBar.addAction(i)
 
             self.toolBar.insertSeparator(self.addlinkAction)
@@ -3511,7 +3518,11 @@ class MainWindow(MainWindow_Ui):
 
 
 # add actions to download_table's context menu
-            for action in [self.openFileAction, self.openDownloadFolderAction, self.resumeAction, self.pauseAction, self.stopAction, self.removeAction, self.deleteFileAction, self.propertiesAction, self.progressAction]:
+            list = [self.openFileAction, self.openDownloadFolderAction, self.resumeAction,
+                    self.pauseAction, self.stopAction, self.removeAction,
+                    self.deleteFileAction, self.propertiesAction, self.progressAction]
+
+            for action in list:
                 self.download_table.tablewidget_menu.addAction(action)
 
         elif category == 'Single Downloads' and mode == 'selection':
@@ -3519,7 +3530,12 @@ class MainWindow(MainWindow_Ui):
             self.queue_panel_widget.hide()
             self.queuePanelWidget(category)
 
-            for i in self.addlinkAction, self.resumeAction, self.pauseAction, self.stopAction, self.removeSelectedAction, self.deleteSelectedAction, self.propertiesAction, self.progressAction, self.minimizeAction, self.exitAction:
+            list = [self.addlinkAction, self.resumeAction, self.pauseAction,
+                    self.stopAction, self.removeSelectedAction, self.deleteSelectedAction,
+                    self.propertiesAction, self.progressAction, self.minimizeAction,
+                    self.exitAction]
+
+            for i in list:
                 self.toolBar.addAction(i)
 
             self.toolBar.insertSeparator(self.addlinkAction)
@@ -3528,14 +3544,23 @@ class MainWindow(MainWindow_Ui):
             self.toolBar.addSeparator()
 
 # add actions to download_table's context menu
-            for action in [self.openFileAction, self.openDownloadFolderAction, self.resumeAction, self.pauseAction, self.stopAction, self.removeSelectedAction, self.deleteSelectedAction, self.propertiesAction, self.progressAction]:
+            list = [self.openFileAction, self.openDownloadFolderAction, self.resumeAction,
+                    self.pauseAction, self.stopAction, self.removeSelectedAction,
+                    self.deleteSelectedAction, self.propertiesAction, self.progressAction]
+
+            for action in list:
                 self.download_table.tablewidget_menu.addAction(action)
 
         elif (category != 'All Downloads' and category != 'Single Downloads') and mode == 'None':
             self.queue_panel_widget.show()
             self.queuePanelWidget(category)
 
-            for i in self.addlinkAction, self.removeAction, self.deleteFileAction, self.propertiesAction, self.startQueueAction, self.stopQueueAction, self.removeQueueAction, self.moveUpAction, self.moveDownAction, self.minimizeAction, self.exitAction:
+            list = [self.addlinkAction, self.removeAction, self.deleteFileAction,
+                    self.propertiesAction, self.startQueueAction, self.stopQueueAction,
+                    self.removeQueueAction, self.moveUpAction, self.moveDownAction,
+                    self.minimizeAction, self.exitAction]
+
+            for i in list:
                 self.toolBar.addAction(i)
 
             self.toolBar.insertSeparator(self.addlinkAction)
@@ -3571,7 +3596,12 @@ class MainWindow(MainWindow_Ui):
             self.queue_panel_widget.show()
             self.queuePanelWidget(category)
 
-            for i in self.addlinkAction,self.removeSelectedAction , self.deleteSelectedAction , self.propertiesAction,self.startQueueAction , self.stopQueueAction , self.removeQueueAction  , self.moveUpSelectedAction , self.moveDownSelectedAction , self.minimizeAction , self.exitAction :
+            list = [self.addlinkAction, self.removeSelectedAction, self.deleteSelectedAction,
+                    self.propertiesAction, self.startQueueAction, self.stopQueueAction,
+                    self.removeQueueAction, self.moveUpSelectedAction, self.moveDownSelectedAction,
+                    self.minimizeAction, self.exitAction]
+
+            for i in list:
                 self.toolBar.addAction(i)
 
             self.toolBar.insertSeparator(self.addlinkAction)

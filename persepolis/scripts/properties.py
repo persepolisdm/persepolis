@@ -143,7 +143,7 @@ class PropertiesWindow(AddLinkWindow_Ui):
 # get categories name and add them to add_queue_comboBox
         categories_list = self.parent.persepolis_db.categoriesList()
         for queue in categories_list:
-            self.add_queue_comboBox.addItem(str(queue))
+            self.add_queue_comboBox.addItem(queue)
 
     # finding current queue and setting it!
         self.current_category = self.download_table_dict['category'] 

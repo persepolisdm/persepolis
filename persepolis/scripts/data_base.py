@@ -302,6 +302,11 @@ class PersepolisDB():
         self.persepolis_db_cursor.execute("""SELECT * FROM download_db_table""")
         return self.persepolis_db_cursor.fetchall()
 
+    def searchCategoryInDownloadTable(self, category):
+        self.persepolis_db_cursor.execute("""SELECT {} FROM download_db_table""".format(category))
+        return self.persepolis_db_cursor.fetchall()
+
+       
 
     # return download information in addlink_db_table with special gid.
     def searchGidInAddLinkTable(self, gid):
@@ -510,7 +515,16 @@ class PersepolisDB():
     # return categories name 
     def categoriesList(self):
         self.persepolis_db_cursor.execute("""SELECT category FROM category_db_table""")
-        return self.persepolis_db_cursor.fetchall() 
+        rows = self.persepolis_db_cursor.fetchall() 
+
+        # create a list from categories name
+        queues_list = []
+
+        for tuple in rows:
+            queues_list.append(tuple[0])
+
+        # return the list
+        return queues_list
 
 
 
