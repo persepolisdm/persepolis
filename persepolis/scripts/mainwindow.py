@@ -19,7 +19,7 @@ import ast
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import QApplication,  QAction, QFileDialog, QSystemTrayIcon, QMenu, QApplication, QInputDialog, QMessageBox
 from PyQt5.QtGui import QIcon, QColor, QPalette, QStandardItem, QCursor
-from PyQt5.QtCore import QCoreApplication, QRect, QSize, QPoint, QThread, pyqtSignal, Qt
+from PyQt5.QtCore import QTime, QCoreApplication, QRect, QSize, QPoint, QThread, pyqtSignal, Qt
 import os
 import time
 from time import sleep
@@ -3402,11 +3402,14 @@ class MainWindow(MainWindow_Ui):
 # update toolBar and tablewidget_menu items
         self.toolBarAndContextMenuItems(str(current_category_tree_text))
 
-###################
 
 # this method changes toolabr and context menu items when new item
 # highlited by user in category_tree
     def toolBarAndContextMenuItems(self, category):
+        # clear toolBar and context menus. 
+        # it makes them ready for adding 
+        # new items that suitable with new selected category.
+
         # clear toolBar
         self.toolBar.clear()
 
@@ -3424,11 +3427,11 @@ class MainWindow(MainWindow_Ui):
 
         # check if user checked selection mode
         if self.selectAction.isChecked():
-            mode = 'selection'
+            selection_mode = True 
             self.download_table.sendMenu = self.download_table.tablewidget_menu.addMenu(
                 'Send selected downloads to')
         else:
-            mode = 'None'
+            selection_mode = False
             self.download_table.sendMenu = self.download_table.tablewidget_menu.addMenu(
                 'Send to')
 
@@ -3446,7 +3449,7 @@ class MainWindow(MainWindow_Ui):
 
                 self.download_table.sendMenu.addAction(queueAction)
 
-        if category == 'All Downloads' and mode == 'None':
+        if category == 'All Downloads' and not(selection_mode):
 
             # hide queue_panel_widget(left side down panel)
             self.queue_panel_widget.hide()
@@ -3464,7 +3467,6 @@ class MainWindow(MainWindow_Ui):
             self.toolBar.insertSeparator(self.resumeAction)
             self.toolBar.insertSeparator(self.removeSelectedAction)
             self.toolBar.insertSeparator(self.exitAction)
-########
 
 # add actions to download_table's context menu
             list = [self.openFileAction, self.openDownloadFolderAction, self.resumeAction,
@@ -3474,10 +3476,12 @@ class MainWindow(MainWindow_Ui):
             for action in list :
                 self.download_table.tablewidget_menu.addAction(action)
 
-        elif category == 'All Downloads' and mode == 'selection':
+        elif category == 'All Downloads' and selection_mode:
 
+            # hide queue_panel_widget(lef side down panel)
             self.queue_panel_widget.hide()
 
+            # update toolBar
             list = [self.addlinkAction, self.resumeAction, self.pauseAction,
                     self.stopAction, self.removeSelectedAction, self.deleteSelectedAction,
                     self.propertiesAction, self.progressAction, self.minimizeAction, self.exitAction]
@@ -3492,7 +3496,7 @@ class MainWindow(MainWindow_Ui):
             self.toolBar.addSeparator()
 
 
-# add actions to download_table's context menu
+            # add actions to download_table's context menu
             list = [self.openFileAction, self.openDownloadFolderAction, self.resumeAction,
                     self.pauseAction, self.stopAction, self.removeSelectedAction,
                     self.deleteSelectedAction, self.propertiesAction, self.progressAction]
@@ -3500,10 +3504,12 @@ class MainWindow(MainWindow_Ui):
             for action in list:
                 self.download_table.tablewidget_menu.addAction(action)
 
-        if category == 'Single Downloads' and mode == 'None':
+        if category == 'Single Downloads' and not(selection_mode):
 
+            # hide queue_panel_widget
             self.queue_panel_widget.hide()
 
+            # update toolBar
             list = [self.addlinkAction, self.resumeAction, self.pauseAction, self.stopAction,
                     self.removeAction, self.deleteFileAction, self.propertiesAction,
                     self.progressAction, self.minimizeAction, self.exitAction]
@@ -3517,7 +3523,7 @@ class MainWindow(MainWindow_Ui):
             self.toolBar.insertSeparator(self.exitAction)
 
 
-# add actions to download_table's context menu
+            # add actions to download_table's context menu
             list = [self.openFileAction, self.openDownloadFolderAction, self.resumeAction,
                     self.pauseAction, self.stopAction, self.removeAction,
                     self.deleteFileAction, self.propertiesAction, self.progressAction]
@@ -3525,11 +3531,13 @@ class MainWindow(MainWindow_Ui):
             for action in list:
                 self.download_table.tablewidget_menu.addAction(action)
 
-        elif category == 'Single Downloads' and mode == 'selection':
+        elif category == 'Single Downloads' and selection_mode:
 
+            # hide queue_panel_widget
             self.queue_panel_widget.hide()
             self.queuePanelWidget(category)
 
+            # update toolBar
             list = [self.addlinkAction, self.resumeAction, self.pauseAction,
                     self.stopAction, self.removeSelectedAction, self.deleteSelectedAction,
                     self.propertiesAction, self.progressAction, self.minimizeAction,
@@ -3543,7 +3551,7 @@ class MainWindow(MainWindow_Ui):
             self.toolBar.insertSeparator(self.exitAction)
             self.toolBar.addSeparator()
 
-# add actions to download_table's context menu
+            # add actions to download_table's context menu
             list = [self.openFileAction, self.openDownloadFolderAction, self.resumeAction,
                     self.pauseAction, self.stopAction, self.removeSelectedAction,
                     self.deleteSelectedAction, self.propertiesAction, self.progressAction]
@@ -3551,10 +3559,13 @@ class MainWindow(MainWindow_Ui):
             for action in list:
                 self.download_table.tablewidget_menu.addAction(action)
 
-        elif (category != 'All Downloads' and category != 'Single Downloads') and mode == 'None':
+        elif (category != 'All Downloads' and category != 'Single Downloads') and not(selection_mode):
+
+            # show queue_panel_widget
             self.queue_panel_widget.show()
             self.queuePanelWidget(category)
 
+            # update toolBar
             list = [self.addlinkAction, self.removeAction, self.deleteFileAction,
                     self.propertiesAction, self.startQueueAction, self.stopQueueAction,
                     self.removeQueueAction, self.moveUpAction, self.moveDownAction,
@@ -3569,15 +3580,15 @@ class MainWindow(MainWindow_Ui):
             self.toolBar.insertSeparator(self.exitAction)
             self.toolBar.addSeparator()
 
-# add actions to download_table's context menu
+            # add actions to download_table's context menu
             for action in [self.openFileAction, self.openDownloadFolderAction, self.removeAction, self.deleteFileAction, self.propertiesAction]:
                 self.download_table.tablewidget_menu.addAction(action)
 
-# updating category_tree_menu
+            # update category_tree_menu
             for i in self.startQueueAction, self.stopQueueAction, self.removeQueueAction:
                 self.category_tree.category_tree_menu.addAction(i)
 
-            # checking queue condition
+            # check queue condition
             if str(category) in self.queue_list_dict.keys():
                 queue_status = self.queue_list_dict[str(category)].start
             else:
@@ -3592,10 +3603,13 @@ class MainWindow(MainWindow_Ui):
                 self.startQueueAction.setEnabled(True)
                 self.removeQueueAction.setEnabled(True)
 
-        elif (category != 'All Downloads' and category != 'Single Downloads') and mode == 'selection':
+        elif (category != 'All Downloads' and category != 'Single Downloads') and selection_mode:
+
+            # show queue_panel_widget
             self.queue_panel_widget.show()
             self.queuePanelWidget(category)
 
+            # update toolBar
             list = [self.addlinkAction, self.removeSelectedAction, self.deleteSelectedAction,
                     self.propertiesAction, self.startQueueAction, self.stopQueueAction,
                     self.removeQueueAction, self.moveUpSelectedAction, self.moveDownSelectedAction,
@@ -3610,22 +3624,23 @@ class MainWindow(MainWindow_Ui):
             self.toolBar.insertSeparator(self.exitAction)
             self.toolBar.addSeparator()
 
-# add actions to download_table's context menu
+            # add actions to download_table's context menu
             for action in [self.openFileAction, self.openDownloadFolderAction, self.removeAction, self.deleteFileAction, self.propertiesAction]:
                 self.download_table.tablewidget_menu.addAction(action)
 
-# updating category_tree_menu(right click menu for category_tree items)
+            # update category_tree_menu(right click menu for category_tree items)
             for i in self.startQueueAction, self.stopQueueAction, self.removeQueueAction:
                 self.category_tree.category_tree_menu.addAction(i)
 
-        # checking queue condition
+        # check queue condition
         if category != 'All Downloads' and category != 'Single Downloads':
             if str(category) in self.queue_list_dict.keys():
                 queue_status = self.queue_list_dict[str(category)].start
             else:
                 queue_status = False
 
-            if queue_status:  # if queue started befor
+            if queue_status:  
+                # if queue started befor
                 self.stopQueueAction.setEnabled(True)
                 self.startQueueAction.setEnabled(False)
                 self.removeQueueAction.setEnabled(False)
@@ -3633,22 +3648,26 @@ class MainWindow(MainWindow_Ui):
                 self.moveDownAction.setEnabled(False)
                 self.moveUpSelectedAction.setEnabled(False)
                 self.moveDownSelectedAction.setEnabled(False)
-            else:  # if queue didn't start
+            else:
+                # if queue didn't start
                 self.stopQueueAction.setEnabled(False)
                 self.startQueueAction.setEnabled(True)
                 self.removeQueueAction.setEnabled(True)
-                if mode != 'selection':
-                    self.moveUpAction.setEnabled(True)
-                    self.moveDownAction.setEnabled(True)
-                    self.moveUpSelectedAction.setEnabled(False)
-                    self.moveDownSelectedAction.setEnabled(False)
-                else:
+
+                if selection_mode:
                     self.moveUpAction.setEnabled(False)
                     self.moveDownAction.setEnabled(False)
                     self.moveUpSelectedAction.setEnabled(True)
                     self.moveDownSelectedAction.setEnabled(True)
 
-        else:  # if category is All Downloads  or Single Downloads
+                else:
+                    self.moveUpAction.setEnabled(True)
+                    self.moveDownAction.setEnabled(True)
+                    self.moveUpSelectedAction.setEnabled(False)
+                    self.moveDownSelectedAction.setEnabled(False)
+
+        else:  
+            # if category is All Downloads  or Single Downloads
             self.stopQueueAction.setEnabled(False)
             self.startQueueAction.setEnabled(False)
             self.removeQueueAction.setEnabled(False)
@@ -3657,7 +3676,7 @@ class MainWindow(MainWindow_Ui):
             self.moveUpSelectedAction.setEnabled(False)
             self.moveDownSelectedAction.setEnabled(False)
 
-        # adding sortMenu to download_table context menu
+        # add sortMenu to download_table context menu
         sortMenu = self.download_table.tablewidget_menu.addMenu('Sort by')
         sortMenu.addAction(self.sort_file_name_Action)
 
@@ -3670,10 +3689,10 @@ class MainWindow(MainWindow_Ui):
         sortMenu.addAction(self.sort_download_status_Action)
 
 
-# this method removes the queue that selected in category_tree
+# this method removes the queue that is selected in category_tree
     def removeQueue(self, menu):
-        # showing Warning message to the user.
-        # checking persepolis_setting first!
+        # show Warning message to user.
+        # checks persepolis_setting first!
         # perhaps user was checking "do not show this message again"
         remove_warning_message = self.persepolis_setting.value(
             'MainWindow/remove-queue-warning', 'yes')
@@ -3682,6 +3701,7 @@ class MainWindow(MainWindow_Ui):
             self.remove_queue_msgBox = QMessageBox()
             self.remove_queue_msgBox.setText('<b><center>This operation will remove \
                     all download items in this queue<br>from "All Downloads" list!</center></b>')
+
             self.remove_queue_msgBox.setInformativeText("<center>Do you want to continue?</center>")
             self.remove_queue_msgBox.setStandardButtons(QMessageBox.Yes | QMessageBox.No)
             self.remove_queue_msgBox.setIcon(QMessageBox.Warning)
@@ -3699,87 +3719,42 @@ class MainWindow(MainWindow_Ui):
                 return
 
 
-        # finding name of queue
+        # find name of queue
         current_category_tree_text = str(current_category_tree_index.data())
 
         if current_category_tree_text != 'All Downloads' and current_category_tree_text != 'Single Downloads':
 
-            # removing queue from category_tree
+            # remove queue from category_tree
             row_number = current_category_tree_index.row()
             self.category_tree_model.removeRow(row_number)
 
-            # finding path of queue in category_folder
-            queue_gid_file = os.path.join(
-                category_folder, current_category_tree_text)
-
-            # getting gids from queue_gid_file
-            f = Open(queue_gid_file)
-            gid_list = f.readlines()
-            f.close()
-            # deleting queue's file
-            f.remove()
-
-            for j in gid_list:
-                gid = j.strip()
-                # removing gid from download_list_file 
-                # and download_list_file_active
-                for file in [download_list_file, download_list_file_active]:
-                    f = Open(file)
-                    f_lines = f.readlines()
-                    f.close()
-                    f = Open(file, "w")
-                    for i in f_lines:
-                        if i.strip() != gid:
-                            f.writelines(i.strip() + "\n")
-                    f.close()
-
-                # removing download_info_file and download_info_file_backup
-                download_info_file = os.path.join(download_info_folder, gid)
-                osCommands.remove(download_info_file)
-
-                download_info_file_backup = str(download_info_file) + "_back"
-                osCommands.remove(download_info_file_backup)
-
-           # removing name of the queue from queues_list_file
-            f = Open(queues_list_file)
-            f_lines = f.readlines()
-            f.close()
-
-            f = Open(queues_list_file, 'w')
-            for i in f_lines:
-                if i.strip() != current_category_tree_text:
-                    f.writelines(i.strip() + '\n')
-            f.close()
-
-            # removing queue_info_file
-            # finding queue_info_file path
-            queue_info_file = os.path.join(
-                queue_info_folder, current_category_tree_text)
-
-            # removing file
-            osCommands.remove(queue_info_file)
+            # delete category from data base
+            self.persepolis_db.deleteCategory(current_category_tree_text)
 
 
-# highlighting "All Downloads" in category_tree
+# highlight "All Downloads" in category_tree
         all_download_index = self.category_tree_model.index(0, 0)
         self.category_tree.setCurrentIndex(all_download_index)
         self.categoryTreeSelected(all_download_index)
 
+#######
+
+    # this method starts the queue that is selected in category_tree
     def startQueue(self, menu):
         self.startQueueAction.setEnabled(False)
 
-        # current_category_tree_text is the name of queue that selected by user
+        # current_category_tree_text is the name of queue that is selected by user
         current_category_tree_text = str(current_category_tree_index.data())
 
-# checking start time and end time
-        if self.start_checkBox.isChecked() == False:
+# check start time and end time
+        if not(self.start_checkBox.isChecked()):
             start_hour = None
             start_minute = None
         else:
             start_hour = str(self.start_hour_spinBox.value())
             start_minute = str(self.start_minute_spinBox.value())
 
-        if self.end_checkBox.isChecked() == False:
+        if not(self.end_checkBox.isChecked()):
             end_hour = None
             end_minute = None
         else:
@@ -4008,18 +3983,18 @@ class MainWindow(MainWindow_Ui):
         checking_flag = 0
 
 
-# this method activating or deactivating start_frame according to situation
+# this method activates or deactivates start_frame according to situation
     def startFrame(self, checkBox):
 
-        if self.start_checkBox.isChecked() == True:
+        if self.start_checkBox.isChecked():
             self.start_frame.setEnabled(True)
         else:
             self.start_frame.setEnabled(False)
 
-# this method activating or deactivating end_frame according to situation
+# this method activates or deactivates end_frame according to situation
     def endFrame(self, checkBox):
 
-        if self.end_checkBox.isChecked() == True:
+        if self.end_checkBox.isChecked():
             self.end_frame.setEnabled(True)
         else:
             self.end_frame.setEnabled(False)
@@ -4040,7 +4015,7 @@ class MainWindow(MainWindow_Ui):
         self.limit_pushButton.setEnabled(True)
 
 
-# this method is activating or deactivating limit_frame according to
+# this method activates or deactivates limit_frame according to
 # limit_checkBox situation
     def limitFrame(self, checkBox):
         if self.limit_checkBox.isChecked() == True:
@@ -4053,7 +4028,7 @@ class MainWindow(MainWindow_Ui):
             current_category_tree_text = str(
                 current_category_tree_index.data())
 
-        # informing queue about changes
+        # inform queue about changes
             if current_category_tree_text in self.queue_list_dict.keys():
                 self.queue_list_dict[current_category_tree_text].limit = False
                 self.queue_list_dict[current_category_tree_text].limit_changed = True
@@ -4124,51 +4099,45 @@ class MainWindow(MainWindow_Ui):
             self.threadPool[len(self.threadPool) - 1].start()
 
 
-# this method is activating or deactivating after_frame according to
+# this method activates or deactivates after_frame according to
 # after_checkBox situation
     def afterFrame(self, checkBox):
         # current_category_tree_text is the name of queue that selected by user
         current_category_tree_text = str(current_category_tree_index.data())
 
-        if self.after_checkBox.isChecked() == True:  # enabling after_frame
+        if self.after_checkBox.isChecked():  # enable after_frame
             self.after_frame.setEnabled(True)
             self.after_pushButton.setEnabled(True)
         else:
-            self.after_frame.setEnabled(False)  # disabaling after_frame
+            self.after_frame.setEnabled(False)  # disable after_frame
 
-            # writing 'canceled' word in persepolis_tmp/shutdown/queue_name .
+            # write 'canceled' word in persepolis_tmp/shutdown/queue_name .
             # this is informing shutdown_script_root for canceling shutdown
             # operation after download
             if current_category_tree_text in self.queue_list_dict.keys():
-                if self.queue_list_dict[current_category_tree_text].after == True:
+                if self.queue_list_dict[current_category_tree_text].after:
                     shutdown_file = os.path.join(
                         persepolis_tmp, 'shutdown', current_category_tree_text)
+
                     f = Open(shutdown_file, 'w')
                     f.writelines('canceled')
                     f.close()
+
                     self.queue_list_dict[current_category_tree_text].after = False
 
 
 # queue_panel_widget
-# this method checking that queue started or not , and it showing or
-# hiding widgets in queue_panel_widget according to situation and set
-# widgets value.
+# this method checks that queue started or not,
+# and it shows or hides widgets in queue_panel_widget
+# according to situation and set them.
+
     def queuePanelWidget(self, category):
-        # updating queue_panel_widget items
-        # finding queue_info_file path
-        queue_info_file = os.path.join(queue_info_folder, category)
+        # update queue_panel_widget items
 
-        # queue_info_dict default format >> queue_info_dict = {'start_time_enable' : 'no' , 'end_time_enable' : 'no' , 'start_minute' : '0' , 'start_hour' : '0' , 'end_hour': '0' , 'end_minute' : '0' , 'reverse' : 'no' , 'limit_speed' : 'yes' , 'limit' : '0K'  , 'after': 'yes' }
-        # reading queue_info_dict
-        queue_info_dict = readDict(queue_info_file)
+        # read queue_info_dict from data base
+        queue_info_dict = self.persepolis_db.searchCategoryInCategoryTable(category) 
 
-        # after download options
-#             if queue_info_dict['after'] == 'yes':
-#                 self.after_checkBox.setChecked(True)
-#             else:
-#                 self.after_checkBox.setChecked(False)
-
-        # checking queue condition
+        # check queue condition
         if str(category) in self.queue_list_dict.keys():
             queue_status = self.queue_list_dict[str(category)].start
         else:
@@ -4178,44 +4147,37 @@ class MainWindow(MainWindow_Ui):
             self.start_end_frame.hide()
             self.limit_after_frame.show()
 
-            # checking that if user set limit speed
+            # check that if user set limit speed
             limit_status = self.queue_list_dict[str(category)].limit
 
-            # checking that if user selected 'shutdown after download'
+            # check that if user selected 'shutdown after download'
             after_status = self.queue_list_dict[str(category)].after
 
-            if limit_status == True:  # It means queue's download speed limited by user
-                # getting limit_spinBox value and limit_comboBox value
+            if limit_status:  # It means queue's download speed limited by user
+                # get limit_spinBox value and limit_comboBox value
                 limit_number = self.queue_list_dict[str(
                     category)].limit_spinBox_value
                 limit_unit = self.queue_list_dict[str(
                     category)].limit_comboBox_value
 
-                # setting limit_spinBox value
+                # set limit_spinBox value
                 self.limit_spinBox.setValue(limit_number)
 
-                # setting limit_comboBox value
+                # set limit_comboBox value
                 if limit_unit == 'K':
                     self.after_comboBox.setCurrentIndex(0)
                 else:
                     self.after_comboBox.setCurrentIndex(1)
 
-                # enabling limit_frame
+                # enable limit_frame
                 self.limit_checkBox.setChecked(True)
 
             else:
-
-                # disabaling limit_frame
+                # disabale limit_frame
                 self.limit_checkBox.setChecked(False)
 
             # limit speed
-            # limit_checkBox
-#                 if queue_info_dict['limit_speed'] == 'yes':
-#                     self.limit_checkBox.setChecked(True)
-#                 else:
-#                     self.limit_checkBox.setChecked(False)
-
-                limit = str(queue_info_dict['limit'])
+                limit = str(queue_info_dict['limit_value'])
 
             # limit values
                 limit_number = limit[0:-1]
@@ -4230,13 +4192,17 @@ class MainWindow(MainWindow_Ui):
                 else:
                     self.limit_comboBox.setCurrentIndex(1)
 
-            # so user was selected shutdown option , after queue completed.
-            if after_status == True:
+            # if after_status is True,
+            # it means that user was selected
+            # shutdown option, after queue completed.
+            if after_status:
                 self.after_checkBox.setChecked(True)
-
             else:
                 self.after_checkBox.setChecked(False)
-        else:  # queue stopped
+
+        else:  
+            # so queue is stopped
+
             self.start_end_frame.show()
             self.limit_after_frame.hide()
 
@@ -4247,13 +4213,10 @@ class MainWindow(MainWindow_Ui):
             else:
                 self.start_checkBox.setChecked(False)
 
-            # start_hour_spinBox
-            self.start_hour_spinBox.setValue(
-                int(queue_info_dict['start_hour']))
+            hour, minute = queue_info_dict['start_time'].split(':')
 
-            # start_minute_spinBox
-            self.start_minute_spinBox.setValue(
-                int(queue_info_dict['start_minute']))
+            q_time = QTime(int(hour), int(minute))
+            self.start_time_qDataTimeEdit.setTime(q_time)
 
             # end time
             # end_checkBox
@@ -4262,12 +4225,10 @@ class MainWindow(MainWindow_Ui):
             else:
                 self.end_checkBox.setChecked(False)
 
-            # end_hour_spinBox
-            self.end_hour_spinBox.setValue(int(queue_info_dict['end_hour']))
-
-            # end_minute_spinBox
-            self.end_minute_spinBox.setValue(
-                int(queue_info_dict['end_minute']))
+            hour, minute = queue_info_dict['end_time'].split(':')
+            # set time
+            q_time = QTime(int(hour), int(minute))
+            self.end_time_qDateTimeEdit(q_time)
 
             # reverse_checkBox
             if queue_info_dict['reverse'] == 'yes':

@@ -198,11 +198,11 @@ class ProgressWindow(ProgressWindow_Ui):
         self.after_pushButton.setEnabled(True)
 
     def afterCheckBoxToggled(self, checkBoxes):
-        if self.after_checkBox.isChecked() == True:
+        if self.after_checkBox.isChecked():
             self.after_frame.setEnabled(True)
         else:
             # so user canceled shutdown after download
-            # write cancel value un shutdown_file
+            # write cancel value in shutdown_file
             self.after_frame.setEnabled(False)
             shutdown_file = os.path.join(persepolis_tmp, 'shutdown', self.gid)
             f = Open(shutdown_file, 'w')

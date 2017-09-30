@@ -553,6 +553,14 @@ class PersepolisDB():
                                             OR status = 'scheduled' OR status = 'paused'""")
         return self.persepolis_db_cursor.fetchall()
 
+# This method deletes a category from category_db_table
+    def deleteCategory(self, category):
+        self.persepolis_db_cursor.execute("""DELETE FROM category_db_table WHERE category = {}""".format(str(category)))
+
+        # commit changes
+        self.persepolis_db_connection.commit()
+
+
     # close connections
     def closeConnections(self):
         self.persepolis_db_cursor.close()
