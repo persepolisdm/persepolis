@@ -401,14 +401,12 @@ class Queue(QThread):
     # this signal emited when download status of queue changes to stop
     REFRESHTOOLBARSIGNAL = pyqtSignal(str)
 
-    def __init__(self, category, start_hour, start_minute, end_hour, end_minute, parent):
+    def __init__(self, category, start_time, end_time, parent):
         QThread.__init__(self)
         self.category = str(category)
         self.parent = parent
-        self.start_hour = start_hour
-        self.start_minute = start_minute
-        self.end_hour = end_hour
-        self.end_minute = end_minute
+        self.start_time = start_time
+        self.end_time = end_time
 
     def run(self):
         self.start = True
@@ -418,85 +416,70 @@ class Queue(QThread):
         self.after = False
         self.break_for_loop = False
 
-        queue_file = os.path.join(category_folder, self.category)
-
         queue_counter = 0 
-        for counter in range(5):  # queue is repeating 5 times! and everty times load queue list again! It is helping for checking new downloads in queue and retrying failed downloads
-            # getting list of gid in queue
-            f = Open(queue_file)
-            queue_file_lines = f.readlines()
-            f.close()
 
-            # download from top to the bottom of the list OR bottom to the top
+        # queue repeats 5 times!
+        # and everty time loads queue list again!
+        # It is helps for checking new downloads in queue
+        # and retrying failed downloads.
+        for counter in range(5): 
+            # read downloads information from data base
+            download_table_list = self.parent.persepolis_db.returnItemsInDownloadTable(self.category)
+            add_link_table_list = self.parent.persepolis_db.returnItemsInAddLinkTable(self.category)
+
+            # sort downloads top to the bottom of the list OR bottom to the top
             if not(self.parent.reverse_checkBox.isChecked()):
-                queue_file_lines.reverse()
+                download_table_list.reverse()
 
-            if self.start_hour != None and counter == 0:  # checking that if user set start time
-                # setting start time for first download in queue
-                # finding gid of first download ! status of first download must
-                # be stopped or error but not compelete
-                for index in range(len(queue_file_lines)):
-                    first_download_gid = queue_file_lines[index].strip()
+            # check that if user set start time
+            if self.start_time and counter == 0:  
+                # find first download
+                # set start time for first download in queue
+                # status of first download must not be compelete
+                for dict in download_table_list:
+                    # find status of download
+                    status = dict['status']
 
-            # finding download_info_file
-                    download_info_file = os.path.join(
-                        download_info_folder, first_download_gid)
+                    if status != 'complete':  
+                        # We find first item! GREAT!
 
-            # reading download_info_file_list
-                    download_info_file_list = readList(download_info_file)
+                        # set start_time for this download
+                        dict['start_time'] = self.start_time
 
-                    status = download_info_file_list[1]
+                        # write changes in data base
+                        self.parent.persepolis_db.updateAddLinkTable([dict])
 
-                    if status != 'complete':  # We find first item! GREAT!
-
-                        # reading add_link_dictionary
-                        add_link_dictionary = download_info_file_list[9]
-
-            # setting start_hour and start_minute
-                        add_link_dictionary['start_hour'] = self.start_hour
-                        add_link_dictionary['start_minute'] = self.start_minute
-                        download_info_file_list[9] = add_link_dictionary
-
-            # writing on download_info_file
-                        writeList(download_info_file, download_info_file_list)
-
+                        # job is done! break the loop
                         break
 
             
-            for line in queue_file_lines:
-                gid = line.strip()
+            for dict in download_table_list:
 
-                download_info_file = os.path.join(download_info_folder, gid)
-
-            # reading download_info_file_list
-                download_info_file_list = readList(download_info_file)
-
-                # if download was completed continues with the next iteration
-                # of the loop!We don't want to download it two times :)
-                if str(download_info_file_list[1]) == 'complete':
+                # if download was completed, continue the loop
+                # with the next iteration of the loop!
+                # We don't want to download it two times :)
+                if dict['status'] == 'complete':
                     continue
                 
                 queue_counter = queue_counter + 1
-            # changing status of download to waiting
+
+                # change status of download to waiting
                 status = 'waiting'
-                download_info_file_list[1] = status
-                # reading add_link_dictionary
-                add_link_dictionary = download_info_file_list[9]
+                dict['status'] = status
 
+                if self.end_time:  
+                    # it means user was set end time for download
+                    # set end_hour and end_minute
+                    dict['end_time'] = self.end_time
 
-                if self.end_hour != None:  # it means user was set end time for download
-
-                # setting end_hour and end_minute
-                    add_link_dictionary['end_hour'] = self.end_hour
-                    add_link_dictionary['end_minute'] = self.end_minute
-
-            # finding wait_queue value
-            # user can set sleep time between download items in queue. see preferences window!
+                # user can set sleep time between download items in queue.
+                #see preferences window!
+                # find wait_queue value
                 wait_queue_list = self.parent.persepolis_setting.value('settings/wait-queue') 
                 wait_queue_hour = int(wait_queue_list[0])
                 wait_queue_minute = int(wait_queue_list[1])
 
-                # checking if user set sleep time between downloads in queue in setting window.
+                # check if user set sleep time between downloads in queue in setting window.
                 # if queue_counter is 1 , it means we are in the first download item in queue.
                 # and no need to wait for first item.
                 if (wait_queue_hour != 0 or wait_queue_minute != 0) and queue_counter != 1:  
@@ -518,18 +501,16 @@ class Queue(QThread):
                     if sigma_hour > 23:
                         sigma_hour = sigma_hour - 24
 
-                    # setting sigma_hour and sigma_minute for download start time!
-                    add_link_dictionary['start_hour'] = str(sigma_hour) 
-                    add_link_dictionary['start_minute'] = str(sigma_minute)
+                    # setting sigma_hour and sigma_minute for download's start time!
+                    dict['start_time'] = str(sigma_hour + ':' + sigma_minute)
 
-            # writing changes to download_info_file_list
-                download_info_file_list[9] = add_link_dictionary
+                # write changes in data base 
+                self.parent.persepolis_db.updateAddLinkTable([dict])
 
+                # find gid
+                gid = dict['gid']
 
-            # writing new download_info_file_list to download_info_file
-                writeList(download_info_file, download_info_file_list)
-
-            # starting new thread for download
+                # start new thread for download
                 new_download = DownloadLink(gid, self.parent)
                 self.parent.threadPool.append(new_download)
                 self.parent.threadPool[len(self.parent.threadPool) - 1].start()
@@ -537,89 +518,100 @@ class Queue(QThread):
                     self.parent.threadPool) - 1].ARIA2NOTRESPOND.connect(self.parent.aria2NotRespond)
                 sleep(3)
 
-            #
-                if self.limit:  # limit download speed if user limited speed for previous download
+                # limit download speed if user limited speed for previous download
+                if self.limit:  
                     self.limit_changed = True
 
                 # continue loop until download has finished
                 while status == 'downloading' or status == 'waiting' or status == 'paused' or status == 'scheduled':
 
                     sleep(1)
-                    try:
-                        download_info_file_list = readList(download_info_file)
-                        status = str(download_info_file_list[1])
-                        if status == 'error':
-                            add_link_dictionary = download_info_file_list[9]
-                            # writing error_message in log file
-                            error_message = 'Download failed - GID : '\
+                    dict = self.parent.persepolis_db.searchGidInDownloadTable(gid)
+
+                    status = dict['status'] 
+
+                    if status == 'error':
+                        if 'error' in dict.keys():
+                            error = str(dict['error'])
+                        else:
+                            error = 'error'
+
+                        # write error_message in log file
+                        error_message = 'Download failed - GID : '\
                                     + str(gid)\
                                     + '/nMessage : '\
-                                    + str(add_link_dictionary['error'])
+                                    + error
                             
-                            logger.sendToLog(error_message, 'ERROR')
+                        logger.sendToLog(error_message, 'ERROR')
 
-                        elif status == 'complete':
-                            compelete_message = 'Download complete - GID : '\
+                    elif status == 'complete':
+                        compelete_message = 'Download complete - GID : '\
                                     + str(gid)
-                            logger.sendToLog(compelete_message, 'INFO')
+
+                        # write in log the compelete_message
+                        logger.sendToLog(compelete_message, 'INFO')
 
 
-                    except:
-                        status = 'downloading'
-
-                    if self.stop == True:  # it means user stopped queue
+                    if self.stop:  
+                        # it means user stopped queue
                         answer = download.downloadStop(gid, self.parent)
-                    # if aria2 did not respond , then this function is checking
-                    # for aria2 availability , and if aria2 disconnected then
-                    # aria2Disconnected is executed
+
+                        # if aria2 did not respond , then this function is checking
+                        # for aria2 availability , and if aria2 disconnected then
+                        # aria2Disconnected is executed
                         if answer == 'None':
                             version_answer = download.aria2Version()
                             if version_answer == 'did not respond':
                                 self.parent.aria2Disconnected()
                         status = 'stopped'
-
-                    # It means user want to limit download speed
-                    if self.limit == True and status == 'downloading' and self.limit_changed == True:
-                        # getting limitation value
+                    
+                    if self.limit and status == 'downloading' and self.limit_changed:
+                        # It means user want to limit download speed
+                        # get limitation value
                         self.limit_comboBox_value = self.parent.limit_comboBox.currentText()
                         self.limit_spinBox_value = self.parent.limit_spinBox.value()
                         if self.limit_comboBox_value == "KB/S":
                             limit = str(self.limit_spinBox_value) + str("K")
                         else:
                             limit = str(self.limit_spinBox_value) + str("M")
-                    # applying limitation
+
+                        # apply limitation
                         download.limitSpeed(gid, limit)
 
-                    # done!
+                        # done!
                         self.limit_changed = False
 
-                    # limiting speed is canceled by user!
-                    if self.limit == False and status == 'downloading' and self.limit_changed == True:
-                        # applying limitation
+                    if not(self.limit) and status == 'downloading' and self.limit_changed:
+                        # speed limitation is canceled by user!
+                        # cancel limitation
                         download.limitSpeed(gid, "0")
 
-                    # done!
+                        # done!
                         self.limit_changed = False
 
-                if status == 'stopped':  # it means queue stopped at end time or user stopped queue
+                if status == 'stopped':  
+                    # it means queue stopped at end time or user stopped queue
 
-                    # It means user activated shutdown before and now user
-                    # stopped queue . so after download must be canceled
-                    if self.stop == True and self.after == True:
+                    if self.stop and self.after:
+                        # It means user activated shutdown before and now user
+                        # stopped queue . so after download must be canceled
                         self.parent.after_checkBox.setChecked(False)
 
                     self.stop = True
                     self.limit = False
                     self.limit_changed = False
-                    self.break_for_loop = True  # it means that break outer for loop
+
+                    # it means that break outer "for" loop
+                    self.break_for_loop = True  
 
                     if str(self.parent.category_tree.currentIndex().data()) == str(self.category):
                         self.REFRESHTOOLBARSIGNAL.emit(self.category)
 
-        # showing notification
+                    # show notification
                     notifySend("Persepolis", "Queue Stopped!", 10000,
                                'no', systemtray=self.parent.system_tray_icon)
 
+                    # write message in log
                     logger.sendToLog('Queue stopped', 'INFO')
 
                     break
@@ -627,33 +619,45 @@ class Queue(QThread):
             if self.break_for_loop:
                 break
 
-        if self.start == True:  # if queue finished
+        if self.start:  
+            # if queue finished :
             self.start = False
-# this section is sending shutdown signal to the shutdown script(if user
-# select shutdown for after download)
-            if self.after == True:
+
+            # this section is sending shutdown signal to the shutdown script(if user
+            # select shutdown for after download)
+            if self.after:
+                # shutdown aria2c
                 answer = download.shutDown()
 
-# KILL aria2c if didn't respond. R.I.P :))
+                # KILL aria2c if didn't respond. R.I.P :))
                 if not(answer) and (os_type != 'Windows'):
                     os.system('killall aria2c')
 
                 shutdown_file = os.path.join(
                     persepolis_tmp, 'shutdown', self.category)
+
+                # write 'shutdown' word in shutdown file
+                # see shutdown.py for more information.
                 f = Open(shutdown_file, 'w')
-                notifySend('Persepolis is shutting down', 'your system in 20 seconds',
-                           15000, 'warning', systemtray=self.parent.system_tray_icon)
                 f.writelines('shutdown')
                 f.close()
 
+                # show a notification about system is shutting down now!
+                notifySend('Persepolis is shutting down', 'your system in 20 seconds',
+                           15000, 'warning', systemtray=self.parent.system_tray_icon)
+
+            # show notification for queue completion
             notifySend("Persepolis", 'Queue completed!', 10000,
                        'queue', systemtray=self.parent.system_tray_icon)
+
+            # write a message in log
             logger.sendToLog('Queue completed', 'INFO')
 
             self.stop = True
             self.limit = False
             self.limit_changed = False
             self.after = False
+
             if str(self.parent.category_tree.currentIndex().data()) == str(self.category):
                 self.REFRESHTOOLBARSIGNAL.emit(self.category)
 
@@ -901,13 +905,30 @@ class MainWindow(MainWindow_Ui):
         
 # add download items to the download_table
         # read download items from data base
-        download_table_rows = self.persepolis_db.returnAllItemsInDownloadTable()
+        download_table_list = self.persepolis_db.returnItemsInDownloadTable()
+
+        keys_list = ['file_name',
+                    'status',
+                    'size',
+                    'downloaded_size',
+                    'percent',
+                    'connections',
+                    'rate',
+                    'estimate_time_left',
+                    'gid',
+                    'link',
+                    'firs_try_date',
+                    'last_try_date',
+                    'category'
+                    ]
 
         # insert items in download_table 
-        for row in download_table_rows:
-            for i in range(13):
-                item = QTableWidgetItem(str(row[i]))
+        for dict in download_table_list:
+            i = 0
+            for key in keys_list: 
+                item = QTableWidgetItem(str(dict[key]))
                 self.download_table.setItem(0, i, item)
+                i = i + 1
 
 
 # defining some lists and dictionaries for running addlinkwindows and
@@ -3369,23 +3390,37 @@ class MainWindow(MainWindow_Ui):
         current_category_tree_index = new_selection
 
         # find category
+        # TODO must be checked
         current_category_tree_text = str(
             self.category_tree.currentIndex().data())
 
-        # find path of gid_list_file , gid_list_file cantains gid of
-        # downloads for selected category
+        # read download items from data base
         if current_category_tree_text == 'All Downloads':
-            # read download items from data base
-            download_table_rows = self.persepolis_db.returnAllItemsInDownloadTable()
+            download_table_rows = self.persepolis_db.returnItemsInDownloadTable()
         else:
-            download_table_rows = self.persepolis_db.searchCategoryInDownloadTable()
+            download_table_rows = self.persepolis_db.returnItemsInDownloadTable(current_category_tree_text)
 
+        keys_list = ['file_name',
+                    'status',
+                    'size',
+                    'downloaded_size',
+                    'percent',
+                    'connections',
+                    'rate',
+                    'estimate_time_left',
+                    'gid',
+                    'link',
+                    'firs_try_date',
+                    'last_try_date',
+                    'category'
+                    ]
 
         # insert items in download_table 
-        for row in download_table_rows:
-            for i in range(13):
-                item = QTableWidgetItem(str(row[i]))
-
+        for dict in download_table_list:
+            i = 0
+            for key in keys_list: 
+                item = QTableWidgetItem(str(dict[key]))
+                
                 # add checkbox to download rows if selectAction is checked
                 # in edit menu
                 if self.selectAction.isChecked() and i == 0:
@@ -3395,11 +3430,13 @@ class MainWindow(MainWindow_Ui):
 
                 self.download_table.setItem(0, i, item)
 
-# tell the CheckDownloadInfoThread that job is done!
+                i = i + 1
+
+        # tell the CheckDownloadInfoThread that job is done!
         global checking_flag
         checking_flag = 0
 
-# update toolBar and tablewidget_menu items
+        # update toolBar and tablewidget_menu items
         self.toolBarAndContextMenuItems(str(current_category_tree_text))
 
 
@@ -3737,7 +3774,6 @@ class MainWindow(MainWindow_Ui):
         self.category_tree.setCurrentIndex(all_download_index)
         self.categoryTreeSelected(all_download_index)
 
-#######
 
     # this method starts the queue that is selected in category_tree
     def startQueue(self, menu):
@@ -3746,73 +3782,27 @@ class MainWindow(MainWindow_Ui):
         # current_category_tree_text is the name of queue that is selected by user
         current_category_tree_text = str(current_category_tree_index.data())
 
-# check start time and end time
-        if not(self.start_checkBox.isChecked()):
-            start_hour = None
-            start_minute = None
-        else:
-            start_hour = str(self.start_hour_spinBox.value())
-            start_minute = str(self.start_minute_spinBox.value())
-
-        if not(self.end_checkBox.isChecked()):
-            end_hour = None
-            end_minute = None
-        else:
-            end_hour = str(self.end_hour_spinBox.value())
-            end_minute = str(self.end_minute_spinBox.value())
-
-# create new Queue thread
-        new_queue = Queue(current_category_tree_text, start_hour,
-                          start_minute, end_hour, end_minute, self)
-
-# queue_list_dict contains queue threads >> queue_list_dict[name of queue]
-# = Queue(name of queue , parent)
-        self.queue_list_dict[current_category_tree_text] = new_queue
-        self.queue_list_dict[current_category_tree_text].start()
-        self.queue_list_dict[current_category_tree_text].REFRESHTOOLBARSIGNAL.connect(
-            self.toolBarAndContextMenuItems)
-
-        self.toolBarAndContextMenuItems(current_category_tree_text)
-
-# updating queue_info_file
-
-        # queue_info_file contains start time and end time information and ... for queue
-        # finding queue_info_file path
-        queue_info_file = os.path.join(
-            queue_info_folder, current_category_tree_text)
-
-        # reading queue_info_dict
-        queue_info_dict = readDict(queue_info_file)
-
-        #queue_info_dict default format >> queue_info_dict = {'start_time_enable' : 'no' , 'end_time_enable' : 'no' , 'start_minute' : '0' , 'start_hour' : '0' , 'end_hour': '0' , 'end_minute' : '0' , 'reverse' : 'no' , 'limit_speed' : 'yes' , 'limit' : '0K'  , 'after': 'yes' }
-
-        #start_checkBox
+        # check that if user checks start_checkBox or not.
         if self.start_checkBox.isChecked() :
             queue_info_dict['start_time_enable'] = 'yes'
+
+            # read start_time value
+            start_time = self.start_time_qDataTimeEdit.text()
         else:
             queue_info_dict['start_time_enable'] = 'no'
+            start_time = None
 
-        # end_checkBox
+
+        # check that if user checked end_checkBox or not.
         if self.end_checkBox.isChecked():
             queue_info_dict['end_time_enable'] = 'yes'
+
+            # read end_time value
+            end_time = self.end_time_qDateTimeEdit.text()
         else:
             queue_info_dict['end_time_enable'] = 'no'
+            end_time = None
 
-        # start_hour_spinBox
-        start_hour = self.start_hour_spinBox.value()
-        queue_info_dict['start_hour'] = str(start_hour)
-
-        # start_minute_spinBox
-        start_minute = self.start_minute_spinBox.value()
-        queue_info_dict['start_minute'] = str(start_minute)
-
-        # end_hour_spinBox
-        end_hour = self.end_hour_spinBox.value()
-        queue_info_dict['end_hour'] = str(end_hour)
-
-        # end_minute_spinBox
-        end_minute = self.end_minute_spinBox.value()
-        queue_info_dict['end_minute'] = str(end_minute)
 
         # reverse_checkBox
         if self.reverse_checkBox.isChecked():
@@ -3820,15 +3810,27 @@ class MainWindow(MainWindow_Ui):
         else:
             queue_info_dict['reverse'] = 'no'
 
-        # saving values
-        f = Open(queue_info_file, 'w')
-        f.writelines(str(queue_info_dict))
-        f.close()
+        # update data base
+        self.persepolis_db.updateCategoryTable([queue_info_dict])
 
+
+        # create new Queue thread
+        new_queue = Queue(current_category_tree_text, start_time,
+                          end_time, self)
+
+        self.queue_list_dict[current_category_tree_text] = new_queue
+        self.queue_list_dict[current_category_tree_text].start()
+        self.queue_list_dict[current_category_tree_text].REFRESHTOOLBARSIGNAL.connect(
+            self.toolBarAndContextMenuItems)
+
+        self.toolBarAndContextMenuItems(current_category_tree_text)
+
+    # this method stops the queue that is selected 
+    # by user in the left side panel 
     def stopQueue(self, menu):
         self.stopQueueAction.setEnabled(False)
 
-        # current_category_tree_text is the name of queue that selected by user
+        # current_category_tree_text is the name of queue that is selected by user
         current_category_tree_text = str(current_category_tree_index.data())
 
         queue = self.queue_list_dict[current_category_tree_text]
@@ -3836,6 +3838,8 @@ class MainWindow(MainWindow_Ui):
         queue.stop = True
 
         self.startQueueAction.setEnabled(True)
+
+#######
 
 # this method is called , when user want to add a download to a queue with
 # context menu. see also toolBarAndContextMenuItems() method

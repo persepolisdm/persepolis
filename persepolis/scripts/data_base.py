@@ -298,15 +298,35 @@ class PersepolisDB():
         return dict
 
     # return all items in download_db_table
-    def returnAllItemsInDownloadTable(self):
-        self.persepolis_db_cursor.execute("""SELECT * FROM download_db_table""")
-        return self.persepolis_db_cursor.fetchall()
-
-    def searchCategoryInDownloadTable(self, category):
+    # '*' for category, cause that method returns all items. 
+    def returnItemsInDownloadTable(self, category='*'):
         self.persepolis_db_cursor.execute("""SELECT {} FROM download_db_table""".format(category))
-        return self.persepolis_db_cursor.fetchall()
+        rows = self.persepolis_db_cursor.fetchall()
 
-       
+        list = []
+        for tuple in rows:
+            # change format of tuple to dictionary
+            dict = {'file_name': tuple[0],
+                    'status': tuple[1],
+                    'size': tuple[2],
+                    'downloaded_size': tuple[3],
+                    'percent': tuple[4],
+                    'connections': tuple[5],
+                    'rate': tuple[6],
+                    'estimate_time_left': tuple[7],
+                    'gid': tuple[8],
+                    'link': tuple[9],
+                    'firs_try_date': tuple[10],
+                    'last_try_date': tuple[11],
+                    'category': tuple[12]
+                    }
+
+            # add dict to the list
+            list.append(dict)
+
+        return list
+
+      
 
     # return download information in addlink_db_table with special gid.
     def searchGidInAddLinkTable(self, gid):
@@ -339,6 +359,44 @@ class PersepolisDB():
                 }
 
 	return dict
+
+
+    # return all items in addlink_db_table
+    # '*' for category, cause that method returns all items. 
+    def returnItemsInAddLinkTable(self, category='*'):
+        self.persepolis_db_cursor.execute("""SELECT {} FROM addlink_db_table""".format(category))
+        rows = self.persepolis_db_cursor.fetchall()
+
+        list = []
+        for tuple in rows:
+            # change format of tuple to dictionary
+            dict = {'gid' :tuple[1],
+                    'out': tuple[2],
+                    'start_time': tuple[3],
+                    'end_minute': tuple[4],
+                    'link': tuple[5],
+                    'ip': tuple[6],
+                    'port': tuple[7],
+                    'proxy_user': tuple[8],
+                    'proxy_passwd': tuple[9],
+                    'download_user': tuple[10],
+                    'download_passwd': tuple[11],
+                    'connections': tuple[12],
+                    'limit': tuple[13],
+                    'download_path' : tuple[13],
+                    'referer': tuple[14],
+                    'load_cookies': tuple[15],
+                    'user_agent': tuple[16],
+                    'header': tuple[17],
+                    'after_download': tuple[18]
+                    }
+
+            # add dict to the list
+            list.append(dict)
+
+        return list
+
+ 
 
 # this method updates download_db_table
     def updateDownloadTable(self, list):
