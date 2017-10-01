@@ -3839,7 +3839,6 @@ class MainWindow(MainWindow_Ui):
 
         self.startQueueAction.setEnabled(True)
 
-#######
 
 # this method is called , when user want to add a download to a queue with
 # context menu. see also toolBarAndContextMenuItems() method
@@ -3860,57 +3859,63 @@ class MainWindow(MainWindow_Ui):
     def addToQueue2(self, data):
 
         send_message = False
-        new_category = str(data)  # new selected category
+
+        # new selected category
+        new_category = str(data)  
+
         gid_list = []
-        # checking if user checked selectAction in edit menu
-        if self.selectAction.isChecked() == True:
-            # finding checked rows! and appending gid of checked rows to
+
+        # gid_list contains gid of downloads that user wants to add them to a new category
+        # check if user checked selectAction in edit menu
+        if self.selectAction.isChecked():
+            # finding checked rows! and append gid of checked rows to
             # gid_list
             for row in range(self.download_table.rowCount()):
                 status = self.download_table.item(row, 1).text()
                 item = self.download_table.item(row, 0)
                 category = self.download_table.item(row, 12).text()
 
+                # check status of old category
                 if category in self.queue_list_dict.keys():
                     if self.queue_list_dict[category].start:
-                        status = 'downloading'  # It means queue is in download progress
-
-                if category == new_category : # It means item is already in new_category! so no need to transfer item again.
-                    existance = 'yes'
-                else:
-                    existance = 'no'
+                        # It means queue is in download progress
+                        status = 'downloading'  
 
                 # checkState 2 means item is checked by user.
-                if (item.checkState() == 2) and (status == 'error' or status == 'stopped' or status == 'complete') and (existance == 'no'):
-                    gid = self.download_table.item(row, 8).text()
-                    gid_list.append(gid)
-                if not (status == 'error' or status == 'stopped' or status == 'complete'):
+                # download must be in stopped situation.
+                if (status == 'error' or status == 'stopped' or status == 'complete'):
+                    if (item.checkState() == 2): 
+                        gid = self.download_table.item(row, 8).text()
+                        gid_list.append(gid)
+                else:
                     send_message = True
 
         else:
-            # finding selected_row
-            selected_row_return = self.selectedRow()  # finding user selected row
+            # find selected_row
+            selected_row_return = self.selectedRow() 
 
-# appending gid of selected_row to gid_list
-            if selected_row_return != None:
+            # append gid of selected_row to gid_list
+            if selected_row_return:
                 gid = self.download_table.item(selected_row_return, 8).text()
-                status = self.download_table.item(
-                    selected_row_return, 1).text()
-                category = self.download_table.item(
-                    selected_row_return, 12).text()
+                status = self.download_table.item(selected_row_return, 1).text()
+                category = self.download_table.item(selected_row_return, 12).text()
 
                 if category in self.queue_list_dict.keys():
                     if self.queue_list_dict[category].start:
-                        status = 'downloading'  # It means queue is in download progress
+                        # It means queue is in download progress
+                        status = 'downloading'  
 
+                # download must be in stopped situation
                 if (status == 'error' or status == 'stopped' or status == 'complete'):
                     gid_list.append(gid)
                 else:
                     send_message = True
 
+        # gid_list is ready now!
+
         for gid in gid_list:
 
-            # finding row number for specific gid
+            # find row number for specific gid
             for i in range(self.download_table.rowCount()):
                 row_gid = self.download_table.item(i, 8).text()
                 if gid == row_gid:
@@ -3922,47 +3927,13 @@ class MainWindow(MainWindow_Ui):
 
             if current_category != new_category:
 
-                # first download must eliminated form former category (current_category)
-                # reading current_category_file
-                current_category_file = os.path.join(
-                    category_folder, current_category)
-
-                f = Open(current_category_file)
-                f_list = f.readlines()
-                f.close()
-
-                # eliminating gid of download from queue_current_file
-                f = Open(current_category_file, 'w')
-                for line in f_list:
-                    gid_line = line.strip()
-                    if gid_line != gid:
-                        f.writelines(gid_line + '\n')
-
-                f.close()
-
-                # adding download to the new queue
-                new_category_file = os.path.join(category_folder, new_category)
-
-                f = Open(new_category_file, 'a')
-                f.writelines(gid + '\n')
-                f.close()
-
-# updating download_info_file
-                download_info_file = os.path.join(download_info_folder, gid)
-                download_info_file_list = readList(download_info_file)
-                download_info_file_list[12] = new_category
-
-                add_link_dictionary = download_info_file_list[9]
-# eliminating start_hour and start_minute and end_hour and end_minute!
-                add_link_dictionary['start_hour'] = None
-                add_link_dictionary['start_minute'] = None
-                add_link_dictionary['end_hour'] = None
-                add_link_dictionary['end_minute'] = None
-
-                download_info_file_list[9] = add_link_dictionary
-                writeList(download_info_file, download_info_file_list)
-
-# updating category in download_table
+                # write changes in data base
+                dict = {'gid': gid, 'category': new_category}
+                self.persepolis_db.updateDownloadTable([dict])
+                self.persepolis_db.updateAddLinkTable([dict]) 
+                self.persepolis_db.setDefaultGidInAddlinkTable(gid, start_time=True, end_time=True, after_download=True)
+                
+                # update category in download_table
                 current_category_tree_text = str(
                     current_category_tree_index.data())
                 if current_category_tree_text == 'All Downloads':
@@ -3980,11 +3951,13 @@ class MainWindow(MainWindow_Ui):
                     self.download_table.removeRow(row)
 
         if send_message:
-            notifySend("sending some items was unsuccessful!", "Please stop download progress first",
+            # notify user that transfer was unsuccessful
+            notifySend("item transferation was unsuccessful for some items!", "Please stop download progress first",
                        '5000', 'no', systemtray=self.system_tray_icon)
 
         global checking_flag
         checking_flag = 0
+
 
 
 # this method activates or deactivates start_frame according to situation
@@ -4022,7 +3995,7 @@ class MainWindow(MainWindow_Ui):
 # this method activates or deactivates limit_frame according to
 # limit_checkBox situation
     def limitFrame(self, checkBox):
-        if self.limit_checkBox.isChecked() == True:
+        if self.limit_checkBox.isChecked():
             self.limit_frame.setEnabled(True)
             self.limit_pushButton.setEnabled(True)
         else:
@@ -4038,7 +4011,7 @@ class MainWindow(MainWindow_Ui):
                 self.queue_list_dict[current_category_tree_text].limit_changed = True
 
 
-# this method is limiting download speed in queue
+# this method limits download speed in queue
     def limitPushButtonPressed(self, button):
         self.limit_pushButton.setEnabled(False)
 
@@ -4049,16 +4022,16 @@ class MainWindow(MainWindow_Ui):
         self.queue_list_dict[current_category_tree_text].limit = True
         self.queue_list_dict[current_category_tree_text].limit_changed = True
 
-# this method is handling user's shutdown request in queue downloading
-    def afterPushButtonPressed(self, button):
+# this method handles user's shutdown request 
+def afterPushButtonPressed(self, button):
         # current_category_tree_text is the name of queue that selected by user
         current_category_tree_text = str(current_category_tree_index.data())
 
         self.after_pushButton.setEnabled(False)
 
-        if os_type != 'Windows':  # For Linu and Mac OSX
+        if os_type != 'Windows':  # For Linux and Mac OSX
 
-            # getting root password from user
+            # get root password from user
             passwd, ok = QInputDialog.getText(
                 self, 'PassWord', 'Please enter root password:', QtWidgets.QLineEdit.Password)
             if ok:
@@ -4075,14 +4048,15 @@ class MainWindow(MainWindow_Ui):
                         ok = False
                         break
 
-                if ok != False:
+                if ok:
                     self.queue_list_dict[current_category_tree_text].after = True
 
-                    # sending password and queue name to ShutDownThread
-                    # this script is creating a file with the name of queue in  this folder "persepolis_tmp/shutdown/" . and writing a "wait" word in this file
+                    # send password and queue name to ShutDownThread
+                    # this script creates a file with the name of queue in  this folder "persepolis_tmp/shutdown/" 
+                    # and writing a "wait" word in this file
                     # shutdown_script_root is checking that file every second .
                     # when "wait" changes to "shutdown" in that file then
-                    # script is shutting down system
+                    # script shuts down system
                     shutdown_enable = ShutDownThread(
                         current_category_tree_text, passwd)
                     self.threadPool.append(shutdown_enable)
@@ -4133,7 +4107,7 @@ class MainWindow(MainWindow_Ui):
 # queue_panel_widget
 # this method checks that queue started or not,
 # and it shows or hides widgets in queue_panel_widget
-# according to situation and set them.
+# according to situation and set widgets in panel.
 
     def queuePanelWidget(self, category):
         # update queue_panel_widget items
@@ -4245,16 +4219,16 @@ class MainWindow(MainWindow_Ui):
         self.startFrame(category)
         self.endFrame(category)
 
-# this method is openning issues page in github
+# this method opens issues page in github
     def reportIssue(self, menu):
         osCommands.xdgOpen('https://github.com/persepolisdm/persepolis/issues')
 
-# this method is openning persepolis wiki page in github
+# this method opens persepolis wiki page in github
     def persepolisHelp(self, menu):
         osCommands.xdgOpen('https://github.com/persepolisdm/persepolis/wiki')
 
 
-# this method is opening update menu
+# this method opens update menu
     def newUpdate(self, menu):
         checkupdatewindow = checkupdate(
             self.persepolis_setting)
@@ -4263,7 +4237,7 @@ class MainWindow(MainWindow_Ui):
             self.checkupdatewindow_list) - 1].show()
 
 
-# this method is opening LogWindow 
+# this method opens LogWindow 
     def showLog(self, menu):
         logwindow = LogWindow(
             self.persepolis_setting)
@@ -4271,6 +4245,7 @@ class MainWindow(MainWindow_Ui):
         self.logwindow_list[len(
             self.logwindow_list) - 1].show()
 
+#######
 
 # this method is called when user pressed moveUpAction
 # this method is subtituting selected download item with upper one
@@ -4295,13 +4270,14 @@ class MainWindow(MainWindow_Ui):
             self.moveUp2()
 
     def moveUp2(self):
-        old_row = self.selectedRow()  # finding user selected row
+        # find user selected row
+        old_row = self.selectedRow()  
 
         # current_category_tree_text is the name of queue that selected by user
         current_category_tree_text = str(current_category_tree_index.data())
 
-# an old row and new row must replaced  by each other
-        if old_row != None:
+        # an old row and new row must replaced  by each other
+        if old_row:
             new_row = int(old_row) - 1
             if new_row >= 0:
 
