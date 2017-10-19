@@ -177,7 +177,7 @@ parser.add_argument('--parent-window', action='store', nargs = 1, help='this swi
 parser.add_argument('--version', action='version', version='Persepolis Download Manager 2.5a0')
 args = parser.parse_args()
 
-# Mozilla firefox flashgot will send download information whith terminal arguments(link , referer , cookie , agent , headers , name )
+# Mozilla firefox flashgot will send download information with terminal arguments(link , referer , cookie , agent , headers , name )
 # persepolis plugins (for chromium and chrome and opera and vivaldi and firefox) are using native message host system for 
 # sending download information to persepolis.
 # see this repo for more information:
