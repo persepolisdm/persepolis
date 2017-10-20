@@ -2188,7 +2188,6 @@ class MainWindow(MainWindow_Ui):
         self.persepolis_setting.sync()
 
 
-###########
 # this method shows/hides left side panel 
 # this method is called if user toggles showSidePanelAction in view menu
     def showSidePanel(self, menu):
@@ -2199,27 +2198,30 @@ class MainWindow(MainWindow_Ui):
             self.category_tree_qwidget.hide()
             show_sidepanel = 'no'
 
-        # writing changes to persepolis_setting
+        # write changes to persepolis_setting
         self.persepolis_setting.setValue(
             'settings/show-sidepanel', show_sidepanel)
         self.persepolis_setting.sync()
 
-# when user click on mouse's left button , then this method is called
+
+# when user left clicks on persepolis's system tray icon,then
+# this method is called
     def systemTrayPressed(self, click):
         if click == 3:
             self.minMaxTray(click)
 
-# when minMaxTray method called ,this method showed/hide main window
+# when minMaxTray method called ,this method shows/hides main window
     def minMaxTray(self, menu):
-        if self.isVisible() == False:
-            self.show()
-            self.minimizeAction.setText('Minimize to system tray')
-            self.minimizeAction.setIcon(QIcon(icons + 'minimize'))
-
-        else:
+        # hide MainWindow if it's visible
+        # Show MainWindow if it's hided
+        if self.isVisible():
             self.minimizeAction.setText('Show main Window')
             self.minimizeAction.setIcon(QIcon(icons + 'window'))
             self.hide()
+        else:
+            self.show()
+            self.minimizeAction.setText('Minimize to system tray')
+            self.minimizeAction.setIcon(QIcon(icons + 'minimize'))
 
 # showMainWindow shows main window in normal mode , see CheckingThread
     def showMainWindow(self):
@@ -2249,11 +2251,14 @@ class MainWindow(MainWindow_Ui):
                     if version_answer == 'did not respond':
                         self.aria2Disconnected()
 
-# this method is creating Preferences window
+
+# this method creats Preferences window
     def openPreferences(self, menu):
         self.preferenceswindow = PreferencesWindow(
             self, self.persepolis_setting)
-        self.preferenceswindow.show()  # showing Preferences Window
+
+        # show Preferences Window
+        self.preferenceswindow.show()  
 
 
 # this method is creating AboutWindow
@@ -2263,75 +2268,90 @@ class MainWindow(MainWindow_Ui):
         self.about_window_list[len(self.about_window_list) - 1].show()
 
 
-# This method is openning user's default download folder
+# This method opens user's default download folder
     def openDefaultDownloadFolder(self, menu):
-        # finding user's default download folder from persepolis_setting
+        # find user's default download folder from persepolis_setting
         self.persepolis_setting.sync()
         download_path = self.persepolis_setting.value('settings/download_path')
-        # checking that if download folder is availabile or not
+
+        # check that if download folder is availabile or not
         if os.path.isdir(download_path):
-            osCommands.xdgOpen(download_path)  # openning folder
+            # open folder
+            osCommands.xdgOpen(download_path)  
         else:
-            # showing error message if folder didn't existed
+            # show error message if folder didn't existed
             notifySend(str(download_path), 'Not Found', 5000,
                        'warning', systemtray=self.system_tray_icon)
 
-# this method is openning download folder , if download was finished
+
+# this method opens download folder , if download was finished
     def openDownloadFolder(self, menu):
-        selected_row_return = self.selectedRow()  # finding user selected row
 
-        if selected_row_return != None:
+        # find user selected row
+        selected_row_return = self.selectedRow()  
+
+        if selected_row_return:
+            # find gid
             gid = self.download_table.item(
-                selected_row_return, 8).text()  # finding gid
+                selected_row_return, 8).text()  
+        
+            # find status
             download_status = self.download_table.item(
-                selected_row_return, 1).text()  # finding download status
+                selected_row_return, 1).text()  
+
             if download_status == 'complete':
-                # finding download path
-                add_link_dictionary_str = self.download_table.item(
-                    selected_row_return, 9).text()
-                add_link_dictionary = ast.literal_eval(add_link_dictionary_str)
-                if 'file_path' in add_link_dictionary:
-                    file_path = add_link_dictionary['file_path']
+                # find download path
+                dict = self.persepolis_db.searchGidInAddLinkTable(gid)
+                file_path = dict['download_path']
 
-                    file_name = os.path.basename(str(file_path))
+                file_name = os.path.basename(str(file_path))
 
-                    file_path_split = file_path.split(file_name)
+                file_path_split = file_path.split(file_name)
 
-                    del file_path_split[-1]
+                del file_path_split[-1]
 
-                    download_path = file_name.join(file_path_split)
+                download_path = file_name.join(file_path_split)
 
-                    if os.path.isdir(download_path):
-                        osCommands.xdgOpen(download_path)  # openning file
-                    else:
-                        # showing error message , if folder did't existed
-                        notifySend(str(download_path), 'Not Found', 5000,
-                                   'warning', systemtray=self.system_tray_icon)
+                # check that if download_path existed
+                if os.path.isdir(download_path):
+                    # open file
+                    osCommands.xdgOpen(download_path)  
+                else:
+                    # showing error message , if folder did't existed
+                    notifySend(str(download_path), 'Not Found', 5000,
+                                'warning', systemtray=self.system_tray_icon)
 
 
-# this method is executing(openning) download file if download was finished
+# this method executes(opens) download file if download's progress was finished
     def openFile(self, menu):
-        selected_row_return = self.selectedRow()  # finding user selected row
+        # find user selected row
+        selected_row_return = self.selectedRow()  
 
-        if selected_row_return != None:
+        if selected_row_return:
+            # find gid
             gid = self.download_table.item(
-                selected_row_return, 8).text()  # finding gid
-            download_status = self.download_table.item(
-                selected_row_return, 1).text()  # finding download status
-            if download_status == 'complete':
-                # finding file path
-                add_link_dictionary_str = self.download_table.item(
-                    selected_row_return, 9).text()
-                add_link_dictionary = ast.literal_eval(add_link_dictionary_str)
-                if 'file_path' in add_link_dictionary:
-                    file_path = add_link_dictionary['file_path']
-                    if os.path.isfile(file_path):
-                        osCommands.xdgOpen(file_path)  # openning file
-                    else:
-                        # showing error message , if file was deleted or moved
-                        notifySend(str(file_path), 'Not Found', 5000,
-                                   'warning', systemtray=self.system_tray_icon)
+                selected_row_return, 8).text() 
 
+            # find status
+            download_status = self.download_table.item(
+                selected_row_return, 1).text() 
+
+            if download_status == 'complete':
+                # find download path
+                dict = self.persepolis_db.searchGidInAddLinkTable(gid)
+                file_path = dict['download_path']
+
+                if os.path.isfile(file_path):
+                    # open file
+                    osCommands.xdgOpen(file_path)
+
+                else:
+                    # show error message , if file was deleted or moved
+                    notifySend(str(file_path), 'Not Found', 5000,
+                               'warning', systemtray=self.system_tray_icon)
+
+
+###########
 # This method is called when user presses remove button in main window .
 # removeButtonPressed is removing download item
     def removeButtonPressed(self, button):
