@@ -282,8 +282,7 @@ class CheckDownloadInfoThread(QThread):
                 gid_list, download_status_list = download.tellActive()
 
                 if download_status_list:
-                    for row in active_gid_list:
-                        gid = row[0]
+                    for gid in active_gid_list:
 
                         # if gid not in gid_list, so download is completed or stopped or error occured!
                         # because aria2 returns active downloads status with tellActive function in download.py file. 
@@ -2029,28 +2028,35 @@ class MainWindow(MainWindow_Ui):
         global checking_flag
         checking_flag = 0
 
-###########
 
 # This method is called if user presses "show/hide progress window" button in
 # MainWindow
     def progressButtonPressed(self, button):
-        selected_row_return = self.selectedRow()  # find user selected row
+    # find user selected row
+        selected_row_return = self.selectedRow()  
         if selected_row_return:
             gid = self.download_table.item(selected_row_return, 8).text()
+
         # if gid is in self.progress_window_list_dict , it means that progress
         # window  for this gid (for this download) is created before and it's
-        # available!
+        # available! See progressBarOpen method for more information.
             if gid in self.progress_window_list_dict:
+                # find member_number of window in progress_window_list_dict
                 member_number = self.progress_window_list_dict[gid]
-                # if window is visible >> hide it , and if window is hide >>
-                # make it visible!
-                if not(self.progress_window_list[member_number].isVisible()):
-                    self.progress_window_list[member_number].show()
-                else:
+
+                # if window is visible >> hide it ,
+                # and if window is hide >> make it visible!
+                if self.progress_window_list[member_number].isVisible():
                     self.progress_window_list[member_number].hide()
+                else:
+                    self.progress_window_list[member_number].show()
+
             else:
-                # if window is not availabile , let's create it!
+                # if window is not availabile in progress_window_list_dict
+                # so let's create it!
                 self.progressBarOpen(gid)
+
+
 
 # This method creates new ProgressWindow
     def progressBarOpen(self, gid):
@@ -2068,6 +2074,7 @@ class MainWindow(MainWindow_Ui):
         self.progress_window_list_dict[gid] = member_number
 
         # check user preferences
+        # user can hide progress window in settings window.
         if str(self.persepolis_setting.value('settings/show-progress')) == 'yes':
             # show progress window
             self.progress_window_list[member_number].show()
@@ -2075,14 +2082,16 @@ class MainWindow(MainWindow_Ui):
             # hide progress window
             self.progress_window_list[member_number].hide()
 
+
+
 # close event
-# when user wants to close application then this function is called
+# when user closes application then this method is called
     def closeEvent(self, event):
-        # saving window size  and position
+        # save window size  and position
         self.persepolis_setting.setValue('MainWindow/size', self.size())
         self.persepolis_setting.setValue('MainWindow/position', self.pos())
 
-        # saving columns size
+        # save columns size
         self.persepolis_setting.setValue('MainWindow/column0', self.download_table.columnWidth(0))
         self.persepolis_setting.setValue('MainWindow/column1', self.download_table.columnWidth(1))
         self.persepolis_setting.setValue('MainWindow/column2', self.download_table.columnWidth(2))
@@ -2096,15 +2105,22 @@ class MainWindow(MainWindow_Ui):
         self.persepolis_setting.setValue('MainWindow/column12', self.download_table.columnWidth(12))
 
 
-
+        # sync persepolis_setting
+        # make sure all settings is saved.
         self.persepolis_setting.sync()
 
+        # hide MainWindow
         self.hide()
+
+        # write message in log and console
         print("Please Wait...")
         logger.sendToLog("Please wait ...", "INFO")
 
-        self.stopAllDownloads(event)  # stopping all downloads
-        self.system_tray_icon.hide()  # hiding system_tray_icon
+        # stop all downloads
+        self.stopAllDownloads(event)  
+
+        # hide system_tray_icon
+        self.system_tray_icon.hide()  
 
         download.shutDown()  # shutting down Aria2
         sleep(0.5)
@@ -2120,28 +2136,49 @@ class MainWindow(MainWindow_Ui):
         logger.sendToLog("Persepolis closed!", "INFO")
         sys.exit(0)
 
-# showTray method is showing/hiding system tray icon
+
+# showTray method shows/hides persepolis's icon in system tray icon
     def showTray(self, menu):
-        if self.trayAction.isChecked() == True:
-            self.system_tray_icon.show()  # showing system_tray_icon
-            # enabling minimizeAction in menu
+        # check if user checed trayAction in menu or not
+        if self.trayAction.isChecked():
+            # show system_tray_icon
+            self.system_tray_icon.show()  
+
+            # enabe minimizeAction in menu
             self.minimizeAction.setEnabled(True)
+
             tray_icon = 'yes'
         else:
-            self.system_tray_icon.hide()  # hide system_tray_icon
+            # hide system_tray_icon
+            self.system_tray_icon.hide()  
+
             # disabaling minimizeAction in menu
             self.minimizeAction.setEnabled(False)
+
             tray_icon = 'no'
-        # writing changes to setting file
+
+        # write changes in persepolis_setting
         self.persepolis_setting.setValue('settings/tray-icon', tray_icon)
         self.persepolis_setting.sync()
 
+
+# this method shows/hides menubar and 
+# it's called when user toggles showMenuBarAction in view menu
     def showMenuBar(self, menu):
+        # persepolis has 2 menu bar
+        # 1. menubar in main window
+        # 2. qmenu(see mainwindow_ui.py file for more information)
+        # qmenu is in toolBar2
+        # user can toggle between viewing menu1 or menu2 with showMenuBarAction
+
+        # check if showMenuBarAction is checked or unchecked
         if self.showMenuBarAction.isChecked():
+            # show menubar and hide toolBar2
             self.menubar.show()
             self.toolBar2.hide()
             show_menubar = 'yes'
         else:
+            # hide menubar and show toolBar2
             self.menubar.hide()
             self.toolBar2.show()
             show_menubar = 'no'
@@ -2150,6 +2187,10 @@ class MainWindow(MainWindow_Ui):
         self.persepolis_setting.setValue('settings/show-menubar', show_menubar)
         self.persepolis_setting.sync()
 
+
+###########
+# this method shows/hides left side panel 
+# this method is called if user toggles showSidePanelAction in view menu
     def showSidePanel(self, menu):
         if self.showSidePanelAction.isChecked():
             self.category_tree_qwidget.show()
@@ -2186,26 +2227,19 @@ class MainWindow(MainWindow_Ui):
         self.minimizeAction.setText('Minimize to system tray')
         self.minimizeAction.setIcon(QIcon(icons + 'minimize'))
 
-# stopAllDownloads is stopping all downloads
+# stopAllDownloads stops all downloads
     def stopAllDownloads(self, menu):
 
-        # stopping all queues
+        # stop all queues
         for queue in self.queue_list_dict.values():
             queue.stop = True
             queue.start = False
 
-# stopping single downloads
+        # stop single downloads
+        # get active download list from data base
+        active_gid_list = self.persepolis_db.findActiveDownloads('Single Downloads')
 
-        f = Open(single_downloads_list_file)
-        single_downloads_list_file_lines = f.readlines()
-        f.close()
-
-        for line in single_downloads_list_file_lines:
-            gid = line.strip()
-            download_info_file = os.path.join(download_info_folder, gid)
-            download_info_file_list = readList(download_info_file)
-            status = download_info_file_list[1]
-            if status == 'downloading' or status == 'paused' or status == 'waiting':  # checking status of downloads
+        for gid in active_gid_list:
                 answer = download.downloadStop(gid, self)
                 # if aria2 did not respond , then this function is checking for
                 # aria2 availability , and if aria2 disconnected then

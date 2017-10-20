@@ -605,11 +605,19 @@ class PersepolisDB():
     
         self.persepolis_db_connection.commit()
 
-    def findActiveDownloads(self):
+    def findActiveDownloads(self, category='*'):
         # find download items is download_db_table with status = "downloading" or "waiting" or paused or scheduled
-        self.persepolis_db_cursor.execute("""SELECT gid FROM download_db_table WHERE status = 'downloading' OR status = 'waiting' 
-                                            OR status = 'scheduled' OR status = 'paused'""")
-        return self.persepolis_db_cursor.fetchall()
+        self.persepolis_db_cursor.execute("""SELECT gid FROM download_db_table WHERE (category = {}) AND (status = 'downloading' OR status = 'waiting' 
+                                            OR status = 'scheduled' OR status = 'paused)'""".format(str(category)))
+
+        # create a list for returning answer
+        list = self.persepolis_db_cursor.fetchall()
+        gid_list = []
+
+        for tuple in rows:
+            gid_list.append(tuple[0])
+
+        return  gid_list 
 
 # This method deletes a category from category_db_table
     def deleteCategory(self, category):
