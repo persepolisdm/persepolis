@@ -103,6 +103,16 @@ class PreferencesWindow(Setting_Ui):
         if current_style_index != -1:
             self.style_comboBox.setCurrentIndex(current_style_index)
 
+        # available language
+        available_language = ['en_US' , 'fa_IR']
+        for lang in available_language:
+            self.lang_comboBox.addItem(lang)
+
+        current_locale = self.lang_comboBox.findText(
+            str(self.persepolis_setting.value('locale')))
+        if current_locale != -1:
+            self.lang_comboBox.setCurrentIndex(current_locale)
+        print(self.persepolis_setting.value('locale'))
 # set color_scheme
         color_scheme = ['System', 'Persepolis Dark Red', 'Persepolis Dark Blue', 'Persepolis ArcDark Red',
                         'Persepolis ArcDark Blue', 'Persepolis Light Red', 'Persepolis Light Blue']
@@ -197,7 +207,7 @@ class PreferencesWindow(Setting_Ui):
             self.font_checkBox.setChecked(True)
         else:
             self.font_checkBox.setChecked(False)
-        
+
         self.fontCheckBoxState(self.font_checkBox)
 
 # keep_awake_checkBox
@@ -272,11 +282,11 @@ class PreferencesWindow(Setting_Ui):
         self.font_checkBox.stateChanged.connect(self.fontCheckBoxState)
 
 # saving initial value of self.persepolis_setting in self.first_key_value_dict
-# at the end! in the okPushButtonPressed method, first_key_value_dict will compared with second_key_value_dict. 
+# at the end! in the okPushButtonPressed method, first_key_value_dict will compared with second_key_value_dict.
 # if any thing changed , then a message box notify user about "some changes take effect after restarting persepolis".
         self.first_key_value_dict = {}
         for member in self.persepolis_setting.allKeys():
-            self.first_key_value_dict[member] = str(self.persepolis_setting.value(member)) 
+            self.first_key_value_dict[member] = str(self.persepolis_setting.value(member))
 
 
         self.persepolis_setting.endGroup()
@@ -302,7 +312,7 @@ class PreferencesWindow(Setting_Ui):
             # enable color_comboBox
             self.color_comboBox.setEnabled(True)
 
-    
+
 
 
 
@@ -315,7 +325,7 @@ class PreferencesWindow(Setting_Ui):
         else:
             self.fontComboBox.setEnabled(False)
             self.font_size_spinBox.setEnabled(False)
- 
+
 
 
     def closeEvent(self, event):
@@ -379,7 +389,7 @@ class PreferencesWindow(Setting_Ui):
 
         self.setting_dict = {'wait-queue': [0, 0], 'awake': 'no', 'custom-font': 'no', 'column0': 'yes', 'column1': 'yes', 'column2': 'yes', 'column3': 'yes', 'column4': 'yes', 'column5': 'yes', 'column6': 'yes', 'column7': 'yes', 'column10': 'yes', 'column11': 'yes', 'column12': 'yes',
                              'subfolder': 'yes', 'startup': 'no', 'show-progress': 'yes', 'show-menubar': 'no', 'show-sidepanel': 'yes', 'rpc-port': 6801, 'notification': 'Native notification', 'after-dialog': 'yes', 'tray-icon': 'yes',
-                             'max-tries': 5, 'retry-wait': 0, 'timeout': 60, 'connections': 16, 'download_path_temp': download_path_temp_default, 'download_path': download_path_default, 'sound': 'yes', 'sound-volume': 100, 'style': 'Fusion',
+                             'max-tries': 5, 'retry-wait': 0, 'timeout': 60, 'connections': 16, 'download_path_temp': download_path_temp_default, 'download_path': download_path_default, 'sound': 'yes', 'sound-volume': 100, 'style': 'Fusion','locale': 'English',
                              'color-scheme': 'Persepolis Dark Red', 'icons': 'Archdroid-Red', 'font': 'Ubuntu', 'font-size': 9}
 
         self.tries_spinBox.setValue(int(self.setting_dict['max-tries']))
@@ -410,6 +420,10 @@ class PreferencesWindow(Setting_Ui):
         current_style_index = self.style_comboBox.findText(
             str(self.setting_dict['style']))
         self.style_comboBox.setCurrentIndex(current_style_index)
+# set language
+        current_locale = self.lang_comboBox.findText(
+            str(self.setting_dict['locale']))
+        self.lang_comboBox.setCurrentIndex(current_locale)
 # set color_scheme
         current_color_index = self.color_comboBox.findText(
             str(self.setting_dict['color-scheme']))
@@ -467,7 +481,7 @@ class PreferencesWindow(Setting_Ui):
         self.column11_checkBox.setChecked(True)
         self.column12_checkBox.setChecked(True)
 
- 
+
 
         self.persepolis_setting.endGroup()
 
@@ -512,6 +526,10 @@ class PreferencesWindow(Setting_Ui):
         style = str(self.style_comboBox.currentText())
         self.persepolis_setting.setValue('style', style)
 
+# language
+        locale = str(self.lang_comboBox.currentText())
+        self.persepolis_setting.setValue('locale', locale)
+
 # color_scheme
         color_scheme = self.color_comboBox.currentText()
         self.persepolis_setting.setValue('color-scheme', color_scheme)
@@ -531,7 +549,7 @@ class PreferencesWindow(Setting_Ui):
             custom_font = 'yes'
         else:
             custom_font = 'no'
-           
+
 
         self.persepolis_setting.setValue('custom-font', custom_font)
 # if user select qt notification  >> enable_system_tray icon
@@ -636,7 +654,7 @@ class PreferencesWindow(Setting_Ui):
         if self.column0_checkBox.isChecked():
             self.persepolis_setting.setValue('column0', 'yes')
             self.parent.download_table.setColumnHidden(0, False)
-            
+
             if self.parent.download_table.isColumnHidden(0):
                 self.parent.download_table.setColumnWidth(0, 100)
 
@@ -648,7 +666,7 @@ class PreferencesWindow(Setting_Ui):
         if self.column1_checkBox.isChecked():
             self.persepolis_setting.setValue('column1', 'yes')
             self.parent.download_table.setColumnHidden(1, False)
-            
+
             if self.parent.download_table.isColumnHidden(1):
                 self.parent.download_table.setColumnWidth(1, 100)
 
@@ -660,7 +678,7 @@ class PreferencesWindow(Setting_Ui):
         if self.column2_checkBox.isChecked():
             self.persepolis_setting.setValue('column2', 'yes')
             self.parent.download_table.setColumnHidden(2, False)
-            
+
             if self.parent.download_table.isColumnHidden(2):
                 self.parent.download_table.setColumnWidth(2, 100)
 
@@ -672,7 +690,7 @@ class PreferencesWindow(Setting_Ui):
         if self.column3_checkBox.isChecked():
             self.persepolis_setting.setValue('column3', 'yes')
             self.parent.download_table.setColumnHidden(3, False)
-            
+
             if self.parent.download_table.isColumnHidden(3):
                 self.parent.download_table.setColumnWidth(3, 100)
 
@@ -684,7 +702,7 @@ class PreferencesWindow(Setting_Ui):
         if self.column4_checkBox.isChecked():
             self.persepolis_setting.setValue('column4', 'yes')
             self.parent.download_table.setColumnHidden(4, False)
-            
+
             if self.parent.download_table.isColumnHidden(4):
                 self.parent.download_table.setColumnWidth(4, 100)
 
@@ -696,7 +714,7 @@ class PreferencesWindow(Setting_Ui):
         if self.column5_checkBox.isChecked():
             self.persepolis_setting.setValue('column5', 'yes')
             self.parent.download_table.setColumnHidden(5, False)
-            
+
             if self.parent.download_table.isColumnHidden(5):
                 self.parent.download_table.setColumnWidth(5, 100)
 
@@ -708,7 +726,7 @@ class PreferencesWindow(Setting_Ui):
         if self.column6_checkBox.isChecked():
             self.persepolis_setting.setValue('column6', 'yes')
             self.parent.download_table.setColumnHidden(6, False)
-            
+
             if self.parent.download_table.isColumnHidden(6):
                 self.parent.download_table.setColumnWidth(6, 100)
 
@@ -720,7 +738,7 @@ class PreferencesWindow(Setting_Ui):
         if self.column7_checkBox.isChecked():
             self.persepolis_setting.setValue('column7', 'yes')
             self.parent.download_table.setColumnHidden(7, False)
-            
+
             if self.parent.download_table.isColumnHidden(7):
                 self.parent.download_table.setColumnWidth(7, 100)
 
@@ -732,7 +750,7 @@ class PreferencesWindow(Setting_Ui):
         if self.column10_checkBox.isChecked():
             self.persepolis_setting.setValue('column10', 'yes')
             self.parent.download_table.setColumnHidden(10, False)
-            
+
             if self.parent.download_table.isColumnHidden(10):
                 self.parent.download_table.setColumnWidth(10, 100)
 
@@ -744,7 +762,7 @@ class PreferencesWindow(Setting_Ui):
         if self.column11_checkBox.isChecked():
             self.persepolis_setting.setValue('column11', 'yes')
             self.parent.download_table.setColumnHidden(11, False)
-            
+
             if self.parent.download_table.isColumnHidden(11):
                 self.parent.download_table.setColumnWidth(11, 100)
 
@@ -756,7 +774,7 @@ class PreferencesWindow(Setting_Ui):
         if self.column12_checkBox.isChecked():
             self.persepolis_setting.setValue('column12', 'yes')
             self.parent.download_table.setColumnHidden(12, False)
-            
+
             if self.parent.download_table.isColumnHidden(12):
                 self.parent.download_table.setColumnWidth(12, 100)
 
@@ -767,7 +785,7 @@ class PreferencesWindow(Setting_Ui):
         # saving value of persepolis_setting in second_key_value_dict.
         self.second_key_value_dict = {}
         for member in self.persepolis_setting.allKeys():
-            self.second_key_value_dict[member] = str(self.persepolis_setting.value(member)) 
+            self.second_key_value_dict[member] = str(self.persepolis_setting.value(member))
 
         # comparing first_key_value_dict with second_key_value_dict
         show_message_box = False
@@ -778,7 +796,7 @@ class PreferencesWindow(Setting_Ui):
 
         # if any thing changed that needs restarting, then notify user about "Some changes take effect after restarting persepolis"
         if show_message_box:
-            restart_messageBox = QMessageBox()                
+            restart_messageBox = QMessageBox()
             restart_messageBox.setText('<b><center>Restart Persepolis Please!</center></b><br><center>Some changes take effect after restarting persepolis</center>')
             restart_messageBox.setWindowTitle('Restart Persepolis!')
             restart_messageBox.exec_()
