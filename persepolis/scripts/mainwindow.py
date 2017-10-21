@@ -2351,9 +2351,8 @@ class MainWindow(MainWindow_Ui):
                                'warning', systemtray=self.system_tray_icon)
 
 
-###########
 # This method is called when user presses remove button in main window .
-# removeButtonPressed is removing download item
+# removeButtonPressed removes download item
     def removeButtonPressed(self, button):
         self.removeAction.setEnabled(False)
         global checking_flag
@@ -2372,54 +2371,32 @@ class MainWindow(MainWindow_Ui):
     def removeButtonPressed2(self):
         selected_row_return = self.selectedRow()  # finding selected row
 
-        if selected_row_return != None:
+        if selected_row_return:
+
+            # find gid, file_name, category and download status
             gid = self.download_table.item(selected_row_return, 8).text()
             file_name = self.download_table.item(selected_row_return, 0).text()
             status = self.download_table.item(selected_row_return, 1).text()
             category = self.download_table.item(selected_row_return, 12).text()
 
-            # removing item from download table
+            # remove item from download table
             self.download_table.removeRow(selected_row_return)
 
-# remove gid of download from download list file and category list file
-# and active download list file
+            # remove download item from data base
+            self.persepolis_db.deleteItemInDownloadTable(gid, category)
 
-            # finding category_gid_list_file
-            category_gid_list_file = os.path.join(
-                category_folder, str(category))
-            # removing gid
-            for file in [download_list_file, download_list_file_active, category_gid_list_file]:
-                f = Open(file)
-                f_lines = f.readlines()
-                f.close()
-                f = Open(file, "w")
-                for i in f_lines:
-                    if i.strip() != gid:
-                        f.writelines(i.strip() + "\n")
-                f.close()
-
-# removing download_info_file
-            download_info_file = os.path.join(download_info_folder, gid)
-            f = Open(download_info_file)
-            f.close()
-            f.remove()
-
-# removing download_info_file_backup
-            download_info_file_backup = str(download_info_file) + "_back"
-            osCommands.remove(download_info_file_backup)
-
-# remove file of download from download temp folder
+            # remove file of download from download temp folder
             if file_name != '***' and status != 'complete':
                 file_name_path = os.path.join(
                     temp_download_folder,  str(file_name))
-                osCommands.remove(file_name_path)  # removing file
+                osCommands.remove(file_name_path)  # remove file
 
                 file_name_aria = file_name_path + str('.aria2')
-                osCommands.remove(file_name_aria)  # removin file.aria
+                osCommands.remove(file_name_aria)  # remove file.aria
         else:
             self.statusbar.showMessage("Please select an item first!")
 
-# telling the CheckDownloadInfoThread that job is done!
+        # tell the CheckDownloadInfoThread that job is done!
         global checking_flag
         checking_flag = 0
 
@@ -2427,12 +2404,12 @@ class MainWindow(MainWindow_Ui):
 
 
 # this method is called when user presses delete button in MainWindow .
-# this method is deleting download file from hard disk and removing
+# this method deletes download file from hard disk and removs
 # download item
     def deleteFile(self, menu):
-        # showing Warning message to the user.
-        # checking persepolis_setting first!
-        # perhaps user was checking "do not show this message again"
+        # show Warning message to the user.
+        # check persepolis_setting first!
+        # perhaps user checked "do not show this message again"
         delete_warning_message = self.persepolis_setting.value(
             'MainWindow/delete-warning', 'yes')
 
@@ -2469,31 +2446,40 @@ class MainWindow(MainWindow_Ui):
             self.deleteFile2()
 
     def deleteFile2(self):
-        selected_row_return = self.selectedRow()  # finding user selected row
-# This section is checking the download status , if download was completed
-# then download file is removing
-        if selected_row_return != None:
-            self.download_table.item(selected_row_return, 8).text()
-            download_status = self.download_table.item(
-                selected_row_return, 1).text()
+        # find user selected item
+        selected_row_return = self.selectedRow()  
+
+        if selected_row_return:
+            # find gid , category and download_status
+            gid = self.download_table.item(selected_row_return, 8).text()
+            download_status = self.download_table.item(selected_row_return, 1).text()
+            category = self.download_table.item(selected_row_return, 12).text()
+
+            # remove file if download_status is complete
             if download_status == 'complete':
-                add_link_dictionary_str = self.download_table.item(
-                    selected_row_return, 9).text()
-                add_link_dictionary = ast.literal_eval(add_link_dictionary_str)
-                if 'file_path' in add_link_dictionary:
-                    # finding file_path from add_link_dictionary
-                    file_path = add_link_dictionary['file_path']
-                    remove_answer = osCommands.remove(
-                        file_path)  # removing file_path file
-                    if remove_answer == 'no':  # notifiying user if file_path is not valid
-                        notifySend(str(file_path), 'Not Found', 5000,
-                                   'warning', systemtray=self.system_tray_icon)
-                    self.removeButtonPressed2()
+                # find download path
+                dict = self.persepolis_db.searchGidInAddLinkTable(gid)
+                file_path = dict['download_path']
+
+                remove_answer = osCommands.remove(file_path)  
+
+                if remove_answer == 'no':  # notifiy user if file_path is not valid
+                    notifySend(str(file_path), 'Not Found', 5000,
+                               'warning', systemtray=self.system_tray_icon)
+
+            # remove item from download table
+            self.download_table.removeRow(selected_row_return)
+
+            # remove download item from data base
+            self.persepolis_db.deleteItemInDownloadTable(gid, category)
+
+
+
 
 # this method is called when user checkes selection mode in edit menu!
     def selectDownloads(self, menu):
-        # selectAllAction is checked >> activating actions and adding removeSelectedAction and deleteSelectedAction to the toolBar
-        # selectAction is unchecked deactivate actions and adding removeAction and deleteFileAction to the toolBar
+        # if selectAllAction is checked >> activating actions and adding removeSelectedAction and deleteSelectedAction to the toolBar
+        # if selectAction is unchecked deactivate actions and adding removeAction and deleteFileAction to the toolBar
         # if checking_flag is equal to 1, it means that user pressed remove or
         # delete button or ... . so checking download information must be
         # stopped until job is done!
@@ -2507,46 +2493,49 @@ class MainWindow(MainWindow_Ui):
             self.selectDownloads2()
 
     def selectDownloads2(self):
-        # finding highlited item in category_tree
+        # find highlited item in category_tree
         current_category_tree_text = str(current_category_tree_index.data())
         self.toolBarAndContextMenuItems(current_category_tree_text)
 
-        if self.selectAction.isChecked() == True:
-            # adding checkbox to items
+        if self.selectAction.isChecked():
+            # add checkbox to items
             for i in range(self.download_table.rowCount()):
                 item = self.download_table.item(i, 0)
                 item.setFlags(QtCore.Qt.ItemIsUserCheckable |
                               QtCore.Qt.ItemIsEnabled)
                 item.setCheckState(QtCore.Qt.Unchecked)
-        # activating selectAllAction and removeSelectedAction and
-        # deleteSelectedAction
+
+                # activate selectAllAction and removeSelectedAction and
+                # deleteSelectedAction
                 self.selectAllAction.setEnabled(True)
                 self.removeSelectedAction.setEnabled(True)
                 self.deleteSelectedAction.setEnabled(True)
 
         else:
-            # removing checkbox from items
+            # remove checkbox from items
             for i in range(self.download_table.rowCount()):
                 item_text = self.download_table.item(i, 0).text()
                 item = QTableWidgetItem(item_text)
                 self.download_table.setItem(i, 0, item)
-        # deactivating selectAllAction and removeSelectedAction and
-        # deleteSelectedAction
+
+                # deactivate selectAllAction and removeSelectedAction and
+                # deleteSelectedAction
                 self.selectAllAction.setEnabled(False)
                 self.removeSelectedAction.setEnabled(False)
                 self.deleteSelectedAction.setEnabled(False)
 
 
-# telling the CheckDownloadInfoThread that job is done!
+        # tell the CheckDownloadInfoThread that job is done!
         global checking_flag
         checking_flag = 0
 
 
-# this method called when user selects "select all items" form edit menu
+# this method s called when user selects "select all items" form edit menu
     def selectAll(self, menu):
         for i in range(self.download_table.rowCount()):
             item = self.download_table.item(i, 0)
             item.setCheckState(QtCore.Qt.Checked)
+
 
 # this method is called when user presses 'remove selected items' button
     def removeSelected(self, menu):
@@ -2564,17 +2553,26 @@ class MainWindow(MainWindow_Ui):
             self.removeSelected2()
 
     def removeSelected2(self):
-     # finding checked rows! and append gid of checked rows to gid_list
+
+        # find checked rows! and append gid of checked rows to gid_list
         gid_list = []
         for row in range(self.download_table.rowCount()):
+            # get download status
             status = self.download_table.item(row, 1).text()
+
+            # get first column
             item = self.download_table.item(row, 0)
+
+            # if checkState is 2, it means item is checked
             if (item.checkState() == 2) and (status == 'complete' or status == 'error' or status == 'stopped'):
+                # find gid
                 gid = self.download_table.item(row, 8).text()
+
+                # append gid to gid_list
                 gid_list.append(gid)
 
-# removing checked rows
-        # finding the row for specific gid
+        # remove checked rows
+        # find row number for specific gid
         for gid in gid_list:
             for i in range(self.download_table.rowCount()):
                 row_gid = self.download_table.item(i, 8).text()
@@ -2582,55 +2580,33 @@ class MainWindow(MainWindow_Ui):
                     row = i
                     break
 
-            # finding filename
+            # find filename
             file_name = self.download_table.item(row, 0).text()
-
-            # finding category
+            
+            # find category
             category = self.download_table.item(row, 12).text()
 
-            # removing row from download_table
+            # remove row from download_table
             self.download_table.removeRow(row)
 
-# removing gid of download from download list file and download_list_file_active and category_gid_list_file
-            # setting category_gid_list_file path
-            category_gid_list_file = os.path.join(
-                category_folder, str(category))
 
-            # removing gid
-            for file in [download_list_file, download_list_file_active, category_gid_list_file]:
-                f = Open(file)
-                f_lines = f.readlines()
-                f.close()
-                f = Open(file, "w")
-                for i in f_lines:
-                    if i.strip() != gid:
-                        f.writelines(i.strip() + "\n")
-                f.close()
+            # remove download item from data base
+            self.persepolis_db.deleteItemInDownloadTable(gid, category)
 
-# removing download_info_file
-            download_info_file = os.path.join(download_info_folder, gid)
-            f = Open(download_info_file)
-            f.close()
-            f.remove()
-
-# removing download_info_file_backup
-            download_info_file_backup = str(download_info_file) + "_back"
-            osCommands.remove(download_info_file_backup)
-
-
-# removing file of download form download temp folder
+            # remove file of download from download temp folder
             if file_name != '***' and status != 'complete':
                 file_name_path = os.path.join(
-                    temp_download_folder, str(file_name))
-                # removing file : file_name_path
-                osCommands.remove(file_name_path)
-                file_name_aria = file_name_path + str('.aria2')
-                # removing aria2 information file *.aria
-                osCommands.remove(file_name_aria)
+                    temp_download_folder,  str(file_name))
+                osCommands.remove(file_name_path)  # remove file
 
-# telling the CheckDownloadInfoThread that job is done!
+                file_name_aria = file_name_path + str('.aria2')
+                osCommands.remove(file_name_aria)  # remove file.aria
+ 
+        # tell the CheckDownloadInfoThread that job is done!
         global checking_flag
         checking_flag = 0
+
+
 
 # this method is called when user presses 'delete selected items'
     def deleteSelected(self, menu):
@@ -2674,18 +2650,28 @@ class MainWindow(MainWindow_Ui):
             self.deleteSelected2()
 
     def deleteSelected2(self):
-        # finding checked rows! and appending gid of checked rows to gid_list
+
+        # find checked rows! and append gid of checked rows to gid_list
         gid_list = []
         for row in range(self.download_table.rowCount()):
+            # get download status
             status = self.download_table.item(row, 1).text()
+
+            # get first column
             item = self.download_table.item(row, 0)
+
+            # if checkState is 2, it means item is checked
             if (item.checkState() == 2) and (status == 'complete' or status == 'error' or status == 'stopped'):
+                # find gid
                 gid = self.download_table.item(row, 8).text()
+
+                # append gid to gid_list
                 gid_list.append(gid)
 
-# removing checked rows
 
-        # finding row number for specific gid
+        # remove checked rows
+
+        # find row number for specific gid
         for gid in gid_list:
             for i in range(self.download_table.rowCount()):
                 row_gid = self.download_table.item(i, 8).text()
@@ -2693,69 +2679,54 @@ class MainWindow(MainWindow_Ui):
                     row = i
                     break
 
-            # finding file_name
+            # find file_name
             file_name = self.download_table.item(row, 0).text()
 
-            # finding category
-            category = self.download_table.item(row, 12) . text()
-
-            # finding add_link_dictionary
-            add_link_dictionary_str = self.download_table.item(row, 9).text()
-            add_link_dictionary = ast.literal_eval(add_link_dictionary_str)
-
-            # removing row
-            self.download_table.removeRow(row)
-
-# removing gid of download from download list file and download_list_file_active and category_gid_list_file
-            # finding category_gid_list_file
-            category_gid_list_file = os.path.join(
-                category_folder, str(category))
-
-            # removing gid
-            for file in [download_list_file, download_list_file_active, category_gid_list_file]:
-                f = Open(file)
-                f_lines = f.readlines()
-                f.close()
-                f = Open(file, "w")
-                for i in f_lines:
-                    if i.strip() != gid:
-                        f.writelines(i.strip() + "\n")
-                f.close()
-
-# remove download_info_file
-            download_info_file = os.path.join(download_info_folder, gid)
-            f = Open(download_info_file)
-            f.close()
-            f.remove()
-
-# removing download_info_file_backup
-            download_info_file_backup = str(download_info_file) + "_back"
-            osCommands.remove(download_info_file_backup)
+            # find category
+            category = self.download_table.item(row, 12).text()
 
 
-# remove file of download form download temp folder
+            # if download is not completed,
+            # remove downloaded file form download temp folder
             if file_name != '***' and status != 'complete':
                 file_name_path = os.path.join(
                     temp_download_folder, str(file_name))
-                # removing file : file_name_path
+
+                # remove file : file_name_path
                 osCommands.remove(file_name_path)
 
-                # removing aria2 download information file : file_name_aria
+                # remove aria2 download information file : file_name_aria
                 file_name_aria = file_name_path + str('.aria2')
                 osCommands.remove(file_name_aria)
-# remove download file
-            if status == 'complete':
-                if 'file_path' in add_link_dictionary:
-                    file_path = add_link_dictionary['file_path']
-                    remove_answer = osCommands.remove(file_path)
-                    if remove_answer == 'no':
-                        notifySend(str(file_path), 'Not Found', 5000,
-                                   'warning', systemtray=self.system_tray_icon)
 
-# telling the CheckDownloadInfoThread that job is done!
+            # remove downloaded file, if download is completed
+            if status == 'complete':
+
+                # find download path
+                dict = self.persepolis_db.searchGidInAddLinkTable(gid)
+                file_path = dict['download_path']
+
+                remove_answer = osCommands.remove(file_path)  
+
+
+                if remove_answer == 'no':
+                    notifySend(str(file_path), 'Not Found', 5000,
+                               'warning', systemtray=self.system_tray_icon)
+
+            # remove row from download_table
+            self.download_table.removeRow(row)
+
+
+            # remove download item from data base
+            self.persepolis_db.deleteItemInDownloadTable(gid, category)
+
+
+        # telling the CheckDownloadInfoThread that job is done!
         global checking_flag
         checking_flag = 0
 
+
+###########
 # when this method called , download_table will sort by name
     def sortByName(self, menu_item):
 
@@ -3196,6 +3167,7 @@ class MainWindow(MainWindow_Ui):
                     'limit_enable': 'no',
                     'limit_value': '0K',
                     'after_download': 'no'
+                    'gid_list': '[]'
                     }
 
             # insert new category in data base

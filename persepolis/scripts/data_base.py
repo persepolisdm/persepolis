@@ -15,6 +15,7 @@
 """
 
 import sqlite3
+import ast
 
 
 # download manager config folder .
@@ -139,6 +140,7 @@ class PersepolisDB():
         # persepolis_db_cursor
         self.persepolis_db_cursor = persepolis_db_connection.cursor()
 
+
     def createTables(self):
     # queues_list contains name of categories and category settings
         self.persepolis_db_cursor.execute("""CREATE TABLE IF NOT EXISTS category_db_table(
@@ -150,7 +152,8 @@ class PersepolisDB():
                                                                         reverse TEXT,
                                                                         limit_enable TEXT,
                                                                         limit_value TEXT,
-                                                                        after_download TEXT
+                                                                        after_download TEXT,
+                                                                        items TEXT
                                                                                     )""")
 
 
@@ -216,6 +219,7 @@ class PersepolisDB():
                                                                             :limit_enable,
                                                                             :limit_value,
                                                                             :after_download
+                                                                            :gid_list
                                                                             )""", dict)
         self.persepolis_db_connection.commit()
  
@@ -451,7 +455,8 @@ class PersepolisDB():
                     'reverse',
                     'limit_enable',
                     'limit_value',
-                    'after_download'
+                    'after_download',
+                    'gid_list'
                     ]
 
 	for dict in list:
@@ -469,7 +474,8 @@ class PersepolisDB():
                                                                                     reverse = coalesce(:reverse, reverse),
                                                                                     limit_enable = coalesce(:limit_enable, limit_enable),
                                                                                     limit_value = coalesce(:limit_value, limit_value),
-                                                                                    after_download = coalesce(:after_download, after_download)
+                                                                                    after_download = coalesce(:after_download, after_download),
+                                                                                    gid_list = coalesce(:gid_list, gid_list)
                                                                                     WHERE category = :category""", dict)
 
     # commit the changes
@@ -555,6 +561,11 @@ class PersepolisDB():
         else:
             return None
 
+
+        # convert string to list
+        gid_list = ast.literal_eval(tuple[9]) 
+
+
         # create a dictionary from results
         dict = {'category': tuple[0],
                 'start_time_enable': tuple[1],
@@ -564,7 +575,8 @@ class PersepolisDB():
                 'reverse': tuple[5],
                 'limit_enable': tuple[6],
                 'limit_value': tuple[7],
-                'after_download': tuple[8]
+                'after_download': tuple[8],
+                'gid_list': gid_list 
                 }
 
         # return dictionary
@@ -625,6 +637,27 @@ class PersepolisDB():
 
         # commit changes
         self.persepolis_db_connection.commit()
+
+
+# This method deletes a download item from download_db_table
+    def deleteItemInDownloadTable(self, gid, category):
+        self.persepolis_db_cursor.execute("""DELETE FROM download_db_table WHERE gid = {}""".format(str(gid)))
+
+        # delete item from gid_list in category
+        category_dict = self.searchCategoryInCategoryTable(category)
+
+        # get gid_list
+        gid_list = category_dict['gid_list']
+
+        # delete item
+        gid_list = gid_list.remove(gid)
+
+        # updata category_db_table
+        self.updateCategoryTable([category_dict])
+
+        # commit changes
+        self.persepolis_db_connection.commit()
+
 
 
     # close connections
