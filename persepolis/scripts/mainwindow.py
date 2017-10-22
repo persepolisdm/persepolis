@@ -423,36 +423,51 @@ class Queue(QThread):
         # and retrying failed downloads.
         for counter in range(5): 
             # read downloads information from data base
-            download_table_list = self.parent.persepolis_db.returnItemsInDownloadTable(self.category)
-            add_link_table_list = self.parent.persepolis_db.returnItemsInAddLinkTable(self.category)
+            download_table_dict = self.parent.persepolis_db.returnItemsInDownloadTable(self.category)
+            category_table_dict = self.parent.persepolis_db.searchCategoryInCategoryTable(self.category)
+
+            gid_list = category_table_dict['gid_list']
 
             # sort downloads top to the bottom of the list OR bottom to the top
             if not(self.parent.reverse_checkBox.isChecked()):
-                download_table_list.reverse()
+                gid_list.reverse()
 
             # check that if user set start time
             if self.start_time and counter == 0:  
                 # find first download
                 # set start time for first download in queue
                 # status of first download must not be compelete
-                for dict in download_table_list:
+                for gid in gid_list:
+
+                    # get download information dictionary
+                    dict = download_table_dict[gid]
+
                     # find status of download
                     status = dict['status']
 
                     if status != 'complete':  
                         # We find first item! GREAT!
-
+                        add_link_dict = {'gid': gid}
+                            
                         # set start_time for this download
-                        dict['start_time'] = self.start_time
+                        add_link_dict['start_time'] = self.start_time
 
                         # write changes in data base
-                        self.parent.persepolis_db.updateAddLinkTable([dict])
+                        self.parent.persepolis_db.updateAddLinkTable([new_dict])
+
+                        # delete add_link_dict
+                        del add_link_dict
 
                         # job is done! break the loop
                         break
 
             
-            for dict in download_table_list:
+            for gid in gid_list:
+
+                add_link_dict = {'gid': gid}
+
+                # find download information
+                dict = download_table_dict[gid]
 
                 # if download was completed, continue the loop
                 # with the next iteration of the loop!
@@ -469,7 +484,7 @@ class Queue(QThread):
                 if self.end_time:  
                     # it means user was set end time for download
                     # set end_hour and end_minute
-                    dict['end_time'] = self.end_time
+                    add_link_dict['end_time'] = self.end_time
 
                 # user can set sleep time between download items in queue.
                 #see preferences window!
@@ -501,13 +516,13 @@ class Queue(QThread):
                         sigma_hour = sigma_hour - 24
 
                     # setting sigma_hour and sigma_minute for download's start time!
-                    dict['start_time'] = str(sigma_hour + ':' + sigma_minute)
+                    add_link_dict['start_time'] = str(sigma_hour + ':' + sigma_minute)
 
                 # write changes in data base 
-                self.parent.persepolis_db.updateAddLinkTable([dict])
+                self.parent.persepolis_db.updateAddLinkTable([add_link_dict])
 
-                # find gid
-                gid = dict['gid']
+                # delete add_link_dict
+                del add_link_dict
 
                 # start new thread for download
                 new_download = DownloadLink(gid, self.parent)
@@ -902,9 +917,13 @@ class MainWindow(MainWindow_Ui):
             self.category_tree_model.appendRow(new_queue_category)
 
         
-# add download items to the download_table
+        # add download items to the download_table
         # read download items from data base
-        download_table_list = self.persepolis_db.returnItemsInDownloadTable()
+        download_table_dict = self.persepolis_db.returnItemsInDownloadTable()
+
+        # read gid_list from date base
+        category_dict = self.persepolis_db.searchCategoryInCategoryTable('All Downloads')
+        gid_list = category_dict['gid_list']
 
         keys_list = ['file_name',
                     'status',
@@ -922,7 +941,8 @@ class MainWindow(MainWindow_Ui):
                     ]
 
         # insert items in download_table 
-        for dict in download_table_list:
+        for gid in gid_list:
+            dict = download_table_dict[gid]
             i = 0
             for key in keys_list: 
                 item = QTableWidgetItem(str(dict[key]))
@@ -2726,8 +2746,7 @@ class MainWindow(MainWindow_Ui):
         checking_flag = 0
 
 
-###########
-# when this method called , download_table will sort by name
+# this method sorts download table by name 
     def sortByName(self, menu_item):
 
         # if checking_flag is equal to 1, it means that user pressed remove or
@@ -2743,56 +2762,85 @@ class MainWindow(MainWindow_Ui):
             self.sortByName2()
 
     def sortByName2(self):
-        # finding names and gid of download and saving them in name_gid_dict
+        # find names and gid of downloads and save them in name_gid_dict
+        # gid is key and name is value.
         gid_name_dict = {}
         for row in range(self.download_table.rowCount()):
             name = self.download_table.item(row, 0).text()
             gid = self.download_table.item(row, 8).text()
             gid_name_dict[gid] = name
-# sorting names
+
+        # sort names
         gid_sorted_list = sorted(gid_name_dict, key=gid_name_dict.get)
 
-# clearing download_table
+        # clear download_table and add sorted items
         self.download_table.clearContents()
-        j = -1
+
+        # find name of selected category
+        current_category_tree_text = str(current_category_tree_index.data())
+
+        # get download information from data base
+        if current_category_tree_text == 'All Downloads':
+            downloads_dict = self.persepolis_db.returnItemsInDownloadTable()
+        else:
+            downloads_dict = self.persepolis_db.returnItemsInDownloadTable(current_category_tree_text)
+
+        j = 0 
+
         for gid in gid_sorted_list:
-            #entering download rows according to gid_sorted_list
-            j = j + 1
-            download_info_file = os.path.join(download_info_folder , gid)
-            download_info_file_list = readList(download_info_file,'string')
-            for i in range(13):
-                item = QTableWidgetItem(download_info_file_list[i])
+            #enter download rows according to gid_sorted_list
+            download_info = downloads_dict[gid]
+
+            keys_list = ['file_name',
+                        'status',
+                        'size',
+                        'downloaded_size',
+                        'percent',
+                        'connections',
+                        'rate',
+                        'estimate_time_left',
+                        'gid',
+                        'link',
+                        'firs_try_date',
+                        'last_try_date',
+                        'category'
+                        ]
+
+            i = 0
+            for key in keys_list:
+                item = QTableWidgetItem(download_info[key])
 
                 # adding checkbox to download rows if selectAction is checked
                 # in edit menu
-                if self.selectAction.isChecked() == True and i == 0:
+                if self.selectAction.isChecked() and i == 0:
                     item.setFlags(QtCore.Qt.ItemIsUserCheckable |
                                   QtCore.Qt.ItemIsEnabled)
                     item.setCheckState(QtCore.Qt.Unchecked)
 
+                # insert item in download_table
                 self.download_table.setItem(j, i, item)
 
-        # finding name of selected category
-        current_category_tree_text = str(current_category_tree_index.data())
-        if current_category_tree_text != 'All Downloads':
-            category_file = os.path.join(
-                category_folder, current_category_tree_text)
-        else:
-            category_file = download_list_file
+                i = i+1
 
-        # opening category_file for writing changes
-        f = Open(category_file, 'w')
-        gid_sorted_list.reverse()
+            j = j + 1
 
-        for gid in gid_sorted_list:
-            # applying changes to category_file
-            f.writelines(gid + '\n')
+        # save sorted list (gid_list) in data base
+        category_dict = self.persepolis_db.searchCategoryInCategoryTable(
+                        current_category_tree_text)
 
-        f.close()
+        # update gid_list
+        category_dict['gid_list'] = gid_list
 
-# telling the CheckDownloadInfoThread that job is done!
+
+        # update category_db_table
+        self.updateCategoryTable([category_dict])
+
+        # tell the CheckDownloadInfoThread that job is done!
         global checking_flag
         checking_flag = 0
+
+
+###########
 
 # this method is sorting download_table by size
     def sortBySize(self, menu_item):
@@ -3326,7 +3374,7 @@ class MainWindow(MainWindow_Ui):
  
 
 
-# this method is called , when user is clicking on an item in
+# this method is called , when user clicks on an item in
 # category_tree (left side panel)
     def categoryTreeSelected(self, item):
         new_selection = item
@@ -3347,11 +3395,9 @@ class MainWindow(MainWindow_Ui):
     def categoryTreeSelected2(self, new_selection):
         global current_category_tree_index
 
-# clear download_table
+        # clear download_table
         self.download_table.setRowCount(0)
 
-
-# updating queue_info_file for old_selection before any changes!
 
         # old_selection_index
         old_selection_index = current_category_tree_index
@@ -3407,9 +3453,11 @@ class MainWindow(MainWindow_Ui):
         else:
             queue_dict['after_download'] = 'no'
 
-        # if old_selection_index.data() is equal to None >> It means queue deleted! and no text (data) available for it
+        # if old_selection_index.data() is equal to None >> It means queue is 
+        # deleted! and no text (data) available for it
         if old_selection_index.data():  
-            # update data_base
+
+            # update data base
             self.persepolis_db.updateCategoryTable([queue_dict])
     
         # update download_table
@@ -3422,9 +3470,13 @@ class MainWindow(MainWindow_Ui):
 
         # read download items from data base
         if current_category_tree_text == 'All Downloads':
-            download_table_rows = self.persepolis_db.returnItemsInDownloadTable()
+            download_table_dict = self.persepolis_db.returnItemsInDownloadTable()
         else:
-            download_table_rows = self.persepolis_db.returnItemsInDownloadTable(current_category_tree_text)
+            download_table_dict = self.persepolis_db.returnItemsInDownloadTable(current_category_tree_text)
+
+        # get gid_list
+        gid_list = self.persepolis_db.searchCategoryInCategoryTable(current_category_tree_text)
+
 
         keys_list = ['file_name',
                     'status',
@@ -3442,7 +3494,8 @@ class MainWindow(MainWindow_Ui):
                     ]
 
         # insert items in download_table 
-        for dict in download_table_list:
+        for gid in gid_list:
+            dict = download_table_dict[gid]
             i = 0
             for key in keys_list: 
                 item = QTableWidgetItem(str(dict[key]))

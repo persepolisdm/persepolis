@@ -242,7 +242,29 @@ class PersepolisDB():
                                                                             :last_try_date,
                                                                             :category
                                                                             )""", dict)
+
+        # commit changes
         self.persepolis_db_connection.commit()
+
+        # item must be inserted to gid_list of 'All Downloads' and gid_list of category
+        # find download category and gid
+        category = dict['category']
+        gid = dict['gid']
+         
+        for 'All Downlaods', category:
+            
+            # get category_dict from data base
+            category_dict = self.searchCategoryInCategoryTable(category)
+
+            # get gid_list
+            gid_list = category_dict['gid_list']
+
+            # add gid of item to gid_list
+            gid_list = gid_list.append(gid)
+
+            # updata category_db_table
+            self.updateCategoryTable([category_dict])
+
 
     # insert in addlink table in persepolis.db 
     def insertInAddLinkTable(self, dict):
@@ -307,7 +329,7 @@ class PersepolisDB():
         self.persepolis_db_cursor.execute("""SELECT {} FROM download_db_table""".format(category))
         rows = self.persepolis_db_cursor.fetchall()
 
-        list = []
+        downloads_dict = {}
         for tuple in rows:
             # change format of tuple to dictionary
             dict = {'file_name': tuple[0],
@@ -325,10 +347,12 @@ class PersepolisDB():
                     'category': tuple[12]
                     }
 
-            # add dict to the list
-            list.append(dict)
+            # add dict to the downloads_dict
+            # gid is key and dict is value
+            downloads_dict[tuple[8]] = dict
 
-        return list
+
+        return downloads_dict
 
       
 
@@ -365,13 +389,13 @@ class PersepolisDB():
 	return dict
 
 
-    # return all items in addlink_db_table
+    # return items in addlink_db_table
     # '*' for category, cause that method returns all items. 
     def returnItemsInAddLinkTable(self, category='*'):
         self.persepolis_db_cursor.execute("""SELECT {} FROM addlink_db_table""".format(category))
         rows = self.persepolis_db_cursor.fetchall()
 
-        list = []
+        addlink_dict = {}
         for tuple in rows:
             # change format of tuple to dictionary
             dict = {'gid' :tuple[1],
@@ -395,10 +419,12 @@ class PersepolisDB():
                     'after_download': tuple[18]
                     }
 
-            # add dict to the list
-            list.append(dict)
+            # add dict to the addlink_dict
+            # gid as key and dict as value
+            addlink_dict[tuple[1]] = dict
 
-        return list
+
+        return addlink_dict
 
  
 
@@ -643,6 +669,10 @@ class PersepolisDB():
     def deleteItemInDownloadTable(self, gid, category):
         self.persepolis_db_cursor.execute("""DELETE FROM download_db_table WHERE gid = {}""".format(str(gid)))
 
+        # commit changes
+        self.persepolis_db_connection.commit()
+
+
         # delete item from gid_list in category
         category_dict = self.searchCategoryInCategoryTable(category)
 
@@ -652,12 +682,8 @@ class PersepolisDB():
         # delete item
         gid_list = gid_list.remove(gid)
 
-        # updata category_db_table
+        # update category_db_table
         self.updateCategoryTable([category_dict])
-
-        # commit changes
-        self.persepolis_db_connection.commit()
-
 
 
     # close connections
