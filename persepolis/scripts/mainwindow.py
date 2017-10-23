@@ -2824,12 +2824,11 @@ class MainWindow(MainWindow_Ui):
 
             j = j + 1
 
-        # save sorted list (gid_list) in data base
-        category_dict = self.persepolis_db.searchCategoryInCategoryTable(
-                        current_category_tree_text)
+        # save sorted list (gid_sorted_list) in data base
+        category_dict = {'category': current_category_tree_text} 
 
         # update gid_list
-        category_dict['gid_list'] = gid_list
+        category_dict['gid_list'] = gid_sorted_list
 
 
         # update category_db_table
@@ -2840,9 +2839,8 @@ class MainWindow(MainWindow_Ui):
         checking_flag = 0
 
 
-###########
 
-# this method is sorting download_table by size
+# this method sorts items in download_table by size
     def sortBySize(self, menu_item):
 
         # if checking_flag is equal to 1, it means that user pressed remove or
@@ -2858,13 +2856,19 @@ class MainWindow(MainWindow_Ui):
             self.sortBySize2()
 
     def sortBySize2(self):
-        # finding gid and size of downloads
+
+        # find name of selected category
+        current_category_tree_text = str(current_category_tree_index.data())
+
+
+        # find gid and size of downloads
         gid_size_dict = {}
         for row in range(self.download_table.rowCount()):
             size_str = self.download_table.item(row, 2).text()
             gid = self.download_table.item(row, 8).text()
+
+            # convert file size to the Byte
             try:
-                # converting fike size to the Byte
                 size_int = float(size_str[:-3])
                 size_symbol = str(size_str[-2])
                 if size_symbol == 'G':  # Giga Byte
@@ -2877,58 +2881,80 @@ class MainWindow(MainWindow_Ui):
                     size = size_int
             except:
                 size = 0
-# creating a dictionary from gid and size of files in Bytes
+
+            # create a dictionary from gid and size of files in Bytes
+            # gid as key and size as value
             gid_size_dict[gid] = size
 
-# sorting
+        # sort gid_size_dict
         gid_sorted_list = sorted(
             gid_size_dict, key=gid_size_dict.get, reverse=True)
 
-# clearing download_table
+        # clear download_table by size
         self.download_table.clearContents()
-# entering download rows according to gid_sorted_list
-        j = -1
+
+        # get download information from data base
+        if current_category_tree_text == 'All Downloads':
+            downloads_dict = self.persepolis_db.returnItemsInDownloadTable()
+        else:
+            downloads_dict = self.persepolis_db.returnItemsInDownloadTable(current_category_tree_text)
+
+        j = 0 
+
         for gid in gid_sorted_list:
-            j = j + 1
-            download_info_file = os.path.join(download_info_folder, gid)
-            download_info_file_list = readList(download_info_file, 'string')
-            for i in range(13):
-                item = QTableWidgetItem(download_info_file_list[i])
+            #enter download rows according to gid_sorted_list
+            download_info = downloads_dict[gid]
+
+            keys_list = ['file_name',
+                        'status',
+                        'size',
+                        'downloaded_size',
+                        'percent',
+                        'connections',
+                        'rate',
+                        'estimate_time_left',
+                        'gid',
+                        'link',
+                        'firs_try_date',
+                        'last_try_date',
+                        'category'
+                        ]
+
+            i = 0
+            for key in keys_list:
+                item = QTableWidgetItem(download_info[key])
 
                 # adding checkbox to download rows if selectAction is checked
                 # in edit menu
-                if self.selectAction.isChecked() == True and i == 0:
+                if self.selectAction.isChecked() and i == 0:
                     item.setFlags(QtCore.Qt.ItemIsUserCheckable |
                                   QtCore.Qt.ItemIsEnabled)
                     item.setCheckState(QtCore.Qt.Unchecked)
 
+                # insert item in download_table
                 self.download_table.setItem(j, i, item)
-# telling the CheckDownloadInfoThread that job is done!
 
-        # finding name of selected category
-        current_category_tree_text = str(current_category_tree_index.data())
+                i = i+1
 
-        if current_category_tree_text != 'All Downloads':
-            category_file = os.path.join(
-                category_folder, current_category_tree_text)
-        else:
-            category_file = download_list_file
+            j = j + 1
 
-        # opening category_file for writing changes
-        f = Open(category_file, 'w')
-        gid_sorted_list.reverse()
+        # save sorted list (gid_sorted_list) in data base
+        category_dict = {'category': current_category_tree_text} 
 
-        for gid in gid_sorted_list:
-            # applying changes to category_file
-            f.writelines(gid + '\n')
+        # update gid_list
+        category_dict['gid_list'] = gid_sorted_list
 
-        f.close()
 
+        # update category_db_table
+        self.updateCategoryTable([category_dict])
+
+        # tell the CheckDownloadInfoThread that job is done!
         global checking_flag
         checking_flag = 0
 
 
-# this method is sorting download_table with status
+
+# this method sorts download_table items with status
     def sortByStatus(self, item):
 
         # if checking_flag is equal to 1, it means that user pressed remove or
@@ -2944,12 +2970,16 @@ class MainWindow(MainWindow_Ui):
             self.sortByStatus2()
 
     def sortByStatus2(self):
-        # finding gid and status of downloads
+
+        # find name of selected category
+        current_category_tree_text = str(current_category_tree_index.data())
+
+        # find gid and status of downloads
         gid_status_dict = {}
         for row in range(self.download_table.rowCount()):
             status = self.download_table.item(row, 1).text()
             gid = self.download_table.item(row, 8).text()
-# assigning a number to every status
+            # assign a number to every status
             if status == 'complete':
                 status_int = 1
             elif status == 'stopped':
@@ -2962,57 +2992,78 @@ class MainWindow(MainWindow_Ui):
                 status_int = 5
             else:
                 status_int = 6
-# creating a dictionary from gid and size_int of files in Bytes
+
+            # create a dictionary from gid and size_int of files in Bytes
             gid_status_dict[gid] = status_int
 
-# sorting
+        # sort gid_status_dict
         gid_sorted_list = sorted(gid_status_dict, key=gid_status_dict.get)
 
-# clearing download_table
+        # get download information from data base
+        if current_category_tree_text == 'All Downloads':
+            downloads_dict = self.persepolis_db.returnItemsInDownloadTable()
+        else:
+            downloads_dict = self.persepolis_db.returnItemsInDownloadTable(current_category_tree_text)
+
+        # clear download_table
         self.download_table.clearContents()
-# entering download rows according to gid_sorted_list
-        j = -1
+
+        j = 0 
+
         for gid in gid_sorted_list:
-            j = j + 1
-            download_info_file = os.path.join(download_info_folder, gid)
-            download_info_file_list = readList(download_info_file, 'string')
-            for i in range(13):
-                item = QTableWidgetItem(download_info_file_list[i])
+            #enter download rows according to gid_sorted_list
+            download_info = downloads_dict[gid]
+
+            keys_list = ['file_name',
+                        'status',
+                        'size',
+                        'downloaded_size',
+                        'percent',
+                        'connections',
+                        'rate',
+                        'estimate_time_left',
+                        'gid',
+                        'link',
+                        'firs_try_date',
+                        'last_try_date',
+                        'category'
+                        ]
+
+            i = 0
+            for key in keys_list:
+                item = QTableWidgetItem(download_info[key])
 
                 # adding checkbox to download rows if selectAction is checked
                 # in edit menu
-                if self.selectAction.isChecked() == True and i == 0:
+                if self.selectAction.isChecked() and i == 0:
                     item.setFlags(QtCore.Qt.ItemIsUserCheckable |
                                   QtCore.Qt.ItemIsEnabled)
                     item.setCheckState(QtCore.Qt.Unchecked)
 
+                # insert item in download_table
                 self.download_table.setItem(j, i, item)
 
-        # finding name of selected category
-        current_category_tree_text = str(current_category_tree_index.data())
+                i = i+1
 
-        if current_category_tree_text != 'All Downloads':
-            category_file = os.path.join(
-                category_folder, current_category_tree_text)
-        else:
-            category_file = download_list_file
+            j = j + 1
 
-        # opening category_file for writing changes
-        f = Open(category_file, 'w')
-        gid_sorted_list.reverse()
+        # save sorted list (gid_sorted_list) in data base
+        category_dict = {'category': current_category_tree_text} 
 
-        for gid in gid_sorted_list:
-            # applying changes to category_file
-            f.writelines(gid + '\n')
-
-        f.close()
+        # update gid_list
+        category_dict['gid_list'] = gid_sorted_list
 
 
-# telling the CheckDownloadInfoThread that job is done!
+        # update category_db_table
+        self.updateCategoryTable([category_dict])
+
+        # tell the CheckDownloadInfoThread that job is done!
         global checking_flag
         checking_flag = 0
 
-# this method is sorting download table with date added information
+
+
+    # this method sorts download table with date added information
     def sortByFirstTry(self, item):
 
         # if checking_flag is equal to 1, it means that user pressed remove or
@@ -3028,14 +3079,15 @@ class MainWindow(MainWindow_Ui):
             self.sortByFirstTry2()
 
     def sortByFirstTry2(self):
-        # finding gid and first try date
+        # find gid and first try date
         gid_try_dict = {}
         for row in range(self.download_table.rowCount()):
             first_try_date = self.download_table.item(row, 10).text()
             gid = self.download_table.item(row, 8).text()
-# this section is converting date and hour in first_try_date to a number
-# for example , first_try_date = '2016/11/05 , 07:45:38' is converted to
-# 20161105074538
+
+            # convert date and hour in first_try_date to a number
+            # for example , first_try_date = '2016/11/05 , 07:45:38'
+            # must be converted to 20161105074538
             first_try_date_splited = first_try_date.split(' , ')
             date_list = first_try_date_splited[0].split('/')
             hour_list = first_try_date_splited[1].split(':')
@@ -3044,57 +3096,82 @@ class MainWindow(MainWindow_Ui):
             date_hour_str = date_joind + hour_joind
             date_hour = int(date_hour_str)
 
+            # create a dictionary
+            # gid as key and date_hour as value
             gid_try_dict[gid] = date_hour
 
-# sorting
+        # sort
         gid_sorted_list = sorted(
             gid_try_dict, key=gid_try_dict.get, reverse=True)
 
-# clearing download_table
+        # clear download_table
         self.download_table.clearContents()
-# entering download rows according to gid_sorted_list
-        j = -1
+
+        # find name of selected category
+        current_category_tree_text = str(current_category_tree_index.data())
+
+        # get download information from data base
+        if current_category_tree_text == 'All Downloads':
+            downloads_dict = self.persepolis_db.returnItemsInDownloadTable()
+        else:
+            downloads_dict = self.persepolis_db.returnItemsInDownloadTable(current_category_tree_text)
+
+        j = 0 
+
         for gid in gid_sorted_list:
-            j = j + 1
-            download_info_file = os.path.join(download_info_folder, gid)
-            download_info_file_list = readList(download_info_file, 'string')
-            for i in range(13):
-                item = QTableWidgetItem(download_info_file_list[i])
+            #enter download rows according to gid_sorted_list
+            download_info = downloads_dict[gid]
+
+            keys_list = ['file_name',
+                        'status',
+                        'size',
+                        'downloaded_size',
+                        'percent',
+                        'connections',
+                        'rate',
+                        'estimate_time_left',
+                        'gid',
+                        'link',
+                        'firs_try_date',
+                        'last_try_date',
+                        'category'
+                        ]
+
+            i = 0
+            for key in keys_list:
+                item = QTableWidgetItem(download_info[key])
 
                 # adding checkbox to download rows if selectAction is checked
                 # in edit menu
-                if self.selectAction.isChecked() == True and i == 0:
+                if self.selectAction.isChecked() and i == 0:
                     item.setFlags(QtCore.Qt.ItemIsUserCheckable |
                                   QtCore.Qt.ItemIsEnabled)
                     item.setCheckState(QtCore.Qt.Unchecked)
 
+                # insert item in download_table
                 self.download_table.setItem(j, i, item)
 
-        # finding name of selected category
-        current_category_tree_text = str(current_category_tree_index.data())
+                i = i+1
 
-        if current_category_tree_text != 'All Downloads':
-            category_file = os.path.join(
-                category_folder, current_category_tree_text)
-        else:
-            category_file = download_list_file
+            j = j + 1
 
-        # opening category_file for writing changes
-        f = Open(category_file, 'w')
-        gid_sorted_list.reverse()
+        # save sorted list (gid_list) in data base
+        category_dict = {'category': current_category_tree_text} 
 
-        for gid in gid_sorted_list:
-            # applying changes to category_file
-            f.writelines(gid + '\n')
+        # update gid_sorted_list
+        category_dict['gid_list'] = gid_sorted_list
 
-        f.close()
 
-# telling the CheckDownloadInfoThread that job is done!
+        # update category_db_table
+        self.updateCategoryTable([category_dict])
+
+        # tell the CheckDownloadInfoThread that job is done!
         global checking_flag
         checking_flag = 0
 
 
-# this method is sorting download_table with order of last modify date
+
+# this method sorts download_table with order of last modify date
     def sortByLastTry(self, item):
         # if checking_flag is equal to 1, it means that user pressed remove or
         # delete button or ... . so checking download information must be
@@ -3110,14 +3187,18 @@ class MainWindow(MainWindow_Ui):
 
     def sortByLastTry2(self):
 
-        # finding gid and last try date
+        # create a dictionary
+        # gid as key and date_hour as value
         gid_try_dict = {}
+
+        # find gid and last try date for download items in download_table
         for row in range(self.download_table.rowCount()):
             last_try_date = self.download_table.item(row, 11).text()
             gid = self.download_table.item(row, 8).text()
-# this section is converting date and hour in last_try_date to a number
-# for example , last_try_date = '2016/11/05 , 07:45:38' is converted to
-# 20161105074538
+
+            # convert date and hour in last_try_date to a number
+            # for example , last_try_date = '2016/11/05 , 07:45:38'
+            # must be converted to 20161105074538
             last_try_date_splited = last_try_date.split(' , ')
             date_list = last_try_date_splited[0].split('/')
             hour_list = last_try_date_splited[1].split(':')
@@ -3126,54 +3207,79 @@ class MainWindow(MainWindow_Ui):
             date_hour_str = date_joind + hour_joind
             date_hour = int(date_hour_str)
 
+            # add gid and date_hour to gid_try_dict
             gid_try_dict[gid] = date_hour
 
-# sorting
+        # sort
         gid_sorted_list = sorted(
             gid_try_dict, key=gid_try_dict.get, reverse=True)
 
-# clearing download_table
+        # clear download_table
         self.download_table.clearContents()
-# entering download rows according to gid_sorted_list
-        j = -1
+
+        # find name of selected category
+        current_category_tree_text = str(current_category_tree_index.data())
+
+        # get download information from data base
+        if current_category_tree_text == 'All Downloads':
+            downloads_dict = self.persepolis_db.returnItemsInDownloadTable()
+        else:
+            downloads_dict = self.persepolis_db.returnItemsInDownloadTable(current_category_tree_text)
+
+        j = 0 
+
         for gid in gid_sorted_list:
-            j = j + 1
-            download_info_file = os.path.join(download_info_folder, gid)
-            download_info_file_list = readList(download_info_file, 'string')
-            for i in range(13):
-                item = QTableWidgetItem(download_info_file_list[i])
+            #enter download rows according to gid_sorted_list
+            download_info = downloads_dict[gid]
+
+            keys_list = ['file_name',
+                        'status',
+                        'size',
+                        'downloaded_size',
+                        'percent',
+                        'connections',
+                        'rate',
+                        'estimate_time_left',
+                        'gid',
+                        'link',
+                        'firs_try_date',
+                        'last_try_date',
+                        'category'
+                        ]
+
+            i = 0
+            for key in keys_list:
+                item = QTableWidgetItem(download_info[key])
 
                 # adding checkbox to download rows if selectAction is checked
                 # in edit menu
-                if self.selectAction.isChecked() == True and i == 0:
+                if self.selectAction.isChecked() and i == 0:
                     item.setFlags(QtCore.Qt.ItemIsUserCheckable |
                                   QtCore.Qt.ItemIsEnabled)
                     item.setCheckState(QtCore.Qt.Unchecked)
 
+                # insert item in download_table
                 self.download_table.setItem(j, i, item)
 
-        # finding name of selected category
-        current_category_tree_text = str(current_category_tree_index.data())
+                i = i+1
 
-        if current_category_tree_text != 'All Downloads':
-            category_file = os.path.join(
-                category_folder, current_category_tree_text)
-        else:
-            category_file = download_list_file
+            j = j + 1
 
-        # opening category_file for writing changes
-        f = Open(category_file, 'w')
-        gid_sorted_list.reverse()
+        # save sorted list (gid_list) in data base
+        category_dict = {'category': current_category_tree_text} 
 
-        for gid in gid_sorted_list:
-            # applying changes to category_file
-            f.writelines(gid + '\n')
+        # update gid_sorted_list
+        category_dict['gid_list'] = gid_sorted_list
 
-        f.close()
 
-# telling the CheckDownloadInfoThread that job is done!
+        # update category_db_table
+        self.updateCategoryTable([category_dict])
+
+        # tell the CheckDownloadInfoThread that job is done!
         global checking_flag
         checking_flag = 0
+
+###########
 
 # this method called , when user clicks on 'create new queue' button in
 # main window.

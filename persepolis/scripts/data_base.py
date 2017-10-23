@@ -504,7 +504,7 @@ class PersepolisDB():
                                                                                     gid_list = coalesce(:gid_list, gid_list)
                                                                                     WHERE category = :category""", dict)
 
-    # commit the changes
+    # commit changes
     self.persepolis_db_connection.commit()
 
 
