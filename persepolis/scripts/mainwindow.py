@@ -60,26 +60,28 @@ from persepolis.scripts.data_base import PluginsDB, PersepolisDB
 
 
 # shutdown_notification = 0 >> persepolis is running 
-# 1 >> persepolis is ready for closing(closeEvent called) 
+# 1 >> persepolis is ready for closing(closeEvent  is called) 
 # 2 >> OK, let's close application!
 
 global shutdown_notification
 shutdown_notification = 0
 
 # checking_flag : 0 >> normal situation ;
-# 1 >> remove button or delete button pressed or sorting form viewMenu selected by user ;
+# 1 >> remove button or delete button pressed or sorting form viewMenu or ... toggled by user ;
 # 2 >> check_download_info function is stopping until remove operation done ;
 # 3 >> deleteFileAction is done it's job and It is called removeButtonPressed. 
 
 global checking_flag
 checking_flag = 0
+
 # when rpc connection between persepolis and aria is disconnected >>
 # aria2_disconnected = 1
+# aria2_disconnected = 0 >> every thing is ok :)
 global aria2_disconnected
 aria2_disconnected = 0
 
 global aria_startup_answer
-aria_startup_answer = 'None'
+aria_startup_answer = None
 
 
 global button_pressed_counter
@@ -88,9 +90,10 @@ button_pressed_counter = 0
 global plugin_links_checked
 plugin_links_checked = False
 
+# get home address for this user
 home_address = os.path.expanduser("~")
 
-# finding os platform
+# find os platform
 os_type = platform.system()
 
 # persepolis tmp folder (temporary folder)
@@ -127,13 +130,6 @@ else:
     temp_download_folder = os.path.join(
         str(home_address), 'AppData', 'Local', 'persepolis')
 
-
-# download_list_file contains GID of all downloads
-download_list_file = os.path.join(config_folder, "download_list_file")
-
-# download_list_file_active for active downloads
-download_list_file_active = os.path.join(
-    config_folder, "download_list_file_active")
 
 # queues_list contains queues name
 queues_list_file = os.path.join(config_folder, 'queues_list')
@@ -1890,7 +1886,7 @@ class MainWindow(MainWindow_Ui):
     def resumeButtonPressed(self, button):
         self.resumeAction.setEnabled(False)
 
-        # find user selected row
+        # find user's selected row
         selected_row_return = self.selectedRow()  
 
         if selected_row_return:
@@ -1937,7 +1933,7 @@ class MainWindow(MainWindow_Ui):
 # this method called if user presses stop button in MainWindow
     def stopButtonPressed(self, button):
         self.stopAction.setEnabled(False)
-        selected_row_return = self.selectedRow()  # finding user selected row
+        selected_row_return = self.selectedRow()  # finding user's selected row
 
         if selected_row_return:
             gid = self.download_table.item(selected_row_return, 8).text()
@@ -1983,7 +1979,7 @@ class MainWindow(MainWindow_Ui):
 # This method called if properties button pressed by user in MainWindow
     def propertiesButtonPressed(self, button):
         self.propertiesAction.setEnabled(False)
-        selected_row_return = self.selectedRow()  # finding user selected row
+        selected_row_return = self.selectedRow()  # finding user's selected row
 
         if selected_row_return:
             # find gid of download
@@ -2018,7 +2014,7 @@ class MainWindow(MainWindow_Ui):
         current_category_tree_text = str(
             self.category_tree.currentIndex().data())
 
-        selected_row_return = self.selectedRow()  # find user selected row
+        selected_row_return = self.selectedRow()  # find user's selected row
 
         # find current category before changing
         current_category = self.download_table.item(
@@ -2052,7 +2048,7 @@ class MainWindow(MainWindow_Ui):
 # This method is called if user presses "show/hide progress window" button in
 # MainWindow
     def progressButtonPressed(self, button):
-    # find user selected row
+    # find user's selected row
         selected_row_return = self.selectedRow()  
         if selected_row_return:
             gid = self.download_table.item(selected_row_return, 8).text()
@@ -2307,7 +2303,7 @@ class MainWindow(MainWindow_Ui):
 # this method opens download folder , if download was finished
     def openDownloadFolder(self, menu):
 
-        # find user selected row
+        # find user's selected row
         selected_row_return = self.selectedRow()  
 
         if selected_row_return:
@@ -2344,7 +2340,7 @@ class MainWindow(MainWindow_Ui):
 
 # this method executes(opens) download file if download's progress was finished
     def openFile(self, menu):
-        # find user selected row
+        # find user's selected row
         selected_row_return = self.selectedRow()  
 
         if selected_row_return:
@@ -2466,7 +2462,7 @@ class MainWindow(MainWindow_Ui):
             self.deleteFile2()
 
     def deleteFile2(self):
-        # find user selected item
+        # find user's selected item
         selected_row_return = self.selectedRow()  
 
         if selected_row_return:
@@ -3459,7 +3455,7 @@ class MainWindow(MainWindow_Ui):
                 self.download_table.setItem(0, j, item)
                 j = j + 1
 
-            # this section adds checkBox to the row , if user selected
+            # this section adds checkBox to the row , if user's selected
             # selectAction
             if self.selectAction.isChecked():
                 item = self.download_table.item(0, 0)
@@ -4430,10 +4426,9 @@ def afterPushButtonPressed(self, button):
         self.logwindow_list[len(
             self.logwindow_list) - 1].show()
 
-#######
 
 # this method is called when user pressed moveUpAction
-# this method is subtituting selected download item with upper one
+# this method subtituts selected download item with upper one
     def moveUp(self, menu):
         global button_pressed_counter
         button_pressed_counter = button_pressed_counter + 1
@@ -4455,7 +4450,7 @@ def afterPushButtonPressed(self, button):
             self.moveUp2()
 
     def moveUp2(self):
-        # find user selected row
+        # find user's selected row
         old_row = self.selectedRow()  
 
         # current_category_tree_text is the name of queue that selected by user
@@ -4466,31 +4461,27 @@ def afterPushButtonPressed(self, button):
             new_row = int(old_row) - 1
             if new_row >= 0:
 
-                # opening and reading queue_file
-                queue_file = os.path.join(
-                    category_folder, current_category_tree_text)
+                # get gid_list from data base
+                category_dict = self.persepolis_db.searchCategoryInCategoryTable(
+                        current_category_tree_text)
 
-                f = Open(queue_file)
-                queue_file_lines = f.readlines()
-                f.close()
+                gid_list = category_dict['gid_list']
 
-                # old index and new index of item in queue file
-                old_index_in_file = len(queue_file_lines) - old_row - 1
-                new_index_in_file = old_index_in_file + 1
-                # replacing lines in queue_file
-                queue_file_lines[old_index_in_file], queue_file_lines[new_index_in_file] = queue_file_lines[
-                    new_index_in_file], queue_file_lines[old_index_in_file]
+                # old index and new index of item in gid_list
+                old_index = len(gid_list) - old_row - 1
+                new_index = old_index + 1
 
-                f = Open(queue_file, 'w')
-                for line in queue_file_lines:
-                    f.writelines(line)
+                # subtitute two gid with each other
+                gid_list[old_index], gid_list[new_index] = gid_list[new_index], gid_list[old_index]
 
-                f.close()
+                # save changes in data base
+                self.persepolis_db.updateCategoryTable([category_dict])
 
+                # subtitute items in download_table
                 old_row_items_list = []
                 new_row_items_list = []
 
-                # reading current items in download_table
+                # read current items in download_table
                 for i in range(13):
                     old_row_items_list.append(
                         self.download_table.item(old_row, i).text())
@@ -4511,8 +4502,9 @@ def afterPushButtonPressed(self, button):
                 self.download_table.selectRow(new_row)
 
 
+
 # this method is called when user pressed moveUpSelectedAction
-# this method is subtituting selected  items with upper one
+# this method subtituts selected  items with upper one
 
     def moveUpSelected(self, menu):
         global button_pressed_counter
@@ -4540,54 +4532,45 @@ def afterPushButtonPressed(self, button):
         # current_category_tree_text is the name of queue that selected by user
         current_category_tree_text = str(current_category_tree_index.data())
 
-        # finding checked rows
+        # get gid_list from data base
+        category_dict = self.persepolis_db.searchCategoryInCategoryTable(
+                        current_category_tree_text)
+
+        gid_list = category_dict['gid_list']
+
+        # find checked rows
         for row in range(self.download_table.rowCount()):
             item = self.download_table.item(row, 0)
             if (item.checkState() == 2):
-                # appending index of checked rows to index_list
+                # append index of checked rows to index_list
                 index_list.append(row)
 
-        # moving up selected rows
+        # move up selected rows
         for old_row in index_list:
             new_row = int(old_row) - 1
             if new_row >= 0:
 
-                # opening and reading queue_file
-                queue_file = os.path.join(
-                    category_folder, current_category_tree_text)
+                # old index and new index of item in gid_list
+                old_index = len(gid_list) - old_row - 1
+                new_index = old_index + 1
 
-                f = Open(queue_file)
-                queue_file_lines = f.readlines()
-                f.close()
+                # subtitute items in gid_list
+                gid_list[old_index], gid_list[new_index] = gid_list[new_index], gid_list[old_index]
 
-                # old index and new index of item in queue file
-                old_index_in_file = len(queue_file_lines) - old_row - 1
-                new_index_in_file = old_index_in_file + 1
-                # replacing lines in queue_file
-                queue_file_lines[old_index_in_file], queue_file_lines[new_index_in_file] = queue_file_lines[
-                    new_index_in_file], queue_file_lines[old_index_in_file]
-
-                f = Open(queue_file, 'w')
-                for line in queue_file_lines:
-                    f.writelines(line)
-
-                f.close()
-
-                old_row_items_list = []
-                new_row_items_list = []
-
-                # reading current items in download_table
+                # subtitute items in download_table
+                # read current items in download_table
                 for i in range(13):
                     old_row_items_list.append(
                         self.download_table.item(old_row, i).text())
+
                     new_row_items_list.append(
                         self.download_table.item(new_row, i).text())
 
-                # replacing
+                # subtituting
                 for i in range(13):
                     # old row
                     item = QTableWidgetItem(new_row_items_list[i])
-                    # adding checkbox
+                    # add checkbox
                     if i == 0:
                         item.setFlags(QtCore.Qt.ItemIsUserCheckable |
                                       QtCore.Qt.ItemIsEnabled)
@@ -4598,7 +4581,7 @@ def afterPushButtonPressed(self, button):
 
                     # new row
                     item = QTableWidgetItem(old_row_items_list[i])
-                    # adding checkbox
+                    # add checkbox
                     if i == 0:
                         item.setFlags(QtCore.Qt.ItemIsUserCheckable |
                                       QtCore.Qt.ItemIsEnabled)
@@ -4606,6 +4589,10 @@ def afterPushButtonPressed(self, button):
                         item.setCheckState(QtCore.Qt.Checked)
 
                     self.download_table.setItem(new_row, i, item)
+
+        # update data base
+        self.persepolis_db.updateCategoryTable([category_dict])
+
 
 
 # this method is called if user pressed moveDown action
@@ -4630,48 +4617,46 @@ def afterPushButtonPressed(self, button):
             self.moveDown2()
 
     def moveDown2(self):
-        old_row = self.selectedRow()  # finding user selected row
+        # find user's selected row
+        old_row = self.selectedRow()  
 
         # current_category_tree_text is the name of queue that selected by user
         current_category_tree_text = str(current_category_tree_index.data())
 
-# an old row and new row must replaced  by each other
-        if old_row != None:
+        # an old row and new row must be subtituted by each other
+        if old_row:
             new_row = int(old_row) + 1
             if new_row < self.download_table.rowCount():
 
-                # opening and reading queue_file
-                queue_file = os.path.join(
-                    category_folder, current_category_tree_text)
+                # get gid_list from data base
+                category_dict = self.persepolis_db.searchCategoryInCategoryTable(
+                        current_category_tree_text)
 
-                f = Open(queue_file)
-                queue_file_lines = f.readlines()
-                f.close()
+                gid_list = category_dict['gid_list']
 
-                # old index and new index of item in queue file
-                old_index_in_file = len(queue_file_lines) - old_row - 1
-                new_index_in_file = old_index_in_file - 1
-                # replacing lines in queue_file
-                queue_file_lines[old_index_in_file], queue_file_lines[new_index_in_file] = queue_file_lines[
-                    new_index_in_file], queue_file_lines[old_index_in_file]
+                # old index and new index of item in gid_list
+                old_index = len(gid_list) - old_row - 1
+                new_index = old_index - 1
 
-                f = Open(queue_file, 'w')
-                for line in queue_file_lines:
-                    f.writelines(line)
+                # subtitute two gids in gid_list 
+                gid_list[old_index], gid_list[new_index] = gid_list[new_index], gid_list[old_index]
 
-                f.close()
-
+                # update data base
+                self.persepolis_db.updateCategoryTable([category_dict])
+            
+                # subtitute items in download_table
                 old_row_items_list = []
                 new_row_items_list = []
 
-                # reading current items in download_table
+                # read current items in download_table
                 for i in range(13):
                     old_row_items_list.append(
                         self.download_table.item(old_row, i).text())
+
                     new_row_items_list.append(
                         self.download_table.item(new_row, i).text())
 
-                # replacing
+                # subtituting
                 for i in range(13):
                     # old_row
                     item = QTableWidgetItem(new_row_items_list[i])
@@ -4706,64 +4691,58 @@ def afterPushButtonPressed(self, button):
 
     def moveDownSelected2(self):
 
-        # an old row and new row must replaced  by each other
+        # an old row and new row must be subtituted by each other
         index_list = []
 
         # current_category_tree_text is the name of queue that selected by user
         current_category_tree_text = str(current_category_tree_index.data())
 
-        # finding checked rows
+        # get gid_list from data base
+        category_dict = self.persepolis_db.searchCategoryInCategoryTable(
+                current_category_tree_text)
+
+        gid_list = category_dict['gid_list']
+
+        # find checked rows
         for row in range(self.download_table.rowCount()):
             item = self.download_table.item(row, 0)
             if (item.checkState() == 2):
-                # appending index of checked rows to index_list
+                # append index of checked rows to index_list
                 index_list.append(row)
 
         index_list.reverse()
 
-        # moving up selected rows
+        # move up selected rows
         for old_row in index_list:
 
             new_row = int(old_row) + 1
             if new_row < self.download_table.rowCount():
 
-                # opening and reading queue_file
-                queue_file = os.path.join(
-                    category_folder, current_category_tree_text)
+                # old index and new index in gid_list
+                old_index = len(gid_list) - old_row - 1
+                new_index = old_index - 1
 
-                f = Open(queue_file)
-                queue_file_lines = f.readlines()
-                f.close()
+                # subtitute gids in gid_list
+                gid_list[old_inde], gid_list[new_index] = gid_list[new_index], gid_list[old_index]
 
-                # old index and new index of item in queue file
-                old_index_in_file = len(queue_file_lines) - old_row - 1
-                new_index_in_file = old_index_in_file - 1
-                # replacing lines in queue_file
-                queue_file_lines[old_index_in_file], queue_file_lines[new_index_in_file] = queue_file_lines[
-                    new_index_in_file], queue_file_lines[old_index_in_file]
-
-                f = Open(queue_file, 'w')
-                for line in queue_file_lines:
-                    f.writelines(line)
-
-                f.close()
-
+                # subtitute items in download_table
                 old_row_items_list = []
                 new_row_items_list = []
 
-                # reading current items in download_table
+                # read current items in download_table
                 for i in range(13):
                     old_row_items_list.append(
                         self.download_table.item(old_row, i).text())
+
                     new_row_items_list.append(
                         self.download_table.item(new_row, i).text())
 
-                # replacing
+                # subtituting
                 for i in range(13):
                     # old row
                     item = QTableWidgetItem(new_row_items_list[i])
 
-                    # adding checkbox
+                    # add checkbox
                     if i == 0:
                         item.setFlags(QtCore.Qt.ItemIsUserCheckable |
                                       QtCore.Qt.ItemIsEnabled)
@@ -4775,7 +4754,7 @@ def afterPushButtonPressed(self, button):
                     # new_row
                     item = QTableWidgetItem(old_row_items_list[i])
 
-                    # adding checkbox
+                    # add checkbox
                     if i == 0:
                         item.setFlags(QtCore.Qt.ItemIsUserCheckable |
                                       QtCore.Qt.ItemIsEnabled)
@@ -4784,11 +4763,17 @@ def afterPushButtonPressed(self, button):
 
                     self.download_table.setItem(new_row, i, item)
 
+        # update data base
+        self.persepolis_db.updateCategoryTable([category_dict])
+            
+        
+
+#######
 # see flashgot_queue.py file
     def queueSpiderCallBack(self, filename, child, row_number):
         item = QTableWidgetItem(str(filename))
 
-        # adding checkbox to the item
+        # add checkbox to the item
         item.setFlags(QtCore.Qt.ItemIsUserCheckable | QtCore.Qt.ItemIsEnabled)
         if child.links_table.item(int(row_number), 0).checkState() == 2:
             item.setCheckState(QtCore.Qt.Checked)
