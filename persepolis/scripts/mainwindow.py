@@ -15,7 +15,6 @@
 
 from functools import partial
 import sys
-import ast
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import QApplication,  QAction, QFileDialog, QSystemTrayIcon, QMenu, QApplication, QInputDialog, QMessageBox
 from PyQt5.QtGui import QIcon, QColor, QPalette, QStandardItem, QCursor
@@ -45,7 +44,6 @@ from persepolis.scripts import logger
 import platform
 from copy import deepcopy
 from persepolis.scripts.shutdown import shutDown
-import shutil
 from persepolis.scripts.update import checkupdate
 from persepolis.scripts.data_base import PluginsDB, PersepolisDB
 
@@ -131,24 +129,8 @@ else:
         str(home_address), 'AppData', 'Local', 'persepolis')
 
 
-# queues_list contains queues name
-queues_list_file = os.path.join(config_folder, 'queues_list')
-
-# category_folder contains some file , and every files named with queues .
-# every file contains gid of downloads for that queue
-category_folder = os.path.join(config_folder, 'category_folder')
-
-# queue_info_folder is contains queues information(start time,end
-# time,limit speed , ...)
-queue_info_folder = os.path.join(config_folder, "queue_info")
-
-# single_downloads_list_file contains gid of non categorised downloads
-single_downloads_list_file = os.path.join(category_folder, "Single Downloads")
-
-# see persepolis.py file for show_window_file and plugin_ready and flashgot_file
+# see persepolis.py file for show_window_file and plugin_ready 
 plugin_ready = os.path.join(persepolis_tmp, 'persepolis-plugin-ready')
-
-flashgot_file = os.path.join(persepolis_tmp, 'persepolis-flashgot')
 
 show_window_file = os.path.join(persepolis_tmp, 'show-window')
 
@@ -1569,14 +1551,18 @@ class MainWindow(MainWindow_Ui):
 
         return my_gid
 
+# this method returns number of selected row
+# and shows download link on statusbar.
     def selectedRow(self):
         try:
+            # find selected item
             item = self.download_table.selectedItems()
+
             selected_row_return = self.download_table.row(item[1])
-            download_info = self.download_table.item(
+
+            # show link on statusbar
+            link = self.download_table.item(
                 selected_row_return, 9).text()
-            download_info = ast.literal_eval(download_info)
-            link = download_info['link']
             self.statusbar.showMessage(str(link))
 
         except:
@@ -2005,8 +1991,7 @@ class MainWindow(MainWindow_Ui):
             self.threadPool[len(self.threadPool) - 1].QTABLEREADY.connect(
                 partial(self.propertiesCallback2, add_link_dictionary, gid, category))
         else:
-            # TODO this line must be checked
-            self.removeSelected2(self, add_link_dictionary, gid, category)
+            self.propertiesCallback2(self, add_link_dictionary, gid, category)
 
     def propertiesCallback2(self, add_link_dictionary, gid, category):
         # current_category_tree_text is current category that highlited by user

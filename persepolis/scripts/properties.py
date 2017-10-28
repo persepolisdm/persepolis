@@ -378,6 +378,12 @@ class PropertiesWindow(AddLinkWindow_Ui):
                 # break the loop
                 break
 
+        # if link changed, then update download_db_table in data base
+        if self.add_link_dictionary['link'] != self.add_link_dictionary_backup['link']:
+            dict = {'gid': self.gid, 'link': link}
+            self.parent.persepolis_db.updateDownloadTable([dict])
+
+
         # callback to mainwindow
         self.callback(self.add_link_dictionary, self.gid, new_category)
 

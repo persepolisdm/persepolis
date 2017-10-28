@@ -251,10 +251,10 @@ class PersepolisDB():
         category = dict['category']
         gid = dict['gid']
          
-        for 'All Downlaods', category:
+        for category_item in 'All Downlaods', category:
             
             # get category_dict from data base
-            category_dict = self.searchCategoryInCategoryTable(category)
+            category_dict = self.searchCategoryInCategoryTable(category_item)
 
             # get gid_list
             gid_list = category_dict['gid_list']
