@@ -93,7 +93,7 @@ class ProgressWindow(ProgressWindow_Ui):
 # check if limit speed actived by user or not
         add_link_dictionary = self.parent.persepolis_db.searchGidInAddLinkTable(gid)
 
-        limit = str(add_link_dictionary['limit'])
+        limit = str(add_link_dictionary['limit_value'])
         if limit != '0':
             limit_number = limit[:-1]
             limit_unit = limit[-1]
@@ -188,7 +188,7 @@ class ProgressWindow(ProgressWindow_Ui):
                 download.limitSpeed(self.gid, "0")
             else:
                 # update limit value in data_base
-                add_link_dictionary = {'gid': self.gid, 'limit': '0'}
+                add_link_dictionary = {'gid': self.gid, 'limit_value': '0'}
                 self.parent.persepolis_db.updateAddLinkTable([add_link_dictionary])
 
     def limitComboBoxChanged(self, connect):
@@ -268,7 +268,7 @@ class ProgressWindow(ProgressWindow_Ui):
             download.limitSpeed(self.gid, limit_value)
         else:
             # update limit value in data_base
-            add_link_dictionary = {'gid': self.gid, 'limit': limit_value}
+            add_link_dictionary = {'gid': self.gid, 'limit_value': limit_value}
             self.parent.persepolis_db.updateAddLinkTable([add_link_dictionary])
 
 

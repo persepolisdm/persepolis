@@ -158,7 +158,7 @@ class PropertiesWindow(AddLinkWindow_Ui):
 
 
 # limit speed
-        limit = str(self.add_link_dictionary['limit'])
+        limit = str(self.add_link_dictionary['limit_value'])
         if limit != '0':
             self.limit_checkBox.setChecked(True)
             limit_number = limit[0:-1]
@@ -356,7 +356,7 @@ class PropertiesWindow(AddLinkWindow_Ui):
         self.add_link_dictionary['download_user'] = download_user
         self.add_link_dictionary['download_passwd'] = download_passwd
         self.add_link_dictionary['download_path'] = download_path
-        self.add_link_dictionary['limit'] = limit
+        self.add_link_dictionary['limit_value'] = limit
         self.add_link_dictionary['connections'] = connections
 
         new_category = str(self.add_queue_comboBox.currentText())

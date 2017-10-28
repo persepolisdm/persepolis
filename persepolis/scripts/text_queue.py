@@ -231,21 +231,21 @@ class TextQueue(TextQueue_Ui):
  # activate frames if checkBoxes checked
     def proxyFrame(self, checkBox):
 
-        if self.proxy_checkBox.isChecked() == True:
+        if self.proxy_checkBox.isChecked():
             self.proxy_frame.setEnabled(True)
         else:
             self.proxy_frame.setEnabled(False)
 
     def downloadFrame(self, checkBox):
 
-        if self.download_checkBox.isChecked() == True:
+        if self.download_checkBox.isChecked():
             self.download_frame.setEnabled(True)
         else:
             self.download_frame.setEnabled(False)
 
     def limitFrame(self, checkBox):
 
-        if self.limit_checkBox.isChecked() == True:
+        if self.limit_checkBox.isChecked():
             self.limit_frame.setEnabled(True)
         else:
             self.limit_frame.setEnabled(False)
@@ -328,7 +328,7 @@ class TextQueue(TextQueue_Ui):
                 'download_user': download_user,
                 'download_passwd': download_passwd,
                 'connections': connections,
-                'limit': limit,
+                'limit_value': limit,
                 'download_path' : download_path,
                 'referer': None,
                 'load_cookies': None,

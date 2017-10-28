@@ -448,7 +448,7 @@ class AddLinkWindow(AddLinkWindow_Ui):
         self.add_link_dictionary = {'out': out, 'start_time': start_time, 'end_time': end_time, 'link': link, 'ip': ip,
                                     'port': port, 'proxy_user': proxy_user, 'proxy_passwd': proxy_passwd, 
                                     'download_user': download_user, 'download_passwd': download_passwd,
-                                    'connections': connections, 'limit': limit, 'download_path': download_path}
+                                    'connections': connections, 'limit_value': limit, 'download_path': download_path}
 
         # add plugin_add_link_dictionary information to add_link_dictionary.
         for i in self.plugin_add_link_dictionary.keys():

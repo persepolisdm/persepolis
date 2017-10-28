@@ -16,6 +16,15 @@
 
 import sqlite3
 import ast
+import os
+import platform
+
+# get home address for this user
+home_address = os.path.expanduser("~")
+
+# find os platform
+os_type = platform.system()
+
 
 
 # download manager config folder .
@@ -50,7 +59,7 @@ class PluginsDB():
         self.plugins_db_connection = sqlite3.connect(plugins_db_path)
 
         # plugins_db_cursor
-        self.plugins_db_cursor = plugins_db_connection.cursor()
+        self.plugins_db_cursor = self.plugins_db_connection.cursor()
 
     # plugins_db_table contains links that sends by browser plugins. 
     def createTables(self):
@@ -64,6 +73,8 @@ class PluginsDB():
                                                                                 out TEXT,
                                                                                 status TEXT
                                                                                 )""") 
+        self.plugins_db_connection.commit()
+
     # insert new item in plugins_db_table
     def insertInPluginsTable(self, link, referer, load_cookies, user_agent, header, out):
         self.plugins_db_cursor.execute("""INSERT INTO plugins_db_table VALUES(
@@ -123,9 +134,8 @@ class PluginsDB():
 
     # close connections
     def closeConnections(self):
-        self.plugins_db_connection.close()
         self.plugins_db_cursor.close()
-
+        self.plugins_db_connection.close()
 
 # persepolis main data base contains downloads information
 # This class is managing persepolis.db 
@@ -138,23 +148,54 @@ class PersepolisDB():
         self.persepolis_db_connection = sqlite3.connect(persepolis_db_path)
 
         # persepolis_db_cursor
-        self.persepolis_db_cursor = persepolis_db_connection.cursor()
+        self.persepolis_db_cursor = self.persepolis_db_connection.cursor()
 
 
     def createTables(self):
     # queues_list contains name of categories and category settings
-        self.persepolis_db_cursor.execute("""CREATE TABLE IF NOT EXISTS category_db_table(
-                                                                        category TEXT PRIMARY KEY,
-                                                                        start_time_enable TEXT,
-                                                                        start_time TEXT,
-                                                                        end_time_enable TEXT,
-                                                                        end_time TEXT,
-                                                                        reverse TEXT,
-                                                                        limit_enable TEXT,
-                                                                        limit_value TEXT,
-                                                                        after_download TEXT,
-                                                                        items TEXT
-                                                                                    )""")
+        try:
+            # Create category_db_table and add 'All Downloads' and 'Single Downloads' to it
+            self.persepolis_db_cursor.execute("""CREATE TABLE category_db_table(
+                                                                category TEXT PRIMARY KEY,
+                                                                start_time_enable TEXT,
+                                                                start_time TEXT,
+                                                                end_time_enable TEXT,
+                                                                end_time TEXT,
+                                                                reverse TEXT,
+                                                                limit_enable TEXT,
+                                                                limit_value TEXT,
+                                                                after_download TEXT,
+                                                                items TEXT
+                                                                            )""")
+
+            all_downloads_dict = {'category': 'All Downloads',
+                    'start_time_enable': 'no',
+                    'start_time': '0:0',
+                    'end_time_enable': 'no',
+                    'end_time': '0:0',
+                    'reverse': 'no',
+                    'limit_enable': 'no',
+                    'limit_value': '0K',
+                    'after_download': 'no',
+                    'gid_list': '[]'
+                    }
+
+            single_downloads_dict = {'category': 'Single Downloads',
+                    'start_time_enable': 'no',
+                    'start_time': '0:0',
+                    'end_time_enable': 'no',
+                    'end_time': '0:0',
+                    'reverse': 'no',
+                    'limit_enable': 'no',
+                    'limit_value': '0K',
+                    'after_download': 'no',
+                    'gid_list': '[]'
+                    }
+
+            self.insertInCategoryTable(all_downloads_dict)
+            self.insertInCategoryTable(single_downloads_dict)
+        except Exception as e:
+            print(e)
 
 
     # download table contains download table download items information
@@ -193,7 +234,7 @@ class PersepolisDB():
                                                                                 download_user TEXT,
                                                                                 download_passwd TEXT,
                                                                                 connections TEXT,
-                                                                                limit TEXT,
+                                                                                limit_value TEXT,
                                                                                 download_path TEXT,
                                                                                 referer TEXT,
                                                                                 load_cookies TEXT,
@@ -204,7 +245,7 @@ class PersepolisDB():
                                                                                 ON UPDATE CASCADE 
                                                                                 ON DELETE CASCADE 
                                                                                     )""") 
-
+        self.persepolis_db_connection.commit()
 
     # insert new category in category_db_table
     def insertInCategoryTable(self, dict):    
@@ -283,7 +324,7 @@ class PersepolisDB():
                                                                                 :download_user,
                                                                                 :download_passwd,
                                                                                 :connections,
-                                                                                :limit,
+                                                                                :limit_value,
                                                                                 :download_path,
                                                                                 :referer,
                                                                                 :load_cookies,
@@ -291,7 +332,7 @@ class PersepolisDB():
                                                                                 :header,
                                                                                 NULL
                                                                                 )""", dict)
-    self.persepolis_db_connection.commit() 
+        self.persepolis_db_connection.commit() 
     
  
 
@@ -377,7 +418,7 @@ class PersepolisDB():
                 'download_user': tuple[10],
                 'download_passwd': tuple[11],
                 'connections': tuple[12],
-                'limit': tuple[13],
+                'limit_value': tuple[13],
                 'download_path' : tuple[13],
                 'referer': tuple[14],
                 'load_cookies': tuple[15],
@@ -386,7 +427,7 @@ class PersepolisDB():
                 'after_download': tuple[18]
                 }
 
-	return dict
+        return dict
 
 
     # return items in addlink_db_table
@@ -410,7 +451,7 @@ class PersepolisDB():
                     'download_user': tuple[10],
                     'download_passwd': tuple[11],
                     'connections': tuple[12],
-                    'limit': tuple[13],
+                    'limit_value': tuple[13],
                     'download_path' : tuple[13],
                     'referer': tuple[14],
                     'load_cookies': tuple[15],
@@ -467,8 +508,8 @@ class PersepolisDB():
                                                                                     category = coalesce(:category, category)
                                                                                     WHERE gid = :gid""", dict)
 
-    # commit the changes
-    self.persepolis_db_connection.commit()
+        # commit the changes
+        self.persepolis_db_connection.commit()
 
 
 # this method updates category_db_table
@@ -482,10 +523,9 @@ class PersepolisDB():
                     'limit_enable',
                     'limit_value',
                     'after_download',
-                    'gid_list'
-                    ]
+                    'gid_list']
 
-	for dict in list:
+        for dict in list:
             for key in keys_list:
                 # if a key is missed in dict, 
                 # then add this key to the dict and assign None value for the key. 
@@ -504,8 +544,8 @@ class PersepolisDB():
                                                                                     gid_list = coalesce(:gid_list, gid_list)
                                                                                     WHERE category = :category""", dict)
 
-    # commit changes
-    self.persepolis_db_connection.commit()
+        # commit changes
+        self.persepolis_db_connection.commit()
 
 
 # this method updates addlink_db_table
@@ -522,14 +562,13 @@ class PersepolisDB():
                     'download_user',
                     'download_passwd',
                     'connections',
-                    'limit',
+                    'limit_value',
                     'download_path',
                     'referer',
                     'load_cookies',
                     'user_agent',
                     'header',
-                    'after_download'
-                        ]
+                    'after_download']
 
         for dict in list:
             for key in keys_list:  
@@ -539,7 +578,7 @@ class PersepolisDB():
                     dict[key] = None 
 
                 # update data base if value for the keys is not None
-                self.persepolis_db_cursor.execute("""UPDATE addlink_db_table SET    out = coalesce(:out, out),
+                self.persepolis_db_cursor.execute("""UPDATE addlink_db_table SET out = coalesce(:out, out),
                                                                                 start_time = coalesce(:start_time, start_time),
                                                                                 end_time = coalesce(:end_time, end_time),
                                                                                 link = coalesce(:link, link),
@@ -550,14 +589,14 @@ class PersepolisDB():
                                                                                 download_user = coalesce(:download_user, download_user),
                                                                                 download_passwd = coalesce(:download_passwd, download_passwd),
                                                                                 connections = coalesce(:connections, connections),
-                                                                                limit = coalesce(:limit, limit),
+                                                                                limit_value = coalesce(:limit_value, limit_value),
                                                                                 download_path = coalesce(:download_path, download_path),
                                                                                 referer = coalesce(:referer, referer),
                                                                                 load_cookies = coalesce(:load_cookies, load_cookies),
                                                                                 user_agent = coalesce(:user_agent, user_agent),
                                                                                 header = coalesce(:header, header),
                                                                                 after_download = coalesce(:after_download , after_download)
-                                                                                WHERE gid = :gid""", dict)                                                                                    })
+                                                                                WHERE gid = :gid""", dict)
         # commit the changes!
         self.persepolis_db_connection.commit() 
     

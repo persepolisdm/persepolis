@@ -114,7 +114,7 @@ def downloadAria(gid, parent):
     download_user = add_link_dictionary['download_user']
     download_passwd = add_link_dictionary['download_passwd']
     connections = add_link_dictionary['connections']
-    limit = str(add_link_dictionary['limit'])
+    limit = str(add_link_dictionary['limit_value'])
     start_time = add_link_dictionary['start_time']
     end_time = add_link_dictionary['end_time']
     header = add_link_dictionary['header']
@@ -187,7 +187,7 @@ def downloadAria(gid, parent):
         # read limit value again from data_base before starting download!
         # perhaps user changed this in progress bar window
         add_link_dictionary = parent.persepolis_db.searchGidInAddLinkTable(gid)
-        limit = add_link_dictionary['limit']
+        limit = add_link_dictionary['limit_value']
 
 # set start_time value to None in data_base!
         parent.persepolis_db.setDefaultGidInAddlinkTable(gid, start_time=True)

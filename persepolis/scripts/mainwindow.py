@@ -279,9 +279,9 @@ class CheckDownloadInfoThread(QThread):
                                 download_status_list.append(returned_dict)
 
                             # if returned_dict in None, check for availability of RPC connection.
-                            else:
-                                self.reconnectAria()
-                                continue
+                                if not(returned_dict):
+                                    self.reconnectAria()
+                                    continue
 
                 # if download_status_list in None, check for availability of RPC connection.
                 else:                 
@@ -884,7 +884,6 @@ class MainWindow(MainWindow_Ui):
         # get queues name from data base
         queues_list = self.persepolis_db.categoriesList()
 
-        #TODO adding 'Single Downloads' to category_db_table in data base
         # add queues to category_tree(left side panel)
         for category_name in queues_list:
             new_queue_category = QStandardItem(category_name)
@@ -1252,262 +1251,262 @@ class MainWindow(MainWindow_Ui):
 #                       'Transfer rate', 'Estimate time left', 'Gid', 'Link', 'First try date', 'Last try date', 'Category']
 
     def checkDownloadInfo(self, list):
-    for dict in list:
-        gid = dict['gid']
+        for dict in list:
+            gid = dict['gid']
 
 
-# find row of this gid in download_table!
-        row = None
-        for i in range(self.download_table.rowCount()):
-            row_gid = self.download_table.item(i, 8).text()
-            if gid == row_gid:
-                row = i
-                break
+            # find row of this gid in download_table!
+            row = None
+            for i in range(self.download_table.rowCount()):
+                row_gid = self.download_table.item(i, 8).text()
+                if gid == row_gid:
+                    row = i
+                    break
 
-# check that if user checked selection mode from edit menu
-        if self.selectAction.isChecked():
-            selection = 'actived'
-        else:
-            selection = None
+            # check that if user checked selection mode from edit menu
+            if self.selectAction.isChecked():
+                selection = 'actived'
+            else:
+                selection = None
 
-# updat download_table items
-        if row != None:
-            update_list = [dict['file_name'], dict['status'], dict['size'], dict['downloaded_size'], dict['percent'], 
+            # updat download_table items
+            if row != None:
+                update_list = [dict['file_name'], dict['status'], dict['size'], dict['downloaded_size'], dict['percent'], 
                             dict['connections'], dict['rate'], dict['estimate_time_left'], dict['gid'], None, None, None, None]
-            for i in range(12):
+                for i in range(12):
 
-                # update download_table cell if update_list item in not None
-                if update_list[i]:
-                    text = update_list[i]
-                else:
-                    text = self.download_table.item(row, i).text()
+                    # update download_table cell if update_list item in not None
+                    if update_list[i]:
+                        text = update_list[i]
+                    else:
+                        text = self.download_table.item(row, i).text()
 
-                # create a QTableWidgetItem
-                item = QTableWidgetItem(text)
+                    # create a QTableWidgetItem
+                    item = QTableWidgetItem(text)
 
-                # add checkbox to first cell in row , if user checked selection mode
-                if i == 0 and selection != None:
-                    item.setFlags(QtCore.Qt.ItemIsUserCheckable |
+                    # add checkbox to first cell in row , if user checked selection mode
+                    if i == 0 and selection != None:
+                        item.setFlags(QtCore.Qt.ItemIsUserCheckable |
                                               QtCore.Qt.ItemIsEnabled)
-                    # 2 means that user checked item before
-                if self.download_table.item(row, i).checkState() == 2:
-                    # if user checked row before , check it again
-                    item.setCheckState(QtCore.Qt.Checked)
-                else:
-                    # if user didn't checked row then don't check it!
-                    item.setCheckState(QtCore.Qt.Unchecked)
-# set item
-                try:
-                    self.download_table.setItem(row, i, item)
-                except Exception as problem:
-                    print('updating download_table was unsuccessful\nError is :')
-                    print(problem)
-                    logger.sendToLog(
-                        "Error occured while updating download table", "INFO")
-                    logger.sendToLog(problem, "ERROR")
+                        # 2 means that user checked item before
+                    if self.download_table.item(row, i).checkState() == 2:
+                        # if user checked row before , check it again
+                        item.setCheckState(QtCore.Qt.Checked)
+                    else:
+                        # if user didn't checked row then don't check it!
+                        item.setCheckState(QtCore.Qt.Unchecked)
+                    # set item
+                    try:
+                        self.download_table.setItem(row, i, item)
+                    except Exception as problem:
+                        print('updating download_table was unsuccessful\nError is :')
+                        print(problem)
+                        logger.sendToLog(
+                            "Error occured while updating download table", "INFO")
+                        logger.sendToLog(problem, "ERROR")
 
-# update download_table (refreshing!)
-            self.download_table.viewport().update()
+                # update download_table (refreshing!)
+                self.download_table.viewport().update()
 
 
-# update progresswindow labels
+            # update progresswindow labels
             # check that any progress_window is available for this gid or not!
-        if gid in self.progress_window_list_dict.keys():
+            if gid in self.progress_window_list_dict.keys():
 
-            # find progress_window for this gid
-            member_number = self.progress_window_list_dict[gid]
-            progress_window = self.progress_window_list[member_number]
+                # find progress_window for this gid
+                member_number = self.progress_window_list_dict[gid]
+                progress_window = self.progress_window_list[member_number]
 
-            # link
-            link = "<b>Link</b> : " + str(dict['link'])
-            progress_window.link_label.setText(link)
-            progress_window.link_label.setToolTip(link)
+                # link
+                link = "<b>Link</b> : " + str(dict['link'])
+                progress_window.link_label.setText(link)
+                progress_window.link_label.setToolTip(link)
 
-            # downloaded
-            downloaded = "<b>Downloaded</b> : " \
+                # downloaded
+                downloaded = "<b>Downloaded</b> : " \
                         + str(dict['downloaded']) \
                         + "/" \
                         + str(dict['size'])
 
-            progress_window.downloaded_label.setText(downloaded)
+                progress_window.downloaded_label.setText(downloaded)
 
-            # Transfer rate
-            rate = "<b>Transfer rate</b> : " \
+                # Transfer rate
+                rate = "<b>Transfer rate</b> : " \
                     + str(dict['rate'])
 
-            progress_window.rate_label.setText(rate)
+                progress_window.rate_label.setText(rate)
 
-            # Estimate time left
-            estimate_time_left = "<b>Estimate time left</b> : " \
+                # Estimate time left
+                estimate_time_left = "<b>Estimate time left</b> : " \
                                 + str(dict['estimate_time_left'])
 
-            progress_window.time_label.setText(estimate_time_left)
+                progress_window.time_label.setText(estimate_time_left)
 
-            # Connections
-            connections = "<b>Connections</b> : " \
+                # Connections
+                connections = "<b>Connections</b> : " \
                             + str(dict['connections'])
 
-            progress_window.connections_label.setText(connections)
+                progress_window.connections_label.setText(connections)
 
-            # progressbar
-            value = dict['percent']
-            file_name = str(dict['file_name'])
+                # progressbar
+                value = dict['percent']
+                file_name = str(dict['file_name'])
 
-            if file_name != "***":
-                windows_title = '(' + str(value) + ')' + str(file_name)
-                progress_window.setWindowTitle(windows_title)
-            try:
-                value = int(value[:-1])
-            except:
-                value = 0
-            progress_window.download_progressBar.setValue(value)
+                if file_name != "***":
+                    windows_title = '(' + str(value) + ')' + str(file_name)
+                    progress_window.setWindowTitle(windows_title)
+                try:
+                    value = int(value[:-1])
+                except:
+                    value = 0
+                progress_window.download_progressBar.setValue(value)
 
 
-            # status
-            progress_window.status = str(dict['status'])
-            status = "<b>Status</b> : " + progress_window.status
-            progress_window.status_label.setText(status)
+                # status
+                progress_window.status = str(dict['status'])
+                status = "<b>Status</b> : " + progress_window.status
+                progress_window.status_label.setText(status)
 
-            # active/deactive progress_window buttons according to status
-            if progress_window.status == "downloading":
-                progress_window.resume_pushButton.setEnabled(False)
-                progress_window.stop_pushButton.setEnabled(True)
-                progress_window.pause_pushButton.setEnabled(True)
+                # active/deactive progress_window buttons according to status
+                if progress_window.status == "downloading":
+                    progress_window.resume_pushButton.setEnabled(False)
+                    progress_window.stop_pushButton.setEnabled(True)
+                    progress_window.pause_pushButton.setEnabled(True)
 
-            elif progress_window.status == "paused":
-                progress_window.resume_pushButton.setEnabled(True)
-                progress_window.stop_pushButton.setEnabled(True)
-                progress_window.pause_pushButton.setEnabled(False)
+                elif progress_window.status == "paused":
+                    progress_window.resume_pushButton.setEnabled(True)
+                    progress_window.stop_pushButton.setEnabled(True)
+                    progress_window.pause_pushButton.setEnabled(False)
 
-            elif progress_window.status == "waiting":
-                progress_window.resume_pushButton.setEnabled(False)
-                progress_window.stop_pushButton.setEnabled(True)
-                progress_window.pause_pushButton.setEnabled(False)
+                elif progress_window.status == "waiting":
+                    progress_window.resume_pushButton.setEnabled(False)
+                    progress_window.stop_pushButton.setEnabled(True)
+                    progress_window.pause_pushButton.setEnabled(False)
 
-            elif progress_window.status == "scheduled":
-                progress_window.resume_pushButton.setEnabled(False)
-                progress_window.stop_pushButton.setEnabled(True)
-                progress_window.pause_pushButton.setEnabled(False)
+                elif progress_window.status == "scheduled":
+                    progress_window.resume_pushButton.setEnabled(False)
+                    progress_window.stop_pushButton.setEnabled(True)
+                    progress_window.pause_pushButton.setEnabled(False)
 
-            # it means download has finished!
-            # lets do finishing jobs!
-            elif progress_window.status == "stopped" or progress_window.status == "error" or progress_window.status == "complete":
+                # it means download has finished!
+                # lets do finishing jobs!
+                elif progress_window.status == "stopped" or progress_window.status == "error" or progress_window.status == "complete":
 
-                # close progress_window if download status is stopped or
-                # completed or error
-                progress_window.destroy()  # close window!
+                    # close progress_window if download status is stopped or
+                    # completed or error
+                    progress_window.destroy()  # close window!
 
-                # eliminate window information! in progress_window_list
-                # and progress_window_list_dict
-                self.progress_window_list[member_number] = []
-                del self.progress_window_list_dict[gid]
+                    # eliminate window information! in progress_window_list
+                    # and progress_window_list_dict
+                    self.progress_window_list[member_number] = []
+                    del self.progress_window_list_dict[gid]
 
-                # if download stopped:
-                if progress_window.status == "stopped":
-                    # write message in log
-                    stop_message = 'Download stoped - GID : '\
+                    # if download stopped:
+                    if progress_window.status == "stopped":
+                        # write message in log
+                        stop_message = 'Download stoped - GID : '\
                                     + str(gid)
 
-                    logger.sendToLog(stop_message, 'INFO')
+                        logger.sendToLog(stop_message, 'INFO')
 
-                    # show notification
-                    notifySend("Download Stopped",
+                        # show notification
+                        notifySend("Download Stopped",
                             str(dict['file_name']), 10000, 'no', systemtray=self.system_tray_icon)
 
 
-                # if download status is error!
-                elif progress_window.status == "error":
+                    # if download status is error!
+                    elif progress_window.status == "error":
 
-                    # get error message from dict
-                    if 'error' in dict.keys():
-                        error = dict['error']
-                    else:
-                        error = 'Error'
+                        # get error message from dict
+                        if 'error' in dict.keys():
+                            error = dict['error']
+                        else:
+                            error = 'Error'
 
-                    # write error_message in log file
-                    error_message = 'Download failed - GID : '\
+                        # write error_message in log file
+                        error_message = 'Download failed - GID : '\
                                 + str(gid)\
                                 + '/nMessage : '\
-                                + error)
+                                + error
 
-                    logger.sendToLog(error_message, 'ERROR')
+                        logger.sendToLog(error_message, 'ERROR')
 
-                    # show notification
-                    notifySend("Error - " + error, str(dict['file_name'],
+                        # show notification
+                        notifySend("Error - " + error, str(dict['file_name'],
                                 10000, 'fail', systemtray=self.system_tray_icon)
 
-                # set "None" for start_time and end_time and after_download value 
-                # in data_base, because download has finished
-                self.persepolis_db.setDefaultGidInAddlinkTable(gid, start_time = True, end_time = True, after_download = True)
+                    # set "None" for start_time and end_time and after_download value 
+                    # in data_base, because download has finished
+                    self.persepolis_db.setDefaultGidInAddlinkTable(gid=gid, start_time=True, end_time=True, after_download=True)
 
 
-                # if user selectes shutdown option after download progress 
-                # a file(shutdown_file) will be created with the name of gid in
-                # this folder "persepolis_tmp/shutdown/"
-                # and "wait" word will be written in this file.
-                # (see ShutDownThread and shutdown.py for more information)
-                # shutDown methode is checking that file every second .
-                # when "wait" changes to "shutdown" in that file then script is
-                # shutting down system
-                shutdown_file = os.path.join(
-                        persepolis_tmp, 'shutdown', gid)
+                    # if user selectes shutdown option after download progress 
+                    # a file(shutdown_file) will be created with the name of gid in
+                    # this folder "persepolis_tmp/shutdown/"
+                    # and "wait" word will be written in this file.
+                    # (see ShutDownThread and shutdown.py for more information)
+                    # shutDown methode is checking that file every second .
+                    # when "wait" changes to "shutdown" in that file then script is
+                    # shutting down system
+                    shutdown_file = os.path.join(
+                            persepolis_tmp, 'shutdown', gid)
 
-                # if status is complete or error, and user selected "shutdown after downoad" option:
-                if os.path.isfile(shutdown_file) and progress_window.status != 'stopped':
+                    # if status is complete or error, and user selected "shutdown after downoad" option:
+                    if os.path.isfile(shutdown_file) and progress_window.status != 'stopped':
 
-                    # shutdown aria!
-                    answer = download.shutDown()
+                        # shutdown aria!
+                        answer = download.shutDown()
 
-                    # KILL aria2c in Unix like systems, if didn't respond. R.I.P :))
-                    if not(answer) and (os_type != 'Windows'):
-                        os.system('killall aria2c')
+                        # KILL aria2c in Unix like systems, if didn't respond. R.I.P :))
+                        if not(answer) and (os_type != 'Windows'):
+                            os.system('killall aria2c')
 
-                    # send notification
-                    notifySend('Persepolis is shutting down', 'your system in 20 seconds',
-                               15000, 'warning', systemtray=self.system_tray_icon)
+                        # send notification
+                        notifySend('Persepolis is shutting down', 'your system in 20 seconds',
+                                   15000, 'warning', systemtray=self.system_tray_icon)
 
-                    # write "shutdown" message in shutdown_file >> Shutdown system!
-                    # send shutdown signal to the shutdown script(if user
-                    # selected shutdown for after download)
-                    f = Open(shutdown_file, 'w')
-                    f.writelines('shutdown')
-                    f.close()
+                        # write "shutdown" message in shutdown_file >> Shutdown system!
+                        # send shutdown signal to the shutdown script(if user
+                        # selected shutdown for after download)
+                        f = Open(shutdown_file, 'w')
+                        f.writelines('shutdown')
+                        f.close()
 
-                # if download stopped and user selected "shutdown after download" option:
-                elif os.path.isfile(shutdown_file) == True and progress_window.status == 'stopped':
-                    # write "canceled" message in shutdown_file >> cancel shutdown operation!
-                    f = Open(shutdown_file, 'w')
-                    f.writelines('canceled')
-                    f.close()
+                    # if download stopped and user selected "shutdown after download" option:
+                    elif os.path.isfile(shutdown_file) == True and progress_window.status == 'stopped':
+                        # write "canceled" message in shutdown_file >> cancel shutdown operation!
+                        f = Open(shutdown_file, 'w')
+                        f.writelines('canceled')
+                        f.close()
 
-                # sync persepolis_setting before checking!
-                self.persepolis_setting.sync()
-                if progress_window.status == "complete":
-                    # write message in log file
-                    compelete_message = 'Download compelete - GID : '\
+                    # sync persepolis_setting before checking!
+                    self.persepolis_setting.sync()
+                    if progress_window.status == "complete":
+                        # write message in log file
+                        compelete_message = 'Download compelete - GID : '\
                                         + str(gid)
 
-                    logger.sendToLog(compelete_message, 'INFO')
+                        logger.sendToLog(compelete_message, 'INFO')
 
-                    # play notification
-                    notifySend("Download Complete", dict['file_name'],
+                        # play notification
+                        notifySend("Download Complete", dict['file_name'],
                                         10000, 'ok', systemtray=self.system_tray_icon)
 
-                    # check user's Preferences
-                    if self.persepolis_setting.value('settings/after-dialog') == 'yes':
+                        # check user's Preferences
+                        if self.persepolis_setting.value('settings/after-dialog') == 'yes':
 
-                        # show download compelete dialog
-                        afterdownloadwindow = AfterDownloadWindow(
-                                download_info_file_list, self.persepolis_setting)
-                        self.afterdownload_list.append(afterdownloadwindow)
-                        self.afterdownload_list[len(
-                            self.afterdownload_list) - 1].show()
+                            # show download compelete dialog
+                            afterdownloadwindow = AfterDownloadWindow(
+                                    download_info_file_list, self.persepolis_setting)
+                            self.afterdownload_list.append(afterdownloadwindow)
+                            self.afterdownload_list[len(
+                                self.afterdownload_list) - 1].show()
 
-                        # bringing AfterDownloadWindow on top
-                        self.afterdownload_list[len(
-                            self.afterdownload_list) - 1].raise_()
-                        self.afterdownload_list[len(
-                            self.afterdownload_list) - 1].activateWindow()
+                            # bringing AfterDownloadWindow on top
+                            self.afterdownload_list[len(
+                                self.afterdownload_list) - 1].raise_()
+                            self.afterdownload_list[len(
+                                self.afterdownload_list) - 1].activateWindow()
 
 
 
@@ -3301,7 +3300,7 @@ class MainWindow(MainWindow_Ui):
                     'reverse': 'no',
                     'limit_enable': 'no',
                     'limit_value': '0K',
-                    'after_download': 'no'
+                    'after_download': 'no',
                     'gid_list': '[]'
                     }
 
@@ -4023,7 +4022,7 @@ class MainWindow(MainWindow_Ui):
             self.addToQueue2(data)
 
     def addToQueue2(self, data):
-
+        # TODO downloads must be added to gid_list in category in data base
         send_message = False
 
         # new selected category
@@ -4096,7 +4095,6 @@ class MainWindow(MainWindow_Ui):
                 # write changes in data base
                 dict = {'gid': gid, 'category': new_category}
                 self.persepolis_db.updateDownloadTable([dict])
-                self.persepolis_db.updateAddLinkTable([dict]) 
                 self.persepolis_db.setDefaultGidInAddlinkTable(gid, start_time=True, end_time=True, after_download=True)
                 
                 # update category in download_table
