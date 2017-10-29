@@ -56,7 +56,7 @@ class PluginsDB():
         plugins_db_path = os.path.join(persepolis_tmp, 'plugins.db')
 
         # plugins_db_connection
-        self.plugins_db_connection = sqlite3.connect(plugins_db_path)
+        self.plugins_db_connection = sqlite3.connect(plugins_db_path, check_same_thread=False)
 
         # plugins_db_cursor
         self.plugins_db_cursor = self.plugins_db_connection.cursor()
@@ -145,7 +145,7 @@ class PersepolisDB():
         persepolis_db_path = os.path.join(config_folder, 'persepolis.db')
 
         # persepolis_db_connection
-        self.persepolis_db_connection = sqlite3.connect(persepolis_db_path)
+        self.persepolis_db_connection = sqlite3.connect(persepolis_db_path, check_same_thread=False)
 
         # persepolis_db_cursor
         self.persepolis_db_cursor = self.persepolis_db_connection.cursor()
@@ -165,7 +165,7 @@ class PersepolisDB():
                                                                 limit_enable TEXT,
                                                                 limit_value TEXT,
                                                                 after_download TEXT,
-                                                                items TEXT
+                                                                gid_list TEXT
                                                                             )""")
 
             all_downloads_dict = {'category': 'All Downloads',
@@ -259,7 +259,7 @@ class PersepolisDB():
                                                                             :reverse,
                                                                             :limit_enable,
                                                                             :limit_value,
-                                                                            :after_download
+                                                                            :after_download,
                                                                             :gid_list
                                                                             )""", dict)
         self.persepolis_db_connection.commit()
@@ -292,11 +292,13 @@ class PersepolisDB():
         category = dict['category']
         gid = dict['gid']
          
-        for category_item in 'All Downlaods', category:
+        for category_item in 'All Downloads', category:
+            print(category_item)
             
             # get category_dict from data base
             category_dict = self.searchCategoryInCategoryTable(category_item)
 
+            print(category_dict)
             # get gid_list
             gid_list = category_dict['gid_list']
 
@@ -367,7 +369,7 @@ class PersepolisDB():
     # return all items in download_db_table
     # '*' for category, cause that method returns all items. 
     def returnItemsInDownloadTable(self, category='*'):
-        self.persepolis_db_cursor.execute("""SELECT {} FROM download_db_table""".format(category))
+        self.persepolis_db_cursor.execute("""SELECT '{}' FROM download_db_table""".format(category))
         rows = self.persepolis_db_cursor.fetchall()
 
         downloads_dict = {}
@@ -433,7 +435,7 @@ class PersepolisDB():
     # return items in addlink_db_table
     # '*' for category, cause that method returns all items. 
     def returnItemsInAddLinkTable(self, category='*'):
-        self.persepolis_db_cursor.execute("""SELECT {} FROM addlink_db_table""".format(category))
+        self.persepolis_db_cursor.execute("""SELECT '{}' FROM addlink_db_table""".format(category))
         rows = self.persepolis_db_cursor.fetchall()
 
         addlink_dict = {}
@@ -493,8 +495,8 @@ class PersepolisDB():
                 if key not in dict.keys():
                     dict[key] = None
 
-                # update data base if value for the keys is not None
-                self.persepolis_db_cursor.execute("""UPDATE download_db_table SET   file_name = coalesce(:file_name, file_name),
+            # update data base if value for the keys is not None
+            self.persepolis_db_cursor.execute("""UPDATE download_db_table SET   file_name = coalesce(:file_name, file_name),
                                                                                     status = coalesce(:status, status),
                                                                                     size = coalesce(:size, size),
                                                                                     downloaded_size = coalesce(:downloaded_size, downloaded_size),
@@ -526,14 +528,22 @@ class PersepolisDB():
                     'gid_list']
 
         for dict in list:
+
+            # format of gid_list is list and must be converted to string for sqlite3
+            if 'gid_list' in dict.keys():
+                dict['gid_list'] = str(dict['gid_list'])
+
             for key in keys_list:
                 # if a key is missed in dict, 
                 # then add this key to the dict and assign None value for the key. 
                 if key not in dict.keys():
                     dict[key] = None
 
-                # update data base if value for the keys is not None
-                self.persepolis_db_cursor.execute("""UPDATE category_db_table SET   start_time_enable = coalesce(:start_time_enable, start_time_enable),
+
+
+
+            # update data base if value for the keys is not None
+            self.persepolis_db_cursor.execute("""UPDATE category_db_table SET   start_time_enable = coalesce(:start_time_enable, start_time_enable),
                                                                                     start_time = coalesce(:start_time, start_time),
                                                                                     end_time_enable = coalesce(:end_time_enable, end_time_enable),
                                                                                     end_time = coalesce(:end_time, end_time),
@@ -577,8 +587,8 @@ class PersepolisDB():
                 if key not in dict.keys():
                     dict[key] = None 
 
-                # update data base if value for the keys is not None
-                self.persepolis_db_cursor.execute("""UPDATE addlink_db_table SET out = coalesce(:out, out),
+            # update data base if value for the keys is not None
+            self.persepolis_db_cursor.execute("""UPDATE addlink_db_table SET out = coalesce(:out, out),
                                                                                 start_time = coalesce(:start_time, start_time),
                                                                                 end_time = coalesce(:end_time, end_time),
                                                                                 link = coalesce(:link, link),
@@ -618,7 +628,7 @@ class PersepolisDB():
 
     # return category information in category_db_table
     def searchCategoryInCategoryTable(self, category):
-        self.persepolis_db_cursor.execute("""SELECT * FROM category_db_table WHERE category = {}""".format(str(category)))
+        self.persepolis_db_cursor.execute("""SELECT * FROM category_db_table WHERE category = '{}'""".format(str(category)))
         list = self.persepolis_db_cursor.fetchall()
 
         if list:
@@ -684,21 +694,21 @@ class PersepolisDB():
 
     def findActiveDownloads(self, category='*'):
         # find download items is download_db_table with status = "downloading" or "waiting" or paused or scheduled
-        self.persepolis_db_cursor.execute("""SELECT gid FROM download_db_table WHERE (category = {}) AND (status = 'downloading' OR status = 'waiting' 
-                                            OR status = 'scheduled' OR status = 'paused)'""".format(str(category)))
+        self.persepolis_db_cursor.execute("""SELECT gid FROM download_db_table WHERE (category = '{}') AND (status = 'downloading' OR status = 'waiting' 
+                                            OR status = 'scheduled' OR status = 'paused')""".format(str(category)))
 
         # create a list for returning answer
         list = self.persepolis_db_cursor.fetchall()
         gid_list = []
 
-        for tuple in rows:
+        for tuple in list:
             gid_list.append(tuple[0])
 
         return  gid_list 
 
 # This method deletes a category from category_db_table
     def deleteCategory(self, category):
-        self.persepolis_db_cursor.execute("""DELETE FROM category_db_table WHERE category = {}""".format(str(category)))
+        self.persepolis_db_cursor.execute("""DELETE FROM category_db_table WHERE category = '{}'""".format(str(category)))
 
         # commit changes
         self.persepolis_db_connection.commit()
@@ -706,7 +716,7 @@ class PersepolisDB():
 
 # This method deletes a download item from download_db_table
     def deleteItemInDownloadTable(self, gid, category):
-        self.persepolis_db_cursor.execute("""DELETE FROM download_db_table WHERE gid = {}""".format(str(gid)))
+        self.persepolis_db_cursor.execute("""DELETE FROM download_db_table WHERE gid = '{}'""".format(str(gid)))
 
         # commit changes
         self.persepolis_db_connection.commit()

@@ -202,15 +202,6 @@ class MainWindow_Ui(QMainWindow):
             category_table_header)
         self.category_tree.header().setStretchLastSection(True)
 
-        # inserting items in category_tree
-        for item in ['All Downloads', 'Single Downloads']:
-            qstandarditem = QStandardItem(item)
-            font = QtGui.QFont()
-            font.setBold(True)
-            qstandarditem.setFont(font)
-            qstandarditem.setEditable(False)
-            self.category_tree_model.appendRow(qstandarditem)
-
 # queue_panel
         self.queue_panel_widget = QWidget(self)
 
@@ -244,8 +235,9 @@ class MainWindow_Ui(QMainWindow):
 
         start_frame_verticalLayout = QVBoxLayout(self.start_frame)
 
-        self.start_time_qDataTimeEdit = QDateTimeEdit(start_frame_verticalLayout)
+        self.start_time_qDataTimeEdit = QDateTimeEdit(self.start_frame)
         self.start_time_qDataTimeEdit.setDisplayFormat('H:mm')
+        start_frame_verticalLayout.addWidget(self.start_time_qDataTimeEdit)
   
         start_verticalLayout.addWidget(self.start_frame)
 # end time
@@ -259,8 +251,9 @@ class MainWindow_Ui(QMainWindow):
 
         end_frame_verticalLayout = QVBoxLayout(self.end_frame)
 
-        self.end_time_qDateTimeEdit = QDateTimeEdit(end_frame_verticalLayout)
+        self.end_time_qDateTimeEdit = QDateTimeEdit(self.end_frame)
         self.end_time_qDateTimeEdit.setDisplayFormat('H:mm')
+        end_frame_verticalLayout.addWidget(self.end_time_qDateTimeEdit)
  
         start_verticalLayout.addWidget(self.end_frame)
 

@@ -1433,7 +1433,7 @@ class MainWindow(MainWindow_Ui):
 
                         # show notification
                         notifySend("Error - " + error, str(dict['file_name'],
-                                10000, 'fail', systemtray=self.system_tray_icon)
+                                10000, 'fail', systemtray=self.system_tray_icon))
 
                     # set "None" for start_time and end_time and after_download value 
                     # in data_base, because download has finished
@@ -1545,8 +1545,11 @@ class MainWindow(MainWindow_Ui):
             my_gid = my_gid[2:18]
             my_gid = str(my_gid)
 
-        # check my_gid used before or not!
-            return_list = self.persepolis_db.searchGidInDownloadTable(my_gid)
+            # check my_gid used before or not!
+            try:
+                return_list = self.persepolis_db.searchGidInDownloadTable(my_gid)
+            except:
+                return_list = False
 
         return my_gid
 
@@ -3561,7 +3564,8 @@ class MainWindow(MainWindow_Ui):
             download_table_dict = self.persepolis_db.returnItemsInDownloadTable(current_category_tree_text)
 
         # get gid_list
-        gid_list = self.persepolis_db.searchCategoryInCategoryTable(current_category_tree_text)
+        category_dict = self.persepolis_db.searchCategoryInCategoryTable(current_category_tree_text)
+        gid_list = category_dict['gid_list']
 
 
         keys_list = ['file_name',
@@ -4096,6 +4100,33 @@ class MainWindow(MainWindow_Ui):
                 dict = {'gid': gid, 'category': new_category}
                 self.persepolis_db.updateDownloadTable([dict])
                 self.persepolis_db.setDefaultGidInAddlinkTable(gid, start_time=True, end_time=True, after_download=True)
+
+                # delete item from gid_list in current_category
+                current_category_dict = self.searchCategoryInCategoryTable(current_category)
+
+                # get gid_list
+                current_category_gid_list = current_category_dict['gid_list']
+
+                # delete item
+                current_category_gid_list = current_category_gid_list.remove(gid)
+
+                # update category_db_table
+                self.updateCategoryTable([current_category_dict])
+                
+                # add item to gid_list of new_category
+                # get category_dict from data base
+                new_category_dict = self.searchCategoryInCategoryTable(new_category)
+
+                # get gid_list
+                new_category_gid_list = new_category_dict['gid_list']
+
+                # add gid of item to gid_list
+                new_category_gid_list = new_category_gid_list.append(gid)
+
+                # updata category_db_table
+                self.updateCategoryTable([new_category_dict])
+
+
                 
                 # update category in download_table
                 current_category_tree_text = str(
@@ -4187,7 +4218,7 @@ class MainWindow(MainWindow_Ui):
         self.queue_list_dict[current_category_tree_text].limit_changed = True
 
 # this method handles user's shutdown request 
-def afterPushButtonPressed(self, button):
+    def afterPushButtonPressed(self, button):
         # current_category_tree_text is the name of queue that selected by user
         current_category_tree_text = str(current_category_tree_index.data())
 
@@ -4370,7 +4401,7 @@ def afterPushButtonPressed(self, button):
             hour, minute = queue_info_dict['end_time'].split(':')
             # set time
             q_time = QTime(int(hour), int(minute))
-            self.end_time_qDateTimeEdit(q_time)
+            self.end_time_qDateTimeEdit.setTime(q_time)
 
             # reverse_checkBox
             if queue_info_dict['reverse'] == 'yes':

@@ -266,7 +266,7 @@ def tellActive():
     gid_list = []
 
     # convert download information in desired format.
-    for dict in download_status:
+    for dict in downloads_status:
         converted_info_dict = convertDownloadInformation(dict)
 
         # add gid to gid_list

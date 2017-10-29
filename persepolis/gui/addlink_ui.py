@@ -219,8 +219,9 @@ class AddLinkWindow_Ui(QWidget):
 
         horizontalLayout_5 = QHBoxLayout(self.start_frame)
 
-        self.start_time_qDataTimeEdit = QDateTimeEdit(horizontalLayout_5)
+        self.start_time_qDataTimeEdit = QDateTimeEdit(self.start_frame)
         self.start_time_qDataTimeEdit.setDisplayFormat('H:mm')
+        horizontalLayout_5.addWidget(self.start_time_qDataTimeEdit)
         
         start_verticalLayout.addWidget(self.start_frame)
         time_limit_horizontalLayout.addLayout(start_verticalLayout)
@@ -237,8 +238,9 @@ class AddLinkWindow_Ui(QWidget):
 
         horizontalLayout_6 = QHBoxLayout(self.end_frame)
 
-        self.end_time_qDateTimeEdit = QDateTimeEdit(horizontalLayout_6)
+        self.end_time_qDateTimeEdit = QDateTimeEdit(self.end_frame)
         self.end_time_qDateTimeEdit.setDisplayFormat('H:mm')
+        horizontalLayout_6.addWidget(self.end_time_qDateTimeEdit)
  
         end_verticalLayout.addWidget(self.end_frame)
         time_limit_horizontalLayout.addLayout(end_verticalLayout)
