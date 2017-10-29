@@ -292,6 +292,7 @@ class CheckDownloadInfoThread(QThread):
                 # now we have a list that contains download information (download_status_list)
                 # lets update download table in main window and update data base!
                 # first emit a signal for updating MainWindow. 
+                print(download_status_list)
                 self.DOWNLOAD_INFO_SIGNAL.emit(download_status_list)
 
                 # updat data base!
@@ -912,16 +913,20 @@ class MainWindow(MainWindow_Ui):
                     'estimate_time_left',
                     'gid',
                     'link',
-                    'firs_try_date',
+                    'first_try_date',
                     'last_try_date',
                     'category'
                     ]
 
         # insert items in download_table 
         for gid in gid_list:
+            # create new row
+            self.download_table.insertRow(0)
+
             dict = download_table_dict[gid]
             i = 0
             for key in keys_list: 
+                print(str(dict[key]))
                 item = QTableWidgetItem(str(dict[key]))
                 self.download_table.setItem(0, i, item)
                 i = i + 1
@@ -1263,14 +1268,8 @@ class MainWindow(MainWindow_Ui):
                     row = i
                     break
 
-            # check that if user checked selection mode from edit menu
-            if self.selectAction.isChecked():
-                selection = 'actived'
-            else:
-                selection = None
-
             # updat download_table items
-            if row != None:
+            if row:
                 update_list = [dict['file_name'], dict['status'], dict['size'], dict['downloaded_size'], dict['percent'], 
                             dict['connections'], dict['rate'], dict['estimate_time_left'], dict['gid'], None, None, None, None]
                 for i in range(12):
@@ -1285,7 +1284,7 @@ class MainWindow(MainWindow_Ui):
                     item = QTableWidgetItem(text)
 
                     # add checkbox to first cell in row , if user checked selection mode
-                    if i == 0 and selection != None:
+                    if i == 0 and self.selectAction.isChecked():
                         item.setFlags(QtCore.Qt.ItemIsUserCheckable |
                                               QtCore.Qt.ItemIsEnabled)
                         # 2 means that user checked item before
@@ -1324,7 +1323,7 @@ class MainWindow(MainWindow_Ui):
 
                 # downloaded
                 downloaded = "<b>Downloaded</b> : " \
-                        + str(dict['downloaded']) \
+                        + str(dict['downloaded_size']) \
                         + "/" \
                         + str(dict['size'])
 
@@ -1537,7 +1536,7 @@ class MainWindow(MainWindow_Ui):
     def gidGenerator(self):
         return_list = True
         # this loop repeats until we have a unique GID
-        while return_list:
+        while True:
 
         # generate a random hex value between 1152921504606846976 and 18446744073709551615
         # for download GID
@@ -1546,11 +1545,12 @@ class MainWindow(MainWindow_Ui):
             my_gid = str(my_gid)
 
             # check my_gid used before or not!
-            try:
-                return_list = self.persepolis_db.searchGidInDownloadTable(my_gid)
-            except:
-                return_list = False
+            category_dict = self.persepolis_db.searchCategoryInCategoryTable('All Downloads')
+            gid_list = category_dict['gid_list']
 
+            if not(my_gid in gid_list):
+                break
+            
         return my_gid
 
 # this method returns number of selected row
@@ -1765,7 +1765,7 @@ class MainWindow(MainWindow_Ui):
         # download_info_file_list is a list that contains ['file_name' ,
         # 'status' , 'size' , 'downloaded size' ,'download percentage' ,
         # 'number of connections' ,'Transfer rate' , 'estimate_time_left' ,
-        # 'gid' , 'link' , 'firs_try_date' , 'last_try_date', 'category']
+        # 'gid' , 'link' , 'first_try_date' , 'last_try_date', 'category']
 
         # if user or flashgot defined filename then file_name is valid in
         # add_link_dictionary['out']
@@ -1788,9 +1788,9 @@ class MainWindow(MainWindow_Ui):
         # get now time and date
         date = download.nowDate()
 
-        list = [file_name, status, '***', '***', '***',
-                '***', '***', '***', gid, add_link_dictionary['link'], date, date, category]
-
+#         list = [file_name, status, '***', '***', '***',
+#                 '***', '***', '***', gid, add_link_dictionary['link'], date, date, category]
+# 
         dict = {'file_name': file_name,
                 'status': status,
                 'size': '***',
@@ -1801,7 +1801,7 @@ class MainWindow(MainWindow_Ui):
                 'estimate_time_left': '***',
                 'gid': gid,
                 'link': add_link_dictionary['link'],
-                'firs_try_date': date, 
+                'first_try_date': date, 
                 'last_try_date': date,
                 'category': category}
 
@@ -1824,22 +1824,22 @@ class MainWindow(MainWindow_Ui):
         self.category_tree.setCurrentIndex(category_tree_model_index)
         self.categoryTreeSelected(category_tree_model_index)
 
-        # create a row in download_table for new download
-        self.download_table.insertRow(0)
-        j = 0
-        # add item in list to the row
-        for i in list:
-            item = QTableWidgetItem(i)
-            self.download_table.setItem(0, j, item)
-            j = j + 1
-
-        # add checkBox to the row , if user selected selectAction
-        if self.selectAction.isChecked() == True:
-            item = self.download_table.item(0, 0)
-            item.setFlags(QtCore.Qt.ItemIsUserCheckable |
-                          QtCore.Qt.ItemIsEnabled)
-            item.setCheckState(QtCore.Qt.Unchecked)
-
+#         # create a row in download_table for new download
+#         self.download_table.insertRow(0)
+#         j = 0
+#         # add item in list to the row
+#         for i in list:
+#             item = QTableWidgetItem(i)
+#             self.download_table.setItem(0, j, item)
+#             j = j + 1
+# 
+#         # add checkBox to the row , if user selected selectAction
+#         if self.selectAction.isChecked():
+#             item = self.download_table.item(0, 0)
+#             item.setFlags(QtCore.Qt.ItemIsUserCheckable |
+#                           QtCore.Qt.ItemIsEnabled)
+#             item.setCheckState(QtCore.Qt.Unchecked)
+# 
         # if user didn't press download_later_pushButton in add_link window
         # then create new qthread for new download!
         if not(download_later):
@@ -2784,7 +2784,7 @@ class MainWindow(MainWindow_Ui):
                         'estimate_time_left',
                         'gid',
                         'link',
-                        'firs_try_date',
+                        'first_try_date',
                         'last_try_date',
                         'category'
                         ]
@@ -2898,7 +2898,7 @@ class MainWindow(MainWindow_Ui):
                         'estimate_time_left',
                         'gid',
                         'link',
-                        'firs_try_date',
+                        'first_try_date',
                         'last_try_date',
                         'category'
                         ]
@@ -3007,7 +3007,7 @@ class MainWindow(MainWindow_Ui):
                         'estimate_time_left',
                         'gid',
                         'link',
-                        'firs_try_date',
+                        'first_try_date',
                         'last_try_date',
                         'category'
                         ]
@@ -3115,7 +3115,7 @@ class MainWindow(MainWindow_Ui):
                         'estimate_time_left',
                         'gid',
                         'link',
-                        'firs_try_date',
+                        'first_try_date',
                         'last_try_date',
                         'category'
                         ]
@@ -3225,7 +3225,7 @@ class MainWindow(MainWindow_Ui):
                         'estimate_time_left',
                         'gid',
                         'link',
-                        'firs_try_date',
+                        'first_try_date',
                         'last_try_date',
                         'category'
                         ]
@@ -3404,7 +3404,7 @@ class MainWindow(MainWindow_Ui):
             # download_info_file_list is a list that contains ['file_name' ,
             # 'status' , 'size' , 'downloaded size' ,'download percentage' ,
             # 'number of connections' ,'Transfer rate' , 'estimate_time_left' ,
-            # 'gid' , 'link' , 'firs_try_date' , 'last_try_date', 'category']
+            # 'gid' , 'link' , 'first_try_date' , 'last_try_date', 'category']
 
             # if user or flashgot defined filename then file_name is valid in
             # add_link_dictionary['out']
@@ -3427,7 +3427,7 @@ class MainWindow(MainWindow_Ui):
                     'estimate_time_left': '***',
                     'gid': gid,
                     'link': add_link_dictionary['link'],
-                    'firs_try_date': date,
+                    'first_try_date': date,
                     'last_try_date': date,
                     'category': category}
 
@@ -3553,9 +3553,9 @@ class MainWindow(MainWindow_Ui):
         current_category_tree_index = new_selection
 
         # find category
-        # TODO must be checked
         current_category_tree_text = str(
             self.category_tree.currentIndex().data())
+
 
         # read download items from data base
         if current_category_tree_text == 'All Downloads':
@@ -3578,13 +3578,16 @@ class MainWindow(MainWindow_Ui):
                     'estimate_time_left',
                     'gid',
                     'link',
-                    'firs_try_date',
+                    'first_try_date',
                     'last_try_date',
                     'category'
                     ]
 
         # insert items in download_table 
         for gid in gid_list:
+            # create new row
+            self.download_table.insertRow(0)
+
             dict = download_table_dict[gid]
             i = 0
             for key in keys_list: 
@@ -3641,15 +3644,13 @@ class MainWindow(MainWindow_Ui):
             self.download_table.sendMenu = self.download_table.tablewidget_menu.addMenu(
                 'Send to')
 
-        if category != 'Single Downloads':
-            self.download_table.sendMenu.addAction(queueAction)
 
         # get categories list from data base
         categories_list = self.persepolis_db.categoriesList()
 
         # add categories name to sendMenu
         for category_name in categories_list:
-            if category_name != category:
+            if category_name != category and category_name != 'All Downloads':
                 queueAction = QAction(QIcon(icons + 'add_queue'), category_name, self, statusTip="Add to" + category_name,
                         triggered=partial(self.addToQueue, category_name))
 

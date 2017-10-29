@@ -128,7 +128,8 @@ class AddLinkWindow(AddLinkWindow_Ui):
 # get categories name and add them to add_queue_comboBox
         categories_list = self.parent.persepolis_db.categoriesList()
         for queue in categories_list:
-            self.add_queue_comboBox.addItem(queue)
+            if queue != 'All Downloads':
+                self.add_queue_comboBox.addItem(queue)
 
         self.add_queue_comboBox.setCurrentIndex(0)
 
@@ -431,18 +432,18 @@ class AddLinkWindow(AddLinkWindow_Ui):
         # get download_path
         download_path = self.download_folder_lineEdit.text()
 
-        # get referer and header and user-agent and load-cookies in plugin_add_link_dictionary if exits.
+        # get referer and header and user_agent and load_cookies in plugin_add_link_dictionary if exits.
         if not('referer' in self.plugin_add_link_dictionary):
             self.plugin_add_link_dictionary['referer'] = None
 
         if not('header' in self.plugin_add_link_dictionary):
             self.plugin_add_link_dictionary['header'] = None
 
-        if not('user-agent' in self.plugin_add_link_dictionary):
-            self.plugin_add_link_dictionary['user-agent'] = None
+        if not('user_agent' in self.plugin_add_link_dictionary):
+            self.plugin_add_link_dictionary['user_agent'] = None
 
-        if not('load-cookies' in self.plugin_add_link_dictionary):
-            self.plugin_add_link_dictionary['load-cookies'] = None
+        if not('load_cookies' in self.plugin_add_link_dictionary):
+            self.plugin_add_link_dictionary['load_cookies'] = None
 
         # save information in a dictionary(add_link_dictionary).
         self.add_link_dictionary = {'out': out, 'start_time': start_time, 'end_time': end_time, 'link': link, 'ip': ip,

@@ -119,8 +119,8 @@ def downloadAria(gid, parent):
     end_time = add_link_dictionary['end_time']
     header = add_link_dictionary['header']
     out = add_link_dictionary['out']
-    user_agent = add_link_dictionary['user-agent']
-    cookies = add_link_dictionary['load-cookies']
+    user_agent = add_link_dictionary['user_agent']
+    cookies = add_link_dictionary['load_cookies']
     referer = add_link_dictionary['referer']
 
 
@@ -160,7 +160,7 @@ def downloadAria(gid, parent):
         status = "waiting"
 
     # get last_try_date
-    now_date = download.nowDate()
+    now_date = nowDate()
 
 
     # update data_base
