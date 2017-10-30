@@ -45,7 +45,7 @@ import platform
 from copy import deepcopy
 from persepolis.scripts.shutdown import shutDown
 from persepolis.scripts.update import checkupdate
-from persepolis.scripts.data_base import PluginsDB, PersepolisDB
+from persepolis.scripts.data_base import PluginsDB, PersepolisDB, TempDB
 
 # THIS FILE CREATES MAIN WINDOW
 
@@ -249,8 +249,8 @@ class CheckDownloadInfoThread(QThread):
                 # lets getting downloads information from aria and putting them in download_status_list!
 
                 # find gid of active downloads first! (get them from data base)
-                # output of this method is a list of tuples
-                active_gid_list = self.parent.persepolis_db.findActiveDownloads()
+                # output of this method is a list of gid
+                active_gid_list = self.parent.temp_db.returnGids()
 
                 # get download status of active downloads from aria2
                 # download_status_list is a list that contains some dictionaries.  
@@ -258,8 +258,10 @@ class CheckDownloadInfoThread(QThread):
                 # gid_list is a list that contains gid of downloads in download_status_list. 
                 # see download.py file for more information. 
                 gid_list, download_status_list = download.tellActive()
+                print('tellActive'+str(gid_list))
 
-                if download_status_list:
+                if True:
+                    print(gid_list)
                     for gid in active_gid_list:
 
                         # if gid not in gid_list, so download is completed or stopped or error occured!
@@ -270,7 +272,9 @@ class CheckDownloadInfoThread(QThread):
                         # if aria do not return download information with tellStatus and tellActive,
                         # then perhaps some error occured.so download information must be in data_base. 
                         if gid not in gid_list:  
+                            print('here')
                             returned_dict = download.tellStatus(gid, self.parent)
+                            print('tellStatus' + str(returned_dict))
                             if returned_dict:
                                 download_status_list.append(returned_dict)
                             else:
@@ -292,7 +296,6 @@ class CheckDownloadInfoThread(QThread):
                 # now we have a list that contains download information (download_status_list)
                 # lets update download table in main window and update data base!
                 # first emit a signal for updating MainWindow. 
-                print(download_status_list)
                 self.DOWNLOAD_INFO_SIGNAL.emit(download_status_list)
 
                 # updat data base!
@@ -363,6 +366,9 @@ class DownloadLink(QThread):
         self.parent = parent
 
     def run(self):
+        # add gid of download to the active gids in temp_db
+        self.parent.temp_db.insertInTempTable(self.gid)
+
         # if request is not successful then persepolis is checking rpc
         # connection whith download.aria2Version() function
         answer = download.downloadAria(self.gid, self.parent)
@@ -878,6 +884,14 @@ class MainWindow(MainWindow_Ui):
         # create an object for PersepolisDB
         self.persepolis_db = PersepolisDB()
 
+        # create an object fo TempDB
+        self.temp_db = TempDB()
+
+        # create tables
+        self.temp_db.createTables()
+
+
+
         # check tables in data_base, and change required values to default value.
         # see data_base.py for more information.
         self.persepolis_db.setDBTablesToDefaultValue()
@@ -926,7 +940,6 @@ class MainWindow(MainWindow_Ui):
             dict = download_table_dict[gid]
             i = 0
             for key in keys_list: 
-                print(str(dict[key]))
                 item = QTableWidgetItem(str(dict[key]))
                 self.download_table.setItem(0, i, item)
                 i = i + 1
@@ -1269,7 +1282,7 @@ class MainWindow(MainWindow_Ui):
                     break
 
             # updat download_table items
-            if row:
+            if row != None:
                 update_list = [dict['file_name'], dict['status'], dict['size'], dict['downloaded_size'], dict['percent'], 
                             dict['connections'], dict['rate'], dict['estimate_time_left'], dict['gid'], None, None, None, None]
                 for i in range(12):
@@ -1494,6 +1507,7 @@ class MainWindow(MainWindow_Ui):
                         # check user's Preferences
                         if self.persepolis_setting.value('settings/after-dialog') == 'yes':
 
+                            # TODO afterdownloadwindow must be edited and gid must be deleted from activate download gid when download is compelete
                             # show download compelete dialog
                             afterdownloadwindow = AfterDownloadWindow(
                                     download_info_file_list, self.persepolis_setting)
@@ -2133,6 +2147,11 @@ class MainWindow(MainWindow_Ui):
         shutdown_notification = 1
         while shutdown_notification != 2:
             sleep(0.1)
+
+        # close data bases connections
+        for db in self.persepolis_db, self.plugins_db, self.temp_db:
+            db.closeConnections()
+
 
         QCoreApplication.instance().quit
         print("Persepolis Closed")

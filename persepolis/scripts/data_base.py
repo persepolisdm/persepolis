@@ -50,6 +50,76 @@ else:
         str(home_address), 'AppData', 'Local', 'persepolis_tmp')
 
 
+
+# This class manages TempDB
+# TempDB contains gid of active downloads in every session.
+class TempDB():
+    def __init__(self):
+        # temp_db saves in RAM
+        # temp_db_connection
+
+        self.temp_db_connection = sqlite3.connect(':memory:', check_same_thread=False)
+
+        # temp_db_cursor
+        self.temp_db_cursor = self.temp_db_connection.cursor()
+        self.lock = False
+
+    def lockCursor(self):
+        while self.lock:
+            rand_float = random.uniform(0, 0.5)
+            sleep(rand_float)
+        
+        self.lock = True
+
+
+    # temp_db_table contains gid of active downloads. 
+    def createTables(self):
+        self.lockCursor()
+        self.temp_db_cursor.execute("""CREATE TABLE IF NOT EXISTS temp_db_table(
+                                                                                ID INTEGER PRIMARY KEY,
+                                                                                gid TEXT
+                                                                                )""") 
+        self.temp_db_connection.commit()
+        self.lock = False
+
+    # insert new item in temp_db_table
+    def insertInTempTable(self, gid):
+        self.lockCursor()
+        self.temp_db_cursor.execute("""INSERT INTO temp_db_table VALUES(
+                                                                NULL,
+                                                                '{}')""".format(gid)) 
+
+        self.temp_db_connection.commit()
+        self.lock = False
+
+    def returnGids(self):
+        self.lockCursor()
+        self.temp_db_cursor.execute("""SELECT gid FROM temp_db_table""")
+        
+        list = self.temp_db_cursor.fetchall()
+        print('list' + str(list))
+
+        self.lock = False
+        gid_list = []
+
+        for tuple in list:
+            gid = tuple[0]
+            gid_list.append(gid)
+            
+
+        return gid_list
+
+
+    # close connections
+    def closeConnections(self):
+        self.lockCursor()
+        self.temp_db_cursor.close()
+        self.temp_db_connection.close()
+        self.lock = False
+
+
+
+
 # plugins.db is store links, when browser plugins are send new links.
 # This class is managing plugin.db   
 class PluginsDB():
@@ -159,7 +229,7 @@ class PersepolisDB():
             rand_float = random.uniform(0, 0.5)
             sleep(rand_float)
 
-        print(traceback.extract_stack(None, 2)[0][2])
+#         print(traceback.extract_stack(None, 2)[0][2])
         self.lock = True
 
 
@@ -737,13 +807,13 @@ class PersepolisDB():
         # change value of start_time and end_time and after_download for special gid to NULL value
         if start_time:
             self.persepolis_db_cursor.execute("""UPDATE addlink_db_table SET start_time = NULL
-                                                                        WHERE gid = ? """, (gid))
+                                                                        WHERE gid = '{}' """.format(gid))
         if end_time:
             self.persepolis_db_cursor.execute("""UPDATE addlink_db_table SET end_time = NULL
-                                                                        WHERE gid = ? """, (gid))
+                                                                        WHERE gid = '{}' """.format(gid))
         if after_download:
             self.persepolis_db_cursor.execute("""UPDATE addlink_db_table SET after_download = NULL
-                                                                        WHERE gid = ? """, (gid))
+                                                                        WHERE gid = '{}' """.format(gid))
  
         self.persepolis_db_connection.commit()
 
@@ -856,7 +926,7 @@ class PersepolisDB():
                                             OR status = 'scheduled' OR status = 'paused')""".format(str(category)))
         else:
             self.persepolis_db_cursor.execute("""SELECT gid FROM download_db_table WHERE (status = 'downloading' OR status = 'waiting' 
-                                            OR status = 'scheduled' OR status = 'paused')""".format(str(category)))
+                                            OR status = 'scheduled' OR status = 'paused')""")
 
 
         # create a list for returning answer

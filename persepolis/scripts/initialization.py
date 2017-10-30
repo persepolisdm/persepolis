@@ -84,7 +84,6 @@ plugins_db.createTables()
 # close connections
 plugins_db.closeConnections()
 
-
 # persepolisdm.log file contains persepolis log.
 from persepolis.scripts import logger
 

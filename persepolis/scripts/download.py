@@ -308,6 +308,13 @@ def tellStatus(gid, parent):
             download_path = findDownloadPath(
                 file_name, download_path, persepolis_setting.value('settings/subfolder'))
 
+        # find temp download path
+        file_status = str(download_status['files'])
+        file_status = file_status[1:-1]
+        file_status = ast.literal_eval(file_status)
+        path = str(file_status['path'])
+        file_name = urllib.parse.unquote(os.path.basename(path))
+
         file_path = downloadCompleteAction(path, download_path, file_name)
 
         # update download_path in addlink_db_table
@@ -335,13 +342,11 @@ def convertDownloadInformation(download_status):
         file_status = file_status[1:-1]
         file_status = ast.literal_eval(file_status)
         path = str(file_status['path'])
-
         file_name = urllib.parse.unquote(os.path.basename(path))
-
         if not(file_name):
             file_name = None
 
-        uris = str(file_status['uris'])
+        uris = file_status['uris']
         uri = uris[0]
         link = uri['uri']
 
@@ -611,7 +616,7 @@ def downloadStop(gid, parent):
 
         # change status of download to "stopped" in data base
         dict = {'gid': gid, 'status': 'stopped'}        
-        parent.persepolis_db.updateAddLinkTable([dict])
+        parent.persepolis_db.updateDownloadTable([dict])
 
     return answer
 
