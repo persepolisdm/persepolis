@@ -581,12 +581,12 @@ class PersepolisDB():
                 'download_passwd': tuple[11],
                 'connections': tuple[12],
                 'limit_value': tuple[13],
-                'download_path' : tuple[13],
-                'referer': tuple[14],
-                'load_cookies': tuple[15],
-                'user_agent': tuple[16],
-                'header': tuple[17],
-                'after_download': tuple[18]
+                'download_path' : tuple[14],
+                'referer': tuple[15],
+                'load_cookies': tuple[16],
+                'user_agent': tuple[17],
+                'header': tuple[18],
+                'after_download': tuple[19]
                 }
 
         return dict
@@ -748,6 +748,7 @@ class PersepolisDB():
 
 # this method updates addlink_db_table
     def updateAddLinkTable(self, list):
+
         self.lockCursor()
 
         keys_list = ['gid',

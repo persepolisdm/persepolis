@@ -77,7 +77,7 @@ class PropertiesWindow(AddLinkWindow_Ui):
 
         # create a copy from add_link_dictionary for checking changes finally!
         self.add_link_dictionary_backup = {}
-        for key in self.add_link_dictionary.allKeys():
+        for key in self.add_link_dictionary.keys():
             self.add_link_dictionary_backup[key] = self.add_link_dictionary[key]
 
 # initialization
@@ -369,7 +369,7 @@ class PropertiesWindow(AddLinkWindow_Ui):
             self.parent.persepolis_db.updateDownloadTable([self.download_table_dict])
 
         # if any thing in add_link_dictionary is changed,then update data base!
-        for key in self.add_link_dictionary.allKeys():
+        for key in self.add_link_dictionary.keys():
             if self.add_link_dictionary[key] != self.add_link_dictionary_backup[key]:
                 
                 # update data base
