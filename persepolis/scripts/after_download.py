@@ -13,63 +13,58 @@
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from persepolis.scripts.newopen import Open, readList, writeList, readDict
 from persepolis.gui.after_download_ui import AfterDownloadWindow_Ui
 from PyQt5 import QtCore
 from PyQt5.QtCore import QSize, QPoint
 import os
-import ast
 from persepolis.scripts.play import playNotification
 from persepolis.scripts import osCommands
-import platform
 
-os_type = platform.system()
-
-home_address = os.path.expanduser("~")
-
-# config_folder
-if os_type == 'Linux' or os_type == 'FreeBSD' or os_type == 'OpenBSD':
-    config_folder = os.path.join(
-        str(home_address), ".config/persepolis_download_manager")
-elif os_type == 'Darwin':
-    config_folder = os.path.join(
-        str(home_address), "Library/Application Support/persepolis_download_manager")
-elif os_type == 'Windows':
-    config_folder = os.path.join(
-        str(home_address), 'AppData', 'Local', 'persepolis_download_manager')
 
 
 class AfterDownloadWindow(AfterDownloadWindow_Ui):
-    def __init__(self, download_info_file_list, persepolis_setting):
+    def __init__(self, parent, dict, persepolis_setting):
         super().__init__(persepolis_setting)
         self.persepolis_setting = persepolis_setting
-        self.download_info_file_list = download_info_file_list
-# connecting buttons
+        self.dict = dict
+        self.parent = parent
+
+        # connecting buttons
         self.open_pushButtun.clicked.connect(self.openFile)
         self.open_folder_pushButtun.clicked.connect(self.openFolder)
         self.ok_pushButton.clicked.connect(self.okButtonPressed)
 
-# labels
-        add_link_dictionary = self.download_info_file_list[9]
-        final_download_path = add_link_dictionary['final_download_path']
-        save_as = final_download_path
-        self.save_as_lineEdit.setText(save_as)
-        self.save_as_lineEdit.setToolTip(save_as)
-        link = str(add_link_dictionary['link'])
+        # labels
+        # find gid
+        gid = self.dict['gid']
+
+        # get file_path from data base
+        self.add_link_dict = self.parent.persepolis_db.searchGidInAddLinkTable(gid)
+        file_path = self.add_link_dict['download_path']
+
+        # save_as
+        self.save_as_lineEdit.setText(file_path)
+        self.save_as_lineEdit.setToolTip(file_path)
+
+        # link
+        link = str(self.dict['link'])
         self.link_lineEdit.setText(link)
         self.link_lineEdit.setToolTip(link)
-        file_name = "<b>File name</b> : " + \
-            str(self.download_info_file_list[0])
-        self.file_name_label.setText(file_name)
-        self.setWindowTitle(str(self.download_info_file_list[0]))
 
-        size = "<b>Size</b> : " + str(download_info_file_list[2])
+        # file_name
+        file_name = "<b>File name</b> : " + \
+            str(self.dict['file_name'])
+        self.file_name_label.setText(file_name)
+        self.setWindowTitle(str(file_name))
+
+        size = "<b>Size</b> : " + str(self.dict['size'])
         self.size_label.setText(size)
-# disabling link_lineEdit and save_as_lineEdit
+
+        # disable link_lineEdit and save_as_lineEdit
         self.link_lineEdit.setEnabled(False)
         self.save_as_lineEdit.setEnabled(False)
 
- # setting window size and position
+         # set window size and position
         size = self.persepolis_setting.value(
             'AfterDownloadWindow/size', QSize(570, 290))
         position = self.persepolis_setting.value(
@@ -78,19 +73,19 @@ class AfterDownloadWindow(AfterDownloadWindow_Ui):
         self.move(position)
 
     def openFile(self):
-        # executing file
-        add_link_dictionary = self.download_info_file_list[9]
-        file_path = add_link_dictionary['file_path']
+        # execute file
+        file_path = self.add_link_dict['download_path'] 
 
         if os.path.isfile(file_path):
             osCommands.xdgOpen(file_path)
 
+        # close window
         self.close()
+
 
     def openFolder(self):
         # open download folder
-        add_link_dictionary = self.download_info_file_list[9]
-        file_path = add_link_dictionary['file_path']
+        file_path = self.add_link_dict['download_path'] 
 
         file_name = os.path.basename(file_path)
 
@@ -102,13 +97,19 @@ class AfterDownloadWindow(AfterDownloadWindow_Ui):
 
         if os.path.isdir(download_path):
             osCommands.xdgOpen(download_path)
+
+        # close window
         self.close()
 
+
     def okButtonPressed(self):
-        if self.dont_show_checkBox.isChecked() == True:
+        if self.dont_show_checkBox.isChecked():
             self.persepolis_setting.setValue('settings/after-dialog', 'no')
             self.persepolis_setting.sync()
+            
+        # close window
         self.close()
+
 
     def closeEvent(self, event):
         # saving window size and position

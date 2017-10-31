@@ -492,6 +492,7 @@ def convertDownloadInformation(download_status):
 def downloadCompleteAction(path, download_path, file_name):
     i = 1
     file_path = os.path.join(download_path, file_name)
+    print(file_path)
 
 # rename file if file already existed
     while os.path.isfile(file_path):
@@ -504,6 +505,8 @@ def downloadCompleteAction(path, download_path, file_name):
         i = i + 1
 
 # move the file to the download folder
+    print(path)
+    print(file_path)
     try:
         shutil.copy(str(path) ,str(file_path) )
         os.remove(path)

@@ -92,12 +92,19 @@ class TempDB():
         self.temp_db_connection.commit()
         self.lock = False
 
+    def deleteGidFromTempTable(self, gid):
+        self.lockCursor()
+        self.temp_db_cursor.execute("""DELETE FROM temp_db_table WHERE gid = '{}'""".format(gid))
+
+        self.temp_db_connection.commit()
+
+        self.lock = False
+
     def returnGids(self):
         self.lockCursor()
         self.temp_db_cursor.execute("""SELECT gid FROM temp_db_table""")
         
         list = self.temp_db_cursor.fetchall()
-        print('list' + str(list))
 
         self.lock = False
         gid_list = []

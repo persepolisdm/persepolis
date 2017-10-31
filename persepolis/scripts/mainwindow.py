@@ -258,10 +258,8 @@ class CheckDownloadInfoThread(QThread):
                 # gid_list is a list that contains gid of downloads in download_status_list. 
                 # see download.py file for more information. 
                 gid_list, download_status_list = download.tellActive()
-                print('tellActive'+str(gid_list))
 
                 if True:
-                    print(gid_list)
                     for gid in active_gid_list:
 
                         # if gid not in gid_list, so download is completed or stopped or error occured!
@@ -272,9 +270,7 @@ class CheckDownloadInfoThread(QThread):
                         # if aria do not return download information with tellStatus and tellActive,
                         # then perhaps some error occured.so download information must be in data_base. 
                         if gid not in gid_list:  
-                            print('here')
                             returned_dict = download.tellStatus(gid, self.parent)
-                            print('tellStatus' + str(returned_dict))
                             if returned_dict:
                                 download_status_list.append(returned_dict)
                             else:
@@ -1272,7 +1268,6 @@ class MainWindow(MainWindow_Ui):
         for dict in list:
             gid = dict['gid']
 
-
             # find row of this gid in download_table!
             row = None
             for i in range(self.download_table.rowCount()):
@@ -1301,12 +1296,12 @@ class MainWindow(MainWindow_Ui):
                         item.setFlags(QtCore.Qt.ItemIsUserCheckable |
                                               QtCore.Qt.ItemIsEnabled)
                         # 2 means that user checked item before
-                    if self.download_table.item(row, i).checkState() == 2:
-                        # if user checked row before , check it again
-                        item.setCheckState(QtCore.Qt.Checked)
-                    else:
-                        # if user didn't checked row then don't check it!
-                        item.setCheckState(QtCore.Qt.Unchecked)
+                        if self.download_table.item(row, i).checkState() == 2:
+                            # if user checked row before , check it again
+                            item.setCheckState(QtCore.Qt.Checked)
+                        else:
+                            # if user didn't checked row then don't check it!
+                            item.setCheckState(QtCore.Qt.Unchecked)
                     # set item
                     try:
                         self.download_table.setItem(row, i, item)
@@ -1403,7 +1398,10 @@ class MainWindow(MainWindow_Ui):
                 # it means download has finished!
                 # lets do finishing jobs!
                 elif progress_window.status == "stopped" or progress_window.status == "error" or progress_window.status == "complete":
+                    # eliminate gid from active_downloads from data_base
+                    self.temp_db.deleteGidFromTempTable(gid)
 
+                    
                     # close progress_window if download status is stopped or
                     # completed or error
                     progress_window.destroy()  # close window!
@@ -1444,8 +1442,8 @@ class MainWindow(MainWindow_Ui):
                         logger.sendToLog(error_message, 'ERROR')
 
                         # show notification
-                        notifySend("Error - " + error, str(dict['file_name'],
-                                10000, 'fail', systemtray=self.system_tray_icon))
+                        notifySend("Error - " + error, str(dict['file_name']),
+                                10000, 'fail', systemtray=self.system_tray_icon)
 
                     # set "None" for start_time and end_time and after_download value 
                     # in data_base, because download has finished
@@ -1507,10 +1505,9 @@ class MainWindow(MainWindow_Ui):
                         # check user's Preferences
                         if self.persepolis_setting.value('settings/after-dialog') == 'yes':
 
-                            # TODO afterdownloadwindow must be edited and gid must be deleted from activate download gid when download is compelete
                             # show download compelete dialog
                             afterdownloadwindow = AfterDownloadWindow(
-                                    download_info_file_list, self.persepolis_setting)
+                                    self, dict, self.persepolis_setting)
                             self.afterdownload_list.append(afterdownloadwindow)
                             self.afterdownload_list[len(
                                 self.afterdownload_list) - 1].show()
@@ -1595,7 +1592,7 @@ class MainWindow(MainWindow_Ui):
         except:
             selected_row_return = None
 
-        if selected_row_return:
+        if selected_row_return != None:
             status = self.download_table.item(selected_row_return, 1).text()
             category = self.download_table.item(selected_row_return, 12).text()
 
@@ -1891,7 +1888,7 @@ class MainWindow(MainWindow_Ui):
         # find user's selected row
         selected_row_return = self.selectedRow()  
 
-        if selected_row_return:
+        if selected_row_return != None:
             # find download gid
             gid = self.download_table.item(selected_row_return, 8).text()
             download_status = self.download_table.item(
@@ -1937,7 +1934,7 @@ class MainWindow(MainWindow_Ui):
         self.stopAction.setEnabled(False)
         selected_row_return = self.selectedRow()  # finding user's selected row
 
-        if selected_row_return:
+        if selected_row_return != None:
             gid = self.download_table.item(selected_row_return, 8).text()
             answer = download.downloadStop(gid, self)
 # if aria2 did not respond , then this function is checking for aria2
@@ -1958,7 +1955,7 @@ class MainWindow(MainWindow_Ui):
         # find selected row
         selected_row_return = self.selectedRow()  
 
-        if selected_row_return:
+        if selected_row_return != None:
             # find download gid
             gid = self.download_table.item(selected_row_return, 8).text()
 
@@ -1983,7 +1980,7 @@ class MainWindow(MainWindow_Ui):
         self.propertiesAction.setEnabled(False)
         selected_row_return = self.selectedRow()  # finding user's selected row
 
-        if selected_row_return:
+        if selected_row_return != None:
             # find gid of download
             gid = self.download_table.item(selected_row_return, 8).text()
 
@@ -2051,7 +2048,7 @@ class MainWindow(MainWindow_Ui):
     def progressButtonPressed(self, button):
     # find user's selected row
         selected_row_return = self.selectedRow()  
-        if selected_row_return:
+        if selected_row_return != None:
             gid = self.download_table.item(selected_row_return, 8).text()
 
         # if gid is in self.progress_window_list_dict , it means that progress
@@ -2312,7 +2309,7 @@ class MainWindow(MainWindow_Ui):
         # find user's selected row
         selected_row_return = self.selectedRow()  
 
-        if selected_row_return:
+        if selected_row_return != None:
             # find gid
             gid = self.download_table.item(
                 selected_row_return, 8).text()  
@@ -2349,7 +2346,7 @@ class MainWindow(MainWindow_Ui):
         # find user's selected row
         selected_row_return = self.selectedRow()  
 
-        if selected_row_return:
+        if selected_row_return != None:
             # find gid
             gid = self.download_table.item(
                 selected_row_return, 8).text() 
@@ -2393,7 +2390,7 @@ class MainWindow(MainWindow_Ui):
     def removeButtonPressed2(self):
         selected_row_return = self.selectedRow()  # finding selected row
 
-        if selected_row_return:
+        if selected_row_return != None:
 
             # find gid, file_name, category and download status
             gid = self.download_table.item(selected_row_return, 8).text()
@@ -2471,7 +2468,7 @@ class MainWindow(MainWindow_Ui):
         # find user's selected item
         selected_row_return = self.selectedRow()  
 
-        if selected_row_return:
+        if selected_row_return != None:
             # find gid , category and download_status
             gid = self.download_table.item(selected_row_return, 8).text()
             download_status = self.download_table.item(selected_row_return, 1).text()
@@ -4084,7 +4081,7 @@ class MainWindow(MainWindow_Ui):
             selected_row_return = self.selectedRow() 
 
             # append gid of selected_row to gid_list
-            if selected_row_return:
+            if selected_row_return != None:
                 gid = self.download_table.item(selected_row_return, 8).text()
                 status = self.download_table.item(selected_row_return, 1).text()
                 category = self.download_table.item(selected_row_return, 12).text()
