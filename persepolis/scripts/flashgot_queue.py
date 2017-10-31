@@ -316,7 +316,7 @@ class FlashgotQueue(TextQueue_Ui):
 
         dict = {'out': None,
                 'start_time': None,
-                'end_minute': None,
+                'end_time': None,
                 'link': None,
                 'ip': ip,
                 'port': port,

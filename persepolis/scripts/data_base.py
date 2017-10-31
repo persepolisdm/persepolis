@@ -616,7 +616,7 @@ class PersepolisDB():
             dict = {'gid' :tuple[1],
                     'out': tuple[2],
                     'start_time': tuple[3],
-                    'end_minute': tuple[4],
+                    'end_time': tuple[4],
                     'link': tuple[5],
                     'ip': tuple[6],
                     'port': tuple[7],
@@ -754,7 +754,7 @@ class PersepolisDB():
         keys_list = ['gid',
                     'out',
                     'start_time',
-                    'end_minute',
+                    'end_time',
                     'link',
                     'ip',
                     'port',
@@ -906,9 +906,9 @@ class PersepolisDB():
         self.persepolis_db_cursor.execute("""UPDATE category_db_table SET start_time_enable = 'no', end_time_enable = 'no',
                                         reverse = 'no', limit_enable = 'no', after_download = 'no'""")
 
-    # change status of download to 'stopped' if status isn't 'compelete' or 'error'
+    # change status of download to 'stopped' if status isn't 'complete' or 'error'
         self.persepolis_db_cursor.execute("""UPDATE download_db_table SET status = 'stopped' 
-                                        WHERE status NOT IN ('compelete', 'error')""")
+                                        WHERE status NOT IN ('complete', 'error')""")
 
     # change start_time and end_time and
     # after_download value to None in addlink_db_table!

@@ -264,7 +264,7 @@ class CheckDownloadInfoThread(QThread):
 
                         # if gid not in gid_list, so download is completed or stopped or error occured!
                         # because aria2 returns active downloads status with tellActive function in download.py file. 
-                        # and compelete or stopped or errored downloads are not active downloads. 
+                        # and complete or stopped or errored downloads are not active downloads. 
                         # so we must get download information with tellStatus function.  
                         # see download.py file (tellStatus and tellActive functions) for more information. 
                         # if aria do not return download information with tellStatus and tellActive,
@@ -288,6 +288,8 @@ class CheckDownloadInfoThread(QThread):
                     self.reconnectAria()
                     continue
 
+                if not(download_status_list):
+                    download_status_list = []
 
                 # now we have a list that contains download information (download_status_list)
                 # lets update download table in main window and update data base!
@@ -417,7 +419,7 @@ class Queue(QThread):
             if self.start_time and counter == 0:  
                 # find first download
                 # set start time for first download in queue
-                # status of first download must not be compelete
+                # status of first download must not be complete
                 for gid in gid_list:
 
                     # get download information dictionary
@@ -540,11 +542,11 @@ class Queue(QThread):
                         logger.sendToLog(error_message, 'ERROR')
 
                     elif status == 'complete':
-                        compelete_message = 'Download complete - GID : '\
+                        complete_message = 'Download complete - GID : '\
                                     + str(gid)
 
-                        # write in log the compelete_message
-                        logger.sendToLog(compelete_message, 'INFO')
+                        # write in log the complete_message
+                        logger.sendToLog(complete_message, 'INFO')
 
 
                     if self.stop:  
@@ -1493,10 +1495,10 @@ class MainWindow(MainWindow_Ui):
                     self.persepolis_setting.sync()
                     if progress_window.status == "complete":
                         # write message in log file
-                        compelete_message = 'Download compelete - GID : '\
+                        complete_message = 'Download complete - GID : '\
                                         + str(gid)
 
-                        logger.sendToLog(compelete_message, 'INFO')
+                        logger.sendToLog(complete_message, 'INFO')
 
                         # play notification
                         notifySend("Download Complete", dict['file_name'],
@@ -1505,7 +1507,7 @@ class MainWindow(MainWindow_Ui):
                         # check user's Preferences
                         if self.persepolis_setting.value('settings/after-dialog') == 'yes':
 
-                            # show download compelete dialog
+                            # show download complete dialog
                             afterdownloadwindow = AfterDownloadWindow(
                                     self, dict, self.persepolis_setting)
                             self.afterdownload_list.append(afterdownloadwindow)
@@ -3968,6 +3970,8 @@ class MainWindow(MainWindow_Ui):
         # current_category_tree_text is the name of queue that is selected by user
         current_category_tree_text = str(current_category_tree_index.data())
 
+        queue_info_dict = {'category': current_category_tree_text}
+
         # check that if user checks start_checkBox or not.
         if self.start_checkBox.isChecked() :
             queue_info_dict['start_time_enable'] = 'yes'
@@ -4119,7 +4123,7 @@ class MainWindow(MainWindow_Ui):
                 self.persepolis_db.setDefaultGidInAddlinkTable(gid, start_time=True, end_time=True, after_download=True)
 
                 # delete item from gid_list in current_category
-                current_category_dict = self.searchCategoryInCategoryTable(current_category)
+                current_category_dict = self.persepolis_db.searchCategoryInCategoryTable(current_category)
 
                 # get gid_list
                 current_category_gid_list = current_category_dict['gid_list']
@@ -4128,11 +4132,11 @@ class MainWindow(MainWindow_Ui):
                 current_category_gid_list = current_category_gid_list.remove(gid)
 
                 # update category_db_table
-                self.updateCategoryTable([current_category_dict])
+                self.persepolis_db.updateCategoryTable([current_category_dict])
                 
                 # add item to gid_list of new_category
                 # get category_dict from data base
-                new_category_dict = self.searchCategoryInCategoryTable(new_category)
+                new_category_dict = self.persepolis_db.searchCategoryInCategoryTable(new_category)
 
                 # get gid_list
                 new_category_gid_list = new_category_dict['gid_list']
@@ -4141,7 +4145,7 @@ class MainWindow(MainWindow_Ui):
                 new_category_gid_list = new_category_gid_list.append(gid)
 
                 # updata category_db_table
-                self.updateCategoryTable([new_category_dict])
+                self.persepolis_db.updateCategoryTable([new_category_dict])
 
 
                 
