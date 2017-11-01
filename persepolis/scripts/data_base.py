@@ -226,6 +226,9 @@ class PersepolisDB():
         # persepolis_db_connection
         self.persepolis_db_connection = sqlite3.connect(persepolis_db_path, check_same_thread=False)
 
+        # turn FOREIGN KEY Support on!
+        self.persepolis_db_connection.execute('pragma foreign_keys=ON')
+
         # persepolis_db_cursor
         self.persepolis_db_cursor = self.persepolis_db_connection.cursor()
 
@@ -952,6 +955,26 @@ class PersepolisDB():
 
 # This method deletes a category from category_db_table
     def deleteCategory(self, category):
+
+        # delete gids of this category from gid_list of 'All Downloads'
+        category_dict = self.searchCategoryInCategoryTable(category)
+        all_downloads_dict = self.searchCategoryInCategoryTable('All Downloads')
+
+        # get gid_list
+        category_gid_list = category_dict['gid_list']
+        all_downloads_gid_list = all_downloads_dict['gid_list']
+
+        print(all_downloads_gid_list)
+
+        for gid in category_gid_list:
+
+            # delete item from all_downloads_gid_list
+            all_downloads_gid_list = all_downloads_gid_list.remove(gid)
+
+        # update category_db_table
+        self.updateCategoryTable([all_downloads_dict])
+
+        # delete category from data_base
         self.lockCursor()
 
         self.persepolis_db_cursor.execute("""DELETE FROM category_db_table WHERE category = '{}'""".format(str(category)))
@@ -961,6 +984,8 @@ class PersepolisDB():
 
         # job is done! open the lock
         self.lock = False
+
+
 
 
 # This method deletes a download item from download_db_table
@@ -977,17 +1002,18 @@ class PersepolisDB():
 
 
 
-        # delete item from gid_list in category
-        category_dict = self.searchCategoryInCategoryTable(category)
+        # delete item from gid_list in category and All Downloads
+        for category_name in category, 'All Downloads':
+            category_dict = self.searchCategoryInCategoryTable(category_name)
 
-        # get gid_list
-        gid_list = category_dict['gid_list']
+            # get gid_list
+            gid_list = category_dict['gid_list']
 
-        # delete item
-        gid_list = gid_list.remove(gid)
+            # delete item
+            gid_list = gid_list.remove(gid)
 
-        # update category_db_table
-        self.updateCategoryTable([category_dict])
+            # update category_db_table
+            self.updateCategoryTable([category_dict])
 
     # close connections
     def closeConnections(self):

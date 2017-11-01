@@ -270,6 +270,7 @@ class CheckDownloadInfoThread(QThread):
                         # if aria do not return download information with tellStatus and tellActive,
                         # then perhaps some error occured.so download information must be in data_base. 
                         if gid not in gid_list:  
+
                             returned_dict = download.tellStatus(gid, self.parent)
                             if returned_dict:
                                 download_status_list.append(returned_dict)
@@ -298,7 +299,7 @@ class CheckDownloadInfoThread(QThread):
 
                 # updat data base!
                 self.parent.persepolis_db.updateDownloadTable(download_status_list)
-
+                
             # Ok exit loop! get ready for shutting down!
             shutdown_notification = 2
             break
@@ -527,6 +528,8 @@ class Queue(QThread):
 
                     status = dict['status'] 
 
+
+
                     if status == 'error':
                         if 'error' in dict.keys():
                             error = str(dict['error'])
@@ -682,6 +685,7 @@ class CheckingThread(QThread):
             sleep(2)
 
         while shutdown_notification == 0:
+            sleep(0.2)
 
             # it means , user clicked on persepolis icon and persepolis is
             # still running. see persepolis file for more details.
@@ -980,7 +984,6 @@ class MainWindow(MainWindow_Ui):
         self.threadPool[3].CHECKPLUGINDBSIGNAL.connect(self.checkPluginCall)
         self.threadPool[3].SHOWMAINWINDOWSIGNAL.connect(self.showMainWindow)
 
-#######################################
 # keepAwake
         keep_awake = KeepAwakeThread()
         self.threadPool.append(keep_awake)
@@ -1270,6 +1273,13 @@ class MainWindow(MainWindow_Ui):
         for dict in list:
             gid = dict['gid']
 
+            status = dict['status']
+
+            if status == 'complete' or status == 'error' or status == 'stopped':
+                # eliminate gid from active_downloads in data base
+                self.temp_db.deleteGidFromTempTable(gid)
+
+
             # find row of this gid in download_table!
             row = None
             for i in range(self.download_table.rowCount()):
@@ -1400,10 +1410,7 @@ class MainWindow(MainWindow_Ui):
                 # it means download has finished!
                 # lets do finishing jobs!
                 elif progress_window.status == "stopped" or progress_window.status == "error" or progress_window.status == "complete":
-                    # eliminate gid from active_downloads from data_base
-                    self.temp_db.deleteGidFromTempTable(gid)
-
-                    
+                   
                     # close progress_window if download status is stopped or
                     # completed or error
                     progress_window.destroy()  # close window!
@@ -1801,9 +1808,6 @@ class MainWindow(MainWindow_Ui):
         # get now time and date
         date = download.nowDate()
 
-#         list = [file_name, status, '***', '***', '***',
-#                 '***', '***', '***', gid, add_link_dictionary['link'], date, date, category]
-# 
         dict = {'file_name': file_name,
                 'status': status,
                 'size': '***',
@@ -1835,24 +1839,33 @@ class MainWindow(MainWindow_Ui):
         category_tree_model_index = self.category_tree_model.index(
             category_index, 0)
         self.category_tree.setCurrentIndex(category_tree_model_index)
-        self.categoryTreeSelected(category_tree_model_index)
 
-#         # create a row in download_table for new download
-#         self.download_table.insertRow(0)
-#         j = 0
-#         # add item in list to the row
-#         for i in list:
-#             item = QTableWidgetItem(i)
-#             self.download_table.setItem(0, j, item)
-#             j = j + 1
-# 
-#         # add checkBox to the row , if user selected selectAction
-#         if self.selectAction.isChecked():
-#             item = self.download_table.item(0, 0)
-#             item.setFlags(QtCore.Qt.ItemIsUserCheckable |
-#                           QtCore.Qt.ItemIsEnabled)
-#             item.setCheckState(QtCore.Qt.Unchecked)
-# 
+        # finding name of category
+        category_tree_item_text = str(category_tree_model_index.data())
+
+
+        if category_tree_item_text != category:
+
+            self.categoryTreeSelected(category_tree_model_index)
+        else:
+            # create a row in download_table for new download
+            list = [file_name, status, '***', '***', '***',
+                '***', '***', '***', gid, add_link_dictionary['link'], date, date, category]
+            self.download_table.insertRow(0)
+            j = 0
+            # add item in list to the row
+            for i in list:
+                item = QTableWidgetItem(i)
+                self.download_table.setItem(0, j, item)
+                j = j + 1
+
+            # add checkBox to the row , if user selected selectAction
+            if self.selectAction.isChecked():
+                item = self.download_table.item(0, 0)
+                item.setFlags(QtCore.Qt.ItemIsUserCheckable |
+                              QtCore.Qt.ItemIsEnabled)
+                item.setCheckState(QtCore.Qt.Unchecked)
+ 
         # if user didn't press download_later_pushButton in add_link window
         # then create new qthread for new download!
         if not(download_later):
@@ -1896,14 +1909,14 @@ class MainWindow(MainWindow_Ui):
             download_status = self.download_table.item(
                 selected_row_return, 1).text()
 
-# this 'if' checks status of download before resuming! If download status
-# is 'paused' then download must be resumed and if status isn't 'paused' new
-# download thread must be created !
+            # this 'if' checks status of download before resuming! If download status
+            # is 'paused' then download must be resumed and if status isn't 'paused' new
+            # download thread must be created !
             if download_status == "paused":
                 answer = download.downloadUnpause(gid)
-# if aria2 did not respond , then this function checks for aria2
-# availability , and if aria2 disconnected then aria2Disconnected is
-# called. 
+                # if aria2 did not respond , then this function checks for aria2
+                # availability , and if aria2 disconnected then aria2Disconnected is
+                # called. 
                 if not(answer):
                     version_answer = download.aria2Version()
                     if version_answer == 'did not respond':
@@ -1939,9 +1952,9 @@ class MainWindow(MainWindow_Ui):
         if selected_row_return != None:
             gid = self.download_table.item(selected_row_return, 8).text()
             answer = download.downloadStop(gid, self)
-# if aria2 did not respond , then this function is checking for aria2
-# availability , and if aria2 disconnected then aria2Disconnected is
-# executed
+            # if aria2 did not respond , then this function is checking for aria2
+            # availability , and if aria2 disconnected then aria2Disconnected is
+            # executed
             if answer == 'None':
                 version_answer = download.aria2Version()
                 if version_answer == 'did not respond':
@@ -2021,7 +2034,7 @@ class MainWindow(MainWindow_Ui):
             selected_row_return, 12).text()
 
 
-# find row of this gid!
+        # find row of this gid!
         row = None
         for i in range(self.download_table.rowCount()):
             row_gid = self.download_table.item(i, 8).text()
@@ -2040,7 +2053,7 @@ class MainWindow(MainWindow_Ui):
                 self.download_table.removeRow(row)
 
 
-# tell the CheckDownloadInfoThread that job is done!
+        # tell the CheckDownloadInfoThread that job is done!
         global checking_flag
         checking_flag = 0
 
@@ -2390,7 +2403,7 @@ class MainWindow(MainWindow_Ui):
             self.removeButtonPressed2()
 
     def removeButtonPressed2(self):
-        selected_row_return = self.selectedRow()  # finding selected row
+        selected_row_return = self.selectedRow()  # find selected row
 
         if selected_row_return != None:
 
