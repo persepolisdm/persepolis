@@ -2842,11 +2842,12 @@ class MainWindow(MainWindow_Ui):
         category_dict = {'category': current_category_tree_text} 
 
         # update gid_list
+        gid_sorted_list.reverse()
         category_dict['gid_list'] = gid_sorted_list
 
 
         # update category_db_table
-        self.updateCategoryTable([category_dict])
+        self.persepolis_db.updateCategoryTable([category_dict])
 
         # tell the CheckDownloadInfoThread that job is done!
         global checking_flag
@@ -2956,11 +2957,13 @@ class MainWindow(MainWindow_Ui):
         category_dict = {'category': current_category_tree_text} 
 
         # update gid_list
+        gid_sorted_list.reverse()
+
         category_dict['gid_list'] = gid_sorted_list
 
 
         # update category_db_table
-        self.updateCategoryTable([category_dict])
+        self.persepolis_db.updateCategoryTable([category_dict])
 
         # tell the CheckDownloadInfoThread that job is done!
         global checking_flag
@@ -3065,11 +3068,13 @@ class MainWindow(MainWindow_Ui):
         category_dict = {'category': current_category_tree_text} 
 
         # update gid_list
+        gid_sorted_list.reverse()
+
         category_dict['gid_list'] = gid_sorted_list
 
 
         # update category_db_table
-        self.updateCategoryTable([category_dict])
+        self.persepolis_db.updateCategoryTable([category_dict])
 
         # tell the CheckDownloadInfoThread that job is done!
         global checking_flag
@@ -3173,11 +3178,13 @@ class MainWindow(MainWindow_Ui):
         category_dict = {'category': current_category_tree_text} 
 
         # update gid_sorted_list
+        gid_sorted_list.reverse()
+
         category_dict['gid_list'] = gid_sorted_list
 
 
         # update category_db_table
-        self.updateCategoryTable([category_dict])
+        self.persepolis_db.updateCategoryTable([category_dict])
 
         # tell the CheckDownloadInfoThread that job is done!
         global checking_flag
@@ -3283,17 +3290,18 @@ class MainWindow(MainWindow_Ui):
         category_dict = {'category': current_category_tree_text} 
 
         # update gid_sorted_list
+        gid_sorted_list.reverse()
+
         category_dict['gid_list'] = gid_sorted_list
 
 
         # update category_db_table
-        self.updateCategoryTable([category_dict])
+        self.persepolis_db.updateCategoryTable([category_dict])
 
         # tell the CheckDownloadInfoThread that job is done!
         global checking_flag
         checking_flag = 0
 
-###########
 
 # this method called , when user clicks on 'create new queue' button in
 # main window.
@@ -4505,7 +4513,7 @@ class MainWindow(MainWindow_Ui):
         current_category_tree_text = str(current_category_tree_index.data())
 
         # an old row and new row must replaced  by each other
-        if old_row:
+        if old_row != None:
             new_row = int(old_row) - 1
             if new_row >= 0:
 
@@ -4596,6 +4604,9 @@ class MainWindow(MainWindow_Ui):
         # move up selected rows
         for old_row in index_list:
             new_row = int(old_row) - 1
+
+            old_row_items_list = []
+            new_row_items_list = []
             if new_row >= 0:
 
                 # old index and new index of item in gid_list
@@ -4672,7 +4683,7 @@ class MainWindow(MainWindow_Ui):
         current_category_tree_text = str(current_category_tree_index.data())
 
         # an old row and new row must be subtituted by each other
-        if old_row:
+        if old_row != None:
             new_row = int(old_row) + 1
             if new_row < self.download_table.rowCount():
 
@@ -4771,7 +4782,7 @@ class MainWindow(MainWindow_Ui):
                 new_index = old_index - 1
 
                 # subtitute gids in gid_list
-                gid_list[old_inde], gid_list[new_index] = gid_list[new_index], gid_list[old_index]
+                gid_list[old_index], gid_list[new_index] = gid_list[new_index], gid_list[old_index]
 
                 # subtitute items in download_table
                 old_row_items_list = []
@@ -4816,7 +4827,6 @@ class MainWindow(MainWindow_Ui):
             
         
 
-#######
 # see flashgot_queue.py file
     def queueSpiderCallBack(self, filename, child, row_number):
         item = QTableWidgetItem(str(filename))

@@ -964,12 +964,9 @@ class PersepolisDB():
         category_gid_list = category_dict['gid_list']
         all_downloads_gid_list = all_downloads_dict['gid_list']
 
-        print(all_downloads_gid_list)
-
         for gid in category_gid_list:
-
             # delete item from all_downloads_gid_list
-            all_downloads_gid_list = all_downloads_gid_list.remove(gid)
+            all_downloads_gid_list.remove(gid)
 
         # update category_db_table
         self.updateCategoryTable([all_downloads_dict])
@@ -1010,7 +1007,7 @@ class PersepolisDB():
             gid_list = category_dict['gid_list']
 
             # delete item
-            gid_list = gid_list.remove(gid)
+            gid_list.remove(gid)
 
             # update category_db_table
             self.updateCategoryTable([category_dict])

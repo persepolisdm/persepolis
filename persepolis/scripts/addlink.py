@@ -84,7 +84,7 @@ class AddLinkWindow(AddLinkWindow_Ui):
 
         # if browsers plugin didn't send any links
         # then check clipboard for link!
-        if ('link' in self.plugin_add_link_dictionary):
+        if ('link' in self.plugin_add_link_dictionary.keys()):
             # check plugin_add_link_dictionary for link!
             # "link" key-value must be checked
             self.link_lineEdit.setText(
@@ -171,7 +171,7 @@ class AddLinkWindow(AddLinkWindow_Ui):
         # check plugin_add_link_dictionary for finding file name
         # perhaps plugin sended file name in plugin_add_link_dictionary
         # for finding file name "out" key must be checked
-        if ('out' in self.plugin_add_link_dictionary):
+        if ('out' in self.plugin_add_link_dictionary.keys()):
             if self.plugin_add_link_dictionary['out']:
                 self.change_name_lineEdit.setText(
                     str(self.plugin_add_link_dictionary['out']))
@@ -317,10 +317,10 @@ class AddLinkWindow(AddLinkWindow_Ui):
             self.download_later_pushButton.setEnabled(False)
         else: # find file size
 
-            self.plugin_add_link_dictionary['link'] = str(self.link_lineEdit.text())
+            dict = {'link': str(self.link_lineEdit.text())}
 
             # spider is finding file size
-            new_spider = AddLinkSpiderThread(self.plugin_add_link_dictionary)
+            new_spider = AddLinkSpiderThread(dict)
             self.parent.threadPool.append(new_spider)
             self.parent.threadPool[len(self.parent.threadPool) - 1].start()
             self.parent.threadPool[len(self.parent.threadPool) - 1].ADDLINKSPIDERSIGNAL.connect(
@@ -418,10 +418,10 @@ class AddLinkWindow(AddLinkWindow_Ui):
             end_time = self.end_time_qDateTimeEdit.text()
 
         # check that if user set new name for download file.
-        if not(self.change_name_checkBox.isChecked()):
-            out = None
-        else:
+        if self.change_name_checkBox.isChecked():
             out = str(self.change_name_lineEdit.text())
+        else:
+            out = None
 
         # get download link
         link = self.link_lineEdit.text()
@@ -433,6 +433,7 @@ class AddLinkWindow(AddLinkWindow_Ui):
         download_path = self.download_folder_lineEdit.text()
 
         # get referer and header and user_agent and load_cookies in plugin_add_link_dictionary if exits.
+        print(self.plugin_add_link_dictionary)
         if not('referer' in self.plugin_add_link_dictionary):
             self.plugin_add_link_dictionary['referer'] = None
 
