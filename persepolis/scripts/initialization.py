@@ -188,28 +188,34 @@ for browser in ['chrome', 'chromium', 'opera', 'vivaldi', 'firefox']:
     browserIntegration(browser)
 
 # compatibility
-persepolis_version = float(persepolis_setting.value('version/version', 2.2))
-if persepolis_version < 2.3:
-    compatibility()
-    persepolis_version = 2.3
-    persepolis_setting.setValue('version/version', 2.3)
+persepolis_version = float(persepolis_setting.value('version/version', 2.5))
+if persepolis_version < 2.6:
+    try:
+        compatibility()
+    except Exception as e:
+    
+        print('compatibility ERROR')
+
+        print(str(e))
+
+        # create an object for PersepolisDB
+        persepolis_db = PersepolisDB()
+
+        # persepolis.db file path 
+        persepolis_db_path = os.path.join(config_folder, 'persepolis.db')
+
+
+        # remove and create data base again
+        osCommands.remove(persepolis_db_path)
+
+        # create tables
+        persepolis_db.createTables()
+
+        # close connections
+        persepolis_db.closeConnections()
+
+
+    persepolis_version = 2.6
+    persepolis_setting.setValue('version/version', 2.6)
     persepolis_setting.sync()
 
-if persepolis_version != 2.4:
-    if os_type == 'Darwin':
-        try:
-            old_config_folder = os.path.join(
-                str(home_address), ".config/persepolis_download_manager")
-            shutil.copytree(old_config_folder,  config_folder)
-            osCommands.removeDir(old_config_folder)
-            persepolis_setting.setValue('version/version', 2.41)
-            persepolis_setting.sync()
-        except Exception as e:
-            print(e)
-            logger.logObj.error("Failed to load configuration!", exc_info=True)
-    else:
-
-        persepolis_setting.setValue('version/version', 2.41)
-
-persepolis_setting.setValue('version/version', 2.42) 
-persepolis_setting.sync()

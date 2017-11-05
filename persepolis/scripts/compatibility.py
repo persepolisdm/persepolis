@@ -15,102 +15,198 @@
 import time
 import os
 import ast
-from persepolis.scripts.newopen import Open
-# this script for compatibility between Version 2.0 and 2.1 and 2.2 and
-# 2.3 of persepolis
+from persepolis.scripts.newopen import Open, readList
+from persepolis.scripts.data_base import PersepolisDB 
+import platform
+
 home_address = os.path.expanduser("~")
-config_folder = str(home_address) + "/.config/persepolis_download_manager"
-download_info_folder = config_folder + "/download_info"
-category_folder = config_folder + '/category_folder'
-single_downloads_list_file = category_folder + "/" + "Single Downloads"
 
-download_list_file = config_folder + "/download_list_file"
-download_list_file_lines = []
+# finding os platform
+os_type = platform.system()
 
+# persepolis tmp folder (temporary folder)
+if os_type != 'Windows':
+
+    user_name_split = home_address.split('/')
+    user_name = user_name_split[2]
+
+    persepolis_tmp = '/tmp/persepolis_' + user_name
+else:
+    persepolis_tmp = os.path.join(
+        str(home_address), 'AppData', 'Local', 'persepolis_tmp')
+
+
+# config_folder
+if os_type == 'Linux' or os_type == 'FreeBSD' or os_type == 'OpenBSD':
+    config_folder = os.path.join(
+        str(home_address), ".config/persepolis_download_manager")
+elif os_type == 'Darwin':
+    config_folder = os.path.join(
+        str(home_address), "Library/Application Support/persepolis_download_manager")
+elif os_type == 'Windows':
+    config_folder = os.path.join(
+        str(home_address), 'AppData', 'Local', 'persepolis_download_manager')
+
+
+download_info_folder = os.path.join(config_folder, "download_info")
+
+
+# persepolis temporary download folder
+if os_type != 'Windows':
+    temp_download_folder = str(home_address) + '/.persepolis'
+else:
+    temp_download_folder = os.path.join(
+        str(home_address), 'AppData', 'Local', 'persepolis')
+
+
+# download_list_file contains GID of all downloads
+download_list_file = os.path.join(config_folder, "download_list_file")
+
+# download_list_file_active for active downloads
+download_list_file_active = os.path.join(
+    config_folder, "download_list_file_active")
+
+# queues_list contains queues name
+queues_list_file = os.path.join(config_folder, 'queues_list')
+
+# category_folder contains some file , and every files named with queues .
+# every file contains gid of downloads for that queue
+category_folder = os.path.join(config_folder, 'category_folder')
+
+# queue_info_folder is contains queues information(start time,end
+# time,limit speed , ...)
+queue_info_folder = os.path.join(config_folder, "queue_info")
+
+# single_downloads_list_file contains gid of non categorised downloads
+single_downloads_list_file = os.path.join(category_folder, "Single Downloads")
+
+
+
+
+
+
+# this script for compatibility between Version 2 and 3 
 
 def compatibility():
-    if os.path.isdir(download_info_folder) == True:
-        f = Open(download_list_file)
-        download_list_file_lines = f.readlines()
+    persepolis_db = PersepolisDB()
+
+    # add categories to category_db_table in data_base
+    f = open(queues_list_file)
+    queues_list = f.readlines()
+    f.close()
+
+    category_list = ['All Downloads', 'Single Downloads']
+    for line in queues_list:
+        queue_name = line.strip()
+        category_list.append(queue_name)
+
+
+    for category in category_list:
+        gid_list = []
+
+        if category == 'All Downloads':
+            category_info_file = download_list_file 
+        else:
+            category_info_file = os.path.join(category_folder, category)
+
+        f = open(category_info_file)
+        category_info_file_list = f.readlines()
         f.close()
 
-        for line in download_list_file_lines:
-            gid = line.strip()
-            download_info_file = download_info_folder + "/" + gid
-            f_download_info_file = Open(download_info_file)
-            download_info_file_lines = f_download_info_file.readlines()
-            f_download_info_file.close()
-            if len(download_info_file_lines) == 10:
-                list = []
-                for i in range(10):
-                    line_strip = download_info_file_lines[i].strip()
-                    if i == 9:
-                        line_strip = ast.literal_eval(line_strip)
-                    list.append(line_strip)
-                dictionary = {'list': list}
-                os.system('echo "' + str(dictionary) + '"  >  "' +
-                          str(download_info_file) + '"')
-                f_download_info_file = Open(download_info_file, 'w')
-                f_download_info_file.writelines(str(dictionary))
-                f_download_info_file.close()
+        for item in category_info_file_list:
+            gid = item.strip()
+            gid_list.append(gid)
+        
+        category_dict = {'category': category,
+                    'start_time_enable': 'no',
+                    'start_time': '0:0',
+                    'end_time_enable': 'no',
+                    'end_time': '0:0',
+                    'reverse': 'no',
+                    'limit_enable': 'no',
+                    'limit_value': '0K',
+                    'after_download': 'no',
+                    'gid_list': str(gid_list) 
+                    }
+            
 
-# compatibility between version 2.2 and version 2.3
-        date_list = []
-        for i in ['%Y', '%m', '%d', '%H', '%M', '%S']:
-            date_list.append(time.strftime(i))
+        # add category to data_base
+        if category == 'All Downloads' or category == 'Single Downloads':
+            persepolis_db.updateCategoryTable([category_dict])
+        else:
+            persepolis_db.insertInCategoryTable(category_dict)
 
-        for line in download_list_file_lines:
-            gid = line.strip()
-            download_info_file = download_info_folder + "/" + gid
-            f = Open(download_info_file, 'r')
-            f_string = f.readline()
-            f.close()
-            dictionary = ast.literal_eval(f_string.strip())
-            list = dictionary['list']
+    # add items to download_db_table in data base
+    f_download_list_file = open(download_list_file)
+    download_list_file_lines = f_download_list_file.readlines()
+    f_download_list_file.close()
 
-            if len(list) == 10:
-                add_link_dictionary = list[9]
-                add_link_dictionary['firs_try_date'] = date_list
-                add_link_dictionary['last_try_date'] = date_list
+    for line in download_list_file_lines:
+        gid = line.strip()
+        download_info_file = os.path.join(download_info_folder, gid)
 
-                list[9] = add_link_dictionary
+        download_info_file_list = readList(download_info_file)
+        add_link_dictionary = download_info_file_list[9]
 
-                try_date = str(date_list[0]) + '/' + str(date_list[1]) + '/' + str(
-                    date_list[2]) + ' , ' + str(date_list[3]) + ':' + str(date_list[4]) + ':' + str(date_list[5])
+        dict = {'file_name': download_info_file_list[0],
+                'status': download_info_file_list[1],
+                'size': download_info_file_list[2],
+                'downloaded_size': download_info_file_list[3],
+                'percent': download_info_file_list[4],
+                'connections': download_info_file_list[5],
+                'rate': download_info_file_list[6],
+                'estimate_time_left': download_info_file_list[7],
+                'gid': download_info_file_list[8],
+                'link': add_link_dictionary['link'],
+                'first_try_date': download_info_file_list[10], 
+                'last_try_date': download_info_file_list[11],
+                'category': download_info_file_list[12]}
 
-                list.append(try_date)
-                list.append(try_date)
-                list.append('Single Downloads')
+        add_link_dictionary['gid'] = download_info_file_list[8]
 
-                dictionary = {'list': list}
-                f = Open(download_info_file, 'w')
-                f.writelines(str(dictionary))
-                f.close()
+        if 'user-agent' in add_link_dictionary.keys():
+            add_link_dictionary['user_agent'] = add_link_dictionary.pop('user-agent')
 
-                print(str(dictionary))
-                f = Open(download_list_file)
-                f_lines = f.readlines()
-                f.close()
 
-                f = Open(single_downloads_list_file, 'w')
-                for line in f_lines:
-                    f.writelines(line)
+        if 'load-cookies' in add_link_dictionary.keys():
+            add_link_dictionary['load_cookies'] = add_link_dictionary.pop('load-cookies')
 
-                f.close()
-            elif len(list) == 12:
-                list.append('Single Downloads')
-                dictionary = {'list': list}
-                f = Open(download_info_file, 'w')
-                f.writelines(str(dictionary))
-                f.close()
 
-                f = Open(download_list_file)
-                f_lines = f.readlines()
-                f.close()
 
-                f = Open(single_downloads_list_file, 'w')
-                for line in f_lines:
-                    gid = line.strip()
-                    f.writelines(gid + '\n')
 
-                f.close()
+        keys_list = ['gid',
+                    'out',
+                    'start_time',
+                    'end_time',
+                    'link',
+                    'ip',
+                    'port',
+                    'proxy_user',
+                    'proxy_passwd',
+                    'download_user',
+                    'download_passwd',
+                    'connections',
+                    'limit_value',
+                    'download_path',
+                    'referer',
+                    'load_cookies',
+                    'user_agent',
+                    'header',
+                    'after_download']
+
+        for key in keys_list:  
+                # if a key is missed in dict, 
+                # then add this key to the dict and assign None value for the key. 
+            if key not in add_link_dictionary.keys():
+                add_link_dictionary[key] = None 
+
+
+        # write information in data_base
+        persepolis_db.insertInDownloadTable(dict)
+        persepolis_db.insertInAddLinkTable(add_link_dictionary)
+
+    # close connections
+    persepolis_db.closeConnections()
+
+
+ 

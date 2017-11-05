@@ -155,7 +155,7 @@ class PluginsDB():
         self.plugins_db_connection.commit()
 
     # insert new item in plugins_db_table
-    def insertInPluginsTable(self, link, referer, load_cookies, user_agent, header, out):
+    def insertInPluginsTable(self, dict):
         self.plugins_db_cursor.execute("""INSERT INTO plugins_db_table VALUES(
                                                                     NULL,
                                                                     :link,
@@ -165,14 +165,7 @@ class PluginsDB():
                                                                     :header,
                                                                     :out,
                                                                     'new'
-                                                                        )""", {
-                                                                            'link': link,
-                                                                            'referer': referer,
-                                                                            'load_cookies': load_cookies,
-                                                                            'user_agent': user_agent,
-                                                                            'header': header,
-                                                                            'out': out
-                                                                            })
+                                                                        )""", dict)
 
         self.plugins_db_connection.commit()
 
@@ -196,12 +189,13 @@ class PluginsDB():
 
         # put the information in tuples in dictionary format and add it to new_list
         for tuple in list:
-            dict = {'link': tuple[1],
-                    'referer': tuple[2],
-                    'load_cookies': tuple[3],
-                    'user_agent': tuple[4],
-                    'header': tuple[5],
-                    'out': tuple[6]
+            print(tuple)
+            dict = {'link': tuple[0],
+                    'referer': tuple[1],
+                    'load_cookies': tuple[2],
+                    'user_agent': tuple[3],
+                    'header': tuple[4],
+                    'out': tuple[5]
                     }
 
             new_list.append(dict)
@@ -881,7 +875,7 @@ class PersepolisDB():
     def categoriesList(self):
         self.lockCursor()
 
-        self.persepolis_db_cursor.execute("""SELECT category FROM category_db_table""")
+        self.persepolis_db_cursor.execute("""SELECT category FROM category_db_table ORDER BY ROWID""")
         rows = self.persepolis_db_cursor.fetchall() 
 
         # create a list from categories name

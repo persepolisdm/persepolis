@@ -294,14 +294,21 @@ else:
 if ('link' in add_link_dictionary):   
 
     # add add_link_dictionary to plugins_db.
-    from persepolis.scripts import PluginsDB
+    from persepolis.scripts.data_base import PluginsDB
     
     # create an object for PluginsDB
     plugins_db = PluginsDB()
 
     # add new link information to plugins_table in plugins.db file.
-    plugins_db.insertInPluginsTable(add_link_dictionary['link'], add_link_dictionary['referer'], add_link_dictionary['load-cookies'],
-                                    add_link_dictionary['user-agent'], add_link_dictionary['header'], add_link_dictionary['out'])
+    plugin_dict ={'link': add_link_dictionary['link'],
+                    'referer': add_link_dictionary['referer'],
+                    'load_cookies': add_link_dictionary['load-cookies'],
+                    'user_agent': add_link_dictionary['user-agent'],
+                    'header': add_link_dictionary['header'],
+                    'out': add_link_dictionary['out']
+                    }
+    plugins_db.insertInPluginsTable(plugin_dict)
+
     # Job is done! close connections.
     plugins_db.closeConnections()
 
