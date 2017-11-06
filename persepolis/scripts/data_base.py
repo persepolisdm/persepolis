@@ -246,7 +246,6 @@ class PersepolisDB():
 
 
     def createTables(self):
-
     # queues_list contains name of categories and category settings
         try:
 

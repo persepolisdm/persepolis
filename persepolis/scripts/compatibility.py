@@ -88,12 +88,15 @@ single_downloads_list_file = os.path.join(category_folder, "Single Downloads")
 # this script for compatibility between Version 2 and 3 
 
 def compatibility():
-    persepolis_db = PersepolisDB()
+    if os.path.isfile(queues_list_file):
+        persepolis_db = PersepolisDB()
 
-    # add categories to category_db_table in data_base
-    f = open(queues_list_file)
-    queues_list = f.readlines()
-    f.close()
+        # add categories to category_db_table in data_base
+        f = open(queues_list_file)
+        queues_list = f.readlines()
+        f.close()
+    else:
+        return
 
     category_list = ['All Downloads', 'Single Downloads']
     for line in queues_list:
@@ -171,6 +174,7 @@ def compatibility():
         if 'load-cookies' in add_link_dictionary.keys():
             add_link_dictionary['load_cookies'] = add_link_dictionary.pop('load-cookies')
 
+        add_link_dictionary['limit_value'] = 0
 
 
 
