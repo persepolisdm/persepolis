@@ -4,7 +4,7 @@
  
 + Version : 2.4.2
 + Written in PYQT5.
-+ For GNU/Linux and FreeBSD and PCBSD and OpenBSD and Mac and Windows.
++ For GNU/Linux, FreeBSD, PC-BSD, OpenBSD, Mac OS X and Windows.
 
 #### GNU/Linux
 ![ScreenShot](https://persepolisdm.github.io/img/screen/persepolis.png)
@@ -35,7 +35,7 @@ Read [Our Wiki For More Information Including Installers and Development and FAQ
 
 ### How to report issues or how to ask a question
 
-If you have any question and if you want to report a bug or suggest a new feature feel free to [create an issue here](https://github.com/persepolisdm/persepolis/issues)
+If you have any question or if you want to report a bug or suggest a new feature feel free to [create an issue here](https://github.com/persepolisdm/persepolis/issues)
 
 
 ## Contact us

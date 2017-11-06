@@ -2,7 +2,7 @@
 # coding: utf-8
 
 
-import os.path
+import os
 import warnings
 import sys
 import platform
@@ -143,11 +143,4 @@ setup(
         ]
     }
 )
-# clearing after installation finished!
-for folder in  [ 'build', 'dist', 'root', 'persepolis.egg-info']:
-    if os.path.isdir(folder):
-        shutil.rmtree(folder)
-        print(str(folder)
-            + ' is removed!')
-os.remove('man/persepolis.1.gz')
 
