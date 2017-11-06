@@ -55,9 +55,6 @@ else:
     persepolis_tmp = os.path.join(
         str(home_address), 'AppData', 'Local', 'persepolis_tmp')
 
-# remove old persepolis_tmp at persepolis startup
-osCommands.removeDir(persepolis_tmp)
-
 # persepolis_shutdown
 persepolis_shutdown = os.path.join(persepolis_tmp, 'shutdown')
 
