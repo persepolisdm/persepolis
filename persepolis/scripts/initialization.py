@@ -78,6 +78,9 @@ plugins_db = PluginsDB()
 # create tables
 plugins_db.createTables()
 
+# delete old links
+plugins_db.deleteOldLinks()
+
 # close connections
 plugins_db.closeConnections()
 

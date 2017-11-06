@@ -205,6 +205,14 @@ class PluginsDB():
         # every dictionary contains download information
         return new_list
 
+    # delete old links from data base
+    def deleteOldLinks(self):
+        self.plugins_db_cursor.execute("""DELETE FROM plugins_db_table WHERE status = 'old'""")
+        # commit changes
+        self.plugins_db_connection.commit()
+
+
+
     # close connections
     def closeConnections(self):
         self.plugins_db_cursor.close()
