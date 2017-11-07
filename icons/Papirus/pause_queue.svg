@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="48"
+   height="48"
+   version="1"
+   id="svg12"
+   sodipodi:docname="pause_queue.svg"
+   inkscape:version="0.92.2 5c3e80d, 2017-08-06">
+  <metadata
+     id="metadata18">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <defs
+     id="defs16" />
+  <sodipodi:namedview
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="1366"
+     inkscape:window-height="694"
+     id="namedview14"
+     showgrid="false"
+     inkscape:zoom="3.4766083"
+     inkscape:cx="-74.445191"
+     inkscape:cy="34.710647"
+     inkscape:window-x="0"
+     inkscape:window-y="48"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg12" />
+  <rect
+     fill="#23c197"
+     width="40"
+     height="40"
+     x="-44"
+     y="-44"
+     rx="20"
+     ry="20"
+     transform="matrix(0,-1,-1,0,0,0)"
+     id="rect2"
+     style="fill:#a6369e;fill-opacity:1" />
+  <path
+     fill="#fff"
+     opacity=".2"
+     d="m24 4c-11.08 0-20 8.92-20 20 0 0.168-0.004 0.333 0 0.5 0.2644-10.846 9.088-19.5 20-19.5s19.736 8.654 20 19.5c0.004-0.167 0-0.332 0-0.5 0-11.08-8.92-20-20-20z"
+     id="path4" />
+  <path
+     opacity=".2"
+     d="m4.0117 24.5c-0.0041 0.167-0.0117 0.332-0.0117 0.5 0 11.08 8.92 20 20 20s20-8.92 20-20c0-0.168-0.008-0.333-0.012-0.5-0.264 10.846-9.076 19.5-19.988 19.5s-19.724-8.654-19.988-19.5z"
+     id="path6" />
+  <path
+     opacity=".2"
+     d="m18.495 16a1.4613 1.4593 0 0 0 -1.495 1.46v15.082a1.4613 1.4593 0 0 0 2.1917 1.2635l6.5391-3.7695 6.5391-3.7714a1.4613 1.4593 0 0 0 0 -2.5269l-6.539-3.772-6.539-3.77a1.4613 1.4593 0 0 0 -0.697 -0.196z"
+     id="path8" />
+  <path
+     fill="#fff"
+     d="m18.495 15a1.4613 1.4593 0 0 0 -1.495 1.46v15.082a1.4613 1.4593 0 0 0 2.1917 1.2635l6.5391-3.7695 6.5391-3.7714a1.4613 1.4593 0 0 0 0 -2.5269l-6.539-3.772-6.539-3.77a1.4613 1.4593 0 0 0 -0.697 -0.196z"
+     id="path10" />
+  <rect
+     width="20"
+     height="20"
+     x="-47.5"
+     y="-48"
+     rx="10"
+     ry="10"
+     transform="matrix(0,-1,-1,0,0,0)"
+     id="rect2-3"
+     style="fill:#f58411;fill-opacity:1;stroke-width:0.5" />
+  <path
+     inkscape:connector-curvature="0"
+     style="opacity:0.2;fill:#ffffff;stroke-width:0.5"
+     d="m 38,27.5 c -5.54,0 -10,4.46 -10,10 0,0.084 0.004,0.1665 0.0058,0.25 0.13235,-5.423 4.53815,-9.75 9.994,-9.75 5.45585,0 9.862,4.32695 9.994,9.75 0.002,-0.08343 0.0059,-0.166065 0.0059,-0.25 0,-5.54 -4.46,-10 -10,-10 z"
+     id="path12" />
+  <path
+     inkscape:connector-curvature="0"
+     style="opacity:0.2;stroke-width:0.5"
+     d="m 28.00585,37.75 c -0.002,0.0835 -0.0058,0.166 -0.0058,0.25 0,5.54 4.46,10 10,10 5.54,0 10,-4.46 10,-10 0,-0.084 -0.004,-0.1665 -0.006,-0.25 -0.132,5.423 -4.538,9.75 -9.994,9.75 -5.456,0 -9.862,-4.327 -9.994,-9.75 z"
+     id="path14" />
+  <g
+     id="g849"
+     transform="matrix(-0.72222219,0,0,-0.72222219,49.555555,49.555555)"
+     style="opacity:0.2;fill-opacity:1">
+    <rect
+       style="fill-opacity:1"
+       width="4"
+       height="18"
+       x="10"
+       y="7"
+       id="rect845" />
+    <rect
+       style="fill-opacity:1"
+       width="4"
+       height="18"
+       x="18"
+       y="7"
+       id="rect847" />
+  </g>
+  <g
+     style="fill:#ffffff;fill-opacity:1"
+     transform="matrix(-0.72222219,0,0,-0.72222219,49.555555,49.055555)"
+     id="g18">
+    <rect
+       id="rect4"
+       y="7"
+       x="10"
+       height="18"
+       width="4"
+       style="fill:#ffffff;fill-opacity:1" />
+    <rect
+       id="rect6"
+       y="7"
+       x="18"
+       height="18"
+       width="4"
+       style="fill:#ffffff;fill-opacity:1" />
+  </g>
+</svg>
