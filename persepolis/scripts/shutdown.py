@@ -13,50 +13,47 @@
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import os
-from persepolis.scripts.newopen import Open
 from time import sleep
-from persepolis.scripts import osCommands
 from persepolis.scripts import logger
 import platform
 import subprocess
 
-home_address = os.path.expanduser("~")
-
-# finding os platform
+# find os platform
 os_type = platform.system()
 
 
-# persepolis tmp folder in /tmp
-if os_type != 'Windows':
-    user_name_split = home_address.split('/')
-    user_name = user_name_split[2]
-    persepolis_tmp = '/tmp/persepolis_' + user_name
-else:
-    persepolis_tmp = os.path.join(
-        str(home_address), 'AppData', 'Local', 'persepolis_tmp')
+def shutDown(parent, gid=None, category=None, password=None):
+    # for queue >> gid = None
+    # for single downloads >> category = None
+    # change value of shutdown in data base
+    if category != None:
+        dict = {'category': category,
+                'shutdown': 'wait'}
 
+        # update data base
+        parent.temp_db.updateQueueTable(dict)
+    else:
+        # so we have single download
+        dict = {'gid': gid,
+                'shutdown': 'wait'}
 
-def shutDown(gid, password=None):
-    shutdown_notification_file = os.path.join(persepolis_tmp, 'shutdown', gid)
-    f = Open(shutdown_notification_file, 'w')
-    f.writelines('wait')
-    f.close()
+        # update data base
+        parent.temp_db.updateSingleTable(dict)
+    
+    shutdown_status = "wait"
 
-    shutdown_notification = "wait"
+    while shutdown_status == "wait":
+        sleep(5)
 
-    while shutdown_notification == "wait":
-        sleep(1)
+        # get shutdown status from data_base
+        if category != None:
+            dict = parent.temp_db.returnCategory(category)
+        else:
+            dict = parent.temp_db.returnGid(gid)
 
-        f = Open(shutdown_notification_file, 'r')
-        shutdown_notification_file_lines = f.readlines()
-        f.close()
-
-        shutdown_notification = str(
-            shutdown_notification_file_lines[0].strip())
-
-    osCommands.remove(shutdown_notification_file)
-
-    if shutdown_notification == "shutdown":
+        shutdown_status = dict['shutdown']
+ 
+    if shutdown_status == "shutdown":
 
         print("shutdown in 20 seconds")
         logger.sendToLog("Shutting down in 20 seconds", "INFO")

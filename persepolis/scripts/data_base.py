@@ -75,34 +75,96 @@ class TempDB():
     # temp_db_table contains gid of active downloads. 
     def createTables(self):
         self.lockCursor()
-        self.temp_db_cursor.execute("""CREATE TABLE IF NOT EXISTS temp_db_table(
+        self.temp_db_cursor.execute("""CREATE TABLE IF NOT EXISTS single_db_table(
                                                                                 ID INTEGER PRIMARY KEY,
-                                                                                gid TEXT
+                                                                                gid TEXT,
+                                                                                status TEXT,
+                                                                                shutdown TEXT
                                                                                 )""") 
+
+        self.temp_db_cursor.execute("""CREATE TABLE IF NOT EXISTS queue_db_table(
+                                                                                ID INTEGER PRIMARY KEY,
+                                                                                category TEXT,
+                                                                                shutdown TEXT
+                                                                                )""") 
+ 
         self.temp_db_connection.commit()
         self.lock = False
 
-    # insert new item in temp_db_table
-    def insertInTempTable(self, gid):
+    # insert new item in single_db_table
+    def insertInSingleTable(self, gid):
         self.lockCursor()
-        self.temp_db_cursor.execute("""INSERT INTO temp_db_table VALUES(
+        self.temp_db_cursor.execute("""INSERT INTO single_db_table VALUES(
                                                                 NULL,
-                                                                '{}')""".format(gid)) 
+                                                                '{}',
+                                                                'active',
+                                                                NULL)""".format(gid)) 
 
         self.temp_db_connection.commit()
         self.lock = False
 
-    def deleteGidFromTempTable(self, gid):
+
+    # insert new item in queue_db_table
+    def insertInQueueTable(self, category):
         self.lockCursor()
-        self.temp_db_cursor.execute("""DELETE FROM temp_db_table WHERE gid = '{}'""".format(gid))
+        self.temp_db_cursor.execute("""INSERT INTO queue_db_table VALUES(
+                                                                NULL,
+                                                                '{}',
+                                                                NULL)""".format(category)) 
 
         self.temp_db_connection.commit()
+        self.lock = False
+
+
+    # this method updates single_db_table
+    def updateSingleTable(self, dict):
+        self.lockCursor()
+        keys_list = ['gid',
+                    'shutdown',
+                    'status'
+                    ]
+
+        for key in keys_list:
+            # if a key is missed in dict, 
+            # then add this key to the dict and assign None value for the key. 
+            if key not in dict.keys():
+                dict[key] = None
+
+        # update data base if value for the keys is not None
+        self.temp_db_cursor.execute("""UPDATE single_db_table SET shutdown = coalesce(:shutdown, shutdown),
+                                                                status = coalesce(:status, status)
+                                                                WHERE gid = :gid""", dict)
+
+        self.temp_db_connection.commit()
+        
+        self.lock = False
+
+    # this method updates queue_db_table
+    def updateQueueTable(self, dict):
+        self.lockCursor()
+        keys_list = ['category',
+                    'shutdown']
+
+        for key in keys_list:
+            # if a key is missed in dict, 
+            # then add this key to the dict and assign None value for the key. 
+            if key not in dict.keys():
+                dict[key] = None
+
+        # update data base if value for the keys is not None
+        self.temp_db_cursor.execute("""UPDATE queue_db_table SET shutdown = coalesce(:shutdown, shutdown)
+                                                                WHERE category = :category""", dict)
+
+        self.temp_db_connection.commit()
+ 
 
         self.lock = False
 
-    def returnGids(self):
+    # this method returns gid of active downloads
+    def returnActiveGids(self):
         self.lockCursor()
-        self.temp_db_cursor.execute("""SELECT gid FROM temp_db_table""")
+
+        self.temp_db_cursor.execute("""SELECT gid FROM single_db_table WHERE status = 'active'""")
         
         list = self.temp_db_cursor.fetchall()
 
@@ -116,6 +178,38 @@ class TempDB():
 
         return gid_list
 
+    # this method returns shutdown value for specific gid
+    def returnGid(self, gid):
+        self.lockCursor()
+        self.temp_db_cursor.execute("""SELECT shutdown, status FROM single_db_table WHERE gid = '{}'""".format(gid))
+        
+        list = self.temp_db_cursor.fetchall()
+
+        self.lock = False
+
+        tuple = list[0]
+
+        dict = {'shutdown': str(tuple[0]),
+                'status': tuple[1]}
+
+        return dict
+            
+
+    # This method returns values of columns for specific category
+    def returnCategory(self, category):
+        self.lockCursor()
+        self.temp_db_cursor.execute("""SELECT shutdown FROM queue_db_table WHERE category = '{}'""".format(category))
+        
+        list = self.temp_db_cursor.fetchall()
+
+        self.lock = False
+
+        tuple = list[0]
+
+        dict = {'shutdown': tuple[0]}
+
+        return dict
+ 
 
     # close connections
     def closeConnections(self):
@@ -189,7 +283,6 @@ class PluginsDB():
 
         # put the information in tuples in dictionary format and add it to new_list
         for tuple in list:
-            print(tuple)
             dict = {'link': tuple[0],
                     'referer': tuple[1],
                     'load_cookies': tuple[2],

@@ -32,7 +32,6 @@ from persepolis.scripts.progress import ProgressWindow
 from persepolis.scripts import download
 from persepolis.gui.mainwindow_ui import MainWindow_Ui, QTableWidgetItem
 from persepolis.scripts.log_window import LogWindow
-from persepolis.scripts.newopen import Open, writeList, readList, readDict
 from persepolis.scripts.play import playNotification
 from persepolis.scripts.bubble import notifySend
 from persepolis.scripts.setting import PreferencesWindow
@@ -250,7 +249,7 @@ class CheckDownloadInfoThread(QThread):
 
                 # find gid of active downloads first! (get them from data base)
                 # output of this method is a list of gid
-                active_gid_list = self.parent.temp_db.returnGids()
+                active_gid_list = self.parent.temp_db.returnActiveGids()
 
                 # get download status of active downloads from aria2
                 # download_status_list is a list that contains some dictionaries.  
@@ -308,7 +307,6 @@ class CheckDownloadInfoThread(QThread):
 # disconnected then aria2_disconnected = 1
     def reconnectAria(self):
         global aria2_disconnected
-        # TODO check that aria2_disconnected is needed or must eliminated
         aria2_disconnected = 0
         # check aria2 availability by aria2Version function(see download.py file fore more information)
         answer = download.aria2Version()
@@ -366,7 +364,7 @@ class DownloadLink(QThread):
 
     def run(self):
         # add gid of download to the active gids in temp_db
-        self.parent.temp_db.insertInTempTable(self.gid)
+        self.parent.temp_db.insertInSingleTable(self.gid)
 
         # if request is not successful then persepolis is checking rpc
         # connection whith download.aria2Version() function
@@ -374,7 +372,6 @@ class DownloadLink(QThread):
         if not(answer):
             version_answer = download.aria2Version()
 
-            # TODO version_answer must be changed to True or false or None and version number
             if version_answer == 'did not respond':
                 self.ARIA2NOTRESPOND.emit()
 
@@ -633,14 +630,9 @@ class Queue(QThread):
                 if not(answer) and (os_type != 'Windows'):
                     os.system('killall aria2c')
 
-                shutdown_file = os.path.join(
-                    persepolis_tmp, 'shutdown', self.category)
-
-                # write 'shutdown' word in shutdown file
-                # see shutdown.py for more information.
-                f = Open(shutdown_file, 'w')
-                f.writelines('shutdown')
-                f.close()
+                # write 'shutdown' value for this category in temp_db
+                shutdown_dict = {'category': self.category, 'shutdown': 'shutdown'}
+                self.parent.temp_db.updateQueueTable(shutdown_dict)
 
                 # show a notification about system is shutting down now!
                 notifySend('Persepolis is shutting down', 'your system in 20 seconds',
@@ -746,13 +738,14 @@ class ButtonPressedThread(QThread):
 
 
 class ShutDownThread(QThread):
-    def __init__(self, gid, password=None):
+    def __init__(self, parent, category, password=None):
         QThread.__init__(self)
-        self.gid = gid
+        self.category = category
         self.password = password
+        self.parent = parent
 
     def run(self):
-        shutDown(self.gid, self.password)
+        shutDown(self.parent, category=self.category, password=self.password)
 
 
 # this thread is keeping system awake! because if system sleeps , then internet connection is disconnected!
@@ -1277,7 +1270,10 @@ class MainWindow(MainWindow_Ui):
 
             if status == 'complete' or status == 'error' or status == 'stopped':
                 # eliminate gid from active_downloads in data base
-                self.temp_db.deleteGidFromTempTable(gid)
+                temp_dict = {'gid': gid,
+                            'status': 'deactive'}
+
+                self.temp_db.updateSingleTable(temp_dict)
 
 
             # find row of this gid in download_table!
@@ -1459,19 +1455,19 @@ class MainWindow(MainWindow_Ui):
                     self.persepolis_db.setDefaultGidInAddlinkTable(gid=gid, start_time=True, end_time=True, after_download=True)
 
 
-                    # if user selectes shutdown option after download progress 
-                    # a file(shutdown_file) will be created with the name of gid in
-                    # this folder "persepolis_tmp/shutdown/"
-                    # and "wait" word will be written in this file.
+                    # if user selects shutdown option for after download progress 
+                    # value of 'shutdown' in data base will changed to 'wait' for this category
                     # (see ShutDownThread and shutdown.py for more information)
-                    # shutDown methode is checking that file every second .
-                    # when "wait" changes to "shutdown" in that file then script is
-                    # shutting down system
-                    shutdown_file = os.path.join(
-                            persepolis_tmp, 'shutdown', gid)
+                    # shutDown method will check that value in a loop.
+                    # when "wait" changes to "shutdown" then shutdown.py script
+                    # will shut down the system
+                    shutdown_dict = self.temp_db.returnGid(gid)
 
+                    # get shutdown value for this gid from data base
+                    shutdown_status = shutdown_dict['shutdown']
+        
                     # if status is complete or error, and user selected "shutdown after downoad" option:
-                    if os.path.isfile(shutdown_file) and progress_window.status != 'stopped':
+                    if shutdown_status == 'wait' and progress_window.status != 'stopped':
 
                         # shutdown aria!
                         answer = download.shutDown()
@@ -1484,19 +1480,18 @@ class MainWindow(MainWindow_Ui):
                         notifySend('Persepolis is shutting down', 'your system in 20 seconds',
                                    15000, 'warning', systemtray=self.system_tray_icon)
 
-                        # write "shutdown" message in shutdown_file >> Shutdown system!
-                        # send shutdown signal to the shutdown script(if user
-                        # selected shutdown for after download)
-                        f = Open(shutdown_file, 'w')
-                        f.writelines('shutdown')
-                        f.close()
+                        # write "shutdown" message in data base for this gid >> Shutdown system!
+                        shutdown_dict = {'gid': gid, 'shutdown': 'shutdown'}
+
+                        self.temp_db.updateSingleTable(shutdown_dict)
 
                     # if download stopped and user selected "shutdown after download" option:
-                    elif os.path.isfile(shutdown_file) == True and progress_window.status == 'stopped':
-                        # write "canceled" message in shutdown_file >> cancel shutdown operation!
-                        f = Open(shutdown_file, 'w')
-                        f.writelines('canceled')
-                        f.close()
+                    elif shutdown_status == 'wait' and progress_window.status == 'stopped':
+                        # write "canceled" message in for this gid in data base >> cancel shutdown operation!
+                        shutdown_dict = {'gid': gid, 'shutdown': 'canceled'}
+
+                        self.temp_db.updateSingleTable(shutdown_dict)
+
 
                     # sync persepolis_setting before checking!
                     self.persepolis_setting.sync()
@@ -3381,8 +3376,6 @@ class MainWindow(MainWindow_Ui):
             self.plugin_queue_window_list) - 1].raise_()
         self.plugin_queue_window_list[len(
             self.plugin_queue_window_list) - 1].activateWindow()
-# TODO FlashgotQueue file must be checked and callbacks must be checked
-
 
 # this method is importing a text file for creating queue .
 # text file must contain links . 1 link per line!
@@ -3991,6 +3984,9 @@ class MainWindow(MainWindow_Ui):
         # current_category_tree_text is the name of queue that is selected by user
         current_category_tree_text = str(current_category_tree_index.data())
 
+        # create an item for this category in temp_db
+        self.temp_db.insertInQueueTable(current_category_tree_text)
+
         queue_info_dict = {'category': current_category_tree_text}
 
         # check that if user checks start_checkBox or not.
@@ -4068,7 +4064,6 @@ class MainWindow(MainWindow_Ui):
             self.addToQueue2(data)
 
     def addToQueue2(self, data):
-        # TODO downloads must be added to gid_list in category in data base
         send_message = False
 
         # new selected category
@@ -4289,13 +4284,8 @@ class MainWindow(MainWindow_Ui):
                     self.queue_list_dict[current_category_tree_text].after = True
 
                     # send password and queue name to ShutDownThread
-                    # this script creates a file with the name of queue in  this folder "persepolis_tmp/shutdown/" 
-                    # and writing a "wait" word in this file
-                    # shutdown_script_root is checking that file every second .
-                    # when "wait" changes to "shutdown" in that file then
-                    # script shuts down system
                     shutdown_enable = ShutDownThread(
-                        current_category_tree_text, passwd)
+                        self, current_category_tree_text, passwd)
                     self.threadPool.append(shutdown_enable)
                     self.threadPool[len(self.threadPool) - 1].start()
 
@@ -4309,7 +4299,7 @@ class MainWindow(MainWindow_Ui):
 
         else:  # for windows
 
-            shutdown_enable = ShutDownThread(current_category_tree_text)
+            shutdown_enable = ShutDownThread(self, current_category_tree_text)
             self.threadPool.append(shutdown_enable)
             self.threadPool[len(self.threadPool) - 1].start()
 
@@ -4326,17 +4316,15 @@ class MainWindow(MainWindow_Ui):
         else:
             self.after_frame.setEnabled(False)  # disable after_frame
 
-            # write 'canceled' word in persepolis_tmp/shutdown/queue_name .
-            # this is informing shutdown_script_root for canceling shutdown
-            # operation after download
+            # write 'canceled' for this category in temp_db .
+            # see shutdown.py for more information
             if current_category_tree_text in self.queue_list_dict.keys():
                 if self.queue_list_dict[current_category_tree_text].after:
-                    shutdown_file = os.path.join(
-                        persepolis_tmp, 'shutdown', current_category_tree_text)
 
-                    f = Open(shutdown_file, 'w')
-                    f.writelines('canceled')
-                    f.close()
+                    shutdown_dict = {'category': current_category_tree_text,
+                            'shutdown': 'canceled'}
+
+                    self.temp_db.updateQueueTable(shutdown_dict)
 
                     self.queue_list_dict[current_category_tree_text].after = False
 

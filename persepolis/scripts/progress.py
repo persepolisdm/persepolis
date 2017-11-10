@@ -20,8 +20,6 @@ from PyQt5.QtCore import QSize, QPoint, QThread
 from persepolis.gui.progress_ui import ProgressWindow_Ui
 import os
 import time
-import ast
-from persepolis.scripts.newopen import Open, readList, writeList, readDict
 from persepolis.scripts import download
 from persepolis.scripts.bubble import notifySend
 import platform
@@ -29,44 +27,16 @@ from persepolis.scripts.shutdown import shutDown
 
 os_type = platform.system()
 
-home_address = os.path.expanduser("~")
-
 
 class ShutDownThread(QThread):
-    def __init__(self, gid, password=None):
+    def __init__(self, parent, gid, password=None):
         QThread.__init__(self)
         self.gid = gid
         self.password = password
+        self.parent = parent
 
     def run(self):
-        shutDown(self.gid, self.password)
-
-
-# persepolis tmp folder (temporary folder)
-if os_type != 'Windows':
-
-    user_name_split = home_address.split('/')
-    user_name = user_name_split[2]
-
-    persepolis_tmp = '/tmp/persepolis_' + user_name
-else:
-    persepolis_tmp = os.path.join(
-        str(home_address), 'AppData', 'Local', 'persepolis_tmp')
-
-
-# config_folder
-if os_type == 'Linux' or os_type == 'FreeBSD' or os_type == 'OpenBSD':
-    config_folder = os.path.join(
-        str(home_address), ".config/persepolis_download_manager")
-elif os_type == 'Darwin':
-    config_folder = os.path.join(
-        str(home_address), "Library/Application Support/persepolis_download_manager")
-elif os_type == 'Windows':
-    config_folder = os.path.join(
-        str(home_address), 'AppData', 'Local', 'persepolis_download_manager')
-
-
-download_info_folder = os.path.join(config_folder, "download_info")
+        shutDown(self.parent, gid=self.gid, password=self.password)
 
 
 class ProgressWindow(ProgressWindow_Ui):
@@ -202,12 +172,13 @@ class ProgressWindow(ProgressWindow_Ui):
             self.after_frame.setEnabled(True)
         else:
             # so user canceled shutdown after download
-            # write cancel value in shutdown_file
+            # write cancel value in data_base for this gid
             self.after_frame.setEnabled(False)
-            shutdown_file = os.path.join(persepolis_tmp, 'shutdown', self.gid)
-            f = Open(shutdown_file, 'w')
-            f.writelines('canceled')
-            f.close()
+
+            dict = {'gid': self.gid,
+                    'shutdown': 'canceled'}
+
+            self.parent.temp_db.updateSingleTable(dict)
 
     def afterPushButtonPressed(self, button):
         self.after_pushButton.setEnabled(False)
@@ -233,15 +204,14 @@ class ProgressWindow(ProgressWindow_Ui):
 
                 if ok != False:
 
-                # if user selectes shutdown option after download progress 
-                # a file will be created with the name of gid in
-                # this folder "persepolis_tmp/shutdown/"
-                # and "wait" word will be written in this file.
+                # if user selects shutdown option after download progress, 
+                # value of 'shutdown' will changed in temp_db for this gid
+                # and "wait" word will be written for this value.
                 # (see ShutDownThread and shutdown.py for more information)
-                # shutDown methode is checking that file every second .
-                # when "wait" changes to "shutdown" in that file then script is
-                # shutting down system
-                    shutdown_enable = ShutDownThread(self.gid, passwd)
+                # shutDown method will check that value in a loop .
+                # when "wait" changes to "shutdown" then shutdown.py script
+                # will shut down the system.
+                    shutdown_enable = ShutDownThread(self.parent, self.gid, passwd)
                     self.parent.threadPool.append(shutdown_enable)
                     self.parent.threadPool[len(self.parent.threadPool) - 1].start()
 
@@ -251,7 +221,7 @@ class ProgressWindow(ProgressWindow_Ui):
                 self.after_checkBox.setChecked(False)
 
         else:  # for Windows
-            shutdown_enable = ShutDownThread(self.gid)
+            shutdown_enable = ShutDownThread(self.parent, self.gid)
             self.parent.threadPool.append(shutdown_enable)
             self.parent.threadPool[len(self.parent.threadPool) - 1].start()
 
