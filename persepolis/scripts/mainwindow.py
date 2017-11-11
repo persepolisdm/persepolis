@@ -364,7 +364,14 @@ class DownloadLink(QThread):
 
     def run(self):
         # add gid of download to the active gids in temp_db
-        self.parent.temp_db.insertInSingleTable(self.gid)
+        # or update data base , if it was existed before
+        try:
+            self.parent.temp_db.insertInSingleTable(self.gid)
+        except:
+            # release lock
+            self.parent.temp_db.lock = False
+            dict = {'gid': self.gid, 'status': 'active'}
+            self.parent.temp_db.updateSingleTable(dict)
 
         # if request is not successful then persepolis is checking rpc
         # connection whith download.aria2Version() function
@@ -3984,8 +3991,12 @@ class MainWindow(MainWindow_Ui):
         # current_category_tree_text is the name of queue that is selected by user
         current_category_tree_text = str(current_category_tree_index.data())
 
-        # create an item for this category in temp_db
-        self.temp_db.insertInQueueTable(current_category_tree_text)
+        # create an item for this category in temp_db if not exists!
+        try:
+            self.temp_db.insertInQueueTable(current_category_tree_text)
+        except:
+            # release lock
+            self.temp_db.lock = False
 
         queue_info_dict = {'category': current_category_tree_text}
 

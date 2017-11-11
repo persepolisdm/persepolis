@@ -76,15 +76,15 @@ class TempDB():
     def createTables(self):
         self.lockCursor()
         self.temp_db_cursor.execute("""CREATE TABLE IF NOT EXISTS single_db_table(
-                                                                                ID INTEGER PRIMARY KEY,
-                                                                                gid TEXT,
+                                                                                ID INTEGER,
+                                                                                gid TEXT PRIMARY KEY,
                                                                                 status TEXT,
                                                                                 shutdown TEXT
                                                                                 )""") 
 
         self.temp_db_cursor.execute("""CREATE TABLE IF NOT EXISTS queue_db_table(
-                                                                                ID INTEGER PRIMARY KEY,
-                                                                                category TEXT,
+                                                                                ID INTEGER,
+                                                                                category TEXT PRIMARY KEY,
                                                                                 shutdown TEXT
                                                                                 )""") 
  
