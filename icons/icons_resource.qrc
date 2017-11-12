@@ -136,6 +136,39 @@
         <file>Breeze-Dark/multi_down.svg</file>	
         <file>Breeze-Dark/clipboard.svg</file>	
         <file>Breeze-Dark/refresh.svg</file>
+        
+        
+        <file>Papirus/about.svg</file>		
+		<file>Papirus/add.svg</file>		
+		<file>Papirus/exit.svg</file>		
+		<file>Papirus/folder.svg</file>		
+		<file>Papirus/minimize.svg</file>		
+		<file>Papirus/ok.svg</file>		
+		<file>Papirus/pause.svg</file>		
+		<file>Papirus/play.svg</file>		
+		<file>Papirus/preferences.svg</file>		
+		<file>Papirus/remove.svg</file>		
+		<file>Papirus/setting.svg</file>		
+		<file>Papirus/stop.svg</file>		
+		<file>Papirus/stop_all.svg</file>		
+		<file>Papirus/trash.svg</file>		
+		<file>Papirus/window.svg</file>		
+		<file>Papirus/file.svg</file>		
+        <file>Papirus/multi_remove.svg</file>	
+        <file>Papirus/multi_trash.svg</file>	
+        <file>Papirus/select_all.svg</file>	
+        <file>Papirus/add_queue.svg</file>	
+        <file>Papirus/start_queue.svg</file>	
+        <file>Papirus/stop_queue.svg</file>	
+        <file>Papirus/pause_queue.svg</file>	
+        <file>Papirus/remove_queue.svg</file>	
+        <file>Papirus/menu.svg</file>	
+        <file>Papirus/up.svg</file>	
+        <file>Papirus/down.svg</file>	
+        <file>Papirus/multi_up.svg</file>	
+        <file>Papirus/multi_down.svg</file>	
+        <file>Papirus/clipboard.svg</file>	
+        <file>Papirus/refresh.svg</file>
 
 
 
