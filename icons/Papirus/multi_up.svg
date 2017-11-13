@@ -1,9 +1,9 @@
-<svg xmlns="http://www.w3.org/2000/svg" id="svg16" width="48" height="48" version="1">
- <rect id="rect2" width="40" height="40" x="-44" y="-44" rx="20" ry="20" transform="matrix(0,-1,-1,0,0,0)" style="fill:#4f4f4f;fill-opacity:1"/>
- <path id="path12" fill="#fff" opacity=".2" d="m24 4c-11.08 0-20 8.92-20 20 0 0.168 0.008 0.333 0.0117 0.5 0.2647-10.846 9.0763-19.5 19.988-19.5s19.724 8.6539 19.988 19.5c0.004-0.16686 0.0117-0.33213 0.0117-0.5 0-11.08-8.92-20-20-20z" style="opacity:0.1"/>
- <path id="path14" opacity=".2" d="m4.0117 24.5c-0.0041 0.167-0.0117 0.332-0.0117 0.5 0 11.08 8.92 20 20 20s20-8.92 20-20c0-0.168-0.008-0.333-0.012-0.5-0.264 10.846-9.076 19.5-19.988 19.5s-19.724-8.654-19.988-19.5z"/>
- <path id="path4146" d="M 11,24 16.571429,24 24,15.562395 31.428571,24 37,24 24.246629,9 Z" style="opacity:0.2;fill:#000000;fill-opacity:1;stroke-width:1.85714281"/>
- <path style="fill:#ff9b2a;fill-opacity:1;stroke-width:1.85714281" id="path876" d="M 11,23 16.571429,23 24,14.562395 31.428571,23 37,23 24.246629,8 Z"/>
- <path style="opacity:0.2;fill:#000000;fill-opacity:1;stroke-width:1.85714281" id="path4148" d="M 11,35 16.571429,35 24,26.562395 31.428571,35 37,35 24.246629,20 Z"/>
- <path id="path4160" d="M 11,34 16.571429,34 24,25.562395 31.428571,34 37,34 24.246629,19 Z" style="fill:#ffd242;fill-opacity:1;stroke-width:1.85714281"/>
+<svg xmlns="http://www.w3.org/2000/svg" id="svg16" width="32" height="32" version="1">
+ <rect style="opacity:0.2;fill:#000000;fill-opacity:1" id="rect4163" width="28" height="28" x="-31" y="-30" rx="14" ry="14" transform="matrix(0,-1,-1,0,0,0)"/>
+ <rect id="rect2" width="28" height="28" x="-30" y="-30" rx="14" ry="14" transform="matrix(0,-1,-1,0,0,0)" style="fill:#4f4f4f;fill-opacity:1"/>
+ <path id="path4172" d="M 16.169922,7 7.6425781,16 11.498047,16 16,11.234375 20.501953,16 24.380859,16 16.169922,7 Z" style="opacity:0.2;fill:#000000;fill-opacity:1;stroke-width:1.85714281"/>
+ <path style="opacity:1;fill:#ff9b2a;fill-opacity:1;stroke-width:1.85714281" id="path4149" d="M 16.169922 6 L 7.6425781 15 L 11.498047 15 L 16 10.234375 L 20.501953 15 L 24.380859 15 L 16.169922 6 z"/>
+ <path style="fill:#ffffff;fill-opacity:1;opacity:0.1" id="rect4167" d="M 16 2 C 8.244 2 2 8.244 2 16 C 2 16.168842 2.0195214 16.33264 2.0253906 16.5 C 2.2891326 8.9794325 8.4128418 3 16 3 C 23.587158 3 29.710867 8.9794325 29.974609 16.5 C 29.980479 16.33264 30 16.168842 30 16 C 30 8.244 23.756 2 16 2 z"/>
+ <path style="opacity:0.2;fill:#000000;fill-opacity:1;stroke-width:1.85714281" id="path4139" d="M 16.169922,15 7.6425781,24 11.498047,24 16,19.234375 20.501953,24 l 3.878906,0 -8.210937,-9 z"/>
+ <path id="path4141" d="M 16.169922,14 7.6425781,23 11.498047,23 16,18.234375 20.501953,23 l 3.878906,0 -8.210937,-9 z" style="opacity:1;fill:#ffd242;fill-opacity:1;stroke-width:1.85714281"/>
 </svg>
