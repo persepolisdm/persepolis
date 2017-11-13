@@ -1,10 +1,22 @@
-<svg xmlns="http://www.w3.org/2000/svg" id="svg18" width="48" height="48" version="1">
- <rect id="rect2" fill="#c2c2c2" width="27.907" height="28" x="4.09" y="-44" rx="1.595" ry="1.6" transform="rotate(90)"/>
- <path id="path4" opacity=".2" d="m21 25v-2h12v2zm0-4v-2h18v2zm0-4v-2h18v2zm0-4v-2h18v2z"/>
- <path id="path6" fill="#fff" opacity=".4" d="m44 6.0867v-0.4984c0-0.8834-0.707-1.5884-1.594-1.5884h-24.812c-0.887 0-1.594 0.705-1.594 1.5884v0.49833c0-0.88344 0.70735-1.5884 1.5938-1.5884h24.812c0.8864 0 1.5938 0.70499 1.5938 1.5884z"/>
- <path id="path8" opacity=".2" d="m16 30.406v0.998c0 0.884 0.713 1.596 1.6 1.596h24.8c0.887 0 1.6-0.712 1.6-1.596v-0.998c0 0.884-0.713 1.594-1.6 1.594h-24.8c-0.887 0-1.6-0.71-1.6-1.594z"/>
- <rect id="rect10" fill="#d3d3d3" width="28" height="28" x="16" y="-32" rx="1.6" ry="1.6" transform="rotate(90)"/>
- <path id="path12" fill="#fff" opacity=".4" d="m32 18v-0.5c0-0.8864-0.70736-1.5938-1.5938-1.5938h-24.812c-0.8866 0-1.594 0.708-1.594 1.594v0.5c0-0.8864 0.70735-1.5938 1.5938-1.5938h24.812c0.887 0 1.594 0.708 1.594 1.594z"/>
- <path id="path14" opacity=".2" d="m4 42.4v1c0 0.887 0.7132 1.6 1.5996 1.6h24.8c0.887 0 1.6-0.713 1.6-1.6v-1c0 0.887-0.713 1.6-1.6 1.6h-24.8c-0.8868 0-1.6-0.713-1.6-1.6z"/>
- <path id="path16" opacity=".5" d="m9 37v-2h12v2zm0-4v-2h18v2zm0-4v-2h18v2zm0-4v-2h18v2z"/>
+<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" version="1">
+ <rect stroke="#000" stroke-width="2" opacity=".05" width="19" height="19" x="2" y="-30" rx="1.5" ry="1.5" transform="rotate(90)"/>
+ <rect opacity=".2" width="19" height="19" x="2" y="-30" rx="1.5" ry="1.5" transform="rotate(90)"/>
+ <rect stroke="#000" stroke-width="2" opacity=".05" width="19" height="19" x="11" y="-21" rx="1.5" ry="1.5" transform="rotate(90)"/>
+ <rect fill="#c2c2c2" width="19" height="19" x="1" y="-30" rx="1.5" ry="1.5" transform="rotate(90)"/>
+ <g opacity=".2" transform="translate(4,-4)">
+  <path d="m10 11v-1h12v1z"/>
+  <path d="m10 14v-1h12v1z"/>
+  <path d="m10 17v-1h12v1z"/>
+  <path d="m10 20v-1h8v1z"/>
+ </g>
+ <rect opacity=".2" width="19" height="19" x="11" y="-21" rx="1.5" ry="1.5" transform="rotate(90)"/>
+ <rect fill="#d3d3d3" width="19" height="19" x="10" y="-21" rx="1.5" ry="1.5" transform="rotate(90)"/>
+ <path fill="#fff" opacity=".1" d="m12.5 1c-0.831 0-1.5 0.669-1.5 1.5v1c0-0.831 0.669-1.5 1.5-1.5h16c0.831 0 1.5 0.669 1.5 1.5v-1c0-0.831-0.669-1.5-1.5-1.5h-16z"/>
+ <path fill="#fff" opacity=".1" d="m3.5 10c-0.831 0-1.5 0.669-1.5 1.5v1c0-0.831 0.669-1.5 1.5-1.5h16c0.831 0 1.5 0.669 1.5 1.5v-1c0-0.831-0.669-1.5-1.5-1.5h-16z"/>
+ <g opacity=".5" transform="translate(-5,5)">
+  <path d="m10 11v-1h12v1z"/>
+  <path d="m10 14v-1h12v1z"/>
+  <path d="m10 17v-1h12v1z"/>
+  <path d="m10 20v-1h8v1z"/>
+ </g>
 </svg>
