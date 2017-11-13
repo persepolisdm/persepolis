@@ -376,14 +376,14 @@ class MainWindow_Ui(QMainWindow):
         self.toolBar2 = QToolBar(self)
         self.addToolBar(QtCore.Qt.TopToolBarArea, self.toolBar2)
         self.toolBar2.setWindowTitle('Menu')
-        self.toolBar2.setIconSize(QSize(38, 38))
+        self.toolBar2.setIconSize(QSize(32, 32))
         self.toolBar2.setFloatable(False)
         self.toolBar2.setMovable(False)
 
         self.toolBar = QToolBar(self)
         self.addToolBar(QtCore.Qt.TopToolBarArea, self.toolBar)
         self.toolBar.setWindowTitle('Toolbar')
-        self.toolBar.setIconSize(QSize(38, 38))
+        self.toolBar.setIconSize(QSize(32, 32))
         self.toolBar.setFloatable(False)
         self.toolBar.setMovable(False)
 
