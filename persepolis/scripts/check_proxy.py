@@ -1,5 +1,6 @@
 import urllib
 import os
+import requests
 from persepolis.scripts import logger
 import platform
 import subprocess
