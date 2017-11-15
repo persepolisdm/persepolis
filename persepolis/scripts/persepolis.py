@@ -180,8 +180,8 @@ parser.add_argument('--parent-window', action='store', nargs = 1, help='this swi
 parser.add_argument('--version', action='version', version='Persepolis Download Manager 2.5a0')
 args = parser.parse_args()
 
-# Mozilla firefox plugin sends download information with terminal arguments(link , referer , cookie , agent , headers , name )
-# persepolis plugins (for chromium and chrome and opera and vivaldi and firefox) are using native message host system for 
+# terminal arguments are send download information with terminal arguments(link , referer , cookie , agent , headers , name )
+# persepolis plugins (for chromium and chrome and opera and vivaldi and firefox) are use native message host system for 
 # sending download information to persepolis.
 # see this repo for more information:
 #   https://github.com/persepolisdm/Persepolis-WebExtension
@@ -191,16 +191,17 @@ args = parser.parse_args()
 
 
 add_link_dictionary = {}
+plugin_list = []
 if args.chromium != 'no' or args.parent_window:
 
 # Platform specific configuration
     if os_type == "Windows":
-  # Set the default I/O mode to O_BINARY in windows
+        # Set the default I/O mode to O_BINARY in windows
         import msvcrt
         msvcrt.setmode(sys.stdin.fileno(), os.O_BINARY)
         msvcrt.setmode(sys.stdout.fileno(), os.O_BINARY)
 
-    # Send message to browser plugins 
+    # Send message to browsers plugin 
     message = '{"enable": true, "version": "1.85"}'.encode('utf-8')
     sys.stdout.buffer.write((struct.pack('I', len(message))))
     sys.stdout.buffer.write(message)
@@ -216,25 +217,32 @@ if args.chromium != 'no' or args.parent_window:
     # Read the text (JSON object) of the message.
     text = sys.stdin.buffer.read(text_length).decode("utf-8")
     if text:
-        if not 'url' in text:
-            sys.exit(0)
+        plugin_list = json.loads(text)
 
-        data = json.loads(text)
-        url = str(data['url'])
+        for item in plugin_list:
+            url = str(item['url'])
 
-        if url:
-            args.link = str(url)
-            if 'referrer' in data.keys():
-                args.referer = data['referrer']
+            if url:
+                plugin_dict ={'link': add_link_dictionary['link'],
+                    'referer': add_link_dictionary['referer'],
+                    'load_cookies': add_link_dictionary['load-cookies'],
+                    'user_agent': add_link_dictionary['user-agent'],
+                    'header': add_link_dictionary['header'],
+                    'out': add_link_dictionary['out']
+                    }
 
-            if 'filename' in data.keys() and data['filename'] != '':
-                args.name = os.path.basename(str(data['filename']))
+                args.link = str(url)
+                if 'referrer' in data.keys():
+                    args.referer = data['referrer']
+
+                if 'filename' in data.keys() and data['filename'] != '':
+                    args.name = os.path.basename(str(data['filename']))
                 
-            if 'useragent' in data.keys():
-                args.agent = data['useragent']
+                if 'useragent' in data.keys():
+                    args.agent = data['useragent']
                 
-            if 'cookies' in data.keys():
-                args.cookie = data['cookies']
+                if 'cookies' in data.keys():
+                    args.cookie = data['cookies']
 
 # persepolis --clear >> remove config_folder
 if args.clear:
@@ -286,8 +294,9 @@ if args.name :
 else:
     add_link_dictionary['out'] = None
 
-# when browsers plugin calls persepolis then persepolis creats a request file in /tmp folder 
-# and link information added to plugins_db.db file(see data_base.py for more information).
+# when browsers plugin calls persepolis or user runs persepolis by terminal arguments,
+# then persepolis creats a request file in /tmp folder and link information added to
+# plugins_db.db file(see data_base.py for more information).
 # persepolis mainwindow checks /tmp for plugins request file every 2 seconds (see CheckingThread class in mainwindow.py)
 # when requset received in CheckingThread, a popup window (AddLinkWindow) comes up and window gets additional download information
 # from user (port , proxy , ...) and download starts and request file deleted
@@ -325,12 +334,12 @@ else:
 
 
 def main():
-# if lock_file is existed , it means persepolis is still running!
+    # if lock_file is existed , it means persepolis is still running!
     if lock_file_validation:  
-    # run mainwindow
+        # run mainwindow
 
-    # set color_scheme and style
-    # see palettes.py and setting.py
+        # set color_scheme and style
+        # see palettes.py and setting.py
 
         persepolis_download_manager = PersepolisApplication(sys.argv)
 
