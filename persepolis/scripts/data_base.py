@@ -280,21 +280,22 @@ class PluginsDB():
         # release lock
         self.lock = False
 
-    # insert new item in plugins_db_table
-    def insertInPluginsTable(self, dict):
+    # insert new items in plugins_db_table
+    def insertInPluginsTable(self, list):
         # lock data base
         self.lockCursor()
 
-        self.plugins_db_cursor.execute("""INSERT INTO plugins_db_table VALUES(
-                                                                    NULL,
-                                                                    :link,
-                                                                    :referer,
-                                                                    :load_cookies,
-                                                                    :user_agent,
-                                                                    :header,
-                                                                    :out,
-                                                                    'new'
-                                                                        )""", dict)
+        for dict in list:
+            self.plugins_db_cursor.execute("""INSERT INTO plugins_db_table VALUES(
+                                                                        NULL,
+                                                                        :link,
+                                                                        :referer,
+                                                                        :load_cookies,
+                                                                        :user_agent,
+                                                                        :header,
+                                                                        :out,
+                                                                        'new'
+                                                                            )""", dict)
 
         self.plugins_db_connection.commit()
         # release lock

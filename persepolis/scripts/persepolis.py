@@ -16,6 +16,7 @@
 import sys
 import os
 import platform
+from copy import deepcopy
 
 # finding os platform
 os_type = platform.system()
@@ -192,6 +193,15 @@ args = parser.parse_args()
 
 add_link_dictionary = {}
 plugin_list = []
+browser_plugin_dict ={'link': None,
+            'referer': None,
+            'load_cookies':None,
+            'user_agent': None,
+            'header': None,
+            'out': None
+            }
+
+
 if args.chromium != 'no' or args.parent_window:
 
 # Platform specific configuration
@@ -217,32 +227,27 @@ if args.chromium != 'no' or args.parent_window:
     # Read the text (JSON object) of the message.
     text = sys.stdin.buffer.read(text_length).decode("utf-8")
     if text:
-        plugin_list = json.loads(text)
+        new_list = json.loads(text)
 
-        for item in plugin_list:
-            url = str(item['url'])
+        for item in new_list:
+            copy_dict = browser_plugin_dict.deepcopy()
 
-            if url:
-                plugin_dict ={'link': add_link_dictionary['link'],
-                    'referer': add_link_dictionary['referer'],
-                    'load_cookies': add_link_dictionary['load-cookies'],
-                    'user_agent': add_link_dictionary['user-agent'],
-                    'header': add_link_dictionary['header'],
-                    'out': add_link_dictionary['out']
-                    }
+            if 'url' in item.keys():
+                copy_dict['link'] = str(item['url'])
 
-                args.link = str(url)
-                if 'referrer' in data.keys():
-                    args.referer = data['referrer']
+                if 'referrer' in item.keys():
+                    copy_dict['referer'] = item['referrer']
 
-                if 'filename' in data.keys() and data['filename'] != '':
-                    args.name = os.path.basename(str(data['filename']))
+                if 'filename' in item.keys() and item['filename'] != '':
+                    copy_dict['out'] = os.path.basename(str(item['filename']))
                 
-                if 'useragent' in data.keys():
-                    args.agent = data['useragent']
+                if 'useragent' in item.keys():
+                    copy_dict['user_agent'] = item['useragent']
                 
-                if 'cookies' in data.keys():
-                    args.cookie = data['cookies']
+                if 'cookies' in item.keys():
+                    copy_dict['load_cookies'] = item['cookies']
+
+                plugin_list.append(copy_dict)
 
 # persepolis --clear >> remove config_folder
 if args.clear:
@@ -302,14 +307,6 @@ else:
 # from user (port , proxy , ...) and download starts and request file deleted
 
 if ('link' in add_link_dictionary):   
-
-    # add add_link_dictionary to plugins_db.
-    from persepolis.scripts.data_base import PluginsDB
-    
-    # create an object for PluginsDB
-    plugins_db = PluginsDB()
-
-    # add new link information to plugins_table in plugins.db file.
     plugin_dict ={'link': add_link_dictionary['link'],
                     'referer': add_link_dictionary['referer'],
                     'load_cookies': add_link_dictionary['load-cookies'],
@@ -317,7 +314,18 @@ if ('link' in add_link_dictionary):
                     'header': add_link_dictionary['header'],
                     'out': add_link_dictionary['out']
                     }
-    plugins_db.insertInPluginsTable(plugin_dict)
+
+    plugin_list.append(plugin_dict)
+
+if len(plugin_list) != 0:
+    # import PluginsDB
+    from persepolis.scripts.data_base import PluginsDB
+    
+    # create an object for PluginsDB
+    plugins_db = PluginsDB()
+
+    # add plugin_list to plugins_table in plugins.db file.
+    plugins_db.insertInPluginsTable(plugin_list)
 
     # Job is done! close connections.
     plugins_db.closeConnections()
