@@ -51,7 +51,7 @@ class QueueSpiderThread(QThread):
 
 
 
-class FlashgotQueue(TextQueue_Ui):
+class BrowserPluginQueue(TextQueue_Ui):
     def __init__(self, parent, list_of_links, callback, persepolis_setting):
         super().__init__(persepolis_setting)
         self.persepolis_setting = persepolis_setting

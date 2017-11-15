@@ -73,6 +73,7 @@ if os_type != 'Windows':
         lock_file_validation = True # Lock file created successfully!
     except IOError:
         lock_file_validation = False # creating lock_file was unsuccessful! So persepolis is still running
+
 else: # for windows
     # pypiwin32 must be installed by pip
     from win32event import CreateMutex
@@ -179,7 +180,7 @@ parser.add_argument('--parent-window', action='store', nargs = 1, help='this swi
 parser.add_argument('--version', action='version', version='Persepolis Download Manager 2.5a0')
 args = parser.parse_args()
 
-# Mozilla firefox plugin is sending download information whith terminal arguments(link , referer , cookie , agent , headers , name )
+# Mozilla firefox plugin sends download information with terminal arguments(link , referer , cookie , agent , headers , name )
 # persepolis plugins (for chromium and chrome and opera and vivaldi and firefox) are using native message host system for 
 # sending download information to persepolis.
 # see this repo for more information:
@@ -199,7 +200,7 @@ if args.chromium != 'no' or args.parent_window:
         msvcrt.setmode(sys.stdin.fileno(), os.O_BINARY)
         msvcrt.setmode(sys.stdout.fileno(), os.O_BINARY)
 
-    # Send message to chrome extension
+    # Send message to browser plugins 
     message = '{"enable": true, "version": "1.85"}'.encode('utf-8')
     sys.stdout.buffer.write((struct.pack('I', len(message))))
     sys.stdout.buffer.write(message)
@@ -285,10 +286,10 @@ if args.name :
 else:
     add_link_dictionary['out'] = None
 
-# when browser plugins calls persepolis then persepolis is creating a request file in /tmp folder 
-# and link information added to plugins_db.db file( see data_base.py for more information).
-# persepolis mainwindow checks /tmp for plugins request file every 2 seconds ( see CheckingThread class in mainwindow.py )
-# when requset received in CheckingThread, a popup window (AddLinkWindow) is coming up and window is getting additional download information
+# when browsers plugin calls persepolis then persepolis creats a request file in /tmp folder 
+# and link information added to plugins_db.db file(see data_base.py for more information).
+# persepolis mainwindow checks /tmp for plugins request file every 2 seconds (see CheckingThread class in mainwindow.py)
+# when requset received in CheckingThread, a popup window (AddLinkWindow) comes up and window gets additional download information
 # from user (port , proxy , ...) and download starts and request file deleted
 
 if ('link' in add_link_dictionary):   

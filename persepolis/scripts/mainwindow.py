@@ -25,7 +25,7 @@ from time import sleep
 import random
 from persepolis.scripts.after_download import AfterDownloadWindow
 from persepolis.scripts.text_queue import TextQueue
-from persepolis.scripts.flashgot_queue import FlashgotQueue
+from persepolis.scripts.browser_plugin_queue import BrowserPluginQueue
 from persepolis.scripts.addlink import AddLinkWindow
 from persepolis.scripts.properties import PropertiesWindow
 from persepolis.scripts.progress import ProgressWindow
@@ -704,7 +704,7 @@ class CheckingThread(QThread):
                 # When checkPluginCall method considered request , then
                 # plugin_links_checked is changed to True
                 plugin_links_checked = False
-                self.CHECKPLUGINDBSIGNAL.emit()  # notifiying that we have flashgot request
+                self.CHECKPLUGINDBSIGNAL.emit()  # notifiying that we have browser_plugin request
                 while plugin_links_checked != True:  # wait for persepolis consideration!
                     sleep(0.5)
 
@@ -978,8 +978,8 @@ class MainWindow(MainWindow_Ui):
                                     self.checkSelectedRow)
 
 # CheckingThread
-        check_flashgot = CheckingThread()
-        self.threadPool.append(check_flashgot)
+        check_browser_plugin = CheckingThread()
+        self.threadPool.append(check_browser_plugin)
         self.threadPool[3].start()
         self.threadPool[3].CHECKPLUGINDBSIGNAL.connect(self.checkPluginCall)
         self.threadPool[3].SHOWMAINWINDOWSIGNAL.connect(self.showMainWindow)
@@ -1789,7 +1789,7 @@ class MainWindow(MainWindow_Ui):
         # 'number of connections' ,'Transfer rate' , 'estimate_time_left' ,
         # 'gid' , 'link' , 'first_try_date' , 'last_try_date', 'category']
 
-        # if user or flashgot defined filename then file_name is valid in
+        # if user or browser_plugin defined filename then file_name is valid in
         # add_link_dictionary['out']
         if add_link_dictionary['out']:
             file_name = add_link_dictionary['out']
@@ -3369,10 +3369,10 @@ class MainWindow(MainWindow_Ui):
             return queue_name
 
 
-# this method creates a FlashgotQueue window for list of links.
+# this method creates a BrowserPluginQueue window for list of links.
     def pluginQueue(self, list_of_links):
         # create window
-        plugin_queue_window = FlashgotQueue(
+        plugin_queue_window = BrowserPluginQueue(
             self, list_of_links, self.queueCallback, self.persepolis_setting)
         self.plugin_queue_window_list.append(plugin_queue_window)
         self.plugin_queue_window_list[len(
@@ -3445,7 +3445,7 @@ class MainWindow(MainWindow_Ui):
             # 'number of connections' ,'Transfer rate' , 'estimate_time_left' ,
             # 'gid' , 'link' , 'first_try_date' , 'last_try_date', 'category']
 
-            # if user or flashgot defined filename then file_name is valid in
+            # if user or browser_plugin defined filename then file_name is valid in
             # add_link_dictionary['out']
             if add_link_dictionary['out']:
                 file_name = add_link_dictionary['out']
@@ -4826,7 +4826,7 @@ class MainWindow(MainWindow_Ui):
             
         
 
-# see flashgot_queue.py file
+# see browser_plugin_queue.py file
     def queueSpiderCallBack(self, filename, child, row_number):
         item = QTableWidgetItem(str(filename))
 
