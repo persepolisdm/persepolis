@@ -110,6 +110,24 @@ class Setting_Ui(QWidget):
         self.download_options_verticalLayout.addLayout(
             wait_queue_horizontalLayout) 
 
+# change aria2 path
+        aria2_path_verticalLayout = QVBoxLayout()
+
+        self.aria2_path_checkBox = QCheckBox(self.layoutWidget)
+        aria2_path_verticalLayout.addWidget(self.aria2_path_checkBox)
+
+        aria2_path_horizontalLayout = QHBoxLayout()
+
+        self.aria2_path_lineEdit = QLineEdit(self.layoutWidget)
+        aria2_path_horizontalLayout.addWidget(self.aria2_path_lineEdit)
+
+        self.aria2_path_pushButton = QPushButton(self.layoutWidget)
+        aria2_path_horizontalLayout.addWidget(self.aria2_path_pushButton)
+
+        aria2_path_verticalLayout.addLayout(aria2_path_horizontalLayout)
+
+        self.download_options_verticalLayout.addLayout(
+                aria2_path_verticalLayout)
 
         self.setting_tabWidget.addTab(self.download_options_tab, "")
 # save_as_tab
@@ -348,6 +366,13 @@ class Setting_Ui(QWidget):
             "<html><head/><body><p> Specify a port number for JSON-RPC/XML-RPC server to listen to. Possible Values: 1024 - 65535 Default: 6801 </p></body></html>")
 
         self.wait_queue_label.setText('Wait between every downloads in queue:')
+
+        self.aria2_path_checkBox.setText('Change aria2 default path')
+        self.aria2_path_pushButton.setText('Change')
+        aria2_path_tooltip ="<html><head/><body><p>Attention: Wrong path may have caused problem! Do it carefully or don't change default setting!</p></body></html>" 
+        self.aria2_path_checkBox.setToolTip(aria2_path_tooltip)
+        self.aria2_path_lineEdit.setToolTip(aria2_path_tooltip)
+        self.aria2_path_pushButton.setToolTip(aria2_path_tooltip)
 
         self.setting_tabWidget.setTabText(self.setting_tabWidget.indexOf(
             self.download_options_tab),  "Download Options")

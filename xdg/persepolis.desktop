@@ -11,7 +11,7 @@ Categories=Qt;Network;
 StartupNotify=true
 Exec=persepolis 
 Icon=persepolis
-StartupWMClass=Persepolis Download Manager
+StartupWMClass=persepolis
 Actions=Open;Tray;
 
 [Desktop Action Open]

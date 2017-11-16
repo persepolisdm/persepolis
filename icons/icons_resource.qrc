@@ -136,7 +136,105 @@
         <file>Breeze-Dark/multi_down.svg</file>	
         <file>Breeze-Dark/clipboard.svg</file>	
         <file>Breeze-Dark/refresh.svg</file>
-
+        
+        
+        <file>Papirus/about.svg</file>		
+		<file>Papirus/add.svg</file>		
+		<file>Papirus/exit.svg</file>		
+		<file>Papirus/folder.svg</file>		
+		<file>Papirus/minimize.svg</file>		
+		<file>Papirus/ok.svg</file>		
+		<file>Papirus/pause.svg</file>		
+		<file>Papirus/play.svg</file>		
+		<file>Papirus/preferences.svg</file>		
+		<file>Papirus/remove.svg</file>		
+		<file>Papirus/setting.svg</file>		
+		<file>Papirus/stop.svg</file>		
+		<file>Papirus/stop_all.svg</file>		
+		<file>Papirus/trash.svg</file>		
+		<file>Papirus/window.svg</file>		
+		<file>Papirus/file.svg</file>		
+        <file>Papirus/multi_remove.svg</file>	
+        <file>Papirus/multi_trash.svg</file>	
+        <file>Papirus/select_all.svg</file>	
+        <file>Papirus/add_queue.svg</file>	
+        <file>Papirus/start_queue.svg</file>	
+        <file>Papirus/stop_queue.svg</file>	
+        <file>Papirus/pause_queue.svg</file>	
+        <file>Papirus/remove_queue.svg</file>	
+        <file>Papirus/menu.svg</file>	
+        <file>Papirus/up.svg</file>	
+        <file>Papirus/down.svg</file>	
+        <file>Papirus/multi_up.svg</file>	
+        <file>Papirus/multi_down.svg</file>	
+        <file>Papirus/clipboard.svg</file>	
+        <file>Papirus/refresh.svg</file>
+        
+        
+        <file>Papirus-Dark/about.svg</file>		
+		<file>Papirus-Dark/add.svg</file>		
+		<file>Papirus-Dark/exit.svg</file>		
+		<file>Papirus-Dark/folder.svg</file>		
+		<file>Papirus-Dark/minimize.svg</file>		
+		<file>Papirus-Dark/ok.svg</file>		
+		<file>Papirus-Dark/pause.svg</file>		
+		<file>Papirus-Dark/play.svg</file>		
+		<file>Papirus-Dark/preferences.svg</file>		
+		<file>Papirus-Dark/remove.svg</file>		
+		<file>Papirus-Dark/setting.svg</file>		
+		<file>Papirus-Dark/stop.svg</file>		
+		<file>Papirus-Dark/stop_all.svg</file>		
+		<file>Papirus-Dark/trash.svg</file>		
+		<file>Papirus-Dark/window.svg</file>		
+		<file>Papirus-Dark/file.svg</file>		
+        <file>Papirus-Dark/multi_remove.svg</file>	
+        <file>Papirus-Dark/multi_trash.svg</file>	
+        <file>Papirus-Dark/select_all.svg</file>	
+        <file>Papirus-Dark/add_queue.svg</file>	
+        <file>Papirus-Dark/start_queue.svg</file>	
+        <file>Papirus-Dark/stop_queue.svg</file>	
+        <file>Papirus-Dark/pause_queue.svg</file>	
+        <file>Papirus-Dark/remove_queue.svg</file>	
+        <file>Papirus-Dark/menu.svg</file>	
+        <file>Papirus-Dark/up.svg</file>	
+        <file>Papirus-Dark/down.svg</file>	
+        <file>Papirus-Dark/multi_up.svg</file>	
+        <file>Papirus-Dark/multi_down.svg</file>	
+        <file>Papirus-Dark/clipboard.svg</file>	
+        <file>Papirus-Dark/refresh.svg</file>
+        
+        
+        <file>Papirus-Light/about.svg</file>		
+		<file>Papirus-Light/add.svg</file>		
+		<file>Papirus-Light/exit.svg</file>		
+		<file>Papirus-Light/folder.svg</file>		
+		<file>Papirus-Light/minimize.svg</file>		
+		<file>Papirus-Light/ok.svg</file>		
+		<file>Papirus-Light/pause.svg</file>		
+		<file>Papirus-Light/play.svg</file>		
+		<file>Papirus-Light/preferences.svg</file>		
+		<file>Papirus-Light/remove.svg</file>		
+		<file>Papirus-Light/setting.svg</file>		
+		<file>Papirus-Light/stop.svg</file>		
+		<file>Papirus-Light/stop_all.svg</file>		
+		<file>Papirus-Light/trash.svg</file>		
+		<file>Papirus-Light/window.svg</file>		
+		<file>Papirus-Light/file.svg</file>		
+        <file>Papirus-Light/multi_remove.svg</file>	
+        <file>Papirus-Light/multi_trash.svg</file>	
+        <file>Papirus-Light/select_all.svg</file>	
+        <file>Papirus-Light/add_queue.svg</file>	
+        <file>Papirus-Light/start_queue.svg</file>	
+        <file>Papirus-Light/stop_queue.svg</file>	
+        <file>Papirus-Light/pause_queue.svg</file>	
+        <file>Papirus-Light/remove_queue.svg</file>	
+        <file>Papirus-Light/menu.svg</file>	
+        <file>Papirus-Light/up.svg</file>	
+        <file>Papirus-Light/down.svg</file>	
+        <file>Papirus-Light/multi_up.svg</file>	
+        <file>Papirus-Light/multi_down.svg</file>	
+        <file>Papirus-Light/clipboard.svg</file>	
+        <file>Papirus-Light/refresh.svg</file>
 
 
 	</qresource>

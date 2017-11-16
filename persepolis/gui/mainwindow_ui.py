@@ -14,7 +14,7 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from PyQt5 import QtCore, QtGui, QtWidgets
-from PyQt5.QtWidgets import QDoubleSpinBox, QPushButton, QComboBox,  QMenu, QTreeView, QSplitter, QSizePolicy, QGridLayout, QHBoxLayout, QVBoxLayout, QMenu, QTableWidgetItem, QAbstractItemView, QApplication, QToolBar, QMenuBar, QStatusBar, QTableWidget, QAction, QMainWindow, QWidget, QFrame, QAbstractItemView, QCheckBox, QSpinBox, QLabel
+from PyQt5.QtWidgets import QDateTimeEdit, QDoubleSpinBox, QPushButton, QComboBox,  QMenu, QTreeView, QSplitter, QSizePolicy, QGridLayout, QHBoxLayout, QVBoxLayout, QMenu, QTableWidgetItem, QAbstractItemView, QApplication, QToolBar, QMenuBar, QStatusBar, QTableWidget, QAction, QMainWindow, QWidget, QFrame, QAbstractItemView, QCheckBox, QSpinBox, QLabel
 from PyQt5.QtGui import QIcon, QStandardItemModel, QStandardItem
 from PyQt5.QtCore import QCoreApplication, QRect, QSize, Qt
 import ast
@@ -202,15 +202,6 @@ class MainWindow_Ui(QMainWindow):
             category_table_header)
         self.category_tree.header().setStretchLastSection(True)
 
-        # inserting items in category_tree
-        for item in ['All Downloads', 'Single Downloads']:
-            qstandarditem = QStandardItem(item)
-            font = QtGui.QFont()
-            font.setBold(True)
-            qstandarditem.setFont(font)
-            qstandarditem.setEditable(False)
-            self.category_tree_model.appendRow(qstandarditem)
-
 # queue_panel
         self.queue_panel_widget = QWidget(self)
 
@@ -243,21 +234,11 @@ class MainWindow_Ui(QMainWindow):
         self.start_frame.setFrameShadow(QFrame.Raised)
 
         start_frame_verticalLayout = QVBoxLayout(self.start_frame)
-        horizontalLayout_5 = QHBoxLayout()
 
-        self.start_hour_spinBox = QSpinBox(self.start_frame)
-        self.start_hour_spinBox.setMaximum(23)
-        horizontalLayout_5.addWidget(self.start_hour_spinBox)
-
-        self.start_label = QLabel(self.start_frame)
-        horizontalLayout_5.addWidget(self.start_label)
-
-        self.start_minute_spinBox = QSpinBox(self.start_frame)
-        self.start_minute_spinBox.setMaximum(59)
-        horizontalLayout_5.addWidget(self.start_minute_spinBox)
-
-        start_frame_verticalLayout.addLayout(horizontalLayout_5)
-
+        self.start_time_qDataTimeEdit = QDateTimeEdit(self.start_frame)
+        self.start_time_qDataTimeEdit.setDisplayFormat('H:mm')
+        start_frame_verticalLayout.addWidget(self.start_time_qDataTimeEdit)
+  
         start_verticalLayout.addWidget(self.start_frame)
 # end time
 
@@ -269,21 +250,11 @@ class MainWindow_Ui(QMainWindow):
         self.end_frame.setFrameShadow(QFrame.Raised)
 
         end_frame_verticalLayout = QVBoxLayout(self.end_frame)
-        horizontalLayout_6 = QHBoxLayout()
 
-        self.end_hour_spinBox = QSpinBox(self.end_frame)
-        self.end_hour_spinBox.setMaximum(23)
-        horizontalLayout_6.addWidget(self.end_hour_spinBox)
-
-        self.end_label = QLabel(self.end_frame)
-        horizontalLayout_6.addWidget(self.end_label)
-
-        self.end_minute_spinBox = QSpinBox(self.end_frame)
-        self.end_minute_spinBox.setMaximum(59)
-        horizontalLayout_6.addWidget(self.end_minute_spinBox)
-
-        end_frame_verticalLayout.addLayout(horizontalLayout_6)
-
+        self.end_time_qDateTimeEdit = QDateTimeEdit(self.end_frame)
+        self.end_time_qDateTimeEdit.setDisplayFormat('H:mm')
+        end_frame_verticalLayout.addWidget(self.end_time_qDateTimeEdit)
+ 
         start_verticalLayout.addWidget(self.end_frame)
 
         self.reverse_checkBox = QCheckBox(self)
@@ -369,7 +340,7 @@ class MainWindow_Ui(QMainWindow):
         self.download_table.setColumnHidden(9, True)
 
         download_table_header = ['File Name', 'Status', 'Size', 'Downloaded', 'Percentage', 'Connections',
-                                 'Transfer rate', 'Estimate time left', 'Gid', 'Info', 'First try date', 'Last try date', 'Category']
+                                 'Transfer rate', 'Estimate time left', 'Gid', 'Link', 'First try date', 'Last try date', 'Category']
         self.download_table.setHorizontalHeaderLabels(download_table_header)
 
 # fixing the size of download_table when window is Maximized!
@@ -405,14 +376,14 @@ class MainWindow_Ui(QMainWindow):
         self.toolBar2 = QToolBar(self)
         self.addToolBar(QtCore.Qt.TopToolBarArea, self.toolBar2)
         self.toolBar2.setWindowTitle('Menu')
-        self.toolBar2.setIconSize(QSize(38, 38))
+        self.toolBar2.setIconSize(QSize(32, 32))
         self.toolBar2.setFloatable(False)
         self.toolBar2.setMovable(False)
 
         self.toolBar = QToolBar(self)
         self.addToolBar(QtCore.Qt.TopToolBarArea, self.toolBar)
         self.toolBar.setWindowTitle('Toolbar')
-        self.toolBar.setIconSize(QSize(38, 38))
+        self.toolBar.setIconSize(QSize(32, 32))
         self.toolBar.setFloatable(False)
         self.toolBar.setMovable(False)
 
@@ -600,10 +571,8 @@ class MainWindow_Ui(QMainWindow):
 # labels
         self.queue_panel_show_button.setText("Hide options")
         self.start_checkBox.setText("Start Time")
-        self.start_label.setText(":")
 
         self.end_checkBox.setText("End Time")
-        self.end_label.setText(":")
 
         self.reverse_checkBox.setText("Download bottom of\n the list first")
 

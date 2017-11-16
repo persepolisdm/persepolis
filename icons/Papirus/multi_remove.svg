@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" id="svg2" width="32" height="32" version="1">
+ <path id="path4" fill="#ccc" d="m27 28.5v-25c0-0.831-0.669-1.5-1.5-1.5h-19c-0.831 0-1.5 0.669-1.5 1.5v25c0 0.831 0.669 1.5 1.5 1.5h19c0.831 0 1.5-0.669 1.5-1.5z"/>
+ <path style="opacity:0.5" id="path14-3" d="m 10,11 0,1 12,0 0,-1 z m 0,3 0,1 12,0 0,-1 z m 0,3 0,1 12,0 0,-1 z m 0,3 0,1 9,0 0,-1 z"/>
+ <path id="path6" fill="#fff" opacity=".1" d="m6.5 2c-0.831 0-1.5 0.669-1.5 1.5v1c0-0.831 0.669-1.5 1.5-1.5h19c0.831 0 1.5 0.669 1.5 1.5v-1c0-0.831-0.669-1.5-1.5-1.5z"/>
+ <path id="path8" opacity=".2" d="m5 28.5v1c0 0.831 0.669 1.5 1.5 1.5h19c0.831 0 1.5-0.669 1.5-1.5v-1c0 0.831-0.669 1.5-1.5 1.5h-19c-0.831 0-1.5-0.669-1.5-1.5z"/>
+ <circle style="fill:#db3c30;fill-rule:evenodd;fill-opacity:1" id="circle12" cx="24" cy="23" r="8"/>
+ <path id="path16" fill-rule="evenodd" opacity=".2" d="m31.979 23.424a8 8 0 0 1 -7.979 7.576 8 8 0 0 1 -7.979 -7.424 8 8 0 0 0 -0.021 0.424 8 8 0 0 0 8 8 8 8 0 0 0 8 -8 8 8 0 0 0 -0.02148 -0.57617z"/>
+ <rect style="opacity:1;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:4;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" id="rect4141" width="2" height="8" x="-.29" y="29.23" transform="matrix(0.70710678,-0.70710678,0.70710678,0.70710678,0,0)"/>
+ <rect id="rect4143" width="2" height="8" x="32.23" y="-4.71" transform="matrix(0.70710678,0.70710678,-0.70710678,0.70710678,0,0)" style="opacity:1;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:4;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"/>
+</svg>

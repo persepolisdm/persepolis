@@ -55,9 +55,6 @@ class ProgressWindow_Ui(QWidget):
 # downloaded_label
         self.downloaded_label = QtWidgets.QLabel(self.informations_tab)
         self.informations_verticalLayout.addWidget(self.downloaded_label)
-# save_label
-        self.save_label = QtWidgets.QLabel(self.informations_tab)
-        self.informations_verticalLayout.addWidget(self.save_label)
 # rate_label
         self.rate_label = QtWidgets.QLabel(self.informations_tab)
         self.informations_verticalLayout.addWidget(self.rate_label)
@@ -161,7 +158,6 @@ class ProgressWindow_Ui(QWidget):
         self.link_label.setText("Link :")
         self.status_label.setText("Status : ")
         self.downloaded_label.setText("Downloaded :")
-        self.save_label.setText("Save as : ")
         self.rate_label.setText("Transfer rate : ")
         self.time_label.setText("Estimate time left :")
         self.connections_label.setText("Number of connections : ")

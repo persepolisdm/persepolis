@@ -17,12 +17,10 @@
 import os
 
 from PyQt5 import QtCore, QtGui, QtWidgets
-from PyQt5.QtWidgets import QDoubleSpinBox, QPushButton, QComboBox, QSpinBox, QVBoxLayout, QHBoxLayout, QLabel, QApplication, QWidget, QFileDialog, QMessageBox, QSizePolicy, QGridLayout, QCheckBox, QFrame, QLineEdit, QPushButton
+from PyQt5.QtWidgets import QDateTimeEdit, QDoubleSpinBox, QPushButton, QComboBox, QSpinBox, QVBoxLayout, QHBoxLayout, QLabel, QApplication, QWidget, QFileDialog, QMessageBox, QSizePolicy, QGridLayout, QCheckBox, QFrame, QLineEdit, QPushButton
 from PyQt5.QtGui import QIcon
-from persepolis.scripts.newopen import Open
 from persepolis.gui import icons_resource
 
-home_address = os.path.expanduser("~")
 
 
 class AddLinkWindow_Ui(QWidget):
@@ -30,7 +28,7 @@ class AddLinkWindow_Ui(QWidget):
         super().__init__()
         self.persepolis_setting = persepolis_setting
 
-        # window ->
+        # get icons name
         icons = ':/' + \
             str(self.persepolis_setting.value('settings/icons')) + '/'
 
@@ -220,16 +218,11 @@ class AddLinkWindow_Ui(QWidget):
         self.start_frame.setFrameShadow(QFrame.Raised)
 
         horizontalLayout_5 = QHBoxLayout(self.start_frame)
-        self.start_hour_spinBox = QSpinBox(self.start_frame)
-        self.start_hour_spinBox.setMaximum(23)
-        horizontalLayout_5.addWidget(self.start_hour_spinBox)
 
-        self.start_label = QLabel(self.start_frame)
-        horizontalLayout_5.addWidget(self.start_label)
-
-        self.start_minute_spinBox = QSpinBox(self.start_frame)
-        self.start_minute_spinBox.setMaximum(59)
-        horizontalLayout_5.addWidget(self.start_minute_spinBox)
+        self.start_time_qDataTimeEdit = QDateTimeEdit(self.start_frame)
+        self.start_time_qDataTimeEdit.setDisplayFormat('H:mm')
+        horizontalLayout_5.addWidget(self.start_time_qDataTimeEdit)
+        
         start_verticalLayout.addWidget(self.start_frame)
         time_limit_horizontalLayout.addLayout(start_verticalLayout)
 
@@ -245,16 +238,10 @@ class AddLinkWindow_Ui(QWidget):
 
         horizontalLayout_6 = QHBoxLayout(self.end_frame)
 
-        self.end_hour_spinBox = QSpinBox(self.end_frame)
-        self.end_hour_spinBox.setMaximum(23)
-        horizontalLayout_6.addWidget(self.end_hour_spinBox)
-
-        self.end_label = QLabel(self.end_frame)
-        horizontalLayout_6.addWidget(self.end_label)
-
-        self.end_minute_spinBox = QSpinBox(self.end_frame)
-        self.end_minute_spinBox.setMaximum(59)
-        horizontalLayout_6.addWidget(self.end_minute_spinBox)
+        self.end_time_qDateTimeEdit = QDateTimeEdit(self.end_frame)
+        self.end_time_qDateTimeEdit.setDisplayFormat('H:mm')
+        horizontalLayout_6.addWidget(self.end_time_qDateTimeEdit)
+ 
         end_verticalLayout.addWidget(self.end_frame)
         time_limit_horizontalLayout.addLayout(end_verticalLayout)
 
@@ -354,9 +341,7 @@ class AddLinkWindow_Ui(QWidget):
         self.folder_label.setText("Download Folder : ")
 
         self.start_checkBox.setText("Start Time")
-        self.start_label.setText(":")
         self.end_checkBox.setText("End Time")
-        self.end_label.setText(":")
 
         self.limit_checkBox.setText("Limit Speed")
         self.limit_comboBox.setItemText(0, "KB/S")

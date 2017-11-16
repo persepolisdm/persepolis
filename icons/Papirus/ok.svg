@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" id="svg16" width="32" height="32" version="1">
+ <rect style="opacity:0.2;fill:#000000;fill-opacity:1" id="rect4148" width="28" height="28" x="-31" y="-30" rx="14" ry="14" transform="matrix(0,-1,-1,0,0,0)"/>
+ <rect id="rect2" width="28" height="28" x="-30" y="-30" rx="14" ry="14" transform="matrix(0,-1,-1,0,0,0)" style="fill:#4caf50;fill-opacity:1"/>
+ <path style="fill:#ffffff;fill-opacity:1;opacity:0.2" id="rect4152" d="M 16 2 C 8.244 2 2 8.244 2 16 C 2 16.168842 2.0195214 16.33264 2.0253906 16.5 C 2.2891326 8.9794325 8.4128418 3 16 3 C 23.587158 3 29.710867 8.9794325 29.974609 16.5 C 29.980479 16.33264 30 16.168842 30 16 C 30 8.244 23.756 2 16 2 z"/>
+ <g style="opacity:0.2;fill:#000000;fill-opacity:1" id="g4183" transform="matrix(1.8386625,0,0,1.8386625,1.2935535,-1900.9717)">
+  <path id="path4185" d="m 11.564301,1039.6343 -4.2303459,4.2304 -2.6920436,-2.6921 -1.5383259,1.5383 2.6920436,2.6921 1.5383072,1.5383 5.7686716,-5.7687 z" style="fill:#000000;fill-opacity:1"/>
+ </g>
+ <g id="g2297" transform="matrix(1.8386625,0,0,1.8386625,1.2935535,-1901.9717)" style="fill:#ffffff;fill-opacity:1">
+  <path style="fill:#ffffff;fill-opacity:1" id="path4-3" d="m 11.564301,1039.6343 -4.2303459,4.2304 -2.6920436,-2.6921 -1.5383259,1.5383 2.6920436,2.6921 1.5383072,1.5383 5.7686716,-5.7687 z"/>
+ </g>
+</svg>

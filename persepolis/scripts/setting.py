@@ -16,6 +16,7 @@
 from persepolis.gui.setting_ui import Setting_Ui
 import ast
 import os
+import sys
 import copy
 from PyQt5 import QtWidgets
 from PyQt5.QtWidgets import QFileDialog, QStyleFactory, QMessageBox
@@ -28,17 +29,6 @@ from persepolis.scripts import startup
 
 home_address = os.path.expanduser("~")
 os_type = platform.system()
-
-# config_folder
-if os_type == 'Linux' or os_type == 'FreeBSD' or os_type == 'OpenBSD':
-    config_folder = os.path.join(
-        str(home_address), ".config/persepolis_download_manager")
-elif os_type == 'Darwin':
-    config_folder = os.path.join(
-        str(home_address), "Library/Application Support/persepolis_download_manager")
-elif os_type == 'Windows':
-    config_folder = os.path.join(
-        str(home_address), 'AppData', 'Local', 'persepolis_download_manager')
 
 
 class PreferencesWindow(Setting_Ui):
@@ -66,6 +56,22 @@ class PreferencesWindow(Setting_Ui):
         wait_queue_list = self.persepolis_setting.value('wait-queue')
         q_time = QTime(int(wait_queue_list[0]), int(wait_queue_list[1]))
         self.wait_queue_time.setTime(q_time)
+
+# change aria2 path
+        self.aria2_path_pushButton.clicked.connect(self.changeAria2Path)
+        self.aria2_path_checkBox.toggled.connect(self.ariaCheckBoxToggled)
+        aria2_path = self.persepolis_setting.value('settings/aria2_path')
+
+        self.aria2_path_lineEdit.setEnabled(False)
+        if aria2_path != None:
+            self.aria2_path_checkBox.setChecked(True)
+            self.aria2_path_lineEdit.setText(str(aria2_path))
+
+        self.ariaCheckBoxToggled('aria2')
+
+        if os_type == 'Linux' or os_type == 'FreeBSD' or os_type == 'OpenBSD':
+            for widget in self.aria2_path_checkBox, self.aria2_path_lineEdit, self.aria2_path_pushButton:
+                widget.hide()
 
 # save_as_tab
         self.download_folder_lineEdit.setText(
@@ -112,7 +118,7 @@ class PreferencesWindow(Setting_Ui):
             str(self.persepolis_setting.value('color-scheme')))
         self.color_comboBox.setCurrentIndex(current_color_index)
 # set icons
-        icons = ['Archdroid-Red', 'Archdroid-Blue', 'Breeze', 'Breeze-Dark']
+        icons = ['Archdroid-Red', 'Archdroid-Blue', 'Breeze', 'Breeze-Dark', 'Papirus', 'Papirus-Dark', 'Papirus-Light']
         self.icon_comboBox.addItems(icons)
 
         current_icons_index = self.icon_comboBox.findText(
@@ -304,9 +310,6 @@ class PreferencesWindow(Setting_Ui):
 
     
 
-
-
-
     def fontCheckBoxState(self,checkBox):
         # deactive fontComboBox and font_size_spinBox if font_checkBox not checked!
         if self.font_checkBox.isChecked():
@@ -331,10 +334,29 @@ class PreferencesWindow(Setting_Ui):
         self.close()
 
     def soundFrame(self, checkBox):
-        if self.enable_notifications_checkBox.isChecked() == True:
+        if self.enable_notifications_checkBox.isChecked():
             self.sound_frame.setEnabled(True)
         else:
             self.sound_frame.setEnabled(False)
+
+    def ariaCheckBoxToggled(self, checkBox):
+        if self.aria2_path_checkBox.isChecked():
+            self.aria2_path_pushButton.setEnabled(True)
+        else:
+            self.aria2_path_pushButton.setEnabled(False)
+    def changeAria2Path(self, button):
+        cwd = sys.argv[0]
+        cwd = os.path.dirname(cwd)
+
+        f_path, filters = QFileDialog.getOpenFileName(
+            self, 'Select aria2 path', cwd)
+
+        # if path is correct:
+        if os.path.isfile(str(f_path)):
+            self.aria2_path_lineEdit.setText(str(f_path))
+        else:
+            self.aria2_path_checkBox.setChecked(False)
+
 
     def downloadFolderPushButtonClicked(self, button):
         download_path = str(
@@ -350,6 +372,7 @@ class PreferencesWindow(Setting_Ui):
             self.download_folder_lineEdit.setText(fname)
             self.persepolis_setting.setValue(
                 'settings/download_path', str(fname))
+
 
     def tempDownloadPushButtonClicked(self, button):
         download_path_temp = str(
@@ -380,7 +403,7 @@ class PreferencesWindow(Setting_Ui):
         self.setting_dict = {'wait-queue': [0, 0], 'awake': 'no', 'custom-font': 'no', 'column0': 'yes', 'column1': 'yes', 'column2': 'yes', 'column3': 'yes', 'column4': 'yes', 'column5': 'yes', 'column6': 'yes', 'column7': 'yes', 'column10': 'yes', 'column11': 'yes', 'column12': 'yes',
                              'subfolder': 'yes', 'startup': 'no', 'show-progress': 'yes', 'show-menubar': 'no', 'show-sidepanel': 'yes', 'rpc-port': 6801, 'notification': 'Native notification', 'after-dialog': 'yes', 'tray-icon': 'yes',
                              'max-tries': 5, 'retry-wait': 0, 'timeout': 60, 'connections': 16, 'download_path_temp': download_path_temp_default, 'download_path': download_path_default, 'sound': 'yes', 'sound-volume': 100, 'style': 'Fusion',
-                             'color-scheme': 'Persepolis Dark Red', 'icons': 'Archdroid-Red', 'font': 'Ubuntu', 'font-size': 9}
+                             'color-scheme': 'Persepolis Dark Red', 'icons': 'Archdroid-Red', 'font': 'Ubuntu', 'font-size': 9, 'aria2_path': ''}
 
         self.tries_spinBox.setValue(int(self.setting_dict['max-tries']))
         self.wait_spinBox.setValue(int(self.setting_dict['retry-wait']))
@@ -388,6 +411,8 @@ class PreferencesWindow(Setting_Ui):
         self.connections_spinBox.setValue(
             int(self.setting_dict['connections']))
         self.rpc_port_spinbox.setValue(int(self.setting_dict['rpc-port']))
+        self.aria2_path_lineEdit.setText('')
+        self.aria2_path_checkBox.setChecked(False)
 
 # wait-queue
         wait_queue_list = self.setting_dict['wait-queue']
@@ -495,6 +520,11 @@ class PreferencesWindow(Setting_Ui):
             'notification', self.notification_comboBox.currentText())
         self.persepolis_setting.setValue(
             'wait-queue', self.wait_queue_time.text().split(':'))
+
+# change aria2_path
+        if self.aria2_path_checkBox.isChecked():
+            self.persepolis_setting.setValue('settings/aria2_path', str(self.aria2_path_lineEdit.text())) 
+
 # changing icons
 
         icons = self.icon_comboBox.currentText()
@@ -539,7 +569,7 @@ class PreferencesWindow(Setting_Ui):
             self.enable_system_tray_checkBox.setChecked(True)
 
 # enable_system_tray_checkBox
-        if self.enable_system_tray_checkBox.isChecked() == True:
+        if self.enable_system_tray_checkBox.isChecked():
             self.persepolis_setting.setValue('tray-icon', 'yes')
             self.parent.system_tray_icon.show()
             self.parent.minimizeAction.setEnabled(True)
@@ -551,13 +581,13 @@ class PreferencesWindow(Setting_Ui):
             self.parent.trayAction.setChecked(False)
 
 # after_download_checkBox
-        if self.after_download_checkBox.isChecked() == True:
+        if self.after_download_checkBox.isChecked():
             self.persepolis_setting.setValue('after-dialog', 'yes')
         else:
             self.persepolis_setting.setValue('after-dialog', 'no')
 
 # show_menubar_checkbox
-        if self.show_menubar_checkbox.isChecked() == True:
+        if self.show_menubar_checkbox.isChecked():
             self.persepolis_setting.setValue('show-menubar', 'yes')
             self.parent.menubar.show()
             self.parent.toolBar2.hide()
@@ -570,7 +600,7 @@ class PreferencesWindow(Setting_Ui):
             self.parent.showMenuBarAction.setChecked(False)
 
 # show_sidepanel_checkbox
-        if self.show_sidepanel_checkbox.isChecked() == True:
+        if self.show_sidepanel_checkbox.isChecked():
             self.persepolis_setting.setValue('show-sidepanel', 'yes')
             self.parent.category_tree_qwidget.show()
         else:
@@ -578,12 +608,12 @@ class PreferencesWindow(Setting_Ui):
             self.parent.category_tree_qwidget.hide()
 
 # show_progress_window_checkbox
-        if self.show_progress_window_checkbox.isChecked() == True:
+        if self.show_progress_window_checkbox.isChecked():
             self.persepolis_setting.setValue('show-progress', 'yes')
         else:
             self.persepolis_setting.setValue('show-progress', 'no')
 
-        if self.startup_checkbox.isChecked() == True:
+        if self.startup_checkbox.isChecked():
             self.persepolis_setting.setValue('startup', 'yes')
 
             if not(startup.checkstartup()):  # checking existance of Persepolis in  system's startup
@@ -627,7 +657,7 @@ class PreferencesWindow(Setting_Ui):
         for folder in folder_list:
             osCommands.makeDirs(folder)
 
-        if self.enable_notifications_checkBox.isChecked() == True:
+        if self.enable_notifications_checkBox.isChecked():
             self.persepolis_setting.setValue('sound', 'yes')
         else:
             self.persepolis_setting.setValue('sound', 'no')
@@ -773,7 +803,7 @@ class PreferencesWindow(Setting_Ui):
         show_message_box = False
         for key in self.first_key_value_dict.keys():
             if self.first_key_value_dict[key] != self.second_key_value_dict[key]:
-                if key in ['download_path_temp', 'download_path', 'custom-font', 'rpc-port', 'max-tries', 'retry-wait', 'timeout', 'connections', 'style', 'font', 'font-size', 'color-scheme']:
+                if key in ['aria2_path', 'download_path_temp', 'download_path', 'custom-font', 'rpc-port', 'max-tries', 'retry-wait', 'timeout', 'connections', 'style', 'font', 'font-size', 'color-scheme']:
                     show_message_box = True
 
         # if any thing changed that needs restarting, then notify user about "Some changes take effect after restarting persepolis"

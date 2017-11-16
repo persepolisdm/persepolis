@@ -15,27 +15,19 @@
 
 
 # THIS FILE CONTAINING SOME VARIABLES , ... THAT USING FOR INITIALIZING PERSEPOLIS
-# This py file imported in persepolis-download-manager file
 
-# The GID (or gid) is a key to manage each download. Each download will be assigned a unique GID.
-# The GID is stored as 64-bit binary value in aria2. For RPC access,
-# it is represented as a hex string of 16 characters (e.g., 2089b05ecca3d829).
-# Normally, aria2 generates this GID for each download, but the user can
-# specify GIDs manually
 import time
 import os
 import shutil
-import ast
-from persepolis.scripts.newopen import Open
 from persepolis.scripts import osCommands
 import platform
 from persepolis.scripts.compatibility import compatibility
-import glob
-import PyQt5
 from PyQt5.QtCore import QSettings
 from persepolis.scripts.browser_integration import browserIntegration
-
+from persepolis.scripts.data_base import PersepolisDB, PluginsDB
 # initialization
+
+# user home address
 home_address = os.path.expanduser("~")
 
 # os_type >> Linux or Darwin(Mac osx) or Windows(Microsoft Windows) or
@@ -53,35 +45,8 @@ elif os_type == 'Windows':
     config_folder = os.path.join(
         str(home_address), 'AppData', 'Local', 'persepolis_download_manager')
 
-# download information (Percentage , Estimate time left , size of file , ... ) saved in download_info folder.
-# Persepolis creates one file for every download .
-# Persepolis uses download's GID for the name of the file
-download_info_folder = os.path.join(config_folder, "download_info")
 
-# category_folder contains some file , and every files named with
-# categories . every file contains gid of downloads for that category
-category_folder = os.path.join(config_folder, 'category_folder')
-
-# queue_info_folder is contains queues information(start time,end
-# time,limit speed , ...)
-queue_info_folder = os.path.join(config_folder, "queue_info")
-
-
-# queue initialization files
-# queues_list contains queues name
-queues_list = os.path.join(config_folder, 'queues_list')
-
-# download_list_file contains GID of all downloads
-download_list_file = os.path.join(config_folder, "download_list_file")
-
-# download_list_file_active for active downloads
-download_list_file_active = os.path.join(
-    config_folder, "download_list_file_active")
-
-# single_downloads_list_file contains gid of non categorised downloads
-single_downloads_list_file = os.path.join(category_folder, "Single Downloads")
-
-# persepolis tmp folder in /tmp
+# persepolis tmp folder path
 if os_type != 'Windows':
     user_name_split = home_address.split('/')
     user_name = user_name_split[2]
@@ -90,47 +55,49 @@ else:
     persepolis_tmp = os.path.join(
         str(home_address), 'AppData', 'Local', 'persepolis_tmp')
 
-# removing persepolis_tmp at persepolis startup
-osCommands.removeDir(persepolis_tmp)
-
 # persepolis_shutdown
 persepolis_shutdown = os.path.join(persepolis_tmp, 'shutdown')
-# shutil.rmtree(persepolis_shutdown, ignore_errors=True, onerror=None)
 
 
-# creating folders
-for folder in [config_folder, download_info_folder, persepolis_tmp, category_folder, queue_info_folder, persepolis_shutdown]:
+# create folders
+for folder in [config_folder, persepolis_tmp, persepolis_shutdown]:
     osCommands.makeDirs(folder)
 
-# creating files
-for file in [queues_list, download_list_file, download_list_file_active, single_downloads_list_file]:
-    osCommands.touch(file)
+# create an object for PersepolisDB
+persepolis_db = PersepolisDB()
 
+# create tables
+persepolis_db.createTables()
 
-# lock files perventing to access a file simultaneously
+# close connections
+persepolis_db.closeConnections()
 
-# removing lock files in starting persepolis
-pattern_folder_list = [config_folder,
-                       download_info_folder, category_folder, queue_info_folder]
+# create an object for PluginsDB
+plugins_db = PluginsDB()
 
-for folder in pattern_folder_list:
-    pattern = os.path.join(str(folder), '*.lock')
-    for file in glob.glob(pattern):
-        osCommands.remove(file)
+# create tables
+plugins_db.createTables()
 
+# delete old links
+plugins_db.deleteOldLinks()
 
+# close connections
+plugins_db.closeConnections()
+
+# persepolisdm.log file contains persepolis log.
 from persepolis.scripts import logger
+
 # refresh logs!
 log_file = os.path.join(str(config_folder), 'persepolisdm.log')
 
-# getting current time
+# get current time
 current_time = time.strftime('%Y/%m/%d %H:%M:%S')
 
-# finding number of lines in log_file
+# find number of lines in log_file. 
 with open(log_file) as f:
     lines = sum(1 for _ in f)
 
-# if number of lines in log_file is more than 300, then clean first 200 line in log_file
+# if number of lines in log_file is more than 300, then clean first 200 line in log_file.
 if lines < 300:
     f = open(log_file, 'a')
     f.writelines('Persepolis Download Manager, '\
@@ -155,14 +122,15 @@ else: # delete first 200 lines
     f.close()
 
 
-
-#import persepolis_setting
+# import persepolis_setting
 # persepolis is using QSettings for saving windows size and windows
-# position and program settings
+# position and program settings.
+
 persepolis_setting = QSettings('persepolis_download_manager', 'persepolis')
 
 persepolis_setting.beginGroup('settings')
 
+# download files is downloading in temporary folder(download_path_temp) and then they will be moved to user download folder(download_path) after completion.
 # persepolis temporary download folder
 if os_type != 'Windows':
     download_path_temp = str(home_address) + '/.persepolis'
@@ -170,13 +138,14 @@ else:
     download_path_temp = os.path.join(
         str(home_address), 'AppData', 'Local', 'persepolis')
 
+# user download folder path    
 download_path = os.path.join(str(home_address), 'Downloads', 'Persepolis')
 
-
+# Persepolis default setting
 default_setting_dict = {'wait-queue': [0, 0], 'awake': 'no', 'custom-font': 'no', 'column0': 'yes', 'column1': 'yes', 'column2': 'yes', 'column3': 'yes', 'column4': 'yes', 'column5': 'yes', 'column6': 'yes', 'column7': 'yes', 'column10': 'yes', 'column11': 'yes', 'column12': 'yes',
                              'subfolder': 'yes', 'startup': 'no', 'show-progress': 'yes', 'show-menubar': 'no', 'show-sidepanel': 'yes', 'rpc-port': 6801, 'notification': 'Native notification', 'after-dialog': 'yes', 'tray-icon': 'yes',
                              'max-tries': 5, 'retry-wait': 0, 'timeout': 60, 'connections': 16, 'download_path_temp': download_path_temp, 'download_path': download_path, 'sound': 'yes', 'sound-volume': 100, 'style': 'Fusion',
-                             'color-scheme': 'Persepolis Dark Red', 'icons': 'Archdroid-Red', 'font': 'Ubuntu', 'font-size': 9}
+                             'color-scheme': 'Persepolis Dark Red', 'icons': 'Archdroid-Red', 'font': 'Ubuntu', 'font-size': 9, 'aria2_path': ''}
 
 # this loop is checking values in persepolis_setting . if value is not
 # valid then value replaced by default_setting_dict value
@@ -195,10 +164,12 @@ download_path = persepolis_setting.value('download_path')
 
 folder_list = [download_path_temp, download_path]
 
+# add subfolders to folder_list if user checked subfolders check box in setting window.
 if persepolis_setting.value('subfolder') == 'yes':
     for folder in ['Audios', 'Videos', 'Others', 'Documents', 'Compressed']:
         folder_list.append(os.path.join(download_path, folder))
 
+# create folders in folder_list
 for folder in folder_list:
     osCommands.makeDirs(folder)
 
@@ -217,28 +188,34 @@ for browser in ['chrome', 'chromium', 'opera', 'vivaldi', 'firefox']:
     browserIntegration(browser)
 
 # compatibility
-persepolis_version = float(persepolis_setting.value('version/version', 2.2))
-if persepolis_version < 2.3:
-    compatibility()
-    persepolis_version = 2.3
-    persepolis_setting.setValue('version/version', 2.3)
+persepolis_version = float(persepolis_setting.value('version/version', 2.5))
+if persepolis_version < 2.6:
+    try:
+        compatibility()
+    except Exception as e:
+    
+        print('compatibility ERROR')
+
+        print(str(e))
+        # persepolis.db file path 
+        persepolis_db_path = os.path.join(config_folder, 'persepolis.db')
+
+
+        # remove and create data base again
+        osCommands.remove(persepolis_db_path)
+
+
+        # create an object for PersepolisDB
+        persepolis_db = PersepolisDB()
+
+        # create tables
+        persepolis_db.createTables()
+
+        # close connections
+        persepolis_db.closeConnections()
+
+
+    persepolis_version = 2.6
+    persepolis_setting.setValue('version/version', 2.6)
     persepolis_setting.sync()
 
-if persepolis_version != 2.4:
-    if os_type == 'Darwin':
-        try:
-            old_config_folder = os.path.join(
-                str(home_address), ".config/persepolis_download_manager")
-            shutil.copytree(old_config_folder,  config_folder)
-            osCommands.removeDir(old_config_folder)
-            persepolis_setting.setValue('version/version', 2.41)
-            persepolis_setting.sync()
-        except Exception as e:
-            print(e)
-            logger.logObj.error("Failed to load configuration!", exc_info=True)
-    else:
-
-        persepolis_setting.setValue('version/version', 2.41)
-
-persepolis_setting.setValue('version/version', 2.42) 
-persepolis_setting.sync()
