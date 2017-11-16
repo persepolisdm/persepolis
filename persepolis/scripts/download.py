@@ -44,6 +44,9 @@ host = 'localhost'
 # get port from persepolis_setting
 port = int(persepolis_setting.value('settings/rpc-port'))
 
+# get aria2_path
+aria2_path = persepolis_setting.value('settings/aria2_path')
+
 # xml rpc
 SERVER_URI_FORMAT = 'http://{}:{:d}/rpc'
 server_uri = SERVER_URI_FORMAT.format(host, port)
@@ -59,19 +62,28 @@ def startAria():
 
     # in macintosh
     elif os_type == 'Darwin':
-        cwd = sys.argv[0]
-        cwd = os.path.dirname(cwd)
-        aria2d = cwd + "/aria2c"
+        if aria2_path == None:
+            cwd = sys.argv[0]
+            cwd = os.path.dirname(cwd)
+            aria2d = cwd + "/aria2c"
+        else:
+            aria2d = aria2_path
+
         os.system("'" + aria2d + "' --version 1> /dev/null")
         os.system("'" + aria2d + "' --no-conf  --enable-rpc --rpc-listen-port '" +
                   str(port) + "' --rpc-max-request-size=2M --rpc-listen-all --quiet=true &")
 
     # in Windows
     elif os_type == 'Windows':
+        if aria2_path == None:
+            cwd = sys.argv[0]
+            cwd = os.path.dirname(cwd)
+            aria2d = os.path.join(cwd, "aria2c.exe")  # aria2c.exe path
+        else:
+            aria2d = aria2_path
+
         NO_WINDOW = 0x08000000
-        cwd = sys.argv[0]
-        cwd = os.path.dirname(cwd)
-        aria2d = os.path.join(cwd, "aria2c.exe")  # defining aria2c.exe path
+
 
         # aria2 command in windows
         subprocess.Popen([aria2d, '--no-conf', '--enable-rpc', '--rpc-listen-port=' + str(port),
