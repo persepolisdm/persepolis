@@ -62,7 +62,7 @@ def startAria():
 
     # in macintosh
     elif os_type == 'Darwin':
-        if aria2_path == "":
+        if aria2_path == "" or aria2_path == None or os.path.isfile(str(aria2_path)) == False:
             cwd = sys.argv[0]
             cwd = os.path.dirname(cwd)
             aria2d = cwd + "/aria2c"
@@ -75,7 +75,7 @@ def startAria():
 
     # in Windows
     elif os_type == 'Windows':
-        if aria2_path == None:
+        if aria2_path == "" or aria2_path == None or os.path.isfile(str(aria2_path)) == False:
             cwd = sys.argv[0]
             cwd = os.path.dirname(cwd)
             aria2d = os.path.join(cwd, "aria2c.exe")  # aria2c.exe path
