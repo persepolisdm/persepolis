@@ -2509,6 +2509,11 @@ class MainWindow(MainWindow_Ui):
             # remove download item from data base
             self.persepolis_db.deleteItemInDownloadTable(gid, category)
 
+        # tell the CheckDownloadInfoThread that job is done!
+        global checking_flag
+        checking_flag = 0
+
+
 
 
 
