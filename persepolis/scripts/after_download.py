@@ -52,11 +52,16 @@ class AfterDownloadWindow(AfterDownloadWindow_Ui):
         self.link_lineEdit.setToolTip(link)
 
         # file_name
-        file_name = "<b>File name</b> : " + \
-            str(self.dict['file_name'])
-        self.file_name_label.setText(file_name)
-        self.setWindowTitle(str(file_name))
 
+        window_title = str(self.dict['file_name'])
+        file_name = "<b>File name</b> : " + \
+                window_title
+ 
+        self.setWindowTitle(window_title)
+
+        self.file_name_label.setText(file_name)
+
+        # size
         size = "<b>Size</b> : " + str(self.dict['size'])
         self.size_label.setText(size)
 
