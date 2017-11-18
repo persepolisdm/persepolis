@@ -529,7 +529,29 @@ def downloadCompleteAction(parent, path, download_path, file_name, file_size):
         i = i + 1
 
     free_space = freeSpace(download_path)
-    if free_space >= file_size:
+
+    if free_space != None and file_size != None:
+        # compare free disk space and file_size
+        if free_space >= file_size:
+            # move the file to the download folder
+            try:
+                shutil.copy(str(path) ,str(file_path) )
+                os.remove(path)
+
+            except:
+                print('Persepolis can not move file')
+                logger.sendToLog('Persepolis can not move file', "ERROR")
+                file_path = path
+        else:
+            # notify user if we have insufficient disk space
+            # and do not move file from temp download folder to download folder
+            file_path = path
+            logger.sendToLog('Insufficient disk space in download folder', "ERROR")
+            # show notification
+            notifySend("Insufficient disk space!", 'Please change download folder',
+                    10000, 'fail', systemtray=parent.system_tray_icon)
+
+    else:
         # move the file to the download folder
         try:
             shutil.copy(str(path) ,str(file_path) )
@@ -539,13 +561,7 @@ def downloadCompleteAction(parent, path, download_path, file_name, file_size):
             print('Persepolis can not move file')
             logger.sendToLog('Persepolis can not move file', "ERROR")
             file_path = path
-    else:
-        file_path = path
-        logger.sendToLog('Insufficient disk space in download folder', "ERROR")
-        # show notification
-        notifySend("Insufficient disk space!", 'Please change download folder',
-                10000, 'fail', systemtray=parent.system_tray_icon)
-
+ 
     return str(file_path)
 
 
