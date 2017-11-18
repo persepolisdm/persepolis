@@ -22,6 +22,8 @@ import shutil
 import platform
 import sys
 from persepolis.scripts import logger
+from persepolis.scripts.freespace import freeSpace
+from persepolis.scripts.bubble import notifySend
 from PyQt5.QtCore import QSettings
 import urllib.parse
 import traceback
@@ -325,10 +327,20 @@ def tellStatus(gid, parent):
         file_status = str(download_status['files'])
         file_status = file_status[1:-1]
         file_status = ast.literal_eval(file_status)
+
+        # find user defined download path
         path = str(file_status['path'])
+
+        # file_name
         file_name = urllib.parse.unquote(os.path.basename(path))
 
-        file_path = downloadCompleteAction(path, download_path, file_name)
+        # find file_size        
+        try:
+            file_size = int(download_status['totalLength'])
+        except:
+            file_size = None
+
+        file_path = downloadCompleteAction(parent, path, download_path, file_name, file_size)
 
         # update download_path in addlink_db_table
         add_link_dictionary['download_path'] = file_path
@@ -502,7 +514,7 @@ def convertDownloadInformation(download_status):
 # download complete actions!
 # this method is returning file_path of file in the user's download folder
 # and move downloaded file after download completion.
-def downloadCompleteAction(path, download_path, file_name):
+def downloadCompleteAction(parent, path, download_path, file_name, file_size):
     i = 1
     file_path = os.path.join(download_path, file_name)
 
@@ -516,15 +528,23 @@ def downloadCompleteAction(path, download_path, file_name):
         file_path = os.path.join(download_path, new_name)
         i = i + 1
 
-# move the file to the download folder
-    try:
-        shutil.copy(str(path) ,str(file_path) )
-        os.remove(path)
+    free_space = freeSpace(download_path)
+    if free_space >= file_size:
+        # move the file to the download folder
+        try:
+            shutil.copy(str(path) ,str(file_path) )
+            os.remove(path)
 
-    except:
-        print('Persepolis can not move file')
-        logger.sendToLog('Persepolis can not move file', "ERROR")
+        except:
+            print('Persepolis can not move file')
+            logger.sendToLog('Persepolis can not move file', "ERROR")
+            file_path = path
+    else:
         file_path = path
+        logger.sendToLog('Insufficient disk space in download folder', "ERROR")
+        # show notification
+        notifySend("Insufficient disk space!", 'Please change download folder',
+                10000, 'fail', systemtray=parent.system_tray_icon)
 
     return str(file_path)
 

@@ -40,6 +40,7 @@ from persepolis.gui import icons_resource
 from persepolis.scripts import spider
 from persepolis.scripts import osCommands
 from persepolis.scripts import logger
+from persepolis.scripts.freespace import freeSpace
 import platform
 from copy import deepcopy
 from persepolis.scripts.shutdown import shutDown
@@ -119,13 +120,6 @@ elif os_type == 'Windows':
 
 download_info_folder = os.path.join(config_folder, "download_info")
 
-
-# persepolis temporary download folder
-if os_type != 'Windows':
-    temp_download_folder = str(home_address) + '/.persepolis'
-else:
-    temp_download_folder = os.path.join(
-        str(home_address), 'AppData', 'Local', 'persepolis')
 
 
 # see persepolis.py file for show_window_file and plugin_ready 
@@ -535,11 +529,7 @@ class Queue(QThread):
 
 
                     if status == 'error':
-                        if 'error' in dict.keys():
-                            error = str(dict['error'])
-                        else:
-                            error = 'error'
-
+                        error = 'error'
                         # write error_message in log file
                         error_message = 'Download failed - GID : '\
                                     + str(gid)\
@@ -804,6 +794,9 @@ class MainWindow(MainWindow_Ui):
         icons = ':/' + \
             str(self.persepolis_setting.value('settings/icons')) + '/'
 
+        # find temp_download_folder
+        global temp_download_folder
+        temp_download_folder = persepolis_setting.value('settings/download_path_temp')
 
 # system_tray_icon
         self.system_tray_icon = QSystemTrayIcon()
@@ -1281,6 +1274,63 @@ class MainWindow(MainWindow_Ui):
                             'status': 'deactive'}
 
                 self.temp_db.updateSingleTable(temp_dict)
+
+
+                if status == 'error':
+                    # check free space in temp_download_folder!
+                    # perhaps insufficient space in hard disk caused this error!
+                    # find free space in KiB
+                    free_space = freeSpace(temp_download_folder) 
+
+                    # find file size
+                    file_size = dict['size']
+
+                    if len(file_size) > 2:
+                        unit = file_size[-2:]
+                        try:
+                            if unit == 'GB':
+                                size_value = float(file_size[:-3])
+                            else:
+                                size_value = int(file_size[:-3])
+                        except:
+                            size_value = None
+                    else:
+                        unit = None
+
+                        try:
+                            size_value = int(file_size)
+                        except:
+                            size_value = None
+
+                    if free_space != None and size_value != None:
+                    
+                        if unit == 'GB':
+                            free_space = free_space/1073741824
+                            free_space = round(free_space, 2)
+                        elif unit == 'MB':
+                            free_space = int(free_space/1048576)
+                        elif unit == 'KB':
+                            free_space = int(free_space/1024)
+                        else:
+                            free_space = int(free_space)
+
+                        if free_space < size_value:
+                            error = 'Insufficient disk space!'
+                                
+
+                        # write error_message in log file
+                        error_message = 'Download failed - GID : '\
+                                + str(gid)\
+                                + '/nMessage : '\
+                                + error
+
+                        logger.sendToLog(error_message, 'ERROR')
+
+                        # show notification
+                        notifySend("Error - " + error, 'Please change the temporary download folder',
+                                10000, 'fail', systemtray=self.system_tray_icon)
+
+
 
 
             # find row of this gid in download_table!
