@@ -166,8 +166,9 @@ class PersepolisApplication(QApplication):
 
 # create  terminal arguments  
 
+
 parser = argparse.ArgumentParser(description='Persepolis Download Manager')
-parser.add_argument('chromium', nargs = '?', default = 'no', help='this switch is used for chrome native messaging in Linux and Mac')
+#parser.add_argument('chromium', nargs = '?', default = 'no', help='this switch is used for chrome native messaging in Linux and Mac')
 parser.add_argument('--link', action='store', nargs = 1, help='Download link.(Use "" for links)')
 parser.add_argument('--referer', action='store', nargs = 1, help='Set an http referrer (Referer). This affects all http/https downloads.  If * is given, the download URI is also used as the referrer.')
 parser.add_argument('--cookie', action='store', nargs = 1, help='Cookie')
@@ -179,7 +180,12 @@ parser.add_argument('--clear', action='store_true', help='Clear download list an
 parser.add_argument('--tray', action='store_true', help="Persepolis is starting in tray icon. It's useful when you want to put persepolis in system's startup.")
 parser.add_argument('--parent-window', action='store', nargs = 1, help='this switch is used for chrome native messaging in Windows')
 parser.add_argument('--version', action='version', version='Persepolis Download Manager 2.5a0')
-args = parser.parse_args()
+
+
+parser.add_argument('args', nargs=argparse.REMAINDER)
+
+#args, unknown = parser.parse_known_args(['chromium','--link','--referer','--cookie','--agent','--headers','--name','--default','--clear','--tray','--parent-window','--version'])
+args  = parser.parse_args()
 
 # terminal arguments are send download information with terminal arguments(link , referer , cookie , agent , headers , name )
 # persepolis plugins (for chromium and chrome and opera and vivaldi and firefox) are use native message host system for 
@@ -202,7 +208,8 @@ browser_plugin_dict ={'link': None,
             }
 
 
-if args.chromium != 'no' or args.parent_window:
+#if args.chromium != 'no' or args.parent_window:
+if args.parent_window or args.args:
 
 # Platform specific configuration
     if os_type == "Windows":
@@ -213,25 +220,23 @@ if args.chromium != 'no' or args.parent_window:
 
     # Send message to browsers plugin 
     message = '{"enable": true, "version": "1.85"}'.encode('utf-8')
-    sys.stdout.buffer.write((struct.pack('I', len(message))))
+    sys.stdout.buffer.write((struct.pack('i', len(message))))
     sys.stdout.buffer.write(message)
     sys.stdout.flush()
-
-    
 
     text_length_bytes = sys.stdin.buffer.read(4)
 
     # Unpack message length as 4 byte integer.
-    text_length = struct.unpack('i', text_length_bytes)[0]
+    text_length = struct.unpack('@I', text_length_bytes)[0]
 
     # Read the text (JSON object) of the message.
     text = sys.stdin.buffer.read(text_length).decode("utf-8")
+    
     if text:
         new_list = json.loads(text)
 
-        for item in new_list:
-            copy_dict = browser_plugin_dict.deepcopy()
-
+        for item in new_list['url_links']:
+            copy_dict = deepcopy(browser_plugin_dict)
             if 'url' in item.keys():
                 copy_dict['link'] = str(item['url'])
 
@@ -410,5 +415,4 @@ def main():
             f.close()
 
         sys.exit(0)
-
 
