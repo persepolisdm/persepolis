@@ -1285,49 +1285,50 @@ class MainWindow(MainWindow_Ui):
                     # find file size
                     file_size = dict['size']
 
-                    if len(file_size) > 2:
-                        unit = file_size[-2:]
-                        try:
-                            if unit == 'GB':
-                                size_value = float(file_size[:-3])
-                            else:
-                                size_value = int(file_size[:-3])
-                        except:
-                            size_value = None
-                    else:
-                        unit = None
-
-                        try:
-                            size_value = int(file_size)
-                        except:
-                            size_value = None
-
-                    if free_space != None and size_value != None:
-                    
-                        if unit == 'GB':
-                            free_space = free_space/1073741824
-                            free_space = round(free_space, 2)
-                        elif unit == 'MB':
-                            free_space = int(free_space/1048576)
-                        elif unit == 'KB':
-                            free_space = int(free_space/1024)
+                    if file_size != None:
+                        if len(file_size) > 2:
+                            unit = file_size[-2:]
+                            try:
+                                if unit == 'GB':
+                                    size_value = float(file_size[:-3])
+                                else:
+                                    size_value = int(file_size[:-3])
+                            except:
+                                size_value = None
                         else:
-                            free_space = int(free_space)
+                            unit = None
+    
+                            try:
+                                size_value = int(file_size)
+                            except:
+                                size_value = None
 
-                        if free_space < size_value:
-                            error = 'Insufficient disk space!'
+                        if free_space != None and size_value != None:
+                    
+                            if unit == 'GB':
+                                free_space = free_space/1073741824
+                                free_space = round(free_space, 2)
+                            elif unit == 'MB':
+                                free_space = int(free_space/1048576)
+                            elif unit == 'KB':
+                                free_space = int(free_space/1024)
+                            else:
+                                free_space = int(free_space)
+
+                            if free_space < size_value:
+                                error = 'Insufficient disk space!'
                                 
 
-                        # write error_message in log file
-                        error_message = 'Download failed - GID : '\
+                            # write error_message in log file
+                            error_message = 'Download failed - GID : '\
                                 + str(gid)\
                                 + '/nMessage : '\
                                 + error
 
-                        logger.sendToLog(error_message, 'ERROR')
+                            logger.sendToLog(error_message, 'ERROR')
 
-                        # show notification
-                        notifySend("Error - " + error, 'Please change the temporary download folder',
+                            # show notification
+                            notifySend("Error - " + error, 'Please change the temporary download folder',
                                 10000, 'fail', systemtray=self.system_tray_icon)
 
 
