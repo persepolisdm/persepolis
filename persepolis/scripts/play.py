@@ -51,7 +51,6 @@ def playNotification(file):
         if os_type == 'Linux' or os_type == 'FreeBSD' or os_type == 'OpenBSD':
             answer = os.system("paplay --volume='" + str(volume) + "' '" + file + "' &")
             if answer != 0:
-                print("paplay not installed!Install it for playing sound notification")
                 logger.sendToLog(
                     "paplay not installed!Install it for playing sound notification", "WARNING")
 

@@ -40,14 +40,14 @@ class AddLinkSpiderThread(QThread):
             if filesize:
                 self.ADDLINKSPIDERSIGNAL.emit(filesize)
             else:
-                print("Spider couldn't find download information")
                 logger.sendToLog(
                     "Spider couldn't find download information", "ERROR")
         except Exception as e:
-            print(str(e))
-            print("Spider couldn't find download information")
             logger.sendToLog(
                 "Spider couldn't find download information", "ERROR")
+            logger.sendToLog(
+                str(e), "ERROR")
+
 
 
 
@@ -433,7 +433,6 @@ class AddLinkWindow(AddLinkWindow_Ui):
         download_path = self.download_folder_lineEdit.text()
 
         # get referer and header and user_agent and load_cookies in plugin_add_link_dictionary if exits.
-        print(self.plugin_add_link_dictionary)
         if not('referer' in self.plugin_add_link_dictionary):
             self.plugin_add_link_dictionary['referer'] = None
 

@@ -100,8 +100,9 @@ if lock_file_validation:
             from setproctitle import setproctitle
             setproctitle("persepolis")
         except:
-            print("Warning : setproctitle is not installed!")
-
+            from persepolis.scripts import logger
+            logger.sendToLog('setproctitle is not installed!', "ERROR")
+ 
 
 from PyQt5.QtWidgets import QApplication  
 from PyQt5.QtGui import QFont   
@@ -403,8 +404,6 @@ def main():
         sys.exit(persepolis_download_manager.exec_())
 
     else:
-        print('persepolis is still running')
-
 
     # this section warns user that program is still running and no need to run it again
     # and creating a file to notify mainwindow for showing itself!

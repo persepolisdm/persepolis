@@ -55,7 +55,6 @@ def shutDown(parent, gid=None, category=None, password=None):
  
     if shutdown_status == "shutdown":
 
-        print("shutdown in 20 seconds")
         logger.sendToLog("Shutting down in 20 seconds", "INFO")
         sleep(20)
         if os_type == 'Linux':

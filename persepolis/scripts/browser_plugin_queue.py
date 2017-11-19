@@ -39,15 +39,15 @@ class QueueSpiderThread(QThread):
             if filename:
                 self.QUEUESPIDERRETURNEDFILENAME.emit(filename)
             else:
-                print("Spider couldn't find download information")
                 logger.logObj.error(
                     "Spider couldn't find download information", exc_info=True)
 
         except Exception as e:
-            print(e)
-            print("Spider couldn't find download information")
             logger.logObj.error(
                 "Spider couldn't find download information", exc_info=True)
+
+            logger.logObj.error(
+                str(e), exc_info=True)
 
 
 

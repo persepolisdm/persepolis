@@ -176,13 +176,6 @@ for folder in folder_list:
 
 persepolis_setting.endGroup()
 
-# print proxy information
-from persepolis.scripts.check_proxy import getProxy
-
-proxy = getProxy()
-proxy_log_message = 'proxy: ' + str(proxy)
-print(proxy)
-
 # Browser integration for Firefox and chromium and google chrome
 for browser in ['chrome', 'chromium', 'opera', 'vivaldi', 'firefox']:
     browserIntegration(browser)
@@ -194,9 +187,6 @@ if persepolis_version < 2.6:
         compatibility()
     except Exception as e:
     
-        print('compatibility ERROR')
-
-        print(str(e))
         # persepolis.db file path 
         persepolis_db_path = os.path.join(config_folder, 'persepolis.db')
 
@@ -214,6 +204,12 @@ if persepolis_version < 2.6:
         # close connections
         persepolis_db.closeConnections()
 
+        # write error in log
+        logger.sendToLog(
+            "compatibility ERROR!", "ERROR")
+        logger.sendToLog(
+                str(e), "ERROR")
+ 
 
     persepolis_version = 2.6
     persepolis_setting.setValue('version/version', 2.6)

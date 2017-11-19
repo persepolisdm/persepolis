@@ -21,6 +21,8 @@ import platform
 from time import sleep
 import random
 import traceback
+from persepolis.scripts import logger
+
 # get home address for this user
 home_address = os.path.expanduser("~")
 
@@ -393,7 +395,6 @@ class PersepolisDB():
             rand_float = random.uniform(0, 0.5)
             sleep(rand_float)
 
-#         print(traceback.extract_stack(None, 2)[0][2])
         self.lock = True
 
 
@@ -454,7 +455,9 @@ class PersepolisDB():
         except Exception as e:
             self.lock = False
 
-            print(e)
+            # wire error in log file
+            logger.logObj.error(
+                str(e), exc_info=True)
 
             # lock data base
             self.lockCursor()

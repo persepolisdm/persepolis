@@ -106,7 +106,6 @@ def aria2Version():
         answer = server.aria2.getVersion()
     except:
         # write ERROR messages in terminal and log
-        print("aria2 did not respond!")
         logger.sendToLog("Aria2 didn't respond!", "ERROR")
         answer = "did not respond"
 
@@ -241,7 +240,6 @@ def downloadAria(gid, parent):
         try:
             answer = server.aria2.addUri([link], aria_dict)
 
-            print(answer + " Starts")
             logger.sendToLog(answer + " Starts", 'INFO')
             if end_time:
                 endTime(end_time, gid, parent)
@@ -253,18 +251,15 @@ def downloadAria(gid, parent):
             parent.persepolis_db.updateDownloadTable([dict])
 
             # write ERROR messages in log
-            print("Download did not start")
             logger.sendToLog("Download did not start", "ERROR")
             error_message = str(traceback.format_exc())
             logger.sendToLog(error_message, "ERROR")
-            print(error_message)
 
 
             # return None!
             return None
     else:
         # if start_time_status is "stopped" it means download Canceled by user
-        print("Download Canceled")
         logger.sendToLog("Download Canceled", "INFO")
 
 # this function returns list of download information
@@ -539,7 +534,6 @@ def downloadCompleteAction(parent, path, download_path, file_name, file_size):
                 os.remove(path)
 
             except:
-                print('Persepolis can not move file')
                 logger.sendToLog('Persepolis can not move file', "ERROR")
                 file_path = path
         else:
@@ -558,7 +552,6 @@ def downloadCompleteAction(parent, path, download_path, file_name, file_size):
             os.remove(path)
 
         except:
-            print('Persepolis can not move file')
             logger.sendToLog('Persepolis can not move file', "ERROR")
             file_path = path
  
@@ -620,11 +613,9 @@ def findDownloadPath(file_name, download_path, subfolder):
 def shutDown():
     try:
         answer = server.aria2.shutdown()
-        print("Aria2 Shutdown : " + str(answer))
         logger.sendToLog("Aria2 Shutdown : " + str(answer), "INFO")
         return True 
     except:
-        print("Aria2 Shutdown Error")
         logger.sendToLog("Aria2 Shutdown Error", "ERROR")
         return False
 
@@ -650,7 +641,6 @@ def downloadStop(gid, parent):
             answer = "None"
 
         # write a messages in log and terminal
-        print(answer + " stopped")
         logger.sendToLog(answer + " stopped", "INFO")
 
     # if download has not been completed yet,
@@ -680,7 +670,6 @@ def downloadPause(gid):
     except:
         answer = None
 
-    print(str(answer) + " paused")
     logger.sendToLog(str(answer) + " paused", "INFO")
     return answer
 
@@ -693,7 +682,6 @@ def downloadUnpause(gid):
     except:
         answer = None
 
-    print(str(answer) + " unpaused")
     logger.sendToLog(str(answer) + " unpaused", "INFO")
  
     return answer
@@ -715,11 +703,9 @@ def limitSpeed(gid, limit):
 
     try:
         server.aria2.changeOption(gid, {'max-download-limit': limit})
-        print("Download speed limit value is changed")
         logger.sendToLog("Download speed limit  value is changed", "INFO")
 
     except:
-        print("speed limitation operation was unsuccessful")
         logger.sendToLog("Speed limitation was unsuccessful", "ERROR")
 
 
@@ -764,7 +750,6 @@ def nowTime():
 # this function creates sleep time,if user sets "start time" for download.  
 def startTime(start_time, gid, parent):
     # write some messages
-    print("Download starts at " + start_time)
     logger.sendToLog("Download starts at " + start_time, "INFO")
 
     # start_time that specified by user
@@ -797,7 +782,6 @@ def startTime(start_time, gid, parent):
 
 
 def endTime(end_time, gid, parent):
-    print("end time is actived " + gid)
     logger.sendToLog("End time is activated " + gid, "INFO")
     sigma_end = sigmaTime(end_time)
 
@@ -819,7 +803,6 @@ def endTime(end_time, gid, parent):
             # Download completed or stopped by user
             # so break the loop
             answer = 'end'
-            print("Download ended before! " + str(gid))
             logger.sendToLog("Download has been finished! " + str(gid), "INFO")
             break
 
@@ -829,7 +812,6 @@ def endTime(end_time, gid, parent):
 
     # Time is up!
     if answer != 'end':
-        print("Time is Up")
         logger.sendToLog("Time is up!", "INFO")
         answer = downloadStop(gid, parent)
         i = 0

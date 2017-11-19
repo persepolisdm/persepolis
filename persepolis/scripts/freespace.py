@@ -5,7 +5,6 @@ def freeSpace(dir):
     try:
         import psutil
     except:
-        print('ERROR - psutil is not installed!')
         logger.sendToLog("psutil in not installed!", "ERROR")
 
         return None
@@ -17,8 +16,7 @@ def freeSpace(dir):
 
     except Exception as e:
         # log in to the log file
-        logger.sendToLog("I can't find free space ERROR :\n" + str(e), "ERROR")
-        print("I can't find free space:\n" + str(e))
+        logger.sendToLog("persepolis couldn't find free space value:\n" + str(e), "ERROR")
 
         return None
 

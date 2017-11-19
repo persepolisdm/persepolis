@@ -147,8 +147,6 @@ class StartAria2Thread(QThread):
 
         # if Aria2 wasn't started before, so start it!
         if answer == 'did not respond':
-            print('Starting Aria2')
-
             # write in log file.
             logger.sendToLog(
                             "Starting Aria2", "INFO")
@@ -170,7 +168,6 @@ class StartAria2Thread(QThread):
         else:
             # Aria2 is responding :)
             signal_str = 'yes'
-            print('Aria2 is running')
             logger.sendToLog(
                             "Aria2 is running", "INFO")
  
@@ -341,7 +338,6 @@ class SpiderThread(QThread):
 
         except:
             # write ERROR message
-            print("Spider couldn't find download information")
             logger.sendToLog(
                 "Spider couldn't find download information", "ERROR")
 
@@ -1238,7 +1234,6 @@ class MainWindow(MainWindow_Ui):
         cursor_position = QCursor.pos()
         cursor_array = [int(cursor_position.x()) , int(cursor_position.y())]
 
-        print(self.persepolis_setting.value('settings/awake'))
         if self.persepolis_setting.value('settings/awake') == 'yes':
             if add == True and self.keep_awake_checkBox.isChecked() == True: # Moving mouse position one time +1 pixel and one time -1 pixel! 
                 QCursor.setPos(cursor_array[0] + 1, cursor_array[1] + 1)
@@ -1372,8 +1367,6 @@ class MainWindow(MainWindow_Ui):
                     try:
                         self.download_table.setItem(row, i, item)
                     except Exception as problem:
-                        print('updating download_table was unsuccessful\nError is :')
-                        print(problem)
                         logger.sendToLog(
                             "Error occured while updating download table", "INFO")
                         logger.sendToLog(problem, "ERROR")
@@ -2195,7 +2188,6 @@ class MainWindow(MainWindow_Ui):
         self.hide()
 
         # write message in log and console
-        print("Please Wait...")
         logger.sendToLog("Please wait ...", "INFO")
 
         # stop all downloads
@@ -2219,7 +2211,6 @@ class MainWindow(MainWindow_Ui):
 
 
         QCoreApplication.instance().quit
-        print("Persepolis Closed")
         logger.sendToLog("Persepolis closed!", "INFO")
         sys.exit(0)
 
