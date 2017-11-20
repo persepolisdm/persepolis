@@ -21,10 +21,8 @@ import os
 import shutil
 from persepolis.scripts import osCommands
 import platform
-from persepolis.scripts.compatibility import compatibility
 from PyQt5.QtCore import QSettings
 from persepolis.scripts.browser_integration import browserIntegration
-from persepolis.scripts.data_base import PersepolisDB, PluginsDB
 # initialization
 
 # user home address
@@ -63,27 +61,6 @@ persepolis_shutdown = os.path.join(persepolis_tmp, 'shutdown')
 for folder in [config_folder, persepolis_tmp, persepolis_shutdown]:
     osCommands.makeDirs(folder)
 
-# create an object for PersepolisDB
-persepolis_db = PersepolisDB()
-
-# create tables
-persepolis_db.createTables()
-
-# close connections
-persepolis_db.closeConnections()
-
-# create an object for PluginsDB
-plugins_db = PluginsDB()
-
-# create tables
-plugins_db.createTables()
-
-# delete old links
-plugins_db.deleteOldLinks()
-
-# close connections
-plugins_db.closeConnections()
-
 # persepolisdm.log file contains persepolis log.
 from persepolis.scripts import logger
 
@@ -120,6 +97,30 @@ else: # delete first 200 lines
 
         line_counter = line_counter + 1
     f.close()
+
+
+from persepolis.scripts.data_base import PersepolisDB, PluginsDB
+
+# create an object for PersepolisDB
+persepolis_db = PersepolisDB()
+
+# create tables
+persepolis_db.createTables()
+
+# close connections
+persepolis_db.closeConnections()
+
+# create an object for PluginsDB
+plugins_db = PluginsDB()
+
+# create tables
+plugins_db.createTables()
+
+# delete old links
+plugins_db.deleteOldLinks()
+
+# close connections
+plugins_db.closeConnections()
 
 
 # import persepolis_setting
@@ -183,6 +184,7 @@ for browser in ['chrome', 'chromium', 'opera', 'vivaldi', 'firefox']:
 # compatibility
 persepolis_version = float(persepolis_setting.value('version/version', 2.5))
 if persepolis_version < 2.6:
+    from persepolis.scripts.compatibility import compatibility
     try:
         compatibility()
     except Exception as e:
