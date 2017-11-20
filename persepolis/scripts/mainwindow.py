@@ -1869,8 +1869,8 @@ class MainWindow(MainWindow_Ui):
                 'category': category}
 
         # write information in data_base
-        self.persepolis_db.insertInDownloadTable(dict)
-        self.persepolis_db.insertInAddLinkTable(add_link_dictionary)
+        self.persepolis_db.insertInDownloadTable([dict])
+        self.persepolis_db.insertInAddLinkTable([add_link_dictionary])
         
 
         # find selected category in left side panel

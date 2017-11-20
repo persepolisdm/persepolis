@@ -30,11 +30,7 @@ def browserIntegration(browser):
     # for GNU/Linux
     if os_type == 'Linux':
         # find Persepolis execution path
-        cwd = os.path.abspath(__file__)
-        current_directory = os.path.dirname(cwd)
-
-        exec_path = os.path.join(
-            current_directory, 'persepolis.py')
+        exec_path = '/usr/bin/persepolis'
 
         # Native Messaging Hosts folder path for every browser
         if browser == 'chromium':
@@ -59,12 +55,7 @@ def browserIntegration(browser):
     # for FreeBSD and OpenBSD
     elif os_type == 'FreeBSD' or os_type == 'OpenBSD':
         # find Persepolis execution path
-        cwd = os.path.abspath(__file__)
-        current_directory = os.path.dirname(cwd)
-
-        exec_path = os.path.join(
-            current_directory, 'persepolis.py')
-
+        exec_path = '/usr/local/bin/persepolis'
 
         # Native Messaging Hosts folder path for every browser
         if browser == 'chromium':

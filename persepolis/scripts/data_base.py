@@ -544,11 +544,12 @@ class PersepolisDB():
 
 
     # insert in to download_db_table in persepolis.db
-    def insertInDownloadTable(self, dict):
+    def insertInDownloadTable(self, list):
         # lock data base
         self.lockCursor()
 
-        self.persepolis_db_cursor.execute("""INSERT INTO download_db_table VALUES(
+        for dict in list:
+            self.persepolis_db_cursor.execute("""INSERT INTO download_db_table VALUES(
                                                                             :file_name,
                                                                             :status,
                                                                             :size,
@@ -572,36 +573,42 @@ class PersepolisDB():
         self.lock = False
 
 
-
-
         # item must be inserted to gid_list of 'All Downloads' and gid_list of category
         # find download category and gid
         category = dict['category']
-        gid = dict['gid']
+
+        # get category_dict from data base
+        category_dict = self.searchCategoryInCategoryTable(category)
+
+        # get all_downloads_dict from data base
+        all_downloads_dict = self.searchCategoryInCategoryTable('All Downloads')
+
+        # get gid_list
+        category_gid_list = category_dict['gid_list']
+
+        all_downloads_gid_list = all_downloads_dict['gid_list']
+
+        for dict in list:
+            gid = dict['gid']
          
-        for category_item in 'All Downloads', category:
-            
-            # get category_dict from data base
-            category_dict = self.searchCategoryInCategoryTable(category_item)
-
-            # get gid_list
-            gid_list = category_dict['gid_list']
-
             # add gid of item to gid_list
-            gid_list = gid_list.append(gid)
+            category_gid_list.append(gid)
+            all_downloads_gid_list.append(gid)
 
-            # updata category_db_table
-            self.updateCategoryTable([category_dict])
+
+        # updata category_db_table
+        self.updateCategoryTable([all_downloads_dict])
+        self.updateCategoryTable([category_dict])
 
 
     # insert in addlink table in persepolis.db 
-    def insertInAddLinkTable(self, dict):
+    def insertInAddLinkTable(self, list):
         # lock data base
         self.lockCursor()
 
-
-        # first column and after download column is NULL
-        self.persepolis_db_cursor.execute("""INSERT INTO addlink_db_table VALUES(NULL,
+        for dict in list:
+            # first column and after download column is NULL
+            self.persepolis_db_cursor.execute("""INSERT INTO addlink_db_table VALUES(NULL,
                                                                                 :gid,
                                                                                 :out,
                                                                                 :start_time,

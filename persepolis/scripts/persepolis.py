@@ -241,16 +241,16 @@ if args.parent_window or args.args:
             if 'url' in item.keys():
                 copy_dict['link'] = str(item['url'])
 
-                if 'referrer' in item.keys():
+                if 'referrer' in item.keys() and item['referrer'] != '':
                     copy_dict['referer'] = item['referrer']
 
                 if 'filename' in item.keys() and item['filename'] != '':
                     copy_dict['out'] = os.path.basename(str(item['filename']))
                 
-                if 'useragent' in item.keys():
+                if 'useragent' in item.keys() and item['useragent'] != '':
                     copy_dict['user_agent'] = item['useragent']
                 
-                if 'cookies' in item.keys():
+                if 'cookies' in item.keys() and item['cookies'] != '':
                     copy_dict['load_cookies'] = item['cookies']
 
                 plugin_list.append(copy_dict)
