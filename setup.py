@@ -43,6 +43,13 @@ try:
 except:
     print("Warning: setproctitle is not installed!")
 
+# psutil
+try:
+    import psutil
+    print('python3-psutil is found!')
+except:
+    print("Warning: python3-psutil is not installed!")
+
 # aria2
 answer = os.system('aria2c --version 1>/dev/null')
 if answer != 0:
