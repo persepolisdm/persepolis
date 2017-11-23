@@ -30,7 +30,12 @@ def browserIntegration(browser):
     # for GNU/Linux
     if os_type == 'Linux':
         # find Persepolis execution path
-        exec_path = '/usr/bin/persepolis'
+        # persepolis execution path
+        config_folder = os.path.join(
+            str(home_address), ".config/persepolis_download_manager")
+        exec_path = os.path.join(config_folder, 'persepolis_run_shell')
+
+
 
         # Native Messaging Hosts folder path for every browser
         if browser == 'chromium':
@@ -55,7 +60,10 @@ def browserIntegration(browser):
     # for FreeBSD and OpenBSD
     elif os_type == 'FreeBSD' or os_type == 'OpenBSD':
         # find Persepolis execution path
-        exec_path = '/usr/local/bin/persepolis'
+        # persepolis execution path
+        config_folder = os.path.join(
+            str(home_address), ".config/persepolis_download_manager")
+        exec_path = os.path.join(config_folder, 'persepolis_run_shell')
 
         # Native Messaging Hosts folder path for every browser
         if browser == 'chromium':
@@ -194,3 +202,28 @@ def browserIntegration(browser):
                 return False
 
                  
+    # create persepolis_run_shell file for gnu/linux and bsd 
+    # firefox and chromium and ... call persepolis with Native Messaging system. 
+    # json file calls persepolis_run_shell file.
+    if os_type == 'Linux' or os_type == 'OpenBSD' or os_type == 'FreeBSD':
+        # find available shell
+        shell_list = ['/bin/bash', '/usr/local/bin/bash', '/bin/sh', '/usr/local/bin/sh', '/bin/ksh', '/bin/tcsh']
+
+        for shell in shell_list:
+            if os.path.isfile(shell):
+                # define shebang
+                shebang = '#!' + shell
+                break
+
+    
+        persepolis_run_shell_contents = shebang + '\n' + 'persepolis "$@"'
+    
+        f = Open(exec_path, 'w')
+        f.writelines(persepolis_run_shell_contents)
+        f.close()
+
+        # make persepolis_run_shell executable
+        os.system('chmod +x ' + exec_path)
+
+
+ 

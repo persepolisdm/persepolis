@@ -665,7 +665,6 @@ class CheckingThread(QThread):
 # shutdown_notification = 0 >> persepolis is running 
 # 1 >> persepolis is ready for closing(closeEvent called) 
 # 2 >> OK, let's close application!
-
         while shutdown_notification == 0 and aria_startup_answer != 'ready':
             sleep(2)
 
