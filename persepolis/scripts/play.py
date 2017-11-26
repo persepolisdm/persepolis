@@ -14,24 +14,11 @@
 
 import os
 from persepolis.scripts import logger
-from persepolis.scripts.newopen import Open
 import platform
 from PyQt5.QtCore import QSettings
 import subprocess
 
 os_type = platform.system()
-
-home_address = os.path.expanduser("~")
-# config_folder
-if os_type == 'Linux' or os_type == 'FreeBSD' or os_type == 'OpenBSD':
-    config_folder = os.path.join(
-        str(home_address), ".config/persepolis_download_manager")
-elif os_type == 'Darwin':
-    config_folder = os.path.join(
-        str(home_address), "Library/Application Support/persepolis_download_manager")
-elif os_type == 'Windows':
-    config_folder = os.path.join(
-        str(home_address), 'AppData', 'Local', 'persepolis_download_manager')
 
 
 def playNotification(file):

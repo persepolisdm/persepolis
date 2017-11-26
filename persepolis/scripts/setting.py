@@ -14,7 +14,6 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from persepolis.gui.setting_ui import Setting_Ui
-import ast
 import os
 import sys
 import copy
@@ -22,7 +21,6 @@ from PyQt5 import QtWidgets
 from PyQt5.QtWidgets import QFileDialog, QStyleFactory, QMessageBox
 from PyQt5.QtGui import QFont
 from PyQt5.QtCore import QTime, QSize, QPoint, QDir
-from persepolis.scripts.newopen import Open, readDict
 from persepolis.scripts import osCommands
 import platform
 from persepolis.scripts import startup
