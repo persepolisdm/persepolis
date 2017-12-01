@@ -174,7 +174,7 @@ def browserIntegration(browser):
     f.close()
 
     if os_type != 'Windows':
-        os.system('chmod +x "' + str(native_message_file) + '"')
+        os.system('chmod +x \"' + str(native_message_file) + '\"')
 
     else:
         import winreg
@@ -240,7 +240,7 @@ def browserIntegration(browser):
         f.close()
 
         # make persepolis_run_shell executable
-        os.system('chmod +x ' + exec_path)
 
 
  
+        os.system('chmod +x \"' + exec_path + '\"')
