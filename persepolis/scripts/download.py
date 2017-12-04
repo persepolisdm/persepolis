@@ -26,6 +26,7 @@ from persepolis.scripts.bubble import notifySend
 from PyQt5.QtCore import QSettings
 import urllib.parse
 import traceback
+import sys
 
 # Before reading this file, please read this link! 
 # this link helps you to understand this codes:

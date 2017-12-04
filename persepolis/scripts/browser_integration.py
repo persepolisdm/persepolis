@@ -15,6 +15,7 @@
 
 import platform
 import os
+import sys
 from persepolis.scripts.newopen import Open
 from persepolis.scripts import osCommands
 
