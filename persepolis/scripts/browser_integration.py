@@ -124,7 +124,8 @@ def browserIntegration(browser):
     # for MicroSoft Windows os (windows 7 , ...)
     elif os_type == 'Windows':
         # finding Persepolis execution path
-        cwd = sys.argv[0]
+        cwd = os.path.abspath(__file__)
+
         current_directory = os.path.dirname(cwd)
 
         exec_path = os.path.join(
@@ -223,7 +224,8 @@ def browserIntegration(browser):
     
         if os_type == 'Darwin':
             # finding Persepolis execution path
-            cwd = sys.argv[0]
+            cwd = os.path.abspath(__file__)
+
             current_directory = os.path.dirname(cwd)
 
             persepolis_path = os.path.join(
