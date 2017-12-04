@@ -25,7 +25,6 @@ def getProxy():
             desktop_env_type = 'Desktop environment: ' + str(desktop)
 
         logger.sendToLog(desktop_env_type, "INFO")
-        print(desktop_env_type)
 
     # check if it is KDE
     if desktop == 'KDE':
@@ -159,7 +158,6 @@ def getProxy():
         you must convert socks proxy to http proxy.\n\
         Please read this for more help:\n\
             https://github.com/persepolisdm/persepolis/wiki/Privoxy"
-        print(socks_message)
         logger.sendToLog(socks_message, 'ERROR')
 
     # return results

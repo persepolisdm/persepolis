@@ -23,6 +23,7 @@ from PyQt5.QtCore import QPoint, QSize, QThread, pyqtSignal, QDir
 import os
 from persepolis.scripts import logger
 from persepolis.scripts import spider
+from copy import deepcopy
 
 
 # This thread finds filename
@@ -39,19 +40,19 @@ class QueueSpiderThread(QThread):
             if filename:
                 self.QUEUESPIDERRETURNEDFILENAME.emit(filename)
             else:
-                print("Spider couldn't find download information")
                 logger.logObj.error(
                     "Spider couldn't find download information", exc_info=True)
 
         except Exception as e:
-            print(e)
-            print("Spider couldn't find download information")
             logger.logObj.error(
                 "Spider couldn't find download information", exc_info=True)
 
+            logger.logObj.error(
+                str(e), exc_info=True)
 
 
-class FlashgotQueue(TextQueue_Ui):
+
+class BrowserPluginQueue(TextQueue_Ui):
     def __init__(self, parent, list_of_links, callback, persepolis_setting):
         super().__init__(persepolis_setting)
         self.persepolis_setting = persepolis_setting
@@ -72,7 +73,10 @@ class FlashgotQueue(TextQueue_Ui):
 
             # file_name
             if 'out' in dict:
-                file_name = dict['out']
+                if dict['out']:
+                    file_name = dict['out']
+                else:
+                    file_name = '***'
             else:
                 file_name = '***'
 
@@ -347,7 +351,7 @@ class FlashgotQueue(TextQueue_Ui):
             if (item.checkState() == 2):
                 # Create a copy from dict and add it to add_link_dictionary_list
                 self.add_link_dictionary_list.append(
-                    dict.copy())
+                    deepcopy(dict))
 
                 # get link and add it to dict
                 link = self.links_table.item(row, 1).text()
@@ -357,12 +361,11 @@ class FlashgotQueue(TextQueue_Ui):
                 self.add_link_dictionary_list[i]['out'] = self.links_table.item(
                     row, 0).text()
 
-                # TODO : this line must be checked!
-                dict = self.list_of_links[row]
+                input_dict = self.list_of_links[row]
 
                 keys_list = ['referer', 'header', 'user-agent', 'load_cookies']
                 for key in keys_list:
-                    if key in dict:
+                    if key in input_dict:
                         self.add_link_dictionary_list[i][key] = dict[key]
 
                 i = i + 1
@@ -370,6 +373,7 @@ class FlashgotQueue(TextQueue_Ui):
 
         # reverse list
         self.add_link_dictionary_list.reverse()
+
 
         # Create callback for mainwindow
         self.callback(self.add_link_dictionary_list, category)

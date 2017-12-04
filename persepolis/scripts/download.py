@@ -20,8 +20,9 @@ import time
 import ast
 import shutil
 import platform
-import sys
 from persepolis.scripts import logger
+from persepolis.scripts.freespace import freeSpace
+from persepolis.scripts.bubble import notifySend
 from PyQt5.QtCore import QSettings
 import urllib.parse
 import traceback
@@ -44,6 +45,9 @@ host = 'localhost'
 # get port from persepolis_setting
 port = int(persepolis_setting.value('settings/rpc-port'))
 
+# get aria2_path
+aria2_path = persepolis_setting.value('settings/aria2_path')
+
 # xml rpc
 SERVER_URI_FORMAT = 'http://{}:{:d}/rpc'
 server_uri = SERVER_URI_FORMAT.format(host, port)
@@ -59,19 +63,30 @@ def startAria():
 
     # in macintosh
     elif os_type == 'Darwin':
-        cwd = sys.argv[0]
-        cwd = os.path.dirname(cwd)
-        aria2d = cwd + "/aria2c"
+        if aria2_path == "" or aria2_path == None or os.path.isfile(str(aria2_path)) == False:
+            cwd = sys.argv[0] 
+            current_directory = os.path.dirname(cwd)
+
+            aria2d = current_directory + "/aria2c"
+        else:
+            aria2d = aria2_path
+
         os.system("'" + aria2d + "' --version 1> /dev/null")
         os.system("'" + aria2d + "' --no-conf  --enable-rpc --rpc-listen-port '" +
                   str(port) + "' --rpc-max-request-size=2M --rpc-listen-all --quiet=true &")
 
     # in Windows
     elif os_type == 'Windows':
+        if aria2_path == "" or aria2_path == None or os.path.isfile(str(aria2_path)) == False:
+            cwd = sys.argv[0] 
+            current_directory = os.path.dirname(cwd)
+
+            aria2d = os.path.join(current_directory, "aria2c.exe")  # aria2c.exe path
+        else:
+            aria2d = aria2_path
+
         NO_WINDOW = 0x08000000
-        cwd = sys.argv[0]
-        cwd = os.path.dirname(cwd)
-        aria2d = os.path.join(cwd, "aria2c.exe")  # defining aria2c.exe path
+
 
         # aria2 command in windows
         subprocess.Popen([aria2d, '--no-conf', '--enable-rpc', '--rpc-listen-port=' + str(port),
@@ -92,7 +107,6 @@ def aria2Version():
         answer = server.aria2.getVersion()
     except:
         # write ERROR messages in terminal and log
-        print("aria2 did not respond!")
         logger.sendToLog("Aria2 didn't respond!", "ERROR")
         answer = "did not respond"
 
@@ -227,7 +241,6 @@ def downloadAria(gid, parent):
         try:
             answer = server.aria2.addUri([link], aria_dict)
 
-            print(answer + " Starts")
             logger.sendToLog(answer + " Starts", 'INFO')
             if end_time:
                 endTime(end_time, gid, parent)
@@ -239,18 +252,15 @@ def downloadAria(gid, parent):
             parent.persepolis_db.updateDownloadTable([dict])
 
             # write ERROR messages in log
-            print("Download did not start")
             logger.sendToLog("Download did not start", "ERROR")
             error_message = str(traceback.format_exc())
             logger.sendToLog(error_message, "ERROR")
-            print(error_message)
 
 
             # return None!
             return None
     else:
         # if start_time_status is "stopped" it means download Canceled by user
-        print("Download Canceled")
         logger.sendToLog("Download Canceled", "INFO")
 
 # this function returns list of download information
@@ -313,10 +323,20 @@ def tellStatus(gid, parent):
         file_status = str(download_status['files'])
         file_status = file_status[1:-1]
         file_status = ast.literal_eval(file_status)
+
+        # find user defined download path
         path = str(file_status['path'])
+
+        # file_name
         file_name = urllib.parse.unquote(os.path.basename(path))
 
-        file_path = downloadCompleteAction(path, download_path, file_name)
+        # find file_size        
+        try:
+            file_size = int(download_status['totalLength'])
+        except:
+            file_size = None
+
+        file_path = downloadCompleteAction(parent, path, download_path, file_name, file_size)
 
         # update download_path in addlink_db_table
         add_link_dictionary['download_path'] = file_path
@@ -490,7 +510,7 @@ def convertDownloadInformation(download_status):
 # download complete actions!
 # this method is returning file_path of file in the user's download folder
 # and move downloaded file after download completion.
-def downloadCompleteAction(path, download_path, file_name):
+def downloadCompleteAction(parent, path, download_path, file_name, file_size):
     i = 1
     file_path = os.path.join(download_path, file_name)
 
@@ -504,16 +524,38 @@ def downloadCompleteAction(path, download_path, file_name):
         file_path = os.path.join(download_path, new_name)
         i = i + 1
 
-# move the file to the download folder
-    try:
-        shutil.copy(str(path) ,str(file_path) )
-        os.remove(path)
+    free_space = freeSpace(download_path)
 
-    except:
-        print('Persepolis can not move file')
-        logger.sendToLog('Persepolis can not move file', "ERROR")
-        file_path = path
+    if free_space != None and file_size != None:
+        # compare free disk space and file_size
+        if free_space >= file_size:
+            # move the file to the download folder
+            try:
+                shutil.copy(str(path) ,str(file_path) )
+                os.remove(path)
 
+            except:
+                logger.sendToLog('Persepolis can not move file', "ERROR")
+                file_path = path
+        else:
+            # notify user if we have insufficient disk space
+            # and do not move file from temp download folder to download folder
+            file_path = path
+            logger.sendToLog('Insufficient disk space in download folder', "ERROR")
+            # show notification
+            notifySend("Insufficient disk space!", 'Please change download folder',
+                    10000, 'fail', systemtray=parent.system_tray_icon)
+
+    else:
+        # move the file to the download folder
+        try:
+            shutil.copy(str(path) ,str(file_path) )
+            os.remove(path)
+
+        except:
+            logger.sendToLog('Persepolis can not move file', "ERROR")
+            file_path = path
+ 
     return str(file_path)
 
 
@@ -572,11 +614,9 @@ def findDownloadPath(file_name, download_path, subfolder):
 def shutDown():
     try:
         answer = server.aria2.shutdown()
-        print("Aria2 Shutdown : " + str(answer))
         logger.sendToLog("Aria2 Shutdown : " + str(answer), "INFO")
         return True 
     except:
-        print("Aria2 Shutdown Error")
         logger.sendToLog("Aria2 Shutdown Error", "ERROR")
         return False
 
@@ -602,7 +642,6 @@ def downloadStop(gid, parent):
             answer = "None"
 
         # write a messages in log and terminal
-        print(answer + " stopped")
         logger.sendToLog(answer + " stopped", "INFO")
 
     # if download has not been completed yet,
@@ -632,7 +671,6 @@ def downloadPause(gid):
     except:
         answer = None
 
-    print(str(answer) + " paused")
     logger.sendToLog(str(answer) + " paused", "INFO")
     return answer
 
@@ -645,7 +683,6 @@ def downloadUnpause(gid):
     except:
         answer = None
 
-    print(str(answer) + " unpaused")
     logger.sendToLog(str(answer) + " unpaused", "INFO")
  
     return answer
@@ -667,11 +704,9 @@ def limitSpeed(gid, limit):
 
     try:
         server.aria2.changeOption(gid, {'max-download-limit': limit})
-        print("Download speed limit value is changed")
         logger.sendToLog("Download speed limit  value is changed", "INFO")
 
     except:
-        print("speed limitation operation was unsuccessful")
         logger.sendToLog("Speed limitation was unsuccessful", "ERROR")
 
 
@@ -716,7 +751,6 @@ def nowTime():
 # this function creates sleep time,if user sets "start time" for download.  
 def startTime(start_time, gid, parent):
     # write some messages
-    print("Download starts at " + start_time)
     logger.sendToLog("Download starts at " + start_time, "INFO")
 
     # start_time that specified by user
@@ -749,7 +783,6 @@ def startTime(start_time, gid, parent):
 
 
 def endTime(end_time, gid, parent):
-    print("end time is actived " + gid)
     logger.sendToLog("End time is activated " + gid, "INFO")
     sigma_end = sigmaTime(end_time)
 
@@ -771,7 +804,6 @@ def endTime(end_time, gid, parent):
             # Download completed or stopped by user
             # so break the loop
             answer = 'end'
-            print("Download ended before! " + str(gid))
             logger.sendToLog("Download has been finished! " + str(gid), "INFO")
             break
 
@@ -781,7 +813,6 @@ def endTime(end_time, gid, parent):
 
     # Time is up!
     if answer != 'end':
-        print("Time is Up")
         logger.sendToLog("Time is up!", "INFO")
         answer = downloadStop(gid, parent)
         i = 0

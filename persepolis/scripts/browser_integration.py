@@ -17,11 +17,21 @@ import platform
 import os
 from persepolis.scripts.newopen import Open
 from persepolis.scripts import osCommands
-import sys
 
 os_type = platform.system()
 
 home_address = str(os.path.expanduser("~"))
+
+# download manager config folder .
+if os_type == 'Linux' or os_type == 'FreeBSD' or os_type == 'OpenBSD':
+    config_folder = os.path.join(
+        str(home_address), ".config/persepolis_download_manager")
+elif os_type == 'Darwin':
+    config_folder = os.path.join(
+        str(home_address), "Library/Application Support/persepolis_download_manager")
+elif os_type == 'Windows':
+    config_folder = os.path.join(
+        str(home_address), 'AppData', 'Local', 'persepolis_download_manager')
 
 
 # browser can be firefox or chromium or chrome
@@ -29,10 +39,11 @@ home_address = str(os.path.expanduser("~"))
 def browserIntegration(browser):
     # for GNU/Linux
     if os_type == 'Linux':
+        # find Persepolis execution path
         # persepolis execution path
-        config_folder = os.path.join(
-            str(home_address), ".config/persepolis_download_manager")
         exec_path = os.path.join(config_folder, 'persepolis_run_shell')
+
+
 
         # Native Messaging Hosts folder path for every browser
         if browser == 'chromium':
@@ -56,11 +67,9 @@ def browserIntegration(browser):
 
     # for FreeBSD and OpenBSD
     elif os_type == 'FreeBSD' or os_type == 'OpenBSD':
+        # find Persepolis execution path
         # persepolis execution path
-        config_folder = os.path.join(
-            str(home_address), ".config/persepolis_download_manager")
         exec_path = os.path.join(config_folder, 'persepolis_run_shell')
-
 
         # Native Messaging Hosts folder path for every browser
         if browser == 'chromium':
@@ -85,12 +94,10 @@ def browserIntegration(browser):
 
     # for Mac OSX
     elif os_type == 'Darwin':
-        # finding Persepolis execution path
-        cwd = sys.argv[0]
-        current_directory = os.path.dirname(cwd)
+        # find Persepolis execution path
+        # persepolis execution path
+        exec_path = os.path.join(config_folder, 'persepolis_run_shell')
 
-        exec_path = os.path.join(
-            current_directory, 'Persepolis Download Manager')
 
         # Native Messaging Hosts folder path for every browser
         if browser == 'chromium':
@@ -116,7 +123,8 @@ def browserIntegration(browser):
     # for MicroSoft Windows os (windows 7 , ...)
     elif os_type == 'Windows':
         # finding Persepolis execution path
-        cwd = sys.argv[0]
+        cwd = sys.argv[0] 
+
         current_directory = os.path.dirname(cwd)
 
         exec_path = os.path.join(
@@ -127,7 +135,7 @@ def browserIntegration(browser):
         # "\" in address
         exec_path = exec_path.replace('\\', r'\\')
 
-        if browser == 'chrome' or browser == 'chromium' or browser == 'opera' or browser == 'vivaldi':
+        if browser in ['chrome','chromium','opera','vivaldi']:
             native_message_folder = os.path.join(
                 home_address, 'AppData\Local\persepolis_download_manager', 'chrome')
         else:
@@ -144,7 +152,7 @@ def browserIntegration(browser):
     }
 
     # Add chrom* keys
-    if browser == 'chrome' or browser == 'chromium' or browser == 'opera' or browser == 'vivaldi':
+    if browser in ['chrome','chromium','opera','vivaldi']:
         webextension_json_connector["allowed_origins"] = [ "chrome-extension://legimlagjjoghkoedakdjhocbeomojao/" ]
 
     # Add firefox keys
@@ -166,12 +174,12 @@ def browserIntegration(browser):
     f.close()
 
     if os_type != 'Windows':
-        os.system('chmod +x "' + str(native_message_file) + '"')
+        os.system('chmod +x \"' + str(native_message_file) + '\"')
 
     else:
         import winreg
         # add the key to the windows registry
-        if browser == 'chrome' or browser == 'chromium' or browser == 'opera' or browser == 'vivaldi':
+        if browser in ['chrome','chromium','opera','vivaldi']:
             try:
                 # create pdmchromewrapper key under NativeMessagingHosts
                 winreg.CreateKey(winreg.HKEY_CURRENT_USER, "SOFTWARE\\Google\\Chrome\\NativeMessagingHosts\\com.persepolis.pdmchromewrapper")
@@ -198,28 +206,42 @@ def browserIntegration(browser):
             except WindowsError:
                 return False
 
-    # browsers will call persepolis with persepolis_run_shell file in gnu/linux and bsd  
-
-    # creating persepolis_run_shell file for gnu/linux and bsd 
-    if os_type == 'Linux' or os_type == 'OpenBSD' or os_type == 'FreeBSD':
-        # finding shell
+                 
+    # create persepolis_run_shell file for gnu/linux and BSD and Mac 
+    # firefox and chromium and ... call persepolis with Native Messaging system. 
+    # json file calls persepolis_run_shell file.
+    if os_type == 'Linux' or os_type == 'OpenBSD' or os_type == 'FreeBSD' or os_type == 'Darwin':
+        # find available shell
         shell_list = ['/bin/bash', '/usr/local/bin/bash', '/bin/sh', '/usr/local/bin/sh', '/bin/ksh', '/bin/tcsh']
 
         for shell in shell_list:
             if os.path.isfile(shell):
-                # defining shebang
+                # define shebang
                 shebang = '#!' + shell
                 break
 
     
-        persepolis_run_shell_contents = shebang + '\n' + 'persepolis "$@"'
+        if os_type == 'Darwin':
+            # finding Persepolis execution path
+            cwd = sys.argv[0] 
+
+            current_directory = os.path.dirname(cwd)
+
+            persepolis_path = os.path.join(
+                current_directory, 'Persepolis Download Manager')
+        else:
+            persepolis_path = 'persepolis'
+
+        persepolis_run_shell_contents = shebang + '\n' + '"' + persepolis_path + '" "$@"'
+
+
     
         f = Open(exec_path, 'w')
         f.writelines(persepolis_run_shell_contents)
         f.close()
 
-        # making persepolis_run_shell executable
-        os.system('chmod +x ' + exec_path)
+        # make persepolis_run_shell executable
 
 
-                
+ 
+        os.system('chmod +x \"' + exec_path + '\"')

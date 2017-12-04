@@ -14,7 +14,6 @@
 #
 
 import os
-from persepolis.scripts.newopen import Open
 from persepolis.scripts import osCommands
 import platform
 from persepolis.gui.log_window_ui import LogWindow_Ui
@@ -48,7 +47,7 @@ class LogWindow(LogWindow_Ui):
 # log file address
         self.log_file = os.path.join(str(config_folder), 'persepolisdm.log')
 
-        f = Open(self.log_file, 'r')
+        f = open(self.log_file, 'r')
         f_lines = f.readlines()
         f.close()
 
@@ -87,7 +86,7 @@ class LogWindow(LogWindow_Ui):
         self.minimum_height = self.height()
 
     def clearLogPushButtonPressed(self, button):
-        f = Open(self.log_file, 'w')
+        f = open(self.log_file, 'w')
         f.close()
 
         self.text = 'Log File:\n'
@@ -116,7 +115,7 @@ class LogWindow(LogWindow_Ui):
 
 # this method is refresh log messages in text_edit
     def refreshLogPushButtonPressed(self, button):
-        f = Open(self.log_file, 'r')
+        f = open(self.log_file, 'r')
         f_lines = f.readlines()
         f.close()
 

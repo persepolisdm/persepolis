@@ -54,7 +54,7 @@ mostafaasadi73@gmail.com
 
 Mac OSX support : **MohammadAmin Vahedinia**
 https://github.com/Mr0Null
-mohammadamin@beeit.ir
+persepolisdm@vahedinia.me
 
 Persepolis website support : **Sadegh Alirezaie**
 https://github.com/Alirezaies

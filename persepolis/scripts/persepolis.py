@@ -16,6 +16,7 @@
 import sys
 import os
 import platform
+from copy import deepcopy
 
 # finding os platform
 os_type = platform.system()
@@ -73,6 +74,7 @@ if os_type != 'Windows':
         lock_file_validation = True # Lock file created successfully!
     except IOError:
         lock_file_validation = False # creating lock_file was unsuccessful! So persepolis is still running
+
 else: # for windows
     # pypiwin32 must be installed by pip
     from win32event import CreateMutex
@@ -98,8 +100,9 @@ if lock_file_validation:
             from setproctitle import setproctitle
             setproctitle("persepolis")
         except:
-            print("Warning : setproctitle is not installed!")
-
+            from persepolis.scripts import logger
+            logger.sendToLog('setproctitle is not installed!', "ERROR")
+ 
 
 from PyQt5.QtWidgets import QApplication  
 from PyQt5.QtGui import QFont   
@@ -164,8 +167,9 @@ class PersepolisApplication(QApplication):
 
 # create  terminal arguments  
 
+
 parser = argparse.ArgumentParser(description='Persepolis Download Manager')
-parser.add_argument('chromium', nargs = '?', default = 'no', help='this switch is used for chrome native messaging in Linux and Mac')
+#parser.add_argument('chromium', nargs = '?', default = 'no', help='this switch is used for chrome native messaging in Linux and Mac')
 parser.add_argument('--link', action='store', nargs = 1, help='Download link.(Use "" for links)')
 parser.add_argument('--referer', action='store', nargs = 1, help='Set an http referrer (Referer). This affects all http/https downloads.  If * is given, the download URI is also used as the referrer.')
 parser.add_argument('--cookie', action='store', nargs = 1, help='Cookie')
@@ -177,10 +181,15 @@ parser.add_argument('--clear', action='store_true', help='Clear download list an
 parser.add_argument('--tray', action='store_true', help="Persepolis is starting in tray icon. It's useful when you want to put persepolis in system's startup.")
 parser.add_argument('--parent-window', action='store', nargs = 1, help='this switch is used for chrome native messaging in Windows')
 parser.add_argument('--version', action='version', version='Persepolis Download Manager 2.5a0')
-args = parser.parse_args()
 
-# Mozilla firefox plugin is sending download information whith terminal arguments(link , referer , cookie , agent , headers , name )
-# persepolis plugins (for chromium and chrome and opera and vivaldi and firefox) are using native message host system for 
+
+parser.add_argument('args', nargs=argparse.REMAINDER)
+
+#args, unknown = parser.parse_known_args(['chromium','--link','--referer','--cookie','--agent','--headers','--name','--default','--clear','--tray','--parent-window','--version'])
+args  = parser.parse_args()
+
+# terminal arguments are send download information with terminal arguments(link , referer , cookie , agent , headers , name )
+# persepolis plugins (for chromium and chrome and opera and vivaldi and firefox) are use native message host system for 
 # sending download information to persepolis.
 # see this repo for more information:
 #   https://github.com/persepolisdm/Persepolis-WebExtension
@@ -190,50 +199,61 @@ args = parser.parse_args()
 
 
 add_link_dictionary = {}
-if args.chromium != 'no' or args.parent_window:
+plugin_list = []
+browser_plugin_dict ={'link': None,
+            'referer': None,
+            'load_cookies':None,
+            'user_agent': None,
+            'header': None,
+            'out': None
+            }
+
+
+#if args.chromium != 'no' or args.parent_window:
+if args.parent_window or args.args:
 
 # Platform specific configuration
     if os_type == "Windows":
-  # Set the default I/O mode to O_BINARY in windows
+        # Set the default I/O mode to O_BINARY in windows
         import msvcrt
         msvcrt.setmode(sys.stdin.fileno(), os.O_BINARY)
         msvcrt.setmode(sys.stdout.fileno(), os.O_BINARY)
 
-    # Send message to chrome extension
+    # Send message to browsers plugin 
     message = '{"enable": true, "version": "1.85"}'.encode('utf-8')
-    sys.stdout.buffer.write((struct.pack('I', len(message))))
+    sys.stdout.buffer.write((struct.pack('i', len(message))))
     sys.stdout.buffer.write(message)
     sys.stdout.flush()
-
-    
 
     text_length_bytes = sys.stdin.buffer.read(4)
 
     # Unpack message length as 4 byte integer.
-    text_length = struct.unpack('i', text_length_bytes)[0]
+    text_length = struct.unpack('@I', text_length_bytes)[0]
 
     # Read the text (JSON object) of the message.
     text = sys.stdin.buffer.read(text_length).decode("utf-8")
+    
     if text:
-        if not 'url' in text:
-            sys.exit(0)
+        new_list = json.loads(text)
 
-        data = json.loads(text)
-        url = str(data['url'])
+        for item in new_list['url_links']:
+            copy_dict = deepcopy(browser_plugin_dict)
+            if 'url' in item.keys():
+                copy_dict['link'] = str(item['url'])
 
-        if url:
-            args.link = str(url)
-            if 'referrer' in data.keys():
-                args.referer = data['referrer']
+                if 'referrer' in item.keys() and item['referrer'] != '':
+                    copy_dict['referer'] = item['referrer']
 
-            if 'filename' in data.keys() and data['filename'] != '':
-                args.name = os.path.basename(str(data['filename']))
+                if 'filename' in item.keys() and item['filename'] != '':
+                    copy_dict['out'] = os.path.basename(str(item['filename']))
                 
-            if 'useragent' in data.keys():
-                args.agent = data['useragent']
+                if 'useragent' in item.keys() and item['useragent'] != '':
+                    copy_dict['user_agent'] = item['useragent']
                 
-            if 'cookies' in data.keys():
-                args.cookie = data['cookies']
+                if 'cookies' in item.keys() and item['cookies'] != '':
+                    copy_dict['load_cookies'] = item['cookies']
+
+                plugin_list.append(copy_dict)
 
 # persepolis --clear >> remove config_folder
 if args.clear:
@@ -285,21 +305,14 @@ if args.name :
 else:
     add_link_dictionary['out'] = None
 
-# when browser plugins calls persepolis then persepolis is creating a request file in /tmp folder 
-# and link information added to plugins_db.db file( see data_base.py for more information).
-# persepolis mainwindow checks /tmp for plugins request file every 2 seconds ( see CheckingThread class in mainwindow.py )
-# when requset received in CheckingThread, a popup window (AddLinkWindow) is coming up and window is getting additional download information
+# when browsers plugin calls persepolis or user runs persepolis by terminal arguments,
+# then persepolis creats a request file in /tmp folder and link information added to
+# plugins_db.db file(see data_base.py for more information).
+# persepolis mainwindow checks /tmp for plugins request file every 2 seconds (see CheckingThread class in mainwindow.py)
+# when requset received in CheckingThread, a popup window (AddLinkWindow) comes up and window gets additional download information
 # from user (port , proxy , ...) and download starts and request file deleted
 
 if ('link' in add_link_dictionary):   
-
-    # add add_link_dictionary to plugins_db.
-    from persepolis.scripts.data_base import PluginsDB
-    
-    # create an object for PluginsDB
-    plugins_db = PluginsDB()
-
-    # add new link information to plugins_table in plugins.db file.
     plugin_dict ={'link': add_link_dictionary['link'],
                     'referer': add_link_dictionary['referer'],
                     'load_cookies': add_link_dictionary['load-cookies'],
@@ -307,7 +320,18 @@ if ('link' in add_link_dictionary):
                     'header': add_link_dictionary['header'],
                     'out': add_link_dictionary['out']
                     }
-    plugins_db.insertInPluginsTable(plugin_dict)
+
+    plugin_list.append(plugin_dict)
+
+if len(plugin_list) != 0:
+    # import PluginsDB
+    from persepolis.scripts.data_base import PluginsDB
+    
+    # create an object for PluginsDB
+    plugins_db = PluginsDB()
+
+    # add plugin_list to plugins_table in plugins.db file.
+    plugins_db.insertInPluginsTable(plugin_list)
 
     # Job is done! close connections.
     plugins_db.closeConnections()
@@ -324,12 +348,12 @@ else:
 
 
 def main():
-# if lock_file is existed , it means persepolis is still running!
+    # if lock_file is existed , it means persepolis is still running!
     if lock_file_validation:  
-    # run mainwindow
+        # run mainwindow
 
-    # set color_scheme and style
-    # see palettes.py and setting.py
+        # set color_scheme and style
+        # see palettes.py and setting.py
 
         persepolis_download_manager = PersepolisApplication(sys.argv)
 
@@ -380,8 +404,6 @@ def main():
         sys.exit(persepolis_download_manager.exec_())
 
     else:
-        print('persepolis is still running')
-
 
     # this section warns user that program is still running and no need to run it again
     # and creating a file to notify mainwindow for showing itself!
@@ -392,5 +414,4 @@ def main():
             f.close()
 
         sys.exit(0)
-
 

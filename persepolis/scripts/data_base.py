@@ -21,6 +21,8 @@ import platform
 from time import sleep
 import random
 import traceback
+from persepolis.scripts import logger
+
 # get home address for this user
 home_address = os.path.expanduser("~")
 
@@ -280,21 +282,22 @@ class PluginsDB():
         # release lock
         self.lock = False
 
-    # insert new item in plugins_db_table
-    def insertInPluginsTable(self, dict):
+    # insert new items in plugins_db_table
+    def insertInPluginsTable(self, list):
         # lock data base
         self.lockCursor()
 
-        self.plugins_db_cursor.execute("""INSERT INTO plugins_db_table VALUES(
-                                                                    NULL,
-                                                                    :link,
-                                                                    :referer,
-                                                                    :load_cookies,
-                                                                    :user_agent,
-                                                                    :header,
-                                                                    :out,
-                                                                    'new'
-                                                                        )""", dict)
+        for dict in list:
+            self.plugins_db_cursor.execute("""INSERT INTO plugins_db_table VALUES(
+                                                                        NULL,
+                                                                        :link,
+                                                                        :referer,
+                                                                        :load_cookies,
+                                                                        :user_agent,
+                                                                        :header,
+                                                                        :out,
+                                                                        'new'
+                                                                            )""", dict)
 
         self.plugins_db_connection.commit()
         # release lock
@@ -392,17 +395,16 @@ class PersepolisDB():
             rand_float = random.uniform(0, 0.5)
             sleep(rand_float)
 
-#         print(traceback.extract_stack(None, 2)[0][2])
         self.lock = True
 
 
-    def createTables(self):
     # queues_list contains name of categories and category settings
-        try:
-            # lock data base
-            self.lockCursor()
-            # Create category_db_table and add 'All Downloads' and 'Single Downloads' to it
-            self.persepolis_db_cursor.execute("""CREATE TABLE category_db_table(
+    def createTables(self):
+
+        # lock data base
+        self.lockCursor()
+        # Create category_db_table and add 'All Downloads' and 'Single Downloads' to it
+        self.persepolis_db_cursor.execute("""CREATE TABLE IF NOT EXISTS category_db_table(
                                                                 category TEXT PRIMARY KEY,
                                                                 start_time_enable TEXT,
                                                                 start_time TEXT,
@@ -415,13 +417,62 @@ class PersepolisDB():
                                                                 gid_list TEXT
                                                                             )""")
 
-            self.persepolis_db_connection.commit()
+        # download table contains download table download items information
+        self.persepolis_db_cursor.execute("""CREATE TABLE IF NOT EXISTS download_db_table(
+                                                                                    file_name TEXT,
+                                                                                    status TEXT,
+                                                                                    size TEXT,
+                                                                                    downloaded_size TEXT,
+                                                                                    percent TEXT,
+                                                                                    connections TEXT,
+                                                                                    rate TEXT,
+                                                                                    estimate_time_left TEXT,
+                                                                                    gid TEXT PRIMARY KEY,
+                                                                                    link TEXT,
+                                                                                    first_try_date TEXT,
+                                                                                    last_try_date TEXT,
+                                                                                    category TEXT,
+                                                                                    FOREIGN KEY(category) REFERENCES category_db_table(category)
+                                                                                    ON UPDATE CASCADE
+                                                                                    ON DELETE CASCADE
+                                                                                         )""")
+
+
+        # addlink_db_table contains addlink window download information
+        self.persepolis_db_cursor.execute("""CREATE TABLE IF NOT EXISTS addlink_db_table(
+                                                                                ID INTEGER PRIMARY KEY,
+                                                                                gid TEXT,
+                                                                                out TEXT,
+                                                                                start_time TEXT,
+                                                                                end_time TEXT,
+                                                                                link TEXT,
+                                                                                ip TEXT,
+                                                                                port TEXT,
+                                                                                proxy_user TEXT,
+                                                                                proxy_passwd TEXT,
+                                                                                download_user TEXT,
+                                                                                download_passwd TEXT,
+                                                                                connections TEXT,
+                                                                                limit_value TEXT,
+                                                                                download_path TEXT,
+                                                                                referer TEXT,
+                                                                                load_cookies TEXT,
+                                                                                user_agent TEXT,
+                                                                                header TEXT,
+                                                                                after_download TEXT,
+                                                                                FOREIGN KEY(gid) REFERENCES download_db_table(gid) 
+                                                                                ON UPDATE CASCADE 
+                                                                                ON DELETE CASCADE 
+                                                                                    )""") 
+        self.persepolis_db_connection.commit()
             
-            # job is done! open the lock
-            self.lock = False
+        # job is done! open the lock
+        self.lock = False
 
+        # add 'All Downloads' and 'Single Downloads' to the category_db_table if they wasn't added. 
+        answer = self.searchCategoryInCategoryTable('All Downloads')
 
-
+        if not(answer):
             all_downloads_dict = {'category': 'All Downloads',
                     'start_time_enable': 'no',
                     'start_time': '0:0',
@@ -450,67 +501,6 @@ class PersepolisDB():
 
             self.insertInCategoryTable(all_downloads_dict)
             self.insertInCategoryTable(single_downloads_dict)
-        except Exception as e:
-            self.lock = False
-
-            print(e)
-
-            # lock data base
-            self.lockCursor()
-
-    # download table contains download table download items information
-        self.persepolis_db_cursor.execute("""CREATE TABLE IF NOT EXISTS download_db_table(
-                                                                                    file_name TEXT,
-                                                                                    status TEXT,
-                                                                                    size TEXT,
-                                                                                    downloaded_size TEXT,
-                                                                                    percent TEXT,
-                                                                                    connections TEXT,
-                                                                                    rate TEXT,
-                                                                                    estimate_time_left TEXT,
-                                                                                    gid TEXT PRIMARY KEY,
-                                                                                    link TEXT,
-                                                                                    first_try_date TEXT,
-                                                                                    last_try_date TEXT,
-                                                                                    category TEXT,
-                                                                                    FOREIGN KEY(category) REFERENCES category_db_table(category)
-                                                                                    ON UPDATE CASCADE
-                                                                                    ON DELETE CASCADE
-                                                                                         )""")
-
-
-    # addlink_db_table contains addlink window download information
-        self.persepolis_db_cursor.execute("""CREATE TABLE IF NOT EXISTS addlink_db_table(
-                                                                                ID INTEGER PRIMARY KEY,
-                                                                                gid TEXT,
-                                                                                out TEXT,
-                                                                                start_time TEXT,
-                                                                                end_time TEXT,
-                                                                                link TEXT,
-                                                                                ip TEXT,
-                                                                                port TEXT,
-                                                                                proxy_user TEXT,
-                                                                                proxy_passwd TEXT,
-                                                                                download_user TEXT,
-                                                                                download_passwd TEXT,
-                                                                                connections TEXT,
-                                                                                limit_value TEXT,
-                                                                                download_path TEXT,
-                                                                                referer TEXT,
-                                                                                load_cookies TEXT,
-                                                                                user_agent TEXT,
-                                                                                header TEXT,
-                                                                                after_download TEXT,
-                                                                                FOREIGN KEY(gid) REFERENCES download_db_table(gid) 
-                                                                                ON UPDATE CASCADE 
-                                                                                ON DELETE CASCADE 
-                                                                                    )""") 
-        self.persepolis_db_connection.commit()
-
-        # job is done! open the lock
-        self.lock = False
-
-
 
 
     # insert new category in category_db_table
@@ -540,11 +530,12 @@ class PersepolisDB():
 
 
     # insert in to download_db_table in persepolis.db
-    def insertInDownloadTable(self, dict):
+    def insertInDownloadTable(self, list):
         # lock data base
         self.lockCursor()
 
-        self.persepolis_db_cursor.execute("""INSERT INTO download_db_table VALUES(
+        for dict in list:
+            self.persepolis_db_cursor.execute("""INSERT INTO download_db_table VALUES(
                                                                             :file_name,
                                                                             :status,
                                                                             :size,
@@ -568,36 +559,42 @@ class PersepolisDB():
         self.lock = False
 
 
-
-
         # item must be inserted to gid_list of 'All Downloads' and gid_list of category
         # find download category and gid
         category = dict['category']
-        gid = dict['gid']
+
+        # get category_dict from data base
+        category_dict = self.searchCategoryInCategoryTable(category)
+
+        # get all_downloads_dict from data base
+        all_downloads_dict = self.searchCategoryInCategoryTable('All Downloads')
+
+        # get gid_list
+        category_gid_list = category_dict['gid_list']
+
+        all_downloads_gid_list = all_downloads_dict['gid_list']
+
+        for dict in list:
+            gid = dict['gid']
          
-        for category_item in 'All Downloads', category:
-            
-            # get category_dict from data base
-            category_dict = self.searchCategoryInCategoryTable(category_item)
-
-            # get gid_list
-            gid_list = category_dict['gid_list']
-
             # add gid of item to gid_list
-            gid_list = gid_list.append(gid)
+            category_gid_list.append(gid)
+            all_downloads_gid_list.append(gid)
 
-            # updata category_db_table
-            self.updateCategoryTable([category_dict])
+
+        # updata category_db_table
+        self.updateCategoryTable([all_downloads_dict])
+        self.updateCategoryTable([category_dict])
 
 
     # insert in addlink table in persepolis.db 
-    def insertInAddLinkTable(self, dict):
+    def insertInAddLinkTable(self, list):
         # lock data base
         self.lockCursor()
 
-
-        # first column and after download column is NULL
-        self.persepolis_db_cursor.execute("""INSERT INTO addlink_db_table VALUES(NULL,
+        for dict in list:
+            # first column and after download column is NULL
+            self.persepolis_db_cursor.execute("""INSERT INTO addlink_db_table VALUES(NULL,
                                                                                 :gid,
                                                                                 :out,
                                                                                 :start_time,

@@ -25,7 +25,7 @@ from time import sleep
 import random
 from persepolis.scripts.after_download import AfterDownloadWindow
 from persepolis.scripts.text_queue import TextQueue
-from persepolis.scripts.flashgot_queue import FlashgotQueue
+from persepolis.scripts.browser_plugin_queue import BrowserPluginQueue
 from persepolis.scripts.addlink import AddLinkWindow
 from persepolis.scripts.properties import PropertiesWindow
 from persepolis.scripts.progress import ProgressWindow
@@ -40,6 +40,7 @@ from persepolis.gui import icons_resource
 from persepolis.scripts import spider
 from persepolis.scripts import osCommands
 from persepolis.scripts import logger
+from persepolis.scripts.freespace import freeSpace
 import platform
 from copy import deepcopy
 from persepolis.scripts.shutdown import shutDown
@@ -120,13 +121,6 @@ elif os_type == 'Windows':
 download_info_folder = os.path.join(config_folder, "download_info")
 
 
-# persepolis temporary download folder
-if os_type != 'Windows':
-    temp_download_folder = str(home_address) + '/.persepolis'
-else:
-    temp_download_folder = os.path.join(
-        str(home_address), 'AppData', 'Local', 'persepolis')
-
 
 # see persepolis.py file for show_window_file and plugin_ready 
 plugin_ready = os.path.join(persepolis_tmp, 'persepolis-plugin-ready')
@@ -153,8 +147,6 @@ class StartAria2Thread(QThread):
 
         # if Aria2 wasn't started before, so start it!
         if answer == 'did not respond':
-            print('Starting Aria2')
-
             # write in log file.
             logger.sendToLog(
                             "Starting Aria2", "INFO")
@@ -176,7 +168,6 @@ class StartAria2Thread(QThread):
         else:
             # Aria2 is responding :)
             signal_str = 'yes'
-            print('Aria2 is running')
             logger.sendToLog(
                             "Aria2 is running", "INFO")
  
@@ -258,35 +249,30 @@ class CheckDownloadInfoThread(QThread):
                 # see download.py file for more information. 
                 gid_list, download_status_list = download.tellActive()
 
-                if True:
-                    for gid in active_gid_list:
+                for gid in active_gid_list:
 
-                        # if gid not in gid_list, so download is completed or stopped or error occured!
-                        # because aria2 returns active downloads status with tellActive function in download.py file. 
-                        # and complete or stopped or errored downloads are not active downloads. 
-                        # so we must get download information with tellStatus function.  
-                        # see download.py file (tellStatus and tellActive functions) for more information. 
-                        # if aria do not return download information with tellStatus and tellActive,
-                        # then perhaps some error occured.so download information must be in data_base. 
-                        if gid not in gid_list:  
+                    # if gid not in gid_list, so download is completed or stopped or error occured!
+                    # because aria2 returns active downloads status with tellActive function in download.py file. 
+                    # and complete or stopped or errored downloads are not active downloads. 
+                    # so we must get download information with tellStatus function.  
+                    # see download.py file (tellStatus and tellActive functions) for more information. 
+                    # if aria do not return download information with tellStatus and tellActive,
+                    # then perhaps some error occured.so download information must be in data_base. 
+                    if gid not in gid_list:  
 
-                            returned_dict = download.tellStatus(gid, self.parent)
-                            if returned_dict:
-                                download_status_list.append(returned_dict)
-                            else:
-                                # check data_base
-                                returned_dict = self.parent.persepolis_db.searchGidInDownloadTable(gid)
-                                download_status_list.append(returned_dict)
+                        returned_dict = download.tellStatus(gid, self.parent)
+                        if returned_dict:
+                            download_status_list.append(returned_dict)
+                        else:
+                            # check data_base
+                            returned_dict = self.parent.persepolis_db.searchGidInDownloadTable(gid)
+                            download_status_list.append(returned_dict)
 
                             # if returned_dict in None, check for availability of RPC connection.
-                                if not(returned_dict):
-                                    self.reconnectAria()
-                                    continue
+                            if not(returned_dict):
+                                self.reconnectAria()
+                                continue
 
-                # if download_status_list in None, check for availability of RPC connection.
-                else:                 
-                    self.reconnectAria()
-                    continue
 
                 if not(download_status_list):
                     download_status_list = []
@@ -347,7 +333,6 @@ class SpiderThread(QThread):
 
         except:
             # write ERROR message
-            print("Spider couldn't find download information")
             logger.sendToLog(
                 "Spider couldn't find download information", "ERROR")
 
@@ -535,11 +520,7 @@ class Queue(QThread):
 
 
                     if status == 'error':
-                        if 'error' in dict.keys():
-                            error = str(dict['error'])
-                        else:
-                            error = 'error'
-
+                        error = 'error'
                         # write error_message in log file
                         error_message = 'Download failed - GID : '\
                                     + str(gid)\
@@ -679,7 +660,6 @@ class CheckingThread(QThread):
 # shutdown_notification = 0 >> persepolis is running 
 # 1 >> persepolis is ready for closing(closeEvent called) 
 # 2 >> OK, let's close application!
-
         while shutdown_notification == 0 and aria_startup_answer != 'ready':
             sleep(2)
 
@@ -704,7 +684,7 @@ class CheckingThread(QThread):
                 # When checkPluginCall method considered request , then
                 # plugin_links_checked is changed to True
                 plugin_links_checked = False
-                self.CHECKPLUGINDBSIGNAL.emit()  # notifiying that we have flashgot request
+                self.CHECKPLUGINDBSIGNAL.emit()  # notifiying that we have browser_plugin request
                 while plugin_links_checked != True:  # wait for persepolis consideration!
                     sleep(0.5)
 
@@ -804,6 +784,9 @@ class MainWindow(MainWindow_Ui):
         icons = ':/' + \
             str(self.persepolis_setting.value('settings/icons')) + '/'
 
+        # find temp_download_folder
+        global temp_download_folder
+        temp_download_folder = persepolis_setting.value('settings/download_path_temp')
 
 # system_tray_icon
         self.system_tray_icon = QSystemTrayIcon()
@@ -978,8 +961,8 @@ class MainWindow(MainWindow_Ui):
                                     self.checkSelectedRow)
 
 # CheckingThread
-        check_flashgot = CheckingThread()
-        self.threadPool.append(check_flashgot)
+        check_browser_plugin = CheckingThread()
+        self.threadPool.append(check_browser_plugin)
         self.threadPool[3].start()
         self.threadPool[3].CHECKPLUGINDBSIGNAL.connect(self.checkPluginCall)
         self.threadPool[3].SHOWMAINWINDOWSIGNAL.connect(self.showMainWindow)
@@ -1245,7 +1228,6 @@ class MainWindow(MainWindow_Ui):
         cursor_position = QCursor.pos()
         cursor_array = [int(cursor_position.x()) , int(cursor_position.y())]
 
-        print(self.persepolis_setting.value('settings/awake'))
         if self.persepolis_setting.value('settings/awake') == 'yes':
             if add == True and self.keep_awake_checkBox.isChecked() == True: # Moving mouse position one time +1 pixel and one time -1 pixel! 
                 QCursor.setPos(cursor_array[0] + 1, cursor_array[1] + 1)
@@ -1281,6 +1263,64 @@ class MainWindow(MainWindow_Ui):
                             'status': 'deactive'}
 
                 self.temp_db.updateSingleTable(temp_dict)
+
+
+                if status == 'error':
+                    # check free space in temp_download_folder!
+                    # perhaps insufficient space in hard disk caused this error!
+                    # find free space in KiB
+                    free_space = freeSpace(temp_download_folder) 
+
+                    # find file size
+                    file_size = dict['size']
+
+                    if file_size != None:
+                        if len(file_size) > 2:
+                            unit = file_size[-2:]
+                            try:
+                                if unit == 'GB':
+                                    size_value = float(file_size[:-3])
+                                else:
+                                    size_value = int(file_size[:-3])
+                            except:
+                                size_value = None
+                        else:
+                            unit = None
+    
+                            try:
+                                size_value = int(file_size)
+                            except:
+                                size_value = None
+
+                        if free_space != None and size_value != None:
+                    
+                            if unit == 'GB':
+                                free_space = free_space/1073741824
+                                free_space = round(free_space, 2)
+                            elif unit == 'MB':
+                                free_space = int(free_space/1048576)
+                            elif unit == 'KB':
+                                free_space = int(free_space/1024)
+                            else:
+                                free_space = int(free_space)
+
+                            if free_space < size_value:
+                                error = 'Insufficient disk space!'
+                                
+
+                            # write error_message in log file
+                            error_message = 'Download failed - GID : '\
+                                + str(gid)\
+                                + '/nMessage : '\
+                                + error
+
+                            logger.sendToLog(error_message, 'ERROR')
+
+                            # show notification
+                            notifySend("Error - " + error, 'Please change the temporary download folder',
+                                10000, 'fail', systemtray=self.system_tray_icon)
+
+
 
 
             # find row of this gid in download_table!
@@ -1321,8 +1361,6 @@ class MainWindow(MainWindow_Ui):
                     try:
                         self.download_table.setItem(row, i, item)
                     except Exception as problem:
-                        print('updating download_table was unsuccessful\nError is :')
-                        print(problem)
                         logger.sendToLog(
                             "Error occured while updating download table", "INFO")
                         logger.sendToLog(problem, "ERROR")
@@ -1789,7 +1827,7 @@ class MainWindow(MainWindow_Ui):
         # 'number of connections' ,'Transfer rate' , 'estimate_time_left' ,
         # 'gid' , 'link' , 'first_try_date' , 'last_try_date', 'category']
 
-        # if user or flashgot defined filename then file_name is valid in
+        # if user or browser_plugin defined filename then file_name is valid in
         # add_link_dictionary['out']
         if add_link_dictionary['out']:
             file_name = add_link_dictionary['out']
@@ -1825,8 +1863,8 @@ class MainWindow(MainWindow_Ui):
                 'category': category}
 
         # write information in data_base
-        self.persepolis_db.insertInDownloadTable(dict)
-        self.persepolis_db.insertInAddLinkTable(add_link_dictionary)
+        self.persepolis_db.insertInDownloadTable([dict])
+        self.persepolis_db.insertInAddLinkTable([add_link_dictionary])
         
 
         # find selected category in left side panel
@@ -2144,7 +2182,6 @@ class MainWindow(MainWindow_Ui):
         self.hide()
 
         # write message in log and console
-        print("Please Wait...")
         logger.sendToLog("Please wait ...", "INFO")
 
         # stop all downloads
@@ -2168,7 +2205,6 @@ class MainWindow(MainWindow_Ui):
 
 
         QCoreApplication.instance().quit
-        print("Persepolis Closed")
         logger.sendToLog("Persepolis closed!", "INFO")
         sys.exit(0)
 
@@ -2508,6 +2544,11 @@ class MainWindow(MainWindow_Ui):
 
             # remove download item from data base
             self.persepolis_db.deleteItemInDownloadTable(gid, category)
+
+        # tell the CheckDownloadInfoThread that job is done!
+        global checking_flag
+        checking_flag = 0
+
 
 
 
@@ -3369,10 +3410,10 @@ class MainWindow(MainWindow_Ui):
             return queue_name
 
 
-# this method creates a FlashgotQueue window for list of links.
+# this method creates a BrowserPluginQueue window for list of links.
     def pluginQueue(self, list_of_links):
         # create window
-        plugin_queue_window = FlashgotQueue(
+        plugin_queue_window = BrowserPluginQueue(
             self, list_of_links, self.queueCallback, self.persepolis_setting)
         self.plugin_queue_window_list.append(plugin_queue_window)
         self.plugin_queue_window_list[len(
@@ -3445,7 +3486,7 @@ class MainWindow(MainWindow_Ui):
             # 'number of connections' ,'Transfer rate' , 'estimate_time_left' ,
             # 'gid' , 'link' , 'first_try_date' , 'last_try_date', 'category']
 
-            # if user or flashgot defined filename then file_name is valid in
+            # if user or browser_plugin defined filename then file_name is valid in
             # add_link_dictionary['out']
             if add_link_dictionary['out']:
                 file_name = add_link_dictionary['out']
@@ -4826,7 +4867,7 @@ class MainWindow(MainWindow_Ui):
             
         
 
-# see flashgot_queue.py file
+# see browser_plugin_queue.py file
     def queueSpiderCallBack(self, filename, child, row_number):
         item = QTableWidgetItem(str(filename))
 

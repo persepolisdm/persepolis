@@ -21,10 +21,8 @@ import os
 import shutil
 from persepolis.scripts import osCommands
 import platform
-from persepolis.scripts.compatibility import compatibility
 from PyQt5.QtCore import QSettings
 from persepolis.scripts.browser_integration import browserIntegration
-from persepolis.scripts.data_base import PersepolisDB, PluginsDB
 # initialization
 
 # user home address
@@ -62,27 +60,6 @@ persepolis_shutdown = os.path.join(persepolis_tmp, 'shutdown')
 # create folders
 for folder in [config_folder, persepolis_tmp, persepolis_shutdown]:
     osCommands.makeDirs(folder)
-
-# create an object for PersepolisDB
-persepolis_db = PersepolisDB()
-
-# create tables
-persepolis_db.createTables()
-
-# close connections
-persepolis_db.closeConnections()
-
-# create an object for PluginsDB
-plugins_db = PluginsDB()
-
-# create tables
-plugins_db.createTables()
-
-# delete old links
-plugins_db.deleteOldLinks()
-
-# close connections
-plugins_db.closeConnections()
 
 # persepolisdm.log file contains persepolis log.
 from persepolis.scripts import logger
@@ -122,6 +99,30 @@ else: # delete first 200 lines
     f.close()
 
 
+from persepolis.scripts.data_base import PersepolisDB, PluginsDB
+
+# create an object for PersepolisDB
+persepolis_db = PersepolisDB()
+
+# create tables
+persepolis_db.createTables()
+
+# close connections
+persepolis_db.closeConnections()
+
+# create an object for PluginsDB
+plugins_db = PluginsDB()
+
+# create tables
+plugins_db.createTables()
+
+# delete old links
+plugins_db.deleteOldLinks()
+
+# close connections
+plugins_db.closeConnections()
+
+
 # import persepolis_setting
 # persepolis is using QSettings for saving windows size and windows
 # position and program settings.
@@ -145,7 +146,7 @@ download_path = os.path.join(str(home_address), 'Downloads', 'Persepolis')
 default_setting_dict = {'wait-queue': [0, 0], 'awake': 'no', 'custom-font': 'no', 'column0': 'yes', 'column1': 'yes', 'column2': 'yes', 'column3': 'yes', 'column4': 'yes', 'column5': 'yes', 'column6': 'yes', 'column7': 'yes', 'column10': 'yes', 'column11': 'yes', 'column12': 'yes',
                              'subfolder': 'yes', 'startup': 'no', 'show-progress': 'yes', 'show-menubar': 'no', 'show-sidepanel': 'yes', 'rpc-port': 6801, 'notification': 'Native notification', 'after-dialog': 'yes', 'tray-icon': 'yes',
                              'max-tries': 5, 'retry-wait': 0, 'timeout': 60, 'connections': 16, 'download_path_temp': download_path_temp, 'download_path': download_path, 'sound': 'yes', 'sound-volume': 100, 'style': 'Fusion',
-                             'color-scheme': 'Persepolis Dark Red', 'icons': 'Archdroid-Red', 'font': 'Ubuntu', 'font-size': 9}
+                             'color-scheme': 'Persepolis Dark Red', 'icons': 'Archdroid-Red', 'font': 'Ubuntu', 'font-size': 9, 'aria2_path': ''}
 
 # this loop is checking values in persepolis_setting . if value is not
 # valid then value replaced by default_setting_dict value
@@ -176,13 +177,6 @@ for folder in folder_list:
 
 persepolis_setting.endGroup()
 
-# print proxy information
-from persepolis.scripts.check_proxy import getProxy
-
-proxy = getProxy()
-proxy_log_message = 'proxy: ' + str(proxy)
-print(proxy)
-
 # Browser integration for Firefox and chromium and google chrome
 for browser in ['chrome', 'chromium', 'opera', 'vivaldi', 'firefox']:
     browserIntegration(browser)
@@ -190,13 +184,11 @@ for browser in ['chrome', 'chromium', 'opera', 'vivaldi', 'firefox']:
 # compatibility
 persepolis_version = float(persepolis_setting.value('version/version', 2.5))
 if persepolis_version < 2.6:
+    from persepolis.scripts.compatibility import compatibility
     try:
         compatibility()
     except Exception as e:
     
-        print('compatibility ERROR')
-
-        print(str(e))
         # persepolis.db file path 
         persepolis_db_path = os.path.join(config_folder, 'persepolis.db')
 
@@ -214,6 +206,12 @@ if persepolis_version < 2.6:
         # close connections
         persepolis_db.closeConnections()
 
+        # write error in log
+        logger.sendToLog(
+            "compatibility ERROR!", "ERROR")
+        logger.sendToLog(
+                str(e), "ERROR")
+ 
 
     persepolis_version = 2.6
     persepolis_setting.setValue('version/version', 2.6)

@@ -14,27 +14,12 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import os
-import ast
 import platform
 from persepolis.scripts.play import playNotification
-from persepolis.scripts.newopen import Open
 from PyQt5.QtCore import QSettings
-
-home_address = os.path.expanduser("~")
 
 # platform
 os_type = platform.system()
-
-# config_folder
-if os_type == 'Linux' or os_type == 'FreeBSD' or os_type == 'OpenBSD':
-    config_folder = os.path.join(
-        str(home_address), ".config/persepolis_download_manager")
-elif os_type == 'Darwin':
-    config_folder = os.path.join(
-        str(home_address), "Library/Application Support/persepolis_download_manager")
-elif os_type == 'Windows':
-    config_folder = os.path.join(
-        str(home_address), 'AppData', 'Local', 'persepolis_download_manager')
 
 
 # notifySend use notify-send program in user's system for sending notifications
