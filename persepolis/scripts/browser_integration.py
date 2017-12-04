@@ -123,14 +123,12 @@ def browserIntegration(browser):
     # for MicroSoft Windows os (windows 7 , ...)
     elif os_type == 'Windows':
         # finding Persepolis execution path
-        cwd = os.path.abspath(__file__)
+        cwd = sys.argv[0] 
 
         current_directory = os.path.dirname(cwd)
-        upper_directory = os.path.dirname(current_directory)
-        persepolis_directory = os.path.dirname(upper_directory)
 
         exec_path = os.path.join(
-            persepolis_directory, 'Persepolis Download Manager.exe')
+            current_directory, 'Persepolis Download Manager.exe')
 
         # the execution path in jason file for Windows must in form of
         # c:\\Users\\...\\Persepolis Download Manager.exe , so we need 2
@@ -225,14 +223,12 @@ def browserIntegration(browser):
     
         if os_type == 'Darwin':
             # finding Persepolis execution path
-            cwd = os.path.abspath(__file__)
+            cwd = sys.argv[0] 
 
             current_directory = os.path.dirname(cwd)
-            upper_directory = os.path.dirname(current_directory)
-            persepolis_directory = os.path.dirname(upper_directory)
 
             persepolis_path = os.path.join(
-                persepolis_directory, 'Persepolis Download Manager')
+                current_directory, 'Persepolis Download Manager')
         else:
             persepolis_path = 'persepolis'
 
