@@ -20,7 +20,6 @@ import time
 import ast
 import shutil
 import platform
-import sys
 from persepolis.scripts import logger
 from persepolis.scripts.freespace import freeSpace
 from persepolis.scripts.bubble import notifySend
@@ -65,7 +64,7 @@ def startAria():
     # in macintosh
     elif os_type == 'Darwin':
         if aria2_path == "" or aria2_path == None or os.path.isfile(str(aria2_path)) == False:
-            cwd = sys.argv[0]
+            cwd = os.path.abspath(__file__)
             cwd = os.path.dirname(cwd)
             aria2d = cwd + "/aria2c"
         else:
@@ -78,7 +77,7 @@ def startAria():
     # in Windows
     elif os_type == 'Windows':
         if aria2_path == "" or aria2_path == None or os.path.isfile(str(aria2_path)) == False:
-            cwd = sys.argv[0]
+            cwd = os.path.abspath(__file__)
             cwd = os.path.dirname(cwd)
             aria2d = os.path.join(cwd, "aria2c.exe")  # aria2c.exe path
         else:
