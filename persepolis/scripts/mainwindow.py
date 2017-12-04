@@ -249,35 +249,30 @@ class CheckDownloadInfoThread(QThread):
                 # see download.py file for more information. 
                 gid_list, download_status_list = download.tellActive()
 
-                if True:
-                    for gid in active_gid_list:
+                for gid in active_gid_list:
 
-                        # if gid not in gid_list, so download is completed or stopped or error occured!
-                        # because aria2 returns active downloads status with tellActive function in download.py file. 
-                        # and complete or stopped or errored downloads are not active downloads. 
-                        # so we must get download information with tellStatus function.  
-                        # see download.py file (tellStatus and tellActive functions) for more information. 
-                        # if aria do not return download information with tellStatus and tellActive,
-                        # then perhaps some error occured.so download information must be in data_base. 
-                        if gid not in gid_list:  
+                    # if gid not in gid_list, so download is completed or stopped or error occured!
+                    # because aria2 returns active downloads status with tellActive function in download.py file. 
+                    # and complete or stopped or errored downloads are not active downloads. 
+                    # so we must get download information with tellStatus function.  
+                    # see download.py file (tellStatus and tellActive functions) for more information. 
+                    # if aria do not return download information with tellStatus and tellActive,
+                    # then perhaps some error occured.so download information must be in data_base. 
+                    if gid not in gid_list:  
 
-                            returned_dict = download.tellStatus(gid, self.parent)
-                            if returned_dict:
-                                download_status_list.append(returned_dict)
-                            else:
-                                # check data_base
-                                returned_dict = self.parent.persepolis_db.searchGidInDownloadTable(gid)
-                                download_status_list.append(returned_dict)
+                        returned_dict = download.tellStatus(gid, self.parent)
+                        if returned_dict:
+                            download_status_list.append(returned_dict)
+                        else:
+                            # check data_base
+                            returned_dict = self.parent.persepolis_db.searchGidInDownloadTable(gid)
+                            download_status_list.append(returned_dict)
 
                             # if returned_dict in None, check for availability of RPC connection.
-                                if not(returned_dict):
-                                    self.reconnectAria()
-                                    continue
+                            if not(returned_dict):
+                                self.reconnectAria()
+                                continue
 
-                # if download_status_list in None, check for availability of RPC connection.
-                else:                 
-                    self.reconnectAria()
-                    continue
 
                 if not(download_status_list):
                     download_status_list = []
