@@ -65,8 +65,11 @@ def startAria():
     elif os_type == 'Darwin':
         if aria2_path == "" or aria2_path == None or os.path.isfile(str(aria2_path)) == False:
             cwd = os.path.abspath(__file__)
-            cwd = os.path.dirname(cwd)
-            aria2d = cwd + "/aria2c"
+            current_directory = os.path.dirname(cwd)
+            upper_directory = os.path.dirname(current_directory)
+            persepolis_directory = os.path.dirname(upper_directory)
+
+            aria2d = persepolis_directory + "/aria2c"
         else:
             aria2d = aria2_path
 
@@ -78,8 +81,11 @@ def startAria():
     elif os_type == 'Windows':
         if aria2_path == "" or aria2_path == None or os.path.isfile(str(aria2_path)) == False:
             cwd = os.path.abspath(__file__)
-            cwd = os.path.dirname(cwd)
-            aria2d = os.path.join(cwd, "aria2c.exe")  # aria2c.exe path
+            current_directory = os.path.dirname(cwd)
+            upper_directory = os.path.dirname(current_directory)
+            persepolis_directory = os.path.dirname(upper_directory)
+
+            aria2d = os.path.join(persepolis_directory, "aria2c.exe")  # aria2c.exe path
         else:
             aria2d = aria2_path
 

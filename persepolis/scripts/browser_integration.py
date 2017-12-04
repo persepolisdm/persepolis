@@ -126,9 +126,11 @@ def browserIntegration(browser):
         cwd = os.path.abspath(__file__)
 
         current_directory = os.path.dirname(cwd)
+        upper_directory = os.path.dirname(current_directory)
+        persepolis_directory = os.path.dirname(upper_directory)
 
         exec_path = os.path.join(
-            current_directory, 'Persepolis Download Manager.exe')
+            persepolis_directory, 'Persepolis Download Manager.exe')
 
         # the execution path in jason file for Windows must in form of
         # c:\\Users\\...\\Persepolis Download Manager.exe , so we need 2
@@ -226,9 +228,11 @@ def browserIntegration(browser):
             cwd = os.path.abspath(__file__)
 
             current_directory = os.path.dirname(cwd)
+            upper_directory = os.path.dirname(current_directory)
+            persepolis_directory = os.path.dirname(upper_directory)
 
             persepolis_path = os.path.join(
-                current_directory, 'Persepolis Download Manager')
+                persepolis_directory, 'Persepolis Download Manager')
         else:
             persepolis_path = 'persepolis'
 
