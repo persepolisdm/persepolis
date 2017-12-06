@@ -1093,6 +1093,11 @@ class MainWindow(MainWindow_Ui):
         self.download_table.setColumnWidth(12, int(size))
 
 
+        # check maximizing situation in persepolis_setting
+        if str(self.persepolis_setting.value('MainWindow/maximized')) == 'yes':
+            self.showMaximized()
+
+        # get columns visiblity situation from persepolis_setting
         if str(self.persepolis_setting.value('settings/column0')) == 'yes':
             self.download_table.setColumnHidden(0, False)
         else:
@@ -2172,6 +2177,12 @@ class MainWindow(MainWindow_Ui):
         self.persepolis_setting.setValue('MainWindow/column10', self.download_table.columnWidth(10))
         self.persepolis_setting.setValue('MainWindow/column11', self.download_table.columnWidth(11))
         self.persepolis_setting.setValue('MainWindow/column12', self.download_table.columnWidth(12))
+
+        # save maximizing situation
+        if self.isMaximized():
+            self.persepolis_setting.setValue('MainWindow/maximized', 'yes')
+        else:
+            self.persepolis_setting.setValue('MainWindow/maximized', 'no')
 
 
         # sync persepolis_setting
