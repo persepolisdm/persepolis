@@ -1313,17 +1313,17 @@ class MainWindow(MainWindow_Ui):
                                 error = 'Insufficient disk space!'
                                 
 
-                            # write error_message in log file
-                            error_message = 'Download failed - GID : '\
-                                + str(gid)\
-                                + '/nMessage : '\
-                                + error
+                                # write error_message in log file
+                                error_message = 'Download failed - GID : '\
+                                    + str(gid)\
+                                    + '/nMessage : '\
+                                    + error
 
-                            logger.sendToLog(error_message, 'ERROR')
+                                logger.sendToLog(error_message, 'ERROR')
 
-                            # show notification
-                            notifySend("Error - " + error, 'Please change the temporary download folder',
-                                10000, 'fail', systemtray=self.system_tray_icon)
+                                # show notification
+                                notifySend("Error - " + error, 'Please change the temporary download folder',
+                                    10000, 'fail', systemtray=self.system_tray_icon)
 
 
 
