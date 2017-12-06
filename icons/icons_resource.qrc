@@ -2,7 +2,6 @@
 	<qresource prefix="/">
 
         <file>persepolis.svg</file>
-        <file>persepolis.png</file>
 
 		<file>Archdroid-Blue/about.svg</file>		
 		<file>Archdroid-Blue/add.svg</file>		
