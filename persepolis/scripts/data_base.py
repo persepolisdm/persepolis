@@ -707,6 +707,25 @@ class PersepolisDB():
         return downloads_dict
 
       
+    # this method checks existance of a link in addlink_db_table
+    def searchLinkInAddLinkTable(self, link):
+        # lock data base
+        self.lockCursor()
+
+        self.persepolis_db_cursor.execute("""SELECT * FROM addlink_db_table WHERE link = '{}'""".format(str(link)))
+        list = self.persepolis_db_cursor.fetchall()
+
+        # job is done! open the lock
+        self.lock = False
+
+
+        if list:
+            return True
+        else:
+            return False
+
+
+
 
     # return download information in addlink_db_table with special gid.
     def searchGidInAddLinkTable(self, gid):

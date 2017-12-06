@@ -1818,6 +1818,24 @@ class MainWindow(MainWindow_Ui):
 
 # callback of AddLinkWindow
     def callBack(self, add_link_dictionary, download_later, category):
+        exists = self.persepolis_db.searchLinkInAddLinkTable(add_link_dictionary['link'])
+
+        if exists:
+            self.msgBox = QMessageBox()
+            self.msgBox.setText("<b><center>You add this link before\
+                    do you want to add it again?</center></b>")
+            self.msgBox.setInformativeText("<center>Do you want to continue?</center>")
+            self.msgBox.setStandardButtons(QMessageBox.Yes | QMessageBox.No)
+            self.msgBox.setIcon(QMessageBox.Warning)
+            reply = self.msgBox.exec_()
+
+            # do nothing if user clicks NO
+            if reply != QMessageBox.Yes:
+                return
+
+
+
+
         category = str(category)
         # aria2 identifies each download by the ID called GID. The GID must be
         # hex string of 16 characters.
