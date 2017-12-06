@@ -305,6 +305,12 @@ if args.name :
 else:
     add_link_dictionary['out'] = None
 
+if args.tray:
+    start_in_tray = True
+else:
+    start_in_tray = False
+
+
 # when browsers plugin calls persepolis or user runs persepolis by terminal arguments,
 # then persepolis creats a request file in /tmp folder and link information added to
 # plugins_db.db file(see data_base.py for more information).
@@ -340,11 +346,9 @@ if len(plugin_list) != 0:
     plugin_ready = os.path.join(persepolis_tmp, 'persepolis-plugin-ready')
     osCommands.touch(plugin_ready)
 
+    # start persepolis in system tray
+    start_in_tray = True 
 
-if args.tray:
-    start_in_tray = 'yes'
-else:
-    start_in_tray = 'no'
 
 
 def main():
@@ -385,7 +389,7 @@ def main():
         # run mainwindow
         try:
             mainwindow = MainWindow(start_in_tray, persepolis_download_manager, persepolis_download_manager.setting)
-            if start_in_tray == 'yes':
+            if start_in_tray:
                 mainwindow.hide()
             else:
                 mainwindow.show()

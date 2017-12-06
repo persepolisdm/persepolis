@@ -814,13 +814,13 @@ class MainWindow(MainWindow_Ui):
         self.system_tray_icon.setToolTip('Persepolis Download Manager')
 
         # check user preference for showing or hiding system_tray_icon
-        if self.persepolis_setting.value('settings/tray-icon') != 'yes' and start_in_tray == 'no':
+        if self.persepolis_setting.value('settings/tray-icon') != 'yes' and start_in_tray == False:
             self.minimizeAction.setEnabled(False)
             self.trayAction.setChecked(False)
             self.system_tray_icon.hide()
 
         # hide MainWindow if start_in_tray is equal to "yes"
-        if start_in_tray == 'yes':
+        if start_in_tray:
             self.minimizeAction.setText('Show main Window')
             self.minimizeAction.setIcon(QIcon(icons + 'window'))
 
