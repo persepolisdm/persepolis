@@ -12,6 +12,7 @@ os_type = platform.system()
 if os_type == 'Linux':
     path_list = ['/usr/share/man/man1/persepolis.1.gz',
     '/usr/share/pixmaps/persepolis.svg',
+    '/usr/share/pixmaps/persepolis-tray.svg',
     '/usr/share/applications/persepolis.desktop',
     '/usr/bin/persepolis']
 
@@ -23,6 +24,7 @@ if os_type == 'Linux':
 elif os_type == 'FreeBSD' or os_type == 'OpenBSD':
     path_list = ['/usr/local/share/man/man1/persepolis.1.gz',
     '/usr/local/share/pixmaps/persepolis.svg',
+    '/usr/local/share/pixmaps/persepolis-tray.svg',
     '/usr/local/share/applications/persepolis.desktop',
     '/usr/local/bin/persepolis']
 
