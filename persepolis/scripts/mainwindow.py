@@ -1206,7 +1206,6 @@ class MainWindow(MainWindow_Ui):
 
             #this section is checking download status of items in download table , if status is downloading then restarts this download.
             for row in range(self.download_table.rowCount()):
-                print(row)
                 status_download_table = str(self.download_table.item( row , 1 ).text())
                 gid = self.download_table.item( row , 8).text()
 
