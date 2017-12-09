@@ -249,7 +249,8 @@ class CheckDownloadInfoThread(QThread):
                 # see download.py file for more information. 
                 gid_list, download_status_list = download.tellActive()
 
-                for gid in active_gid_list:
+                try:
+                    for gid in active_gid_list:
 
                     # if gid not in gid_list, so download is completed or stopped or error occured!
                     # because aria2 returns active downloads status with tellActive function in download.py file. 
@@ -258,32 +259,37 @@ class CheckDownloadInfoThread(QThread):
                     # see download.py file (tellStatus and tellActive functions) for more information. 
                     # if aria do not return download information with tellStatus and tellActive,
                     # then perhaps some error occured.so download information must be in data_base. 
-                    if gid not in gid_list:  
+                        if gid not in gid_list:  
 
-                        returned_dict = download.tellStatus(gid, self.parent)
-                        if returned_dict:
-                            download_status_list.append(returned_dict)
-                        else:
-                            # check data_base
-                            returned_dict = self.parent.persepolis_db.searchGidInDownloadTable(gid)
-                            download_status_list.append(returned_dict)
+                            returned_dict = download.tellStatus(gid, self.parent)
+                            if returned_dict:
+                                download_status_list.append(returned_dict)
+                            else:
+                                # check data_base
+                                returned_dict = self.parent.persepolis_db.searchGidInDownloadTable(gid)
+                                download_status_list.append(returned_dict)
 
-                            # if returned_dict in None, check for availability of RPC connection.
-                            if not(returned_dict):
-                                self.reconnectAria()
-                                continue
+                                # if returned_dict in None, check for availability of RPC connection.
+                                if not(returned_dict):
+                                    self.reconnectAria()
+                                    continue
 
 
-                if not(download_status_list):
-                    download_status_list = []
+                    if not(download_status_list):
+                        download_status_list = []
 
-                # now we have a list that contains download information (download_status_list)
-                # lets update download table in main window and update data base!
-                # first emit a signal for updating MainWindow. 
-                self.DOWNLOAD_INFO_SIGNAL.emit(download_status_list)
+                    # now we have a list that contains download information (download_status_list)
+                    # lets update download table in main window and update data base!
+                    # first emit a signal for updating MainWindow. 
+                    self.DOWNLOAD_INFO_SIGNAL.emit(download_status_list)
 
-                # updat data base!
-                self.parent.persepolis_db.updateDownloadTable(download_status_list)
+                    # updat data base!
+                    self.parent.persepolis_db.updateDownloadTable(download_status_list)
+
+                except:
+                    # continue the loop if any error occured.
+                    self.reconnectAria()
+                    continue
                 
             # Ok exit loop! get ready for shutting down!
             shutdown_notification = 2
@@ -305,11 +311,10 @@ class CheckDownloadInfoThread(QThread):
                 if answer == 'did not respond' and i != 4:  # check answer
                     sleep(2)
                 else:
-                    break
                     # emit answer. 
                     # if answer is 'did not respond', it means that reconnecting aria was not successful
                     self.RECONNECTARIASIGNAL.emit(str(answer))
-
+                    break
 
 
 # SpiderThread calls spider in spider.py .
@@ -1201,6 +1206,7 @@ class MainWindow(MainWindow_Ui):
 
             #this section is checking download status of items in download table , if status is downloading then restarts this download.
             for row in range(self.download_table.rowCount()):
+                print(row)
                 status_download_table = str(self.download_table.item( row , 1 ).text())
                 gid = self.download_table.item( row , 8).text()
 
