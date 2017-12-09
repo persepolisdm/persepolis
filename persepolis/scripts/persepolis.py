@@ -318,7 +318,7 @@ else:
 # when requset received in CheckingThread, a popup window (AddLinkWindow) comes up and window gets additional download information
 # from user (port , proxy , ...) and download starts and request file deleted
 
-if ('link' in add_link_dictionary):   
+if ('link' in add_link_dictionary.keys()):   
     plugin_dict ={'link': add_link_dictionary['link'],
                     'referer': add_link_dictionary['referer'],
                     'load_cookies': add_link_dictionary['load-cookies'],
@@ -412,7 +412,8 @@ def main():
     # this section warns user that program is still running and no need to run it again
     # and creating a file to notify mainwindow for showing itself!
     # (see CheckingThread in mainwindow.py for more information)
-        if not('link' in add_link_dictionary):
+        if len(plugin_list) == 0:
+
             show_window_file = os.path.join(persepolis_tmp, 'show-window')
             f = open(show_window_file, 'w')
             f.close()
