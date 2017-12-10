@@ -1204,21 +1204,21 @@ class MainWindow(MainWindow_Ui):
             self.statusbar.showMessage('Reconnecting aria2...')
             logger.sendToLog('Reconnecting Aria2 ...', 'INFO')
 
-            #this section is checking download status of items in download table , if status is downloading then restarts this download.
-            for row in range(self.download_table.rowCount()):
-                status_download_table = str(self.download_table.item( row , 1 ).text())
-                gid = self.download_table.item( row , 8).text()
+            # get items with 'downloading' or 'waiting' status from data base and restart them.
+            downloading_gid_list = self.persepolis_db.returnDownloadingItems()
 
-                if status_download_table == 'downloading':
-                    new_download = DownloadLink(gid, self)
-                    self.threadPool.append(new_download)
-                    self.threadPool[len(self.threadPool) - 1].start()
-                    self.threadPool[len(
-                        self.threadPool) - 1].ARIA2NOTRESPOND.connect(self.aria2NotRespond)
+            for gid in downloading_gid_list:
+                new_download = DownloadLink(gid, self)
+                self.threadPool.append(new_download)
+                self.threadPool[len(self.threadPool) - 1].start()
+                self.threadPool[len(
+                    self.threadPool) - 1].ARIA2NOTRESPOND.connect(self.aria2NotRespond)
 
-            # if status is paused , then this section is stopping download.
-                if status_download_table == 'paused':
-                    download.downloadStop(gid, self)
+            # get download items with 'paused' status and stop them. 
+            paused_gid_list = self.persepolis_db.returnPausedItems()
+
+            for gid in paused_gid_list:
+                download.downloadStop(gid, self)
 
             self.statusbar.showMessage(
                 'Persepolis reconnected aria2 successfully')

@@ -68,7 +68,7 @@ class TempDB():
         # create a lock for data base
         self.lock = False
 
-    # this method locls data base. 
+    # this method locks data base. 
     # this is pervent accessing data base simoltaneously.
     def lockCursor(self):
         while self.lock:
@@ -1135,6 +1135,51 @@ class PersepolisDB():
 
 
         return  gid_list 
+
+# this method returns items with 'downloading' or 'waiting' status
+    def returnDownloadingItems(self):
+        # lock data base
+        self.lockCursor()
+
+        # find download items is download_db_table with status = "downloading" or "waiting" or paused or scheduled
+        self.persepolis_db_cursor.execute("""SELECT gid FROM download_db_table WHERE (status = 'downloading' OR status = 'waiting')""")
+
+
+        # create a list for returning answer
+        list = self.persepolis_db_cursor.fetchall()
+        gid_list = []
+
+        for tuple in list:
+            gid_list.append(tuple[0])
+            
+        # job is done! open the lock
+        self.lock = False
+
+
+        return  gid_list 
+
+# this method returns items with 'paused' status.
+    def returnPausedItems(self):
+        # lock data base
+        self.lockCursor()
+
+        # find download items is download_db_table with status = "downloading" or "waiting" or paused or scheduled
+        self.persepolis_db_cursor.execute("""SELECT gid FROM download_db_table WHERE (status = 'paused')""")
+
+
+        # create a list for returning answer
+        list = self.persepolis_db_cursor.fetchall()
+        gid_list = []
+
+        for tuple in list:
+            gid_list.append(tuple[0])
+            
+        # job is done! open the lock
+        self.lock = False
+
+
+        return  gid_list 
+
 
 # This method deletes a category from category_db_table
     def deleteCategory(self, category):
