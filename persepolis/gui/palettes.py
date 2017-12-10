@@ -156,21 +156,21 @@ class ArcDarkBluePallete(QPalette):
 class LightRedPallete(QPalette):
     def __init__(self):
         super().__init__()
-        #220 220 220 is light gray
-        self.setColor(QPalette.Window, QColor(220, 220, 220))
+        #light gray
+        self.setColor(QPalette.Window, QColor(237, 239, 243))
         #0 0 0 is black
         self.setColor(QPalette.WindowText, Qt.black)
         #255 255 255 is white
         self.setColor(QPalette.Base, Qt.white)
         #gray
-        self.setColor(QPalette.AlternateBase, QColor(220, 220, 220))
+        self.setColor(QPalette.AlternateBase, QColor(237, 239, 243))
         self.setColor(QPalette.ToolTipBase, Qt.white)
         self.setColor(QPalette.ToolTipText, Qt.white)
         # light gray
         self.setColor(QPalette.Text, Qt.black)
 
         # gray
-        self.setColor(QPalette.Button, QColor(220, 220, 220))
+        self.setColor(QPalette.Button, QColor(237, 239, 243))
         # light gray
         self.setColor(QPalette.ButtonText, Qt.black)
         # numix red
@@ -193,21 +193,21 @@ class LightRedPallete(QPalette):
 class LightBluePallete(QPalette):
     def __init__(self):
         super().__init__()
-        # 220 220 220 is light gray
-        self.setColor(QPalette.Window, QColor(220, 220, 220))
+        # light gray
+        self.setColor(QPalette.Window, QColor(237, 239, 243))
         # 0 0 0 is black
         self.setColor(QPalette.WindowText, Qt.black)
         # 255 255 255 is white
         self.setColor(QPalette.Base, Qt.white)
         # gray
-        self.setColor(QPalette.AlternateBase, QColor(220, 220, 220))
+        self.setColor(QPalette.AlternateBase, QColor(237, 239, 243))
         self.setColor(QPalette.ToolTipBase, Qt.white)
         self.setColor(QPalette.ToolTipText, Qt.white)
         # light gray
         self.setColor(QPalette.Text, Qt.black)
 
         # gray
-        self.setColor(QPalette.Button, QColor(220, 220, 220))
+        self.setColor(QPalette.Button, QColor(237, 239, 243))
         # light gray
         self.setColor(QPalette.ButtonText, Qt.black)
         # numix blue
