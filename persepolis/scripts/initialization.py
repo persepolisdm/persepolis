@@ -189,19 +189,11 @@ if persepolis_version < 2.6:
         compatibility()
     except Exception as e:
     
-        # persepolis.db file path 
-        persepolis_db_path = os.path.join(config_folder, 'persepolis.db')
-
-
-        # remove and create data base again
-        osCommands.remove(persepolis_db_path)
-
-
         # create an object for PersepolisDB
         persepolis_db = PersepolisDB()
 
         # create tables
-        persepolis_db.createTables()
+        persepolis_db.resetDataBase()
 
         # close connections
         persepolis_db.closeConnections()

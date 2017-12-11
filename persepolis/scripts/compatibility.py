@@ -206,8 +206,8 @@ def compatibility():
 
 
         # write information in data_base
-        persepolis_db.insertInDownloadTable(dict)
-        persepolis_db.insertInAddLinkTable(add_link_dictionary)
+        persepolis_db.insertInDownloadTable([dict])
+        persepolis_db.insertInAddLinkTable([add_link_dictionary])
 
     # close connections
     persepolis_db.closeConnections()
