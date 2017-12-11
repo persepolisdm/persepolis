@@ -4052,7 +4052,7 @@ class MainWindow(MainWindow_Ui):
             self.persepolis_db.deleteCategory(current_category_tree_text)
 
 
-# highlight "All Downloads" in category_tree
+        # highlight "All Downloads" in category_tree
         all_download_index = self.category_tree_model.index(0, 0)
         self.category_tree.setCurrentIndex(all_download_index)
         self.categoryTreeSelected(all_download_index)
@@ -4919,5 +4919,50 @@ class MainWindow(MainWindow_Ui):
         if str(filesize) != '***':
             filesize = 'Size: ' + str(filesize)
             child.size_label.setText(filesize)
+
+# this method deletes all items in data base
+    def clearDownloadList(self, item):
+        # if checking_flag is equal to 1, it means that user pressed remove or
+        # delete button or ... . so checking download information must be
+        # stopped until job is done!
+        if checking_flag != 2:
+            wait_check = WaitThread()
+            self.threadPool.append(wait_check)
+            self.threadPool[len(self.threadPool) - 1].start()
+            self.threadPool[len(self.threadPool) -
+                            1].QTABLEREADY.connect(self.clearDownloadList2)
+        else:
+            self.clearDownloadList2()
+
+
+    def clearDownloadList(self):
+        # all Downloads must be stopped by user
+        gid_list = self.persepolis_db.findActiveDownloads()
+
+        if len(gid_list) != 0:
+            error_messageBox = QMessageBox()
+            error_messageBox.setText(
+                    'Stop all downloads first!')
+            error_messageBox.setWindowTitle('Error!')
+            error_messageBox.exec_()
+            return
+ 
+        
+        # reset data base
+        self.persepolis_db.resetDataBase()
+        self.temp_db.resetDataBase()
+
+        # highlight "All Downloads" in category_tree
+        all_download_index = self.category_tree_model.index(0, 0)
+        self.category_tree.setCurrentIndex(all_download_index)
+        self.categoryTreeSelected(all_download_index)
+
+        # clear download_table
+        self.download_table.setRowCount(0)
+
+
+        # tell the CheckDownloadInfoThread that job is done!
+        global checking_flag
+        checking_flag = 0
 
 

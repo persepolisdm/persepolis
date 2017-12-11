@@ -223,7 +223,18 @@ class TempDB():
         dict = {'shutdown': tuple[0]}
 
         return dict
- 
+
+    def resetDataBase(self):
+        # lock data base
+        self.lockCursor()
+
+        # delete all items
+        self.temp_db_cursor.execute("""DELETE FROM single_db_table""")
+        self.temp_db_cursor.execute("""DELETE FROM queue_db_table""")
+
+        # release lock
+        self.lock = False
+
 
     # close connections
     def closeConnections(self):
@@ -1212,7 +1223,27 @@ class PersepolisDB():
         self.lock = False
 
 
+# this method deletes all items in data_base
+    def resetDataBase(self):
+        # update gid_list in categories with empty gid_list
+        all_downloads_dict = {'category': 'All Downloads', 'gid_list': []}
+        single_downloads_dict = {'category': 'Single Downloads', 'gid_list': []}
 
+        self.updateCategoryTable([all_downloads_dict, single_downloads_dict])
+
+        # lock data base
+        self.lockCursor()
+
+        # delete all items in category_db_table, except 'All Downloads' and 'Single Downloads'
+        self.persepolis_db_cursor.execute("""DELETE FROM category_db_table WHERE category NOT IN ('All Downloads', 'Single Downloads')""")
+        self.persepolis_db_cursor.execute("""DELETE FROM download_db_table""")
+        self.persepolis_db_cursor.execute("""DELETE FROM addlink_db_table""")
+
+        # commit
+        self.persepolis_db_connection.commit()
+
+        # release lock
+        self.lock = False
 
 # This method deletes a download item from download_db_table
     def deleteItemInDownloadTable(self, gid, category):

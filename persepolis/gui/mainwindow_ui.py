@@ -101,6 +101,8 @@ class MenuWidget(QPushButton):
 
         fileMenu.addAction(self.parent.exitAction)
 
+        editMenu.addAction(self.parent.clearAction)
+
         editMenu.addAction(self.parent.selectAction)
 
         editMenu.addAction(self.parent.selectAllAction)
@@ -483,6 +485,11 @@ class MainWindow_Ui(QMainWindow):
         self.exitAction = QAction(QIcon(icons + 'exit'), 'Exit', self,
                                   shortcut="Ctrl+Q", statusTip="Exit", triggered=self.closeEvent)
         fileMenu.addAction(self.exitAction)
+
+        self.clearAction = QAction(QIcon(icons + 'multi_remove'), 'Clear download list',
+                                         self, statusTip='Clear all items in download list', triggered=self.clearDownloadList)
+        editMenu.addAction(self.clearAction)
+
 
         self.selectAction = QAction('Select multiple items ', self,
                                     statusTip='Select multiple items', triggered=self.selectDownloads)
