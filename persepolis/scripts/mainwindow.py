@@ -1827,8 +1827,8 @@ class MainWindow(MainWindow_Ui):
 
         if exists:
             self.msgBox = QMessageBox()
-            self.msgBox.setText("<b><center>You add this link before\
-                    do you want to add it again?</center></b>")
+            self.msgBox.setText("<b><center>This link has been added before!\
+                    Are you sure you want to add it again?</center></b>")
             self.msgBox.setStandardButtons(QMessageBox.Yes | QMessageBox.No)
             self.msgBox.setIcon(QMessageBox.Warning)
             reply = self.msgBox.exec_()
