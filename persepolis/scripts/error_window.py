@@ -16,25 +16,10 @@
 from PyQt5 import QtGui, QtWidgets, QtCore
 from PyQt5.QtWidgets import QWidget, QTextEdit, QVBoxLayout, QHBoxLayout, QPushButton, QLabel
 from PyQt5.QtGui import QIcon
-import os
+from PyQt5.QtCore import QSettings
 from persepolis.gui import icons_resource
 from persepolis.scripts import osCommands
-import platform
-
-os_type = platform.system()
-
-home_address = os.path.expanduser("~")
-
-# config_folder
-if os_type == 'Linux' or os_type == 'FreeBSD' or os_type == 'OpenBSD':
-    config_folder = os.path.join(
-        str(home_address), ".config/persepolis_download_manager")
-elif os_type == 'Darwin':
-    config_folder = os.path.join(
-        str(home_address), "Library/Application Support/persepolis_download_manager")
-elif os_type == 'Windows':
-    config_folder = os.path.join(
-        str(home_address), 'AppData', 'Local', 'persepolis_download_manager')
+from persepolis.scripts.data_base import PersepolisDB
 
 
 class ErrorWindow(QWidget):
@@ -85,4 +70,16 @@ class ErrorWindow(QWidget):
         self.close()
 
     def resetPushButtonPressed(self, button):
-        osCommands.removeDir(str(config_folder))
+        # create an object for PersepolisDB
+        persepolis_db = PersepolisDB()
+
+        # Reset data base
+        persepolis_db.resetDataBase()
+
+        # close connections
+        persepolis_db.closeConnections()
+
+        # Reset persepolis_setting
+        persepolis_setting = QSettings('persepolis_download_manager', 'persepolis')
+        persepolis_setting.clear()
+        persepolis_setting.sync()

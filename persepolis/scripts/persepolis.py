@@ -257,11 +257,21 @@ if args.parent_window or args.args:
 
 # persepolis --clear >> remove config_folder
 if args.clear:
-    status = osCommands.removeDir(str(config_folder))
-    if status == 'ok' or status == 'no' :
-        print ('Download list cleard!')
-    else:
-        print("persepolis can't clear download list")
+    from persepolis.scripts.data_base import PersepolisDB
+
+    # create an object for PersepolisDB
+    persepolis_db = PersepolisDB()
+
+    # Reset data base
+    persepolis_db.resetDataBase()
+
+    # close connections
+    persepolis_db.closeConnections()
+
+    # Reset persepolis_setting
+    persepolis_setting = QSettings('persepolis_download_manager', 'persepolis')
+    persepolis_setting.clear()
+    persepolis_setting.sync()
 
     sys.exit(0)
 
