@@ -187,6 +187,8 @@ class AddLinkWindow(AddLinkWindow_Ui):
 
         self.minimum_height = self.height()
 
+        # this variable will change to True if options_pushButton is clicked.
+        self.options_pushButton_clicked = False
 
 # more options widgets list
         self.more_options_widgets = [self.proxy_checkBox, self.detect_proxy_pushButton, self.proxy_frame, self.download_checkBox,
@@ -202,7 +204,8 @@ class AddLinkWindow(AddLinkWindow_Ui):
 
     def resizeEvent(self, event):
         height = int(self.height())
-        if height < self.minimum_height:
+#         if height < self.minimum_height:
+        if not(self.options_pushButton_clicked):
             self.minimum_height = height
 
 # detect system proxy setting, and set ip_lineEdit and port_spinBox
@@ -238,6 +241,7 @@ class AddLinkWindow(AddLinkWindow_Ui):
         if self.options_pushButton.text() == 'Show more options' or self.options_pushButton.text() == '&Show more options':
             self.options_pushButton.setText('Hide options')
             
+            self.options_pushButton_clicked = True
             #unhide more_options_widgets
             for widgets in self.more_options_widgets:
                 widgets.show()
@@ -245,6 +249,8 @@ class AddLinkWindow(AddLinkWindow_Ui):
             self.layout().setSizeConstraint(QtWidgets.QLayout.SetFixedSize)
         else:
             self.options_pushButton.setText('Show more options')
+
+            self.options_pushButton_clicked = False
 
             #hide more_options_widgets
             for widgets in self.more_options_widgets:
