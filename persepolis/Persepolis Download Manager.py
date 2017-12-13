@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 # this file is created for building persepolis with pyinstaller.
 import sys
