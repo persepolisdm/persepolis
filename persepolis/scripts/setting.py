@@ -115,6 +115,7 @@ class PreferencesWindow(Setting_Ui):
         current_color_index = self.color_comboBox.findText(
             str(self.persepolis_setting.value('color-scheme')))
         self.color_comboBox.setCurrentIndex(current_color_index)
+
 # set icons
         icons = ['Archdroid-Red', 'Archdroid-Blue', 'Breeze', 'Breeze-Dark', 'Papirus', 'Papirus-Dark', 'Papirus-Light']
         self.icon_comboBox.addItems(icons)
@@ -123,6 +124,14 @@ class PreferencesWindow(Setting_Ui):
             str(self.persepolis_setting.value('icons')))
         self.icon_comboBox.setCurrentIndex(current_icons_index)
         self.current_icon = str(self.icon_comboBox.currentText())
+
+# icon size
+        size = ['128', '64', '48', '32', '24', '16']
+        self.icons_size_comboBox.addItems(size)
+        current_icons_size_index = self.icons_size_comboBox.findText(
+            str(self.persepolis_setting.value('toolbar_icon_size')))
+        self.icons_size_comboBox.setCurrentIndex(current_icons_size_index)
+
 # set notification
         notifications = ['Native notification', 'QT notification']
         self.notification_comboBox.addItems(notifications)
@@ -398,7 +407,7 @@ class PreferencesWindow(Setting_Ui):
         download_path_default = os.path.join(
             str(home_address), 'Downloads', 'Persepolis')
 
-        self.setting_dict = {'wait-queue': [0, 0], 'awake': 'no', 'custom-font': 'no', 'column0': 'yes', 'column1': 'yes', 'column2': 'yes', 'column3': 'yes', 'column4': 'yes', 'column5': 'yes', 'column6': 'yes', 'column7': 'yes', 'column10': 'yes', 'column11': 'yes', 'column12': 'yes',
+        self.setting_dict = {'toolbar_icon_size': 32, 'wait-queue': [0, 0], 'awake': 'no', 'custom-font': 'no', 'column0': 'yes', 'column1': 'yes', 'column2': 'yes', 'column3': 'yes', 'column4': 'yes', 'column5': 'yes', 'column6': 'yes', 'column7': 'yes', 'column10': 'yes', 'column11': 'yes', 'column12': 'yes',
                              'subfolder': 'yes', 'startup': 'no', 'show-progress': 'yes', 'show-menubar': 'no', 'show-sidepanel': 'yes', 'rpc-port': 6801, 'notification': 'Native notification', 'after-dialog': 'yes', 'tray-icon': 'yes',
                              'max-tries': 5, 'retry-wait': 0, 'timeout': 60, 'connections': 16, 'download_path_temp': download_path_temp_default, 'download_path': download_path_default, 'sound': 'yes', 'sound-volume': 100, 'style': 'Fusion',
                              'color-scheme': 'Persepolis Light Blue', 'icons': 'Papirus-Light', 'font': 'Ubuntu', 'font-size': 9, 'aria2_path': ''}
@@ -441,6 +450,12 @@ class PreferencesWindow(Setting_Ui):
         current_icons_index = self.icon_comboBox.findText(
             str(self.setting_dict['icons']))
         self.icon_comboBox.setCurrentIndex(current_icons_index)
+
+# set icons size
+        current_icons_size_index = self.icons_size_comboBox.findText(
+            str(self.setting_dict['toolbar_icon_size']))
+        self.icons_size_comboBox.setCurrentIndex(current_icons_size_index)
+
 # set notification
         current_notification_index = self.notification_comboBox.findText(
             str(self.setting_dict['notification']))
@@ -535,6 +550,15 @@ class PreferencesWindow(Setting_Ui):
                     window.changeIcon(icons)
 
             self.parent.changeIcon(icons)
+
+# icons size
+        icons_size = self.icons_size_comboBox.currentText()
+        self.persepolis_setting.setValue('toolbar_icon_size', icons_size)
+
+        icons_size = int(icons_size)
+        self.parent.toolBar.setIconSize(QSize(icons_size, icons_size))
+        self.parent.toolBar2.setIconSize(QSize(icons_size, icons_size))
+
 
 # style
         style = str(self.style_comboBox.currentText())

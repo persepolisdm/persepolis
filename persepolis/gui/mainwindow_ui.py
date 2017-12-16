@@ -17,13 +17,8 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import QDateTimeEdit, QDoubleSpinBox, QPushButton, QComboBox,  QMenu, QTreeView, QSplitter, QSizePolicy, QGridLayout, QHBoxLayout, QVBoxLayout, QMenu, QTableWidgetItem, QAbstractItemView, QApplication, QToolBar, QMenuBar, QStatusBar, QTableWidget, QAction, QMainWindow, QWidget, QFrame, QAbstractItemView, QCheckBox, QSpinBox, QLabel
 from PyQt5.QtGui import QIcon, QStandardItemModel, QStandardItem
 from PyQt5.QtCore import QCoreApplication, QRect, QSize, Qt
-import ast
-import os
 from persepolis.scripts.newopen import Open
 from persepolis.gui import icons_resource
-
-
-home_address = os.path.expanduser("~")
 
 
 # align center for items in download table
@@ -378,14 +373,12 @@ class MainWindow_Ui(QMainWindow):
         self.toolBar2 = QToolBar(self)
         self.addToolBar(QtCore.Qt.TopToolBarArea, self.toolBar2)
         self.toolBar2.setWindowTitle('Menu')
-        self.toolBar2.setIconSize(QSize(32, 32))
         self.toolBar2.setFloatable(False)
         self.toolBar2.setMovable(False)
 
         self.toolBar = QToolBar(self)
         self.addToolBar(QtCore.Qt.TopToolBarArea, self.toolBar)
         self.toolBar.setWindowTitle('Toolbar')
-        self.toolBar.setIconSize(QSize(32, 32))
         self.toolBar.setFloatable(False)
         self.toolBar.setMovable(False)
 

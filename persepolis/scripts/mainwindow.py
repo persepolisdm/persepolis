@@ -1158,6 +1158,10 @@ class MainWindow(MainWindow_Ui):
         else:
             self.download_table.setColumnHidden(12, True)
 
+        icons_size = int(self.persepolis_setting.value('settings/toolbar_icon_size'))
+        self.toolBar.setIconSize(QSize(icons_size, icons_size))
+        self.toolBar2.setIconSize(QSize(icons_size, icons_size))
+
 
 # check reverse_checkBox
         self.reverse_checkBox.setChecked(False)

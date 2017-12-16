@@ -17,12 +17,9 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import QDateTimeEdit, QCheckBox, QVBoxLayout, QHBoxLayout, QFrame, QWidget, QLabel, QLineEdit, QTabWidget, QSpinBox, QPushButton, QDial, QComboBox, QFontComboBox, QSpacerItem, QSizePolicy
 from PyQt5.QtGui import QIcon
-import ast
-import os
 from persepolis.scripts.newopen import Open
 from persepolis.gui import icons_resource
 
-home_address = os.path.expanduser("~")
 
 
 class Setting_Ui(QWidget):
@@ -223,11 +220,25 @@ class Setting_Ui(QWidget):
         self.horizontalLayout_12 = QHBoxLayout()
         self.icon_label = QLabel(self.layoutWidget3)
         self.horizontalLayout_12.addWidget(self.icon_label)
+
 # icon_comboBox
         self.icon_comboBox = QComboBox(self.layoutWidget3)
         self.horizontalLayout_12.addWidget(self.icon_comboBox)
 
         self.verticalLayout_3.addLayout(self.horizontalLayout_12)
+
+# icons_size_comboBox
+        self.icons_size_horizontalLayout = QHBoxLayout()
+        self.icons_size_label = QLabel(self.layoutWidget3)
+        self.icons_size_horizontalLayout.addWidget(self.icons_size_label)
+
+        self.icons_size_comboBox = QComboBox(self.layoutWidget3)
+        self.icons_size_horizontalLayout.addWidget(self.icons_size_comboBox)
+
+        self.verticalLayout_3.addLayout(self.icons_size_horizontalLayout)
+
+       
+
         self.horizontalLayout_6 = QHBoxLayout()
 # notification_label
         self.horizontalLayout_13 = QHBoxLayout()
@@ -399,6 +410,8 @@ class Setting_Ui(QWidget):
         self.style_label.setText("Style : ")
         self.color_label.setText("Color scheme : ")
         self.icon_label.setText("Icons : ")
+
+        self.icons_size_label.setText("ToolBar's icons size : ")
 
         self.notification_label.setText("Notification type : ")
 
