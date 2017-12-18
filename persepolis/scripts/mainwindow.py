@@ -314,7 +314,7 @@ class CheckDownloadInfoThread(QThread):
 # spider finds file size and file name of download file .
 # spider works similiar to spider in wget.
 class SpiderThread(QThread):
-    SPIDERSIGNAL = pyqtSignal()
+    SPIDERSIGNAL = pyqtSignal(dict)
     def __init__(self, add_link_dictionary, parent):
         QThread.__init__(self)
         self.add_link_dictionary = add_link_dictionary
@@ -328,6 +328,9 @@ class SpiderThread(QThread):
             # update data base
             dict = {'file_name': file_name, 'size': size, 'gid': self.add_link_dictionary['gid']}
             self.parent.persepolis_db.updateDownloadTable([dict])
+
+            # update table in MainWindow
+            self.SPIDERSIGNAL.emit(dict)
 
         except:
             # write ERROR message
@@ -1950,6 +1953,7 @@ class MainWindow(MainWindow_Ui):
                 new_spider = SpiderThread(add_link_dictionary, self)
                 self.threadPool.append(new_spider)
                 self.threadPool[len(self.threadPool) - 1].start()
+                self.threadPool[len(self.threadPool) - 1].SPIDERSIGNAL.connect(self.spiderUpdate)
                 message = "Download Scheduled"
             notifySend(message, '', 10000, 'no',
                        systemtray=self.system_tray_icon)
@@ -1958,6 +1962,7 @@ class MainWindow(MainWindow_Ui):
             new_spider = SpiderThread(add_link_dictionary, self)
             self.threadPool.append(new_spider)
             self.threadPool[len(self.threadPool) - 1].start()
+            self.threadPool[len(self.threadPool) - 1].SPIDERSIGNAL.connect(self.spiderUpdate)
 
 
 # when user presses resume button this method is called
@@ -3564,6 +3569,7 @@ class MainWindow(MainWindow_Ui):
             new_spider = SpiderThread(add_link_dictionary, self)
             self.threadPool.append(new_spider)
             self.threadPool[len(self.threadPool) - 1].start()
+            self.threadPool[len(self.threadPool) - 1].SPIDERSIGNAL.connect(self.spiderUpdate)
 
 
 
@@ -4926,6 +4932,50 @@ class MainWindow(MainWindow_Ui):
         if str(filesize) != '***':
             filesize = 'Size: ' + str(filesize)
             child.size_label.setText(filesize)
+
+    def spiderUpdate(self, dict):
+        gid = dict['gid']
+        row = None
+        for i in range(self.download_table.rowCount()):
+            row_gid = self.download_table.item(i, 8).text()
+            if gid == row_gid:
+                row = i
+                break
+
+        # updat download_table items
+        if row != None:
+            update_list = [dict['file_name'], dict['status'], dict['size'], dict['downloaded_size'], dict['percent'], 
+                            dict['connections'], dict['rate'], dict['estimate_time_left'], dict['gid'], None, None, None, None]
+            for i in range(12):
+
+                # update download_table cell if update_list item in not None
+                if update_list[i]:
+                    text = update_list[i]
+                else:
+                    text = self.download_table.item(row, i).text()
+
+                # create a QTableWidgetItem
+                item = QTableWidgetItem(text)
+
+                # add checkbox to first cell in row , if user checked selection mode
+                if i == 0 and self.selectAction.isChecked():
+                    item.setFlags(QtCore.Qt.ItemIsUserCheckable |
+                                              QtCore.Qt.ItemIsEnabled)
+                    # 2 means that user checked item before
+                    if self.download_table.item(row, i).checkState() == 2:
+                        # if user checked row before , check it again
+                        item.setCheckState(QtCore.Qt.Checked)
+                    else:
+                        # if user didn't checked row then don't check it!
+                        item.setCheckState(QtCore.Qt.Unchecked)
+                # set item
+                try:
+                    self.download_table.setItem(row, i, item)
+                except Exception as problem:
+                    logger.sendToLog(
+                        "Error occured while updating download table", "INFO")
+                    logger.sendToLog(problem, "ERROR")
+
 
 # this method deletes all items in data base
     def clearDownloadList(self, item):

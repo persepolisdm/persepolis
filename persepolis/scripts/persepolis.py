@@ -295,14 +295,14 @@ else:
     add_link_dictionary['referer'] = None
 
 if args.cookie :
-    add_link_dictionary['load-cookies'] = "".join(args.cookie)
+    add_link_dictionary['load_cookies'] = "".join(args.cookie)
 else:
-    add_link_dictionary['load-cookies'] = None
+    add_link_dictionary['load_cookies'] = None
 
 if args.agent :
-    add_link_dictionary['user-agent'] = "".join(args.agent)
+    add_link_dictionary['user_agent'] = "".join(args.agent)
 else:
-    add_link_dictionary['user-agent'] = None
+    add_link_dictionary['user_agent'] = None
 
 if args.headers :
     add_link_dictionary['header'] = "".join(args.headers)
@@ -330,8 +330,8 @@ else:
 if ('link' in add_link_dictionary.keys()):   
     plugin_dict ={'link': add_link_dictionary['link'],
                     'referer': add_link_dictionary['referer'],
-                    'load_cookies': add_link_dictionary['load-cookies'],
-                    'user_agent': add_link_dictionary['user-agent'],
+                    'load_cookies': add_link_dictionary['load_cookies'],
+                    'user_agent': add_link_dictionary['user_agent'],
                     'header': add_link_dictionary['header'],
                     'out': add_link_dictionary['out']
                     }

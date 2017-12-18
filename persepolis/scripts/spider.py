@@ -35,8 +35,8 @@ def spider(add_link_dictionary):
     download_passwd = add_link_dictionary['download_passwd']
     header = add_link_dictionary['header']
     out = add_link_dictionary['out']
-    user_agent = add_link_dictionary['user-agent']
-    raw_cookies = add_link_dictionary['load-cookies']
+    user_agent = add_link_dictionary['user_agent']
+    raw_cookies = add_link_dictionary['load_cookies']
     referer = add_link_dictionary['referer']
 
     # defin a requests session
@@ -114,14 +114,14 @@ def spider(add_link_dictionary):
 # this function finds and returns file name for links.
 def queueSpider(add_link_dictionary):
     # get download information from add_link_dictionary
-    for i in ['link', 'header', 'out', 'user-agent', 'load-cookies', 'referer']:
+    for i in ['link', 'header', 'out', 'user_agent', 'load_cookies', 'referer']:
         if not (i in add_link_dictionary):
             add_link_dictionary[i] = None
 
     link = add_link_dictionary['link']
     header = add_link_dictionary['header']
-    user_agent = add_link_dictionary['user-agent']
-    raw_cookies = add_link_dictionary['load-cookies']
+    user_agent = add_link_dictionary['user_agent']
+    raw_cookies = add_link_dictionary['load_cookies']
     referer = add_link_dictionary['referer']
 
     requests_session = requests.Session()  # defining a requests Session
@@ -161,14 +161,14 @@ def queueSpider(add_link_dictionary):
 
 def addLinkSpider(add_link_dictionary):
     # get user's download information from add_link_dictionary
-    for i in ['link', 'header', 'out', 'user-agent', 'load-cookies', 'referer']:
+    for i in ['link', 'header', 'out', 'user_agent', 'load_cookies', 'referer']:
         if not (i in add_link_dictionary):
             add_link_dictionary[i] = None
 
     link = add_link_dictionary['link']
     header = add_link_dictionary['header']
-    user_agent = add_link_dictionary['user-agent']
-    raw_cookies = add_link_dictionary['load-cookies']
+    user_agent = add_link_dictionary['user_agent']
+    raw_cookies = add_link_dictionary['load_cookies']
     referer = add_link_dictionary['referer']
 
     requests_session = requests.Session()  # defining a requests Session
