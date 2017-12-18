@@ -130,6 +130,12 @@ class ProgressWindow(ProgressWindow_Ui):
                                'critical', systemtray=self.parent.system_tray_icon)
 
     def stopPushButtonPressed(self, button):
+        dict = {'gid': self.gid,
+                'shutdown': 'canceled'}
+
+        self.parent.temp_db.updateSingleTable(dict)
+
+
         answer = download.downloadStop(self.gid, self.parent)
 # if aria2 did not respond , then this function is checking for aria2
 # availability , and if aria2 disconnected then aria2Disconnected is

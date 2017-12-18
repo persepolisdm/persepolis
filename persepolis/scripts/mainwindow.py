@@ -1522,7 +1522,7 @@ class MainWindow(MainWindow_Ui):
                     shutdown_status = shutdown_dict['shutdown']
         
                     # if status is complete or error, and user selected "shutdown after downoad" option:
-                    if shutdown_status == 'wait' and progress_window.status != 'stopped':
+                    if shutdown_status == 'wait':
 
                         # shutdown aria!
                         answer = download.shutDown()
@@ -1539,14 +1539,6 @@ class MainWindow(MainWindow_Ui):
                         shutdown_dict = {'gid': gid, 'shutdown': 'shutdown'}
 
                         self.temp_db.updateSingleTable(shutdown_dict)
-
-                    # if download stopped and user selected "shutdown after download" option:
-                    elif shutdown_status == 'wait' and progress_window.status == 'stopped':
-                        # write "canceled" message in for this gid in data base >> cancel shutdown operation!
-                        shutdown_dict = {'gid': gid, 'shutdown': 'canceled'}
-
-                        self.temp_db.updateSingleTable(shutdown_dict)
-
 
                     # sync persepolis_setting before checking!
                     self.persepolis_setting.sync()
@@ -1902,6 +1894,7 @@ class MainWindow(MainWindow_Ui):
                 category_index = i
                 break
 
+
         # highlight selected category in category_tree
         category_tree_model_index = self.category_tree_model.index(
             category_index, 0)
@@ -2015,12 +2008,23 @@ class MainWindow(MainWindow_Ui):
 
 # this method called if user presses stop button in MainWindow
     def stopButtonPressed(self, button):
+
         self.stopAction.setEnabled(False)
         selected_row_return = self.selectedRow()  # finding user's selected row
 
         if selected_row_return != None:
+
             gid = self.download_table.item(selected_row_return, 8).text()
+
+            # change status of shutdown in temp_db
+            dict = {'gid': gid,
+                'shutdown': 'canceled'}
+
+            self.temp_db.updateSingleTable(dict)
+
+
             answer = download.downloadStop(gid, self)
+
             # if aria2 did not respond , then this function is checking for aria2
             # availability , and if aria2 disconnected then aria2Disconnected is
             # executed
