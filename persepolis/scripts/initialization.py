@@ -74,28 +74,33 @@ current_time = time.strftime('%Y/%m/%d %H:%M:%S')
 with open(log_file) as f:
     lines = sum(1 for _ in f)
 
-# if number of lines in log_file is more than 300, then clean first 200 line in log_file.
+# if number of lines in log_file is more than 300, then keep last 200 lines in log_file.
 if lines < 300:
     f = open(log_file, 'a')
     f.writelines('Persepolis Download Manager, '\
             + current_time\
             +'\n')
     f.close()
-else: # delete first 200 lines 
+else: 
+# keep last 200 lines 
+    line_num = lines - 200
     f = open(log_file, 'r')
     f_lines = f.readlines()
     f.close()
 
     line_counter = 1
     f = open(log_file, 'w')
-    f.writelines('Persepolis Download Manager, '\
-        + current_time\
-        +'\n')
     for line in f_lines:
-        if line_counter > 200:
+        if line_counter > line_num:
             f.writelines(str(line))
 
         line_counter = line_counter + 1
+    f.close()
+
+    f = open(log_file, 'a')
+    f.writelines('Persepolis Download Manager, '\
+            + current_time\
+            +'\n')
     f.close()
 
 
