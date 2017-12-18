@@ -116,15 +116,16 @@ class PreferencesWindow(Setting_Ui):
             str(self.persepolis_setting.value('color-scheme')))
         self.color_comboBox.setCurrentIndex(current_color_index)
 
-# set icons
-        icons = ['Archdroid-Red', 'Archdroid-Blue', 'Breeze', 'Breeze-Dark', 'Papirus', 'Papirus-Dark', 'Papirus-Light']
-        self.icon_comboBox.addItems(icons)
+# # set icons
+#         icons = ['Archdroid-Red', 'Archdroid-Blue', 'Breeze', 'Breeze-Dark', 'Papirus', 'Papirus-Dark', 'Papirus-Light']
+#         self.icon_comboBox.addItems(icons)
+# 
+#         current_icons_index = self.icon_comboBox.findText(
+#             str(self.persepolis_setting.value('icons')))
+#         self.icon_comboBox.setCurrentIndex(current_icons_index)
+#         self.current_icon = str(self.icon_comboBox.currentText())
 
-        current_icons_index = self.icon_comboBox.findText(
-            str(self.persepolis_setting.value('icons')))
-        self.icon_comboBox.setCurrentIndex(current_icons_index)
-        self.current_icon = str(self.icon_comboBox.currentText())
-
+        self.current_icon = self.persepolis_setting.value('icons')
 # icon size
         size = ['128', '64', '48', '32', '24', '16']
         self.icons_size_comboBox.addItems(size)
@@ -132,6 +133,11 @@ class PreferencesWindow(Setting_Ui):
             str(self.persepolis_setting.value('toolbar_icon_size')))
         self.icons_size_comboBox.setCurrentIndex(current_icons_size_index)
 
+        # call iconSizeComboBoxCanged if index is changed
+        self.icons_size_comboBox.currentIndexChanged.connect(self.iconSizeComboBoxCanged)
+
+        self.iconSizeComboBoxCanged(1)
+        
 # set notification
         notifications = ['Native notification', 'QT notification']
         self.notification_comboBox.addItems(notifications)
@@ -301,6 +307,35 @@ class PreferencesWindow(Setting_Ui):
 
         self.resize(size)
         self.move(position)
+
+# Papirus icons can be used with small sizes(smaller than 48)
+    def iconSizeComboBoxCanged(self, index):
+        self.icon_comboBox.clear()
+        selected_size = int(self.icons_size_comboBox.currentText())
+        if selected_size < 48:
+            # add Papirus-light and Papirus-Dark icons to the list 
+            icons = ['Archdroid-Red', 'Archdroid-Blue', 'Breeze', 'Breeze-Dark', 'Papirus', 'Papirus-Dark', 'Papirus-Light']
+            self.icon_comboBox.addItems(icons)
+
+            current_icons_index = self.icon_comboBox.findText(
+                str(self.persepolis_setting.value('icons', self.current_icon)))
+
+        else:
+            # eliminate Papirus-light and Papirus-Dark from list
+            icons = ['Archdroid-Red', 'Archdroid-Blue', 'Breeze', 'Breeze-Dark', 'Papirus']
+            self.icon_comboBox.addItems(icons)
+
+            # current_icons_index is -1, if findText couldn't find icon index.
+            current_icons_index = self.icon_comboBox.findText(
+                str(self.persepolis_setting.value('icons', self.current_icon)))
+
+            # set 'Archdroid-Blue' if current_icons_index is -1
+            if current_icons_index == -1:
+                current_icons_index = 1
+
+        self.icon_comboBox.setCurrentIndex(current_icons_index)
+
+
 
 # active color_comboBox only when user is select "Fusion" style.
     def styleComboBoxChanged(self, index):
