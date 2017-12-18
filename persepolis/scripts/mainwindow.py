@@ -4039,6 +4039,16 @@ class MainWindow(MainWindow_Ui):
         # find name of queue
         current_category_tree_text = str(current_category_tree_index.data())
 
+        if current_category_tree_text == 'Scheduled Downloads':
+            error_messageBox = QMessageBox()
+            error_messageBox.setText(
+                    "<b>Sorry! You can't remove default queue!</b>")
+            error_messageBox.setWindowTitle('Error!')
+            error_messageBox.exec_()
+ 
+            return
+ 
+
         if current_category_tree_text != 'All Downloads' and current_category_tree_text != 'Single Downloads':
 
             # remove queue from category_tree

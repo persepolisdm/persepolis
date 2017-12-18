@@ -508,6 +508,22 @@ class PersepolisDB():
             self.insertInCategoryTable(all_downloads_dict)
             self.insertInCategoryTable(single_downloads_dict)
 
+        # add default queue with the name 'Scheduled Downloads'
+        answer = self.searchCategoryInCategoryTable('Scheduled Downloads')
+        if not(answer):
+            scheduled_downloads_dict = {'category': 'Scheduled Downloads',
+                    'start_time_enable': 'no',
+                    'start_time': '0:0',
+                    'end_time_enable': 'no',
+                    'end_time': '0:0',
+                    'reverse': 'no',
+                    'limit_enable': 'no',
+                    'limit_value': '0K',
+                    'after_download': 'no',
+                    'gid_list': '[]'
+                    }
+            self.insertInCategoryTable(scheduled_downloads_dict)
+
 
     # insert new category in category_db_table
     def insertInCategoryTable(self, dict):    
