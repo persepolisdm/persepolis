@@ -179,7 +179,7 @@ parser.add_argument('--default', action='store_true', help='restore default sett
 parser.add_argument('--clear', action='store_true', help='Clear download list and user setting!')
 parser.add_argument('--tray', action='store_true', help="Persepolis is starting in tray icon. It's useful when you want to put persepolis in system's startup.")
 parser.add_argument('--parent-window', action='store', nargs = 1, help='this switch is used for chrome native messaging in Windows')
-parser.add_argument('--version', action='version', version='Persepolis Download Manager 3.0.0')
+parser.add_argument('--version', action='version', version='Persepolis Download Manager 3.0.1')
 
 
 parser.add_argument('args', nargs=argparse.REMAINDER)

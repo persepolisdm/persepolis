@@ -147,7 +147,7 @@ print('man page file is generated!')
 
 setup(
     name = 'persepolis',
-    version = '3.0.0',
+    version = '3.0.1',
     license = 'GPL3',
     description = DESCRIPTION,
     long_description = DESCRIPTION,
