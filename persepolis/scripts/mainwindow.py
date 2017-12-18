@@ -424,7 +424,7 @@ class Queue(QThread):
                         add_link_dict['start_time'] = self.start_time
 
                         # write changes in data base
-                        self.parent.persepolis_db.updateAddLinkTable([new_dict])
+                        self.parent.persepolis_db.updateAddLinkTable([add_link_dict])
 
                         # delete add_link_dict
                         del add_link_dict
