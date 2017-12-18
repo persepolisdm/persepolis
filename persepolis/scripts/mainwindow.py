@@ -1884,7 +1884,7 @@ class MainWindow(MainWindow_Ui):
         # write information in data_base
         self.persepolis_db.insertInDownloadTable([dict])
         self.persepolis_db.insertInAddLinkTable([add_link_dictionary])
-        
+
 
         # find selected category in left side panel
         for i in range(self.category_tree_model.rowCount()):
@@ -1898,14 +1898,12 @@ class MainWindow(MainWindow_Ui):
         # highlight selected category in category_tree
         category_tree_model_index = self.category_tree_model.index(
             category_index, 0)
+
+        current_category_tree_text = current_category_tree_index.data()
+
+
         self.category_tree.setCurrentIndex(category_tree_model_index)
-
-        # finding name of category
-        category_tree_item_text = str(category_tree_model_index.data())
-
-
-        if category_tree_item_text != category:
-
+        if current_category_tree_text != category:
             self.categoryTreeSelected(category_tree_model_index)
         else:
             # create a row in download_table for new download
