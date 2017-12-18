@@ -110,7 +110,8 @@ class TextQueue(TextQueue_Ui):
         categories_list = self.parent.persepolis_db.categoriesList()
  
         for queue in categories_list:
-            self.add_queue_comboBox.addItem(queue)
+            if queue != 'All Downloads':
+                self.add_queue_comboBox.addItem(queue)
 
         self.add_queue_comboBox.addItem(
             QIcon(icons + 'add_queue'), 'Create new queue')
@@ -218,7 +219,8 @@ class TextQueue(TextQueue_Ui):
                 # load queue list again!
                 queues_list = self.parent.persepolis_db.categoriesList()
                 for queue in queues_list:
-                    self.add_queue_comboBox.addItem(queue)
+                    if queue != 'All Downloads':
+                        self.add_queue_comboBox.addItem(queue)
 
                 self.add_queue_comboBox.addItem(
                     QIcon(icons + 'add_queue'), 'Create new queue')
