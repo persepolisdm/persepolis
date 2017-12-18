@@ -17,8 +17,6 @@ import platform
 import os
 import shutil
 import subprocess
-import PyQt5
-from PyQt5 import QtCore
 
 os_type = platform.system()
 
@@ -28,7 +26,7 @@ def touch(file_path):
         f = open(file_path, 'w')
         f.close()
 
-# xdgOpen is openning files or folders
+# xdgOpen opens files or folders
 
 
 def xdgOpen(file_path):
@@ -42,27 +40,27 @@ def xdgOpen(file_path):
                          shell=False, creationflags=CREATE_NO_WINDOW)
 
 
-def remove(file_path):  # removing file with path of file_path
+def remove(file_path):  # remove file with path of file_path
     if os.path.isfile(file_path):
         try:
             os.remove(file_path)
-            return 'ok'  # function returning  this , if opertation was successful
+            return 'ok'  # function returns  this , if opertation was successful
         except:
-            return 'cant'  # function is returning this , if operation was not successful
+            return 'cant'  # function returns this , if operation was not successful
     else:
-        return 'no'  # function is returning this , if file is not existed
+        return 'no'  # function returns this , if file is not existed
 
 
-def removeDir(folder_path):  # removeDir is removing folder : folder_path
-    if os.path.isdir(folder_path):  # checking folder_path existance
+def removeDir(folder_path):  # removeDir removes folder : folder_path
+    if os.path.isdir(folder_path):  # check folder_path existance
         try:
-            shutil.rmtree(folder_path)  # removing folder
+            shutil.rmtree(folder_path)  # remove folder
             return 'ok'
         except:
-            return 'cant'  # returning 'cant' if removing was not successful
+            return 'cant'  # return 'cant' if removing was not successful
     else:
-        return 'no'  # returning 'no' if file didn't existed
+        return 'no'  # return 'no' if file didn't existed
 
 
-def makeDirs(folder_path):  # making new folders
+def makeDirs(folder_path):  # make new folders
     os.makedirs(folder_path, exist_ok=True)

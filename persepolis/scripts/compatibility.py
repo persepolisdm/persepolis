@@ -18,6 +18,7 @@ import ast
 from persepolis.scripts.newopen import Open, readList
 from persepolis.scripts.data_base import PersepolisDB 
 import platform
+from persepolis.scripts.osCommands import remove, removeDir
 
 home_address = os.path.expanduser("~")
 
@@ -95,6 +96,9 @@ def compatibility():
         f = open(queues_list_file)
         queues_list = f.readlines()
         f.close()
+
+        # remove queues_list_file
+        remove(queues_list_file)
     else:
         return
 
@@ -211,6 +215,13 @@ def compatibility():
 
     # close connections
     persepolis_db.closeConnections()
+
+    # remove unwanted files and folders
+    for file in [download_list_file, download_list_file_active]:
+        remove(file)
+
+    for folder in [category_folder, queue_info_folder]:
+        removeDir(folder)
 
 
  
