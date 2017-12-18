@@ -15,7 +15,7 @@
 import time
 import os
 import ast
-from persepolis.scripts.newopen import Open, readList
+from persepolis.scripts.newopen import readList
 from persepolis.scripts.data_base import PersepolisDB 
 import platform
 from persepolis.scripts.osCommands import remove, removeDir
@@ -24,17 +24,6 @@ home_address = os.path.expanduser("~")
 
 # finding os platform
 os_type = platform.system()
-
-# persepolis tmp folder (temporary folder)
-if os_type != 'Windows':
-
-    user_name_split = home_address.split('/')
-    user_name = user_name_split[2]
-
-    persepolis_tmp = '/tmp/persepolis_' + user_name
-else:
-    persepolis_tmp = os.path.join(
-        str(home_address), 'AppData', 'Local', 'persepolis_tmp')
 
 
 # config_folder
@@ -50,14 +39,6 @@ elif os_type == 'Windows':
 
 
 download_info_folder = os.path.join(config_folder, "download_info")
-
-
-# persepolis temporary download folder
-if os_type != 'Windows':
-    temp_download_folder = str(home_address) + '/.persepolis'
-else:
-    temp_download_folder = os.path.join(
-        str(home_address), 'AppData', 'Local', 'persepolis')
 
 
 # download_list_file contains GID of all downloads

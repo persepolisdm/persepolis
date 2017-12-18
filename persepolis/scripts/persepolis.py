@@ -47,13 +47,10 @@ elif os_type == 'Darwin':
 elif os_type == 'Windows' :
     config_folder = os.path.join(str(home_address), 'AppData\Local\persepolis_download_manager')
 
-# persepolis tmp folder in /tmp
-if os_type != 'Windows':
-    user_name_split = home_address.split('/')
-    user_name = user_name_split[2]
-    persepolis_tmp = '/tmp/persepolis_' + user_name
-else:
-    persepolis_tmp = os.path.join(str(home_address), 'AppData', 'Local', 'persepolis_tmp')
+
+# persepolis tmp folder path
+persepolis_tmp = os.path.join(config_folder, 'persepolis_tmp')
+
 
 
 # if lock_file_validation == True >> not another instanse running,
@@ -62,6 +59,8 @@ global lock_file_validation
 
 if os_type != 'Windows':
     import fcntl
+    user_name_split = home_address.split('/')
+    user_name = user_name_split[2]
 # persepolis lock file
     lock_file = '/tmp/persepolis_exec_' + user_name + '.lock'
 
@@ -322,9 +321,9 @@ else:
 
 
 # when browsers plugin calls persepolis or user runs persepolis by terminal arguments,
-# then persepolis creats a request file in /tmp folder and link information added to
+# then persepolis creats a request file in persepolis_tmp folder and link information added to
 # plugins_db.db file(see data_base.py for more information).
-# persepolis mainwindow checks /tmp for plugins request file every 2 seconds (see CheckingThread class in mainwindow.py)
+# persepolis mainwindow checks persepolis_tmp for plugins request file every 2 seconds (see CheckingThread class in mainwindow.py)
 # when requset received in CheckingThread, a popup window (AddLinkWindow) comes up and window gets additional download information
 # from user (port , proxy , ...) and download starts and request file deleted
 

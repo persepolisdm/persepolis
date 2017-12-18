@@ -94,17 +94,6 @@ home_address = os.path.expanduser("~")
 # find os platform
 os_type = platform.system()
 
-# persepolis tmp folder (temporary folder)
-if os_type != 'Windows':
-
-    user_name_split = home_address.split('/')
-    user_name = user_name_split[2]
-
-    persepolis_tmp = '/tmp/persepolis_' + user_name
-else:
-    persepolis_tmp = os.path.join(
-        str(home_address), 'AppData', 'Local', 'persepolis_tmp')
-
 
 # config_folder
 if os_type == 'Linux' or os_type == 'FreeBSD' or os_type == 'OpenBSD':
@@ -119,6 +108,10 @@ elif os_type == 'Windows':
 
 
 download_info_folder = os.path.join(config_folder, "download_info")
+
+
+# persepolis tmp folder path
+persepolis_tmp = os.path.join(config_folder, 'persepolis_tmp')
 
 
 

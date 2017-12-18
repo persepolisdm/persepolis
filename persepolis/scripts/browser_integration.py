@@ -16,7 +16,6 @@
 import platform
 import os
 import sys
-from persepolis.scripts.newopen import Open
 from persepolis.scripts import osCommands
 
 os_type = platform.system()
@@ -237,7 +236,7 @@ def browserIntegration(browser):
 
 
     
-        f = Open(exec_path, 'w')
+        f = open(exec_path, 'w')
         f.writelines(persepolis_run_shell_contents)
         f.close()
 

@@ -42,14 +42,9 @@ elif os_type == 'Windows':
     config_folder = os.path.join(
         str(home_address), 'AppData', 'Local', 'persepolis_download_manager')
 
+
 # persepolis tmp folder path
-if os_type != 'Windows':
-    user_name_split = home_address.split('/')
-    user_name = user_name_split[2]
-    persepolis_tmp = '/tmp/persepolis_' + user_name
-else:
-    persepolis_tmp = os.path.join(
-        str(home_address), 'AppData', 'Local', 'persepolis_tmp')
+persepolis_tmp = os.path.join(config_folder, 'persepolis_tmp')
 
 
 

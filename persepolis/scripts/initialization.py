@@ -45,20 +45,11 @@ elif os_type == 'Windows':
 
 
 # persepolis tmp folder path
-if os_type != 'Windows':
-    user_name_split = home_address.split('/')
-    user_name = user_name_split[2]
-    persepolis_tmp = '/tmp/persepolis_' + user_name
-else:
-    persepolis_tmp = os.path.join(
-        str(home_address), 'AppData', 'Local', 'persepolis_tmp')
-
-# persepolis_shutdown
-persepolis_shutdown = os.path.join(persepolis_tmp, 'shutdown')
+persepolis_tmp = os.path.join(config_folder, 'persepolis_tmp')
 
 
 # create folders
-for folder in [config_folder, persepolis_tmp, persepolis_shutdown]:
+for folder in [config_folder, persepolis_tmp]:
     osCommands.makeDirs(folder)
 
 # persepolisdm.log file contains persepolis log.

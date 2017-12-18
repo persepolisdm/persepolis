@@ -16,12 +16,8 @@
 from PyQt5 import QtWidgets , QtGui
 from PyQt5.QtWidgets import QCheckBox , QWidget , QVBoxLayout , QHBoxLayout , QPushButton , QLabel , QLineEdit  
 from PyQt5.QtGui import QIcon
-import ast
-import os
-from persepolis.scripts.newopen import Open
 from persepolis.gui import icons_resource
 
-home_address = os.path.expanduser("~")
 
 
 
