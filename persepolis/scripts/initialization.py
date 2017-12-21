@@ -214,6 +214,6 @@ if persepolis_version < 3.0:
     persepolis_setting.endGroup()
 
 
-    persepolis_setting.setValue('version/version', 3.0)
-    persepolis_setting.sync()
+persepolis_setting.setValue('version/version', 3.0)
+persepolis_setting.sync()
 

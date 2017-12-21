@@ -1239,14 +1239,16 @@ class PersepolisDB():
         # update gid_list in categories with empty gid_list
         all_downloads_dict = {'category': 'All Downloads', 'gid_list': []}
         single_downloads_dict = {'category': 'Single Downloads', 'gid_list': []}
+        scheduled_downloads_dict = {'category': 'Scheduled Downloads', 'gid_list': []}
 
-        self.updateCategoryTable([all_downloads_dict, single_downloads_dict])
+
+        self.updateCategoryTable([all_downloads_dict, single_downloads_dict, scheduled_downloads_dict])
 
         # lock data base
         self.lockCursor()
 
         # delete all items in category_db_table, except 'All Downloads' and 'Single Downloads'
-        self.persepolis_db_cursor.execute("""DELETE FROM category_db_table WHERE category NOT IN ('All Downloads', 'Single Downloads')""")
+        self.persepolis_db_cursor.execute("""DELETE FROM category_db_table WHERE category NOT IN ('All Downloads', 'Single Downloads', 'Scheduled Downloads')""")
         self.persepolis_db_cursor.execute("""DELETE FROM download_db_table""")
         self.persepolis_db_cursor.execute("""DELETE FROM addlink_db_table""")
 
