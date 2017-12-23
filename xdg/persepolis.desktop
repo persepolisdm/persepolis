@@ -1,9 +1,11 @@
 [Desktop Entry]
 Name=Persepolis Download Manager
 Name[fa]=پرسپولیس
+Name[bn]=পার্সেপোলিস
 Comment=Download Manager
 GenericName=Download Manager
 GenericName[fa]=نرم افزار مدیریت بارگیری
+GenericName[bn]=ডাউনলোড মেনেজার
 Keywords=Internet;WWW;Web;
 Terminal=false
 Type=Application
@@ -17,9 +19,11 @@ Actions=Open;Tray;
 [Desktop Action Open]
 Name=Start Persepolis
 Name[fa]=اجرای برنامه
+Name[bn]=পার্সেপোলিস চালু করুন
 Exec=persepolis
 
 [Desktop Action Tray]
 Name=Start in System Tray
 Name[fa]=اجرای برنامه در سینی نمایه
+Name[bn]=সিস্টেম-ট্রে-তে চালু করুন
 Exec=persepolis --tray
