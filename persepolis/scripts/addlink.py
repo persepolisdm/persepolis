@@ -426,6 +426,7 @@ class AddLinkWindow(AddLinkWindow_Ui):
         # check that if user set new name for download file.
         if self.change_name_checkBox.isChecked():
             out = str(self.change_name_lineEdit.text())
+            self.plugin_add_link_dictionary['out'] = out
         else:
             out = None
 
