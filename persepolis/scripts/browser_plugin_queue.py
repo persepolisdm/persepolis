@@ -80,6 +80,7 @@ class BrowserPluginQueue(TextQueue_Ui):
             else:
                 file_name = '***'
 
+            if file_name == '***':
             # spider finds file name
                 new_spider = QueueSpiderThread(dict)
                 self.parent.threadPool.append(new_spider)
