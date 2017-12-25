@@ -1784,7 +1784,7 @@ class MainWindow(MainWindow_Ui):
         # notify that job is done!and new links can be received form plugins_db 
         plugin_links_checked = True
         # Capture youtube media as per setting.
-        if bool(self.persepolis_setting.value('youtube/enable', True)):
+        if self.persepolis_setting.value('youtube/enable', 'yes') == 'yes':
             not_youtube_links = []  # Store non-youtube links to process normally.
             try:
                 max_links = int(self.persepolis_setting.value('youtube/max_links', 5))
