@@ -265,16 +265,16 @@ class MediaListFetcherThread(QThread):
 
             if 'referer' in video_dict.keys() and video_dict['referer']:
                 self.youtube_dl_command.append('--referer="{}"'.format(video_dict['referer']))
-            if 'referer' in video_dict.keys() and video_dict['user_agent']:
+            if 'user_agent' in video_dict.keys() and video_dict['user_agent']:
                 self.youtube_dl_command.append('--user-agent="{}"'.format(video_dict['user_agent']))
             # if 'referer' in video_dict.keys() and video_dict['header']:
             #     self.youtube_dl_command.append('--add-header=' + str(video_dict['header']))
-            if 'referer' in video_dict.keys() and video_dict['load_cookies']:
+            if 'load_cookies' in video_dict.keys() and video_dict['load_cookies']:
                 # We need to convert raw cookies to http cookie file to use with youtube-dl.
                 self.cookies = make_http_cookie(video_dict['load_cookies'])
 
             # Proxy check
-            if 'referer' in video_dict.keys() and video_dict['ip']:
+            if 'ip' in video_dict.keys() and video_dict['ip']:
                 try:
                     ip_port = 'http://{}:{}'.format(video_dict['ip'], video_dict['port'])
                     if 'referer' in video_dict.keys() and video_dict['proxy_user']:
@@ -282,14 +282,14 @@ class MediaListFetcherThread(QThread):
                     self.youtube_dl_command.append('--proxy="{}"'.format(ip_port))
                 except:
                     pass
-            if 'referer' in video_dict.keys() and video_dict['download_user']:
+            if 'download_user' in video_dict.keys() and video_dict['download_user']:
                 try:
                     self.youtube_dl_command.append('--username="{}"'.format(video_dict['download_user']))
                     self.youtube_dl_command.append('--password="{}"'.format(video_dict['download_passwd']))
                 except:
                     pass
 
-            if 'referer' in video_dict.keys() and video_dict['link']:
+            if 'link' in video_dict.keys() and video_dict['link']:
                 self.youtube_dl_command.append(video_dict['link'])
 
     def run(self):
