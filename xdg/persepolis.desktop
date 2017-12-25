@@ -19,11 +19,11 @@ Actions=Open;Tray;
 [Desktop Action Open]
 Name=Start Persepolis
 Name[fa]=اجرای برنامه
-Name[bn]=পার্সেপোলিস চালু করুন
+Name[bn]=পার্সেপোলিস শুরু করুন
 Exec=persepolis
 
 [Desktop Action Tray]
 Name=Start in System Tray
 Name[fa]=اجرای برنامه در سینی نمایه
-Name[bn]=সিস্টেম-ট্রে-তে চালু করুন
+Name[bn]=সিস্টেম-ট্রে-তে শুরু করুন
 Exec=persepolis --tray
