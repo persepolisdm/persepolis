@@ -44,19 +44,19 @@ class AddLinkWindow_Ui(QWidget):
 
         horizontalLayout_2 = QHBoxLayout(self.link_frame)
 
-        link_verticalLayout = QVBoxLayout()
+        self.link_verticalLayout = QVBoxLayout()
 
         # link ->
-        link_horizontalLayout = QHBoxLayout()
+        self.link_horizontalLayout = QHBoxLayout()
         self.link_label = QLabel(self.link_frame)
-        link_horizontalLayout.addWidget(self.link_label)
+        self.link_horizontalLayout.addWidget(self.link_label)
 
         self.link_lineEdit = QLineEdit(self.link_frame)
-        link_horizontalLayout.addWidget(self.link_lineEdit)
+        self.link_horizontalLayout.addWidget(self.link_lineEdit)
 
-        link_verticalLayout.addLayout(link_horizontalLayout)
+        self.link_verticalLayout.addLayout(self.link_horizontalLayout)
 
-        horizontalLayout_2.addLayout(link_verticalLayout)
+        horizontalLayout_2.addLayout(self.link_verticalLayout)
         window_verticalLayout.addWidget(self.link_frame)
 
         # add change_name field ->
@@ -67,7 +67,7 @@ class AddLinkWindow_Ui(QWidget):
         self.change_name_lineEdit = QLineEdit(self.link_frame)
         change_name_horizontalLayout.addWidget(self.change_name_lineEdit)
 
-        link_verticalLayout.addLayout(change_name_horizontalLayout)
+        self.link_verticalLayout.addLayout(change_name_horizontalLayout)
 
         # add_category ->
         queue_horizontalLayout = QHBoxLayout()

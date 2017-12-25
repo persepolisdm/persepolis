@@ -60,6 +60,7 @@ from persepolis.scripts.data_base import PluginsDB, PersepolisDB, TempDB
 # shutdown_notification = 0 >> persepolis is running 
 # 1 >> persepolis is ready for closing(closeEvent  is called) 
 # 2 >> OK, let's close application!
+from persepolis.scripts.youtube_addlink import YoutubeAddLink
 
 global shutdown_notification
 shutdown_notification = 0
@@ -1782,6 +1783,24 @@ class MainWindow(MainWindow_Ui):
 
         # notify that job is done!and new links can be received form plugins_db 
         plugin_links_checked = True
+        # Capture youtube media as per setting.
+        if bool(self.persepolis_setting.value('youtube/enable', True)):
+            not_youtube_links = []  # Store non-youtube links to process normally.
+            try:
+                max_links = int(self.persepolis_setting.value('youtube/max_links', 5))
+            except:
+                max_links = 5
+            for link in list_of_links:
+                if max_links and 'youtube.com/watch' in link['link']:
+                    max_links = max_links - 1
+                    youtube_addlink_window = YoutubeAddLink(self, self.callBack, self.persepolis_setting, link)
+                    self.addlinkwindows_list.append(youtube_addlink_window)
+                    youtube_addlink_window.show()
+                    youtube_addlink_window.raise_()
+                    youtube_addlink_window.activateWindow()
+                else:
+                    not_youtube_links.append(link)
+            list_of_links = not_youtube_links  # Yes, youtube links also will stay here, those coming after specified max.
 
         if len(list_of_links) == 1:  # It means we have only one link in list_of_links
 
@@ -1789,7 +1808,7 @@ class MainWindow(MainWindow_Ui):
             # link information
             self.pluginAddLink(list_of_links[0])
 
-        else:  # we have queue request from browser plugin
+        elif len(list_of_links):  # we have queue request from browser plugin # Length non-zero
             self.pluginQueue(list_of_links)
 
 
@@ -5025,3 +5044,9 @@ class MainWindow(MainWindow_Ui):
         checking_flag = 0
 
 
+    def showYoutubeAddLinkWindow(self, menu):
+        youtube_addlink_window = YoutubeAddLink(self, self.callBack, self.persepolis_setting)
+        self.addlinkwindows_list.append(youtube_addlink_window)
+        youtube_addlink_window.show()
+        youtube_addlink_window.raise_()
+        youtube_addlink_window.activateWindow()

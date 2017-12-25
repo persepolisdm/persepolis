@@ -204,8 +204,6 @@ def addLinkSpider(add_link_dictionary):
             size_str = str(int(file_size/1024)) + " KB"
         else:
             size_str = str(file_size)
-        filesize = size_str
+        file_size = size_str
 
-
-
-    return filesize
+    return file_size  # If no Content-Length ? fixed it.
