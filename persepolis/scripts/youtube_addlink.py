@@ -86,7 +86,7 @@ class YoutubeAddLink(AddLinkWindow):
         self.ok_pushButton.setText('Download Now')
         select_format_label.setText('Select a format')
 
-        if 'referer' in video_dict.keys() and video_dict['link']:
+        if 'link' in video_dict.keys() and video_dict['link']:
             self.link_lineEdit.setText(video_dict['link'])
             self.link_lineEdit.setEnabled(False)
             self.submit_clicked()

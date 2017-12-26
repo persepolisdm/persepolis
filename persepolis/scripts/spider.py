@@ -69,8 +69,11 @@ def spider(add_link_dictionary):
         requests_session.headers.update({'user-agent':user_agent }) #setting user_agent to the session
         
     #find headers
-    response = requests_session.head(link)   
-    header = response.headers
+    try:
+        response = requests_session.head(link)
+        header = response.headers
+    except:
+        header = {}
 
     filename = None
     filesize = None
@@ -92,11 +95,11 @@ def spider(add_link_dictionary):
         filename = out
 
     # check if file_size is available
-    if 'Content-Length' in header.keys():  
+    if 'Content-Length' in header.keys():
         file_size = int(header['Content-Length'])
 
         # convert file_size to KB or MB or GB
-        if int(file_size/1073741824) != 0:  
+        if int(file_size/1073741824) != 0:
             file_size = file_size/1073741824
             size_str = str(round(file_size, 2)) + " GB"
         elif int(file_size/1048576) != 0:
@@ -108,7 +111,7 @@ def spider(add_link_dictionary):
         filesize = size_str
 
     # return results
-    return filename, filesize    
+    return filename, filesize
 
 
 # this function finds and returns file name for links.
@@ -142,9 +145,12 @@ def queueSpider(add_link_dictionary):
         requests_session.headers.update({'user-agent': user_agent})
 
     # find headers
-    response = requests_session.head(link)
-    header = response.headers
-    filename = None 
+    try:
+        response = requests_session.head(link)
+        header = response.headers
+    except:
+        header = {}
+    filename = None
     if 'Content-Disposition' in header.keys():  # checking if filename is available
         content_disposition = header['Content-Disposition']
         if content_disposition.find('filename') != -1:
@@ -189,8 +195,11 @@ def addLinkSpider(add_link_dictionary):
         requests_session.headers.update({'user-agent': user_agent})
 
     # find headers
-    response = requests_session.head(link)
-    header = response.headers
+    try:
+        response = requests_session.head(link)
+        header = response.headers
+    except:
+        header = {}
 
     file_size = None 
     if 'Content-Length' in header.keys():  # checking if file_size is available
