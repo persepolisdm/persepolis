@@ -24,6 +24,7 @@ from PyQt5.QtCore import QTime, QSize, QPoint, QDir
 from persepolis.scripts import osCommands
 import platform
 from persepolis.scripts import startup
+from persepolis.scripts.initialization import find_youtube_dl
 
 home_address = os.path.expanduser("~")
 os_type = platform.system()
@@ -308,6 +309,19 @@ class PreferencesWindow(Setting_Ui):
         self.resize(size)
         self.move(position)
 
+        self.enable_ytd_checkbox.stateChanged.connect(self.youtube_downloader_toggled)
+        self.youtube_dl_path_pushButton.clicked.connect(self.youtube_path_button_clicked)
+        self.enable_ytd_checkbox.setChecked(persepolis_setting.value('youtube/enable', 'yes') == 'yes')
+        self.hide_no_audio_checkbox.setChecked(persepolis_setting.value('youtube/hide_no_audio', 'no') == 'yes')
+        self.hide_no_video_checkbox.setChecked(persepolis_setting.value('youtube/hide_no_video', 'no') == 'yes')
+        try:  # Integer casting may raise exception.
+            self.max_links_spinBox.setValue(int(persepolis_setting.value('youtube/max_links', 5)))
+        except:
+            pass
+        self.youtube_dl_path_lineEdit.setText(persepolis_setting.value('youtube/youtube_dl_path', ''))
+        self.youtube_dl_path_lineEdit.setReadOnly(True)
+        self.youtube_downloader_toggled()
+
 # Papirus icons can be used with small sizes(smaller than 48)
     def iconSizeComboBoxCanged(self, index):
         self.icon_comboBox.clear()
@@ -540,9 +554,24 @@ class PreferencesWindow(Setting_Ui):
         self.column11_checkBox.setChecked(True)
         self.column12_checkBox.setChecked(True)
 
- 
+
 
         self.persepolis_setting.endGroup()
+
+        self.enable_ytd_checkbox.setChecked(True)
+        self.hide_no_audio_checkbox.setChecked(False)
+        self.hide_no_video_checkbox.setChecked(False)
+        self.youtube_dl_path_lineEdit.setEnabled(True)
+        self.youtube_dl_path_lineEdit.setText(find_youtube_dl())
+        self.max_links_spinBox.setValue(3)
+
+    def youtube_downloader_toggled(self):
+        self.youtube_frame.setEnabled(self.enable_ytd_checkbox.isChecked())
+
+    def youtube_path_button_clicked(self, button):
+        file_path, filters = QFileDialog.getOpenFileName(self, "Select 'youtube-dl' path", os.path.dirname(sys.argv[0]))
+        if os.path.isfile(file_path):
+            self.youtube_dl_path_lineEdit.setText(file_path)
 
     def okPushButtonPressed(self, button):
 
@@ -873,4 +902,24 @@ class PreferencesWindow(Setting_Ui):
         # applying changes
         self.persepolis_setting.endGroup()
         self.persepolis_setting.sync()
+
+        enable = 'yes'
+        hide_no_audio = 'no'
+        hide_no_video = 'no'
+        if not self.enable_ytd_checkbox.isChecked():
+            enable = 'no'
+        if self.hide_no_audio_checkbox.isChecked():
+            hide_no_audio = 'yes'
+        if self.hide_no_video_checkbox.isChecked():
+            hide_no_video = 'yes'
+        self.persepolis_setting.setValue('youtube/enable', enable)
+        self.persepolis_setting.setValue('youtube/hide_no_audio', hide_no_audio)
+        self.persepolis_setting.setValue('youtube/hide_no_video', hide_no_video)
+        self.persepolis_setting.setValue('youtube/max_links', self.max_links_spinBox.value())
+        got_path = self.youtube_dl_path_lineEdit.text()
+        if not os.path.isfile(got_path):
+            got_path = ''
+        self.persepolis_setting.setValue('youtube/youtube_dl_path', got_path)
+        self.persepolis_setting.sync()
+
         self.close()
