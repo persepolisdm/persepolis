@@ -86,7 +86,7 @@ class YoutubeAddLink(AddLinkWindow):
         self.ok_pushButton.setText('Download Now')
         select_format_label.setText('Select a format')
 
-        if 'referer' in video_dict.keys() and video_dict['link']:
+        if 'link' in video_dict.keys() and video_dict['link']:
             self.link_lineEdit.setText(video_dict['link'])
             self.link_lineEdit.setEnabled(False)
             self.submit_clicked()
@@ -267,7 +267,7 @@ class MediaListFetcherThread(QThread):
                 self.youtube_dl_command.append('--referer="{}"'.format(video_dict['referer']))
             if 'user_agent' in video_dict.keys() and video_dict['user_agent']:
                 self.youtube_dl_command.append('--user-agent="{}"'.format(video_dict['user_agent']))
-            # if 'referer' in video_dict.keys() and video_dict['header']:
+            # if 'header' in video_dict.keys() and video_dict['header']:
             #     self.youtube_dl_command.append('--add-header=' + str(video_dict['header']))
             if 'load_cookies' in video_dict.keys() and video_dict['load_cookies']:
                 # We need to convert raw cookies to http cookie file to use with youtube-dl.

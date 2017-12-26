@@ -39,7 +39,7 @@ def spider(add_link_dictionary):
     raw_cookies = add_link_dictionary['load_cookies']
     referer = add_link_dictionary['referer']
 
-    # defin a requests session
+    # define a requests session
     requests_session = requests.Session() 
     if ip:
         ip_port = 'http://' + str(ip) + ":" + str(port)
@@ -69,8 +69,14 @@ def spider(add_link_dictionary):
         requests_session.headers.update({'user-agent':user_agent }) #setting user_agent to the session
         
     #find headers
-    response = requests_session.head(link)   
-    header = response.headers
+    # Maximum retry limit exceeded error may raise
+    # If temporary failure in name resolution occurs.
+    # So keep it inside try block.
+    try:
+        response = requests_session.head(link)
+        header = response.headers
+    except:
+        header = {}
 
     filename = None
     filesize = None
@@ -142,8 +148,14 @@ def queueSpider(add_link_dictionary):
         requests_session.headers.update({'user-agent': user_agent})
 
     # find headers
-    response = requests_session.head(link)
-    header = response.headers
+    # Maximum retry limit exceeded error may raise
+    # If temporary failure in name resolution occurs.
+    # So keep it inside try block.
+    try:
+        response = requests_session.head(link)
+        header = response.headers
+    except:
+        header = {}
     filename = None 
     if 'Content-Disposition' in header.keys():  # checking if filename is available
         content_disposition = header['Content-Disposition']
@@ -189,9 +201,14 @@ def addLinkSpider(add_link_dictionary):
         requests_session.headers.update({'user-agent': user_agent})
 
     # find headers
-    response = requests_session.head(link)
-    header = response.headers
-
+    # Maximum retry limit exceeded error may raise
+    # If temporary failure in name resolution occurs.
+    # So keep it inside try block.
+    try:
+        response = requests_session.head(link)
+        header = response.headers
+    except:
+        header = {}
     file_size = None 
     if 'Content-Length' in header.keys():  # checking if file_size is available
         file_size = int(header['Content-Length'])
