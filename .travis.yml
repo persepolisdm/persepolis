@@ -5,28 +5,26 @@ python:
   - "3.4"
   - "3.5"
   - "3.6"
-# virtualenv:
-#  system_site_packages: true
 before_install:
   - sudo apt-get -qq update
-  - sudo apt-get install -y python3
   - sudo apt-get install -y aria2
   - sudo apt-get install -y sound-theme-freedesktop     
   - sudo apt-get install -y libnotify-bin
   - sudo apt-get install -y libqt5svg5
-  - sudo apt-get install -y python3-setuptools
-  - sudo apt-get install -y python3-pip
-  - sudo apt-get install -y python3-pyqt5
   - sudo apt-get install -y pulseaudio
-  - sudo apt-get install -y python3-psutil
-  - sudo pip3 install flake8
-  - sudo pip3 install requests
-  - sudo pip3 install setproctitle
+  - pip install --upgrade pip  
+  - pip install flake8
+  - pip install psutil
+  - pip install pyqt5
+  - pip install requests
+  - pip install setproctitle
 before_script:
   # stop the build if there are Python syntax errors or undefined names
   - flake8 . --count --select=E901,E999,F821,F822,F823 --show-source --statistics
   # exit-zero treats all style errors as warnings.  The GitHub editor is 127 chars wide
   - flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
 script:
- - sudo python3 setup.py install
+ - python --version
+ - pip --version
+ - sudo python setup.py install
  - persepolis --version
