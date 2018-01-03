@@ -40,7 +40,7 @@ class checkupdate(QWidget):
         self.setWindowTitle('Checking for newer version')
 
         # installed version
-        self.client_version = '3.01' 
+        self.client_version = '3.01'
 
         # first line text
         self.update_label = QLabel("The newest is the best , We recommend to update Persepolis")
@@ -89,8 +89,7 @@ class checkupdate(QWidget):
         self.resize(size)
         self.move(position)
 
-
-        # checking methode
+    # checking methode
     def updateCheck(self, button):
         self.check_button.setText('Checking...')
 
@@ -109,15 +108,15 @@ class checkupdate(QWidget):
                 self.status_label.setText('A newer Persepolis release is available')
 
                 if os_type == 'Windows':
-                    self.winUpdatedl() # this function download latest release
+                    self.winUpdatedl()  # this function download latest release
                     # find system architect
                     if platform.architecture()[0] == '64bit':
-                        osCommands.xdgOpen(dictvalue['win64dlurl'])
+                        osCommands.xdgOpen(updatesource_dict['win64dlurl'])
                     elif platform.architecture()[0] == '32bit':
-                        osCommands.xdgOpen(dictvalue['win32dlurl'])
+                        osCommands.xdgOpen(updatesource_dict['win32dlurl'])
 
                 elif os_type == 'Darwin':
-                    osCommands.xdgOpen(dictvalue['macdlurl']) # it will download latest release for mac
+                    osCommands.xdgOpen(updatesource_dict['macdlurl'])  # it will download latest release for mac
 
             elif float(server_version) == float(self.client_version):
                 self.status_label.setText('Latest version is installed :)')
@@ -129,7 +128,6 @@ class checkupdate(QWidget):
             self.status_label.setText('an error occured while checking update.')
 
         self.check_button.setText('Check for new update')
-
 
     def closeEvent(self, event):
         # saving window size and position
