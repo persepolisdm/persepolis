@@ -5,8 +5,8 @@ python:
   - "3.4"
   - "3.5"
   - "3.6"
-virtualenv:
-  system_site_packages: true
+# virtualenv:
+#  system_site_packages: true
 before_install:
   - sudo apt-get -qq update
   - sudo apt-get install -y python3
