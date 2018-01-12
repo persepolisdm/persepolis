@@ -533,7 +533,7 @@ def downloadCompleteAction(parent, path, download_path, file_name, file_size):
             # move the file to the download folder
             try:
                 # use shutil.copy instead of the default copy2
-                shutil.move(str(path) ,str(file_path) , shutil.copy)
+                shutil.move(str(path) ,str(file_path) ,shutil.copy )
 
             except:
                 logger.sendToLog('Persepolis can not move file', "ERROR")
@@ -550,7 +550,7 @@ def downloadCompleteAction(parent, path, download_path, file_name, file_size):
     else:
         # move the file to the download folder
         try:
-            shutil.move(str(path) ,str(file_path) , shutil.copy)
+            shutil.move(str(path) ,str(file_path) ,shutil.copy )
 
         except:
             logger.sendToLog('Persepolis can not move file', "ERROR")
