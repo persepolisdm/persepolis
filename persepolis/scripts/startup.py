@@ -87,18 +87,13 @@ StartupWMClass=persepolis-download-Manager
 '''
 
         # check if the autostart directry exists & create entry
-        if os.path.exists(home_address + "/.config/autostart"):
-            startupfile = open(
-                home_address + "/.config/autostart/persepolis.desktop", 'w+')
-            startupfile.write(entry)
-            os.chmod(home_address + "/.config/autostart/persepolis.desktop", 0o644)
         if not os.path.exists(home_address + "/.config/autostart"):
             os.makedirs(home_address + "/.config/autostart", 0o755)
-            startupfile = open(
-                home_address + "/.config/autostart/persepolis.desktop", 'w+')
-            startupfile.write(entry)
-            os.chmod(home_address +
-                     "/.config/autostart/persepolis.desktop", 0o644)
+        startupfile = open(
+            home_address + "/.config/autostart/persepolis.desktop", 'w+')
+        startupfile.write(entry)
+        os.chmod(home_address +
+                 "/.config/autostart/persepolis.desktop", 0o644)
     # check if it is mac
     elif os_type == "Darwin":
         # OS X
