@@ -98,7 +98,7 @@ StartupWMClass=persepolis-download-Manager
                 home_address + "/.config/autostart/persepolis.desktop", 'w+')
             startupfile.write(entry)
             os.chmod(home_address +
-                     "/.config/.autostart/persepolis.desktop", 0o644)
+                     "/.config/autostart/persepolis.desktop", 0o644)
     # check if it is mac
     elif os_type == "Darwin":
         # OS X
