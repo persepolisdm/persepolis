@@ -23,6 +23,7 @@ from persepolis.scripts import osCommands
 import platform
 from PyQt5.QtCore import QSettings
 from persepolis.scripts.browser_integration import browserIntegration
+import subprocess
 # initialization
 
 # user home address
@@ -72,8 +73,8 @@ if lines < 300:
             + current_time\
             +'\n')
     f.close()
-else: 
-# keep last 200 lines 
+else:
+# keep last 200 lines
     line_num = lines - 200
     f = open(log_file, 'r')
     f_lines = f.readlines()
@@ -184,7 +185,7 @@ if persepolis_version < 2.6:
     try:
         compatibility()
     except Exception as e:
-    
+
         # create an object for PersepolisDB
         persepolis_db = PersepolisDB()
 
@@ -199,7 +200,7 @@ if persepolis_version < 2.6:
             "compatibility ERROR!", "ERROR")
         logger.sendToLog(
                 str(e), "ERROR")
- 
+
 
     persepolis_version = 2.6
 
@@ -217,3 +218,26 @@ if persepolis_version < 3.0:
 persepolis_setting.setValue('version/version', 3.0)
 persepolis_setting.sync()
 
+
+def find_youtube_dl():
+    if os_type != 'Windows':
+        try:
+            command = subprocess.Popen(['which', 'youtube-dl'], stdout=subprocess.PIPE)
+            return command.stdout.readline().decode().strip()
+        except Exception as ex:
+            logger.sendToLog(ex, "ERROR")
+
+    return ''
+
+
+# Check youtube-dl setting
+persepolis_setting.beginGroup('youtube')
+youtube_dl_path = persepolis_setting.value('youtube_dl_path', '')
+if not os.path.isfile(youtube_dl_path):
+    youtube_dl_path = find_youtube_dl()
+persepolis_setting.setValue('youtube_dl_path', youtube_dl_path)
+persepolis_setting.setValue('enable', persepolis_setting.value('enable', 'yes'))
+persepolis_setting.setValue('cookie_path', persepolis_tmp)
+persepolis_setting.setValue('max_links', persepolis_setting.value('max_links', 3))
+persepolis_setting.sync()
+persepolis_setting.endGroup()
