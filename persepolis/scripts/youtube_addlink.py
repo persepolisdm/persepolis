@@ -167,8 +167,9 @@ class YoutubeAddLink(AddLinkWindow):
             if 'formats' not in media_dict.keys() and 'entries' in media_dict.keys():
                 formats = media_dict['entries']
                 formats = formats[0]
-                print(type(formats))
                 media_dict['formats'] = formats['formats']
+            elif 'formats' not in media_dict.keys() and 'format' in media_dict.keys():
+                media_dict['formats'] = [media_dict.copy()]
 
             for f in media_dict['formats']:
                 try:
@@ -214,7 +215,6 @@ class YoutubeAddLink(AddLinkWindow):
                     self.media_combo.addItem(text)
                     i = i + 1
                 except Exception as ex:
-                    print(ex)
                     logger.sendToLog(ex, "ERROR")
 
             self.status_box.hide()
