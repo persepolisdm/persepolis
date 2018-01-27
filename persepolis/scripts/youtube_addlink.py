@@ -164,6 +164,12 @@ class YoutubeAddLink(AddLinkWindow):
         else:  # Show the media list
             self.media_title = media_dict['title']
             i = 0
+            if 'formats' not in media_dict.keys() and 'entries' in media_dict.keys():
+                formats = media_dict['entries']
+                formats = formats[0]
+                print(type(formats))
+                media_dict['formats'] = formats['formats']
+
             for f in media_dict['formats']:
                 try:
                     text = ''
@@ -208,10 +214,14 @@ class YoutubeAddLink(AddLinkWindow):
                     self.media_combo.addItem(text)
                     i = i + 1
                 except Exception as ex:
+                    print(ex)
                     logger.sendToLog(ex, "ERROR")
 
             self.status_box.hide()
-            self.duration_label.setText('Duration ' + get_readable_duration(media_dict['duration']))
+
+            if 'duration' in media_dict.keys():
+                self.duration_label.setText('Duration ' + get_readable_duration(media_dict['duration']))
+
             self.selection_line.show()
             self.ok_pushButton.setEnabled(True)
             self.download_later_pushButton.setEnabled(True)
@@ -270,7 +280,11 @@ class MediaListFetcherThread(QThread):
                                             '.{}{}'.format(time(), random()))
 
         # youtube options must be added to youtube_dl_options_dict in dictionary format
-        self.youtube_dl_options_dict = {}
+        self.youtube_dl_options_dict = {'dump_single_json': True,
+                                        'quiet': True,
+                                        'noplaylist': True,
+                                        'no_warnings': True
+                                        }
 
         # cookies
         self.youtube_dl_options_dict['cookies']=str(self.cookie_path)
@@ -323,7 +337,7 @@ class MediaListFetcherThread(QThread):
             with ydl:
                 result = ydl.extract_info(
                 self.youtube_link,
-                download=False  # We just want to extract the info
+                download=False
                 )
 
 
