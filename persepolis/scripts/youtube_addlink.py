@@ -19,6 +19,7 @@ from random import random
 from time import time, sleep
 
 import subprocess
+import youtube_dl
 
 import os
 from PyQt5.QtCore import QThread, pyqtSignal
@@ -68,41 +69,46 @@ class YoutubeAddLink(AddLinkWindow):
         self.selection_line.setLayout(select_format_hl)
         self.link_verticalLayout.addWidget(self.selection_line)
 
-        # Add Slot Connections
-        self.url_submit_button.clicked.connect(self.submit_clicked)
-        self.media_combo.currentIndexChanged.connect(self.media_selection_changed)
-        self.link_lineEdit.textChanged.disconnect(super().linkLineChanged)  # Should be disconnected.
-        self.link_lineEdit.textChanged.connect(self.linkLineChangedHere)
-
-        self.url_submit_button.setEnabled(False)
-        self.change_name_lineEdit.setEnabled(False)
-        self.ok_pushButton.setEnabled(False)
-        self.download_later_pushButton.setEnabled(False)
-
-        self.setMinimumSize(500, 400)
-
         # Set Texts
         self.url_submit_button.setText('Fetch Media List')
         self.ok_pushButton.setText('Download Now')
         select_format_label.setText('Select a format')
 
+
+        # Add Slot Connections
+        self.url_submit_button.setEnabled(False)
+        self.change_name_lineEdit.setEnabled(False)
+        self.ok_pushButton.setEnabled(False)
+        self.download_later_pushButton.setEnabled(False)
+
+
+        self.url_submit_button.clicked.connect(self.submit_clicked)
+        self.media_combo.currentIndexChanged.connect(self.media_selection_changed)
+#         self.link_lineEdit.textChanged.disconnect(super().linkLineChanged)  # Should be disconnected.
+        self.link_lineEdit.textChanged.connect(self.linkLineChangedHere)
+
+        self.setMinimumSize(500, 400)
+
+        self.status_box.hide()
+        self.selection_line.hide()
+
         if 'link' in video_dict.keys() and video_dict['link']:
             self.link_lineEdit.setText(video_dict['link'])
-            self.link_lineEdit.setEnabled(False)
+            self.url_submit_button.setEnabled(True)
             self.submit_clicked()
         else:
+            # check clipboard
             clipboard = QApplication.clipboard()
-            text = str(clipboard.text())
-            if ' ' not in text and 'youtube.com/watch' in text:
-                self.link_lineEdit.setText(text)
-                self.url_submit_button.setEnabled(True)
-            self.status_box.hide()
-            self.selection_line.hide()
+            text = clipboard.text()
+            if (("tp:/" in text[2:6]) or ("tps:/" in text[2:7])):
+                self.link_lineEdit.setText(str(text))
+
+            self.url_submit_button.setEnabled(True)
 
     # Define native slots
 
     def url_changed(self, value):
-        if ' ' in value or 'youtube.com/watch?' not in value:
+        if ' ' in value or value == '':
             self.url_submit_button.setEnabled(False)
             self.url_submit_button.setToolTip('Please enter a valid youtube video link')
         else:
@@ -129,7 +135,7 @@ class YoutubeAddLink(AddLinkWindow):
         for k in more_options.keys():
             dictionary_to_send[k] = more_options[k]
         dictionary_to_send['link'] = self.link_lineEdit.text()
-        fetcher_thread = MediaListFetcherThread(self.fetched_result, dictionary_to_send, self.persepolis_setting)
+        fetcher_thread = MediaListFetcherThread(self.fetched_result, dictionary_to_send, self.persepolis_setting, self)
         self.running_thread = fetcher_thread
         fetcher_thread.start()
 
@@ -156,30 +162,41 @@ class YoutubeAddLink(AddLinkWindow):
             self.status_box.setText('<font color="#f11">' + str(media_dict['error']) + '</font>')
             self.status_box.show()
         else:  # Show the media list
-            self.media_title = media_dict['fulltitle']
+            self.media_title = media_dict['title']
             i = 0
             for f in media_dict['formats']:
                 try:
-                    if f['acodec'] == 'none' and f['vcodec'] != 'none' and self.persepolis_setting.value('youtube/hide_no_audio', 'no') == 'yes':
-                        continue
-                    if f['vcodec'] == 'none' and f['acodec'] != 'none' and self.persepolis_setting.value('youtube/hide_no_video', 'no') == 'yes':
-                        continue
+                    text = ''
+                    if 'acodec' in f.keys():
+                        if f['acodec'] == 'none' and f['vcodec'] != 'none' and self.persepolis_setting.value('youtube/hide_no_audio', 'no') == 'yes':
+                            continue
+                        if f['acodec'] == 'none':
+                            text = 'No Audio {}p'.format(f['height'])
 
-                    if f['vcodec'] == 'none':  # No video, show audio bit rate
-                        text = 'Only Audio {}kbps'.format(f['abr'])
-                    elif f['acodec'] == 'none':
-                        text = 'No Audio {}p'.format(f['height'])
-                    else:
+                    if 'vcodec' in f.keys():
+                        if f['vcodec'] == 'none' and f['acodec'] != 'none' and self.persepolis_setting.value('youtube/hide_no_video', 'no') == 'yes':
+                            continue
+
+                        if f['vcodec'] == 'none':  # No video, show audio bit rate
+                            text = 'Only Audio {}kbps'.format(f['abr'])
+
+                    if 'height' in f.keys():
                         text = '{}p'.format(f['height'])
-                    text = '{} .{}'.format(text, f['ext'])
+
+                    if 'ext' in f.keys():
+                        text = '{} .{}'.format(text, f['ext'])
+
                     if 'filesize' in f.keys() and f['filesize']:
                         # Youtube api does not supply file size for some formats, so check it.
                         text = '{} - {}'.format(text, get_readable_size(f['filesize']))
+
                     else:  # Start spider to find file size
                         input_dict = deepcopy(self.plugin_add_link_dictionary)
+
                         # input_dict['out'] = self.media_title + str(f['ext'])
                         input_dict['link'] = f['url']
                         more_options = self.collect_more_options()
+
                         for key in more_options.keys():
                             input_dict[key] = more_options[key]
                         size_fetcher = FileSizeFetcherThread(input_dict, i, self.file_size_found)
@@ -212,17 +229,10 @@ class YoutubeAddLink(AddLinkWindow):
             print('Error: ' + str(ex))
 
     def linkLineChangedHere(self, lineEdit):
-        if 'youtube.com/watch' not in str(self.link_lineEdit.text()):
+        if str(lineEdit) == '':
             self.url_submit_button.setEnabled(False)
         else:
             self.url_submit_button.setEnabled(True)
-
-            # if 'googlevideo.com/videoplayback' not in str(self.link_lineEdit.text()):
-            #     self.ok_pushButton.setEnabled(False)
-            #     self.download_later_pushButton.setEnabled(False)
-            # else:
-            #     self.ok_pushButton.setEnabled(True)
-            #     self.download_later_pushButton.setEnabled(True)
 
     # This method collects additional information like proxy ip, user, password etc.
     def collect_more_options(self):
@@ -249,68 +259,79 @@ class MediaListFetcherThread(QThread):
     RESULT = pyqtSignal(dict)
     cookies = '# HTTP cookie file.\n'  # We shall write it in a file when thread starts.
 
-    def __init__(self, receiver_slot, video_dict, pdm_setting):
+    def __init__(self, receiver_slot, video_dict, pdm_setting, parent):
         super().__init__()
         self.RESULT.connect(receiver_slot)
         self.video_dict = video_dict
         self.pdm_setting = pdm_setting
 
-        if pdm_setting.value('youtube/youtube_dl_path', ''):
-            youtube_dl_path = pdm_setting.value('youtube/youtube_dl_path', 'youtube-dl')  # Ambiguous ?
-            self.youtube_dl_command = [youtube_dl_path, '--ignore-config', '--dump-json', '--no-playlist']
 
-            self.cookie_path = os.path.join(self.pdm_setting.value('youtube/cookie_path'),
+        self.cookie_path = os.path.join(self.pdm_setting.value('youtube/cookie_path'),
                                             '.{}{}'.format(time(), random()))
-            self.youtube_dl_command.append('--cookies="{}"'.format(self.cookie_path))
 
-            if 'referer' in video_dict.keys() and video_dict['referer']:
-                self.youtube_dl_command.append('--referer="{}"'.format(video_dict['referer']))
-            if 'user_agent' in video_dict.keys() and video_dict['user_agent']:
-                self.youtube_dl_command.append('--user-agent="{}"'.format(video_dict['user_agent']))
-            # if 'referer' in video_dict.keys() and video_dict['header']:
-            #     self.youtube_dl_command.append('--add-header=' + str(video_dict['header']))
-            if 'load_cookies' in video_dict.keys() and video_dict['load_cookies']:
-                # We need to convert raw cookies to http cookie file to use with youtube-dl.
-                self.cookies = make_http_cookie(video_dict['load_cookies'])
+        # youtube options must be added to youtube_dl_options_dict in dictionary format
+        self.youtube_dl_options_dict = {}
 
-            # Proxy check
-            if 'ip' in video_dict.keys() and video_dict['ip']:
-                try:
-                    ip_port = 'http://{}:{}'.format(video_dict['ip'], video_dict['port'])
-                    if 'referer' in video_dict.keys() and video_dict['proxy_user']:
-                        ip_port = 'http://{}:{}@{}'.format(video_dict['proxy_user'], video_dict['proxy_passwd'], ip_port)
-                    self.youtube_dl_command.append('--proxy="{}"'.format(ip_port))
-                except:
-                    pass
-            if 'download_user' in video_dict.keys() and video_dict['download_user']:
-                try:
-                    self.youtube_dl_command.append('--username="{}"'.format(video_dict['download_user']))
-                    self.youtube_dl_command.append('--password="{}"'.format(video_dict['download_passwd']))
-                except:
-                    pass
+        # cookies
+        self.youtube_dl_options_dict['cookies']=str(self.cookie_path)
 
-            if 'link' in video_dict.keys() and video_dict['link']:
-                self.youtube_dl_command.append(video_dict['link'])
+        # referer
+        if 'referer' in video_dict.keys() and video_dict['referer']:
+            self.youtube_dl_options_dict['referer'] = str(video_dict['referer'])
+
+        # user_agent
+        if 'user_agent' in video_dict.keys() and video_dict['user_agent']:
+            self.youtube_dl_options_dict['user-agent'] = str(video_dict['user_agent'])
+
+        # load_cookies
+        if 'load_cookies' in video_dict.keys() and video_dict['load_cookies']:
+            # We need to convert raw cookies to http cookie file to use with youtube-dl.
+            self.cookies = make_http_cookie(video_dict['load_cookies'])
+
+        # Proxy  
+        if 'ip' in video_dict.keys() and video_dict['ip']:
+            try:
+                # ip + port
+                ip_port = 'http://{}:{}'.format(video_dict['ip'], video_dict['port'])
+
+                if 'referer' in video_dict.keys() and video_dict['proxy_user']:
+                    ip_port = 'http://{}:{}@{}'.format(video_dict['proxy_user'], video_dict['proxy_passwd'], ip_port)
+
+                self.youtube_dl_options_dict['proxy'] = str(ip_port)
+            except:
+                pass
+
+        if 'download_user' in video_dict.keys() and video_dict['download_user']:
+            try:
+                self.youtube_dl_options_dict['username'] = str(video_dict['download_user'])
+                self.youtube_dl_options_dict['password'] = str(video_dict['download_passwd'])
+            except:
+                pass
+
+        if 'link' in video_dict.keys() and video_dict['link']:
+            self.youtube_link = str(video_dict['link'])
 
     def run(self):
-        if not self.pdm_setting.value('youtube/youtube_dl_path', ''):
-            return self.RESULT.emit({'error': "Error! 'youtube-dl' path not specified. \
-            Please go to Preferences > Youtube Options > specify 'youtube-dl' executable path \
-            or disable this feature."})
         ret_val = {}
 
         try:  # Create cookie file
             cookie_file = open(self.cookie_path, 'w')
             cookie_file.write(self.cookies)
             cookie_file.close()
-            fetch_process = subprocess.Popen(self.youtube_dl_command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-            result, error = fetch_process.communicate()
-            error = error.splitlines()[0]  # Or comment out this line to show full stderr.
+
+            ydl = youtube_dl.YoutubeDL(self.youtube_dl_options_dict)
+            with ydl:
+                result = ydl.extract_info(
+                self.youtube_link,
+                download=False  # We just want to extract the info
+                )
+
+
+            error = ""  # Or comment out this line to show full stderr.
             if result:
-                data = json.loads(result.decode())
-                ret_val = data
+                ret_val = result
             else:
-                ret_val = {'error': str(error.decode())}
+                ret_val = {'error': str(error)}
         except PermissionError:
             ret_val = {'error': "Oops! cannot execute specified 'youtube-dl', \
             make sure it is executable."}

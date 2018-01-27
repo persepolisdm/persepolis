@@ -45,10 +45,11 @@ class MenuWidget(QPushButton):
         viewMenu = self.menubar.addMenu('View')
         downloadMenu = self.menubar.addMenu('Download')
         queueMenu = self.menubar.addMenu('Queue')
+        youtubeMenu = self.menubar.addMenu('Youtube')
         helpMenu = self.menubar.addMenu('Help')
 
         sortMenu = viewMenu.addMenu('Sort by')
-        youtubeMenu = self.menubar.addMenu('Youtube')
+
         youtubeMenu.addAction(self.parent.youtubeAddLinkAction)
 
         downloadMenu.addAction(self.parent.stopAllAction)
@@ -361,6 +362,7 @@ class MainWindow_Ui(QMainWindow):
         viewMenu = self.menubar.addMenu('&View')
         downloadMenu = self.menubar.addMenu('&Download')
         queueMenu = self.menubar.addMenu('&Queue')
+        youtubeMenu = self.menubar.addMenu('&Youtube')
         helpMenu = self.menubar.addMenu('&Help')
 
 
@@ -387,6 +389,7 @@ class MainWindow_Ui(QMainWindow):
 #toolBar and menubar and actions
         self.youtubeAddLinkAction = QAction(QIcon(icons + 'down'), 'Download Youtube Video', self, statusTip='Download video or audio from youtube.',
                                             triggered=self.showYoutubeAddLinkWindow)
+        youtubeMenu.addAction(self.youtubeAddLinkAction)
 
         self.stopAllAction = QAction(QIcon(icons + 'stop_all'), 'Stop all active downloads',
                                      self, statusTip='Stop all active downloads', triggered=self.stopAllDownloads)

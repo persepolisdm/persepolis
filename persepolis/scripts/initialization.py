@@ -219,23 +219,8 @@ persepolis_setting.setValue('version/version', 3.0)
 persepolis_setting.sync()
 
 
-def find_youtube_dl():
-    if os_type != 'Windows':
-        try:
-            command = subprocess.Popen(['which', 'youtube-dl'], stdout=subprocess.PIPE)
-            return command.stdout.readline().decode().strip()
-        except Exception as ex:
-            logger.sendToLog(ex, "ERROR")
-
-    return ''
-
-
 # Check youtube-dl setting
 persepolis_setting.beginGroup('youtube')
-youtube_dl_path = persepolis_setting.value('youtube_dl_path', '')
-if not os.path.isfile(youtube_dl_path):
-    youtube_dl_path = find_youtube_dl()
-persepolis_setting.setValue('youtube_dl_path', youtube_dl_path)
 persepolis_setting.setValue('enable', persepolis_setting.value('enable', 'yes'))
 persepolis_setting.setValue('cookie_path', persepolis_tmp)
 persepolis_setting.setValue('max_links', persepolis_setting.value('max_links', 3))
