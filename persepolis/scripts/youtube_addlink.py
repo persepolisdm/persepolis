@@ -40,7 +40,7 @@ class YoutubeAddLink(AddLinkWindow):
 
     def __init__(self, parent, receiver_slot, settings, video_dict={}):
         super().__init__(parent, receiver_slot, settings, video_dict)
-        self.setWindowTitle('Youtube Video Downloader')
+        self.setWindowTitle('Video Finder')
         self.size_label.hide()
 
         # Fetch Button
