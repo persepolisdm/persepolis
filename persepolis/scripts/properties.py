@@ -35,9 +35,6 @@ class PropertiesWindow(AddLinkWindow_Ui):
         self.callback = callback
         self.gid = gid
 
-# hiding options_pushButton
-        self.options_pushButton.hide()
-
 # detect_proxy_pushButton
         self.detect_proxy_pushButton.clicked.connect(
                 self.detectProxy)

@@ -141,8 +141,8 @@ class YoutubeAddLink(AddLinkWindow):
         try:
             self.change_name_lineEdit.setText(self.media_title + '.' +
                                               self.formats_showing[self.media_combo.currentIndex()]['ext'])
-        except:
-            print(self.formats_showing.__len__(), self.media_combo.currentIndex())
+        except Exception as ex:
+            logger.sendToLog(ex, "ERROR")
 
     def okButtonPressed(self, button, download_later):
         index = self.media_combo.currentIndex()
@@ -230,7 +230,7 @@ class YoutubeAddLink(AddLinkWindow):
                 sleep(0.8)
                 self.threadPool[str(result['thread_key'])]['thread'].start()
         except Exception as ex:
-            print('Error: ' + str(ex))
+            logger.sendToLog(ex, "ERROR")
 
     def linkLineChangedHere(self, lineEdit):
         if str(lineEdit) == '':
