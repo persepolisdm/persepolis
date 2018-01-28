@@ -13,22 +13,16 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
-import json
 import re
 from random import random
 from time import time, sleep
-
-import subprocess
 import youtube_dl
-
 import os
 from PyQt5.QtCore import QThread, pyqtSignal
 from PyQt5.QtWidgets import QPushButton, QTextEdit, QFrame, QLabel, QComboBox, QHBoxLayout, QApplication
 from copy import deepcopy
-
 from persepolis.scripts import logger, osCommands
 from persepolis.scripts.spider import spider
-
 from persepolis.scripts.addlink import AddLinkWindow
 
 
@@ -171,8 +165,8 @@ class YoutubeAddLink(AddLinkWindow):
             elif 'formats' not in media_dict.keys() and 'format' in media_dict.keys():
                 media_dict['formats'] = [media_dict.copy()]
 
-            for f in media_dict['formats']:
-                try:
+            try:
+                for f in media_dict['formats']:
                     text = ''
                     if 'acodec' in f.keys():
                         if f['acodec'] == 'none' and f['vcodec'] != 'none' and self.persepolis_setting.value('youtube/hide_no_audio', 'no') == 'yes':
@@ -214,8 +208,8 @@ class YoutubeAddLink(AddLinkWindow):
                     self.formats_showing.append(f)
                     self.media_combo.addItem(text)
                     i = i + 1
-                except Exception as ex:
-                    logger.sendToLog(ex, "ERROR")
+            except Exception as ex:
+                logger.sendToLog(ex, "ERROR")
 
             self.status_box.hide()
 
@@ -341,25 +335,18 @@ class MediaListFetcherThread(QThread):
                 )
 
 
-            error = ""  # Or comment out this line to show full stderr.
+            error = "error"  # Or comment out this line to show full stderr.
             if result:
                 ret_val = result
             else:
                 ret_val = {'error': str(error)}
-        except PermissionError:
-            ret_val = {'error': "Oops! cannot execute specified 'youtube-dl', \
-            make sure it is executable."}
-        except FileNotFoundError:
-            ret_val = {'error': "Oops! 'youtube-dl' seems to be not installed. <br/> \
-                Please install the package and make sure it is executable."}
-        except json.decoder.JSONDecodeError:
-            ret_val = {'error': 'Error: Cannot Decode JSON output.<br/>'
-                                'Make sure you specified correct "youtube-dl" path in preferences.'}
+
         except Exception as ex:
             ret_val = {'error': str(ex)}
         finally:  # Delete cookie file
             try:
                 osCommands.remove(self.cookie_path)
+
             except Exception as ex:
                 logger.sendToLog(ex, "ERROR")
 
