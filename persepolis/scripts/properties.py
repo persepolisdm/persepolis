@@ -190,9 +190,9 @@ class PropertiesWindow(AddLinkWindow_Ui):
 
  # set window size and position
         size = self.persepolis_setting.value(
-            'AddLinkWindow/size', QSize(520, 265))
+            'PropertiesWindow/size', QSize(520, 425))
         position = self.persepolis_setting.value(
-            'AddLinkWindow/position', QPoint(300, 300))
+            'PropertiesWindow/position', QPoint(300, 300))
         self.resize(size)
         self.move(position)
 
