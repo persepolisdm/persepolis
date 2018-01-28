@@ -31,7 +31,7 @@ class AddLinkWindow_Ui(QWidget):
         icons = ':/' + \
             str(self.persepolis_setting.value('settings/icons')) + '/'
 
-        self.setMinimumSize(QtCore.QSize(520, 265))
+        self.setMinimumSize(QtCore.QSize(520, 425))
         self.setWindowIcon(QIcon.fromTheme('persepolis', QIcon(':/persepolis.svg')))
 
         window_verticalLayout = QVBoxLayout()
@@ -44,8 +44,7 @@ class AddLinkWindow_Ui(QWidget):
         self.link_tab = QWidget()
 
         link_tab_verticalLayout = QVBoxLayout(self.link_tab)
-        link_tab_verticalLayout.setContentsMargins(-1, 10, -1, -1)
-
+        link_tab_verticalLayout.setContentsMargins(21, 21, 21, 81)
 
         self.link_frame = QFrame(self.link_tab)
         self.link_frame.setFrameShape(QFrame.StyledPanel)
@@ -108,6 +107,7 @@ class AddLinkWindow_Ui(QWidget):
         self.proxy_tab = QWidget(self)
 
         proxy_verticalLayout = QVBoxLayout(self.proxy_tab)
+        proxy_verticalLayout.setContentsMargins(21, 21, 21, 171)
 
         proxy_horizontalLayout = QHBoxLayout()
 
@@ -127,10 +127,29 @@ class AddLinkWindow_Ui(QWidget):
 
         gridLayout = QGridLayout(self.proxy_frame)
 
+        self.ip_label = QLabel(self.proxy_frame)
+        gridLayout.addWidget(self.ip_label, 0, 0, 1, 1)
+
+
         self.ip_lineEdit = QLineEdit(self.proxy_frame)
         self.ip_lineEdit.setInputMethodHints(QtCore.Qt.ImhNone)
         gridLayout.addWidget(self.ip_lineEdit, 0, 1, 1, 1)
 
+        self.port_label = QLabel(self.proxy_frame)
+        gridLayout.addWidget(self.port_label, 0, 2, 1, 1)
+
+        self.port_spinBox = QSpinBox(self.proxy_frame)
+        self.port_spinBox.setMaximum(65535)
+        self.port_spinBox.setSingleStep(1)
+        gridLayout.addWidget(self.port_spinBox, 0, 3, 1, 1)
+ 
+        self.proxy_user_label = QLabel(self.proxy_frame)
+        gridLayout.addWidget(self.proxy_user_label, 2, 0, 1, 1)
+
+        self.proxy_user_lineEdit = QLineEdit(self.proxy_frame)
+        gridLayout.addWidget(self.proxy_user_lineEdit, 2, 1, 1, 1)
+
+ 
         self.proxy_pass_label = QLabel(self.proxy_frame)
         gridLayout.addWidget(self.proxy_pass_label, 2, 2, 1, 1)
 
@@ -138,22 +157,6 @@ class AddLinkWindow_Ui(QWidget):
         self.proxy_pass_lineEdit.setEchoMode(QLineEdit.Password)
         gridLayout.addWidget(self.proxy_pass_lineEdit, 2, 3, 1, 1)
 
-        self.ip_label = QLabel(self.proxy_frame)
-        gridLayout.addWidget(self.ip_label, 0, 0, 1, 1)
-
-        self.proxy_user_lineEdit = QLineEdit(self.proxy_frame)
-        gridLayout.addWidget(self.proxy_user_lineEdit, 0, 3, 1, 1)
-
-        self.proxy_user_label = QLabel(self.proxy_frame)
-        gridLayout.addWidget(self.proxy_user_label, 0, 2, 1, 1)
-
-        self.port_label = QLabel(self.proxy_frame)
-        gridLayout.addWidget(self.port_label, 2, 0, 1, 1)
-
-        self.port_spinBox = QSpinBox(self.proxy_frame)
-        self.port_spinBox.setMaximum(65535)
-        self.port_spinBox.setSingleStep(1)
-        gridLayout.addWidget(self.port_spinBox, 2, 1, 1, 1)
         proxy_verticalLayout.addWidget(self.proxy_frame)
 
         self.add_link_tabWidget.addTab(self.proxy_tab, '')
