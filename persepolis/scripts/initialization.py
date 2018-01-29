@@ -23,6 +23,7 @@ from persepolis.scripts import osCommands
 import platform
 from PyQt5.QtCore import QSettings
 from persepolis.scripts.browser_integration import browserIntegration
+import subprocess
 # initialization
 
 # user home address
@@ -72,8 +73,8 @@ if lines < 300:
             + current_time\
             +'\n')
     f.close()
-else: 
-# keep last 200 lines 
+else:
+# keep last 200 lines
     line_num = lines - 200
     f = open(log_file, 'r')
     f_lines = f.readlines()
@@ -151,6 +152,13 @@ for key in default_setting_dict.keys():
     setting_value = persepolis_setting.value(key, default_setting_dict[key])
     persepolis_setting.setValue(key, setting_value)
 
+# Check that mount point is available of not!
+if not(os.path.ismount(persepolis_setting.value('download_path_temp'))):
+    persepolis_setting.setValue('download_path_temp', default_setting_dict['download_path_temp'])
+
+if not(os.path.ismount(persepolis_setting.value('download_path'))):
+    persepolis_setting.setValue('download_path', default_setting_dict['download_path'])
+
 persepolis_setting.sync()
 
 # this section  creates temporary download folder and download folder and
@@ -184,7 +192,7 @@ if persepolis_version < 2.6:
     try:
         compatibility()
     except Exception as e:
-    
+
         # create an object for PersepolisDB
         persepolis_db = PersepolisDB()
 
@@ -199,7 +207,7 @@ if persepolis_version < 2.6:
             "compatibility ERROR!", "ERROR")
         logger.sendToLog(
                 str(e), "ERROR")
- 
+
 
     persepolis_version = 2.6
 
@@ -217,3 +225,11 @@ if persepolis_version < 3.0:
 persepolis_setting.setValue('version/version', 3.0)
 persepolis_setting.sync()
 
+
+# Check youtube-dl setting
+persepolis_setting.beginGroup('youtube')
+persepolis_setting.setValue('enable', persepolis_setting.value('enable', 'yes'))
+persepolis_setting.setValue('cookie_path', persepolis_tmp)
+persepolis_setting.setValue('max_links', persepolis_setting.value('max_links', 3))
+persepolis_setting.sync()
+persepolis_setting.endGroup()

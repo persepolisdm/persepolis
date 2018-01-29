@@ -60,6 +60,7 @@ from persepolis.scripts.data_base import PluginsDB, PersepolisDB, TempDB
 # shutdown_notification = 0 >> persepolis is running 
 # 1 >> persepolis is ready for closing(closeEvent  is called) 
 # 2 >> OK, let's close application!
+from persepolis.scripts.youtube_addlink import YoutubeAddLink
 
 global shutdown_notification
 shutdown_notification = 0
@@ -1783,13 +1784,51 @@ class MainWindow(MainWindow_Ui):
         # notify that job is done!and new links can be received form plugins_db 
         plugin_links_checked = True
 
-        if len(list_of_links) == 1:  # It means we have only one link in list_of_links
+        # Capture youtube,... media as per setting.
+        if self.persepolis_setting.value('youtube/enable', 'yes') == 'yes':
+            not_youtube_links = []  # Store non-youtube links to process normally.
+
+            # get maximum of youtube,... link from persepolis_setting
+            max_links = int(self.persepolis_setting.value('youtube/max_links', 3))
+
+            # add yourfavorite site in this list
+            # please don't add porn sites!
+            supported_sites_list = ['youtube.com/watch']
+
+                   
+
+            for link in list_of_links:
+                # if link is on of supported_sites_list member then change 
+                # youtube_dl_supported to True value.
+                youtube_dl_supported = False 
+                for supported_site in supported_sites_list:
+                    if supported_site in link['link']:
+                        youtube_dl_supported = True
+                        break
+ 
+                # if link is on of supported_sites_list member, the open youtube_addlink_window
+                if max_links and youtube_dl_supported:
+                    max_links = max_links - 1
+                    youtube_addlink_window = YoutubeAddLink(self, self.callBack, self.persepolis_setting, link)
+                    self.addlinkwindows_list.append(youtube_addlink_window)
+                    youtube_addlink_window.show()
+                    youtube_addlink_window.raise_()
+                    youtube_addlink_window.activateWindow()
+                else:
+                    # if link is not on of supported_sites_list then add it to not_youtube_links
+                    not_youtube_links.append(link)
+
+            # youtube links also will stay here, those coming after specified max.
+            list_of_links = not_youtube_links  
+
+        # It means we have only one link in list_of_links
+        if len(list_of_links) == 1:  
 
             # this line calls pluginAddLink method and send a dictionary that contains
             # link information
             self.pluginAddLink(list_of_links[0])
 
-        else:  # we have queue request from browser plugin
+        elif len(list_of_links):  # we have queue request from browser plugin # Length non-zero
             self.pluginQueue(list_of_links)
 
 
@@ -3783,7 +3822,7 @@ class MainWindow(MainWindow_Ui):
             list = [self.addlinkAction, self.resumeAction, self.pauseAction,
                     self.stopAction, self.removeAction, self.deleteFileAction,
                     self.propertiesAction, self.progressAction, self.minimizeAction,
-                    self.exitAction]
+                    self.youtubeAddLinkAction, self.exitAction]
 
             for i in list:
                 self.toolBar.addAction(i)
@@ -3791,6 +3830,7 @@ class MainWindow(MainWindow_Ui):
             self.toolBar.insertSeparator(self.addlinkAction)
             self.toolBar.insertSeparator(self.resumeAction)
             self.toolBar.insertSeparator(self.removeSelectedAction)
+            self.toolBar.insertSeparator(self.youtubeAddLinkAction)
             self.toolBar.insertSeparator(self.exitAction)
 
 # add actions to download_table's context menu
@@ -3809,7 +3849,8 @@ class MainWindow(MainWindow_Ui):
             # update toolBar
             list = [self.addlinkAction, self.resumeAction, self.pauseAction,
                     self.stopAction, self.removeSelectedAction, self.deleteSelectedAction,
-                    self.propertiesAction, self.progressAction, self.minimizeAction, self.exitAction]
+                    self.propertiesAction, self.progressAction, self.minimizeAction,
+                    self.youtubeAddLinkAction, self.exitAction]
 
             for i in list:
                 self.toolBar.addAction(i)
@@ -3817,6 +3858,7 @@ class MainWindow(MainWindow_Ui):
             self.toolBar.insertSeparator(self.addlinkAction)
             self.toolBar.insertSeparator(self.resumeAction)
             self.toolBar.insertSeparator(self.removeSelectedAction)
+            self.toolBar.insertSeparator(self.youtubeAddLinkAction)
             self.toolBar.insertSeparator(self.exitAction)
             self.toolBar.addSeparator()
 
@@ -3837,7 +3879,8 @@ class MainWindow(MainWindow_Ui):
             # update toolBar
             list = [self.addlinkAction, self.resumeAction, self.pauseAction, self.stopAction,
                     self.removeAction, self.deleteFileAction, self.propertiesAction,
-                    self.progressAction, self.minimizeAction, self.exitAction]
+                    self.progressAction, self.minimizeAction, 
+                    self.youtubeAddLinkAction ,self.exitAction]
 
             for i in list:
                 self.toolBar.addAction(i)
@@ -3845,6 +3888,7 @@ class MainWindow(MainWindow_Ui):
             self.toolBar.insertSeparator(self.addlinkAction)
             self.toolBar.insertSeparator(self.resumeAction)
             self.toolBar.insertSeparator(self.removeSelectedAction)
+            self.toolBar.insertSeparator(self.youtubeAddLinkAction)
             self.toolBar.insertSeparator(self.exitAction)
 
 
@@ -3866,13 +3910,14 @@ class MainWindow(MainWindow_Ui):
             list = [self.addlinkAction, self.resumeAction, self.pauseAction,
                     self.stopAction, self.removeSelectedAction, self.deleteSelectedAction,
                     self.propertiesAction, self.progressAction, self.minimizeAction,
-                    self.exitAction]
+                    self.youtubeAddLinkAction, self.exitAction]
 
             for i in list:
                 self.toolBar.addAction(i)
 
             self.toolBar.insertSeparator(self.addlinkAction)
             self.toolBar.insertSeparator(self.removeSelectedAction)
+            self.toolBar.insertSeparator(self.youtubeAddLinkAction)
             self.toolBar.insertSeparator(self.exitAction)
             self.toolBar.addSeparator()
 
@@ -3894,7 +3939,7 @@ class MainWindow(MainWindow_Ui):
             list = [self.addlinkAction, self.removeAction, self.deleteFileAction,
                     self.propertiesAction, self.startQueueAction, self.stopQueueAction,
                     self.removeQueueAction, self.moveUpAction, self.moveDownAction,
-                    self.minimizeAction, self.exitAction]
+                    self.minimizeAction, self.youtubeAddLinkAction, self.exitAction]
 
             for i in list:
                 self.toolBar.addAction(i)
@@ -3902,6 +3947,7 @@ class MainWindow(MainWindow_Ui):
             self.toolBar.insertSeparator(self.addlinkAction)
             self.toolBar.insertSeparator(self.startQueueAction)
             self.toolBar.insertSeparator(self.minimizeAction)
+            self.toolBar.insertSeparator(self.youtubeAddLinkAction)
             self.toolBar.insertSeparator(self.exitAction)
             self.toolBar.addSeparator()
 
@@ -3938,7 +3984,7 @@ class MainWindow(MainWindow_Ui):
             list = [self.addlinkAction, self.removeSelectedAction, self.deleteSelectedAction,
                     self.propertiesAction, self.startQueueAction, self.stopQueueAction,
                     self.removeQueueAction, self.moveUpSelectedAction, self.moveDownSelectedAction,
-                    self.minimizeAction, self.exitAction]
+                    self.minimizeAction, self.youtubeAddLinkAction, self.exitAction]
 
             for i in list:
                 self.toolBar.addAction(i)
@@ -3946,6 +3992,7 @@ class MainWindow(MainWindow_Ui):
             self.toolBar.insertSeparator(self.addlinkAction)
             self.toolBar.insertSeparator(self.startQueueAction)
             self.toolBar.insertSeparator(self.minimizeAction)
+            self.toolBar.insertSeparator(self.youtubeAddLinkAction)
             self.toolBar.insertSeparator(self.exitAction)
             self.toolBar.addSeparator()
 
@@ -5025,3 +5072,9 @@ class MainWindow(MainWindow_Ui):
         checking_flag = 0
 
 
+    def showYoutubeAddLinkWindow(self, menu):
+        youtube_addlink_window = YoutubeAddLink(self, self.callBack, self.persepolis_setting)
+        self.addlinkwindows_list.append(youtube_addlink_window)
+        youtube_addlink_window.show()
+        youtube_addlink_window.raise_()
+        youtube_addlink_window.activateWindow()

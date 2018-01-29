@@ -330,6 +330,50 @@ class Setting_Ui(QWidget):
         column_verticalLayout.addWidget(self.column12_checkBox) 
 
         self.setting_tabWidget.addTab(self.columns_tab, '')
+
+        # youtube_tab
+        self.youtube_tab = QWidget()
+        self.layoutWidgetYTD = QWidget(self.youtube_tab)
+        self.youtube_layout = QVBoxLayout(self.layoutWidgetYTD)
+        self.youtube_layout.setContentsMargins(20, 30, 0, 0)
+
+        self.youtube_verticalLayout = QVBoxLayout()
+
+        # Whether to enable video link capturing.
+        self.enable_ytd_checkbox = QCheckBox(self.layoutWidgetYTD)
+        self.youtube_layout.addWidget(self.enable_ytd_checkbox)
+
+        # If we should hide videos with no audio
+        self.hide_no_audio_checkbox = QCheckBox(self.layoutWidgetYTD)
+        self.youtube_verticalLayout.addWidget(self.hide_no_audio_checkbox)
+
+        # If we should hide audios without video
+        self.hide_no_video_checkbox = QCheckBox(self.layoutWidgetYTD)
+        self.youtube_verticalLayout.addWidget(self.hide_no_video_checkbox)
+
+        self.max_links_horizontalLayout = QHBoxLayout()
+
+        # max_links_label
+        self.max_links_label = QLabel(self.layoutWidgetYTD)
+
+        self.max_links_horizontalLayout.addWidget(self.max_links_label)
+        # max_links_spinBox
+        self.max_links_spinBox = QSpinBox(self.layoutWidgetYTD)
+        self.max_links_spinBox.setMinimum(1)
+        self.max_links_spinBox.setMaximum(16)
+        self.max_links_horizontalLayout.addWidget(self.max_links_spinBox)
+        self.youtube_verticalLayout.addLayout(self.max_links_horizontalLayout)
+
+        self.youtube_dl_path_horizontalLayout = QHBoxLayout()
+
+        self.youtube_frame = QFrame(self.youtube_tab)
+        self.youtube_frame.setLayout(self.youtube_verticalLayout)
+
+        self.youtube_layout.addWidget(self.youtube_frame)
+
+        self.setting_tabWidget.addTab(self.youtube_tab, "")
+
+
 # defaults_pushButton
         self.defaults_pushButton = QPushButton(self)
         self.horizontalLayout.addWidget(self.defaults_pushButton)
@@ -456,6 +500,17 @@ class Setting_Ui(QWidget):
         self.setting_tabWidget.setTabText(
             self.setting_tabWidget.indexOf(self.columns_tab), "Columns customization")
 
+# Youtube options tab
+        self.setting_tabWidget.setTabText(self.setting_tabWidget.indexOf(
+            self.youtube_tab),  "Youtube Options")
+
+        self.enable_ytd_checkbox.setText('Enable Youtube Downloader')
+
+        self.hide_no_audio_checkbox.setText('Hide videos with no audio')
+
+        self.hide_no_video_checkbox.setText('Hide audios with no video')
+        self.max_links_label.setText('Maximum number of links to capture :<br/>'
+                                     '<small>(If browser sends multiple video links at a time)</small>')
 
 # window buttons
         self.defaults_pushButton.setText("Defaults")

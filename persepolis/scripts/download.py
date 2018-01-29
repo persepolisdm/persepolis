@@ -88,7 +88,9 @@ def startAria():
 
         NO_WINDOW = 0x08000000
 
-
+        if not os.path.exists(aria2d):
+            logger.sendToLog("Aria2 is not exists in current path !", "ERROR")
+            return None
         # aria2 command in windows
         subprocess.Popen([aria2d, '--no-conf', '--enable-rpc', '--rpc-listen-port=' + str(port),
                           '--rpc-max-request-size=2M', '--rpc-listen-all', '--quiet=true'], shell=False, creationflags=NO_WINDOW)
@@ -532,8 +534,8 @@ def downloadCompleteAction(parent, path, download_path, file_name, file_size):
         if free_space >= file_size:
             # move the file to the download folder
             try:
-                shutil.copy(str(path) ,str(file_path) )
-                os.remove(path)
+                # use shutil.copy instead of the default copy2
+                shutil.move(str(path) ,str(file_path) ,shutil.copy )
 
             except:
                 logger.sendToLog('Persepolis can not move file', "ERROR")
@@ -550,8 +552,7 @@ def downloadCompleteAction(parent, path, download_path, file_name, file_size):
     else:
         # move the file to the download folder
         try:
-            shutil.copy(str(path) ,str(file_path) )
-            os.remove(path)
+            shutil.move(str(path) ,str(file_path) ,shutil.copy )
 
         except:
             logger.sendToLog('Persepolis can not move file', "ERROR")

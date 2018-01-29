@@ -80,8 +80,6 @@ class AddLinkWindow(AddLinkWindow_Ui):
         self.download_later_pushButton.setEnabled(False)
         self.link_lineEdit.textChanged.connect(self.linkLineChanged)
 
-        self.options_pushButton.clicked.connect(self.optionsButtonClicked)
-
         # if browsers plugin didn't send any links
         # then check clipboard for link!
         if ('link' in self.plugin_add_link_dictionary.keys()):
@@ -179,34 +177,13 @@ class AddLinkWindow(AddLinkWindow_Ui):
 
 # set window size and position
         size = self.persepolis_setting.value(
-            'AddLinkWindow/size', QSize(520, 265))
+            'AddLinkWindow/size', QSize(520, 425))
         position = self.persepolis_setting.value(
             'AddLinkWindow/position', QPoint(300, 300))
         self.resize(size)
         self.move(position)
 
-        self.minimum_height = self.height()
 
-        # this variable will change to True if options_pushButton is clicked.
-        self.options_pushButton_clicked = False
-
-# more options widgets list
-        self.more_options_widgets = [self.proxy_checkBox, self.detect_proxy_pushButton, self.proxy_frame, self.download_checkBox,
-                                    self.download_frame, self.folder_frame, self.start_checkBox,self.start_frame, self.end_checkBox,
-                                    self.end_frame, self.limit_checkBox, self.limit_frame, self.connections_frame] 
-        # hide more_options_widgets
-        for widgets in self.more_options_widgets:
-            widgets.hide()
-
-
-
-# hide and show more options
-
-    def resizeEvent(self, event):
-        height = int(self.height())
-#         if height < self.minimum_height:
-        if not(self.options_pushButton_clicked):
-            self.minimum_height = height
 
 # detect system proxy setting, and set ip_lineEdit and port_spinBox
     def detectProxy(self, button):
@@ -232,35 +209,6 @@ class AddLinkWindow(AddLinkWindow_Ui):
         else:
             self.proxy_checkBox.setChecked(False)
             self.detect_proxy_label.setText('No proxy detected!')
-
-
-
-# Show more options 
-    def optionsButtonClicked(self, button):
-
-        if self.options_pushButton.text() == 'Show more options' or self.options_pushButton.text() == '&Show more options':
-            self.options_pushButton.setText('Hide options')
-            
-            self.options_pushButton_clicked = True
-            #unhide more_options_widgets
-            for widgets in self.more_options_widgets:
-                widgets.show()
-
-            self.layout().setSizeConstraint(QtWidgets.QLayout.SetFixedSize)
-        else:
-            self.options_pushButton.setText('Show more options')
-
-            self.options_pushButton_clicked = False
-
-            #hide more_options_widgets
-            for widgets in self.more_options_widgets:
-                widgets.hide()
-
-            self.layout().setSizeConstraint(QtWidgets.QLayout.SetDefaultConstraint)
-            self.setMinimumSize(QSize(self.width() , self.minimum_height))
-            self.resize(QSize(self.width() , self.minimum_height))
-            
-            
 
 
 # active frames if checkBoxes are checked
@@ -476,10 +424,6 @@ class AddLinkWindow(AddLinkWindow_Ui):
 
 # save size and position of window, when user closes the window.
     def closeEvent(self, event):
-        self.layout().setSizeConstraint(QtWidgets.QLayout.SetDefaultConstraint)
-        self.setMinimumSize(QSize(self.width() , self.minimum_height))
-        self.resize(QSize(self.width() , self.minimum_height))
- 
         self.persepolis_setting.setValue('AddLinkWindow/size', self.size())
         self.persepolis_setting.setValue('AddLinkWindow/position', self.pos())
         self.persepolis_setting.sync()
