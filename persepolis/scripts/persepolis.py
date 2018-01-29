@@ -103,9 +103,9 @@ if lock_file_validation:
             logger.sendToLog('setproctitle is not installed!', "ERROR")
  
 
-from PyQt5.QtWidgets import QApplication  
+from PyQt5.QtWidgets import QApplication, QStyleFactory  
 from PyQt5.QtGui import QFont   
-from PyQt5.QtCore import QCoreApplication, QSettings
+from PyQt5.QtCore import QCoreApplication, QSettings, Qt
 from persepolis.gui.palettes import DarkRedPallete, DarkBluePallete, ArcDarkRedPallete, ArcDarkBluePallete, LightRedPallete, LightBluePallete
 from persepolis.scripts.bubble import notifySend
 from persepolis.scripts.error_window import ErrorWindow
@@ -369,6 +369,11 @@ def main():
         # see palettes.py and setting.py
 
         persepolis_download_manager = PersepolisApplication(sys.argv)
+
+        # Enable High DPI display with PyQt5
+        persepolis_download_manager.setAttribute(Qt.AA_EnableHighDpiScaling)
+        if hasattr(QStyleFactory, 'AA_UseHighDpiPixmaps'):
+            persepolis_download_manager.setAttribute(Qt.AA_UseHighDpiPixmaps)
 
         # set organization name and domain and apllication name
         QCoreApplication.setOrganizationName('persepolis_download_manager')
