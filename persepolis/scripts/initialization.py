@@ -152,6 +152,13 @@ for key in default_setting_dict.keys():
     setting_value = persepolis_setting.value(key, default_setting_dict[key])
     persepolis_setting.setValue(key, setting_value)
 
+# Check that mount point is available of not!
+if not(os.path.ismount(persepolis_setting.value('download_path_temp'))):
+    persepolis_setting.setValue('download_path_temp', default_setting_dict['download_path_temp'])
+
+if not(os.path.ismount(persepolis_setting.value('download_path'))):
+    persepolis_setting.setValue('download_path', default_setting_dict['download_path'])
+
 persepolis_setting.sync()
 
 # this section  creates temporary download folder and download folder and
