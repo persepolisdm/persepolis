@@ -71,6 +71,8 @@ class ProgressWindow_Ui(QWidget):
 # options_tab
         self.options_tab = QWidget()
         options_tab_horizontalLayout = QHBoxLayout(self.options_tab)
+        options_tab_horizontalLayout.setContentsMargins(11, 11, 11, 11)
+
         
 # limit_checkBox
         self.limit_checkBox = QCheckBox(self.options_tab)
@@ -106,6 +108,9 @@ class ProgressWindow_Ui(QWidget):
 
         limit_verticalLayout.addWidget(self.limit_frame)
 
+        limit_verticalLayout.setContentsMargins(11, 11, 11, 11)
+
+
         options_tab_horizontalLayout.addLayout(limit_verticalLayout)
 
 # after_checkBox
@@ -121,6 +126,8 @@ class ProgressWindow_Ui(QWidget):
 
         after_frame_verticalLayout = QVBoxLayout(self.after_frame)
 
+
+
 # after_comboBox
         self.after_comboBox = QComboBox(self.options_tab)
         self.after_comboBox.addItem("")
@@ -133,6 +140,7 @@ class ProgressWindow_Ui(QWidget):
 
         after_verticalLayout.addWidget(self.after_frame)
 
+        after_verticalLayout.setContentsMargins(11, 11, 11, 11)
         options_tab_horizontalLayout.addLayout(after_verticalLayout)
 
         self.progress_tabWidget.addTab(self.options_tab, "")
