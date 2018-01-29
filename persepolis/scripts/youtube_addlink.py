@@ -48,13 +48,16 @@ class YoutubeAddLink(AddLinkWindow):
 
         # Select format horizontal layout
         select_format_hl = QHBoxLayout()
+
         # Selection Label
         select_format_label = QLabel(self.link_frame)
         select_format_hl.addWidget(select_format_label)
+
         # Selection combobox
         self.media_combo = QComboBox(self.link_frame)
         self.media_combo.setMinimumWidth(200)
         select_format_hl.addWidget(self.media_combo)
+
         # Duration label
         self.duration_label = QLabel(self.link_frame)
         select_format_hl.addWidget(self.duration_label)
@@ -78,7 +81,7 @@ class YoutubeAddLink(AddLinkWindow):
 
         self.url_submit_button.clicked.connect(self.submit_clicked)
         self.media_combo.currentIndexChanged.connect(self.media_selection_changed)
-#         self.link_lineEdit.textChanged.disconnect(super().linkLineChanged)  # Should be disconnected.
+        self.link_lineEdit.textChanged.disconnect(super().linkLineChanged)  # Should be disconnected.
         self.link_lineEdit.textChanged.connect(self.linkLineChangedHere)
 
         self.setMinimumSize(500, 400)
@@ -89,7 +92,6 @@ class YoutubeAddLink(AddLinkWindow):
         if 'link' in video_dict.keys() and video_dict['link']:
             self.link_lineEdit.setText(video_dict['link'])
             self.url_submit_button.setEnabled(True)
-            self.submit_clicked()
         else:
             # check clipboard
             clipboard = QApplication.clipboard()
@@ -100,11 +102,10 @@ class YoutubeAddLink(AddLinkWindow):
             self.url_submit_button.setEnabled(True)
 
     # Define native slots
-
     def url_changed(self, value):
         if ' ' in value or value == '':
             self.url_submit_button.setEnabled(False)
-            self.url_submit_button.setToolTip('Please enter a valid youtube video link')
+            self.url_submit_button.setToolTip('Please enter a valid video link')
         else:
             self.url_submit_button.setEnabled(True)
             self.url_submit_button.setToolTip('')

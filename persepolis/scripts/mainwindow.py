@@ -1783,15 +1783,31 @@ class MainWindow(MainWindow_Ui):
 
         # notify that job is done!and new links can be received form plugins_db 
         plugin_links_checked = True
-        # Capture youtube media as per setting.
+
+        # Capture youtube,... media as per setting.
         if self.persepolis_setting.value('youtube/enable', 'yes') == 'yes':
             not_youtube_links = []  # Store non-youtube links to process normally.
-            try:
-                max_links = int(self.persepolis_setting.value('youtube/max_links', 5))
-            except:
-                max_links = 5
+
+            # get maximum of youtube,... link from persepolis_setting
+            max_links = int(self.persepolis_setting.value('youtube/max_links', 3))
+
+            # add yourfavorite site in this list
+            # please don't add porn sites!
+            supported_sites_list = ['youtube.com/watch']
+
+                   
+
             for link in list_of_links:
-                if max_links and 'youtube.com/watch' in link['link']:
+                # if link is on of supported_sites_list member then change 
+                # youtube_dl_supported to True value.
+                youtube_dl_supported = False 
+                for supported_site in supported_sites_list:
+                    if supported_site in link['link']:
+                        youtube_dl_supported = True
+                        break
+ 
+                # if link is on of supported_sites_list member, the open youtube_addlink_window
+                if max_links and youtube_dl_supported:
                     max_links = max_links - 1
                     youtube_addlink_window = YoutubeAddLink(self, self.callBack, self.persepolis_setting, link)
                     self.addlinkwindows_list.append(youtube_addlink_window)
@@ -1799,10 +1815,14 @@ class MainWindow(MainWindow_Ui):
                     youtube_addlink_window.raise_()
                     youtube_addlink_window.activateWindow()
                 else:
+                    # if link is not on of supported_sites_list then add it to not_youtube_links
                     not_youtube_links.append(link)
-            list_of_links = not_youtube_links  # Yes, youtube links also will stay here, those coming after specified max.
 
-        if len(list_of_links) == 1:  # It means we have only one link in list_of_links
+            # youtube links also will stay here, those coming after specified max.
+            list_of_links = not_youtube_links  
+
+        # It means we have only one link in list_of_links
+        if len(list_of_links) == 1:  
 
             # this line calls pluginAddLink method and send a dictionary that contains
             # link information
