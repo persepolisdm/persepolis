@@ -20,6 +20,7 @@ from PyQt5.QtWidgets import QTabWidget, QDateTimeEdit, QDoubleSpinBox, QPushButt
 from PyQt5.QtGui import QIcon
 from persepolis.gui import icons_resource
 from PyQt5.QtCore import QTranslator, QCoreApplication
+import pkg_resources
 
 
 
