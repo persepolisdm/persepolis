@@ -353,8 +353,8 @@ class MainWindow_Ui(QMainWindow):
         self.download_table.setColumnHidden(8, True)
         self.download_table.setColumnHidden(9, True)
 
-        download_table_header = ['File Name', 'Status', 'Size', 'Downloaded', 'Percentage', 'Connections',
-                                 'Transfer rate', 'Estimate time left', 'Gid', 'Link', 'First try date', 'Last try date', 'Category']
+        download_table_header = [QCoreApplication.translate("mainwindow_ui_tr", 'File Name', 'Status', 'Size', 'Downloaded', 'Percentage', 'Connections',
+                                 'Transfer rate', 'Estimate time left', 'Gid', 'Link', 'First try date', 'Last try date', 'Category')]
         self.download_table.setHorizontalHeaderLabels(download_table_header)
 
 # fixing the size of download_table when window is Maximized!
