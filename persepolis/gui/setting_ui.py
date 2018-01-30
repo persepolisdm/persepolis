@@ -221,7 +221,17 @@ class Setting_Ui(QWidget):
         self.horizontalLayout_8.addWidget(self.style_comboBox)
 
         self.verticalLayout_3.addLayout(self.horizontalLayout_8)
+        self.horizontalLayout_7 = QHBoxLayout()        
+# language_combox
+        self.lang_label = QLabel(self.layoutWidget3)
+        self.horizontalLayout_7.addWidget(self.lang_label)
+        self.lang_comboBox = QComboBox(self.layoutWidget3)
+        self.horizontalLayout_7.addWidget(self.lang_comboBox)
+
+# language_label
+        self.verticalLayout_3.addLayout(self.horizontalLayout_7)
         self.horizontalLayout_7 = QHBoxLayout()
+        self.lang_label.setText("language :")
 # color_label
         self.color_label = QLabel(self.layoutWidget3)
         self.horizontalLayout_7.addWidget(self.color_label)
