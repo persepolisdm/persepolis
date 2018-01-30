@@ -19,6 +19,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import QCheckBox, QProgressBar, QFrame, QDoubleSpinBox, QComboBox, QWidget, QTabWidget, QVBoxLayout, QHBoxLayout, QPushButton, QLabel, QWidget, QSizePolicy
 from PyQt5.QtGui import QIcon
 from PyQt5.QtCore import QTranslator, QCoreApplication
+import pkg_resources
 
 
 class ProgressWindow_Ui(QWidget):
