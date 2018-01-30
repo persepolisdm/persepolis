@@ -28,14 +28,14 @@ class AddLinkWindow_Ui(QWidget):
         super().__init__()
         self.persepolis_setting = persepolis_setting
         
-        # add support for other languages
-        # a) detect current value of locale in persepolis config file
+# add support for other languages
+# a) detect current value of locale in persepolis config file
         if str(self.persepolis_setting.value('settings/locale')) in (-1, 'en_US'):
             locale_dir = ''
         else:
             locale_dir = 'locales/' + str(self.persepolis_setting.value('settings/locale')) + '/ui.qm'
         locale_path = pkg_resources.resource_filename(__name__, locale_dir)
-        # b) set translator to Qtranslator
+# b) set translator to Qtranslator
         self.translator = QTranslator()
         self.translator.load(locale_path)
         QCoreApplication.installTranslator(self.translator)
