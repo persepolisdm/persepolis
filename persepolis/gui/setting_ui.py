@@ -232,7 +232,7 @@ class Setting_Ui(QWidget):
 # language_label
         self.verticalLayout_3.addLayout(self.horizontalLayout_7)
         self.horizontalLayout_7 = QHBoxLayout()
-        self.lang_label.setText("language :")
+        self.lang_label.setText(QCoreApplication.translate("setting_ui_tr", "language :"))
 # color_label
         self.color_label = QLabel(self.layoutWidget3)
         self.horizontalLayout_7.addWidget(self.color_label)
