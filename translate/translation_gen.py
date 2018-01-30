@@ -19,4 +19,4 @@ def function(locale):
                 copy.write(line.replace('LOCALE', locale))
 
     subprocess.call(['pylupdate5', '-tr-function', 'ui_tr', translation_files])
-function("fa_IR")
+function("PUT_LOCALE_CODE_HERE")
