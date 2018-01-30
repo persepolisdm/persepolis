@@ -120,6 +120,6 @@ class AboutWindow_Ui(QWidget):
             "<a href=https://telegram.me/persepolisdm>https://telegram.me/persepolisdm</a>"))
         self.twitter_label.setText(QCoreApplication.translate("about_ui_tr", 
             "<a href=https://twitter.com/persepolisdm>https://twitter.com/persepolisdm</a>"))
-        self.pushButton.setText(QCoreApplication.translate("about_ui_tr", "Ok")
+        self.pushButton.setText(QCoreApplication.translate("about_ui_tr", "Ok"))
 
 
