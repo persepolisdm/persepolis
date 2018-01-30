@@ -106,7 +106,16 @@ class PreferencesWindow(Setting_Ui):
             str(self.persepolis_setting.value('style')))
         if current_style_index != -1:
             self.style_comboBox.setCurrentIndex(current_style_index)
+# available language
+        available_language = ['en_US' , 'fa_IR']
+        for lang in available_language:
+            self.lang_comboBox.addItem(lang)
 
+        current_locale = self.lang_comboBox.findText(
+            str(self.persepolis_setting.value('locale')))
+        if current_locale != -1:
+            self.lang_comboBox.setCurrentIndex(current_locale)
+        print(self.persepolis_setting.value('locale'))
 # set color_scheme
         color_scheme = ['System', 'Persepolis Dark Red', 'Persepolis Dark Blue', 'Persepolis ArcDark Red',
                         'Persepolis ArcDark Blue', 'Persepolis Light Red', 'Persepolis Light Blue']
@@ -487,6 +496,10 @@ class PreferencesWindow(Setting_Ui):
         current_style_index = self.style_comboBox.findText(
             str(self.setting_dict['style']))
         self.style_comboBox.setCurrentIndex(current_style_index)
+# set language
+        current_locale = self.lang_comboBox.findText(
+            str(self.setting_dict['locale']))
+        self.lang_comboBox.setCurrentIndex(current_locale)
 # set color_scheme
         current_color_index = self.color_comboBox.findText(
             str(self.setting_dict['color-scheme']))
@@ -616,6 +629,10 @@ class PreferencesWindow(Setting_Ui):
 # style
         style = str(self.style_comboBox.currentText())
         self.persepolis_setting.setValue('style', style)
+
+# language
+        locale = str(self.lang_comboBox.currentText())
+        self.persepolis_setting.setValue('locale', locale)
 
 # color_scheme
         color_scheme = self.color_comboBox.currentText()
