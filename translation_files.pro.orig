@@ -12,5 +12,5 @@ SOURCES +=  persepolis/gui/about_ui.py \
             persepolis/gui/progress_ui.py \
             persepolis/gui/setting_ui.py \
             persepolis/gui/text_queue_ui.py
-TRANSLATIONS += persepolis/gui/locales/LOCALE/ui.ts
+TRANSLATIONS += persepolis/translate/locales/LOCALE/ui.ts
 
