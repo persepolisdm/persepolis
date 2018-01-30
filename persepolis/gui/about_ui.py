@@ -17,7 +17,7 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import QWidget
 from PyQt5.QtGui import QIcon
-from PyQt5.QtCore import QSize, QPoint
+from PyQt5.QtCore import QSize, QPoint, QTranslator, QCoreApplication
 from persepolis.gui import icons_resource
 
 
@@ -26,6 +26,18 @@ class AboutWindow_Ui(QWidget):
         super().__init__()
 
         self.persepolis_setting = persepolis_setting
+
+        # add support for other languages
+        # -a detect current value of locale in persepolis config file
+        if str(self.persepolis_setting.value('settings/locale')) in (-1, 'en_US'):
+            locale_dir = ''
+        else:
+            locale_dir = 'locales/' + str(self.persepolis_setting.value('settings/locale')) + '/ui.qm'
+        locale_path = pkg_resources.resource_filename(__name__, locale_dir)
+        # -b set translator to Qtranslator
+        self.translator = QTranslator()
+        self.translator.load(locale_path)
+        QCoreApplication.installTranslator(self.translator)
 
         icons = ':/' + \
             str(self.persepolis_setting.value('settings/icons')) + '/'
@@ -97,17 +109,17 @@ class AboutWindow_Ui(QWidget):
 
         QtCore.QMetaObject.connectSlotsByName(self)
 
-        self.setWindowTitle("About Persepolis")
-        self.title_label.setText("Persepolis Download Manager")
-        self.version_label.setText("Version 3.0.1")
-        self.name_label.setText(
-            "\nAliReza AmirSamimi\nMohammadreza Abdollahzadeh\nSadegh Alirezaie\nMostafa Asadi\nMohammadAmin Vahedinia\nJafar Akhondali")
-        self.site2_label.setText(
-            "<a href=https://persepolisdm.github.io>https://persepolisdm.github.io</a>")
-        self.telegram_label.setText(
-            "<a href=https://telegram.me/persepolisdm>https://telegram.me/persepolisdm</a>")
-        self.twitter_label.setText(
-            "<a href=https://twitter.com/persepolisdm>https://twitter.com/persepolisdm</a>")
-        self.pushButton.setText("Ok")
+        self.setWindowTitle(QCoreApplication.translate("about_ui_tr", "About Persepolis"))
+        self.title_label.setText(QCoreApplication.translate("about_ui_tr", "Persepolis Download Manager"))
+        self.version_label.setText(QCoreApplication.translate("about_ui_tr", "Version 3.0.1"))
+        self.name_label.setText(QCoreApplication.translate("about_ui_tr", 
+            "\nAliReza AmirSamimi\nMohammadreza Abdollahzadeh\nSadegh Alirezaie\nMostafa Asadi\nMohammadAmin Vahedinia\nJafar Akhondali"))
+        self.site2_label.setText(QCoreApplication.translate("about_ui_tr", 
+            "<a href=https://persepolisdm.github.io>https://persepolisdm.github.io</a>"))
+        self.telegram_label.setText(QCoreApplication.translate("about_ui_tr", 
+            "<a href=https://telegram.me/persepolisdm>https://telegram.me/persepolisdm</a>"))
+        self.twitter_label.setText(QCoreApplication.translate("about_ui_tr", 
+            "<a href=https://twitter.com/persepolisdm>https://twitter.com/persepolisdm</a>"))
+        self.pushButton.setText(QCoreApplication.translate("about_ui_tr", "Ok")
 
 
