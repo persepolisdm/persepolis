@@ -518,7 +518,7 @@ class Setting_Ui(QWidget):
         self.column4_checkBox.setText(QCoreApplication.translate("setting_ui_tr", 'Percentage'))
         self.column5_checkBox.setText(QCoreApplication.translate("setting_ui_tr", 'Connections'))
         self.column6_checkBox.setText(QCoreApplication.translate("setting_ui_tr", 'Transfer rate'))
-        self.column7_checkBox.setText(QCoreApplication.translate("setting_ui_tr", 'Estimate time left'))
+        self.column7_checkBox.setText(QCoreApplication.translate("setting_ui_tr", 'Estimated time left'))
         self.column10_checkBox.setText(QCoreApplication.translate("setting_ui_tr", 'First try date'))
         self.column11_checkBox.setText(QCoreApplication.translate("setting_ui_tr", 'Last try date'))
         self.column12_checkBox.setText(QCoreApplication.translate("setting_ui_tr", 'Category'))

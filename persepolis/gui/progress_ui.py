@@ -194,7 +194,7 @@ class ProgressWindow_Ui(QWidget):
         self.status_label.setText(QCoreApplication.translate("progress_ui_tr", "Status : "))
         self.downloaded_label.setText(QCoreApplication.translate("progress_ui_tr", "Downloaded :"))
         self.rate_label.setText(QCoreApplication.translate("progress_ui_tr", "Transfer rate : "))
-        self.time_label.setText(QCoreApplication.translate("progress_ui_tr", "Estimate time left :"))
+        self.time_label.setText(QCoreApplication.translate("progress_ui_tr", "Estimated time left :"))
         self.connections_label.setText(QCoreApplication.translate("progress_ui_tr", "Number of connections : "))
         self.progress_tabWidget.setTabText(self.progress_tabWidget.indexOf(
             self.information_tab),  QCoreApplication.translate("progress_ui_tr",  "Download information"))

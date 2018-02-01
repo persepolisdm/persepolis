@@ -437,9 +437,9 @@ class AddLinkWindow_Ui(QWidget):
             self.more_options_tab), QCoreApplication.translate("addlink_ui_tr", "More Options"))
 
         self.add_link_tabWidget.setTabText(self.add_link_tabWidget.indexOf(
-            self.advance_options_tab), QCoreApplication.translate("addlink_ui_tr", "Advance Options"))
+            self.advance_options_tab), QCoreApplication.translate("addlink_ui_tr", "Advanced Options"))
 
-        self.referer_label.setText(QCoreApplication.translate("addlink_ui_tr", 'Referer: '))
+        self.referer_label.setText(QCoreApplication.translate("addlink_ui_tr", 'Referrer: '))
 
         self.header_label.setText(QCoreApplication.translate("addlink_ui_tr", 'Header: '))
 
