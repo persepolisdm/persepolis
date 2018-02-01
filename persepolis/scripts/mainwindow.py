@@ -18,7 +18,7 @@ import sys
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import QAbstractItemView, QAction, QFileDialog, QSystemTrayIcon, QMenu, QApplication, QInputDialog, QMessageBox
 from PyQt5.QtGui import QIcon, QStandardItem, QCursor
-from PyQt5.QtCore import QTime, QCoreApplication, QRect, QSize, QPoint, QThread, pyqtSignal, Qt
+from PyQt5.QtCore import QTime, QCoreApplication, QRect, QSize, QPoint, QThread, pyqtSignal, Qt, QTranslator
 import os
 import time
 from time import sleep
@@ -42,6 +42,7 @@ from persepolis.scripts import osCommands
 from persepolis.scripts import logger
 from persepolis.scripts.freespace import freeSpace
 import platform
+import pkg_resources
 from copy import deepcopy
 from persepolis.scripts.shutdown import shutDown
 from persepolis.scripts.update import checkupdate
@@ -785,6 +786,18 @@ class MainWindow(MainWindow_Ui):
         global icons
         icons = ':/' + \
             str(self.persepolis_setting.value('settings/icons')) + '/'
+# add support for other languages
+# a) detect current value of locale in persepolis config file
+        if str(self.persepolis_setting.value('settings/locale')) in (-1, 'en_US'):
+            locale_dir = ''
+        else:
+            locale_dir = 'locales/' + str(self.persepolis_setting.value('settings/locale')) + '/ui.qm'
+        locale_path = pkg_resources.resource_filename(__name__, locale_dir)
+# b) set translator to Qtranslator
+        self.translator = QTranslator()
+        self.translator.load(locale_path)
+        QCoreApplication.installTranslator(self.translator)
+
 
         # find temp_download_folder
         global temp_download_folder
@@ -3624,10 +3637,10 @@ class MainWindow(MainWindow_Ui):
         # check if user checked selection mode
         if self.multi_items_selected:
             self.download_table.sendMenu = self.download_table.tablewidget_menu.addMenu(
-                'Send selected downloads to')
+                QCoreApplication.translate("mainwindow_src_ui_tr", 'Send selected downloads to'))
         else:
             self.download_table.sendMenu = self.download_table.tablewidget_menu.addMenu(
-                'Send to')
+                QCoreApplication.translate("mainwindow_src_ui_tr", 'Send to'))
 
 
         # get categories list from data base
@@ -3758,7 +3771,7 @@ class MainWindow(MainWindow_Ui):
             self.moveDownSelectedAction.setEnabled(False)
 
         # add sortMenu to download_table context menu
-        sortMenu = self.download_table.tablewidget_menu.addMenu('Sort by')
+        sortMenu = self.download_table.tablewidget_menu.addMenu(QCoreApplication.translate("mainwindow_src_ui_tr", 'Sort by'))
         sortMenu.addAction(self.sort_file_name_Action)
 
         sortMenu.addAction(self.sort_file_size_Action)
