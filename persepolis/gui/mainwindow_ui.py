@@ -84,8 +84,6 @@ class MenuWidget(QPushButton):
 
         downloadMenu.addAction(self.parent.stopAction)
 
-        downloadMenu.addAction(self.parent.removeAction)
-
         downloadMenu.addAction(self.parent.propertiesAction)
 
         downloadMenu.addAction(self.parent.progressAction)
@@ -94,17 +92,11 @@ class MenuWidget(QPushButton):
 
         fileMenu.addAction(self.parent.openDownloadFolderAction)
 
-        fileMenu.addAction(self.parent.deleteFileAction)
-
         fileMenu.addAction(self.parent.openDefaultDownloadFolderAction)
 
         fileMenu.addAction(self.parent.exitAction)
 
         editMenu.addAction(self.parent.clearAction)
-
-        editMenu.addAction(self.parent.selectAction)
-
-        editMenu.addAction(self.parent.selectAllAction)
 
         editMenu.addAction(self.parent.removeSelectedAction)
 
@@ -117,10 +109,6 @@ class MenuWidget(QPushButton):
         queueMenu.addAction(self.parent.startQueueAction)
 
         queueMenu.addAction(self.parent.stopQueueAction)
-
-        queueMenu.addAction(self.parent.moveUpAction)
-
-        queueMenu.addAction(self.parent.moveDownAction)
 
         queueMenu.addAction(self.parent.moveUpSelectedAction)
 
@@ -469,10 +457,6 @@ class MainWindow_Ui(QMainWindow):
                                   statusTip="Stop/Cancel Download", triggered=self.stopButtonPressed)
         downloadMenu.addAction(self.stopAction)
 
-        self.removeAction = QAction(QIcon(icons + 'remove'), 'Remove Download', self,
-                                    shortcut="Ctrl+D", statusTip="Remove Download", triggered=self.removeButtonPressed)
-        downloadMenu.addAction(self.removeAction)
-
         self.propertiesAction = QAction(QIcon(icons + 'setting'), 'Properties', self,
                                         shortcut="Ctrl+P", statusTip="Properties", triggered=self.propertiesButtonPressed)
         downloadMenu.addAction(self.propertiesAction)
@@ -489,10 +473,6 @@ class MainWindow_Ui(QMainWindow):
             icons + 'folder'), 'Open download folder', self, statusTip='Open download folder', triggered=self.openDownloadFolder)
         fileMenu.addAction(self.openDownloadFolderAction)
 
-        self.deleteFileAction = QAction(QIcon(
-            icons + 'trash'), 'Delete file', self, statusTip='Delete file', triggered=self.deleteFile)
-        fileMenu.addAction(self.deleteFileAction)
-
         self.openDefaultDownloadFolderAction = QAction(QIcon(
             icons + 'folder'), 'Open default download folder', self, statusTip='Open default download folder', triggered=self.openDefaultDownloadFolder)
         fileMenu.addAction(self.openDefaultDownloadFolderAction)
@@ -505,23 +485,12 @@ class MainWindow_Ui(QMainWindow):
                                          self, statusTip='Clear all items in download list', triggered=self.clearDownloadList)
         editMenu.addAction(self.clearAction)
 
-
-        self.selectAction = QAction('Select multiple items ', self,
-                                    statusTip='Select multiple items', triggered=self.selectDownloads)
-        self.selectAction.setCheckable(True)
-        editMenu.addAction(self.selectAction)
-
-        self.selectAllAction = QAction(QIcon(
-            icons + 'select_all'), 'Select All', self, statusTip='Select All', triggered=self.selectAll)
-        editMenu.addAction(self.selectAllAction)
-        self.selectAllAction.setEnabled(False)
-
-        self.removeSelectedAction = QAction(QIcon(icons + 'multi_remove'), 'Remove selected downloads form list',
+        self.removeSelectedAction = QAction(QIcon(icons + 'remove'), 'Remove selected downloads form list',
                                             self, statusTip='Remove selected downloads form list', triggered=self.removeSelected)
         editMenu.addAction(self.removeSelectedAction)
         self.removeSelectedAction.setEnabled(False)
 
-        self.deleteSelectedAction = QAction(QIcon(icons + 'multi_trash'), 'Delete selected download files',
+        self.deleteSelectedAction = QAction(QIcon(icons + 'trash'), 'Delete selected download files',
                                             self, statusTip='Delete selected download files', triggered=self.deleteSelected)
         editMenu.addAction(self.deleteSelectedAction)
         self.deleteSelectedAction.setEnabled(False)
@@ -541,14 +510,6 @@ class MainWindow_Ui(QMainWindow):
         self.stopQueueAction = QAction(QIcon(
             icons + 'stop_queue'), 'Stop this queue', self, statusTip='Stop this queue', triggered=self.stopQueue)
         queueMenu.addAction(self.stopQueueAction)
-
-        self.moveUpAction = QAction(QIcon(icons + 'up'), 'Move up this item', self,
-                                    statusTip='Move currently selected item up by one row', triggered=self.moveUp)
-        queueMenu.addAction(self.moveUpAction)
-
-        self.moveDownAction = QAction(QIcon(icons + 'down'), 'Move down this item', self,
-                                      statusTip='Move currently selected item down by one row', triggered=self.moveDown)
-        queueMenu.addAction(self.moveDownAction)
 
         self.moveUpSelectedAction = QAction(QIcon(icons + 'multi_up'), 'Move up selected items', self,
                                             statusTip='Move currently selected items up by one row', triggered=self.moveUpSelected)
@@ -578,13 +539,9 @@ class MainWindow_Ui(QMainWindow):
                                    self, statusTip='Help', triggered=self.showLog)
         helpMenu.addAction(self.logAction)
 
-
-
         self.helpAction = QAction(QIcon(icons + 'about'), 'Help',
                                    self, statusTip='Help', triggered=self.persepolisHelp)
         helpMenu.addAction(self.helpAction)
-
-
 
         self.qmenu = MenuWidget(self)
 
@@ -616,7 +573,7 @@ class MainWindow_Ui(QMainWindow):
     def changeIcon(self, icons):
         icons = ':/' + str(icons) + '/'
 
-        action_icon_dict = {self.stopAllAction: 'stop_all', self.minimizeAction: 'minimize', self.addlinkAction: 'add', self.addtextfileAction: 'file', self.resumeAction: 'play', self.pauseAction: 'pause', self.stopAction: 'stop', self.removeAction: 'remove', self.propertiesAction: 'setting', self.progressAction: 'window', self.openFileAction: 'file', self.openDownloadFolderAction: 'folder', self.deleteFileAction: 'trash', self.openDefaultDownloadFolderAction: 'folder', self.exitAction: 'exit',
-                self.selectAllAction: 'select_all', self.removeSelectedAction: 'multi_remove', self.deleteSelectedAction: 'multi_trash', self.createQueueAction: 'add_queue', self.removeQueueAction: 'remove_queue', self.startQueueAction: 'start_queue', self.stopQueueAction: 'stop_queue', self.moveUpAction: 'up', self.moveDownAction: 'down', self.preferencesAction: 'preferences', self.aboutAction: 'about', self.issueAction: 'about', self.updateAction: 'about', self.youtubeAddLinkAction: 'video_finder', self.qmenu: 'menu'}
+        action_icon_dict = {self.stopAllAction: 'stop_all', self.minimizeAction: 'minimize', self.addlinkAction: 'add', self.addtextfileAction: 'file', self.resumeAction: 'play', self.pauseAction: 'pause', self.stopAction: 'stop', self.propertiesAction: 'setting', self.progressAction: 'window', self.openFileAction: 'file', self.openDownloadFolderAction: 'folder', self.openDefaultDownloadFolderAction: 'folder', self.exitAction: 'exit',
+                self.removeSelectedAction: 'multi_remove', self.deleteSelectedAction: 'multi_trash', self.createQueueAction: 'add_queue', self.removeQueueAction: 'remove_queue', self.startQueueAction: 'start_queue', self.stopQueueAction: 'stop_queue', self.preferencesAction: 'preferences', self.aboutAction: 'about', self.issueAction: 'about', self.updateAction: 'about', self.youtubeAddLinkAction: 'video_finder', self.qmenu: 'menu'}
         for key in action_icon_dict.keys():
             key.setIcon(QIcon(icons + str(action_icon_dict[key])))
