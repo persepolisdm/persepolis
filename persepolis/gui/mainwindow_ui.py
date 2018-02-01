@@ -36,21 +36,32 @@ class MenuWidget(QPushButton):
 
         icons = ':/' + \
             str(self.parent.persepolis_setting.value('settings/icons')) + '/'
+# add support for other languages
+# a) detect current value of locale in persepolis config file
+        if str(self.persepolis_setting.value('settings/locale')) in (-1, 'en_US'):
+            locale_dir = ''
+        else:
+            locale_dir = 'locales/' + str(self.persepolis_setting.value('settings/locale')) + '/ui.qm'
+        locale_path = pkg_resources.resource_filename(__name__, locale_dir)
+# b) set translator to Qtranslator
+        self.translator = QTranslator()
+        self.translator.load(locale_path)
+        QCoreApplication.installTranslator(self.translator)
 
         # creating context menu
         self.menubar = QMenu(self)
         self.setMenu(self.menubar)
         self.setIcon(QIcon(icons + 'menu'))
 
-        fileMenu = self.menubar.addMenu('File')
-        editMenu = self.menubar.addMenu('Edit')
-        viewMenu = self.menubar.addMenu('View')
-        downloadMenu = self.menubar.addMenu('Download')
-        queueMenu = self.menubar.addMenu('Queue')
-        videoFinderMenu = self.menubar.addMenu('Video Finder')
-        helpMenu = self.menubar.addMenu('Help')
+        fileMenu = self.menubar.addMenu(QCoreApplication.translate("mainwindow_ui_tr", 'File'))
+        editMenu = self.menubar.addMenu(QCoreApplication.translate("mainwindow_ui_tr", 'Edit'))
+        viewMenu = self.menubar.addMenu(QCoreApplication.translate("mainwindow_ui_tr", 'View'))
+        downloadMenu = self.menubar.addMenu(QCoreApplication.translate("mainwindow_ui_tr", 'Download'))
+        queueMenu = self.menubar.addMenu(QCoreApplication.translate("mainwindow_ui_tr", 'Queue'))
+        videoFinderMenu = self.menubar.addMenu(QCoreApplication.translate("mainwindow_ui_tr", 'Video Finder'))
+        helpMenu = self.menubar.addMenu(QCoreApplication.translate("mainwindow_ui_tr", 'Help'))
 
-        sortMenu = viewMenu.addMenu('Sort by')
+        sortMenu = viewMenu.addMenu(QCoreApplication.translate("mainwindow_ui_tr", 'Sort by'))
 
         videoFinderMenu.addAction(self.parent.youtubeAddLinkAction)
 
@@ -341,7 +352,7 @@ class MainWindow_Ui(QMainWindow):
         self.download_table.setColumnHidden(8, True)
         self.download_table.setColumnHidden(9, True)
 
-        download_table_header = [QCoreApplication.translate("mainwindow_ui_tr", 'File Name'), QCoreApplication.translate("mainwindow_ui_tr",'Status'), QCoreApplication.translate("mainwindow_ui_tr", 'Size'), QCoreApplication.translate("mainwindow_ui_tr", 'Downloaded'), QCoreApplication.translate("mainwindow_ui_tr", 'Percentage'), QCoreApplication.translate("mainwindow_ui_tr", 'Connections'),
+        download_table_header = ['File Name'), QCoreApplication.translate("mainwindow_ui_tr",'Status'), QCoreApplication.translate("mainwindow_ui_tr", 'Size'), QCoreApplication.translate("mainwindow_ui_tr", 'Downloaded'), QCoreApplication.translate("mainwindow_ui_tr", 'Percentage'), QCoreApplication.translate("mainwindow_ui_tr", 'Connections'),
                                  QCoreApplication.translate("mainwindow_ui_tr", 'Transfer rate'), QCoreApplication.translate("mainwindow_ui_tr",'Estimate time left'), QCoreApplication.translate("mainwindow_ui_tr", 'Gid'), QCoreApplication.translate("mainwindow_ui_tr",'Link'), QCoreApplication.translate("mainwindow_ui_tr", 'First try date'), QCoreApplication.translate("mainwindow_ui_tr", 'Last try date'), QCoreApplication.translate("mainwindow_ui_tr",'Category')]
         self.download_table.setHorizontalHeaderLabels(download_table_header)
 
