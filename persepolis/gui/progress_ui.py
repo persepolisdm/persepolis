@@ -21,13 +21,11 @@ from PyQt5.QtGui import QIcon
 from PyQt5.QtCore import QTranslator, QCoreApplication
 import pkg_resources
 
-
 class ProgressWindow_Ui(QWidget):
     def __init__(self, persepolis_setting):
         super().__init__()
         self.persepolis_setting = persepolis_setting
         icons = ':/' + str(persepolis_setting.value('settings/icons')) + '/'
-        
 # add support for other languages
 # a) detect current value of locale in persepolis config file
         if str(self.persepolis_setting.value('settings/locale')) in (-1, 'en_US'):
@@ -35,7 +33,7 @@ class ProgressWindow_Ui(QWidget):
         else:
             locale_dir = 'locales/' + str(self.persepolis_setting.value('settings/locale')) + '/ui.qm'
         locale_path = pkg_resources.resource_filename(__name__, locale_dir)
-# b) set translator to Qtranslator
+ # b) set translator to Qtranslator
         self.translator = QTranslator()
         self.translator.load(locale_path)
         QCoreApplication.installTranslator(self.translator)
@@ -197,11 +195,11 @@ class ProgressWindow_Ui(QWidget):
         self.time_label.setText(QCoreApplication.translate("progress_ui_tr", "Estimated time left :"))
         self.connections_label.setText(QCoreApplication.translate("progress_ui_tr", "Number of connections : "))
         self.progress_tabWidget.setTabText(self.progress_tabWidget.indexOf(
-            self.information_tab),  QCoreApplication.translate("progress_ui_tr",  "Download information"))
+            self.information_tab),  QCoreApplication.translate("progress_ui_tr", "Download information"))
         self.limit_checkBox.setText(QCoreApplication.translate("progress_ui_tr", "Limit Speed"))
         self.after_checkBox.setText(QCoreApplication.translate("progress_ui_tr", "After download"))
-        self.limit_comboBox.setItemText(0,  QCoreApplication.translate("progress_ui_tr", "KB/S"))
-        self.limit_comboBox.setItemText(1,  QCoreApplication.translate("progress_ui_tr", "MB/S"))
+        self.limit_comboBox.setItemText(0,  "KB/S")
+        self.limit_comboBox.setItemText(1,  "MB/S")
         self.limit_pushButton.setText(QCoreApplication.translate("progress_ui_tr", "Apply"))
 
         self.after_comboBox.setItemText(0,  QCoreApplication.translate("progress_ui_tr", "Shut Down"))
