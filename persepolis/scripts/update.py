@@ -57,12 +57,12 @@ class checkupdate(QWidget):
         self.client_version = '3.01'
 
         # first line text
-        self.update_label = QLabel("The newest is the best , We recommend to update Persepolis")
+        self.update_label = QLabel(QCoreApplication.translate("update_src_ui_tr", "The newest is the best , We recommend to update Persepolis"))
         self.update_label.setTextFormat(QtCore.Qt.RichText)
         self.update_label.setAlignment(QtCore.Qt.AlignCenter)
 
         # second line text
-        self.version_label = QLabel('This is Persepolis Download Manager version 3.0.1')
+        self.version_label = QLabel(QCoreApplication.translate("update_src_ui_tr", 'This is Persepolis Download Manager version 3.0.1'))
         self.version_label.setAlignment(QtCore.Qt.AlignCenter)
 
         # release link
@@ -76,7 +76,7 @@ class checkupdate(QWidget):
         self.status_label.setAlignment(QtCore.Qt.AlignCenter)
 
         # update button
-        self.check_button = QPushButton("Check for new update")
+        self.check_button = QPushButton(QCoreApplication.translate("update_src_ui_tr", "Check for new update"))
         self.check_button.clicked.connect(self.updateCheck)
 
         # verticalLayout
