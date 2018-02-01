@@ -437,15 +437,15 @@ class AddLinkWindow_Ui(QWidget):
             self.more_options_tab), QCoreApplication.translate("addlink_ui_tr", "More Options"))
 
         self.add_link_tabWidget.setTabText(self.add_link_tabWidget.indexOf(
-            self.advance_options_tab), "Advance Options")
+            self.advance_options_tab), QCoreApplication.translate("addlink_ui_tr", "Advance Options"))
 
-        self.referer_label.setText('Referer: ')
+        self.referer_label.setText(QCoreApplication.translate("addlink_ui_tr", 'Referer: '))
 
-        self.header_label.setText('Header: ')
+        self.header_label.setText(QCoreApplication.translate("addlink_ui_tr", 'Header: '))
 
-        self.load_cookies_label.setText('Load cookies: ')
+        self.load_cookies_label.setText(QCoreApplication.translate("addlink_ui_tr", 'Load cookies: '))
 
-        self.user_agent_label.setText('User agent: ')
+        self.user_agent_label.setText(QCoreApplication.translate("addlink_ui_tr", 'User agent: '))
 
     def changeIcon(self, icons):
         icons = ':/' + str(icons) + '/'

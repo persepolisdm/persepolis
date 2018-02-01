@@ -528,15 +528,15 @@ class Setting_Ui(QWidget):
 
 # Video Finder options tab
         self.setting_tabWidget.setTabText(self.setting_tabWidget.indexOf(
-            self.youtube_tab),  "Video Finder Options")
+            self.youtube_tab), QCoreApplication.translate("setting_ui_tr",  "Video Finder Options"))
 
-        self.enable_ytd_checkbox.setText('Enable Video Finder')
+        self.enable_ytd_checkbox.setText(QCoreApplication.translate("setting_ui_tr", 'Enable Video Finder'))
 
-        self.hide_no_audio_checkbox.setText('Hide videos with no audio')
+        self.hide_no_audio_checkbox.setText(QCoreApplication.translate("setting_ui_tr", 'Hide videos with no audio'))
 
-        self.hide_no_video_checkbox.setText('Hide audios with no video')
-        self.max_links_label.setText('Maximum number of links to capture :<br/>'
-                                     '<small>(If browser sends multiple video links at a time)</small>')
+        self.hide_no_video_checkbox.setText(QCoreApplication.translate("setting_ui_tr", 'Hide audios with no video'))
+        self.max_links_label.setText(QCoreApplication.translate("setting_ui_tr", 'Maximum number of links to capture :<br/>'
+                                     '<small>(If browser sends multiple video links at a time)</small>'))
 
 # window buttons
         self.defaults_pushButton.setText(QCoreApplication.translate("setting_ui_tr", "Defaults"))
