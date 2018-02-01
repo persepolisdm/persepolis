@@ -175,6 +175,22 @@ class AddLinkWindow(AddLinkWindow_Ui):
                     str(self.plugin_add_link_dictionary['out']))
                 self.change_name_checkBox.setChecked(True)
 
+        # get referer and header and user_agent and load_cookies in plugin_add_link_dictionary if exits.
+        if ('referer' in self.plugin_add_link_dictionary):
+            self.referer_lineEdit.setText(str(self.plugin_add_link_dictionary['referer']))
+
+        if ('header' in self.plugin_add_link_dictionary):
+            if str(self.plugin_add_link_dictionary['header']) != 'None':
+                self.header_lineEdit.setText(str(self.plugin_add_link_dictionary['header'])) 
+
+        if ('user_agent' in self.plugin_add_link_dictionary):
+            self.user_agent_lineEdit.setText(str(self.plugin_add_link_dictionary['user_agent']))
+
+        if ('load_cookies' in self.plugin_add_link_dictionary):
+            self.load_cookies_lineEdit.setText((self.plugin_add_link_dictionary['load_cookies']))
+
+ 
+
 # set window size and position
         size = self.persepolis_setting.value(
             'AddLinkWindow/size', QSize(520, 425))
@@ -387,28 +403,36 @@ class AddLinkWindow(AddLinkWindow_Ui):
         # get download_path
         download_path = self.download_folder_lineEdit.text()
 
-        # get referer and header and user_agent and load_cookies in plugin_add_link_dictionary if exits.
-        if not('referer' in self.plugin_add_link_dictionary):
-            self.plugin_add_link_dictionary['referer'] = None
+        # referer
+        if self.referer_lineEdit.text() != '':
+            referer = self.referer_lineEdit.text()
+        else:
+            referer = None
 
-        if not('header' in self.plugin_add_link_dictionary):
-            self.plugin_add_link_dictionary['header'] = None
+        # header
+        if self.header_lineEdit.text() != '':
+            header = self.header_lineEdit.text() 
+        else:
+            header = None
 
-        if not('user_agent' in self.plugin_add_link_dictionary):
-            self.plugin_add_link_dictionary['user_agent'] = None
+        # user_agent
+        if self.user_agent_lineEdit.text() != '': 
+            user_agent = self.user_agent_lineEdit.text()
+        else:
+            user_agent = None
 
-        if not('load_cookies' in self.plugin_add_link_dictionary):
-            self.plugin_add_link_dictionary['load_cookies'] = None
-
+        # load_cookies
+        if self.load_cookies_lineEdit.text() != '': 
+            load_cookies = self.load_cookies_lineEdit.text()
+        else:
+            load_cookies = None
         # save information in a dictionary(add_link_dictionary).
-        self.add_link_dictionary = {'out': out, 'start_time': start_time, 'end_time': end_time, 'link': link, 'ip': ip,
+        self.add_link_dictionary = {'referer': referer, 'header': header, 'user_agent': user_agent, 'load_cookies': load_cookies,
+                                    'out': out, 'start_time': start_time, 'end_time': end_time, 'link': link, 'ip': ip,
                                     'port': port, 'proxy_user': proxy_user, 'proxy_passwd': proxy_passwd, 
                                     'download_user': download_user, 'download_passwd': download_passwd,
                                     'connections': connections, 'limit_value': limit, 'download_path': download_path}
 
-        # add plugin_add_link_dictionary information to add_link_dictionary.
-        for i in self.plugin_add_link_dictionary.keys():
-            self.add_link_dictionary[i] = self.plugin_add_link_dictionary[i]
 
         # get category of download
         category = str(self.add_queue_comboBox.currentText())
