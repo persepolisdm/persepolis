@@ -418,7 +418,7 @@ class MainWindow_Ui(QMainWindow):
             QCoreApplication.translate("mainwindow_ui_tr", 'Download status'), self, triggered=self.sortByStatus)
         sortMenu.addAction(self.sort_download_status_Action)
 
-        self.trayAction = QAction(QCoreApplication.translate("mainwindow_ui_tr" 'Show system tray icon'), self,
+        self.trayAction = QAction(QCoreApplication.translate("mainwindow_ui_tr", 'Show system tray icon'), self,
                                   statusTip=QCoreApplication.translate("mainwindow_ui_tr", "Show/Hide system tray icon"), triggered=self.showTray)
         self.trayAction.setCheckable(True)
         viewMenu.addAction(self.trayAction)
