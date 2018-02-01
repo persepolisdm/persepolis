@@ -841,7 +841,7 @@ class MainWindow(MainWindow_Ui):
 
         # hide MainWindow if start_in_tray is equal to "yes"
         if start_in_tray:
-            self.minimizeAction.setText('Show main Window')
+            self.minimizeAction.setText(QCoreApplication.translate("mainwindow_src_ui_tr", 'Show main Window'))
             self.minimizeAction.setIcon(QIcon(icons + 'window'))
 
         # check user preference for showing or hiding menubar.
@@ -868,7 +868,7 @@ class MainWindow(MainWindow_Ui):
 
 
 # set message for statusbar
-        self.statusbar.showMessage('Please Wait ...')
+        self.statusbar.showMessage(QCoreApplication.translate("mainwindow_src_ui_tr", 'Please Wait ...'))
 
         self.checkSelectedRow()
 
@@ -1188,21 +1188,21 @@ class MainWindow(MainWindow_Ui):
         global aria_startup_answer
         if message == 'yes':
             sleep(0.5)
-            self.statusbar.showMessage('Ready...')
+            self.statusbar.showMessage(QCoreApplication.translate("mainwindow_src_ui_tr", 'Ready...'))
             aria_startup_answer = 'ready'
 
             self.category_tree_qwidget.setEnabled(True)
 
         elif message == 'try again':
             self.statusbar.showMessage(
-                "Aria2 didn't respond! be patient!Persepolis tries again in 2 seconds!")
+                QCoreApplication.translate("mainwindow_src_ui_tr", "Aria2 didn't respond! be patient!Persepolis tries again in 2 seconds!"))
             logger.sendToLog(
                 "Aria2 didn't respond! be patient!Persepolis tries again in 2 seconds!",
                 "WARNING")
 
         else:
-            self.statusbar.showMessage('Error...')
-            notifySend('Persepolis can not connect to Aria2', 'Check your network & Restart Persepolis',
+            self.statusbar.showMessage(QCoreApplication.translate("mainwindow_src_ui_tr", 'Error...'))
+            notifySend(QCoreApplication.translate("mainwindow_src_ui_tr", 'Persepolis can not connect to Aria2'), QCoreApplication.translate("mainwindow_src_ui_tr", 'Check your network & Restart Persepolis'),
                        10000, 'critical', systemtray=self.system_tray_icon)
             logger.sendToLog('Persepolis can not connect to Aria2', 'ERROR')
 
@@ -1215,12 +1215,12 @@ class MainWindow(MainWindow_Ui):
         # if message is not 'did not respond' , it means that reconnecting
         # Aria2 was successful.
         if message == 'did not respond':
-            self.statusbar.showMessage('Error...')
-            notifySend('Persepolis can not connect to Aria2', 'Restart Persepolis',
+            self.statusbar.showMessage(QCoreApplication.translate("mainwindow_src_ui_tr", 'Error...'))
+            notifySend(QCoreApplication.translate("mainwindow_src_ui_tr", 'Persepolis can not connect to Aria2'), QCoreApplication.translate("mainwindow_src_ui_tr", 'Restart Persepolis'),
                        10000, 'critical', systemtray=self.system_tray_icon)
             logger.sendToLog('Persepolis can not connect to Aria2', 'ERROR')
         else:
-            self.statusbar.showMessage('Reconnecting aria2...')
+            self.statusbar.showMessage(QCoreApplication.translate("mainwindow_src_ui_tr", 'Reconnecting aria2...'))
             logger.sendToLog('Reconnecting Aria2 ...', 'INFO')
 
             # get items with 'downloading' or 'waiting' status from data base and restart them.
@@ -1240,7 +1240,7 @@ class MainWindow(MainWindow_Ui):
                 download.downloadStop(gid, self)
 
             self.statusbar.showMessage(
-                'Persepolis reconnected aria2 successfully')
+                QCoreApplication.translate("mainwindow_src_ui_tr", 'Persepolis reconnected aria2 successfully'))
             logger.sendToLog('Persepolis reconnected aria2 successfully', 'INFO')
 
 # when this function is called , aria2_disconnected value is changing to
@@ -1396,12 +1396,12 @@ class MainWindow(MainWindow_Ui):
                 progress_window = self.progress_window_list[member_number]
 
                 # link
-                link = "<b>Link</b> : " + str(dict['link'])
+                link = QCoreApplication.translate("mainwindow_src_ui_tr", "<b>Link</b> : ") + str(dict['link'])
                 progress_window.link_label.setText(link)
                 progress_window.link_label.setToolTip(link)
 
                 # downloaded
-                downloaded = "<b>Downloaded</b> : " \
+                downloaded = QCoreApplication.translate("mainwindow_src_ui_tr", "<b>Downloaded</b> : ") \
                         + str(dict['downloaded_size']) \
                         + "/" \
                         + str(dict['size'])
@@ -1409,19 +1409,19 @@ class MainWindow(MainWindow_Ui):
                 progress_window.downloaded_label.setText(downloaded)
 
                 # Transfer rate
-                rate = "<b>Transfer rate</b> : " \
+                rate = QCoreApplication.translate("mainwindow_src_ui_tr", "<b>Transfer rate</b> : ") \
                     + str(dict['rate'])
 
                 progress_window.rate_label.setText(rate)
 
                 # Estimate time left
-                estimate_time_left = "<b>Estimate time left</b> : " \
+                estimate_time_left = QCoreApplication.translate("mainwindow_src_ui_tr", "<b>Estimate time left</b> : ") \
                                 + str(dict['estimate_time_left'])
 
                 progress_window.time_label.setText(estimate_time_left)
 
                 # Connections
-                connections = "<b>Connections</b> : " \
+                connections = QCoreApplication.translate("mainwindow_src_ui_tr", "<b>Connections</b> : ") \
                             + str(dict['connections'])
 
                 progress_window.connections_label.setText(connections)
@@ -1859,8 +1859,8 @@ class MainWindow(MainWindow_Ui):
 
         if exists:
             self.msgBox = QMessageBox()
-            self.msgBox.setText("<b><center>This link has been added before!\
-                    Are you sure you want to add it again?</center></b>")
+            self.msgBox.setText(QCoreApplication.translate("mainwindow_src_ui_tr", "<b><center>This link has been added before!\
+                    Are you sure you want to add it again?</center></b>"))
             self.msgBox.setStandardButtons(QMessageBox.Yes | QMessageBox.No)
             self.msgBox.setIcon(QMessageBox.Warning)
             reply = self.msgBox.exec_()
@@ -2382,18 +2382,18 @@ class MainWindow(MainWindow_Ui):
         # hide MainWindow if it's visible
         # Show MainWindow if it's hided
         if self.isVisible():
-            self.minimizeAction.setText('Show main Window')
+            self.minimizeAction.setText(QCoreApplication.translate("mainwindow_src_ui_tr", 'Show main Window'))
             self.minimizeAction.setIcon(QIcon(icons + 'window'))
             self.hide()
         else:
             self.show()
-            self.minimizeAction.setText('Minimize to system tray')
+            self.minimizeAction.setText(QCoreApplication.translate("mainwindow_src_ui_tr", 'Minimize to system tray'))
             self.minimizeAction.setIcon(QIcon(icons + 'minimize'))
 
 # showMainWindow shows main window in normal mode , see CheckingThread
     def showMainWindow(self):
         self.showNormal()
-        self.minimizeAction.setText('Minimize to system tray')
+        self.minimizeAction.setText(QCoreApplication.translate("mainwindow_src_ui_tr", 'Minimize to system tray'))
         self.minimizeAction.setIcon(QIcon(icons + 'minimize'))
 
 # stopAllDownloads stops all downloads
@@ -2644,9 +2644,9 @@ class MainWindow(MainWindow_Ui):
 
         if delete_warning_message == 'yes':
             self.msgBox = QMessageBox()
-            self.msgBox.setText("<b><center>This operation will delete \
-                    downloaded files from your hard disk<br>PERMANENTLY!</center></b>")
-            self.msgBox.setInformativeText("<center>Do you want to continue?</center>")
+            self.msgBox.setText(QCoreApplication.translate("mainwindow_src_ui_tr", "<b><center>This operation will delete \
+                    downloaded files from your hard disk<br>PERMANENTLY!</center></b>"))
+            self.msgBox.setInformativeText(QCoreApplication.translate("mainwindow_src_ui_tr", "<center>Do you want to continue?</center>"))
             self.msgBox.setStandardButtons(QMessageBox.Yes | QMessageBox.No)
             self.msgBox.setIcon(QMessageBox.Warning)
             dont_show_checkBox = QtWidgets.QCheckBox("don't show this message again")
@@ -3300,7 +3300,7 @@ class MainWindow(MainWindow_Ui):
             if answer:
                 error_messageBox = QMessageBox()
                 error_messageBox.setText(
-                    '<b>"' + queue_name + '</b>" is already existed!')
+                    '<b>"' + queue_name + QCoreApplication.translate("mainwindow_src_ui_tr", '</b>" is already existed!'))
                 error_messageBox.setWindowTitle('Error!')
                 error_messageBox.exec_()
                 return None
@@ -3793,10 +3793,10 @@ class MainWindow(MainWindow_Ui):
 
         if remove_warning_message == 'yes':
             self.remove_queue_msgBox = QMessageBox()
-            self.remove_queue_msgBox.setText('<b><center>This operation will remove \
-                    all download items in this queue<br>from "All Downloads" list!</center></b>')
+            self.remove_queue_msgBox.setText(QCoreApplication.translate("mainwindow_src_ui_tr", '<b><center>This operation will remove \
+                    all download items in this queue<br>from "All Downloads" list!</center></b>'))
 
-            self.remove_queue_msgBox.setInformativeText("<center>Do you want to continue?</center>")
+            self.remove_queue_msgBox.setInformativeText(QCoreApplication.translate("mainwindow_src_ui_tr", "<center>Do you want to continue?</center>"))
             self.remove_queue_msgBox.setStandardButtons(QMessageBox.Yes | QMessageBox.No)
             self.remove_queue_msgBox.setIcon(QMessageBox.Warning)
             dont_show_checkBox = QtWidgets.QCheckBox("don't show this message again")
@@ -3819,7 +3819,7 @@ class MainWindow(MainWindow_Ui):
         if current_category_tree_text == 'Scheduled Downloads':
             error_messageBox = QMessageBox()
             error_messageBox.setText(
-                    "<b>Sorry! You can't remove default queue!</b>")
+                    QCoreApplication.translate("mainwindow_src_ui_tr", "<b>Sorry! You can't remove default queue!</b>"))
             error_messageBox.setWindowTitle('Error!')
             error_messageBox.exec_()
 
@@ -4044,10 +4044,10 @@ class MainWindow(MainWindow_Ui):
     def showQueuePanelOptions(self, button):
         if (self.queue_panel_show_button.text() == 'Show options') or (self.queue_panel_show_button.text() == '&Show options'):
             self.queue_panel_widget_frame.show()
-            self.queue_panel_show_button.setText('Hide options')
+            self.queue_panel_show_button.setText(QCoreApplication.translate("mainwindow_src_ui_tr", 'Hide options'))
         else:
             self.queue_panel_widget_frame.hide()
-            self.queue_panel_show_button.setText('Show options')
+            self.queue_panel_show_button.setText(QCoreApplication.translate("mainwindow_src_ui_tr", 'Show options'))
 
 # this metode is activating after_pushButton whith limit_comboBox changing
     def limitComboBoxChanged(self, connect):
@@ -4557,7 +4557,7 @@ class MainWindow(MainWindow_Ui):
         if len(gid_list) != 0:
             error_messageBox = QMessageBox()
             error_messageBox.setText(
-                    'Stop all downloads first!')
+                    QCoreApplication.translate("mainwindow_src_ui_tr", 'Stop all downloads first!'))
             error_messageBox.setWindowTitle('Error!')
             error_messageBox.exec_()
             return
