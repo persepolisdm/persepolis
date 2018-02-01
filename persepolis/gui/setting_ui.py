@@ -500,11 +500,11 @@ class Setting_Ui(QWidget):
         self.setting_tabWidget.setTabText(
             self.setting_tabWidget.indexOf(self.columns_tab), "Columns customization")
 
-# Youtube options tab
+# Video Finder options tab
         self.setting_tabWidget.setTabText(self.setting_tabWidget.indexOf(
-            self.youtube_tab),  "Youtube Options")
+            self.youtube_tab),  "Video Finder Options")
 
-        self.enable_ytd_checkbox.setText('Enable Youtube Downloader')
+        self.enable_ytd_checkbox.setText('Enable Video Finder')
 
         self.hide_no_audio_checkbox.setText('Hide videos with no audio')
 
