@@ -16,8 +16,8 @@
 from functools import partial
 import sys
 from PyQt5 import QtCore, QtGui, QtWidgets
-from PyQt5.QtWidgets import QApplication,  QAction, QFileDialog, QSystemTrayIcon, QMenu, QApplication, QInputDialog, QMessageBox
-from PyQt5.QtGui import QIcon, QColor, QPalette, QStandardItem, QCursor
+from PyQt5.QtWidgets import QAbstractItemView, QAction, QFileDialog, QSystemTrayIcon, QMenu, QApplication, QInputDialog, QMessageBox
+from PyQt5.QtGui import QIcon, QStandardItem, QCursor
 from PyQt5.QtCore import QTime, QCoreApplication, QRect, QSize, QPoint, QThread, pyqtSignal, Qt
 import os
 import time
@@ -790,6 +790,11 @@ class MainWindow(MainWindow_Ui):
         global temp_download_folder
         temp_download_folder = persepolis_setting.value('settings/download_path_temp')
 
+        # this variable is changed to True,
+        # if user highlights multiple items in download_table
+        self.multi_items_selected = False
+
+
 # system_tray_icon
         self.system_tray_icon = QSystemTrayIcon()
         self.system_tray_icon.setIcon(
@@ -1357,17 +1362,6 @@ class MainWindow(MainWindow_Ui):
                     # create a QTableWidgetItem
                     item = QTableWidgetItem(text)
 
-                    # add checkbox to first cell in row , if user checked selection mode
-                    if i == 0 and self.selectAction.isChecked():
-                        item.setFlags(QtCore.Qt.ItemIsUserCheckable |
-                                              QtCore.Qt.ItemIsEnabled)
-                        # 2 means that user checked item before
-                        if self.download_table.item(row, i).checkState() == 2:
-                            # if user checked row before , check it again
-                            item.setCheckState(QtCore.Qt.Checked)
-                        else:
-                            # if user didn't checked row then don't check it!
-                            item.setCheckState(QtCore.Qt.Unchecked)
                     # set item
                     try:
                         self.download_table.setItem(row, i, item)
@@ -1616,161 +1610,154 @@ class MainWindow(MainWindow_Ui):
 
         return my_gid
 
-# this method returns number of selected row
-# and shows download link on statusbar.
-    def selectedRow(self):
+# this methode returns index of all selected rows in list format
+    def userSelectedRows(self):
         try:
-            # find selected item
-            item = self.download_table.selectedItems()
+            # Find selected rows
+            rows_list = []
+            rows_index = self.download_table.selectionModel().selectedRows()
+            for index in rows_index:
+                rows_list.append(index.row())
 
-            selected_row_return = self.download_table.row(item[1])
-
-            # show link on statusbar
-            link = self.download_table.item(
-                selected_row_return, 9).text()
-            self.statusbar.showMessage(str(link))
-
+            # sort list by number
+            rows_list.sort()
         except:
-            selected_row_return = None
+             rows_list = []
 
-        return selected_row_return
+
+        return rows_list
+        
+# this method returns number of selected row
+# if user selected one row!
+    def selectedRow(self):
+        rows_list = self.userSelectedRows()
+        if len(rows_list) == 0:
+            return None 
+        else:
+            return rows_list[0]
+
 
 # this method actives/deactives QActions according to selected row!
     def checkSelectedRow(self):
-        try:
-            # find row number
-            item = self.download_table.selectedItems()
-            selected_row_return = self.download_table.row(item[1])
-        except:
-            selected_row_return = None
+        rows_list = self.userSelectedRows()
+        # check if user selected multiple items
+        if len(rows_list) != 0:
+            if len(rows_list) == 1:
+                multi_items_selected = False
+            else:
+                multi_items_selected = True
 
-        if selected_row_return != None:
+            # if any thing changed ...
+            if (multi_items_selected and not(self.multi_items_selected)) or (not(multi_items_selected) and self.multi_items_selected):
+                if multi_items_selected:
+                    self.multi_items_selected = True
+                else:
+                    self.multi_items_selected = False
+
+                self.selectDownloads()
+
+            selected_row_return = rows_list[0]
             status = self.download_table.item(selected_row_return, 1).text()
             category = self.download_table.item(selected_row_return, 12).text()
+
+            self.removeSelectedAction.setEnabled(True)
+            self.deleteSelectedAction.setEnabled(True)
 
             if category == 'Single Downloads':
                 if status == "scheduled":
                     self.resumeAction.setEnabled(False)
                     self.pauseAction.setEnabled(False)
                     self.stopAction.setEnabled(True)
-                    self.removeAction.setEnabled(False)
                     self.propertiesAction.setEnabled(False)
                     self.progressAction.setEnabled(True)
                     self.openDownloadFolderAction.setEnabled(False)
                     self.openFileAction.setEnabled(False)
-                    self.deleteFileAction.setEnabled(False)
 
                 elif status == "stopped" or status == "error":
                     self.stopAction.setEnabled(False)
                     self.pauseAction.setEnabled(False)
                     self.resumeAction.setEnabled(True)
-                    self.removeAction.setEnabled(True)
                     self.propertiesAction.setEnabled(True)
                     self.progressAction.setEnabled(False)
                     self.openDownloadFolderAction.setEnabled(False)
                     self.openFileAction.setEnabled(False)
-                    self.deleteFileAction.setEnabled(False)
 
                 elif status == "downloading":
                     self.resumeAction.setEnabled(False)
                     self.pauseAction.setEnabled(True)
                     self.stopAction.setEnabled(True)
-                    self.removeAction.setEnabled(False)
                     self.propertiesAction.setEnabled(False)
                     self.progressAction.setEnabled(True)
                     self.openDownloadFolderAction.setEnabled(False)
                     self.openFileAction.setEnabled(False)
-                    self.deleteFileAction.setEnabled(False)
 
                 elif status == "waiting":
                     self.stopAction.setEnabled(True)
                     self.resumeAction.setEnabled(False)
                     self.pauseAction.setEnabled(False)
-                    self.removeAction.setEnabled(False)
                     self.propertiesAction.setEnabled(False)
                     self.progressAction.setEnabled(True)
                     self.openDownloadFolderAction.setEnabled(False)
                     self.openFileAction.setEnabled(False)
-                    self.deleteFileAction.setEnabled(False)
 
                 elif status == "complete":
                     self.stopAction.setEnabled(False)
                     self.resumeAction.setEnabled(False)
                     self.pauseAction.setEnabled(False)
-                    self.removeAction.setEnabled(True)
                     self.propertiesAction.setEnabled(True)
                     self.progressAction.setEnabled(False)
                     self.openDownloadFolderAction.setEnabled(True)
                     self.openFileAction.setEnabled(True)
-                    self.deleteFileAction.setEnabled(True)
 
                 elif status == "paused":
                     self.stopAction.setEnabled(True)
                     self.resumeAction.setEnabled(True)
                     self.pauseAction.setEnabled(False)
-                    self.removeAction.setEnabled(False)
                     self.propertiesAction.setEnabled(False)
                     self.progressAction.setEnabled(True)
                     self.openDownloadFolderAction.setEnabled(False)
                     self.openFileAction.setEnabled(False)
-                    self.deleteFileAction.setEnabled(False)
 
                 else:
                     self.progressAction.setEnabled(False)
                     self.resumeAction.setEnabled(False)
                     self.stopAction.setEnabled(False)
                     self.pauseAction.setEnabled(False)
-                    self.removeAction.setEnabled(False)
                     self.propertiesAction.setEnabled(False)
                     self.openDownloadFolderAction.setEnabled(False)
                     self.openFileAction.setEnabled(False)
-                    self.deleteFileAction.setEnabled(False)
 
             else:
+                self.resumeAction.setEnabled(True)
+                self.pauseAction.setEnabled(True)
+                self.stopAction.setEnabled(True)
 
                 if status == 'complete':
-                    self.stopAction.setEnabled(False)
-                    self.resumeAction.setEnabled(False)
-                    self.pauseAction.setEnabled(False)
-                    self.removeAction.setEnabled(True)
                     self.propertiesAction.setEnabled(True)
                     self.progressAction.setEnabled(False)
                     self.openDownloadFolderAction.setEnabled(True)
                     self.openFileAction.setEnabled(True)
-                    self.deleteFileAction.setEnabled(True)
 
                 elif status == "stopped" or status == "error":
-                    self.stopAction.setEnabled(False)
-                    self.pauseAction.setEnabled(False)
-                    self.resumeAction.setEnabled(False)
-                    self.removeAction.setEnabled(True)
                     self.propertiesAction.setEnabled(True)
                     self.progressAction.setEnabled(False)
                     self.openDownloadFolderAction.setEnabled(False)
                     self.openFileAction.setEnabled(False)
-                    self.deleteFileAction.setEnabled(False)
 
                 elif status == "scheduled" or status == "downloading" or status == "paused" or status == "waiting":
-                    self.resumeAction.setEnabled(False)
-                    self.pauseAction.setEnabled(False)
-                    self.stopAction.setEnabled(False)
-                    self.removeAction.setEnabled(False)
                     self.propertiesAction.setEnabled(False)
                     self.progressAction.setEnabled(False)
                     self.openDownloadFolderAction.setEnabled(False)
                     self.openFileAction.setEnabled(False)
-                    self.deleteFileAction.setEnabled(False)
 
         else:
             self.progressAction.setEnabled(False)
             self.resumeAction.setEnabled(False)
             self.stopAction.setEnabled(False)
             self.pauseAction.setEnabled(False)
-            self.removeAction.setEnabled(False)
             self.propertiesAction.setEnabled(False)
             self.openDownloadFolderAction.setEnabled(False)
             self.openFileAction.setEnabled(False)
-            self.deleteFileAction.setEnabled(False)
 
 
 # when user requests calls persepolis with browser plugin,
@@ -1791,7 +1778,7 @@ class MainWindow(MainWindow_Ui):
             # get maximum of youtube,... link from persepolis_setting
             max_links = int(self.persepolis_setting.value('youtube/max_links', 3))
 
-            # add yourfavorite site in this list
+            # add your favorite site in this list
             # please don't add porn sites!
             supported_sites_list = [
                 'youtube.com/watch',
@@ -1957,13 +1944,6 @@ class MainWindow(MainWindow_Ui):
                 self.download_table.setItem(0, j, item)
                 j = j + 1
 
-            # add checkBox to the row , if user selected selectAction
-            if self.selectAction.isChecked():
-                item = self.download_table.item(0, 0)
-                item.setFlags(QtCore.Qt.ItemIsUserCheckable |
-                              QtCore.Qt.ItemIsEnabled)
-                item.setCheckState(QtCore.Qt.Unchecked)
-
         # if user didn't press download_later_pushButton in add_link window
         # then create new qthread for new download!
         if not(download_later):
@@ -1999,11 +1979,19 @@ class MainWindow(MainWindow_Ui):
 # when user presses resume button this method is called
     def resumeButtonPressed(self, button):
         self.resumeAction.setEnabled(False)
-
-        # find user's selected row
-        selected_row_return = self.selectedRow()
+        selected_row_return = self.selectedRow()  # finding user's selected row
 
         if selected_row_return != None:
+
+            # find download category
+            category = self.download_table.item(selected_row_return, 12).text()
+
+            # if category is not "single downloads" , then send notification for error
+            if category != "Single Downloads":
+                notifySend("Operation was unsuccessful", "Please resume " + category + " category.",
+                               10000, 'fail', systemtray=self.system_tray_icon)
+                return
+ 
             # find download gid
             gid = self.download_table.item(selected_row_return, 8).text()
             download_status = self.download_table.item(
@@ -2051,7 +2039,15 @@ class MainWindow(MainWindow_Ui):
         selected_row_return = self.selectedRow()  # finding user's selected row
 
         if selected_row_return != None:
+            # find download category
+            category = self.download_table.item(selected_row_return, 12).text()
 
+            # if category is not "single downloads" , then send notification for error
+            if category != "Single Downloads":
+                notifySend("Operation was unsuccessful", "Please stop " + category + " category.",
+                               10000, 'fail', systemtray=self.system_tray_icon)
+                return
+ 
             gid = self.download_table.item(selected_row_return, 8).text()
 
             # change status of shutdown in temp_db
@@ -2082,6 +2078,15 @@ class MainWindow(MainWindow_Ui):
         selected_row_return = self.selectedRow()
 
         if selected_row_return != None:
+            # find download category
+            category = self.download_table.item(selected_row_return, 12).text()
+
+            # if category is not "single downloads" , then send notification for error
+            if category != "Single Downloads":
+                notifySend("Operation was unsuccessful", "Please stop " + category + " category.",
+                               10000, 'fail', systemtray=self.system_tray_icon)
+                return
+ 
             # find download gid
             gid = self.download_table.item(selected_row_return, 8).text()
 
@@ -2500,200 +2505,30 @@ class MainWindow(MainWindow_Ui):
                                'warning', systemtray=self.system_tray_icon)
 
 
-# This method is called when user presses remove button in main window .
-# removeButtonPressed removes download item
-    def removeButtonPressed(self, button):
-        self.removeAction.setEnabled(False)
-        global checking_flag
-# if checking_flag is equal to 1, it means that user pressed remove or
-# delete button or ... . so checking download information must be stopped
-# until job is done!
-        if checking_flag != 2:
-            wait_check = WaitThread()
-            self.threadPool.append(wait_check)
-            self.threadPool[len(self.threadPool) - 1].start()
-            self.threadPool[len(self.threadPool) -
-                            1].QTABLEREADY.connect(self.removeButtonPressed2)
-        else:
-            self.removeButtonPressed2()
-
-    def removeButtonPressed2(self):
-        selected_row_return = self.selectedRow()  # find selected row
-
-        if selected_row_return != None:
-
-            # find gid, file_name, category and download status
-            gid = self.download_table.item(selected_row_return, 8).text()
-            file_name = self.download_table.item(selected_row_return, 0).text()
-            status = self.download_table.item(selected_row_return, 1).text()
-            category = self.download_table.item(selected_row_return, 12).text()
-
-            # remove item from download table
-            self.download_table.removeRow(selected_row_return)
-
-            # remove download item from data base
-            self.persepolis_db.deleteItemInDownloadTable(gid, category)
-
-            # remove file of download from download temp folder
-            if file_name != '***' and status != 'complete':
-                file_name_path = os.path.join(
-                    temp_download_folder,  str(file_name))
-                osCommands.remove(file_name_path)  # remove file
-
-                file_name_aria = file_name_path + str('.aria2')
-                osCommands.remove(file_name_aria)  # remove file.aria
-        else:
-            self.statusbar.showMessage("Please select an item first!")
-
-        # tell the CheckDownloadInfoThread that job is done!
-        global checking_flag
-        checking_flag = 0
-
-        self.selectedRow()
-
-
-# this method is called when user presses delete button in MainWindow .
-# this method deletes download file from hard disk and removs
-# download item
-    def deleteFile(self, menu):
-        # show Warning message to the user.
-        # check persepolis_setting first!
-        # perhaps user checked "do not show this message again"
-        delete_warning_message = self.persepolis_setting.value(
-            'MainWindow/delete-warning', 'yes')
-
-        if delete_warning_message == 'yes':
-            self.msgBox = QMessageBox()
-            self.msgBox.setText("<b><center>This operation will delete \
-                    downloaded files from your hard disk<br>PERMANENTLY!</center></b>")
-            self.msgBox.setInformativeText("<center>Do you want to continue?</center>")
-            self.msgBox.setStandardButtons(QMessageBox.Yes | QMessageBox.No)
-            self.msgBox.setIcon(QMessageBox.Warning)
-            dont_show_checkBox = QtWidgets.QCheckBox("don't show this message again")
-            self.msgBox.setCheckBox(dont_show_checkBox)
-            reply = self.msgBox.exec_()
-
-            # if user checks "do not show this message again!", change persepolis_setting!
-            if self.msgBox.checkBox().isChecked():
-                self.persepolis_setting.setValue(
-                        'MainWindow/delete-warning', 'no')
-
-            # do nothing if user clicks NO
-            if reply != QMessageBox.Yes:
-                return
-
-        # if checking_flag is equal to 1, it means that user pressed remove or
-        # delete button or ... . so checking download information must be
-        # stopped until job is done!
-        if checking_flag != 2:
-            wait_check = WaitThread()
-            self.threadPool.append(wait_check)
-            self.threadPool[len(self.threadPool) - 1].start()
-            self.threadPool[len(self.threadPool) -
-                            1].QTABLEREADY.connect(self.deleteFile2)
-        else:
-            self.deleteFile2()
-
-    def deleteFile2(self):
-        # find user's selected item
-        selected_row_return = self.selectedRow()
-
-        if selected_row_return != None:
-            # find gid , category and download_status
-            gid = self.download_table.item(selected_row_return, 8).text()
-            download_status = self.download_table.item(selected_row_return, 1).text()
-            category = self.download_table.item(selected_row_return, 12).text()
-
-            # remove file if download_status is complete
-            if download_status == 'complete':
-                # find download path
-                dict = self.persepolis_db.searchGidInAddLinkTable(gid)
-                file_path = dict['download_path']
-
-                remove_answer = osCommands.remove(file_path)
-
-                if remove_answer == 'no':  # notifiy user if file_path is not valid
-                    notifySend(str(file_path), 'Not Found', 5000,
-                               'warning', systemtray=self.system_tray_icon)
-
-            # remove item from download table
-            self.download_table.removeRow(selected_row_return)
-
-            # remove download item from data base
-            self.persepolis_db.deleteItemInDownloadTable(gid, category)
-
-        # tell the CheckDownloadInfoThread that job is done!
-        global checking_flag
-        checking_flag = 0
-
-
-
-
-
-# this method is called when user checkes selection mode in edit menu!
-    def selectDownloads(self, menu):
-        # if selectAllAction is checked >> activating actions and adding removeSelectedAction and deleteSelectedAction to the toolBar
-        # if selectAction is unchecked deactivate actions and adding removeAction and deleteFileAction to the toolBar
-        # if checking_flag is equal to 1, it means that user pressed remove or
-        # delete button or ... . so checking download information must be
-        # stopped until job is done!
-        if checking_flag != 2:
-            wait_check = WaitThread()
-            self.threadPool.append(wait_check)
-            self.threadPool[len(self.threadPool) - 1].start()
-            self.threadPool[len(self.threadPool) -
-                            1].QTABLEREADY.connect(self.selectDownloads2)
-        else:
-            self.selectDownloads2()
-
-    def selectDownloads2(self):
+# this method is called when multiple items is selected by user!
+    def selectDownloads(self):
         # find highlited item in category_tree
         current_category_tree_text = str(current_category_tree_index.data())
         self.toolBarAndContextMenuItems(current_category_tree_text)
 
-        if self.selectAction.isChecked():
-            # add checkbox to items
-            for i in range(self.download_table.rowCount()):
-                item = self.download_table.item(i, 0)
-                item.setFlags(QtCore.Qt.ItemIsUserCheckable |
-                              QtCore.Qt.ItemIsEnabled)
-                item.setCheckState(QtCore.Qt.Unchecked)
-
-                # activate selectAllAction and removeSelectedAction and
-                # deleteSelectedAction
-                self.selectAllAction.setEnabled(True)
-                self.removeSelectedAction.setEnabled(True)
-                self.deleteSelectedAction.setEnabled(True)
+        # change actions icon
+        if self.multi_items_selected:
+            self.removeSelectedAction.setIcon(QIcon(icons + 'multi_remove'))
+            self.deleteSelectedAction.setIcon(QIcon(icons + 'multi_trash'))
+            self.moveUpSelectedAction.setIcon(QIcon(icons + 'multi_up'))
+            self.moveDownSelectedAction.setIcon(QIcon(icons + 'multi_down'))
 
         else:
-            # remove checkbox from items
-            for i in range(self.download_table.rowCount()):
-                item_text = self.download_table.item(i, 0).text()
-                item = QTableWidgetItem(item_text)
-                self.download_table.setItem(i, 0, item)
-
-                # deactivate selectAllAction and removeSelectedAction and
-                # deleteSelectedAction
-                self.selectAllAction.setEnabled(False)
-                self.removeSelectedAction.setEnabled(False)
-                self.deleteSelectedAction.setEnabled(False)
+            self.removeSelectedAction.setIcon(QIcon(icons + 'remove'))
+            self.deleteSelectedAction.setIcon(QIcon(icons + 'trash'))
+            self.moveUpSelectedAction.setIcon(QIcon(icons + 'up'))
+            self.moveDownSelectedAction.setIcon(QIcon(icons + 'down'))
 
 
-        # tell the CheckDownloadInfoThread that job is done!
-        global checking_flag
-        checking_flag = 0
-
-
-# this method s called when user selects "select all items" form edit menu
-    def selectAll(self, menu):
-        for i in range(self.download_table.rowCount()):
-            item = self.download_table.item(i, 0)
-            item.setCheckState(QtCore.Qt.Checked)
 
 
 # this method is called when user presses 'remove selected items' button
     def removeSelected(self, menu):
-
         # if checking_flag is equal to 1, it means that user pressed remove or
         # delete button or ... . so checking download information must be
         # stopped until job is done!
@@ -2707,25 +2542,45 @@ class MainWindow(MainWindow_Ui):
             self.removeSelected2()
 
     def removeSelected2(self):
-
-        # find checked rows! and append gid of checked rows to gid_list
+        # find selected rows!
         gid_list = []
-        for row in range(self.download_table.rowCount()):
+        for row in self.userSelectedRows():
             # get download status
             status = self.download_table.item(row, 1).text()
 
-            # get first column
-            item = self.download_table.item(row, 0)
+            # find category
+            category = self.download_table.item(row, 12).text()
 
-            # if checkState is 2, it means item is checked
-            if (item.checkState() == 2) and (status == 'complete' or status == 'error' or status == 'stopped'):
+            if category != "Single Downloads":
+                # check queue condition!
+                # queue must be stopped first
+                if str(category) in self.queue_list_dict.keys():
+                    queue_status = self.queue_list_dict[str(category)].start
+                else:
+                    queue_status = False
+
+                if queue_status: # if queue was started
+                    # show error message
+                    notifySend('Operation was unsuccessful!', 'Stop ' + category +' first', 5000,
+                           'fail', systemtray=self.system_tray_icon)
+
+                    continue
+
+
+            # only download items with "complete", "error" and "stopped" can be removed
+            if (status == 'complete' or status == 'error' or status == 'stopped'):
                 # find gid
                 gid = self.download_table.item(row, 8).text()
-
-                # append gid to gid_list
+                # add gid to gid_list
                 gid_list.append(gid)
+            else:
+                # find filename
+                file_name = self.download_table.item(row, 0).text()
 
-        # remove checked rows
+                # show error message
+                notifySend('Operation was unsuccessful!', 'Stop ' + file_name +' first', 5000,
+                           'fail', systemtray=self.system_tray_icon)
+
         # find row number for specific gid
         for gid in gid_list:
             for i in range(self.download_table.rowCount()):
@@ -2733,6 +2588,9 @@ class MainWindow(MainWindow_Ui):
                 if gid == row_gid:
                     row = i
                     break
+
+            # find status
+            status = self.download_table.item(row, 1).text()
 
             # find filename
             file_name = self.download_table.item(row, 0).text()
@@ -2742,7 +2600,6 @@ class MainWindow(MainWindow_Ui):
 
             # remove row from download_table
             self.download_table.removeRow(row)
-
 
             # remove download item from data base
             self.persepolis_db.deleteItemInDownloadTable(gid, category)
@@ -2759,6 +2616,8 @@ class MainWindow(MainWindow_Ui):
         # tell the CheckDownloadInfoThread that job is done!
         global checking_flag
         checking_flag = 0
+
+
 
 
 
@@ -2804,27 +2663,47 @@ class MainWindow(MainWindow_Ui):
             self.deleteSelected2()
 
     def deleteSelected2(self):
-
-        # find checked rows! and append gid of checked rows to gid_list
         gid_list = []
-        for row in range(self.download_table.rowCount()):
+        # find selected rows!
+        for row in self.userSelectedRows():
             # get download status
             status = self.download_table.item(row, 1).text()
 
-            # get first column
-            item = self.download_table.item(row, 0)
+            # find category
+            category = self.download_table.item(row, 12).text()
 
-            # if checkState is 2, it means item is checked
-            if (item.checkState() == 2) and (status == 'complete' or status == 'error' or status == 'stopped'):
+            if category != "Single Downloads":
+                # check queue condition!
+                # queue must be stopped first
+                if str(category) in self.queue_list_dict.keys():
+                    queue_status = self.queue_list_dict[str(category)].start
+                else:
+                    queue_status = False
+
+                if queue_status: # if queue was started
+                    # show error message
+                    notifySend('Operation was unsuccessful!', 'Stop ' + category +' first', 5000,
+                           'fail', systemtray=self.system_tray_icon)
+
+                    continue
+
+
+            # only download items with "complete", "error" and "stopped" can be removed
+            if (status == 'complete' or status == 'error' or status == 'stopped'):
                 # find gid
                 gid = self.download_table.item(row, 8).text()
-
-                # append gid to gid_list
+                # add gid to gid_list
                 gid_list.append(gid)
+ 
+            else:
+                # find filename
+                file_name = self.download_table.item(row, 0).text()
 
+                # show error message
+                notifySend('Operation was unsuccessful!', 'Stop ' + file_name +' first', 5000,
+                           'fail', systemtray=self.system_tray_icon)
 
-        # remove checked rows
-
+        # remove selected rows
         # find row number for specific gid
         for gid in gid_list:
             for i in range(self.download_table.rowCount()):
@@ -2839,6 +2718,8 @@ class MainWindow(MainWindow_Ui):
             # find category
             category = self.download_table.item(row, 12).text()
 
+            # find status
+            status = self.download_table.item(row, 1).text()
 
             # if download is not completed,
             # remove downloaded file form download temp folder
@@ -2943,13 +2824,6 @@ class MainWindow(MainWindow_Ui):
             i = 0
             for key in keys_list:
                 item = QTableWidgetItem(download_info[key])
-
-                # adding checkbox to download rows if selectAction is checked
-                # in edit menu
-                if self.selectAction.isChecked() and i == 0:
-                    item.setFlags(QtCore.Qt.ItemIsUserCheckable |
-                                  QtCore.Qt.ItemIsEnabled)
-                    item.setCheckState(QtCore.Qt.Unchecked)
 
                 # insert item in download_table
                 self.download_table.setItem(j, i, item)
@@ -3059,13 +2933,6 @@ class MainWindow(MainWindow_Ui):
             for key in keys_list:
                 item = QTableWidgetItem(download_info[key])
 
-                # adding checkbox to download rows if selectAction is checked
-                # in edit menu
-                if self.selectAction.isChecked() and i == 0:
-                    item.setFlags(QtCore.Qt.ItemIsUserCheckable |
-                                  QtCore.Qt.ItemIsEnabled)
-                    item.setCheckState(QtCore.Qt.Unchecked)
-
                 # insert item in download_table
                 self.download_table.setItem(j, i, item)
 
@@ -3170,13 +3037,6 @@ class MainWindow(MainWindow_Ui):
             for key in keys_list:
                 item = QTableWidgetItem(download_info[key])
 
-                # adding checkbox to download rows if selectAction is checked
-                # in edit menu
-                if self.selectAction.isChecked() and i == 0:
-                    item.setFlags(QtCore.Qt.ItemIsUserCheckable |
-                                  QtCore.Qt.ItemIsEnabled)
-                    item.setCheckState(QtCore.Qt.Unchecked)
-
                 # insert item in download_table
                 self.download_table.setItem(j, i, item)
 
@@ -3279,13 +3139,6 @@ class MainWindow(MainWindow_Ui):
             i = 0
             for key in keys_list:
                 item = QTableWidgetItem(download_info[key])
-
-                # adding checkbox to download rows if selectAction is checked
-                # in edit menu
-                if self.selectAction.isChecked() and i == 0:
-                    item.setFlags(QtCore.Qt.ItemIsUserCheckable |
-                                  QtCore.Qt.ItemIsEnabled)
-                    item.setCheckState(QtCore.Qt.Unchecked)
 
                 # insert item in download_table
                 self.download_table.setItem(j, i, item)
@@ -3391,13 +3244,6 @@ class MainWindow(MainWindow_Ui):
             i = 0
             for key in keys_list:
                 item = QTableWidgetItem(download_info[key])
-
-                # adding checkbox to download rows if selectAction is checked
-                # in edit menu
-                if self.selectAction.isChecked() and i == 0:
-                    item.setFlags(QtCore.Qt.ItemIsUserCheckable |
-                                  QtCore.Qt.ItemIsEnabled)
-                    item.setCheckState(QtCore.Qt.Unchecked)
 
                 # insert item in download_table
                 self.download_table.setItem(j, i, item)
@@ -3599,14 +3445,6 @@ class MainWindow(MainWindow_Ui):
                 self.download_table.setItem(0, j, item)
                 j = j + 1
 
-            # this section adds checkBox to the row , if user's selected
-            # selectAction
-            if self.selectAction.isChecked():
-                item = self.download_table.item(0, 0)
-                item.setFlags(QtCore.Qt.ItemIsUserCheckable |
-                              QtCore.Qt.ItemIsEnabled)
-                item.setCheckState(QtCore.Qt.Unchecked)
-
             # spider is finding file size and file name
             new_spider = SpiderThread(add_link_dictionary, self)
             self.threadPool.append(new_spider)
@@ -3751,13 +3589,6 @@ class MainWindow(MainWindow_Ui):
             for key in keys_list:
                 item = QTableWidgetItem(str(dict[key]))
 
-                # add checkbox to download rows if selectAction is checked
-                # in edit menu
-                if self.selectAction.isChecked() and i == 0:
-                    item.setFlags(QtCore.Qt.ItemIsUserCheckable |
-                                  QtCore.Qt.ItemIsEnabled)
-                    item.setCheckState(QtCore.Qt.Unchecked)
-
                 self.download_table.setItem(0, i, item)
 
                 i = i + 1
@@ -3786,19 +3617,15 @@ class MainWindow(MainWindow_Ui):
         # clear context menu of category_tree
         self.category_tree.category_tree_menu.clear()
 
-        # add selectAction to context menu
-        self.download_table.tablewidget_menu.addAction(self.selectAction)
 
         queueAction = QAction(QIcon(icons + 'add'), 'Single Downloads', self,
                               statusTip="Add to Single Downloads", triggered=partial(self.addToQueue, 'Single Downloads'))
 
         # check if user checked selection mode
-        if self.selectAction.isChecked():
-            selection_mode = True
+        if self.multi_items_selected:
             self.download_table.sendMenu = self.download_table.tablewidget_menu.addMenu(
                 'Send selected downloads to')
         else:
-            selection_mode = False
             self.download_table.sendMenu = self.download_table.tablewidget_menu.addMenu(
                 'Send to')
 
@@ -3814,36 +3641,7 @@ class MainWindow(MainWindow_Ui):
 
                 self.download_table.sendMenu.addAction(queueAction)
 
-        if category == 'All Downloads' and not(selection_mode):
-
-            # hide queue_panel_widget(left side down panel)
-            self.queue_panel_widget.hide()
-
-            # update toolBar
-            list = [self.addlinkAction, self.resumeAction, self.pauseAction,
-                    self.stopAction, self.removeAction, self.deleteFileAction,
-                    self.propertiesAction, self.progressAction, self.minimizeAction,
-                    self.youtubeAddLinkAction, self.exitAction]
-
-            for i in list:
-                self.toolBar.addAction(i)
-
-            self.toolBar.insertSeparator(self.addlinkAction)
-            self.toolBar.insertSeparator(self.resumeAction)
-            self.toolBar.insertSeparator(self.removeSelectedAction)
-            self.toolBar.insertSeparator(self.youtubeAddLinkAction)
-            self.toolBar.insertSeparator(self.exitAction)
-
-# add actions to download_table's context menu
-            list = [self.openFileAction, self.openDownloadFolderAction, self.resumeAction,
-                    self.pauseAction, self.stopAction, self.removeAction, self.deleteFileAction,
-                    self.propertiesAction, self.progressAction]
-
-            for action in list :
-                self.download_table.tablewidget_menu.addAction(action)
-
-        elif category == 'All Downloads' and selection_mode:
-
+        if category == 'All Downloads':
             # hide queue_panel_widget(lef side down panel)
             self.queue_panel_widget.hide()
 
@@ -3863,7 +3661,6 @@ class MainWindow(MainWindow_Ui):
             self.toolBar.insertSeparator(self.exitAction)
             self.toolBar.addSeparator()
 
-
             # add actions to download_table's context menu
             list = [self.openFileAction, self.openDownloadFolderAction, self.resumeAction,
                     self.pauseAction, self.stopAction, self.removeSelectedAction,
@@ -3872,37 +3669,7 @@ class MainWindow(MainWindow_Ui):
             for action in list:
                 self.download_table.tablewidget_menu.addAction(action)
 
-        if category == 'Single Downloads' and not(selection_mode):
-
-            # hide queue_panel_widget
-            self.queue_panel_widget.hide()
-
-            # update toolBar
-            list = [self.addlinkAction, self.resumeAction, self.pauseAction, self.stopAction,
-                    self.removeAction, self.deleteFileAction, self.propertiesAction,
-                    self.progressAction, self.minimizeAction,
-                    self.youtubeAddLinkAction ,self.exitAction]
-
-            for i in list:
-                self.toolBar.addAction(i)
-
-            self.toolBar.insertSeparator(self.addlinkAction)
-            self.toolBar.insertSeparator(self.resumeAction)
-            self.toolBar.insertSeparator(self.removeSelectedAction)
-            self.toolBar.insertSeparator(self.youtubeAddLinkAction)
-            self.toolBar.insertSeparator(self.exitAction)
-
-
-            # add actions to download_table's context menu
-            list = [self.openFileAction, self.openDownloadFolderAction, self.resumeAction,
-                    self.pauseAction, self.stopAction, self.removeAction,
-                    self.deleteFileAction, self.propertiesAction, self.progressAction]
-
-            for action in list:
-                self.download_table.tablewidget_menu.addAction(action)
-
-        elif category == 'Single Downloads' and selection_mode:
-
+        elif category == 'Single Downloads':
             # hide queue_panel_widget
             self.queue_panel_widget.hide()
             self.queuePanelWidget(category)
@@ -3930,53 +3697,7 @@ class MainWindow(MainWindow_Ui):
             for action in list:
                 self.download_table.tablewidget_menu.addAction(action)
 
-        elif (category != 'All Downloads' and category != 'Single Downloads') and not(selection_mode):
-
-            # show queue_panel_widget
-            self.queue_panel_widget.show()
-            self.queuePanelWidget(category)
-
-            # update toolBar
-            list = [self.addlinkAction, self.removeAction, self.deleteFileAction,
-                    self.propertiesAction, self.startQueueAction, self.stopQueueAction,
-                    self.removeQueueAction, self.moveUpAction, self.moveDownAction,
-                    self.minimizeAction, self.youtubeAddLinkAction, self.exitAction]
-
-            for i in list:
-                self.toolBar.addAction(i)
-
-            self.toolBar.insertSeparator(self.addlinkAction)
-            self.toolBar.insertSeparator(self.startQueueAction)
-            self.toolBar.insertSeparator(self.minimizeAction)
-            self.toolBar.insertSeparator(self.youtubeAddLinkAction)
-            self.toolBar.insertSeparator(self.exitAction)
-            self.toolBar.addSeparator()
-
-            # add actions to download_table's context menu
-            for action in [self.openFileAction, self.openDownloadFolderAction, self.removeAction, self.deleteFileAction, self.propertiesAction]:
-                self.download_table.tablewidget_menu.addAction(action)
-
-            # update category_tree_menu
-            for i in self.startQueueAction, self.stopQueueAction, self.removeQueueAction:
-                self.category_tree.category_tree_menu.addAction(i)
-
-            # check queue condition
-            if str(category) in self.queue_list_dict.keys():
-                queue_status = self.queue_list_dict[str(category)].start
-            else:
-                queue_status = False
-
-            if queue_status:  # if queue started before
-                self.stopQueueAction.setEnabled(True)
-                self.startQueueAction.setEnabled(False)
-                self.removeQueueAction.setEnabled(False)
-            else:            #if queue didn't start
-                self.stopQueueAction.setEnabled(False)
-                self.startQueueAction.setEnabled(True)
-                self.removeQueueAction.setEnabled(True)
-
-        elif (category != 'All Downloads' and category != 'Single Downloads') and selection_mode:
-
+        elif (category != 'All Downloads' and category != 'Single Downloads'):
             # show queue_panel_widget
             self.queue_panel_widget.show()
             self.queuePanelWidget(category)
@@ -3998,7 +3719,7 @@ class MainWindow(MainWindow_Ui):
             self.toolBar.addSeparator()
 
             # add actions to download_table's context menu
-            for action in [self.openFileAction, self.openDownloadFolderAction, self.removeAction, self.deleteFileAction, self.propertiesAction]:
+            for action in [self.openFileAction, self.openDownloadFolderAction, self.removeSelectedAction, self.deleteSelectedAction, self.propertiesAction]:
                 self.download_table.tablewidget_menu.addAction(action)
 
             # update category_tree_menu(right click menu for category_tree items)
@@ -4013,12 +3734,10 @@ class MainWindow(MainWindow_Ui):
                 queue_status = False
 
             if queue_status:
-                # if queue started befor
+                # if queue started before
                 self.stopQueueAction.setEnabled(True)
                 self.startQueueAction.setEnabled(False)
                 self.removeQueueAction.setEnabled(False)
-                self.moveUpAction.setEnabled(False)
-                self.moveDownAction.setEnabled(False)
                 self.moveUpSelectedAction.setEnabled(False)
                 self.moveDownSelectedAction.setEnabled(False)
             else:
@@ -4026,26 +3745,15 @@ class MainWindow(MainWindow_Ui):
                 self.stopQueueAction.setEnabled(False)
                 self.startQueueAction.setEnabled(True)
                 self.removeQueueAction.setEnabled(True)
-
-                if selection_mode:
-                    self.moveUpAction.setEnabled(False)
-                    self.moveDownAction.setEnabled(False)
-                    self.moveUpSelectedAction.setEnabled(True)
-                    self.moveDownSelectedAction.setEnabled(True)
-
-                else:
-                    self.moveUpAction.setEnabled(True)
-                    self.moveDownAction.setEnabled(True)
-                    self.moveUpSelectedAction.setEnabled(False)
-                    self.moveDownSelectedAction.setEnabled(False)
+                self.moveUpSelectedAction.setEnabled(True)
+                self.moveDownSelectedAction.setEnabled(True)
+ 
 
         else:
             # if category is All Downloads  or Single Downloads
             self.stopQueueAction.setEnabled(False)
             self.startQueueAction.setEnabled(False)
             self.removeQueueAction.setEnabled(False)
-            self.moveUpAction.setEnabled(False)
-            self.moveDownAction.setEnabled(False)
             self.moveUpSelectedAction.setEnabled(False)
             self.moveDownSelectedAction.setEnabled(False)
 
@@ -4218,58 +3926,29 @@ class MainWindow(MainWindow_Ui):
         new_category = str(data)
 
         gid_list = []
+        # find selected rows!
+        for row in self.userSelectedRows():
+            status = self.download_table.item(row, 1).text()
+            category = self.download_table.item(row, 12).text()
 
-        # gid_list contains gid of downloads that user wants to add them to a new category
-        # check if user checked selectAction in edit menu
-        if self.selectAction.isChecked():
-            # finding checked rows! and append gid of checked rows to
-            # gid_list
-            for row in range(self.download_table.rowCount()):
-                status = self.download_table.item(row, 1).text()
-                item = self.download_table.item(row, 0)
-                category = self.download_table.item(row, 12).text()
+            # check status of old category
+            if category in self.queue_list_dict.keys():
+                if self.queue_list_dict[category].start:
+                    # It means queue is in download progress
+                    status = 'downloading'
 
-                # check status of old category
-                if category in self.queue_list_dict.keys():
-                    if self.queue_list_dict[category].start:
-                        # It means queue is in download progress
-                        status = 'downloading'
+            # download must be in stopped situation.
+            if (status == 'error' or status == 'stopped' or status == 'complete'):
+                # find gid
+                gid = self.download_table.item(row, 8).text()
 
-                # checkState 2 means item is checked by user.
-                # download must be in stopped situation.
-                if (status == 'error' or status == 'stopped' or status == 'complete'):
-                    if (item.checkState() == 2):
-                        gid = self.download_table.item(row, 8).text()
-                        gid_list.append(gid)
-                else:
-                    send_message = True
+                # append gid to gid_list
+                gid_list.append(gid)
+            else:
+                send_message = True
 
-        else:
-            # find selected_row
-            selected_row_return = self.selectedRow()
-
-            # append gid of selected_row to gid_list
-            if selected_row_return != None:
-                gid = self.download_table.item(selected_row_return, 8).text()
-                status = self.download_table.item(selected_row_return, 1).text()
-                category = self.download_table.item(selected_row_return, 12).text()
-
-                if category in self.queue_list_dict.keys():
-                    if self.queue_list_dict[category].start:
-                        # It means queue is in download progress
-                        status = 'downloading'
-
-                # download must be in stopped situation
-                if (status == 'error' or status == 'stopped' or status == 'complete'):
-                    gid_list.append(gid)
-                else:
-                    send_message = True
-
-        # gid_list is ready now!
-
+        # find row number for specific gid
         for gid in gid_list:
-
-            # find row number for specific gid
             for i in range(self.download_table.rowCount()):
                 row_gid = self.download_table.item(i, 8).text()
                 if gid == row_gid:
@@ -4311,21 +3990,11 @@ class MainWindow(MainWindow_Ui):
                 # updata category_db_table
                 self.persepolis_db.updateCategoryTable([new_category_dict])
 
-
-
                 # update category in download_table
-                current_category_tree_text = str(
-                    current_category_tree_index.data())
+                current_category_tree_text = str(current_category_tree_index.data())
+
                 if current_category_tree_text == 'All Downloads':
                     item = QTableWidgetItem(new_category)
-                    # if user checked selectAction , then a checkbox added to
-                    # item
-                    if self.selectAction.isChecked() == True:
-                        item = self.download_table.item(0, 0)
-                        item.setFlags(QtCore.Qt.ItemIsUserCheckable |
-                                      QtCore.Qt.ItemIsEnabled)
-                        item.setCheckState(QtCore.Qt.Unchecked)
-
                     self.download_table.setItem(row, 12, item)
                 else:
                     self.download_table.removeRow(row)
@@ -4481,10 +4150,8 @@ class MainWindow(MainWindow_Ui):
 # this method checks that queue started or not,
 # and it shows or hides widgets in queue_panel_widget
 # according to situation and set widgets in panel.
-
     def queuePanelWidget(self, category):
         # update queue_panel_widget items
-
         # read queue_info_dict from data base
         queue_info_dict = self.persepolis_db.searchCategoryInCategoryTable(category)
 
@@ -4619,85 +4286,8 @@ class MainWindow(MainWindow_Ui):
             self.logwindow_list) - 1].show()
 
 
-# this method is called when user pressed moveUpAction
-# this method subtituts selected download item with upper one
-    def moveUp(self, menu):
-        global button_pressed_counter
-        button_pressed_counter = button_pressed_counter + 1
-# if checking_flag is equal to 1, it means that user pressed remove or
-# delete button or ... . so checking download information must be stopped
-# until job is done!
-
-        if checking_flag != 2:
-            button_pressed_thread = ButtonPressedThread()
-            self.threadPool.append(button_pressed_thread)
-            self.threadPool[len(self.threadPool) - 1].start()
-
-            wait_check = WaitThread()
-            self.threadPool.append(wait_check)
-            self.threadPool[len(self.threadPool) - 1].start()
-            self.threadPool[len(self.threadPool) -
-                            1].QTABLEREADY.connect(self.moveUp2)
-        else:
-            self.moveUp2()
-
-    def moveUp2(self):
-        # find user's selected row
-        old_row = self.selectedRow()
-
-        # current_category_tree_text is the name of queue that selected by user
-        current_category_tree_text = str(current_category_tree_index.data())
-
-        # an old row and new row must replaced  by each other
-        if old_row != None:
-            new_row = int(old_row) - 1
-            if new_row >= 0:
-
-                # get gid_list from data base
-                category_dict = self.persepolis_db.searchCategoryInCategoryTable(
-                        current_category_tree_text)
-
-                gid_list = category_dict['gid_list']
-
-                # old index and new index of item in gid_list
-                old_index = len(gid_list) - old_row - 1
-                new_index = old_index + 1
-
-                # subtitute two gid with each other
-                gid_list[old_index], gid_list[new_index] = gid_list[new_index], gid_list[old_index]
-
-                # save changes in data base
-                self.persepolis_db.updateCategoryTable([category_dict])
-
-                # subtitute items in download_table
-                old_row_items_list = []
-                new_row_items_list = []
-
-                # read current items in download_table
-                for i in range(13):
-                    old_row_items_list.append(
-                        self.download_table.item(old_row, i).text())
-                    new_row_items_list.append(
-                        self.download_table.item(new_row, i).text())
-
-                # replacing
-                for i in range(13):
-                    # old row
-                    item = QTableWidgetItem(new_row_items_list[i])
-
-                    self.download_table.setItem(old_row, i, item)
-
-                    # new row
-                    item = QTableWidgetItem(old_row_items_list[i])
-                    self.download_table.setItem(new_row, i, item)
-
-                self.download_table.selectRow(new_row)
-
-
-
 # this method is called when user pressed moveUpSelectedAction
 # this method subtituts selected  items with upper one
-
     def moveUpSelected(self, menu):
         global button_pressed_counter
         button_pressed_counter = button_pressed_counter + 1
@@ -4719,8 +4309,6 @@ class MainWindow(MainWindow_Ui):
             self.moveUpSelected2()
 
     def moveUpSelected2(self):
-        index_list = []
-
         # current_category_tree_text is the name of queue that selected by user
         current_category_tree_text = str(current_category_tree_index.data())
 
@@ -4730,21 +4318,19 @@ class MainWindow(MainWindow_Ui):
 
         gid_list = category_dict['gid_list']
 
-        # find checked rows
-        for row in range(self.download_table.rowCount()):
-            item = self.download_table.item(row, 0)
-            if (item.checkState() == 2):
-                # append index of checked rows to index_list
-                index_list.append(row)
+        # find selected rows
+        rows_list = self.userSelectedRows()
+
+        new_rows_list = []
 
         # move up selected rows
-        for old_row in index_list:
+        for old_row in rows_list:
             new_row = int(old_row) - 1
-
             old_row_items_list = []
             new_row_items_list = []
-            if new_row >= 0:
 
+            if new_row >= 0:
+                new_rows_list.append(new_row)
                 # old index and new index of item in gid_list
                 old_index = len(gid_list) - old_row - 1
                 new_index = old_index + 1
@@ -4765,102 +4351,30 @@ class MainWindow(MainWindow_Ui):
                 for i in range(13):
                     # old row
                     item = QTableWidgetItem(new_row_items_list[i])
-                    # add checkbox
-                    if i == 0:
-                        item.setFlags(QtCore.Qt.ItemIsUserCheckable |
-                                      QtCore.Qt.ItemIsEnabled)
-                        # set Unchecked
-                        item.setCheckState(QtCore.Qt.Unchecked)
 
                     self.download_table.setItem(old_row, i, item)
 
                     # new row
                     item = QTableWidgetItem(old_row_items_list[i])
-                    # add checkbox
-                    if i == 0:
-                        item.setFlags(QtCore.Qt.ItemIsUserCheckable |
-                                      QtCore.Qt.ItemIsEnabled)
-                        # set Checked
-                        item.setCheckState(QtCore.Qt.Checked)
 
                     self.download_table.setItem(new_row, i, item)
+
+        # remove highlight from old rows
+        self.download_table.clearSelection()
+
+        # Visit this link for more information
+        # doc.qt.io/qt-5/qabstractitemview.html
+        self.download_table.setSelectionMode(QAbstractItemView.MultiSelection)
+
+        # Highlight newer rows
+        for row in new_rows_list:
+            self.download_table.selectRow(row)
+
+        # change selection mode to the normal situation 
+        self.download_table.setSelectionMode(QAbstractItemView.ExtendedSelection)
 
         # update data base
         self.persepolis_db.updateCategoryTable([category_dict])
-
-
-
-# this method is called if user pressed moveDown action
-# this method is subtituting selected download item with lower download item
-    def moveDown(self, menu):
-        global button_pressed_counter
-        button_pressed_counter = button_pressed_counter + 1
-# if checking_flag is equal to 1, it means that user pressed remove or
-# delete button or ... . so checking download information must be stopped
-# until job is done!
-        if checking_flag != 2:
-            button_pressed_thread = ButtonPressedThread()
-            self.threadPool.append(button_pressed_thread)
-            self.threadPool[len(self.threadPool) - 1].start()
-
-            wait_check = WaitThread()
-            self.threadPool.append(wait_check)
-            self.threadPool[len(self.threadPool) - 1].start()
-            self.threadPool[len(self.threadPool) -
-                            1].QTABLEREADY.connect(self.moveDown2)
-        else:
-            self.moveDown2()
-
-    def moveDown2(self):
-        # find user's selected row
-        old_row = self.selectedRow()
-
-        # current_category_tree_text is the name of queue that selected by user
-        current_category_tree_text = str(current_category_tree_index.data())
-
-        # an old row and new row must be subtituted by each other
-        if old_row != None:
-            new_row = int(old_row) + 1
-            if new_row < self.download_table.rowCount():
-
-                # get gid_list from data base
-                category_dict = self.persepolis_db.searchCategoryInCategoryTable(
-                        current_category_tree_text)
-
-                gid_list = category_dict['gid_list']
-
-                # old index and new index of item in gid_list
-                old_index = len(gid_list) - old_row - 1
-                new_index = old_index - 1
-
-                # subtitute two gids in gid_list
-                gid_list[old_index], gid_list[new_index] = gid_list[new_index], gid_list[old_index]
-
-                # update data base
-                self.persepolis_db.updateCategoryTable([category_dict])
-
-                # subtitute items in download_table
-                old_row_items_list = []
-                new_row_items_list = []
-
-                # read current items in download_table
-                for i in range(13):
-                    old_row_items_list.append(
-                        self.download_table.item(old_row, i).text())
-
-                    new_row_items_list.append(
-                        self.download_table.item(new_row, i).text())
-
-                # subtituting
-                for i in range(13):
-                    # old_row
-                    item = QTableWidgetItem(new_row_items_list[i])
-                    self.download_table.setItem(old_row, i, item)
-
-                    # new_row
-                    item = QTableWidgetItem(old_row_items_list[i])
-                    self.download_table.setItem(new_row, i, item)
-                self.download_table.selectRow(new_row)
 
 
 # this method is called if user pressed moveDownSelected action
@@ -4887,7 +4401,9 @@ class MainWindow(MainWindow_Ui):
     def moveDownSelected2(self):
 
         # an old row and new row must be subtituted by each other
-        index_list = []
+
+        # find selected rows
+        rows_list = self.userSelectedRows() 
 
         # current_category_tree_text is the name of queue that selected by user
         current_category_tree_text = str(current_category_tree_index.data())
@@ -4898,20 +4414,16 @@ class MainWindow(MainWindow_Ui):
 
         gid_list = category_dict['gid_list']
 
-        # find checked rows
-        for row in range(self.download_table.rowCount()):
-            item = self.download_table.item(row, 0)
-            if (item.checkState() == 2):
-                # append index of checked rows to index_list
-                index_list.append(row)
+        rows_list.reverse()
 
-        index_list.reverse()
+        new_rows_list = []
 
         # move up selected rows
-        for old_row in index_list:
+        for old_row in rows_list:
 
             new_row = int(old_row) + 1
             if new_row < self.download_table.rowCount():
+                new_rows_list.append(new_row)
 
                 # old index and new index in gid_list
                 old_index = len(gid_list) - old_row - 1
@@ -4937,26 +4449,27 @@ class MainWindow(MainWindow_Ui):
                     # old row
                     item = QTableWidgetItem(new_row_items_list[i])
 
-                    # add checkbox
-                    if i == 0:
-                        item.setFlags(QtCore.Qt.ItemIsUserCheckable |
-                                      QtCore.Qt.ItemIsEnabled)
-                        # set Unchecked
-                        item.setCheckState(QtCore.Qt.Unchecked)
-
                     self.download_table.setItem(old_row, i, item)
 
                     # new_row
                     item = QTableWidgetItem(old_row_items_list[i])
 
-                    # add checkbox
-                    if i == 0:
-                        item.setFlags(QtCore.Qt.ItemIsUserCheckable |
-                                      QtCore.Qt.ItemIsEnabled)
-                        # set Checked
-                        item.setCheckState(QtCore.Qt.Checked)
-
                     self.download_table.setItem(new_row, i, item)
+
+        # remove highlight from old rows
+        self.download_table.clearSelection()
+
+        # Visit this link for more information
+        # doc.qt.io/qt-5/qabstractitemview.html
+        self.download_table.setSelectionMode(QAbstractItemView.MultiSelection)
+
+        # Highlight newer rows
+        for row in new_rows_list:
+            self.download_table.selectRow(row)
+
+        # change selection mode to the normal situation 
+        self.download_table.setSelectionMode(QAbstractItemView.ExtendedSelection)
+
 
         # update data base
         self.persepolis_db.updateCategoryTable([category_dict])
@@ -4966,13 +4479,6 @@ class MainWindow(MainWindow_Ui):
 # see browser_plugin_queue.py file
     def queueSpiderCallBack(self, filename, child, row_number):
         item = QTableWidgetItem(str(filename))
-
-        # add checkbox to the item
-        item.setFlags(QtCore.Qt.ItemIsUserCheckable | QtCore.Qt.ItemIsEnabled)
-        if child.links_table.item(int(row_number), 0).checkState() == 2:
-            item.setCheckState(QtCore.Qt.Checked)
-        else:
-            item.setCheckState(QtCore.Qt.Unchecked)
 
         child.links_table.setItem(int(row_number), 0, item)
 
@@ -5007,17 +4513,6 @@ class MainWindow(MainWindow_Ui):
                 # create a QTableWidgetItem
                 item = QTableWidgetItem(text)
 
-                # add checkbox to first cell in row , if user checked selection mode
-                if i == 0 and self.selectAction.isChecked():
-                    item.setFlags(QtCore.Qt.ItemIsUserCheckable |
-                                              QtCore.Qt.ItemIsEnabled)
-                    # 2 means that user checked item before
-                    if self.download_table.item(row, i).checkState() == 2:
-                        # if user checked row before , check it again
-                        item.setCheckState(QtCore.Qt.Checked)
-                    else:
-                        # if user didn't checked row then don't check it!
-                        item.setCheckState(QtCore.Qt.Unchecked)
                 # set item
                 try:
                     self.download_table.setItem(row, i, item)
