@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 import os
 import subprocess
+import sys
 from shutil import copyfile
 
 HERE = os.path.dirname(os.path.realpath(__file__))
@@ -19,4 +20,4 @@ def function(locale):
                 copy.write(line.replace('LOCALE', locale))
 
     subprocess.call(['pylupdate5', '-tr-function', 'ui_tr', translation_files])
-function("PUT_LOCALE_CODE_HERE")
+function(sys.argv[1])
