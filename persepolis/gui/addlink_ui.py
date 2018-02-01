@@ -304,6 +304,57 @@ class AddLinkWindow_Ui(QWidget):
 
         self.add_link_tabWidget.addTab(self.more_options_tab, '') 
 
+        # advance options
+        self.advance_options_tab = QWidget(self)
+
+        advance_options_tab_verticalLayout = QVBoxLayout(self.advance_options_tab)
+
+        # referer
+        referer_horizontalLayout = QHBoxLayout()
+
+        self.referer_label = QLabel(self.advance_options_tab)
+        referer_horizontalLayout.addWidget(self.referer_label)
+
+        self.referer_lineEdit = QLineEdit(self.advance_options_tab)
+        referer_horizontalLayout.addWidget(self.referer_lineEdit)
+
+        advance_options_tab_verticalLayout.addLayout(referer_horizontalLayout)
+
+        # header
+        header_horizontalLayout = QHBoxLayout()
+
+        self.header_label = QLabel(self.advance_options_tab)
+        header_horizontalLayout.addWidget(self.header_label)
+
+        self.header_lineEdit = QLineEdit(self.advance_options_tab)
+        header_horizontalLayout.addWidget(self.header_lineEdit)
+
+        advance_options_tab_verticalLayout.addLayout(header_horizontalLayout)
+
+        # user_agent
+        user_agent_horizontalLayout = QHBoxLayout()
+
+        self.user_agent_label = QLabel(self.advance_options_tab)
+        user_agent_horizontalLayout.addWidget(self.user_agent_label)
+
+        self.user_agent_lineEdit = QLineEdit(self.advance_options_tab)
+        user_agent_horizontalLayout.addWidget(self.user_agent_lineEdit)
+
+        advance_options_tab_verticalLayout.addLayout(user_agent_horizontalLayout)
+
+        # load_cookies
+        load_cookies_horizontalLayout = QHBoxLayout()
+
+        self.load_cookies_label = QLabel(self.advance_options_tab)
+        load_cookies_horizontalLayout.addWidget(self.load_cookies_label)
+
+        self.load_cookies_lineEdit = QLineEdit(self.advance_options_tab)
+        load_cookies_horizontalLayout.addWidget(self.load_cookies_lineEdit)
+
+        advance_options_tab_verticalLayout.addLayout(load_cookies_horizontalLayout)
+
+        self.add_link_tabWidget.addTab(self.advance_options_tab, '') 
+
         # ok cancel download_later buttons ->
         buttons_horizontalLayout = QHBoxLayout()
         buttons_horizontalLayout.addStretch(1)
@@ -371,7 +422,16 @@ class AddLinkWindow_Ui(QWidget):
         self.add_link_tabWidget.setTabText(self.add_link_tabWidget.indexOf(
             self.more_options_tab), "More Options")
 
+        self.add_link_tabWidget.setTabText(self.add_link_tabWidget.indexOf(
+            self.advance_options_tab), "Advance Options")
 
+        self.referer_label.setText('Referer: ')
+
+        self.header_label.setText('Header: ')
+
+        self.load_cookies_label.setText('Load cookies: ')
+
+        self.user_agent_label.setText('User agent: ')
 
     def changeIcon(self, icons):
         icons = ':/' + str(icons) + '/'

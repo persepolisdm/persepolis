@@ -188,6 +188,22 @@ class PropertiesWindow(AddLinkWindow_Ui):
 
             self.end_checkBox.setChecked(True)
 
+        # referer
+        if self.add_link_dictionary['referer']:
+            self.referer_lineEdit.setText(str(self.add_link_dictionary['referer']))
+
+        if self.add_link_dictionary['header']:
+            self.header_lineEdit.setText(str(self.add_link_dictionary['header'])) 
+
+        if self.add_link_dictionary['user_agent']:
+            self.user_agent_lineEdit.setText(str(self.add_link_dictionary['user_agent']))
+
+        if self.add_link_dictionary['load_cookies']:
+            self.load_cookies_lineEdit.setText((self.add_link_dictionary['load_cookies']))
+
+ 
+
+
  # set window size and position
         size = self.persepolis_setting.value(
             'PropertiesWindow/size', QSize(520, 425))
@@ -344,6 +360,30 @@ class PropertiesWindow(AddLinkWindow_Ui):
         connections = self.connections_spinBox.value()
         download_path = self.download_folder_lineEdit.text()
  
+        # referer
+        if self.referer_lineEdit.text() != '':
+            referer = self.referer_lineEdit.text()
+        else:
+            referer = None
+
+        # header
+        if self.header_lineEdit.text() != '':
+            header = self.header_lineEdit.text() 
+        else:
+            header = None
+
+        # user_agent
+        if self.user_agent_lineEdit.text() != '': 
+            user_agent = self.user_agent_lineEdit.text()
+        else:
+            user_agent = None
+
+        # load_cookies
+        if self.load_cookies_lineEdit.text() != '': 
+            load_cookies = self.load_cookies_lineEdit.text()
+        else:
+            load_cookies = None
+
         self.add_link_dictionary['start_time'] = start_time
         self.add_link_dictionary['end_time'] = end_time
         self.add_link_dictionary['link'] = link
@@ -356,6 +396,10 @@ class PropertiesWindow(AddLinkWindow_Ui):
         self.add_link_dictionary['download_path'] = download_path
         self.add_link_dictionary['limit_value'] = limit
         self.add_link_dictionary['connections'] = connections
+        self.add_link_dictionary['referer'] = referer
+        self.add_link_dictionary['header'] = header
+        self.add_link_dictionary['user_agent'] = user_agent
+        self.add_link_dictionary['load_cookies'] = load_cookies
 
         new_category = str(self.add_queue_comboBox.currentText())
 

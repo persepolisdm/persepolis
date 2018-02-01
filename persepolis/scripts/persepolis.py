@@ -240,6 +240,9 @@ if args.parent_window or args.args:
             if 'url' in item.keys():
                 copy_dict['link'] = str(item['url'])
 
+                if 'header' in item.keys() and item['header'] != '':
+                    copy_dict['header'] = item['header']
+
                 if 'referrer' in item.keys() and item['referrer'] != '':
                     copy_dict['referer'] = item['referrer']
 
