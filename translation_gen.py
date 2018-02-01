@@ -19,5 +19,5 @@ def function(locale):
             for line in src:
                 copy.write(line.replace('LOCALE', locale))
 
-    subprocess.call(['pylupdate5', '-tr-function', 'ui_tr', translation_files])
+    subprocess.call(['pylupdate5', '-noobsolete','-tr-function', 'ui_tr', translation_files])
 function(sys.argv[1])
