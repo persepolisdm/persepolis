@@ -830,9 +830,6 @@ class MainWindow(MainWindow_Ui):
         # check trayAction
         self.trayAction.setChecked(True)
 
-        # set tooltip for system_tray_icon
-        self.system_tray_icon.setToolTip('Persepolis Download Manager')
-
         # check user preference for showing or hiding system_tray_icon
         if self.persepolis_setting.value('settings/tray-icon') != 'yes' and start_in_tray == False:
             self.minimizeAction.setEnabled(False)
@@ -1281,10 +1278,24 @@ class MainWindow(MainWindow_Ui):
 #                       'Transfer rate', 'Estimate time left', 'Gid', 'Link', 'First try date', 'Last try date', 'Category']
 
     def checkDownloadInfo(self, list):
+        systemtray_tooltip_text = 'Persepolis Download Manager'
+
         for dict in list:
             gid = dict['gid']
 
             status = dict['status']
+
+            # add download percent to the tooltip text for persepolis system tray icon
+            try:
+                if status == 'downloading':
+                    system_tray_file_name = dict['file_name']
+                    if len(system_tray_file_name) > 20:
+                        system_tray_file_name = system_tray_file_name[0:19] + '...'
+                    systemtray_tooltip_text = systemtray_tooltip_text + '\n'\
+                            + system_tray_file_name + ': '\
+                            + dict['percent']
+            except:
+                pass
 
             if status == 'complete' or status == 'error' or status == 'stopped':
                 # eliminate gid from active_downloads in data base
@@ -1577,7 +1588,9 @@ class MainWindow(MainWindow_Ui):
                             self.afterdownload_list[len(
                                 self.afterdownload_list) - 1].activateWindow()
 
-
+        # set tooltip for system_tray_icon
+        self.system_tray_icon.setToolTip(systemtray_tooltip_text)
+        
 
 # drag and drop for links
     def dragEnterEvent(self, droplink):
@@ -1654,21 +1667,21 @@ class MainWindow(MainWindow_Ui):
     def checkSelectedRow(self):
         rows_list = self.userSelectedRows()
         # check if user selected multiple items
-        if len(rows_list) != 0:
-            if len(rows_list) == 1:
-                multi_items_selected = False
+        if len(rows_list) <= 1:
+            multi_items_selected = False
+        else:
+            multi_items_selected = True
+
+        # if any thing changed ...
+        if (multi_items_selected and not(self.multi_items_selected)) or (not(multi_items_selected) and self.multi_items_selected):
+            if multi_items_selected:
+                self.multi_items_selected = True
             else:
-                multi_items_selected = True
+                self.multi_items_selected = False
 
-            # if any thing changed ...
-            if (multi_items_selected and not(self.multi_items_selected)) or (not(multi_items_selected) and self.multi_items_selected):
-                if multi_items_selected:
-                    self.multi_items_selected = True
-                else:
-                    self.multi_items_selected = False
+            self.selectDownloads()
 
-                self.selectDownloads()
-
+        if len(rows_list) != 0:
             selected_row_return = rows_list[0]
             status = self.download_table.item(selected_row_return, 1).text()
             category = self.download_table.item(selected_row_return, 12).text()
