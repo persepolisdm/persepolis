@@ -1654,21 +1654,21 @@ class MainWindow(MainWindow_Ui):
     def checkSelectedRow(self):
         rows_list = self.userSelectedRows()
         # check if user selected multiple items
-        if len(rows_list) != 0:
-            if len(rows_list) == 1:
-                multi_items_selected = False
+        if len(rows_list) <= 1:
+            multi_items_selected = False
+        else:
+            multi_items_selected = True
+
+        # if any thing changed ...
+        if (multi_items_selected and not(self.multi_items_selected)) or (not(multi_items_selected) and self.multi_items_selected):
+            if multi_items_selected:
+                self.multi_items_selected = True
             else:
-                multi_items_selected = True
+                self.multi_items_selected = False
 
-            # if any thing changed ...
-            if (multi_items_selected and not(self.multi_items_selected)) or (not(multi_items_selected) and self.multi_items_selected):
-                if multi_items_selected:
-                    self.multi_items_selected = True
-                else:
-                    self.multi_items_selected = False
+            self.selectDownloads()
 
-                self.selectDownloads()
-
+        if len(rows_list) != 0:
             selected_row_return = rows_list[0]
             status = self.download_table.item(selected_row_return, 1).text()
             category = self.download_table.item(selected_row_return, 12).text()
