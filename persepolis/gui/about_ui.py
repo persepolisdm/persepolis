@@ -31,7 +31,7 @@ class AboutWindow_Ui(QWidget):
         locale = QtCore.QLocale(str(self.persepolis_setting.value('settings/locale')))
         QLocale.setDefault(locale)
         self.translator = QTranslator()
-        if self.translator.load("ui_" + locale, ':/locales/'):
+        if self.translator.load(':/translations/locales/ui_' + locale):
             QCoreApplication.installTranslator(self.translator)
 
         icons = ':/' + \
