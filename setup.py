@@ -42,7 +42,6 @@ try:
     print('python3-pyqt5 is found')
 except:
     print('Error : python3-pyqt5 is not installed!')
-    sys.exit(1)
 
 # python3-requests
 try:
@@ -50,7 +49,6 @@ try:
     print('python3-requests is found!')
 except:
     print('Error : requests is not installed!')
-    sys.exit(1)
 
 # python3-setproctitle
 try:
@@ -66,11 +64,17 @@ try:
 except:
     print("Warning: python3-psutil is not installed!")
 
+# youtube_dl
+try:
+    import youtube_dl
+    print('youtube_dl is found')
+except:
+    print('Warning: youtube_dl is not installed!')
+
 # aria2
 answer = os.system('aria2c --version 1>/dev/null')
 if answer != 0:
     print("Error aria2 not installed!")
-    sys.exit(1)
 else:
     print('aria2 is found!')
 
@@ -78,7 +82,6 @@ else:
 answer = os.system('notify-send --version 1>/dev/null')
 if answer != 0:
     print("Error libnotify-bin is not installed!")
-    sys.exit(1)
 else:
     print('libnotify-bin is found!')
 
