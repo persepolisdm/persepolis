@@ -15,5 +15,5 @@ SOURCES +=  persepolis/gui/about_ui.py \
             persepolis/scripts/mainwindow.py \
             persepolis/scripts/update.py \
 			persepolis/scripts/youtube_addlink.py
-TRANSLATIONS += persepolis/gui/locales/LOCALE/ui.ts
+TRANSLATIONS += icons/locales/ui_fa_IR.ts
 

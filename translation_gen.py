@@ -12,12 +12,5 @@ def function(locale):
     if not os.path.exists(os.path.join(HERE + '/icons/locales')):
         os.makedirs(os.path.join(HERE + '/icons/locales'))
 
-    copyfile('./translation_files.pro.orig', './translation_files.pro')
-
-    with open('./translation_files.pro.orig', 'rt') as src:
-        with open('./translation_files.pro', 'wt') as copy:
-            for line in src:
-                copy.write(line.replace('LOCALE', locale))
-
     subprocess.call(['pylupdate5', '-noobsolete','-tr-function', 'ui_tr', translation_files])
-function(sys.argv[1])
+function("locale")
