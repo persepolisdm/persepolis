@@ -17,7 +17,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import QDateTimeEdit, QDoubleSpinBox, QPushButton, QComboBox,  QMenu, QTreeView, QSplitter, QSizePolicy, QGridLayout, QHBoxLayout, QVBoxLayout, QMenu, QTableWidgetItem, QAbstractItemView, QApplication, QToolBar, QMenuBar, QStatusBar, QTableWidget, QAction, QMainWindow, QWidget, QFrame, QAbstractItemView, QCheckBox, QSpinBox, QLabel
 from PyQt5.QtGui import QIcon, QStandardItemModel, QStandardItem
 from PyQt5.QtCore import QCoreApplication, QRect, QSize, Qt, QTranslator
-import pkg_resources
+\
 from persepolis.gui import icons_resource
 
 
@@ -39,11 +39,10 @@ class MenuWidget(QPushButton):
 # add support for other languages
 # a) detect current value of locale in persepolis config file
         if str( self.parent.persepolis_setting.value('settings/locale')) in (-1, 'en_US'):
-            locale_dir = ''
+            locale_path = ''
         else:
-            locale_dir = 'locales/' + str( self.parent.persepolis_setting.value('settings/locale')) + '/ui.qm'
-        locale_path = pkg_resources.resource_filename(__name__, locale_dir)
-# b) set translator to Qtranslator
+			locale_path = 'locales/' + str(self.persepolis_setting.value('settings/locale')) + QIcon(':/ui.qm')
+            # b) set translator to Qtranslator
         self.translator = QTranslator()
         self.translator.load(locale_path)
         QCoreApplication.installTranslator(self.translator)
@@ -176,10 +175,9 @@ class MainWindow_Ui(QMainWindow):
 # add support for other languages
 # a) detect current value of locale in persepolis config file
         if str(self.persepolis_setting.value('settings/locale')) in (-1, 'en_US'):
-            locale_dir = ''
+            locale_path = ''
         else:
-            locale_dir = 'locales/' + str(self.persepolis_setting.value('settings/locale')) + '/ui.qm'
-        locale_path = pkg_resources.resource_filename(__name__, locale_dir)
+            locale_path = 'locales/' + str(self.persepolis_setting.value('settings/locale')) + QIcon(':/ui.qm')
 # b) set translator to Qtranslator
         self.translator = QTranslator()
         self.translator.load(locale_path)

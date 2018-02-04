@@ -19,7 +19,6 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import QCheckBox, QProgressBar, QFrame, QDoubleSpinBox, QComboBox, QWidget, QTabWidget, QVBoxLayout, QHBoxLayout, QPushButton, QLabel, QWidget, QSizePolicy
 from PyQt5.QtGui import QIcon
 from PyQt5.QtCore import QTranslator, QCoreApplication
-import pkg_resources
 
 class ProgressWindow_Ui(QWidget):
     def __init__(self, persepolis_setting):
@@ -29,10 +28,9 @@ class ProgressWindow_Ui(QWidget):
 # add support for other languages
 # a) detect current value of locale in persepolis config file
         if str(self.persepolis_setting.value('settings/locale')) in (-1, 'en_US'):
-            locale_dir = ''
+            locale_path = ''
         else:
-            locale_dir = 'locales/' + str(self.persepolis_setting.value('settings/locale')) + '/ui.qm'
-        locale_path = pkg_resources.resource_filename(__name__, locale_dir)
+            locale_path = 'locales/' + str(self.persepolis_setting.value('settings/locale')) + QIcon(':/ui.qm')
  # b) set translator to Qtranslator
         self.translator = QTranslator()
         self.translator.load(locale_path)

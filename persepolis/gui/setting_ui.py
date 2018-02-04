@@ -31,10 +31,9 @@ class Setting_Ui(QWidget):
 # add support for other languages
 # a) detect current value of locale in persepolis config file
         if str(persepolis_setting.value('settings/locale')) in (-1, 'en_US'):
-            locale_dir = ''
+            locale_path = ''
         else:
-            locale_dir = 'locales/' + str(persepolis_setting.value('settings/locale')) + '/ui.qm'
-        locale_path = pkg_resources.resource_filename(__name__, locale_dir)
+			locale_path = 'locales/' + str(self.persepolis_setting.value('settings/locale')) + QIcon(':/ui.qm')
 # b) set translator to Qtranslator
         self.translator = QTranslator()
         self.translator.load(locale_path)

@@ -21,7 +21,6 @@ import os
 from PyQt5.QtCore import QThread, pyqtSignal, QCoreApplication, QTranslator
 from PyQt5.QtWidgets import QPushButton, QTextEdit, QFrame, QLabel, QComboBox, QHBoxLayout, QApplication
 from copy import deepcopy
-import pkg_resources
 from persepolis.scripts import logger, osCommands
 from persepolis.scripts.spider import spider
 from persepolis.scripts.addlink import AddLinkWindow
@@ -43,8 +42,7 @@ class YoutubeAddLink(AddLinkWindow):
         if str(self.persepolis_setting.value('settings/locale')) in (-1, 'en_US'):
             locale_dir = ''
         else:
-            locale_dir = 'locales/' + str(self.persepolis_setting.value('settings/locale')) + '/ui.qm'
-        locale_path = pkg_resources.resource_filename(__name__, locale_dir)
+            locale_path = 'locales/' + str(self.persepolis_setting.value('settings/locale')) + QIcon(':/ui.qm')
 # b) set translator to Qtranslator
         self.translator = QTranslator()
         self.translator.load(locale_path)

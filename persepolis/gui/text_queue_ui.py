@@ -18,7 +18,6 @@ from PyQt5 import QtWidgets, QtGui, QtCore
 from PyQt5.QtWidgets import QPushButton, QApplication, QWidget, QTabWidget, QVBoxLayout, QTableWidget, QAbstractItemView, QLabel, QLineEdit, QHBoxLayout, QSpinBox, QComboBox, QFrame, QCheckBox, QGridLayout
 from PyQt5.QtCore import QTranslator, QCoreApplication
 from PyQt5.QtGui import QIcon
-import pkg_resources
 
 
 
@@ -35,9 +34,8 @@ class TextQueue_Ui(QWidget):
         if str(self.persepolis_setting.value('settings/locale')) in (-1, 'en_US'):
             locale_dir = ''
         else:
-            locale_dir = 'locales/' + str(self.persepolis_setting.value('settings/locale')) + '/ui.qm'
-        locale_path = pkg_resources.resource_filename(__name__, locale_dir)
-# b) set translator to Qtranslator
+			locale_path = 'locales/' + str(self.persepolis_setting.value('settings/locale')) + QIcon(':/ui.qm')
+		# b) set translator to Qtranslator
         self.translator = QTranslator()
         self.translator.load(locale_path)
         QCoreApplication.installTranslator(self.translator)
