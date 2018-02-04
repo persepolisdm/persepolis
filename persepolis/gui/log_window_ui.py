@@ -17,6 +17,9 @@ from PyQt5 import QtGui, QtWidgets, QtCore
 from PyQt5.QtWidgets import QWidget, QTextEdit, QVBoxLayout, QHBoxLayout, QPushButton, QLabel
 from PyQt5.QtGui import QIcon
 from persepolis.gui import icons_resource
+from PyQt5.QtCore import QTranslator, QCoreApplication
+import pkg_resources
+
 
 
 class LogWindow_Ui(QWidget):
@@ -24,6 +27,18 @@ class LogWindow_Ui(QWidget):
         super().__init__()
 
         self.persepolis_setting = persepolis_setting
+        # add support for other languages
+        # a) detect current value of locale in persepolis config file
+        if str(self.persepolis_setting.value('settings/locale')) in (-1, 'en_US'):
+            locale_dir = ''
+        else:
+            locale_dir = 'locales/' + str(self.persepolis_setting.value('settings/locale')) + '/ui.qm'
+        locale_path = pkg_resources.resource_filename(__name__, locale_dir)
+        # b) set translator to Qtranslator
+        self.translator = QTranslator()
+        self.translator.load(locale_path)
+        QCoreApplication.installTranslator(self.translator)
+
 
         icons = ':/' + \
             str(self.persepolis_setting.value('settings/icons')) + '/'
@@ -71,12 +86,12 @@ class LogWindow_Ui(QWidget):
 
 # set labels
 
-        self.setWindowTitle('Persepolis Log')
-        self.close_pushButton.setText('close')
-        self.copy_log_pushButton.setText('Copy  selected to clipboard')
-        self.report_pushButton.setText("Report Issue")
-        self.refresh_log_pushButton.setText('Refresh log messages')
-        self.clear_log_pushButton.setText('Clear log messages')
+        self.setWindowTitle(QCoreApplication.translate("log_window_ui_tr", 'Persepolis Log'))
+        self.close_pushButton.setText(QCoreApplication.translate("log_window_ui_tr", 'close'))
+        self.copy_log_pushButton.setText(QCoreApplication.translate("log_window_ui_tr", 'Copy  selected to clipboard'))
+        self.report_pushButton.setText(QCoreApplication.translate("log_window_ui_tr", "Report Issue"))
+        self.refresh_log_pushButton.setText(QCoreApplication.translate("log_window_ui_tr", 'Refresh log messages'))
+        self.clear_log_pushButton.setText(QCoreApplication.translate("log_window_ui_tr", 'Clear log messages'))
     def changeIcon(self, icons):
         icons = ':/' + str(icons) + '/'
 

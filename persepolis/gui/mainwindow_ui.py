@@ -16,8 +16,10 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import QDateTimeEdit, QDoubleSpinBox, QPushButton, QComboBox,  QMenu, QTreeView, QSplitter, QSizePolicy, QGridLayout, QHBoxLayout, QVBoxLayout, QMenu, QTableWidgetItem, QAbstractItemView, QApplication, QToolBar, QMenuBar, QStatusBar, QTableWidget, QAction, QMainWindow, QWidget, QFrame, QAbstractItemView, QCheckBox, QSpinBox, QLabel
 from PyQt5.QtGui import QIcon, QStandardItemModel, QStandardItem
-from PyQt5.QtCore import QCoreApplication, QRect, QSize, Qt
+from PyQt5.QtCore import QCoreApplication, QRect, QSize, Qt, QTranslator
+import pkg_resources
 from persepolis.gui import icons_resource
+
 
 
 # align center for items in download table
@@ -34,21 +36,32 @@ class MenuWidget(QPushButton):
 
         icons = ':/' + \
             str(self.parent.persepolis_setting.value('settings/icons')) + '/'
+# add support for other languages
+# a) detect current value of locale in persepolis config file
+        if str( self.parent.persepolis_setting.value('settings/locale')) in (-1, 'en_US'):
+            locale_dir = ''
+        else:
+            locale_dir = 'locales/' + str( self.parent.persepolis_setting.value('settings/locale')) + '/ui.qm'
+        locale_path = pkg_resources.resource_filename(__name__, locale_dir)
+# b) set translator to Qtranslator
+        self.translator = QTranslator()
+        self.translator.load(locale_path)
+        QCoreApplication.installTranslator(self.translator)
 
         # creating context menu
         self.menubar = QMenu(self)
         self.setMenu(self.menubar)
         self.setIcon(QIcon(icons + 'menu'))
 
-        fileMenu = self.menubar.addMenu('File')
-        editMenu = self.menubar.addMenu('Edit')
-        viewMenu = self.menubar.addMenu('View')
-        downloadMenu = self.menubar.addMenu('Download')
-        queueMenu = self.menubar.addMenu('Queue')
-        videoFinderMenu = self.menubar.addMenu('Video Finder')
-        helpMenu = self.menubar.addMenu('Help')
+        fileMenu = self.menubar.addMenu(QCoreApplication.translate("mainwindow_ui_tr", 'File'))
+        editMenu = self.menubar.addMenu(QCoreApplication.translate("mainwindow_ui_tr", 'Edit'))
+        viewMenu = self.menubar.addMenu(QCoreApplication.translate("mainwindow_ui_tr", 'View'))
+        downloadMenu = self.menubar.addMenu(QCoreApplication.translate("mainwindow_ui_tr", 'Download'))
+        queueMenu = self.menubar.addMenu(QCoreApplication.translate("mainwindow_ui_tr", 'Queue'))
+        videoFinderMenu = self.menubar.addMenu(QCoreApplication.translate("mainwindow_ui_tr", 'Video Finder'))
+        helpMenu = self.menubar.addMenu(QCoreApplication.translate("mainwindow_ui_tr", 'Help'))
 
-        sortMenu = viewMenu.addMenu('Sort by')
+        sortMenu = viewMenu.addMenu(QCoreApplication.translate("mainwindow_ui_tr", 'Sort by'))
 
         videoFinderMenu.addAction(self.parent.youtubeAddLinkAction)
 
@@ -82,8 +95,6 @@ class MenuWidget(QPushButton):
 
         downloadMenu.addAction(self.parent.stopAction)
 
-        downloadMenu.addAction(self.parent.removeAction)
-
         downloadMenu.addAction(self.parent.propertiesAction)
 
         downloadMenu.addAction(self.parent.progressAction)
@@ -92,17 +103,11 @@ class MenuWidget(QPushButton):
 
         fileMenu.addAction(self.parent.openDownloadFolderAction)
 
-        fileMenu.addAction(self.parent.deleteFileAction)
-
         fileMenu.addAction(self.parent.openDefaultDownloadFolderAction)
 
         fileMenu.addAction(self.parent.exitAction)
 
         editMenu.addAction(self.parent.clearAction)
-
-        editMenu.addAction(self.parent.selectAction)
-
-        editMenu.addAction(self.parent.selectAllAction)
 
         editMenu.addAction(self.parent.removeSelectedAction)
 
@@ -115,10 +120,6 @@ class MenuWidget(QPushButton):
         queueMenu.addAction(self.parent.startQueueAction)
 
         queueMenu.addAction(self.parent.stopQueueAction)
-
-        queueMenu.addAction(self.parent.moveUpAction)
-
-        queueMenu.addAction(self.parent.moveDownAction)
 
         queueMenu.addAction(self.parent.moveUpSelectedAction)
 
@@ -171,6 +172,19 @@ class MainWindow_Ui(QMainWindow):
         super().__init__()
 # MainWindow
         self.persepolis_setting = persepolis_setting
+
+# add support for other languages
+# a) detect current value of locale in persepolis config file
+        if str(self.persepolis_setting.value('settings/locale')) in (-1, 'en_US'):
+            locale_dir = ''
+        else:
+            locale_dir = 'locales/' + str(self.persepolis_setting.value('settings/locale')) + '/ui.qm'
+        locale_path = pkg_resources.resource_filename(__name__, locale_dir)
+# b) set translator to Qtranslator
+        self.translator = QTranslator()
+        self.translator.load(locale_path)
+        QCoreApplication.installTranslator(self.translator)
+
 
         icons = ':/' + \
             str(self.persepolis_setting.value('settings/icons')) + '/'
@@ -338,8 +352,8 @@ class MainWindow_Ui(QMainWindow):
         self.download_table.setColumnHidden(8, True)
         self.download_table.setColumnHidden(9, True)
 
-        download_table_header = ['File Name', 'Status', 'Size', 'Downloaded', 'Percentage', 'Connections',
-                                 'Transfer rate', 'Estimate time left', 'Gid', 'Link', 'First try date', 'Last try date', 'Category']
+        download_table_header = [QCoreApplication.translate("mainwindow_ui_tr", 'File Name'), QCoreApplication.translate("mainwindow_ui_tr",'Status'), QCoreApplication.translate("mainwindow_ui_tr", 'Size'), QCoreApplication.translate("mainwindow_ui_tr", 'Downloaded'), QCoreApplication.translate("mainwindow_ui_tr", 'Percentage'), QCoreApplication.translate("mainwindow_ui_tr", 'Connections'),
+                                 QCoreApplication.translate("mainwindow_ui_tr", 'Transfer rate'), QCoreApplication.translate("mainwindow_ui_tr",'Estimate time left'), QCoreApplication.translate("mainwindow_ui_tr", 'Gid'), QCoreApplication.translate("mainwindow_ui_tr",'Link'), QCoreApplication.translate("mainwindow_ui_tr", 'First try date'), QCoreApplication.translate("mainwindow_ui_tr", 'Last try date'), QCoreApplication.translate("mainwindow_ui_tr",'Category')]
         self.download_table.setHorizontalHeaderLabels(download_table_header)
 
 # fixing the size of download_table when window is Maximized!
@@ -357,251 +371,220 @@ class MainWindow_Ui(QMainWindow):
         self.menubar = QMenuBar(self)
         self.menubar.setGeometry(QRect(0, 0, 600, 24))
         self.setMenuBar(self.menubar)
-        fileMenu = self.menubar.addMenu('&File')
-        editMenu = self.menubar.addMenu('&Edit')
-        viewMenu = self.menubar.addMenu('&View')
-        downloadMenu = self.menubar.addMenu('&Download')
-        queueMenu = self.menubar.addMenu('&Queue')
-        videoFinderMenu = self.menubar.addMenu('&Video Finder')
-        helpMenu = self.menubar.addMenu('&Help')
+        fileMenu = self.menubar.addMenu(QCoreApplication.translate("mainwindow_ui_tr", '&File'))
+        editMenu = self.menubar.addMenu(QCoreApplication.translate("mainwindow_ui_tr", '&Edit'))
+        viewMenu = self.menubar.addMenu(QCoreApplication.translate("mainwindow_ui_tr", '&View'))
+        downloadMenu = self.menubar.addMenu(QCoreApplication.translate("mainwindow_ui_tr", '&Download'))
+        queueMenu = self.menubar.addMenu(QCoreApplication.translate("mainwindow_ui_tr", '&Queue'))
+        videoFinderMenu = self.menubar.addMenu(QCoreApplication.translate("mainwindow_ui_tr", '&Video Finder'))
+        helpMenu = self.menubar.addMenu(QCoreApplication.translate("mainwindow_ui_tr", '&Help'))
 
 
 # viewMenu submenus
-        sortMenu = viewMenu.addMenu('Sort by')
+        sortMenu = viewMenu.addMenu(QCoreApplication.translate("mainwindow_ui_tr", 'Sort by'))
 # statusbar
         self.statusbar = QStatusBar(self)
         self.setStatusBar(self.statusbar)
-        self.statusbar.showMessage("Persepolis Download Manager")
+        self.statusbar.showMessage(QCoreApplication.translate("mainwindow_ui_tr", "Persepolis Download Manager"))
 # toolBar
         self.toolBar2 = QToolBar(self)
         self.addToolBar(QtCore.Qt.TopToolBarArea, self.toolBar2)
-        self.toolBar2.setWindowTitle('Menu')
+        self.toolBar2.setWindowTitle(QCoreApplication.translate("mainwindow_ui_tr", 'Menu'))
         self.toolBar2.setFloatable(False)
         self.toolBar2.setMovable(False)
 
         self.toolBar = QToolBar(self)
         self.addToolBar(QtCore.Qt.TopToolBarArea, self.toolBar)
-        self.toolBar.setWindowTitle('Toolbar')
+        self.toolBar.setWindowTitle(QCoreApplication.translate("mainwindow_ui_tr", 'Toolbar'))
         self.toolBar.setFloatable(False)
         self.toolBar.setMovable(False)
 
 
 #toolBar and menubar and actions
-        self.youtubeAddLinkAction = QAction(QIcon(icons + 'video_finder'), 'Find Video Links', self, statusTip='Download video or audio from youtube and ...',
+        self.youtubeAddLinkAction = QAction(QIcon(icons + 'video_finder'), QCoreApplication.translate("mainwindow_ui_tr", 'Find Video Links'), self, statusTip=QCoreApplication.translate("mainwindow_ui_tr", 'Download video or audio from youtube and ...'),
                                             triggered=self.showYoutubeAddLinkWindow)
         videoFinderMenu.addAction(self.youtubeAddLinkAction)
 
-        self.stopAllAction = QAction(QIcon(icons + 'stop_all'), 'Stop all active downloads',
+        self.stopAllAction = QAction(QIcon(icons + 'stop_all'), QCoreApplication.translate("mainwindow_ui_tr", 'Stop all active downloads'),
                                      self, statusTip='Stop all active downloads', triggered=self.stopAllDownloads)
         downloadMenu.addAction(self.stopAllAction)
 
         self.sort_file_name_Action = QAction(
-            'File name', self, triggered=self.sortByName)
+            QCoreApplication.translate("mainwindow_ui_tr", 'File name'), self, triggered=self.sortByName)
         sortMenu.addAction(self.sort_file_name_Action)
 
         self.sort_file_size_Action = QAction(
-            'File size', self, triggered=self.sortBySize)
+            QCoreApplication.translate("mainwindow_ui_tr", 'File size'), self, triggered=self.sortBySize)
         sortMenu.addAction(self.sort_file_size_Action)
 
         self.sort_first_try_date_Action = QAction(
-            'First try date', self, triggered=self.sortByFirstTry)
+            QCoreApplication.translate("mainwindow_ui_tr", 'First try date'), self, triggered=self.sortByFirstTry)
         sortMenu.addAction(self.sort_first_try_date_Action)
 
         self.sort_last_try_date_Action = QAction(
-            'Last try date', self, triggered=self.sortByLastTry)
+            QCoreApplication.translate("mainwindow_ui_tr", 'Last try date'), self, triggered=self.sortByLastTry)
         sortMenu.addAction(self.sort_last_try_date_Action)
 
         self.sort_download_status_Action = QAction(
-            'Download status', self, triggered=self.sortByStatus)
+            QCoreApplication.translate("mainwindow_ui_tr", 'Download status'), self, triggered=self.sortByStatus)
         sortMenu.addAction(self.sort_download_status_Action)
 
-        self.trayAction = QAction('Show system tray icon', self,
-                                  statusTip="Show/Hide system tray icon", triggered=self.showTray)
+        self.trayAction = QAction(QCoreApplication.translate("mainwindow_ui_tr", 'Show system tray icon'), self,
+                                  statusTip=QCoreApplication.translate("mainwindow_ui_tr", "Show/Hide system tray icon"), triggered=self.showTray)
         self.trayAction.setCheckable(True)
         viewMenu.addAction(self.trayAction)
 
         self.showMenuBarAction = QAction(
-            'Show menubar', self, statusTip='Show menubar', triggered=self.showMenuBar)
+            QCoreApplication.translate("mainwindow_ui_tr", 'Show menubar'), self, statusTip=QCoreApplication.translate("mainwindow_ui_tr", 'Show menubar'), triggered=self.showMenuBar)
         self.showMenuBarAction.setCheckable(True)
         viewMenu.addAction(self.showMenuBarAction)
 
         self.showSidePanelAction = QAction(
-            'Show side panel', self, statusTip='Show side panel', triggered=self.showSidePanel)
+            'Show side panel', self, statusTip=QCoreApplication.translate("mainwindow_ui_tr", 'Show side panel'), triggered=self.showSidePanel)
         self.showSidePanelAction.setCheckable(True)
         viewMenu.addAction(self.showSidePanelAction)
 
-        self.minimizeAction = QAction(QIcon(icons + 'minimize'), 'Minimize to system tray', self,
-                                      shortcut="Ctrl+W", statusTip="Minimize to system tray", triggered=self.minMaxTray)
+        self.minimizeAction = QAction(QIcon(icons + 'minimize'), QCoreApplication.translate("mainwindow_ui_tr", 'Minimize to system tray'), self,
+                                      shortcut="Ctrl+W", statusTip=QCoreApplication.translate("mainwindow_ui_tr", "Minimize to system tray"), triggered=self.minMaxTray)
         viewMenu.addAction(self.minimizeAction)
 
-        self.addlinkAction = QAction(QIcon(icons + 'add'), 'Add New Download Link', self,
-                                     shortcut="Ctrl+N", statusTip="Add New Download Link", triggered=self.addLinkButtonPressed)
+        self.addlinkAction = QAction(QIcon(icons + 'add'), QCoreApplication.translate("mainwindow_ui_tr", 'Add New Download Link'), self,
+                                     shortcut="Ctrl+N", statusTip=QCoreApplication.translate("mainwindow_ui_tr", "Add New Download Link"), triggered=self.addLinkButtonPressed)
         fileMenu.addAction(self.addlinkAction)
 
-        self.addtextfileAction = QAction(QIcon(icons + 'file'), 'Import links from text file', self,
-                                         statusTip='Create a Text file and put links in it.line by line!', triggered=self.importText)
+        self.addtextfileAction = QAction(QIcon(icons + 'file'), QCoreApplication.translate("mainwindow_ui_tr", 'Import links from text file'), self,
+                                         statusTip=QCoreApplication.translate("mainwindow_ui_tr", 'Create a Text file and put links in it.line by line!'), triggered=self.importText)
         fileMenu.addAction(self.addtextfileAction)
 
-        self.resumeAction = QAction(QIcon(icons + 'play'), 'Resume Download', self,
-                                    shortcut="Ctrl+R", statusTip="Resume Download", triggered=self.resumeButtonPressed)
+        self.resumeAction = QAction(QIcon(icons + 'play'), QCoreApplication.translate("mainwindow_ui_tr", 'Resume Download'), self,
+                                    shortcut="Ctrl+R", statusTip=QCoreApplication.translate("mainwindow_ui_tr", "Resume Download"), triggered=self.resumeButtonPressed)
         downloadMenu.addAction(self.resumeAction)
 
-        self.pauseAction = QAction(QIcon(icons + 'pause'), 'Pause Download', self,
-                                   shortcut="Ctrl+C", statusTip="Pause Download", triggered=self.pauseButtonPressed)
+        self.pauseAction = QAction(QIcon(icons + 'pause'), QCoreApplication.translate("mainwindow_ui_tr", 'Pause Download'), self,
+                                   shortcut="Ctrl+C", statusTip=QCoreApplication.translate("mainwindow_ui_tr", "Pause Download"), triggered=self.pauseButtonPressed)
         downloadMenu.addAction(self.pauseAction)
 
-        self.stopAction = QAction(QIcon(icons + 'stop'), 'Stop Download', self, shortcut="Ctrl+S",
-                                  statusTip="Stop/Cancel Download", triggered=self.stopButtonPressed)
+        self.stopAction = QAction(QIcon(icons + 'stop'), QCoreApplication.translate("mainwindow_ui_tr", 'Stop Download'), self, shortcut="Ctrl+S",
+                                  statusTip=QCoreApplication.translate("mainwindow_ui_tr", "Stop/Cancel Download"), triggered=self.stopButtonPressed)
         downloadMenu.addAction(self.stopAction)
 
-        self.removeAction = QAction(QIcon(icons + 'remove'), 'Remove Download', self,
-                                    shortcut="Ctrl+D", statusTip="Remove Download", triggered=self.removeButtonPressed)
-        downloadMenu.addAction(self.removeAction)
-
-        self.propertiesAction = QAction(QIcon(icons + 'setting'), 'Properties', self,
-                                        shortcut="Ctrl+P", statusTip="Properties", triggered=self.propertiesButtonPressed)
+        self.propertiesAction = QAction(QIcon(icons + 'setting'), QCoreApplication.translate("mainwindow_ui_tr", 'Properties'), self,
+                                        shortcut="Ctrl+P", statusTip=QCoreApplication.translate("mainwindow_ui_tr", "Properties"), triggered=self.propertiesButtonPressed)
         downloadMenu.addAction(self.propertiesAction)
 
-        self.progressAction = QAction(QIcon(icons + 'window'), 'Progress', self,
-                                      shortcut="Ctrl+Z", statusTip="Progress", triggered=self.progressButtonPressed)
+        self.progressAction = QAction(QIcon(icons + 'window'), QCoreApplication.translate("mainwindow_ui_tr", 'Progress'), self,
+                                      shortcut="Ctrl+Z", statusTip=QCoreApplication.translate("mainwindow_ui_tr", "Progress"), triggered=self.progressButtonPressed)
         downloadMenu.addAction(self.progressAction)
 
         self.openFileAction = QAction(QIcon(
-            icons + 'file'), 'Open file', self, statusTip='Open file', triggered=self.openFile)
+            icons + 'file'), QCoreApplication.translate("mainwindow_ui_tr", 'Open file'), self, statusTip=QCoreApplication.translate("mainwindow_ui_tr", 'Open file'), triggered=self.openFile)
         fileMenu.addAction(self.openFileAction)
 
         self.openDownloadFolderAction = QAction(QIcon(
-            icons + 'folder'), 'Open download folder', self, statusTip='Open download folder', triggered=self.openDownloadFolder)
+            icons + 'folder'), QCoreApplication.translate("mainwindow_ui_tr", 'Open download folder'), self, statusTip=QCoreApplication.translate("mainwindow_ui_tr", 'Open download folder'), triggered=self.openDownloadFolder)
         fileMenu.addAction(self.openDownloadFolderAction)
 
-        self.deleteFileAction = QAction(QIcon(
-            icons + 'trash'), 'Delete file', self, statusTip='Delete file', triggered=self.deleteFile)
-        fileMenu.addAction(self.deleteFileAction)
-
         self.openDefaultDownloadFolderAction = QAction(QIcon(
-            icons + 'folder'), 'Open default download folder', self, statusTip='Open default download folder', triggered=self.openDefaultDownloadFolder)
+            icons + 'folder'), QCoreApplication.translate("mainwindow_ui_tr", 'Open default download folder'), self, statusTip=QCoreApplication.translate("mainwindow_ui_tr", 'Open default download folder'), triggered=self.openDefaultDownloadFolder)
         fileMenu.addAction(self.openDefaultDownloadFolderAction)
 
-        self.exitAction = QAction(QIcon(icons + 'exit'), 'Exit', self,
-                                  shortcut="Ctrl+Q", statusTip="Exit", triggered=self.closeEvent)
+        self.exitAction = QAction(QIcon(icons + 'exit'), QCoreApplication.translate("mainwindow_ui_tr", 'Exit'), self,
+                                  shortcut="Ctrl+Q", statusTip=QCoreApplication.translate("mainwindow_ui_tr", "Exit"), triggered=self.closeEvent)
         fileMenu.addAction(self.exitAction)
 
-        self.clearAction = QAction(QIcon(icons + 'multi_remove'), 'Clear download list',
-                                         self, statusTip='Clear all items in download list', triggered=self.clearDownloadList)
+        self.clearAction = QAction(QIcon(icons + 'multi_remove'), QCoreApplication.translate("mainwindow_ui_tr", 'Clear download list'),
+                                         self, statusTip=QCoreApplication.translate("mainwindow_ui_tr", 'Clear all items in download list'), triggered=self.clearDownloadList)
         editMenu.addAction(self.clearAction)
 
-
-        self.selectAction = QAction('Select multiple items ', self,
-                                    statusTip='Select multiple items', triggered=self.selectDownloads)
-        self.selectAction.setCheckable(True)
-        editMenu.addAction(self.selectAction)
-
-        self.selectAllAction = QAction(QIcon(
-            icons + 'select_all'), 'Select All', self, statusTip='Select All', triggered=self.selectAll)
-        editMenu.addAction(self.selectAllAction)
-        self.selectAllAction.setEnabled(False)
-
-        self.removeSelectedAction = QAction(QIcon(icons + 'multi_remove'), 'Remove selected downloads form list',
-                                            self, statusTip='Remove selected downloads form list', triggered=self.removeSelected)
+        self.removeSelectedAction = QAction(QIcon(icons + 'remove'), QCoreApplication.translate("mainwindow_ui_tr", 'Remove selected downloads form list'),
+                                            self, statusTip=QCoreApplication.translate("mainwindow_ui_tr", 'Remove selected downloads form list'), triggered=self.removeSelected)
         editMenu.addAction(self.removeSelectedAction)
         self.removeSelectedAction.setEnabled(False)
 
-        self.deleteSelectedAction = QAction(QIcon(icons + 'multi_trash'), 'Delete selected download files',
-                                            self, statusTip='Delete selected download files', triggered=self.deleteSelected)
+        self.deleteSelectedAction = QAction(QIcon(icons + 'trash'), QCoreApplication.translate("mainwindow_ui_tr", 'Delete selected download files'),
+                                            self, statusTip=QCoreApplication.translate("mainwindow_ui_tr", 'Delete selected download files'), triggered=self.deleteSelected)
         editMenu.addAction(self.deleteSelectedAction)
         self.deleteSelectedAction.setEnabled(False)
 
-        self.createQueueAction = QAction(QIcon(icons + 'add_queue'), 'Create new queue',
-                                         self, statusTip='Create new download queue', triggered=self.createQueue)
+        self.createQueueAction = QAction(QIcon(icons + 'add_queue'), QCoreApplication.translate("mainwindow_ui_tr", 'Create new queue'),
+                                         self, statusTip=QCoreApplication.translate("mainwindow_ui_tr", 'Create new download queue'), triggered=self.createQueue)
         queueMenu.addAction(self.createQueueAction)
 
-        self.removeQueueAction = QAction(QIcon(icons + 'remove_queue'), 'Remove this queue',
-                                         self, statusTip='Remove this queue', triggered=self.removeQueue)
+        self.removeQueueAction = QAction(QIcon(icons + 'remove_queue'), QCoreApplication.translate("mainwindow_ui_tr", 'Remove this queue'),
+                                         self, statusTip=QCoreApplication.translate("mainwindow_ui_tr", 'Remove this queue'), triggered=self.removeQueue)
         queueMenu.addAction(self.removeQueueAction)
 
         self.startQueueAction = QAction(QIcon(
-            icons + 'start_queue'), 'Start this queue', self, statusTip='Start this queue', triggered=self.startQueue)
+            icons + 'start_queue'), QCoreApplication.translate("mainwindow_ui_tr", 'Start this queue'), self, statusTip=QCoreApplication.translate("mainwindow_ui_tr", 'Start this queue'), triggered=self.startQueue)
         queueMenu.addAction(self.startQueueAction)
 
         self.stopQueueAction = QAction(QIcon(
-            icons + 'stop_queue'), 'Stop this queue', self, statusTip='Stop this queue', triggered=self.stopQueue)
+            icons + 'stop_queue'), QCoreApplication.translate("mainwindow_ui_tr", 'Stop this queue'), self, statusTip=QCoreApplication.translate("mainwindow_ui_tr", 'Stop this queue'), triggered=self.stopQueue)
         queueMenu.addAction(self.stopQueueAction)
 
-        self.moveUpAction = QAction(QIcon(icons + 'up'), 'Move up this item', self,
-                                    statusTip='Move currently selected item up by one row', triggered=self.moveUp)
-        queueMenu.addAction(self.moveUpAction)
-
-        self.moveDownAction = QAction(QIcon(icons + 'down'), 'Move down this item', self,
-                                      statusTip='Move currently selected item down by one row', triggered=self.moveDown)
-        queueMenu.addAction(self.moveDownAction)
-
-        self.moveUpSelectedAction = QAction(QIcon(icons + 'multi_up'), 'Move up selected items', self,
-                                            statusTip='Move currently selected items up by one row', triggered=self.moveUpSelected)
+        self.moveUpSelectedAction = QAction(QIcon(icons + 'multi_up'), QCoreApplication.translate("mainwindow_ui_tr", 'Move up selected items'), self,
+                                            statusTip=QCoreApplication.translate("mainwindow_ui_tr", 'Move currently selected items up by one row'), triggered=self.moveUpSelected)
         queueMenu.addAction(self.moveUpSelectedAction)
 
-        self.moveDownSelectedAction = QAction(QIcon(icons + 'multi_down'), 'Move down selected items',
-                                              self, statusTip='Move currently selected items down by one row', triggered=self.moveDownSelected)
+        self.moveDownSelectedAction = QAction(QIcon(icons + 'multi_down'), QCoreApplication.translate("mainwindow_ui_tr", 'Move down selected items'),
+                                              self, statusTip=QCoreApplication.translate("mainwindow_ui_tr", 'Move currently selected items down by one row'), triggered=self.moveDownSelected)
         queueMenu.addAction(self.moveDownSelectedAction)
 
-        self.preferencesAction = QAction(QIcon(icons + 'preferences'), 'Preferences',
-                                         self, statusTip='Preferences', triggered=self.openPreferences, menuRole=5)
+        self.preferencesAction = QAction(QIcon(icons + 'preferences'), QCoreApplication.translate("mainwindow_ui_tr", 'Preferences'),
+                                         self, statusTip=QCoreApplication.translate("mainwindow_ui_tr", 'Preferences'), triggered=self.openPreferences, menuRole=5)
         editMenu.addAction(self.preferencesAction)
 
         self.aboutAction = QAction(QIcon(
-            icons + 'about'), 'About', self, statusTip='About', triggered=self.openAbout, menuRole=4)
+            icons + 'about'), QCoreApplication.translate("mainwindow_ui_tr", 'About'), self, statusTip=QCoreApplication.translate("mainwindow_ui_tr", 'About'), triggered=self.openAbout, menuRole=4)
         helpMenu.addAction(self.aboutAction)
 
-        self.issueAction = QAction(QIcon(icons + 'about'), 'Report an issue',
-                                   self, statusTip='Report an issue', triggered=self.reportIssue)
+        self.issueAction = QAction(QIcon(icons + 'about'), QCoreApplication.translate("mainwindow_ui_tr", 'Report an issue'),
+                                   self, statusTip=QCoreApplication.translate("mainwindow_ui_tr", 'Report an issue'), triggered=self.reportIssue)
         helpMenu.addAction(self.issueAction)
 
-        self.updateAction = QAction(QIcon(icons + 'about'), 'Check for newer version',
-                                    self, statusTip='Check for newer release', triggered=self.newUpdate)
+        self.updateAction = QAction(QIcon(icons + 'about'), QCoreApplication.translate("mainwindow_ui_tr", 'Check for newer version'),
+                                    self, statusTip=QCoreApplication.translate("mainwindow_ui_tr", 'Check for newer release'), triggered=self.newUpdate)
         helpMenu.addAction(self.updateAction)
 
-        self.logAction = QAction(QIcon(icons + 'about'), 'Show log file',
-                                   self, statusTip='Help', triggered=self.showLog)
+        self.logAction = QAction(QIcon(icons + 'about'), QCoreApplication.translate("mainwindow_ui_tr", 'Show log file'),
+                                   self, statusTip=QCoreApplication.translate("mainwindow_ui_tr", 'Help'), triggered=self.showLog)
         helpMenu.addAction(self.logAction)
 
-
-
-        self.helpAction = QAction(QIcon(icons + 'about'), 'Help',
-                                   self, statusTip='Help', triggered=self.persepolisHelp)
+        self.helpAction = QAction(QIcon(icons + 'about'), QCoreApplication.translate("mainwindow_ui_tr", 'Help'),
+                                   self, statusTip=QCoreApplication.translate("mainwindow_ui_tr", 'Help'), triggered=self.persepolisHelp)
         helpMenu.addAction(self.helpAction)
-
-
 
         self.qmenu = MenuWidget(self)
 
         self.toolBar2.addWidget(self.qmenu)
 
 # labels
-        self.queue_panel_show_button.setText("Hide options")
-        self.start_checkBox.setText("Start Time")
+        self.queue_panel_show_button.setText(QCoreApplication.translate("mainwindow_ui_tr", "Hide options"))
+        self.start_checkBox.setText(QCoreApplication.translate("mainwindow_ui_tr", "Start Time"))
 
-        self.end_checkBox.setText("End Time")
+        self.end_checkBox.setText(QCoreApplication.translate("mainwindow_ui_tr", "End Time"))
 
-        self.reverse_checkBox.setText("Download bottom of\n the list first")
+        self.reverse_checkBox.setText(QCoreApplication.translate("mainwindow_ui_tr", "Download bottom of\n the list first"))
 
-        self.limit_checkBox.setText("Limit Speed")
-        self.limit_comboBox.setItemText(0,  "KB/S")
-        self.limit_comboBox.setItemText(1,  "MB/S")
-        self.limit_pushButton.setText("Apply")
+        self.limit_checkBox.setText(QCoreApplication.translate("mainwindow_ui_tr", "Limit Speed"))
+        self.limit_comboBox.setItemText(0,  QCoreApplication.translate("mainwindow_ui_tr", "KB/S"))
+        self.limit_comboBox.setItemText(1,  QCoreApplication.translate("mainwindow_ui_tr", "MB/S"))
+        self.limit_pushButton.setText(QCoreApplication.translate("mainwindow_ui_tr", "Apply"))
 
-        self.after_checkBox.setText("After download")
-        self.after_comboBox.setItemText(0,  "Shut Down")
+        self.after_checkBox.setText(QCoreApplication.translate("mainwindow_ui_tr", "After download"))
+        self.after_comboBox.setItemText(0,  QCoreApplication.translate("mainwindow_ui_tr", "Shut Down"))
 
-        self.keep_awake_checkBox.setText("Keep system awake!")
+        self.keep_awake_checkBox.setText(QCoreApplication.translate("mainwindow_ui_tr", "Keep system awake!"))
         self.keep_awake_checkBox.setToolTip(
-            "<html><head/><body><p>This option is preventing system from going to sleep.\
-            This is necessary if your power manager is suspending system automatically. </p></body></html>")
+            QCoreApplication.translate("mainwindow_ui_tr", "<html><head/><body><p>This option is preventing system from going to sleep.\
+            This is necessary if your power manager is suspending system automatically. </p></body></html>"))
  
-        self.after_pushButton.setText("Apply")
+        self.after_pushButton.setText(QCoreApplication.translate("mainwindow_ui_tr", "Apply"))
 
     def changeIcon(self, icons):
         icons = ':/' + str(icons) + '/'
 
-        action_icon_dict = {self.stopAllAction: 'stop_all', self.minimizeAction: 'minimize', self.addlinkAction: 'add', self.addtextfileAction: 'file', self.resumeAction: 'play', self.pauseAction: 'pause', self.stopAction: 'stop', self.removeAction: 'remove', self.propertiesAction: 'setting', self.progressAction: 'window', self.openFileAction: 'file', self.openDownloadFolderAction: 'folder', self.deleteFileAction: 'trash', self.openDefaultDownloadFolderAction: 'folder', self.exitAction: 'exit',
-                self.selectAllAction: 'select_all', self.removeSelectedAction: 'multi_remove', self.deleteSelectedAction: 'multi_trash', self.createQueueAction: 'add_queue', self.removeQueueAction: 'remove_queue', self.startQueueAction: 'start_queue', self.stopQueueAction: 'stop_queue', self.moveUpAction: 'up', self.moveDownAction: 'down', self.preferencesAction: 'preferences', self.aboutAction: 'about', self.issueAction: 'about', self.updateAction: 'about', self.youtubeAddLinkAction: 'video_finder', self.qmenu: 'menu'}
+        action_icon_dict = {self.stopAllAction: 'stop_all', self.minimizeAction: 'minimize', self.addlinkAction: 'add', self.addtextfileAction: 'file', self.resumeAction: 'play', self.pauseAction: 'pause', self.stopAction: 'stop', self.propertiesAction: 'setting', self.progressAction: 'window', self.openFileAction: 'file', self.openDownloadFolderAction: 'folder', self.openDefaultDownloadFolderAction: 'folder', self.exitAction: 'exit',
+                self.removeSelectedAction: 'multi_remove', self.deleteSelectedAction: 'multi_trash', self.createQueueAction: 'add_queue', self.removeQueueAction: 'remove_queue', self.startQueueAction: 'start_queue', self.stopQueueAction: 'stop_queue', self.preferencesAction: 'preferences', self.aboutAction: 'about', self.issueAction: 'about', self.updateAction: 'about', self.youtubeAddLinkAction: 'video_finder', self.qmenu: 'menu'}
         for key in action_icon_dict.keys():
             key.setIcon(QIcon(icons + str(action_icon_dict[key])))

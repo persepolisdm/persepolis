@@ -16,11 +16,12 @@
 from PyQt5 import QtWidgets, QtCore
 from PyQt5.QtGui import QIcon
 from PyQt5.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QLabel, QPushButton
-from PyQt5.QtCore import QSize, QPoint
+from PyQt5.QtCore import QSize, QPoint, QTranslator, QCoreApplication
 import platform
 from persepolis.scripts import osCommands
 import requests
 import platform
+import pkg_resources
 import ast
 
 # finding os_type
@@ -37,18 +38,31 @@ class checkupdate(QWidget):
             str(self.persepolis_setting.value('settings/icons')) + '/'
         self.setWindowIcon(QIcon.fromTheme('persepolis', QIcon(':/persepolis.svg')))
 
-        self.setWindowTitle('Checking for newer version')
+# add support for other languages
+# -a detect current value of locale in persepolis config file
+        if str(self.persepolis_setting.value('settings/locale')) in (-1, 'en_US'):
+            locale_dir = ''
+        else:
+            locale_dir = 'locales/' + str(self.persepolis_setting.value('settings/locale')) + '/ui.qm'
+        locale_path = pkg_resources.resource_filename(__name__, locale_dir)
+ # -b set translator to Qtranslator
+        self.translator = QTranslator()
+        self.translator.load(locale_path)
+        QCoreApplication.installTranslator(self.translator)
+
+
+        self.setWindowTitle(QCoreApplication.translate("update_src_ui_tr", 'Checking for newer version'))
 
         # installed version
         self.client_version = '3.01'
 
         # first line text
-        self.update_label = QLabel("The newest is the best , We recommend to update Persepolis")
+        self.update_label = QLabel(QCoreApplication.translate("update_src_ui_tr", "The newest is the best , We recommend to update Persepolis"))
         self.update_label.setTextFormat(QtCore.Qt.RichText)
         self.update_label.setAlignment(QtCore.Qt.AlignCenter)
 
         # second line text
-        self.version_label = QLabel('This is Persepolis Download Manager version 3.0.1')
+        self.version_label = QLabel(QCoreApplication.translate("update_src_ui_tr", 'This is Persepolis Download Manager version 3.0.1'))
         self.version_label.setAlignment(QtCore.Qt.AlignCenter)
 
         # release link
@@ -62,7 +76,7 @@ class checkupdate(QWidget):
         self.status_label.setAlignment(QtCore.Qt.AlignCenter)
 
         # update button
-        self.check_button = QPushButton("Check for new update")
+        self.check_button = QPushButton(QCoreApplication.translate("update_src_ui_tr", "Check for new update"))
         self.check_button.clicked.connect(self.updateCheck)
 
         # verticalLayout
@@ -91,7 +105,7 @@ class checkupdate(QWidget):
 
     # checking methode
     def updateCheck(self, button):
-        self.check_button.setText('Checking...')
+        self.check_button.setText(QCoreApplication.translate("update_src_ui_tr", 'Checking...'))
 
         try:
             # get information dictionary from github
@@ -105,7 +119,7 @@ class checkupdate(QWidget):
 
             # Comparison
             if float(server_version) > float(self.client_version):
-                self.status_label.setText('A newer Persepolis release is available')
+                self.status_label.setText(QCoreApplication.translate("update_src_ui_tr", 'A newer Persepolis release is available'))
 
                 if os_type == 'Windows':
                     self.winUpdatedl()  # this function download latest release
@@ -119,15 +133,15 @@ class checkupdate(QWidget):
                     osCommands.xdgOpen(updatesource_dict['macdlurl'])  # it will download latest release for mac
 
             elif float(server_version) == float(self.client_version):
-                self.status_label.setText('Latest version is installed :)')
+                self.status_label.setText(QCoreApplication.translate("update_src_ui_tr", 'Latest version is installed :)'))
 
             elif float(server_version) < float(self.client_version):
-                self.status_label.setText('You are using beta version')
+                self.status_label.setText(QCoreApplication.translate("update_src_ui_tr", 'You are using beta version'))
 
         except Exception as e:
-            self.status_label.setText('an error occured while checking update.')
+            self.status_label.setText(QCoreApplication.translate("update_src_ui_tr", 'an error occured while checking update.'))
 
-        self.check_button.setText('Check for new update')
+        self.check_button.setText(QCoreApplication.translate("update_src_ui_tr", 'Check for new update'))
 
     def closeEvent(self, event):
         # saving window size and position
