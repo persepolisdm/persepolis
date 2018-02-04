@@ -9,8 +9,8 @@ HERE = os.path.dirname(os.path.realpath(__file__))
 translation_files = os.path.join(HERE, 'translation_files.pro')
 
 def function(locale):
-    if not os.path.exists(os.path.join(HERE + '/persepolis/gui/locales/%s' % locale)):
-        os.makedirs(os.path.join(HERE + '/persepolis/gui/locales/%s' % locale))
+    if not os.path.exists(os.path.join(HERE + '/icons/locales')):
+        os.makedirs(os.path.join(HERE + '/icons/locales'))
 
     copyfile('./translation_files.pro.orig', './translation_files.pro')
 

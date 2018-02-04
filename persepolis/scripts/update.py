@@ -16,7 +16,7 @@
 from PyQt5 import QtWidgets, QtCore
 from PyQt5.QtGui import QIcon
 from PyQt5.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QLabel, QPushButton
-from PyQt5.QtCore import QSize, QPoint, QTranslator, QCoreApplication
+from PyQt5.QtCore import QSize, QPoint, QTranslator, QCoreApplication, QLocale
 import platform
 from persepolis.scripts import osCommands
 import requests
@@ -38,14 +38,11 @@ class checkupdate(QWidget):
         self.setWindowIcon(QIcon.fromTheme('persepolis', QIcon(':/persepolis.svg')))
 
 # add support for other languages
+        locale = str(self.persepolis_setting.value('settings/locale'))
+        QLocale.setDefault(QLocale(locale))
         self.translator = QTranslator()
-# a) detect current value of locale in persepolis config file
-        if str(self.persepolis_setting.value('settings/locale')) in (-1, 'en_US'):
-            self.translator.load('')
-        else:
-            self.translator.load('locales/' + str(self.persepolis_setting.value('settings/locale')), ':/ui.qm')
-        QCoreApplication.installTranslator(self.translator)
-
+        if self.translator.load(':/translations/locales/ui_' + locale, 'ts'):
+            QCoreApplication.installTranslator(self.translator)
 
         self.setWindowTitle(QCoreApplication.translate("update_src_ui_tr", 'Checking for newer version'))
 

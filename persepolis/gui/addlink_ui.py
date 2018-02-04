@@ -19,7 +19,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import QTabWidget, QDateTimeEdit, QDoubleSpinBox, QPushButton, QComboBox, QSpinBox, QVBoxLayout, QHBoxLayout, QLabel, QApplication, QWidget, QFileDialog, QMessageBox, QSizePolicy, QGridLayout, QCheckBox, QFrame, QLineEdit, QPushButton
 from PyQt5.QtGui import QIcon
 from persepolis.gui import icons_resource
-from PyQt5.QtCore import QTranslator, QCoreApplication
+from PyQt5.QtCore import QTranslator, QCoreApplication, QLocale
 
 
 
@@ -29,13 +29,11 @@ class AddLinkWindow_Ui(QWidget):
         self.persepolis_setting = persepolis_setting
         
 # add support for other languages
+        locale = str(self.persepolis_setting.value('settings/locale'))
+        QLocale.setDefault(QLocale(locale))
         self.translator = QTranslator()
-# a) detect current value of locale in persepolis config file
-        if str(self.persepolis_setting.value('settings/locale')) in (-1, 'en_US'):
-            self.translator.load('')
-        else:
-            self.translator.load('locales/' + str(self.persepolis_setting.value('settings/locale')), ':/ui.qm')
-        QCoreApplication.installTranslator(self.translator)
+        if self.translator.load(':/translations/locales/ui_' + locale, 'ts'):
+            QCoreApplication.installTranslator(self.translator)
 
         # get icons name
         icons = ':/' + \

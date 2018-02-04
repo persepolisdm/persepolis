@@ -18,7 +18,7 @@ from random import random
 from time import time, sleep
 import youtube_dl
 import os
-from PyQt5.QtCore import QThread, pyqtSignal, QCoreApplication, QTranslator
+from PyQt5.QtCore import QThread, pyqtSignal, QCoreApplication, QTranslator, QLocale
 from PyQt5.QtWidgets import QPushButton, QTextEdit, QFrame, QLabel, QComboBox, QHBoxLayout, QApplication
 from copy import deepcopy
 from persepolis.scripts import logger, osCommands
@@ -38,13 +38,11 @@ class YoutubeAddLink(AddLinkWindow):
         self.size_label.hide()
 		
 # add support for other languages
+        locale = str(self.persepolis_setting.value('settings/locale'))
+        QLocale.setDefault(QLocale(locale))
         self.translator = QTranslator()
-# a) detect current value of locale in persepolis config file
-        if str(self.persepolis_setting.value('settings/locale')) in (-1, 'en_US'):
-            self.translator.load('')
-        else:
-            self.translator.load('locales/' + str(self.persepolis_setting.value('settings/locale')), ':/ui.qm')
-        QCoreApplication.installTranslator(self.translator)
+        if self.translator.load(':/translations/locales/ui_' + locale, 'ts'):
+            QCoreApplication.installTranslator(self.translator)
 
 
         # Fetch Button

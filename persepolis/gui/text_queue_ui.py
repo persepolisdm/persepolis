@@ -16,7 +16,7 @@
 
 from PyQt5 import QtWidgets, QtGui, QtCore
 from PyQt5.QtWidgets import QPushButton, QApplication, QWidget, QTabWidget, QVBoxLayout, QTableWidget, QAbstractItemView, QLabel, QLineEdit, QHBoxLayout, QSpinBox, QComboBox, QFrame, QCheckBox, QGridLayout
-from PyQt5.QtCore import QTranslator, QCoreApplication
+from PyQt5.QtCore import QTranslator, QCoreApplication, QLocale
 from PyQt5.QtGui import QIcon
 
 
@@ -30,13 +30,11 @@ class TextQueue_Ui(QWidget):
             str(self.persepolis_setting.value('settings/icons')) + '/'
             
 # add support for other languages
+        locale = str(self.persepolis_setting.value('settings/locale'))
+        QLocale.setDefault(QLocale(locale))
         self.translator = QTranslator()
-# a) detect current value of locale in persepolis config file
-        if str(self.persepolis_setting.value('settings/locale')) in (-1, 'en_US'):
-            self.translator.load('')
-        else:
-            self.translator.load('locales/' + str(self.persepolis_setting.value('settings/locale')), ':/ui.qm')
-        QCoreApplication.installTranslator(self.translator)
+        if self.translator.load(':/translations/locales/ui_' + locale, 'ts'):
+            QCoreApplication.installTranslator(self.translator)
 
 
         self.setWindowIcon(QIcon.fromTheme('persepolis', QIcon(':/persepolis.svg')))

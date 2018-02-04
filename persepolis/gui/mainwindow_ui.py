@@ -16,7 +16,7 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import QDateTimeEdit, QDoubleSpinBox, QPushButton, QComboBox,  QMenu, QTreeView, QSplitter, QSizePolicy, QGridLayout, QHBoxLayout, QVBoxLayout, QMenu, QTableWidgetItem, QAbstractItemView, QApplication, QToolBar, QMenuBar, QStatusBar, QTableWidget, QAction, QMainWindow, QWidget, QFrame, QAbstractItemView, QCheckBox, QSpinBox, QLabel
 from PyQt5.QtGui import QIcon, QStandardItemModel, QStandardItem
-from PyQt5.QtCore import QCoreApplication, QRect, QSize, Qt, QTranslator
+from PyQt5.QtCore import QCoreApplication, QRect, QSize, Qt, QTranslator, QLocale
 \
 from persepolis.gui import icons_resource
 
@@ -36,15 +36,12 @@ class MenuWidget(QPushButton):
 
         icons = ':/' + \
             str(self.parent.persepolis_setting.value('settings/icons')) + '/'
-# add support for other languages
+        # add support for other languages
+        locale = str(self.parent.persepolis_setting.value('settings/locale'))
+        QLocale.setDefault(QLocale(locale))
         self.translator = QTranslator()
-# a) detect current value of locale in persepolis config file
-        if str(self.parent.persepolis_setting.value('settings/locale')) in (-1, 'en_US'):
-            self.translator.load('')
-        else:
-            self.translator.load('locales/' + str(self.parent.persepolis_setting.value('settings/locale')), ':/ui.qm')
-        QCoreApplication.installTranslator(self.translator)
-
+        if self.translator.load(':/translations/locales/ui_' + locale, 'ts'):
+            QCoreApplication.installTranslator(self.translator)
 
         # creating context menu
         self.menubar = QMenu(self)
@@ -172,13 +169,12 @@ class MainWindow_Ui(QMainWindow):
         self.persepolis_setting = persepolis_setting
 
 # add support for other languages
+        locale = str(self.persepolis_setting.value('settings/locale'))
+        QLocale.setDefault(QLocale(locale))
         self.translator = QTranslator()
-# a) detect current value of locale in persepolis config file
-        if str(self.persepolis_setting.value('settings/locale')) in (-1, 'en_US'):
-            self.translator.load('')
-        else:
-            self.translator.load('locales/' + str(self.persepolis_setting.value('settings/locale')), ':/ui.qm')
-        QCoreApplication.installTranslator(self.translator)
+        if self.translator.load(':/translations/locales/ui_' + locale, 'ts'):
+            QCoreApplication.installTranslator(self.translator)
+
 
 
 
