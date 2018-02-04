@@ -33,7 +33,7 @@ class Setting_Ui(QWidget):
         if str(persepolis_setting.value('settings/locale')) in (-1, 'en_US'):
             locale_path = ''
         else:
-			locale_path = 'locales/' + str(self.persepolis_setting.value('settings/locale')) + QIcon(':/ui.qm')
+            locale_path = 'locales/' + str(self.persepolis_setting.value('settings/locale')) + QIcon(':/ui.qm')
 # b) set translator to Qtranslator
         self.translator = QTranslator()
         self.translator.load(locale_path)
