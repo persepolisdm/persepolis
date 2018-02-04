@@ -243,7 +243,7 @@
         <file>Papirus-Light/refresh.svg</file>
         <file>Papirus-Light/video_finder.svg</file>
 		
-		<file>../persepolis/gui/locales/fa_IR/ui.qm</file>
+		<file>locales/ui_fa_IR.qm</file>
 
 	</qresource>
 </RCC>

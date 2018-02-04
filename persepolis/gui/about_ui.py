@@ -28,13 +28,11 @@ class AboutWindow_Ui(QWidget):
         self.persepolis_setting = persepolis_setting
 
 # add support for other languages
+        locale = QtCore.QLocale(str(self.persepolis_setting.value('settings/locale')))
+        QLocale.setDefault(locale)
         self.translator = QTranslator()
-# a) detect current value of locale in persepolis config file
-        if str(self.persepolis_setting.value('settings/locale')) in (-1, 'en_US'):
-            self.translator.load('')
-        else:
-            self.translator.load('locales/' + str(self.persepolis_setting.value('settings/locale')), ':/ui.qm')
-        QCoreApplication.installTranslator(self.translator)
+        if self.translator.load("ui_" + locale, ':/locales/'):
+            QCoreApplication.installTranslator(self.translator)
 
         icons = ':/' + \
             str(self.persepolis_setting.value('settings/icons')) + '/'
