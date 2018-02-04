@@ -36,7 +36,7 @@
         <file>Archdroid-Blue/clipboard.svg</file>	
         <file>Archdroid-Blue/refresh.svg</file>
         <file>Archdroid-Blue/video_finder.svg</file>
-
+		
 
 
 
@@ -242,6 +242,8 @@
         <file>Papirus-Light/clipboard.svg</file>	
         <file>Papirus-Light/refresh.svg</file>
         <file>Papirus-Light/video_finder.svg</file>
+		
+		<file>../persepolis/gui/locales/fa_IR/ui.qm</file>
 
 	</qresource>
 </RCC>
