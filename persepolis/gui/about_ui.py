@@ -17,7 +17,7 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import QWidget
 from PyQt5.QtGui import QIcon
-from PyQt5.QtCore import QSize, QPoint, QTranslator, QCoreApplication
+from PyQt5.QtCore import QSize, QPoint, QTranslator, QCoreApplication, Qlocale
 from persepolis.gui import icons_resource
 
 
@@ -28,10 +28,10 @@ class AboutWindow_Ui(QWidget):
         self.persepolis_setting = persepolis_setting
 
 # add support for other languages
-        locale = QtCore.QLocale(str(self.persepolis_setting.value('settings/locale')))
-        QLocale.setDefault(locale)
+        locale = str(self.persepolis_setting.value('settings/locale'))
+		QLocale.setDefault(QLocale(locale))
         self.translator = QTranslator()
-        if self.translator.load(':/translations/locales/ui_' + locale):
+        if self.translator.load(':/translations/locales/ui_' + locale, 'ts'):
             QCoreApplication.installTranslator(self.translator)
 
         icons = ':/' + \
