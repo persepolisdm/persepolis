@@ -104,7 +104,9 @@ else:
     print('Warning: sound-theme-freedesktop is not installed! you need this package for sound notifications!')
  
 
-
+if sys.argv[1] == "test":
+   print('We have not unit test :)')
+   sys.exit('0')
 
 DESCRIPTION = 'Persepolis Download Manager'
 
@@ -154,7 +156,7 @@ setup(
     license = 'GPL3',
     description = DESCRIPTION,
     long_description = DESCRIPTION,
-    include_package_data=True,
+    include_package_data = True,
     url = 'https://github.com/persepolisdm/persepolis',
     author = 'AliReza AmirSamimi',
     author_email = 'alireza.amirsamimi@gmail.com',
