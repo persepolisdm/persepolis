@@ -26,15 +26,13 @@ class AfterDownloadWindow_Ui(QWidget):
         super().__init__()
 
         self.persepolis_setting = persepolis_setting
-        # add support for other languages
-        # a) detect current value of locale in persepolis config file
-        if str(self.persepolis_setting.value('settings/locale')) in (-1, 'en_US'):
-            locale_path = ''
-        else:
-            locale_path = 'locales/' + str(self.persepolis_setting.value('settings/locale')) + QIcon(':/ui.qm')
-        # b) set translator to Qtranslator
+# add support for other languages
         self.translator = QTranslator()
-        self.translator.load(locale_path)
+# a) detect current value of locale in persepolis config file
+        if str(self.persepolis_setting.value('settings/locale')) in (-1, 'en_US'):
+            self.translator.load('')
+        else:
+            self.translator.load('locales/' + str(self.persepolis_setting.value('settings/locale')), ':/ui.qm')
         QCoreApplication.installTranslator(self.translator)
 
 
