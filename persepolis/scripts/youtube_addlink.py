@@ -142,13 +142,13 @@ class YoutubeAddLink(AddLinkWindow):
         try:
             self.change_name_lineEdit.setText(self.media_title + '.' +
                                               self.formats_showing[self.media_combo.currentIndex()]['ext'])
+            self.change_name_checkBox.setChecked(True)
         except Exception as ex:
             logger.sendToLog(ex, "ERROR")
 
     def okButtonPressed(self, button, download_later):
         index = self.media_combo.currentIndex()
-        self.plugin_add_link_dictionary['link'] = self.formats_showing[index]['url']
-        self.plugin_add_link_dictionary['out'] = self.change_name_lineEdit.text()
+        self.link_lineEdit.setText(self.formats_showing[index]['url'])
         super().okButtonPressed(button, download_later)
 
     def fetched_result(self, media_dict):
