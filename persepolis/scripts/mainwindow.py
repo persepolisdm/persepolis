@@ -1449,7 +1449,7 @@ class MainWindow(MainWindow_Ui):
 
                 # status
                 progress_window.status = str(dict['status'])
-                status = QCoreApplication.translate("<b>Status</b> : ") + progress_window.status
+                status = QCoreApplication.translate("mainwindow_src_ui_tr", "<b>Status</b> : ") + progress_window.status
                 progress_window.status_label.setText(status)
 
                 # active/deactive progress_window buttons according to status
