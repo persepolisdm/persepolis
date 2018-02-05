@@ -518,6 +518,7 @@ class Setting_Ui(QWidget):
         self.column11_checkBox.setText(QCoreApplication.translate("setting_ui_tr", 'Last try date'))
         self.column12_checkBox.setText(QCoreApplication.translate("setting_ui_tr", 'Category'))
 
+
         self.setting_tabWidget.setTabText(
             self.setting_tabWidget.indexOf(self.columns_tab), QCoreApplication.translate("setting_ui_tr", "Columns customization"))
 

@@ -107,7 +107,6 @@ from PyQt5.QtWidgets import QApplication, QStyleFactory
 from PyQt5.QtGui import QFont   
 from PyQt5.QtCore import QCoreApplication, QSettings, Qt
 from persepolis.gui.palettes import DarkRedPallete, DarkBluePallete, ArcDarkRedPallete, ArcDarkBluePallete, LightRedPallete, LightBluePallete
-from persepolis.scripts.bubble import notifySend
 from persepolis.scripts.error_window import ErrorWindow
 import traceback
 

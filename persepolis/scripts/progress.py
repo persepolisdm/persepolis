@@ -107,10 +107,10 @@ class ProgressWindow(ProgressWindow_Ui):
                 if version_answer == 'did not respond':
                     self.parent.aria2Disconnected()
                     notifySend("Aria2 disconnected!", "Persepolis is trying to connect!be patient!",
-                               10000, 'warning', systemtray=self.parent.system_tray_icon)
+                               10000, 'warning', parent=self.parent)
                 else:
                     notifySend("Aria2 did not respond!", "Try agian!", 10000,
-                               'warning', systemtray=self.parent.system_tray_icon)
+                               'warning', parent=self.parent)
 
     def pausePushButtonPressed(self, button):
         if self.status == "downloading":
@@ -124,10 +124,10 @@ class ProgressWindow(ProgressWindow_Ui):
                     self.parent.aria2Disconnected()
                     download.downloadStop(self.gid, self.parent)
                     notifySend("Aria2 disconnected!", "Persepolis is trying to connect!be patient!",
-                               10000, 'warning', systemtray=self.parent.system_tray_icon)
+                               10000, 'warning', parent=self.parent)
                 else:
                     notifySend("Aria2 did not respond!", "Try agian!", 10000,
-                               'critical', systemtray=self.parent.system_tray_icon)
+                               'critical', parent=self.parent)
 
     def stopPushButtonPressed(self, button):
         dict = {'gid': self.gid,
@@ -145,7 +145,7 @@ class ProgressWindow(ProgressWindow_Ui):
             if version_answer == 'did not respond':
                 self.parent.aria2Disconnected()
                 notifySend("Aria2 disconnected!", "Persepolis is trying to connect!be patient!",
-                           10000, 'warning', systemtray=self.parent.system_tray_icon)
+                           10000, 'warning', parent=self.parent)
 
     def limitCheckBoxToggled(self, checkBoxes):
 
