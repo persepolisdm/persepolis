@@ -180,7 +180,7 @@ class MainWindow_Ui(QMainWindow):
         icons = ':/' + \
             str(self.persepolis_setting.value('settings/icons')) + '/'
 
-        self.setWindowTitle(QCoreApplication.translate("Persepolis Download Manager"))
+        self.setWindowTitle(QCoreApplication.translate("mainwindow_ui_tr", "Persepolis Download Manager"))
         self.setWindowIcon(QIcon.fromTheme('persepolis', QIcon(':/persepolis.svg')))
 
         self.centralwidget = QWidget(self)
