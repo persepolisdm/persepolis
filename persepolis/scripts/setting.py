@@ -115,7 +115,6 @@ class PreferencesWindow(Setting_Ui):
             str(self.persepolis_setting.value('locale')))
         if current_locale != -1:
             self.lang_comboBox.setCurrentIndex(current_locale)
-        print(self.persepolis_setting.value('locale'))
 # set color_scheme
         color_scheme = ['System', 'Persepolis Dark Red', 'Persepolis Dark Blue', 'Persepolis ArcDark Red',
                         'Persepolis ArcDark Blue', 'Persepolis Light Red', 'Persepolis Light Blue']
