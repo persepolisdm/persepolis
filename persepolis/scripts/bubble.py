@@ -78,8 +78,6 @@ def notifySend(message1, message2, time, sound, parent=None):
                       time + "' '" + message1 + "' \ '" + message2 + "' ")
 
         elif os_type == 'Darwin':
-            from persepolis.scripts.mac_notification import notifyMac
-
             notifyMac("Persepolis Download Manager", message1, message2)
 
         elif os_type == 'Windows':
