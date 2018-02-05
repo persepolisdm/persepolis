@@ -596,7 +596,7 @@ class Queue(QThread):
 
                     # show notification
                     notifySend("Persepolis", "Queue Stopped!", 10000,
-                               'no', systemtray=self.parent.system_tray_icon)
+                               'no', parent=self.parent)
 
                     # write message in log
                     logger.sendToLog('Queue stopped', 'INFO')
@@ -626,11 +626,11 @@ class Queue(QThread):
 
                 # show a notification about system is shutting down now!
                 notifySend('Persepolis is shutting down', 'your system in 20 seconds',
-                           15000, 'warning', systemtray=self.parent.system_tray_icon)
+                           15000, 'warning', parent=self.parent)
 
             # show notification for queue completion
             notifySend("Persepolis", 'Queue completed!', 10000,
-                       'queue', systemtray=self.parent.system_tray_icon)
+                       'queue', parent=self.parent)
 
             # write a message in log
             logger.sendToLog('Queue completed', 'INFO')
@@ -1187,7 +1187,7 @@ class MainWindow(MainWindow_Ui):
         else:
             self.statusbar.showMessage('Error...')
             notifySend('Persepolis can not connect to Aria2', 'Check your network & Restart Persepolis',
-                       10000, 'critical', systemtray=self.system_tray_icon)
+                       10000, 'critical', parent=self)
             logger.sendToLog('Persepolis can not connect to Aria2', 'ERROR')
 
             self.propertiesAction.setEnabled(True)
@@ -1201,7 +1201,7 @@ class MainWindow(MainWindow_Ui):
         if message == 'did not respond':
             self.statusbar.showMessage('Error...')
             notifySend('Persepolis can not connect to Aria2', 'Restart Persepolis',
-                       10000, 'critical', systemtray=self.system_tray_icon)
+                       10000, 'critical', parent=self)
             logger.sendToLog('Persepolis can not connect to Aria2', 'ERROR')
         else:
             self.statusbar.showMessage('Reconnecting aria2...')
@@ -1345,7 +1345,7 @@ class MainWindow(MainWindow_Ui):
 
                                 # show notification
                                 notifySend("Error - " + error, 'Please change the temporary download folder',
-                                    10000, 'fail', systemtray=self.system_tray_icon)
+                                    10000, 'fail', parent=self)
 
 
 
@@ -1487,7 +1487,7 @@ class MainWindow(MainWindow_Ui):
 
                         # show notification
                         notifySend("Download Stopped",
-                            str(dict['file_name']), 10000, 'no', systemtray=self.system_tray_icon)
+                            str(dict['file_name']), 10000, 'no', parent=self)
 
 
                     # if download status is error!
@@ -1509,7 +1509,7 @@ class MainWindow(MainWindow_Ui):
 
                         # show notification
                         notifySend("Error - " + error, str(dict['file_name']),
-                                10000, 'fail', systemtray=self.system_tray_icon)
+                                10000, 'fail', parent=self)
 
                     # set "None" for start_time and end_time and after_download value
                     # in data_base, because download has finished
@@ -1539,7 +1539,7 @@ class MainWindow(MainWindow_Ui):
 
                         # send notification
                         notifySend('Persepolis is shutting down', 'your system in 20 seconds',
-                                   15000, 'warning', systemtray=self.system_tray_icon)
+                                   15000, 'warning', parent=self)
 
                         # write "shutdown" message in data base for this gid >> Shutdown system!
                         shutdown_dict = {'gid': gid, 'shutdown': 'shutdown'}
@@ -1557,7 +1557,7 @@ class MainWindow(MainWindow_Ui):
 
                         # play notification
                         notifySend("Download Complete", dict['file_name'],
-                                        10000, 'ok', systemtray=self.system_tray_icon)
+                                        10000, 'ok', parent=self)
 
                         # check user's Preferences
                         if self.persepolis_setting.value('settings/after-dialog') == 'yes':
@@ -1980,7 +1980,7 @@ class MainWindow(MainWindow_Ui):
                 self.threadPool[len(self.threadPool) - 1].SPIDERSIGNAL.connect(self.spiderUpdate)
                 message = "Download Scheduled"
             notifySend(message, '', 10000, 'no',
-                       systemtray=self.system_tray_icon)
+                       parent=self)
 
         else:
             new_spider = SpiderThread(add_link_dictionary, self)
@@ -2002,7 +2002,7 @@ class MainWindow(MainWindow_Ui):
             # if category is not "single downloads" , then send notification for error
             if category != "Single Downloads":
                 notifySend("Operation was unsuccessful", "Please resume " + category + " category.",
-                               10000, 'fail', systemtray=self.system_tray_icon)
+                               10000, 'fail', parent=self)
                 return
  
             # find download gid
@@ -2023,10 +2023,10 @@ class MainWindow(MainWindow_Ui):
                     if version_answer == 'did not respond':
                         self.aria2Disconnected()
                         notifySend("Aria2 disconnected!", "Persepolis is trying to connect!be patient!",
-                                   10000, 'warning', systemtray=self.system_tray_icon)
+                                   10000, 'warning', parent=self)
                     else:
                         notifySend("Aria2 did not respond!", "Try agian!",
-                                   10000, 'warning', systemtray=self.system_tray_icon)
+                                   10000, 'warning', parent=self)
 
             else:
                 # create new download thread
@@ -2043,7 +2043,7 @@ class MainWindow(MainWindow_Ui):
     def aria2NotRespond(self):
         self.aria2Disconnected()
         notifySend('Aria2 did not respond', 'Try again', 5000,
-                   'critical', systemtray=self.system_tray_icon)
+                   'critical', parent=self)
 
 # this method called if user presses stop button in MainWindow
     def stopButtonPressed(self, button):
@@ -2058,7 +2058,7 @@ class MainWindow(MainWindow_Ui):
             # if category is not "single downloads" , then send notification for error
             if category != "Single Downloads":
                 notifySend("Operation was unsuccessful", "Please stop " + category + " category.",
-                               10000, 'fail', systemtray=self.system_tray_icon)
+                               10000, 'fail', parent=self)
                 return
  
             gid = self.download_table.item(selected_row_return, 8).text()
@@ -2080,7 +2080,7 @@ class MainWindow(MainWindow_Ui):
                 if version_answer == 'did not respond':
                     self.aria2Disconnected()
                     notifySend("Aria2 disconnected!", "Persepolis is trying to connect!be patient!",
-                               10000, 'warning', systemtray=self.system_tray_icon)
+                               10000, 'warning', parent=self)
 
 
 # this method called if user presses pause button in MainWindow
@@ -2097,7 +2097,7 @@ class MainWindow(MainWindow_Ui):
             # if category is not "single downloads" , then send notification for error
             if category != "Single Downloads":
                 notifySend("Operation was unsuccessful", "Please stop " + category + " category.",
-                               10000, 'fail', systemtray=self.system_tray_icon)
+                               10000, 'fail', parent=self)
                 return
  
             # find download gid
@@ -2114,10 +2114,10 @@ class MainWindow(MainWindow_Ui):
                     self.aria2Disconnected()
                     download.downloadStop(gid, self)
                     notifySend("Aria2 disconnected!", "Persepolis is trying to connect!be patient!",
-                               10000, 'warning', systemtray=self.system_tray_icon)
+                               10000, 'warning', parent=self)
                 else:
                     notifySend("Aria2 did not respond!", "Try agian!",
-                               10000, 'critical', systemtray=self.system_tray_icon)
+                               10000, 'critical', parent=self)
 
 # This method called if properties button pressed by user in MainWindow
     def propertiesButtonPressed(self, button):
@@ -2448,7 +2448,7 @@ class MainWindow(MainWindow_Ui):
         else:
             # show error message if folder didn't existed
             notifySend(str(download_path), 'Not Found', 5000,
-                       'warning', systemtray=self.system_tray_icon)
+                       'warning', parent=self)
 
 
 # this method opens download folder , if download was finished
@@ -2486,7 +2486,7 @@ class MainWindow(MainWindow_Ui):
                 else:
                     # showing error message , if folder did't existed
                     notifySend(str(download_path), 'Not Found', 5000,
-                                'warning', systemtray=self.system_tray_icon)
+                                'warning', parent=self)
 
 
 # this method executes(opens) download file if download's progress was finished
@@ -2515,7 +2515,7 @@ class MainWindow(MainWindow_Ui):
                 else:
                     # show error message , if file was deleted or moved
                     notifySend(str(file_path), 'Not Found', 5000,
-                               'warning', systemtray=self.system_tray_icon)
+                               'warning', parent=self)
 
 
 # this method is called when multiple items is selected by user!
@@ -2575,7 +2575,7 @@ class MainWindow(MainWindow_Ui):
                 if queue_status: # if queue was started
                     # show error message
                     notifySend('Operation was unsuccessful!', 'Stop ' + category +' first', 5000,
-                           'fail', systemtray=self.system_tray_icon)
+                           'fail', parent=self)
 
                     continue
 
@@ -2592,7 +2592,7 @@ class MainWindow(MainWindow_Ui):
 
                 # show error message
                 notifySend('Operation was unsuccessful!', 'Stop ' + file_name +' first', 5000,
-                           'fail', systemtray=self.system_tray_icon)
+                           'fail', parent=self)
 
         # find row number for specific gid
         for gid in gid_list:
@@ -2696,7 +2696,7 @@ class MainWindow(MainWindow_Ui):
                 if queue_status: # if queue was started
                     # show error message
                     notifySend('Operation was unsuccessful!', 'Stop ' + category +' first', 5000,
-                           'fail', systemtray=self.system_tray_icon)
+                           'fail', parent=self)
 
                     continue
 
@@ -2714,7 +2714,7 @@ class MainWindow(MainWindow_Ui):
 
                 # show error message
                 notifySend('Operation was unsuccessful!', 'Stop ' + file_name +' first', 5000,
-                           'fail', systemtray=self.system_tray_icon)
+                           'fail', parent=self)
 
         # remove selected rows
         # find row number for specific gid
@@ -2759,7 +2759,7 @@ class MainWindow(MainWindow_Ui):
 
                 if remove_answer == 'no':
                     notifySend(str(file_path), 'Not Found', 5000,
-                               'warning', systemtray=self.system_tray_icon)
+                               'warning', parent=self)
 
             # remove row from download_table
             self.download_table.removeRow(row)
@@ -4015,7 +4015,7 @@ class MainWindow(MainWindow_Ui):
         if send_message:
             # notify user that transfer was unsuccessful
             notifySend("item transferation was unsuccessful for some items!", "Please stop download progress first",
-                       '5000', 'no', systemtray=self.system_tray_icon)
+                       '5000', 'no', parent=self)
 
         global checking_flag
         checking_flag = 0
