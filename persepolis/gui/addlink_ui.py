@@ -423,7 +423,7 @@ class AddLinkWindow_Ui(QWidget):
             self.more_options_tab), "More Options")
 
         self.add_link_tabWidget.setTabText(self.add_link_tabWidget.indexOf(
-            self.advance_options_tab), "Advance Options")
+            self.advance_options_tab), "Advanced Options")
 
         self.referer_label.setText('Referer: ')
 

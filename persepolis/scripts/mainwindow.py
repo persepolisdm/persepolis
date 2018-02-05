@@ -1262,7 +1262,7 @@ class MainWindow(MainWindow_Ui):
 # this method updates download_table in MainWindow
 #
 # download_table_header = ['File Name', 'Status', 'Size', 'Downloaded', 'Percentage', 'Connections',
-#                       'Transfer rate', 'Estimate time left', 'Gid', 'Link', 'First try date', 'Last try date', 'Category']
+#                       'Transfer rate', 'Estimated time left', 'Gid', 'Link', 'First try date', 'Last try date', 'Category']
 
     def checkDownloadInfo(self, list):
         systemtray_tooltip_text = 'Persepolis Download Manager'
@@ -1412,8 +1412,8 @@ class MainWindow(MainWindow_Ui):
 
                 progress_window.rate_label.setText(rate)
 
-                # Estimate time left
-                estimate_time_left = "<b>Estimate time left</b> : " \
+                # Estimated time left
+                estimate_time_left = "<b>Estimated time left</b> : " \
                                 + str(dict['estimate_time_left'])
 
                 progress_window.time_label.setText(estimate_time_left)

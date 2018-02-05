@@ -492,7 +492,7 @@ class Setting_Ui(QWidget):
         self.column4_checkBox.setText('Percentage')
         self.column5_checkBox.setText('Connections')
         self.column6_checkBox.setText('Transfer rate')
-        self.column7_checkBox.setText('Estimate time left')
+        self.column7_checkBox.setText('Estimated time left')
         self.column10_checkBox.setText('First try date')
         self.column11_checkBox.setText('Last try date')
         self.column12_checkBox.setText('Category')
