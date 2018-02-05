@@ -180,7 +180,7 @@ class MainWindow_Ui(QMainWindow):
         icons = ':/' + \
             str(self.persepolis_setting.value('settings/icons')) + '/'
 
-        self.setWindowTitle("Persepolis Download Manager")
+        self.setWindowTitle(QCoreApplication.translate("mainwindow_ui_tr", "Persepolis Download Manager"))
         self.setWindowIcon(QIcon.fromTheme('persepolis', QIcon(':/persepolis.svg')))
 
         self.centralwidget = QWidget(self)
@@ -201,7 +201,7 @@ class MainWindow_Ui(QMainWindow):
 
         self.category_tree_model = QStandardItemModel()
         self.category_tree.setModel(self.category_tree_model)
-        category_table_header = ['Category']
+        category_table_header = [QCoreApplication.translate("mainwindow_ui_tr", 'Category')]
         self.category_tree_model.setHorizontalHeaderLabels(
             category_table_header)
         self.category_tree.header().setStretchLastSection(True)
