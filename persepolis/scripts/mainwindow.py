@@ -1423,8 +1423,7 @@ class MainWindow(MainWindow_Ui):
 
                 # Estimate time left
                 estimate_time_left = QCoreApplication.translate("mainwindow_src_ui_tr", "<b>Estimated time left</b> : ") \
-
-                                + str(dict['estimate_time_left'])
+                    + str(dict['estimate_time_left'])
 
                 progress_window.time_label.setText(estimate_time_left)
 
