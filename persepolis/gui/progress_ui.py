@@ -18,7 +18,7 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import QCheckBox, QProgressBar, QFrame, QDoubleSpinBox, QComboBox, QWidget, QTabWidget, QVBoxLayout, QHBoxLayout, QPushButton, QLabel, QWidget, QSizePolicy
 from PyQt5.QtGui import QIcon
-
+from PyQt5.QtCore import QTranslator, QCoreApplication
 
 class ProgressWindow_Ui(QWidget):
     def __init__(self, persepolis_setting):
@@ -26,11 +26,20 @@ class ProgressWindow_Ui(QWidget):
         self.persepolis_setting = persepolis_setting
         icons = ':/' + str(persepolis_setting.value('settings/icons')) + '/'
 
+# add support for other languages
+        self.translator = QTranslator()
+# a) detect current value of locale in persepolis config file
+        if str(self.persepolis_setting.value('settings/locale')) in (-1, 'en_US'):
+            self.translator.load('')
+        else:
+            self.translator.load('locales/' + str(self.persepolis_setting.value('settings/locale')), ':/ui.qm')
+        QCoreApplication.installTranslator(self.translator)
+
 # window
         self.setMinimumSize(QtCore.QSize(595, 284))
 
         self.setWindowIcon(QIcon.fromTheme('persepolis', QIcon(':/persepolis.svg')))
-        self.setWindowTitle("Persepolis Download Manager")
+        self.setWindowTitle(QCoreApplication.translate("progress_ui_tr", "Persepolis Download Manager"))
 
         verticalLayout = QVBoxLayout(self)
 
@@ -176,28 +185,28 @@ class ProgressWindow_Ui(QWidget):
 
         self.progress_tabWidget.setCurrentIndex(0)
 # labels
-        self.link_label.setText("Link :")
-        self.status_label.setText("Status : ")
-        self.downloaded_label.setText("Downloaded :")
-        self.rate_label.setText("Transfer rate : ")
-        self.time_label.setText("Estimate time left :")
-        self.connections_label.setText("Number of connections : ")
+        self.link_label.setText(QCoreApplication.translate("progress_ui_tr", "Link :"))
+        self.status_label.setText(QCoreApplication.translate("progress_ui_tr", "Status : "))
+        self.downloaded_label.setText(QCoreApplication.translate("progress_ui_tr", "Downloaded :"))
+        self.rate_label.setText(QCoreApplication.translate("progress_ui_tr", "Transfer rate : "))
+        self.time_label.setText(QCoreApplication.translate("progress_ui_tr", "Estimated time left :"))
+        self.connections_label.setText(QCoreApplication.translate("progress_ui_tr", "Number of connections : "))
         self.progress_tabWidget.setTabText(self.progress_tabWidget.indexOf(
-            self.information_tab),  "Download information")
-        self.limit_checkBox.setText("Limit Speed")
-        self.after_checkBox.setText("After download")
+            self.information_tab),  QCoreApplication.translate("progress_ui_tr", "Download information"))
+        self.limit_checkBox.setText(QCoreApplication.translate("progress_ui_tr", "Limit Speed"))
+        self.after_checkBox.setText(QCoreApplication.translate("progress_ui_tr", "After download"))
         self.limit_comboBox.setItemText(0,  "KB/S")
         self.limit_comboBox.setItemText(1,  "MB/S")
-        self.limit_pushButton.setText("Apply")
+        self.limit_pushButton.setText(QCoreApplication.translate("progress_ui_tr", "Apply"))
 
-        self.after_comboBox.setItemText(0,  "Shut Down")
+        self.after_comboBox.setItemText(0,  QCoreApplication.translate("progress_ui_tr", "Shut Down"))
 
         self.progress_tabWidget.setTabText(
-            self.progress_tabWidget.indexOf(self.options_tab),  "Download Options")
-        self.resume_pushButton.setText("Resume")
-        self.pause_pushButton.setText("Pause")
-        self.stop_pushButton.setText("Stop")
-        self.after_pushButton.setText("Apply")
+            self.progress_tabWidget.indexOf(self.options_tab),  QCoreApplication.translate("progress_ui_tr", "Download Options"))
+        self.resume_pushButton.setText(QCoreApplication.translate("progress_ui_tr", "Resume"))
+        self.pause_pushButton.setText(QCoreApplication.translate("progress_ui_tr", "Pause"))
+        self.stop_pushButton.setText(QCoreApplication.translate("progress_ui_tr", "Stop"))
+        self.after_pushButton.setText(QCoreApplication.translate("progress_ui_tr", "Apply"))
 
     def changeIcon(self, icons):
         icons = ':/' + str(icons) + '/'

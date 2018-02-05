@@ -18,7 +18,7 @@ from random import random
 from time import time, sleep
 import youtube_dl
 import os
-from PyQt5.QtCore import QThread, pyqtSignal
+from PyQt5.QtCore import QThread, pyqtSignal, QCoreApplication, QTranslator, QLocale
 from PyQt5.QtWidgets import QPushButton, QTextEdit, QFrame, QLabel, QComboBox, QHBoxLayout, QApplication
 from copy import deepcopy
 from persepolis.scripts import logger, osCommands
@@ -36,6 +36,14 @@ class YoutubeAddLink(AddLinkWindow):
         super().__init__(parent, receiver_slot, settings, video_dict)
         self.setWindowTitle('Video Finder')
         self.size_label.hide()
+		
+# add support for other languages
+        locale = str(self.persepolis_setting.value('settings/locale'))
+        QLocale.setDefault(QLocale(locale))
+        self.translator = QTranslator()
+        if self.translator.load(':/translations/locales/ui_' + locale, 'ts'):
+            QCoreApplication.installTranslator(self.translator)
+
 
         # Fetch Button
         self.url_submit_button = QPushButton(self.link_frame)
@@ -67,9 +75,9 @@ class YoutubeAddLink(AddLinkWindow):
         self.link_verticalLayout.addWidget(self.selection_line)
 
         # Set Texts
-        self.url_submit_button.setText('Fetch Media List')
-        self.ok_pushButton.setText('Download Now')
-        select_format_label.setText('Select a format')
+        self.url_submit_button.setText(QCoreApplication.translate("ytaddlink_src_ui_tr", 'Fetch Media List'))
+        self.ok_pushButton.setText(QCoreApplication.translate("ytaddlink_src_ui_tr", 'Download Now'))
+        select_format_label.setText(QCoreApplication.translate("ytaddlink_src_ui_tr", 'Select a format'))
 
 
         # Add Slot Connections
@@ -105,7 +113,7 @@ class YoutubeAddLink(AddLinkWindow):
     def url_changed(self, value):
         if ' ' in value or value == '':
             self.url_submit_button.setEnabled(False)
-            self.url_submit_button.setToolTip('Please enter a valid video link')
+            self.url_submit_button.setToolTip(QCoreApplication.translate("ytaddlink_src_ui_tr", 'Please enter a valid video link'))
         else:
             self.url_submit_button.setEnabled(True)
             self.url_submit_button.setToolTip('')
@@ -119,7 +127,7 @@ class YoutubeAddLink(AddLinkWindow):
         self.change_name_checkBox.setChecked(False)
         self.formats_showing.clear()
         self.url_submit_button.setEnabled(False)
-        self.status_box.setText('Fetching Media Info...')
+        self.status_box.setText(QCoreApplication.translate("ytaddlink_src_ui_tr", 'Fetching Media Info...'))
         self.status_box.show()
         self.ok_pushButton.setEnabled(False)
         self.download_later_pushButton.setEnabled(False)
