@@ -595,7 +595,7 @@ class Queue(QThread):
                         self.REFRESHTOOLBARSIGNAL.emit(self.category)
 
                     # show notification
-                    notifySend("Persepolis", "Queue Stopped!", 10000,
+                    notifySend(QCoreApplication.translate("mainwindow_src_ui_tr", "Persepolis"), QCoreApplication.translate("mainwindow_src_ui_tr", "Queue Stopped!"), 10000,
                                'no', parent=self.parent)
 
                     # write message in log
@@ -625,11 +625,11 @@ class Queue(QThread):
                 self.parent.temp_db.updateQueueTable(shutdown_dict)
 
                 # show a notification about system is shutting down now!
-                notifySend('Persepolis is shutting down', 'your system in 20 seconds',
+                notifySend(QCoreApplication.translate("mainwindow_src_ui_tr", 'Persepolis is shutting down'), QCoreApplication.translate("mainwindow_src_ui_tr", 'your system in 20 seconds'),
                            15000, 'warning', parent=self.parent)
 
             # show notification for queue completion
-            notifySend("Persepolis", 'Queue completed!', 10000,
+            notifySend(QCoreApplication.translate("mainwindow_src_ui_tr", "Persepolis"), QCoreApplication.translate("mainwindow_src_ui_tr", 'Queue completed!'), 10000,
                        'queue', parent=self.parent)
 
             # write a message in log
@@ -1353,7 +1353,7 @@ class MainWindow(MainWindow_Ui):
                                 logger.sendToLog(error_message, 'ERROR')
 
                                 # show notification
-                                notifySend("Error - " + error, 'Please change the temporary download folder',
+                                notifySend(QCoreApplication.translate("mainwindow_src_ui_tr", "Error - ") + error, QCoreApplication.translate("mainwindow_src_ui_tr", 'Please change the temporary download folder'),
                                     10000, 'fail', parent=self)
 
 
@@ -1495,7 +1495,7 @@ class MainWindow(MainWindow_Ui):
                         logger.sendToLog(stop_message, 'INFO')
 
                         # show notification
-                        notifySend("Download Stopped",
+                        notifySend(QCoreApplication.translate("mainwindow_src_ui_tr", "Download Stopped"),
                             str(dict['file_name']), 10000, 'no', parent=self)
 
 
@@ -1517,7 +1517,7 @@ class MainWindow(MainWindow_Ui):
                         logger.sendToLog(error_message, 'ERROR')
 
                         # show notification
-                        notifySend("Error - " + error, str(dict['file_name']),
+                        notifySend(QCoreApplication.translate("mainwindow_src_ui_tr", "Error - ") + error, str(dict['file_name']),
                                 10000, 'fail', parent=self)
 
                     # set "None" for start_time and end_time and after_download value
@@ -1547,7 +1547,7 @@ class MainWindow(MainWindow_Ui):
                             os.system('killall aria2c')
 
                         # send notification
-                        notifySend('Persepolis is shutting down', 'your system in 20 seconds',
+                        notifySend(QCoreApplication.translate("mainwindow_src_ui_tr", 'Persepolis is shutting down'), QCoreApplication.translate("mainwindow_src_ui_tr", 'your system in 20 seconds'),
                                    15000, 'warning', parent=self)
 
                         # write "shutdown" message in data base for this gid >> Shutdown system!
@@ -1565,7 +1565,7 @@ class MainWindow(MainWindow_Ui):
                         logger.sendToLog(complete_message, 'INFO')
 
                         # play notification
-                        notifySend("Download Complete", dict['file_name'],
+                        notifySend(QCoreApplication.translate("mainwindow_src_ui_tr", "Download Complete"), dict['file_name'],
                                         10000, 'ok', parent=self)
 
                         # check user's Preferences
@@ -1981,13 +1981,13 @@ class MainWindow(MainWindow_Ui):
         # notifiy user
             # check that download scheduled or not
             if not(add_link_dictionary['start_time']):
-                message = "Download Starts"
+                message = QCoreApplication.translate("mainwindow_src_ui_tr", "Download Starts")
             else:
                 new_spider = SpiderThread(add_link_dictionary, self)
                 self.threadPool.append(new_spider)
                 self.threadPool[len(self.threadPool) - 1].start()
                 self.threadPool[len(self.threadPool) - 1].SPIDERSIGNAL.connect(self.spiderUpdate)
-                message = "Download Scheduled"
+                message = QCoreApplication.translate("mainwindow_src_ui_tr", "Download Scheduled")
             notifySend(message, '', 10000, 'no',
                        parent=self)
 
@@ -2010,7 +2010,7 @@ class MainWindow(MainWindow_Ui):
 
             # if category is not "single downloads" , then send notification for error
             if category != "Single Downloads":
-                notifySend("Operation was unsuccessful", "Please resume " + category + " category.",
+                notifySend(QCoreApplication.translate("mainwindow_src_ui_tr", "Operation was unsuccessful", 'TRANSLATORS NOTE: full message = "operaton was unsuccessful Please resume &CATEGORY category."'), QCoreApplication.translate("mainwindow_src_ui_tr", "Please resume ", 'TRANSLATORS NOTE: full message = "operaton was unsuccessful Please resume &CATEGORY category."') + category + QCoreApplication.translate("mainwindow_src_ui_tr", " category.", 'TRANSLATORS NOTE: full message = "operaton was unsuccessful Please resume &CATEGORY category."'),
                                10000, 'fail', parent=self)
                 return
  
@@ -2031,10 +2031,10 @@ class MainWindow(MainWindow_Ui):
                     version_answer = download.aria2Version()
                     if version_answer == 'did not respond':
                         self.aria2Disconnected()
-                        notifySend("Aria2 disconnected!", "Persepolis is trying to connect!be patient!",
+                        notifySend(QCoreApplication.translate("mainwindow_src_ui_tr", "Aria2 disconnected!"), QCoreApplication.translate("mainwindow_src_ui_tr", "Persepolis is trying to connect!be patient!"),
                                    10000, 'warning', parent=self)
                     else:
-                        notifySend("Aria2 did not respond!", "Try agian!",
+                        notifySend(QCoreApplication.translate("mainwindow_src_ui_tr", "Aria2 did not respond!"), QCoreApplication.translate("mainwindow_src_ui_tr", "Try agian!"),
                                    10000, 'warning', parent=self)
 
             else:
@@ -2051,7 +2051,7 @@ class MainWindow(MainWindow_Ui):
 # this method called if aria2 crashed or disconnected!
     def aria2NotRespond(self):
         self.aria2Disconnected()
-        notifySend('Aria2 did not respond', 'Try again', 5000,
+        notifySend(QCoreApplication.translate("mainwindow_src_ui_tr", 'Aria2 did not respond'), QCoreApplication.translate("mainwindow_src_ui_tr", 'Try again'), 5000,
                    'critical', parent=self)
 
 # this method called if user presses stop button in MainWindow
@@ -2066,7 +2066,7 @@ class MainWindow(MainWindow_Ui):
 
             # if category is not "single downloads" , then send notification for error
             if category != "Single Downloads":
-                notifySend("Operation was unsuccessful", "Please stop " + category + " category.",
+                notifySend(QCoreApplication.translate("mainwindow_src_ui_tr", "Operation was unsuccessful", 'TRANSLATORS NOTE: full message = "operaton was unsuccessful Please stop &CATEGORY category."'), QCoreApplication.translate("mainwindow_src_ui_tr", "Please stop ", 'TRANSLATORS NOTE: full message = "operaton was unsuccessful Please stop &CATEGORY category."') + category + QCoreApplication.translate("mainwindow_src_ui_tr", " category.", 'TRANSLATORS NOTE: full message = "operaton was unsuccessful Please stop &CATEGORY category."'),
                                10000, 'fail', parent=self)
                 return
  
@@ -2088,7 +2088,7 @@ class MainWindow(MainWindow_Ui):
                 version_answer = download.aria2Version()
                 if version_answer == 'did not respond':
                     self.aria2Disconnected()
-                    notifySend("Aria2 disconnected!", "Persepolis is trying to connect!be patient!",
+                    notifySend(QCoreApplication.translate("mainwindow_src_ui_tr", "Aria2 disconnected!"), QCoreApplication.translate("mainwindow_src_ui_tr", "Persepolis is trying to connect!be patient!"),
                                10000, 'warning', parent=self)
 
 
@@ -2105,7 +2105,7 @@ class MainWindow(MainWindow_Ui):
 
             # if category is not "single downloads" , then send notification for error
             if category != "Single Downloads":
-                notifySend("Operation was unsuccessful", "Please stop " + category + " category.",
+                notifySend(QCoreApplication.translate("mainwindow_src_ui_tr", "Operation was unsuccessful", 'TRANSLATORS NOTE: full message = "operaton was unsuccessful Please stop &CATEGORY category."'), QCoreApplication.translate("mainwindow_src_ui_tr", "Please stop ", 'TRANSLATORS NOTE: full message = "operaton was unsuccessful Please stop &CATEGORY category."') + category + QCoreApplication.translate("mainwindow_src_ui_tr", " category.", 'TRANSLATORS NOTE: full message = "operaton was unsuccessful Please stop &CATEGORY category."'),
                                10000, 'fail', parent=self)
                 return
  
@@ -2122,10 +2122,10 @@ class MainWindow(MainWindow_Ui):
                 if version_answer == 'did not respond':
                     self.aria2Disconnected()
                     download.downloadStop(gid, self)
-                    notifySend("Aria2 disconnected!", "Persepolis is trying to connect!be patient!",
+                    notifySend(QCoreApplication.translate("mainwindow_src_ui_tr", "Aria2 disconnected!"), QCoreApplication.translate("mainwindow_src_ui_tr", "Persepolis is trying to connect!be patient!"),
                                10000, 'warning', parent=self)
                 else:
-                    notifySend("Aria2 did not respond!", "Try agian!",
+                    notifySend(QCoreApplication.translate("mainwindow_src_ui_tr", "Aria2 did not respond!"), QCoreApplication.translate("mainwindow_src_ui_tr", "Try agian!"),
                                10000, 'critical', parent=self)
 
 # This method called if properties button pressed by user in MainWindow
@@ -2456,7 +2456,7 @@ class MainWindow(MainWindow_Ui):
             osCommands.xdgOpen(download_path)
         else:
             # show error message if folder didn't existed
-            notifySend(str(download_path), 'Not Found', 5000,
+            notifySend(str(download_path), QCoreApplication.translate("mainwindow_src_ui_tr", 'Not Found'), 5000,
                        'warning', parent=self)
 
 
@@ -2494,7 +2494,7 @@ class MainWindow(MainWindow_Ui):
                     osCommands.xdgOpen(download_path)
                 else:
                     # showing error message , if folder did't existed
-                    notifySend(str(download_path), 'Not Found', 5000,
+                    notifySend(str(download_path), QCoreApplication.translate("mainwindow_src_ui_tr", 'Not Found'), 5000,
                                 'warning', parent=self)
 
 
@@ -2523,7 +2523,7 @@ class MainWindow(MainWindow_Ui):
 
                 else:
                     # show error message , if file was deleted or moved
-                    notifySend(str(file_path), 'Not Found', 5000,
+                    notifySend(str(file_path), QCoreApplication.translate("mainwindow_src_ui_tr", 'Not Found'), 5000,
                                'warning', parent=self)
 
 
@@ -2583,7 +2583,7 @@ class MainWindow(MainWindow_Ui):
 
                 if queue_status: # if queue was started
                     # show error message
-                    notifySend('Operation was unsuccessful!', 'Stop ' + category +' first', 5000,
+                    notifySend(QCoreApplication.translate("mainwindow_src_ui_tr", 'Operation was unsuccessful!', 'TRANSLATORS NOTE: full message = "operaton was unsuccessful stop &CATEGORY first."'), QCoreApplication.translate("mainwindow_src_ui_tr", 'Stop ', 'TRANSLATORS NOTE: full message = "operaton was unsuccessful stop &CATEGORY first."') + category +QCoreApplication.translate("mainwindow_src_ui_tr", ' first', 'TRANSLATORS NOTE: full message = "operaton was unsuccessful stop &CATEGORY first."'), 5000,
                            'fail', parent=self)
 
                     continue
@@ -2600,7 +2600,7 @@ class MainWindow(MainWindow_Ui):
                 file_name = self.download_table.item(row, 0).text()
 
                 # show error message
-                notifySend('Operation was unsuccessful!', 'Stop ' + file_name +' first', 5000,
+                notifySend(QCoreApplication.translate("mainwindow_src_ui_tr", 'Operation was unsuccessful!', 'TRANSLATORS NOTE: full message = "operaton was unsuccessful stop &FILE_NAME first."'), QCoreApplication.translate("mainwindow_src_ui_tr", 'Stop ', 'TRANSLATORS NOTE: full message = "operaton was unsuccessful stop &FILE_NAME first."') + file_name +QCoreApplication.translate("mainwindow_src_ui_tr", ' first', 'TRANSLATORS NOTE: full message = "operaton was unsuccessful stop &FILE_NAME first."'), 5000,
                            'fail', parent=self)
 
         # find row number for specific gid
@@ -2704,7 +2704,7 @@ class MainWindow(MainWindow_Ui):
 
                 if queue_status: # if queue was started
                     # show error message
-                    notifySend('Operation was unsuccessful!', 'Stop ' + category +' first', 5000,
+                    notifySend(QCoreApplication.translate("mainwindow_src_ui_tr", 'Operation was unsuccessful!', 'TRANSLATORS NOTE: full message = "operaton was unsuccessful stop &CATEGORY first"'), QCoreApplication.translate("mainwindow_src_ui_tr", 'Stop ', 'TRANSLATORS NOTE: full message = "operaton was unsuccessful stop &CATEGORY first"') + category +QCoreApplication.translate("mainwindow_src_ui_tr", ' first', 'TRANSLATORS NOTE: full message = "operaton was unsuccessful stop &CATEGORY first"'), 5000,
                            'fail', parent=self)
 
                     continue
@@ -2722,7 +2722,7 @@ class MainWindow(MainWindow_Ui):
                 file_name = self.download_table.item(row, 0).text()
 
                 # show error message
-                notifySend('Operation was unsuccessful!', 'Stop ' + file_name +' first', 5000,
+                notifySend(QCoreApplication.translate("mainwindow_src_ui_tr", 'Operation was unsuccessful!', 'TRANSLATORS NOTE: full message = "operaton was unsuccessful stop &FILE_NAME first"'), QCoreApplication.translate("mainwindow_src_ui_tr", 'Stop ', 'TRANSLATORS NOTE: full message = "operaton was unsuccessful stop &FILE_NAME first"') + file_name +QCoreApplication.translate("mainwindow_src_ui_tr", ' first', 'TRANSLATORS NOTE: full message = "operaton was unsuccessful stop &FILE_NAME first"'), 5000,
                            'fail', parent=self)
 
         # remove selected rows
@@ -2767,7 +2767,7 @@ class MainWindow(MainWindow_Ui):
 
 
                 if remove_answer == 'no':
-                    notifySend(str(file_path), 'Not Found', 5000,
+                    notifySend(str(file_path), QCoreApplication.translate("mainwindow_src_ui_tr", 'Not Found'), 5000,
                                'warning', parent=self)
 
             # remove row from download_table
@@ -4023,7 +4023,7 @@ class MainWindow(MainWindow_Ui):
 
         if send_message:
             # notify user that transfer was unsuccessful
-            notifySend("item transferation was unsuccessful for some items!", "Please stop download progress first",
+            notifySend(QCoreApplication.translate("mainwindow_src_ui_tr", "item transferation was unsuccessful for some items!"), QCoreApplication.translate("mainwindow_src_ui_tr", "Please stop download progress first"),
                        '5000', 'no', parent=self)
 
         global checking_flag
