@@ -20,7 +20,7 @@ import copy
 from PyQt5 import QtWidgets
 from PyQt5.QtWidgets import QFileDialog, QStyleFactory, QMessageBox
 from PyQt5.QtGui import QFont
-from PyQt5.QtCore import QTime, QSize, QPoint, QDir
+from PyQt5.QtCore import QTime, QSize, QPoint, QDir, QLocale
 from persepolis.scripts import osCommands
 import platform
 from persepolis.scripts import startup
@@ -107,11 +107,11 @@ class PreferencesWindow(Setting_Ui):
         if current_style_index != -1:
             self.style_comboBox.setCurrentIndex(current_style_index)
 # available language
-        available_language = ['en_US' , 'fa_IR']
+        available_language = ['en_US', 'fa_IR']
         for lang in available_language:
-            self.lang_comboBox.addItem(lang)
+            self.lang_comboBox.addItem(str(QLocale(lang).nativeLanguageName()), lang)
 
-        current_locale = self.lang_comboBox.findText(
+        current_locale = self.lang_comboBox.findData(
             str(self.persepolis_setting.value('locale')))
         self.lang_comboBox.setCurrentIndex(current_locale)
 # set color_scheme
@@ -485,7 +485,7 @@ class PreferencesWindow(Setting_Ui):
             str(self.setting_dict['style']))
         self.style_comboBox.setCurrentIndex(current_style_index)
 # set language
-        current_locale = self.lang_comboBox.findText(
+        current_locale = self.lang_comboBox.findData(
             str(self.setting_dict['locale']))
         self.lang_comboBox.setCurrentIndex(current_locale)
 # set color_scheme
@@ -619,7 +619,7 @@ class PreferencesWindow(Setting_Ui):
         self.persepolis_setting.setValue('style', style)
 
 # language
-        locale = str(self.lang_comboBox.currentText())
+        locale = str(self.lang_comboBox.itemData(self.lang_comboBox.currentIndex()))
         self.persepolis_setting.setValue('locale', locale)
 
 # color_scheme
