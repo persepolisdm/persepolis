@@ -18,25 +18,34 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import QCheckBox, QProgressBar, QFrame, QDoubleSpinBox, QComboBox, QWidget, QTabWidget, QVBoxLayout, QHBoxLayout, QPushButton, QLabel, QWidget, QSizePolicy
 from PyQt5.QtGui import QIcon
-from PyQt5.QtCore import QTranslator, QCoreApplication
-import pkg_resources
+from PyQt5.QtCore import Qt, QTranslator, QCoreApplication
+from persepolis.gui import resources
 
 class ProgressWindow_Ui(QWidget):
     def __init__(self, persepolis_setting):
         super().__init__()
         self.persepolis_setting = persepolis_setting
         icons = ':/' + str(persepolis_setting.value('settings/icons')) + '/'
-# add support for other languages
-# a) detect current value of locale in persepolis config file
-        if str(self.persepolis_setting.value('settings/locale')) in (-1, 'en_US'):
-            locale_dir = ''
-        else:
-            locale_dir = 'locales/' + str(self.persepolis_setting.value('settings/locale')) + '/ui.qm'
-        locale_path = pkg_resources.resource_filename(__name__, locale_dir)
- # b) set translator to Qtranslator
+
+        # add support for other languages
         self.translator = QTranslator()
-        self.translator.load(locale_path)
+
+        # detect current value of locale in persepolis config file
+        if str(self.persepolis_setting.value('settings/locale')) in (-1, 'en_US'):
+            self.translator.load('')
+        else:
+            self.translator.load('locales/' + str(self.persepolis_setting.value('settings/locale')), ':/ui.qm')
         QCoreApplication.installTranslator(self.translator)
+
+        # set ui direction
+        ui_direction = self.persepolis_setting.value('ui_direction')
+
+        if ui_direction == 'rtl':
+            self.setLayoutDirection(Qt.RightToLeft)
+        
+        elif ui_direction in 'ltr':
+            self.setLayoutDirection(Qt.LeftToRight)
+
 
 # window
         self.setMinimumSize(QtCore.QSize(595, 284))
@@ -198,8 +207,8 @@ class ProgressWindow_Ui(QWidget):
             self.information_tab),  QCoreApplication.translate("progress_ui_tr", "Download information"))
         self.limit_checkBox.setText(QCoreApplication.translate("progress_ui_tr", "Limit Speed"))
         self.after_checkBox.setText(QCoreApplication.translate("progress_ui_tr", "After download"))
-        self.limit_comboBox.setItemText(0,  "KB/S")
-        self.limit_comboBox.setItemText(1,  "MB/S")
+        self.limit_comboBox.setItemText(0,  QCoreApplication.translate("progress_ui_tr", "KB/S"))
+        self.limit_comboBox.setItemText(1,  QCoreApplication.translate("progress_ui_tr", "MB/S"))
         self.limit_pushButton.setText(QCoreApplication.translate("progress_ui_tr", "Apply"))
 
         self.after_comboBox.setItemText(0,  QCoreApplication.translate("progress_ui_tr", "Shut Down"))

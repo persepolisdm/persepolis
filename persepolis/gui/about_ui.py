@@ -17,9 +17,8 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import QWidget
 from PyQt5.QtGui import QIcon
-from PyQt5.QtCore import QSize, QPoint, QTranslator, QCoreApplication
-from persepolis.gui import icons_resource
-import pkg_resources
+from PyQt5.QtCore import Qt, QSize, QPoint, QTranslator, QCoreApplication, QLocale
+from persepolis.gui import resources 
 
 
 class AboutWindow_Ui(QWidget):
@@ -28,17 +27,22 @@ class AboutWindow_Ui(QWidget):
 
         self.persepolis_setting = persepolis_setting
 
-# add support for other languages
-# -a detect current value of locale in persepolis config file
-        if str(self.persepolis_setting.value('settings/locale')) in (-1, 'en_US'):
-            locale_dir = ''
-        else:
-            locale_dir = 'locales/' + str(self.persepolis_setting.value('settings/locale')) + '/ui.qm'
-        locale_path = pkg_resources.resource_filename(__name__, locale_dir)
- # -b set translator to Qtranslator
+        # add support for other languages
+        locale = str(self.persepolis_setting.value('settings/locale'))
+        QLocale.setDefault(QLocale(locale))
         self.translator = QTranslator()
-        self.translator.load(locale_path)
-        QCoreApplication.installTranslator(self.translator)
+        if self.translator.load(':/translations/locales/ui_' + locale, 'ts'):
+            QCoreApplication.installTranslator(self.translator)
+
+        # set ui direction
+        ui_direction = self.persepolis_setting.value('ui_direction')
+
+        if ui_direction == 'rtl':
+            self.setLayoutDirection(Qt.RightToLeft)
+        
+        elif ui_direction in 'ltr':
+            self.setLayoutDirection(Qt.LeftToRight)
+
 
         icons = ':/' + \
             str(self.persepolis_setting.value('settings/icons')) + '/'
@@ -114,7 +118,7 @@ class AboutWindow_Ui(QWidget):
         self.title_label.setText(QCoreApplication.translate("about_ui_tr", "Persepolis Download Manager"))
         self.version_label.setText(QCoreApplication.translate("about_ui_tr", "Version 3.0.1"))
         self.name_label.setText(QCoreApplication.translate("about_ui_tr", 
-            "\nAliReza AmirSamimi\nMohammadreza Abdollahzadeh\nSadegh Alirezaie\nMostafa Asadi\nMohammadAmin Vahedinia\nJafar Akhondali"))
+            "\nAliReza AmirSamimi\nMohammadreza Abdollahzadeh\nSadegh Alirezaie\nMostafa Asadi\nMohammadAmin Vahedinia\nJafar Akhondali\nH.Rostami"))
         self.site2_label.setText(QCoreApplication.translate("about_ui_tr", 
             "<a href=https://persepolisdm.github.io>https://persepolisdm.github.io</a>"))
         self.telegram_label.setText(QCoreApplication.translate("about_ui_tr", 

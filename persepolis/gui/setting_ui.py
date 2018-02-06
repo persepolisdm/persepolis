@@ -18,8 +18,8 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import QDateTimeEdit, QCheckBox, QVBoxLayout, QHBoxLayout, QFrame, QWidget, QLabel, QLineEdit, QTabWidget, QSpinBox, QPushButton, QDial, QComboBox, QFontComboBox, QSpacerItem, QSizePolicy
 from PyQt5.QtGui import QIcon
 import pkg_resources
-from PyQt5.QtCore import QTranslator, QCoreApplication
-from persepolis.gui import icons_resource
+from PyQt5.QtCore import Qt, QTranslator, QCoreApplication, QLocale
+from persepolis.gui import resources 
 
 
 
@@ -28,23 +28,30 @@ class Setting_Ui(QWidget):
         super().__init__()
         icon = QtGui.QIcon()
 
-# add support for other languages
-# a) detect current value of locale in persepolis config file
-        if str(persepolis_setting.value('settings/locale')) in (-1, 'en_US'):
-            locale_dir = ''
-        else:
-            locale_dir = 'locales/' + str(persepolis_setting.value('settings/locale')) + '/ui.qm'
-        locale_path = pkg_resources.resource_filename(__name__, locale_dir)
-# b) set translator to Qtranslator
+        self.persepolis_setting = persepolis_setting
+
+        # add support for other languages
+        locale = str(self.persepolis_setting.value('settings/locale'))
+        QLocale.setDefault(QLocale(locale))
         self.translator = QTranslator()
-        self.translator.load(locale_path)
-        QCoreApplication.installTranslator(self.translator)
+        if self.translator.load(':/translations/locales/ui_' + locale, 'ts'):
+            QCoreApplication.installTranslator(self.translator)
 
         self.setWindowIcon(QIcon.fromTheme('persepolis', QIcon(':/persepolis.svg')))
         self.setWindowTitle(QCoreApplication.translate("setting_ui_tr", 'Preferences'))
 
+        # set ui direction
+        ui_direction = self.persepolis_setting.value('ui_direction')
+
+        if ui_direction == 'rtl':
+            self.setLayoutDirection(Qt.RightToLeft)
+        
+        elif ui_direction in 'ltr':
+            self.setLayoutDirection(Qt.LeftToRight)
+
+
         global icons
-        icons = ':/' + str(persepolis_setting.value('settings/icons')) + '/'
+        icons = ':/' + str(self.persepolis_setting.value('settings/icons')) + '/'
 
 
         self.verticalLayout_2 = QVBoxLayout(self)
@@ -522,6 +529,7 @@ class Setting_Ui(QWidget):
         self.column10_checkBox.setText(QCoreApplication.translate("setting_ui_tr", 'First try date'))
         self.column11_checkBox.setText(QCoreApplication.translate("setting_ui_tr", 'Last try date'))
         self.column12_checkBox.setText(QCoreApplication.translate("setting_ui_tr", 'Category'))
+
 
         self.setting_tabWidget.setTabText(
             self.setting_tabWidget.indexOf(self.columns_tab), QCoreApplication.translate("setting_ui_tr", "Columns customization"))

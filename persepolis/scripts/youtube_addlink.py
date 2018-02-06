@@ -18,10 +18,9 @@ from random import random
 from time import time, sleep
 import youtube_dl
 import os
-from PyQt5.QtCore import QThread, pyqtSignal, QCoreApplication, QTranslator
+from PyQt5.QtCore import QThread, pyqtSignal, QCoreApplication, QTranslator, QLocale
 from PyQt5.QtWidgets import QPushButton, QTextEdit, QFrame, QLabel, QComboBox, QHBoxLayout, QApplication
 from copy import deepcopy
-import pkg_resources
 from persepolis.scripts import logger, osCommands
 from persepolis.scripts.spider import spider
 from persepolis.scripts.addlink import AddLinkWindow
@@ -39,16 +38,11 @@ class YoutubeAddLink(AddLinkWindow):
         self.size_label.hide()
 		
 # add support for other languages
-# a) detect current value of locale in persepolis config file
-        if str(self.persepolis_setting.value('settings/locale')) in (-1, 'en_US'):
-            locale_dir = ''
-        else:
-            locale_dir = 'locales/' + str(self.persepolis_setting.value('settings/locale')) + '/ui.qm'
-        locale_path = pkg_resources.resource_filename(__name__, locale_dir)
-# b) set translator to Qtranslator
+        locale = str(self.persepolis_setting.value('settings/locale'))
+        QLocale.setDefault(QLocale(locale))
         self.translator = QTranslator()
-        self.translator.load(locale_path)
-        QCoreApplication.installTranslator(self.translator)
+        if self.translator.load(':/translations/locales/ui_' + locale, 'ts'):
+            QCoreApplication.installTranslator(self.translator)
 
 
         # Fetch Button
@@ -156,13 +150,13 @@ class YoutubeAddLink(AddLinkWindow):
         try:
             self.change_name_lineEdit.setText(self.media_title + '.' +
                                               self.formats_showing[self.media_combo.currentIndex()]['ext'])
+            self.change_name_checkBox.setChecked(True)
         except Exception as ex:
             logger.sendToLog(ex, "ERROR")
 
     def okButtonPressed(self, button, download_later):
         index = self.media_combo.currentIndex()
-        self.plugin_add_link_dictionary['link'] = self.formats_showing[index]['url']
-        self.plugin_add_link_dictionary['out'] = self.change_name_lineEdit.text()
+        self.link_lineEdit.setText(self.formats_showing[index]['url'])
         super().okButtonPressed(button, download_later)
 
     def fetched_result(self, media_dict):

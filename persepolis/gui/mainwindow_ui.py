@@ -16,9 +16,8 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import QDateTimeEdit, QDoubleSpinBox, QPushButton, QComboBox,  QMenu, QTreeView, QSplitter, QSizePolicy, QGridLayout, QHBoxLayout, QVBoxLayout, QMenu, QTableWidgetItem, QAbstractItemView, QApplication, QToolBar, QMenuBar, QStatusBar, QTableWidget, QAction, QMainWindow, QWidget, QFrame, QAbstractItemView, QCheckBox, QSpinBox, QLabel
 from PyQt5.QtGui import QIcon, QStandardItemModel, QStandardItem
-from PyQt5.QtCore import QCoreApplication, QRect, QSize, Qt, QTranslator
-import pkg_resources
-from persepolis.gui import icons_resource
+from PyQt5.QtCore import QCoreApplication, QRect, QSize, Qt, QTranslator, QLocale
+from persepolis.gui import resources 
 
 
 
@@ -36,17 +35,23 @@ class MenuWidget(QPushButton):
 
         icons = ':/' + \
             str(self.parent.persepolis_setting.value('settings/icons')) + '/'
-# add support for other languages
-# a) detect current value of locale in persepolis config file
-        if str( self.parent.persepolis_setting.value('settings/locale')) in (-1, 'en_US'):
-            locale_dir = ''
-        else:
-            locale_dir = 'locales/' + str( self.parent.persepolis_setting.value('settings/locale')) + '/ui.qm'
-        locale_path = pkg_resources.resource_filename(__name__, locale_dir)
-# b) set translator to Qtranslator
+
+        # add support for other languages
+        locale = str(self.parent.persepolis_setting.value('settings/locale'))
+        QLocale.setDefault(QLocale(locale))
         self.translator = QTranslator()
-        self.translator.load(locale_path)
-        QCoreApplication.installTranslator(self.translator)
+        if self.translator.load(':/translations/locales/ui_' + locale, 'ts'):
+            QCoreApplication.installTranslator(self.translator)
+
+        # set ui direction
+        ui_direction = self.parent.persepolis_setting.value('ui_direction')
+
+        if ui_direction == 'rtl':
+            self.setLayoutDirection(Qt.RightToLeft)
+        
+        elif ui_direction in 'ltr':
+            self.setLayoutDirection(Qt.LeftToRight)
+
 
         # creating context menu
         self.menubar = QMenu(self)
@@ -144,6 +149,17 @@ class MenuWidget(QPushButton):
 class DownloadTableWidget(QTableWidget):
     def __init__(self, parent):
         super().__init__()
+
+        # set ui direction
+        ui_direction = parent.persepolis_setting.value('ui_direction')
+
+        if ui_direction == 'rtl':
+            self.setLayoutDirection(Qt.RightToLeft)
+        
+        elif ui_direction in 'ltr':
+            self.setLayoutDirection(Qt.LeftToRight)
+
+
 # creating context menu
         self.tablewidget_menu = QMenu(self)
         self.sendMenu = self.tablewidget_menu.addMenu('')
@@ -156,6 +172,17 @@ class DownloadTableWidget(QTableWidget):
 class CategoryTreeView(QTreeView):
     def __init__(self, parent):
         super().__init__()
+
+        # set ui direction
+        ui_direction = parent.persepolis_setting.value('ui_direction')
+
+        if ui_direction == 'rtl':
+            self.setLayoutDirection(Qt.RightToLeft)
+        
+        elif ui_direction in 'ltr':
+            self.setLayoutDirection(Qt.LeftToRight)
+
+
 # creating context menu
         self.category_tree_menu = QMenu(self)
 
@@ -170,31 +197,37 @@ class CategoryTreeView(QTreeView):
 class MainWindow_Ui(QMainWindow):
     def __init__(self, persepolis_setting):
         super().__init__()
-# MainWindow
+        # MainWindow
         self.persepolis_setting = persepolis_setting
 
-# add support for other languages
-# a) detect current value of locale in persepolis config file
-        if str(self.persepolis_setting.value('settings/locale')) in (-1, 'en_US'):
-            locale_dir = ''
-        else:
-            locale_dir = 'locales/' + str(self.persepolis_setting.value('settings/locale')) + '/ui.qm'
-        locale_path = pkg_resources.resource_filename(__name__, locale_dir)
-# b) set translator to Qtranslator
+        # add support for other languages
+        locale = str(self.persepolis_setting.value('settings/locale'))
+        QLocale.setDefault(QLocale(locale))
         self.translator = QTranslator()
-        self.translator.load(locale_path)
-        QCoreApplication.installTranslator(self.translator)
+        if self.translator.load(':/translations/locales/ui_' + locale, 'ts'):
+            QCoreApplication.installTranslator(self.translator)
+
+
+        # set ui direction
+        ui_direction = self.persepolis_setting.value('ui_direction')
+
+        if ui_direction == 'rtl':
+            self.setLayoutDirection(Qt.RightToLeft)
+        
+        elif ui_direction in 'ltr':
+            self.setLayoutDirection(Qt.LeftToRight)
+
 
 
         icons = ':/' + \
             str(self.persepolis_setting.value('settings/icons')) + '/'
 
-        self.setWindowTitle("Persepolis Download Manager")
+        self.setWindowTitle(QCoreApplication.translate("mainwindow_ui_tr", "Persepolis Download Manager"))
         self.setWindowIcon(QIcon.fromTheme('persepolis', QIcon(':/persepolis.svg')))
 
         self.centralwidget = QWidget(self)
         self.verticalLayout = QVBoxLayout(self.centralwidget)
-# enable drag and drop
+        # enable drag and drop
         self.setAcceptDrops(True)
 # frame
         self.frame = QFrame(self.centralwidget)
@@ -210,11 +243,14 @@ class MainWindow_Ui(QMainWindow):
 
         self.category_tree_model = QStandardItemModel()
         self.category_tree.setModel(self.category_tree_model)
-        category_table_header = ['Category']
+        category_table_header = [QCoreApplication.translate("mainwindow_ui_tr", 'Category')]
+
         self.category_tree_model.setHorizontalHeaderLabels(
             category_table_header)
         self.category_tree.header().setStretchLastSection(True)
 
+        self.category_tree.header().setDefaultAlignment(Qt.AlignCenter)
+        
 # queue_panel
         self.queue_panel_widget = QWidget(self)
 
@@ -353,7 +389,8 @@ class MainWindow_Ui(QMainWindow):
         self.download_table.setColumnHidden(9, True)
 
         download_table_header = [QCoreApplication.translate("mainwindow_ui_tr", 'File Name'), QCoreApplication.translate("mainwindow_ui_tr",'Status'), QCoreApplication.translate("mainwindow_ui_tr", 'Size'), QCoreApplication.translate("mainwindow_ui_tr", 'Downloaded'), QCoreApplication.translate("mainwindow_ui_tr", 'Percentage'), QCoreApplication.translate("mainwindow_ui_tr", 'Connections'),
-                                 QCoreApplication.translate("mainwindow_ui_tr", 'Transfer rate'), QCoreApplication.translate("mainwindow_ui_tr",'Estimate time left'), QCoreApplication.translate("mainwindow_ui_tr", 'Gid'), QCoreApplication.translate("mainwindow_ui_tr",'Link'), QCoreApplication.translate("mainwindow_ui_tr", 'First try date'), QCoreApplication.translate("mainwindow_ui_tr", 'Last try date'), QCoreApplication.translate("mainwindow_ui_tr",'Category')]
+                                 QCoreApplication.translate("mainwindow_ui_tr", 'Transfer rate'), QCoreApplication.translate("mainwindow_ui_tr",'Estimated time left'), QCoreApplication.translate("mainwindow_ui_tr", 'Gid'), QCoreApplication.translate("mainwindow_ui_tr",'Link'), QCoreApplication.translate("mainwindow_ui_tr", 'First try date'), QCoreApplication.translate("mainwindow_ui_tr", 'Last try date'), QCoreApplication.translate("mainwindow_ui_tr",'Category')]
+
         self.download_table.setHorizontalHeaderLabels(download_table_header)
 
 # fixing the size of download_table when window is Maximized!

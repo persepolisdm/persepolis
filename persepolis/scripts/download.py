@@ -547,7 +547,7 @@ def downloadCompleteAction(parent, path, download_path, file_name, file_size):
             logger.sendToLog('Insufficient disk space in download folder', "ERROR")
             # show notification
             notifySend("Insufficient disk space!", 'Please change download folder',
-                    10000, 'fail', systemtray=parent.system_tray_icon)
+                    10000, 'fail', parent=parent)
 
     else:
         # move the file to the download folder

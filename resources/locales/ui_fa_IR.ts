@@ -4,22 +4,22 @@
 <context>
     <name>about_ui_tr</name>
     <message>
-        <location filename="../../about_ui.py" line="114"/>
+        <location filename="../../persepolis/gui/about_ui.py" line="114"/>
         <source>About Persepolis</source>
         <translation>درباره پرسپولیس</translation>
     </message>
     <message>
-        <location filename="../../about_ui.py" line="115"/>
+        <location filename="../../persepolis/gui/about_ui.py" line="115"/>
         <source>Persepolis Download Manager</source>
         <translation>دانلود منیجر پرسپولیس</translation>
     </message>
     <message>
-        <location filename="../../about_ui.py" line="116"/>
+        <location filename="../../persepolis/gui/about_ui.py" line="116"/>
         <source>Version 3.0.1</source>
         <translation>نسخه ۳.۰.۱</translation>
     </message>
     <message>
-        <location filename="../../about_ui.py" line="117"/>
+        <location filename="../../persepolis/gui/about_ui.py" line="117"/>
         <source>
 AliReza AmirSamimi
 Mohammadreza Abdollahzadeh
@@ -36,22 +36,22 @@ Jafar Akhondali</source>
 جعفر آخوندعلی</translation>
     </message>
     <message>
-        <location filename="../../about_ui.py" line="119"/>
+        <location filename="../../persepolis/gui/about_ui.py" line="119"/>
         <source>&lt;a href=https://persepolisdm.github.io&gt;https://persepolisdm.github.io&lt;/a&gt;</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../about_ui.py" line="121"/>
+        <location filename="../../persepolis/gui/about_ui.py" line="121"/>
         <source>&lt;a href=https://telegram.me/persepolisdm&gt;https://telegram.me/persepolisdm&lt;/a&gt;</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../about_ui.py" line="123"/>
+        <location filename="../../persepolis/gui/about_ui.py" line="123"/>
         <source>&lt;a href=https://twitter.com/persepolisdm&gt;https://twitter.com/persepolisdm&lt;/a&gt;</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../about_ui.py" line="125"/>
+        <location filename="../../persepolis/gui/about_ui.py" line="125"/>
         <source>Ok</source>
         <translation>تایید</translation>
     </message>

@@ -42,7 +42,6 @@ try:
     print('python3-pyqt5 is found')
 except:
     print('Error : python3-pyqt5 is not installed!')
-    sys.exit(1)
 
 # python3-requests
 try:
@@ -50,7 +49,6 @@ try:
     print('python3-requests is found!')
 except:
     print('Error : requests is not installed!')
-    sys.exit(1)
 
 # python3-setproctitle
 try:
@@ -66,11 +64,17 @@ try:
 except:
     print("Warning: python3-psutil is not installed!")
 
+# youtube_dl
+try:
+    import youtube_dl
+    print('youtube_dl is found')
+except:
+    print('Warning: youtube_dl is not installed!')
+
 # aria2
 answer = os.system('aria2c --version 1>/dev/null')
 if answer != 0:
     print("Error aria2 not installed!")
-    sys.exit(1)
 else:
     print('aria2 is found!')
 
@@ -78,7 +82,6 @@ else:
 answer = os.system('notify-send --version 1>/dev/null')
 if answer != 0:
     print("Error libnotify-bin is not installed!")
-    sys.exit(1)
 else:
     print('libnotify-bin is found!')
 
@@ -101,7 +104,9 @@ else:
     print('Warning: sound-theme-freedesktop is not installed! you need this package for sound notifications!')
  
 
-
+if sys.argv[1] == "test":
+   print('We have not unit test :)')
+   sys.exit('0')
 
 DESCRIPTION = 'Persepolis Download Manager'
 
@@ -109,15 +114,15 @@ if os_type == 'Linux':
     DATA_FILES = [
         ('/usr/share/man/man1/', ['man/persepolis.1.gz']),
         ('/usr/share/applications/', ['xdg/persepolis.desktop']),
-        ('/usr/share/pixmaps/', ['icons/persepolis.svg']),
-        ('/usr/share/pixmaps/', ['icons/persepolis-tray.svg'])
+        ('/usr/share/pixmaps/', ['resources/persepolis.svg']),
+        ('/usr/share/pixmaps/', ['resources/persepolis-tray.svg'])
         ]
 elif os_type == 'FreeBSD' or os_type == 'OpenBSD':
     DATA_FILES = [
         ('/usr/local/share/man/man1/', ['man/persepolis.1.gz']),
         ('/usr/local/share/applications/', ['xdg/persepolis.desktop']),
-        ('/usr/local/share/pixmaps/', ['icons/persepolis.svg']),
-        ('/usr/local/share/pixmaps/', ['icons/persepolis-tray.svg'])
+        ('/usr/local/share/pixmaps/', ['resources/persepolis.svg']),
+        ('/usr/local/share/pixmaps/', ['resources/persepolis-tray.svg'])
         ]
 
 
@@ -151,7 +156,7 @@ setup(
     license = 'GPL3',
     description = DESCRIPTION,
     long_description = DESCRIPTION,
-    include_package_data=True,
+    include_package_data = True,
     url = 'https://github.com/persepolisdm/persepolis',
     author = 'AliReza AmirSamimi',
     author_email = 'alireza.amirsamimi@gmail.com',

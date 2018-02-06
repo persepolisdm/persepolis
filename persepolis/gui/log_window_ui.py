@@ -16,9 +16,8 @@
 from PyQt5 import QtGui, QtWidgets, QtCore
 from PyQt5.QtWidgets import QWidget, QTextEdit, QVBoxLayout, QHBoxLayout, QPushButton, QLabel
 from PyQt5.QtGui import QIcon
-from persepolis.gui import icons_resource
-from PyQt5.QtCore import QTranslator, QCoreApplication
-import pkg_resources
+from persepolis.gui import resources 
+from PyQt5.QtCore import Qt, QTranslator, QCoreApplication, QLocale
 
 
 
@@ -27,23 +26,28 @@ class LogWindow_Ui(QWidget):
         super().__init__()
 
         self.persepolis_setting = persepolis_setting
+		
         # add support for other languages
-        # a) detect current value of locale in persepolis config file
-        if str(self.persepolis_setting.value('settings/locale')) in (-1, 'en_US'):
-            locale_dir = ''
-        else:
-            locale_dir = 'locales/' + str(self.persepolis_setting.value('settings/locale')) + '/ui.qm'
-        locale_path = pkg_resources.resource_filename(__name__, locale_dir)
-        # b) set translator to Qtranslator
+        locale = str(self.persepolis_setting.value('settings/locale'))
+        QLocale.setDefault(QLocale(locale))
         self.translator = QTranslator()
-        self.translator.load(locale_path)
-        QCoreApplication.installTranslator(self.translator)
+        if self.translator.load(':/translations/locales/ui_' + locale, 'ts'):
+            QCoreApplication.installTranslator(self.translator)
+
+        # set ui direction
+        ui_direction = self.persepolis_setting.value('ui_direction')
+
+        if ui_direction == 'rtl':
+            self.setLayoutDirection(Qt.RightToLeft)
+        
+        elif ui_direction in 'ltr':
+            self.setLayoutDirection(Qt.LeftToRight)
 
 
         icons = ':/' + \
             str(self.persepolis_setting.value('settings/icons')) + '/'
 
-# finding windows_size
+        # finding windows_size
         self.setMinimumSize(QtCore.QSize(620, 300))
         self.setWindowIcon(QIcon.fromTheme('persepolis', QIcon(':/persepolis.svg')))
 
