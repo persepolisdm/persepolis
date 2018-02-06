@@ -1678,9 +1678,14 @@ class MainWindow(MainWindow_Ui):
             self.selectDownloads()
 
         if len(rows_list) != 0:
+
             selected_row_return = rows_list[0]
+
             status = self.download_table.item(selected_row_return, 1).text()
             category = self.download_table.item(selected_row_return, 12).text()
+            link = self.download_table.item(selected_row_return, 9).text()
+
+            self.statusbar.showMessage(str(link))
 
             self.removeSelectedAction.setEnabled(True)
             self.deleteSelectedAction.setEnabled(True)
