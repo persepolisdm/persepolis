@@ -64,6 +64,10 @@ Chrome/Chromium and Firefox addons support: **Jafar Akhondali**
 https://github.com/JafarAkhondali
 jafar.akhondali@yahoo.com
 
+Fedora and OpenSuse support and  UI translation: ***H Rostami***
+https://github.com/hayyan71
+hayyan71@yahoo.com
+
 Persepolis website :
 https://persepolisdm.github.io/
 
