@@ -28,15 +28,12 @@ class ProgressWindow_Ui(QWidget):
         icons = ':/' + str(persepolis_setting.value('settings/icons')) + '/'
 
         # add support for other languages
+        locale = str(self.persepolis_setting.value('settings/locale'))
+        QLocale.setDefault(QLocale(locale))
         self.translator = QTranslator()
-
-        # detect current value of locale in persepolis config file
-        if str(self.persepolis_setting.value('settings/locale')) in (-1, 'en_US'):
-            self.translator.load('')
-        else:
-            self.translator.load('locales/' + str(self.persepolis_setting.value('settings/locale')), ':/ui.qm')
-        QCoreApplication.installTranslator(self.translator)
-
+        if self.translator.load(':/translations/locales/ui_' + locale, 'ts'):
+            QCoreApplication.installTranslator(self.translator)
+            
         # set ui direction
         ui_direction = self.persepolis_setting.value('ui_direction')
 
