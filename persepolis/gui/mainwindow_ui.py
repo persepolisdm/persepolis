@@ -35,12 +35,23 @@ class MenuWidget(QPushButton):
 
         icons = ':/' + \
             str(self.parent.persepolis_setting.value('settings/icons')) + '/'
+
         # add support for other languages
         locale = str(self.parent.persepolis_setting.value('settings/locale'))
         QLocale.setDefault(QLocale(locale))
         self.translator = QTranslator()
         if self.translator.load(':/translations/locales/ui_' + locale, 'ts'):
             QCoreApplication.installTranslator(self.translator)
+
+        # set ui direction
+        ui_direction = self.parent.persepolis_setting.value('ui_direction')
+
+        if ui_direction == 'rtl':
+            self.setLayoutDirection(Qt.RightToLeft)
+        
+        elif ui_direction in 'ltr':
+            self.setLayoutDirection(Qt.LeftToRight)
+
 
         # creating context menu
         self.menubar = QMenu(self)
@@ -138,6 +149,17 @@ class MenuWidget(QPushButton):
 class DownloadTableWidget(QTableWidget):
     def __init__(self, parent):
         super().__init__()
+
+        # set ui direction
+        ui_direction = parent.persepolis_setting.value('ui_direction')
+
+        if ui_direction == 'rtl':
+            self.setLayoutDirection(Qt.RightToLeft)
+        
+        elif ui_direction in 'ltr':
+            self.setLayoutDirection(Qt.LeftToRight)
+
+
 # creating context menu
         self.tablewidget_menu = QMenu(self)
         self.sendMenu = self.tablewidget_menu.addMenu('')
@@ -150,6 +172,17 @@ class DownloadTableWidget(QTableWidget):
 class CategoryTreeView(QTreeView):
     def __init__(self, parent):
         super().__init__()
+
+        # set ui direction
+        ui_direction = parent.persepolis_setting.value('ui_direction')
+
+        if ui_direction == 'rtl':
+            self.setLayoutDirection(Qt.RightToLeft)
+        
+        elif ui_direction in 'ltr':
+            self.setLayoutDirection(Qt.LeftToRight)
+
+
 # creating context menu
         self.category_tree_menu = QMenu(self)
 
@@ -164,16 +197,25 @@ class CategoryTreeView(QTreeView):
 class MainWindow_Ui(QMainWindow):
     def __init__(self, persepolis_setting):
         super().__init__()
-# MainWindow
+        # MainWindow
         self.persepolis_setting = persepolis_setting
 
-# add support for other languages
+        # add support for other languages
         locale = str(self.persepolis_setting.value('settings/locale'))
         QLocale.setDefault(QLocale(locale))
         self.translator = QTranslator()
         if self.translator.load(':/translations/locales/ui_' + locale, 'ts'):
             QCoreApplication.installTranslator(self.translator)
 
+
+        # set ui direction
+        ui_direction = self.persepolis_setting.value('ui_direction')
+
+        if ui_direction == 'rtl':
+            self.setLayoutDirection(Qt.RightToLeft)
+        
+        elif ui_direction in 'ltr':
+            self.setLayoutDirection(Qt.LeftToRight)
 
 
 
@@ -185,7 +227,7 @@ class MainWindow_Ui(QMainWindow):
 
         self.centralwidget = QWidget(self)
         self.verticalLayout = QVBoxLayout(self.centralwidget)
-# enable drag and drop
+        # enable drag and drop
         self.setAcceptDrops(True)
 # frame
         self.frame = QFrame(self.centralwidget)
@@ -202,10 +244,13 @@ class MainWindow_Ui(QMainWindow):
         self.category_tree_model = QStandardItemModel()
         self.category_tree.setModel(self.category_tree_model)
         category_table_header = [QCoreApplication.translate("mainwindow_ui_tr", 'Category')]
+
         self.category_tree_model.setHorizontalHeaderLabels(
             category_table_header)
         self.category_tree.header().setStretchLastSection(True)
 
+        self.category_tree.header().setDefaultAlignment(Qt.AlignCenter)
+        
 # queue_panel
         self.queue_panel_widget = QWidget(self)
 

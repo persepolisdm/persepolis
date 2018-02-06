@@ -18,7 +18,7 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import QCheckBox, QProgressBar, QFrame, QDoubleSpinBox, QComboBox, QWidget, QTabWidget, QVBoxLayout, QHBoxLayout, QPushButton, QLabel, QWidget, QSizePolicy
 from PyQt5.QtGui import QIcon
-from PyQt5.QtCore import QTranslator, QCoreApplication
+from PyQt5.QtCore import Qt, QTranslator, QCoreApplication
 
 class ProgressWindow_Ui(QWidget):
     def __init__(self, persepolis_setting):
@@ -26,14 +26,25 @@ class ProgressWindow_Ui(QWidget):
         self.persepolis_setting = persepolis_setting
         icons = ':/' + str(persepolis_setting.value('settings/icons')) + '/'
 
-# add support for other languages
+        # add support for other languages
         self.translator = QTranslator()
-# a) detect current value of locale in persepolis config file
+
+        # detect current value of locale in persepolis config file
         if str(self.persepolis_setting.value('settings/locale')) in (-1, 'en_US'):
             self.translator.load('')
         else:
             self.translator.load('locales/' + str(self.persepolis_setting.value('settings/locale')), ':/ui.qm')
         QCoreApplication.installTranslator(self.translator)
+
+        # set ui direction
+        ui_direction = self.persepolis_setting.value('ui_direction')
+
+        if ui_direction == 'rtl':
+            self.setLayoutDirection(Qt.RightToLeft)
+        
+        elif ui_direction in 'ltr':
+            self.setLayoutDirection(Qt.LeftToRight)
+
 
 # window
         self.setMinimumSize(QtCore.QSize(595, 284))

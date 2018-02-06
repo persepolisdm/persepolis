@@ -140,7 +140,7 @@ else:
 download_path = os.path.join(str(home_address), 'Downloads', 'Persepolis')
 
 # Persepolis default setting
-default_setting_dict = {'toolbar_icon_size': 32, 'wait-queue': [0, 0], 'awake': 'no', 'custom-font': 'no', 'column0': 'yes', 'column1': 'yes', 'column2': 'yes', 'column3': 'yes', 'column4': 'yes', 'column5': 'yes', 'column6': 'yes', 'column7': 'yes', 'column10': 'yes', 'column11': 'yes', 'column12': 'yes',
+default_setting_dict = {'locale': 'en_US', 'toolbar_icon_size': 32, 'wait-queue': [0, 0], 'awake': 'no', 'custom-font': 'no', 'column0': 'yes', 'column1': 'yes', 'column2': 'yes', 'column3': 'yes', 'column4': 'yes', 'column5': 'yes', 'column6': 'yes', 'column7': 'yes', 'column10': 'yes', 'column11': 'yes', 'column12': 'yes',
                              'subfolder': 'yes', 'startup': 'no', 'show-progress': 'yes', 'show-menubar': 'no', 'show-sidepanel': 'yes', 'rpc-port': 6801, 'notification': 'Native notification', 'after-dialog': 'yes', 'tray-icon': 'yes',
                              'max-tries': 5, 'retry-wait': 0, 'timeout': 60, 'connections': 16, 'download_path_temp': download_path_temp, 'download_path': download_path, 'sound': 'yes', 'sound-volume': 100, 'style': 'Fusion',
                              'color-scheme': 'Persepolis Light Blue', 'icons': 'Papirus-Light', 'font': 'Ubuntu', 'font-size': 9, 'aria2_path': ''}
@@ -158,6 +158,7 @@ if not(os.path.exists(persepolis_setting.value('download_path_temp'))):
 
 if not(os.path.exists(persepolis_setting.value('download_path'))):
     persepolis_setting.setValue('download_path', default_setting_dict['download_path'])
+
 
 persepolis_setting.sync()
 
@@ -184,6 +185,28 @@ persepolis_setting.endGroup()
 # Browser integration for Firefox and chromium and google chrome
 for browser in ['chrome', 'chromium', 'opera', 'vivaldi', 'firefox']:
     browserIntegration(browser)
+
+
+# get locale and set ui direction
+locale = str(persepolis_setting.value('settings/locale'))
+
+# right to left languages
+rtl_locale_list = ['fa_IR']
+
+# left to right languages
+ltr_locale_list = ['en_US']
+
+if locale in rtl_locale_list:
+    persepolis_setting.setValue('ui_direction', 'rtl')
+else:
+    persepolis_setting.setValue('ui_direction', 'ltr')
+
+# Check youtube-dl setting
+persepolis_setting.beginGroup('youtube')
+persepolis_setting.setValue('enable', persepolis_setting.value('enable', 'yes'))
+persepolis_setting.setValue('cookie_path', persepolis_tmp)
+persepolis_setting.setValue('max_links', persepolis_setting.value('max_links', 3))
+persepolis_setting.endGroup()
 
 # compatibility
 persepolis_version = float(persepolis_setting.value('version/version', 2.5))
@@ -225,11 +248,3 @@ if persepolis_version < 3.0:
 persepolis_setting.setValue('version/version', 3.0)
 persepolis_setting.sync()
 
-
-# Check youtube-dl setting
-persepolis_setting.beginGroup('youtube')
-persepolis_setting.setValue('enable', persepolis_setting.value('enable', 'yes'))
-persepolis_setting.setValue('cookie_path', persepolis_tmp)
-persepolis_setting.setValue('max_links', persepolis_setting.value('max_links', 3))
-persepolis_setting.sync()
-persepolis_setting.endGroup()

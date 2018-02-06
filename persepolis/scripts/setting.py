@@ -113,8 +113,7 @@ class PreferencesWindow(Setting_Ui):
 
         current_locale = self.lang_comboBox.findText(
             str(self.persepolis_setting.value('locale')))
-        if current_locale != -1:
-            self.lang_comboBox.setCurrentIndex(current_locale)
+        self.lang_comboBox.setCurrentIndex(current_locale)
 # set color_scheme
         color_scheme = ['System', 'Persepolis Dark Red', 'Persepolis Dark Blue', 'Persepolis ArcDark Red',
                         'Persepolis ArcDark Blue', 'Persepolis Light Red', 'Persepolis Light Blue']
@@ -123,15 +122,6 @@ class PreferencesWindow(Setting_Ui):
         current_color_index = self.color_comboBox.findText(
             str(self.persepolis_setting.value('color-scheme')))
         self.color_comboBox.setCurrentIndex(current_color_index)
-
-# # set icons
-#         icons = ['Archdroid-Red', 'Archdroid-Blue', 'Breeze', 'Breeze-Dark', 'Papirus', 'Papirus-Dark', 'Papirus-Light']
-#         self.icon_comboBox.addItems(icons)
-# 
-#         current_icons_index = self.icon_comboBox.findText(
-#             str(self.persepolis_setting.value('icons')))
-#         self.icon_comboBox.setCurrentIndex(current_icons_index)
-#         self.current_icon = str(self.icon_comboBox.currentText())
 
         self.current_icon = self.persepolis_setting.value('icons')
 # icon size
@@ -181,7 +171,6 @@ class PreferencesWindow(Setting_Ui):
         self.volume_dial.valueChanged.connect(self.dialChanged)
 
 # tray icon
-
         if str(self.persepolis_setting.value('tray-icon')) == 'yes':
             self.enable_system_tray_checkBox.setChecked(True)
         else:
@@ -460,7 +449,7 @@ class PreferencesWindow(Setting_Ui):
         download_path_default = os.path.join(
             str(home_address), 'Downloads', 'Persepolis')
 
-        self.setting_dict = {'toolbar_icon_size': 32, 'wait-queue': [0, 0], 'awake': 'no', 'custom-font': 'no', 'column0': 'yes', 'column1': 'yes', 'column2': 'yes', 'column3': 'yes', 'column4': 'yes', 'column5': 'yes', 'column6': 'yes', 'column7': 'yes', 'column10': 'yes', 'column11': 'yes', 'column12': 'yes',
+        self.setting_dict = {'locale': 'en_US', 'toolbar_icon_size': 32, 'wait-queue': [0, 0], 'awake': 'no', 'custom-font': 'no', 'column0': 'yes', 'column1': 'yes', 'column2': 'yes', 'column3': 'yes', 'column4': 'yes', 'column5': 'yes', 'column6': 'yes', 'column7': 'yes', 'column10': 'yes', 'column11': 'yes', 'column12': 'yes',
                              'subfolder': 'yes', 'startup': 'no', 'show-progress': 'yes', 'show-menubar': 'no', 'show-sidepanel': 'yes', 'rpc-port': 6801, 'notification': 'Native notification', 'after-dialog': 'yes', 'tray-icon': 'yes',
                              'max-tries': 5, 'retry-wait': 0, 'timeout': 60, 'connections': 16, 'download_path_temp': download_path_temp_default, 'download_path': download_path_default, 'sound': 'yes', 'sound-volume': 100, 'style': 'Fusion',
                              'color-scheme': 'Persepolis Light Blue', 'icons': 'Papirus-Light', 'font': 'Ubuntu', 'font-size': 9, 'aria2_path': ''}
@@ -894,7 +883,7 @@ class PreferencesWindow(Setting_Ui):
         show_message_box = False
         for key in self.first_key_value_dict.keys():
             if self.first_key_value_dict[key] != self.second_key_value_dict[key]:
-                if key in ['aria2_path', 'download_path_temp', 'download_path', 'custom-font', 'rpc-port', 'max-tries', 'retry-wait', 'timeout', 'connections', 'style', 'font', 'font-size', 'color-scheme']:
+                if key in ['locale', 'aria2_path', 'download_path_temp', 'download_path', 'custom-font', 'rpc-port', 'max-tries', 'retry-wait', 'timeout', 'connections', 'style', 'font', 'font-size', 'color-scheme']:
                     show_message_box = True
 
         # if any thing changed that needs restarting, then notify user about "Some changes take effect after restarting persepolis"

@@ -16,7 +16,7 @@
 
 from PyQt5 import QtWidgets, QtGui, QtCore
 from PyQt5.QtWidgets import QPushButton, QApplication, QWidget, QTabWidget, QVBoxLayout, QTableWidget, QAbstractItemView, QLabel, QLineEdit, QHBoxLayout, QSpinBox, QComboBox, QFrame, QCheckBox, QGridLayout
-from PyQt5.QtCore import QTranslator, QCoreApplication, QLocale
+from PyQt5.QtCore import Qt, QTranslator, QCoreApplication, QLocale
 from PyQt5.QtGui import QIcon
 
 
@@ -35,6 +35,16 @@ class TextQueue_Ui(QWidget):
         self.translator = QTranslator()
         if self.translator.load(':/translations/locales/ui_' + locale, 'ts'):
             QCoreApplication.installTranslator(self.translator)
+
+        # set ui direction
+        ui_direction = self.persepolis_setting.value('ui_direction')
+
+        if ui_direction == 'rtl':
+            self.setLayoutDirection(Qt.RightToLeft)
+        
+        elif ui_direction in 'ltr':
+            self.setLayoutDirection(Qt.LeftToRight)
+
 
 
         self.setWindowIcon(QIcon.fromTheme('persepolis', QIcon(':/persepolis.svg')))

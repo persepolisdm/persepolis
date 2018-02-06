@@ -22,6 +22,15 @@ class Windows_Notification_UI(QWidget):
 
         self.persepolis_setting = persepolis_setting
 
+        # set ui direction
+        ui_direction = self.persepolis_setting.value('ui_direction')
+
+        if ui_direction == 'rtl':
+            self.setLayoutDirection(Qt.RightToLeft)
+        
+        elif ui_direction in 'ltr':
+            self.setLayoutDirection(Qt.LeftToRight)
+
         # set size 
         self.resize(QSize(400, 80))
         self.setFixedWidth(400)

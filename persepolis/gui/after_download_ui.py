@@ -17,7 +17,7 @@ from PyQt5 import QtCore, QtWidgets , QtGui
 from PyQt5.QtWidgets import QCheckBox , QWidget , QVBoxLayout , QHBoxLayout , QPushButton , QLabel , QLineEdit  
 from PyQt5.QtGui import QIcon
 from persepolis.gui import icons_resource
-from PyQt5.QtCore import QTranslator, QCoreApplication,QLocale
+from PyQt5.QtCore import Qt, QTranslator, QCoreApplication,QLocale
 
 
 
@@ -26,12 +26,23 @@ class AfterDownloadWindow_Ui(QWidget):
         super().__init__()
 
         self.persepolis_setting = persepolis_setting
-# add support for other languages
+
+        # add support for other languages
         locale = str(self.persepolis_setting.value('settings/locale'))
         QLocale.setDefault(QLocale(locale))
         self.translator = QTranslator()
         if self.translator.load(':/translations/locales/ui_' + locale, 'ts'):
             QCoreApplication.installTranslator(self.translator)
+
+        # set ui direction
+        ui_direction = self.persepolis_setting.value('ui_direction')
+
+        if ui_direction == 'rtl':
+            self.setLayoutDirection(Qt.RightToLeft)
+        
+        elif ui_direction in 'ltr':
+            self.setLayoutDirection(Qt.LeftToRight)
+
 
         icons = ':/' + str(self.persepolis_setting.value('settings/icons')) + '/'
 
