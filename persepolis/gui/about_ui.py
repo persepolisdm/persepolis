@@ -18,7 +18,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import QWidget
 from PyQt5.QtGui import QIcon
 from PyQt5.QtCore import Qt, QSize, QPoint, QTranslator, QCoreApplication, QLocale
-from persepolis.gui import icons_resource
+from persepolis.gui import resources 
 
 
 class AboutWindow_Ui(QWidget):
@@ -118,7 +118,7 @@ class AboutWindow_Ui(QWidget):
         self.title_label.setText(QCoreApplication.translate("about_ui_tr", "Persepolis Download Manager"))
         self.version_label.setText(QCoreApplication.translate("about_ui_tr", "Version 3.0.1"))
         self.name_label.setText(QCoreApplication.translate("about_ui_tr", 
-            "\nAliReza AmirSamimi\nMohammadreza Abdollahzadeh\nSadegh Alirezaie\nMostafa Asadi\nMohammadAmin Vahedinia\nJafar Akhondali"))
+            "\nAliReza AmirSamimi\nMohammadreza Abdollahzadeh\nSadegh Alirezaie\nMostafa Asadi\nMohammadAmin Vahedinia\nJafar Akhondali\nH.Rostami"))
         self.site2_label.setText(QCoreApplication.translate("about_ui_tr", 
             "<a href=https://persepolisdm.github.io>https://persepolisdm.github.io</a>"))
         self.telegram_label.setText(QCoreApplication.translate("about_ui_tr", 

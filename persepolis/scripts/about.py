@@ -18,8 +18,8 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import QWidget
 from PyQt5.QtGui import QIcon
 from PyQt5.QtCore import QSize, QPoint
-import persepolis.gui.icons_resource
 from persepolis.gui.about_ui import AboutWindow_Ui
+from persepolis.gui import resources
 
 class AboutWindow(AboutWindow_Ui):
     def __init__(self, persepolis_setting):

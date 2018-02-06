@@ -36,7 +36,7 @@ from persepolis.scripts.play import playNotification
 from persepolis.scripts.bubble import notifySend
 from persepolis.scripts.setting import PreferencesWindow
 from persepolis.scripts.about import AboutWindow
-from persepolis.gui import icons_resource
+from persepolis.gui import resources
 from persepolis.scripts import spider
 from persepolis.scripts import osCommands
 from persepolis.scripts import logger
@@ -1678,9 +1678,14 @@ class MainWindow(MainWindow_Ui):
             self.selectDownloads()
 
         if len(rows_list) != 0:
+
             selected_row_return = rows_list[0]
+
             status = self.download_table.item(selected_row_return, 1).text()
             category = self.download_table.item(selected_row_return, 12).text()
+            link = self.download_table.item(selected_row_return, 9).text()
+
+            self.statusbar.showMessage(str(link))
 
             self.removeSelectedAction.setEnabled(True)
             self.deleteSelectedAction.setEnabled(True)

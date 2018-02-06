@@ -19,7 +19,7 @@ from PyQt5.QtWidgets import QDateTimeEdit, QCheckBox, QVBoxLayout, QHBoxLayout, 
 from PyQt5.QtGui import QIcon
 import pkg_resources
 from PyQt5.QtCore import Qt, QTranslator, QCoreApplication, QLocale
-from persepolis.gui import icons_resource
+from persepolis.gui import resources 
 
 
 
@@ -28,8 +28,10 @@ class Setting_Ui(QWidget):
         super().__init__()
         icon = QtGui.QIcon()
 
+        self.persepolis_setting = persepolis_setting
+
         # add support for other languages
-        locale = str(persepolis_setting.value('settings/locale'))
+        locale = str(self.persepolis_setting.value('settings/locale'))
         QLocale.setDefault(QLocale(locale))
         self.translator = QTranslator()
         if self.translator.load(':/translations/locales/ui_' + locale, 'ts'):
@@ -39,7 +41,7 @@ class Setting_Ui(QWidget):
         self.setWindowTitle(QCoreApplication.translate("setting_ui_tr", 'Preferences'))
 
         # set ui direction
-        ui_direction = persepolis_setting.value('ui_direction')
+        ui_direction = self.persepolis_setting.value('ui_direction')
 
         if ui_direction == 'rtl':
             self.setLayoutDirection(Qt.RightToLeft)
@@ -49,7 +51,7 @@ class Setting_Ui(QWidget):
 
 
         global icons
-        icons = ':/' + str(persepolis_setting.value('settings/icons')) + '/'
+        icons = ':/' + str(self.persepolis_setting.value('settings/icons')) + '/'
 
 
         self.verticalLayout_2 = QVBoxLayout(self)
