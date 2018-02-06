@@ -1,15 +1,3 @@
-[Desktop Action Open]
-Exec=persepolis
-Name=Start Persepolis
-Name[bn]=পার্সেপোলিস শুরু করুন
-Name[fa]=اجرای برنامه
-
-[Desktop Action Tray]
-Exec=persepolis --tray
-Name=Start in System Tray
-Name[bn]=সিস্টেম-ট্রে-তে শুরু করুন
-Name[fa]=اجرای برنامه در سینی نمایه
-
 [Desktop Entry]
 Actions=Open;Tray;
 Categories=Qt;Network;
@@ -22,18 +10,25 @@ GenericName[bn]=ডাউনলোড মেনেজার
 GenericName[fa]=نرم افزار مدیریت بارگیری
 Icon=persepolis
 Keywords=Internet;WWW;Web;
-MimeType=
 Name[en_US]=Persepolis Download Manager
 Name=Persepolis Download Manager
 Name[bn]=পার্সেপোলিস
 Name[fa]=پرسپولیس
-Path=
 StartupNotify=true
 StartupWMClass=persepolis
 Terminal=false
-TerminalOptions=
 Type=Application
-X-DBUS-ServiceName=
-X-DBUS-StartupType=
 X-KDE-SubstituteUID=false
-X-KDE-Username=
+
+[Desktop Action Open]
+Exec=persepolis
+Name=Start Persepolis
+Name[bn]=পার্সেপোলিস শুরু করুন
+Name[fa]=اجرای برنامه
+
+[Desktop Action Tray]
+Exec=persepolis --tray
+Name=Start in System Tray
+Name[bn]=সিস্টেম-ট্রে-তে শুরু করুন
+Name[fa]=اجرای برنامه در سینی نمایه
+
