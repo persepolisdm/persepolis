@@ -36,7 +36,7 @@ from persepolis.scripts.play import playNotification
 from persepolis.scripts.bubble import notifySend
 from persepolis.scripts.setting import PreferencesWindow
 from persepolis.scripts.about import AboutWindow
-from persepolis.gui import icons_resource
+from persepolis.gui import resources
 from persepolis.scripts import spider
 from persepolis.scripts import osCommands
 from persepolis.scripts import logger

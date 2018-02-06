@@ -18,7 +18,7 @@ from PyQt5 import QtWidgets, QtGui, QtCore
 from PyQt5.QtWidgets import QPushButton, QApplication, QWidget, QTabWidget, QVBoxLayout, QTableWidget, QAbstractItemView, QLabel, QLineEdit, QHBoxLayout, QSpinBox, QComboBox, QFrame, QCheckBox, QGridLayout
 from PyQt5.QtCore import Qt, QTranslator, QCoreApplication, QLocale
 from PyQt5.QtGui import QIcon
-
+from persepolis.gui import resources
 
 
 class TextQueue_Ui(QWidget):

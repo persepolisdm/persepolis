@@ -16,7 +16,7 @@
 from PyQt5 import QtCore, QtWidgets , QtGui
 from PyQt5.QtWidgets import QCheckBox , QWidget , QVBoxLayout , QHBoxLayout , QPushButton , QLabel , QLineEdit  
 from PyQt5.QtGui import QIcon
-from persepolis.gui import icons_resource
+from persepolis.gui import resources 
 from PyQt5.QtCore import Qt, QTranslator, QCoreApplication,QLocale
 
 
