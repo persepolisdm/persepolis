@@ -391,6 +391,7 @@ def main():
         font_size = int(persepolis_download_manager.setting.value('settings/font-size'))
         style = persepolis_download_manager.setting.value('settings/style')
         color_scheme = persepolis_download_manager.setting.value('settings/color-scheme')
+        ui_direction = persepolis_download_manager.setting.value('ui_direction')
 
 
         # set style
@@ -401,6 +402,15 @@ def main():
 
         # set color_scheme
         persepolis_download_manager.setPersepolisColorScheme(color_scheme)
+
+        
+        # set ui direction
+        if ui_direction == 'rtl':
+            persepolis_download_manager.setLayoutDirection(Qt.RightToLeft)
+        
+        elif ui_direction in 'ltr':
+            persepolis_download_manager.setLayoutDirection(Qt.LeftToRight)
+
 
         # run mainwindow
         try:

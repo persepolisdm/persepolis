@@ -159,6 +159,7 @@ if not(os.path.exists(persepolis_setting.value('download_path_temp'))):
 if not(os.path.exists(persepolis_setting.value('download_path'))):
     persepolis_setting.setValue('download_path', default_setting_dict['download_path'])
 
+
 persepolis_setting.sync()
 
 # this section  creates temporary download folder and download folder and
@@ -184,6 +185,28 @@ persepolis_setting.endGroup()
 # Browser integration for Firefox and chromium and google chrome
 for browser in ['chrome', 'chromium', 'opera', 'vivaldi', 'firefox']:
     browserIntegration(browser)
+
+
+# get locale and set ui direction
+locale = str(persepolis_setting.value('settings/locale'))
+
+# right to left languages
+rtl_locale_list = ['fa_IR']
+
+# left to right languages
+ltr_locale_list = ['en_US']
+
+if locale in rtl_locale_list:
+    persepolis_setting.setValue('ui_direction', 'rtl')
+else:
+    persepolis_setting.setValue('ui_direction', 'ltr')
+
+# Check youtube-dl setting
+persepolis_setting.beginGroup('youtube')
+persepolis_setting.setValue('enable', persepolis_setting.value('enable', 'yes'))
+persepolis_setting.setValue('cookie_path', persepolis_tmp)
+persepolis_setting.setValue('max_links', persepolis_setting.value('max_links', 3))
+persepolis_setting.endGroup()
 
 # compatibility
 persepolis_version = float(persepolis_setting.value('version/version', 2.5))
@@ -225,11 +248,3 @@ if persepolis_version < 3.0:
 persepolis_setting.setValue('version/version', 3.0)
 persepolis_setting.sync()
 
-
-# Check youtube-dl setting
-persepolis_setting.beginGroup('youtube')
-persepolis_setting.setValue('enable', persepolis_setting.value('enable', 'yes'))
-persepolis_setting.setValue('cookie_path', persepolis_tmp)
-persepolis_setting.setValue('max_links', persepolis_setting.value('max_links', 3))
-persepolis_setting.sync()
-persepolis_setting.endGroup()
