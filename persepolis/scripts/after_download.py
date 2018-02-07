@@ -69,7 +69,7 @@ class AfterDownloadWindow(AfterDownloadWindow_Ui):
         self.file_name_label.setText(file_name)
 
         # size
-        size = QCoreApplication.translate("after_download_src_ui_tr", "<b>Size</b> : "> + str(self.dict['size'])
+        size = QCoreApplication.translate("after_download_src_ui_tr", "<b>Size</b> : ") + str(self.dict['size'])
         self.size_label.setText(size)
 
         # disable link_lineEdit and save_as_lineEdit
