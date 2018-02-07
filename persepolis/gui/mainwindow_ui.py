@@ -389,7 +389,7 @@ class MainWindow_Ui(QMainWindow):
         self.download_table.setColumnHidden(9, True)
 
         download_table_header = [QCoreApplication.translate("mainwindow_ui_tr", 'File Name'), QCoreApplication.translate("mainwindow_ui_tr",'Status'), QCoreApplication.translate("mainwindow_ui_tr", 'Size'), QCoreApplication.translate("mainwindow_ui_tr", 'Downloaded'), QCoreApplication.translate("mainwindow_ui_tr", 'Percentage'), QCoreApplication.translate("mainwindow_ui_tr", 'Connections'),
-                                 QCoreApplication.translate("mainwindow_ui_tr", 'Transfer rate'), QCoreApplication.translate("mainwindow_ui_tr",'Estimated time left'), QCoreApplication.translate("mainwindow_ui_tr", 'Gid'), QCoreApplication.translate("mainwindow_ui_tr",'Link'), QCoreApplication.translate("mainwindow_ui_tr", 'First try date'), QCoreApplication.translate("mainwindow_ui_tr", 'Last try date'), QCoreApplication.translate("mainwindow_ui_tr",'Category')]
+                                 QCoreApplication.translate("mainwindow_ui_tr", 'Transfer rate'), QCoreApplication.translate("mainwindow_ui_tr",'Estimated time left'), 'Gid', QCoreApplication.translate("mainwindow_ui_tr",'Link'), QCoreApplication.translate("mainwindow_ui_tr", 'First try date'), QCoreApplication.translate("mainwindow_ui_tr", 'Last try date'), QCoreApplication.translate("mainwindow_ui_tr",'Category')]
 
         self.download_table.setHorizontalHeaderLabels(download_table_header)
 
