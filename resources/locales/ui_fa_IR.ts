@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE TS><TS version="2.0" language="fa_IR" sourcelanguage="">
+<!DOCTYPE TS>
+<TS version="2.1" language="fa_IR">
 <context>
     <name>about_ui_tr</name>
     <message>
@@ -64,7 +65,14 @@ Mostafa Asadi
 MohammadAmin Vahedinia
 Jafar Akhondali
 H.Rostami</source>
-        <translation type="unfinished"></translation>
+        <translation>
+علیرضا امیرصمیمی
+محمدرضا عبدالله‌زاده
+صادق علیرضایی
+مصطفی اسدی
+محمدامین واحدی‌نیا
+جعفر آخوندعلی
+ح.رستمی</translation>
     </message>
 </context>
 <context>
@@ -162,12 +170,12 @@ H.Rostami</source>
     <message>
         <location filename="../../persepolis/gui/addlink_ui.py" line="424"/>
         <source>KB/S</source>
-        <translation>KB/S</translation>
+        <translation>کیلوبایت بر ثانیه</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/addlink_ui.py" line="425"/>
         <source>MB/S</source>
-        <translation>MB/S</translation>
+        <translation>مگابایت بر ثانیه</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/addlink_ui.py" line="427"/>
@@ -230,12 +238,12 @@ H.Rostami</source>
     <message>
         <location filename="../../persepolis/scripts/after_download.py" line="64"/>
         <source>&lt;b&gt;File name&lt;/b&gt; : </source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;b&gt;نام پرونده&lt;/b&gt; : </translation>
     </message>
     <message>
         <location filename="../../persepolis/scripts/after_download.py" line="72"/>
         <source>&lt;b&gt;Size&lt;/b&gt; : </source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;b&gt;اندازه&lt;/b&gt; : </translation>
     </message>
 </context>
 <context>
@@ -459,220 +467,220 @@ H.Rostami</source>
     <message>
         <location filename="../../persepolis/scripts/mainwindow.py" line="632"/>
         <source>Persepolis</source>
-        <translation type="unfinished"></translation>
+        <translation>پرسپولیس</translation>
     </message>
     <message>
         <location filename="../../persepolis/scripts/mainwindow.py" line="598"/>
         <source>Queue Stopped!</source>
-        <translation type="unfinished"></translation>
+        <translation>صف متوقف شد!</translation>
     </message>
     <message>
         <location filename="../../persepolis/scripts/mainwindow.py" line="1550"/>
         <source>Persepolis is shutting down</source>
-        <translation type="unfinished"></translation>
+        <translation>پرسپولیس در حال خاموش کردن</translation>
     </message>
     <message>
         <location filename="../../persepolis/scripts/mainwindow.py" line="1550"/>
         <source>your system in 20 seconds</source>
-        <translation type="unfinished"></translation>
+        <translation>سیستم شما در ۲۰ ثانیه</translation>
     </message>
     <message>
         <location filename="../../persepolis/scripts/mainwindow.py" line="632"/>
         <source>Queue completed!</source>
-        <translation type="unfinished"></translation>
+        <translation>صف به پایان رسید!</translation>
     </message>
     <message>
         <location filename="../../persepolis/scripts/mainwindow.py" line="1520"/>
         <source>Error - </source>
-        <translation type="unfinished"></translation>
+        <translation>خطا - </translation>
     </message>
     <message>
         <location filename="../../persepolis/scripts/mainwindow.py" line="1356"/>
         <source>Please change the temporary download folder</source>
-        <translation type="unfinished"></translation>
+        <translation>لطفا پوشه دانلود موقف را تغییر دهید</translation>
     </message>
     <message>
         <location filename="../../persepolis/scripts/mainwindow.py" line="1425"/>
         <source>&lt;b&gt;Estimated time left&lt;/b&gt; : </source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;b&gt;زمان باقیمانده&lt;/b&gt; : </translation>
     </message>
     <message>
         <location filename="../../persepolis/scripts/mainwindow.py" line="1452"/>
         <source>&lt;b&gt;Status&lt;/b&gt; : </source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;b&gt;وضعیت&lt;/b&gt; : </translation>
     </message>
     <message>
         <location filename="../../persepolis/scripts/mainwindow.py" line="1498"/>
         <source>Download Stopped</source>
-        <translation type="unfinished"></translation>
+        <translation>دانلود متوقف شد</translation>
     </message>
     <message>
         <location filename="../../persepolis/scripts/mainwindow.py" line="1568"/>
         <source>Download Complete</source>
-        <translation type="unfinished"></translation>
+        <translation>دانلود به پایان رسید</translation>
     </message>
     <message>
         <location filename="../../persepolis/scripts/mainwindow.py" line="1989"/>
         <source>Download Starts</source>
-        <translation type="unfinished"></translation>
+        <translation>دانلود آغاز شد</translation>
     </message>
     <message>
         <location filename="../../persepolis/scripts/mainwindow.py" line="1995"/>
         <source>Download Scheduled</source>
-        <translation type="unfinished"></translation>
+        <translation>دانلود زمانبندی شد</translation>
     </message>
     <message>
         <location filename="../../persepolis/scripts/mainwindow.py" line="2018"/>
         <source>Operation was unsuccessful</source>
         <comment>TRANSLATORS NOTE: full message = &quot;operaton was unsuccessful Please resume &amp;CATEGORY category.&quot;</comment>
-        <translation type="unfinished"></translation>
+        <translation>عملیات ناموفق بود</translation>
     </message>
     <message>
         <location filename="../../persepolis/scripts/mainwindow.py" line="2018"/>
         <source>Please resume </source>
         <comment>TRANSLATORS NOTE: full message = &quot;operaton was unsuccessful Please resume &amp;CATEGORY category.&quot;</comment>
-        <translation type="unfinished"></translation>
+        <translation>لطفا دسته را </translation>
     </message>
     <message>
         <location filename="../../persepolis/scripts/mainwindow.py" line="2018"/>
         <source> category.</source>
         <comment>TRANSLATORS NOTE: full message = &quot;operaton was unsuccessful Please resume &amp;CATEGORY category.&quot;</comment>
-        <translation type="unfinished"></translation>
+        <translation> ادامه دهید.</translation>
     </message>
     <message>
         <location filename="../../persepolis/scripts/mainwindow.py" line="2130"/>
         <source>Aria2 disconnected!</source>
-        <translation type="unfinished"></translation>
+        <translation>آریا۲ متصل نیست!</translation>
     </message>
     <message>
         <location filename="../../persepolis/scripts/mainwindow.py" line="2130"/>
         <source>Persepolis is trying to connect!be patient!</source>
-        <translation type="unfinished"></translation>
+        <translation>پرسپولیس برای اتصال تلاش می‌کند! شکیبا باشید!</translation>
     </message>
     <message>
         <location filename="../../persepolis/scripts/mainwindow.py" line="2133"/>
         <source>Aria2 did not respond!</source>
-        <translation type="unfinished"></translation>
+        <translation>آریا۲ پاسخ نمی‌دهد!</translation>
     </message>
     <message>
         <location filename="../../persepolis/scripts/mainwindow.py" line="2133"/>
         <source>Try agian!</source>
-        <translation type="unfinished"></translation>
+        <translation>تلاش دوباره!</translation>
     </message>
     <message>
         <location filename="../../persepolis/scripts/mainwindow.py" line="2059"/>
         <source>Aria2 did not respond</source>
-        <translation type="unfinished"></translation>
+        <translation>آریا۲ پاسخ نداد</translation>
     </message>
     <message>
         <location filename="../../persepolis/scripts/mainwindow.py" line="2059"/>
         <source>Try again</source>
-        <translation type="unfinished"></translation>
+        <translation>تلاش دوباره</translation>
     </message>
     <message>
         <location filename="../../persepolis/scripts/mainwindow.py" line="2113"/>
         <source>Operation was unsuccessful</source>
         <comment>TRANSLATORS NOTE: full message = &quot;operaton was unsuccessful Please stop &amp;CATEGORY category.&quot;</comment>
-        <translation type="unfinished"></translation>
+        <translation>عملیات ناموفق بود</translation>
     </message>
     <message>
         <location filename="../../persepolis/scripts/mainwindow.py" line="2113"/>
         <source>Please stop </source>
         <comment>TRANSLATORS NOTE: full message = &quot;operaton was unsuccessful Please stop &amp;CATEGORY category.&quot;</comment>
-        <translation type="unfinished"></translation>
+        <translation>لطفا دسته را </translation>
     </message>
     <message>
         <location filename="../../persepolis/scripts/mainwindow.py" line="2113"/>
         <source> category.</source>
         <comment>TRANSLATORS NOTE: full message = &quot;operaton was unsuccessful Please stop &amp;CATEGORY category.&quot;</comment>
-        <translation type="unfinished"></translation>
+        <translation>متوقف کنید.</translation>
     </message>
     <message>
         <location filename="../../persepolis/scripts/mainwindow.py" line="2775"/>
         <source>Not Found</source>
-        <translation type="unfinished"></translation>
+        <translation>پیدا نشد</translation>
     </message>
     <message>
         <location filename="../../persepolis/scripts/mainwindow.py" line="2591"/>
         <source>Operation was unsuccessful!</source>
         <comment>TRANSLATORS NOTE: full message = &quot;operaton was unsuccessful stop &amp;CATEGORY first.&quot;</comment>
-        <translation type="unfinished"></translation>
+        <translation>عملیات ناموفق بود!</translation>
     </message>
     <message>
         <location filename="../../persepolis/scripts/mainwindow.py" line="2591"/>
         <source>Stop </source>
         <comment>TRANSLATORS NOTE: full message = &quot;operaton was unsuccessful stop &amp;CATEGORY first.&quot;</comment>
-        <translation type="unfinished"></translation>
+        <translation>ابتدا</translation>
     </message>
     <message>
         <location filename="../../persepolis/scripts/mainwindow.py" line="2591"/>
         <source> first</source>
         <comment>TRANSLATORS NOTE: full message = &quot;operaton was unsuccessful stop &amp;CATEGORY first.&quot;</comment>
-        <translation type="unfinished"></translation>
+        <translation> دسته را متوقف کنید</translation>
     </message>
     <message>
         <location filename="../../persepolis/scripts/mainwindow.py" line="2608"/>
         <source>Operation was unsuccessful!</source>
         <comment>TRANSLATORS NOTE: full message = &quot;operaton was unsuccessful stop &amp;FILE_NAME first.&quot;</comment>
-        <translation type="unfinished"></translation>
+        <translation>عملیات ناموفق بود!</translation>
     </message>
     <message>
         <location filename="../../persepolis/scripts/mainwindow.py" line="2608"/>
         <source>Stop </source>
         <comment>TRANSLATORS NOTE: full message = &quot;operaton was unsuccessful stop &amp;FILE_NAME first.&quot;</comment>
-        <translation type="unfinished"></translation>
+        <translation>ابتدا</translation>
     </message>
     <message>
         <location filename="../../persepolis/scripts/mainwindow.py" line="2608"/>
         <source> first</source>
         <comment>TRANSLATORS NOTE: full message = &quot;operaton was unsuccessful stop &amp;FILE_NAME first.&quot;</comment>
-        <translation type="unfinished"></translation>
+        <translation>متوقف کنید</translation>
     </message>
     <message>
         <location filename="../../persepolis/scripts/mainwindow.py" line="2712"/>
         <source>Operation was unsuccessful!</source>
         <comment>TRANSLATORS NOTE: full message = &quot;operaton was unsuccessful stop &amp;CATEGORY first&quot;</comment>
-        <translation type="unfinished"></translation>
+        <translation>عملیات ناموفق بود!</translation>
     </message>
     <message>
         <location filename="../../persepolis/scripts/mainwindow.py" line="2712"/>
         <source>Stop </source>
         <comment>TRANSLATORS NOTE: full message = &quot;operaton was unsuccessful stop &amp;CATEGORY first&quot;</comment>
-        <translation type="unfinished"></translation>
+        <translation>ابتدا</translation>
     </message>
     <message>
         <location filename="../../persepolis/scripts/mainwindow.py" line="2712"/>
         <source> first</source>
         <comment>TRANSLATORS NOTE: full message = &quot;operaton was unsuccessful stop &amp;CATEGORY first&quot;</comment>
-        <translation type="unfinished"></translation>
+        <translation> متوقف کنید</translation>
     </message>
     <message>
         <location filename="../../persepolis/scripts/mainwindow.py" line="2730"/>
         <source>Operation was unsuccessful!</source>
         <comment>TRANSLATORS NOTE: full message = &quot;operaton was unsuccessful stop &amp;FILE_NAME first&quot;</comment>
-        <translation type="unfinished"></translation>
+        <translation>عملیات ناموفق بود!</translation>
     </message>
     <message>
         <location filename="../../persepolis/scripts/mainwindow.py" line="2730"/>
         <source>Stop </source>
         <comment>TRANSLATORS NOTE: full message = &quot;operaton was unsuccessful stop &amp;FILE_NAME first&quot;</comment>
-        <translation type="unfinished"></translation>
+        <translation>ابتدا </translation>
     </message>
     <message>
         <location filename="../../persepolis/scripts/mainwindow.py" line="2730"/>
         <source> first</source>
         <comment>TRANSLATORS NOTE: full message = &quot;operaton was unsuccessful stop &amp;FILE_NAME first&quot;</comment>
-        <translation type="unfinished"></translation>
+        <translation> متوقف کنید</translation>
     </message>
     <message>
         <location filename="../../persepolis/scripts/mainwindow.py" line="4031"/>
         <source>item transferation was unsuccessful for some items!</source>
-        <translation type="unfinished"></translation>
+        <translation>جابجایی بعضی پرونده‌ها ناموفق بود!</translation>
     </message>
     <message>
         <location filename="../../persepolis/scripts/mainwindow.py" line="4031"/>
         <source>Please stop download progress first</source>
-        <translation type="unfinished"></translation>
+        <translation>لطفا ابتدا جریان دانلود را متوقف کنید</translation>
     </message>
 </context>
 <context>
@@ -745,42 +753,42 @@ H.Rostami</source>
     <message>
         <location filename="../../persepolis/gui/mainwindow_ui.py" line="411"/>
         <source>&amp;File</source>
-        <translation>&amp;پرونده</translation>
+        <translation>پرونده</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/mainwindow_ui.py" line="412"/>
         <source>&amp;Edit</source>
-        <translation>&amp;ویرایش</translation>
+        <translation>ویرایش</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/mainwindow_ui.py" line="413"/>
         <source>&amp;View</source>
-        <translation>&amp;نمایش</translation>
+        <translation>نمایش</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/mainwindow_ui.py" line="414"/>
         <source>&amp;Download</source>
-        <translation>&amp;دانلود</translation>
+        <translation>دانلود</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/mainwindow_ui.py" line="415"/>
         <source>&amp;Queue</source>
-        <translation>&amp;صف</translation>
+        <translation>صف</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/mainwindow_ui.py" line="416"/>
         <source>&amp;Video Finder</source>
-        <translation>&amp;یابنده ویدئو</translation>
+        <translation>یابنده ویدئو</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/mainwindow_ui.py" line="417"/>
         <source>&amp;Help</source>
-        <translation>&amp;کمک</translation>
+        <translation>کمک</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/mainwindow_ui.py" line="421"/>
         <source>Sort by</source>
-        <translation>&amp;چینش</translation>
+        <translation>چینش</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/mainwindow_ui.py" line="425"/>
@@ -1042,12 +1050,12 @@ H.Rostami</source>
     <message>
         <location filename="../../persepolis/gui/mainwindow_ui.py" line="607"/>
         <source>KB/S</source>
-        <translation>KB/S</translation>
+        <translation>کیلوبایت بر ثانیه</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/mainwindow_ui.py" line="608"/>
         <source>MB/S</source>
-        <translation>MB/S</translation>
+        <translation>مگابایت بر ثانیه</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/mainwindow_ui.py" line="619"/>
@@ -1112,7 +1120,7 @@ H.Rostami</source>
     <message>
         <location filename="../../persepolis/gui/mainwindow_ui.py" line="392"/>
         <source>Estimated time left</source>
-        <translation type="unfinished">زمان باقیمانده</translation>
+        <translation>زمان باقیمانده</translation>
     </message>
 </context>
 <context>
@@ -1120,22 +1128,22 @@ H.Rostami</source>
     <message>
         <location filename="../../persepolis/scripts/progress.py" line="153"/>
         <source>Aria2 disconnected!</source>
-        <translation type="unfinished"></translation>
+        <translation>آریا۲ قطع شد!</translation>
     </message>
     <message>
         <location filename="../../persepolis/scripts/progress.py" line="153"/>
         <source>Persepolis is trying to connect!be patient!</source>
-        <translation type="unfinished"></translation>
+        <translation>پرسپولیس برای اتصال تلاش می‌کند!‌ شکیبا باشید!</translation>
     </message>
     <message>
         <location filename="../../persepolis/scripts/progress.py" line="135"/>
         <source>Aria2 did not respond!</source>
-        <translation type="unfinished"></translation>
+        <translation>آریا۲ پاسخ نداد!</translation>
     </message>
     <message>
         <location filename="../../persepolis/scripts/progress.py" line="135"/>
         <source>Try agian!</source>
-        <translation type="unfinished"></translation>
+        <translation>تلاش دوباره!</translation>
     </message>
 </context>
 <context>
@@ -1223,12 +1231,12 @@ H.Rostami</source>
     <message>
         <location filename="../../persepolis/gui/progress_ui.py" line="206"/>
         <source>KB/S</source>
-        <translation type="unfinished">KB/S</translation>
+        <translation>کیلوبایت بر ثانیه</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/progress_ui.py" line="207"/>
         <source>MB/S</source>
-        <translation type="unfinished">MB/S</translation>
+        <translation>مگابایت بر ثانیه</translation>
     </message>
 </context>
 <context>
@@ -1236,12 +1244,12 @@ H.Rostami</source>
     <message>
         <location filename="../../persepolis/scripts/setting.py" line="899"/>
         <source>&lt;b&gt;&lt;center&gt;Restart Persepolis Please!&lt;/center&gt;&lt;/b&gt;&lt;br&gt;&lt;center&gt;Some changes take effect after restarting persepolis&lt;/center&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;b&gt;&lt;center&gt;لطفا پرسپولیس را ازنو بگشایید!&lt;/center&gt;&lt;/b&gt;&lt;br&gt;&lt;center&gt;بعضی تغییرات پس از آن اثر می‌پذیرند&lt;/center&gt;</translation>
     </message>
     <message>
         <location filename="../../persepolis/scripts/setting.py" line="900"/>
         <source>Restart Persepolis!</source>
-        <translation type="unfinished"></translation>
+        <translation>پرسپولیس را از نو بگشایید!</translation>
     </message>
 </context>
 <context>
@@ -1733,7 +1741,7 @@ H.Rostami</source>
     <message>
         <location filename="../../persepolis/scripts/youtube_addlink.py" line="38"/>
         <source>Video Finder</source>
-        <translation type="unfinished">یابنده ویدئو</translation>
+        <translation>سیابنده ویدئو</translation>
     </message>
 </context>
 </TS>
