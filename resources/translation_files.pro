@@ -12,7 +12,10 @@ SOURCES +=  ../persepolis/gui/about_ui.py \
             ../persepolis/gui/progress_ui.py \
             ../persepolis/gui/setting_ui.py \
             ../persepolis/gui/text_queue_ui.py \
+	    ../persepolis/scripts/after_download.py \
+	    ../persepolis/scripts/download.py \
             ../persepolis/scripts/mainwindow.py \
+	    ../persepolis/scripts/progress.py \
             ../persepolis/scripts/update.py \
 			../persepolis/scripts/youtube_addlink.py
 TRANSLATIONS += locales/ui_fa_IR.ts
