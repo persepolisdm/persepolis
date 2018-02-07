@@ -28,6 +28,7 @@ script:
 after_success:
  - pip install transifex-client
  - sudo apt-get install  -y pyqt5-dev-tools
+ - ls
  - python3 translation_gen.py
  - sudo echo $'[https://www.transifex.com]\nhostname = https://www.transifex.com\nusername = '"$TRANSIFEX_USER"$'\npassword = '"$TRANSIFEX_PASSWORD"$'\ntoken = '"$TRANSIFEX_API_TOKEN"$'\n' > ~/.transifexrc
  - tx push -s
