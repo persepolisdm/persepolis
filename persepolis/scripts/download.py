@@ -40,13 +40,6 @@ os_type = platform.system()
 # persepolis setting
 persepolis_setting = QSettings('persepolis_download_manager', 'persepolis')
 
-# add support for other languages
-locale = str(persepolis_setting.value('settings/locale'))
-QLocale.setDefault(QLocale(locale))
-translator = QTranslator()
-if translator.load(':/translations/locales/ui_' + locale, 'ts'):
-    QCoreApplication.installTranslator(translator)
-
 # host is localhost
 host = 'localhost'
 
@@ -553,7 +546,7 @@ def downloadCompleteAction(parent, path, download_path, file_name, file_size):
             file_path = path
             logger.sendToLog('Insufficient disk space in download folder', "ERROR")
             # show notification
-            notifySend(QCoreApplication.translate("download_src_ui_tr", "Insufficient disk space!"), QCoreApplication.translate("download_src_ui_tr", 'Please change download folder'),
+            notifySend("Insufficient disk space!", 'Please change download folder',
                     10000, 'fail', parent=parent)
 
     else:
