@@ -18,5 +18,5 @@ SOURCES +=  ../persepolis/gui/about_ui.py \
 	    ../persepolis/scripts/update.py \
         ../persepolis/scripts/setting.py \
 			../persepolis/scripts/youtube_addlink.py
-TRANSLATIONS += locales/ui_fa_IR.ts
+TRANSLATIONS += locales/ui.ts
 
