@@ -118,13 +118,13 @@ class AboutWindow_Ui(QWidget):
         self.title_label.setText(QCoreApplication.translate("about_ui_tr", "Persepolis Download Manager"))
         self.version_label.setText(QCoreApplication.translate("about_ui_tr", "Version 3.0.1"))
         self.name_label.setText(QCoreApplication.translate("about_ui_tr", 
-                                                           "\nAliReza AmirSamimi\nMohammadreza Abdollahzadeh\nSadegh Alirezaie\nMostafa Asadi\nMohammadAmin Vahedinia\nJafar Akhondali\nH.Rostami"), "TRANSLATORS NOTE: YOU REALLY DON'T NEED TO TRANSLATE THIS PART!")
+                                                           "\nAliReza AmirSamimi\nMohammadreza Abdollahzadeh\nSadegh Alirezaie\nMostafa Asadi\nMohammadAmin Vahedinia\nJafar Akhondali\nH.Rostami", "TRANSLATORS NOTE: YOU REALLY DON'T NEED TO TRANSLATE THIS PART!"))
         self.site2_label.setText(QCoreApplication.translate("about_ui_tr", 
-            "<a href=https://persepolisdm.github.io>https://persepolisdm.github.io</a>"), "TRANSLATORS NOTE: YOU REALLY DON'T NEED TO TRANSLATE THIS PART!")
+            "<a href=https://persepolisdm.github.io>https://persepolisdm.github.io</a>", "TRANSLATORS NOTE: YOU REALLY DON'T NEED TO TRANSLATE THIS PART!"))
         self.telegram_label.setText(QCoreApplication.translate("about_ui_tr", 
-            "<a href=https://telegram.me/persepolisdm>https://telegram.me/persepolisdm</a>"), "TRANSLATORS NOTE: YOU REALLY DON'T NEED TO TRANSLATE THIS PART!")
+            "<a href=https://telegram.me/persepolisdm>https://telegram.me/persepolisdm</a>", "TRANSLATORS NOTE: YOU REALLY DON'T NEED TO TRANSLATE THIS PART!"))
         self.twitter_label.setText(QCoreApplication.translate("about_ui_tr", 
-            "<a href=https://twitter.com/persepolisdm>https://twitter.com/persepolisdm</a>"), "TRANSLATORS NOTE: YOU REALLY DON'T NEED TO TRANSLATE THIS PART!")
+            "<a href=https://twitter.com/persepolisdm>https://twitter.com/persepolisdm</a>", "TRANSLATORS NOTE: YOU REALLY DON'T NEED TO TRANSLATE THIS PART!"))
         self.pushButton.setText(QCoreApplication.translate("about_ui_tr", "Ok"))
 
 
