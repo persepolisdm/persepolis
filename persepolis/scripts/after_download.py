@@ -15,7 +15,7 @@
 
 from persepolis.gui.after_download_ui import AfterDownloadWindow_Ui
 from PyQt5 import QtCore
-from PyQt5.QtCore import QSize, QPoint
+from PyQt5.QtCore import QSize, QPoint, QTranslator, QCoreApplication, QLocale
 import os
 from persepolis.scripts.play import playNotification
 from persepolis.scripts import osCommands
@@ -28,6 +28,13 @@ class AfterDownloadWindow(AfterDownloadWindow_Ui):
         self.persepolis_setting = persepolis_setting
         self.dict = dict
         self.parent = parent
+
+        # add support for other languages
+        locale = str(self.persepolis_setting.value('settings/locale'))
+        QLocale.setDefault(QLocale(locale))
+        self.translator = QTranslator()
+        if self.translator.load(':/translations/locales/ui_' + locale, 'ts'):
+            QCoreApplication.installTranslator(self.translator)
 
         # connecting buttons
         self.open_pushButtun.clicked.connect(self.openFile)
@@ -54,7 +61,7 @@ class AfterDownloadWindow(AfterDownloadWindow_Ui):
         # file_name
 
         window_title = str(self.dict['file_name'])
-        file_name = "<b>File name</b> : " + \
+        file_name = "QCoreApplication.translate("after_download_src_ui_tr", <b>File name</b> : ") + \
                 window_title
  
         self.setWindowTitle(window_title)
@@ -62,7 +69,7 @@ class AfterDownloadWindow(AfterDownloadWindow_Ui):
         self.file_name_label.setText(file_name)
 
         # size
-        size = "<b>Size</b> : " + str(self.dict['size'])
+        size = QCoreApplication.translate("after_download_src_ui_tr", "<b>Size</b> : "> + str(self.dict['size'])
         self.size_label.setText(size)
 
         # disable link_lineEdit and save_as_lineEdit

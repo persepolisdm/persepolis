@@ -23,7 +23,7 @@ import platform
 from persepolis.scripts import logger
 from persepolis.scripts.freespace import freeSpace
 from persepolis.scripts.bubble import notifySend
-from PyQt5.QtCore import QSettings
+from PyQt5.QtCore import QSettings, QTranslator, QCoreApplication, QLocale
 import urllib.parse
 import traceback
 import sys
@@ -39,6 +39,13 @@ os_type = platform.system()
 
 # persepolis setting
 persepolis_setting = QSettings('persepolis_download_manager', 'persepolis')
+
+# add support for other languages
+locale = str(persepolis_setting.value('settings/locale'))
+QLocale.setDefault(QLocale(locale))
+self.translator = QTranslator()
+if self.translator.load(':/translations/locales/ui_' + locale, 'ts'):
+    QCoreApplication.installTranslator(self.translator)
 
 # host is localhost
 host = 'localhost'
@@ -546,7 +553,7 @@ def downloadCompleteAction(parent, path, download_path, file_name, file_size):
             file_path = path
             logger.sendToLog('Insufficient disk space in download folder', "ERROR")
             # show notification
-            notifySend("Insufficient disk space!", 'Please change download folder',
+            notifySend(QCoreApplication.translate("download_src_ui_tr", "Insufficient disk space!"), QCoreApplication.translate("download_src_ui_tr", 'Please change download folder'),
                     10000, 'fail', parent=parent)
 
     else:

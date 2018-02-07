@@ -34,7 +34,7 @@ class YoutubeAddLink(AddLinkWindow):
 
     def __init__(self, parent, receiver_slot, settings, video_dict={}):
         super().__init__(parent, receiver_slot, settings, video_dict)
-        self.setWindowTitle('Video Finder')
+        self.setWindowTitle(QCoreApplication.translate("ytaddlink_src_ui_tr", 'Video Finder'))
         self.size_label.hide()
 		
 # add support for other languages

@@ -16,7 +16,7 @@
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import QWidget, QSizePolicy,  QInputDialog
-from PyQt5.QtCore import QSize, QPoint, QThread
+from PyQt5.QtCore import QSize, QPoint, QThread, QTranslator, QCoreApplication, QLocale
 from persepolis.gui.progress_ui import ProgressWindow_Ui
 import os
 import time
@@ -59,6 +59,13 @@ class ProgressWindow(ProgressWindow_Ui):
         self.after_checkBox.toggled.connect(self.afterCheckBoxToggled)
 
         self.after_pushButton.clicked.connect(self.afterPushButtonPressed)
+
+# add support for other languages
+        locale = str(self.persepolis_setting.value('settings/locale'))
+        QLocale.setDefault(QLocale(locale))
+        self.translator = QTranslator()
+        if self.translator.load(':/translations/locales/ui_' + locale, 'ts'):
+            QCoreApplication.installTranslator(self.translator)
 
 # check if limit speed actived by user or not
         add_link_dictionary = self.parent.persepolis_db.searchGidInAddLinkTable(gid)
@@ -106,10 +113,10 @@ class ProgressWindow(ProgressWindow_Ui):
                 version_answer = download.aria2Version()
                 if version_answer == 'did not respond':
                     self.parent.aria2Disconnected()
-                    notifySend("Aria2 disconnected!", "Persepolis is trying to connect!be patient!",
+                    notifySend(QCoreApplication.translate("progress_src_ui_tr", "Aria2 disconnected!"), QCoreApplication.translate("progress_src_ui_tr", "Persepolis is trying to connect!be patient!"),
                                10000, 'warning', parent=self.parent)
                 else:
-                    notifySend("Aria2 did not respond!", "Try agian!", 10000,
+                    notifySend(QCoreApplication.translate("progress_src_ui_tr", "Aria2 did not respond!"), QCoreApplication.translate("progress_src_ui_tr", "Try agian!"), 10000,
                                'warning', parent=self.parent)
 
     def pausePushButtonPressed(self, button):
@@ -126,7 +133,7 @@ class ProgressWindow(ProgressWindow_Ui):
                     notifySend("Aria2 disconnected!", "Persepolis is trying to connect!be patient!",
                                10000, 'warning', parent=self.parent)
                 else:
-                    notifySend("Aria2 did not respond!", "Try agian!", 10000,
+                    notifySend(QCoreApplication.translate("progress_src_ui_tr", "Aria2 did not respond!"), QCoreApplication.translate("progress_src_ui_tr", "Try agian!"), 10000,
                                'critical', parent=self.parent)
 
     def stopPushButtonPressed(self, button):
@@ -144,7 +151,7 @@ class ProgressWindow(ProgressWindow_Ui):
             version_answer = download.aria2Version()
             if version_answer == 'did not respond':
                 self.parent.aria2Disconnected()
-                notifySend("Aria2 disconnected!", "Persepolis is trying to connect!be patient!",
+                notifySend(QCoreApplication.translate("progress_src_ui_tr", "Aria2 disconnected!"), QCoreApplication.translate("progress_src_ui_tr", "Persepolis is trying to connect!be patient!"),
                            10000, 'warning', parent=self.parent)
 
     def limitCheckBoxToggled(self, checkBoxes):
