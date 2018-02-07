@@ -25,9 +25,9 @@ script:
  - sudo python3 setup.py install
  - persepolis --version
 
- after_success:
-  - pip install transifex-client
-  - sudo apt-get install  -y pyqt5-dev-tools
-  - python3 translation_gen.py
-  - sudo echo $'[https://www.transifex.com]\nhostname = https://www.transifex.com\ntoken = '"1/0c8c62e986aeb17503e10a36d37f36d44f5f5d11"$'\n' > ~/.transifexrc
-  - tx push -s
+after_success:
+ - pip install transifex-client
+ - sudo apt-get install  -y pyqt5-dev-tools
+ - python3 translation_gen.py
+ - sudo echo $'[https://www.transifex.com]\nhostname = https://www.transifex.com\nusername = '"$TRANSIFEX_USER"$'\npassword = '"$TRANSIFEX_PASSWORD"$'\ntoken = '"$TRANSIFEX_API_TOKEN"$'\n' > ~/.transifexrc
+ - tx push -s
