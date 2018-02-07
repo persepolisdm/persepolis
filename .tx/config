@@ -1,0 +1,10 @@
+[main]
+host = https://www.transifex.com
+
+[persepolis-translations.ui-ts]
+file_filter = resources/locales/ui_<lang>.ts
+minimum_perc = 0
+source_file = resources/locales/ui.ts
+source_lang = en
+type = QT
+
