@@ -23,7 +23,7 @@ import platform
 from persepolis.scripts import logger
 from persepolis.scripts.freespace import freeSpace
 from persepolis.scripts.bubble import notifySend
-from PyQt5.QtCore import QSettings, QTranslator, QCoreApplication, QLocale
+from PyQt5.QtCore import QSettings
 import urllib.parse
 import traceback
 import sys
