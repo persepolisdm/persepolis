@@ -20,7 +20,7 @@ import copy
 from PyQt5 import QtWidgets
 from PyQt5.QtWidgets import QFileDialog, QStyleFactory, QMessageBox
 from PyQt5.QtGui import QFont
-from PyQt5.QtCore import QTime, QSize, QPoint, QDir, QLocale
+from PyQt5.QtCore import QTime, QSize, QPoint, QDir , QTranslator, QCoreApplication, QLocale
 from persepolis.scripts import osCommands
 import platform
 from persepolis.scripts import startup
@@ -50,6 +50,13 @@ class PreferencesWindow(Setting_Ui):
         self.rpc_port_spinbox.setValue(
             int(self.persepolis_setting.value('rpc-port')))
 
+# add support for other languages
+        locale = str(self.persepolis_setting.value('settings/locale'))
+        QLocale.setDefault(QLocale(locale))
+        self.translator = QTranslator()
+        if self.translator.load(':/translations/locales/ui_' + locale, 'ts'):
+            QCoreApplication.installTranslator(self.translator)
+            
 # wait_queue
         wait_queue_list = self.persepolis_setting.value('wait-queue')
         q_time = QTime(int(wait_queue_list[0]), int(wait_queue_list[1]))
@@ -889,8 +896,8 @@ class PreferencesWindow(Setting_Ui):
         # if any thing changed that needs restarting, then notify user about "Some changes take effect after restarting persepolis"
         if show_message_box:
             restart_messageBox = QMessageBox()                
-            restart_messageBox.setText('<b><center>Restart Persepolis Please!</center></b><br><center>Some changes take effect after restarting persepolis</center>')
-            restart_messageBox.setWindowTitle('Restart Persepolis!')
+            restart_messageBox.setText(QCoreApplication.translate("setting_src_ui_tr", '<b><center>Restart Persepolis Please!</center></b><br><center>Some changes take effect after restarting persepolis</center>'))
+            restart_messageBox.setWindowTitle(QCoreApplication.translate("setting_src_ui_tr", 'Restart Persepolis!'))
             restart_messageBox.exec_()
 
         # applying changes
