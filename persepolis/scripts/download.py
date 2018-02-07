@@ -43,9 +43,9 @@ persepolis_setting = QSettings('persepolis_download_manager', 'persepolis')
 # add support for other languages
 locale = str(persepolis_setting.value('settings/locale'))
 QLocale.setDefault(QLocale(locale))
-self.translator = QTranslator()
-if self.translator.load(':/translations/locales/ui_' + locale, 'ts'):
-    QCoreApplication.installTranslator(self.translator)
+translator = QTranslator()
+if translator.load(':/translations/locales/ui_' + locale, 'ts'):
+    QCoreApplication.installTranslator(translator)
 
 # host is localhost
 host = 'localhost'
