@@ -1408,10 +1408,63 @@ class MainWindow(MainWindow_Ui):
                 progress_window.link_label.setToolTip(link)
 
                 # downloaded
+                downloaded_size = dict['downloaded_size']
+
+                if downloaded_size != None:
+                    if len(downloaded_size) > 2:
+                        try:
+                            downloaded_size_unit = downloaded_size[-3:]
+                            downloaded_size_value = downloaded_size[:-4]
+                        except:
+                            downloaded_size_unit = None
+                    else:
+                        downloaded_size_unit = None
+
+
+                if downloaded_size_unit:
+                    if downloaded_size_unit == 'GiB':
+                        downloaded_size_unit = QCoreApplication.translate("mainwindow_src_ui_tr", "GiB") 
+                    elif downloaded_size_unit == 'MiB':
+                        downloaded_size_unit = QCoreApplication.translate("mainwindow_src_ui_tr", "MiB") 
+                    elif downloaded_size_unit == 'KiB':
+                        downloaded_size_unit = QCoreApplication.translate("mainwindow_src_ui_tr", "KiB") 
+
+                    downloaded_size_str = downloaded_size_value + downloaded_size_unit
+
+                else:
+                    downloaded_size_str = dict['downloaded_size']
+
+
+
+                file_size = dict['size']
+                if file_size != None:
+                    if len(file_size) > 2:
+                        try:
+                            file_size_unit = file_size[-3:]
+                            file_size_value = file_size[:-4]
+                        except:
+                            file_size_unit = None
+                    else:
+                        file_size_unit = None
+
+                if file_size_unit:
+                    if file_size_unit == 'GiB':
+                        file_size_unit = QCoreApplication.translate("mainwindow_src_ui_tr", "GiB") 
+                    elif file_size_unit == 'MiB':
+                        file_size_unit = QCoreApplication.translate("mainwindow_src_ui_tr", "MiB") 
+                    elif file_size_unit == 'KiB':
+                        file_size_unit = QCoreApplication.translate("mainwindow_src_ui_tr", "KiB") 
+
+                    file_size_str = file_size_value + file_size_unit
+
+                else:
+                    file_size_str = dict['downloaded_size']
+
+               
                 downloaded = QCoreApplication.translate("mainwindow_src_ui_tr", "<b>Downloaded</b> : ") \
-                        + str(dict['downloaded_size']) \
+                        + downloaded_size_str \
                         + "/" \
-                        + str(dict['size'])
+                        + file_size_str
 
                 progress_window.downloaded_label.setText(downloaded)
 
