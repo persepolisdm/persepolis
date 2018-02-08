@@ -98,14 +98,14 @@ def spider(add_link_dictionary):
     if 'Content-Length' in header.keys():
         file_size = int(header['Content-Length'])
 
-        # convert file_size to KB or MB or GB
+        # convert file_size to KiB or MiB or GiB
         if int(file_size/1073741824) != 0:
             file_size = file_size/1073741824
-            size_str = str(round(file_size, 2)) + " GB"
+            size_str = str(round(file_size, 2)) + " GiB"
         elif int(file_size/1048576) != 0:
-            size_str = str(int(file_size/1048576)) + " MB"
+            size_str = str(int(file_size/1048576)) + " MiB"
         elif int(file_size/1024) != 0:
-            size_str = str(int(file_size/1024)) + " KB"
+            size_str = str(int(file_size/1024)) + " KiB"
         else:
             size_str = str(file_size)
         filesize = size_str
@@ -204,13 +204,13 @@ def addLinkSpider(add_link_dictionary):
     file_size = None 
     if 'Content-Length' in header.keys():  # checking if file_size is available
         file_size = int(header['Content-Length'])
-        if int(file_size/1073741824) != 0:  # converting file_size to KB or MB or GB
+        if int(file_size/1073741824) != 0:  # converting file_size to KiB or MiB or GiB
             file_size = file_size/1073741824
-            size_str = str(round(file_size, 2)) + " GB"
+            size_str = str(round(file_size, 2)) + " GiB"
         elif int(file_size/1048576) != 0:
-            size_str = str(int(file_size/1048576)) + " MB"
+            size_str = str(int(file_size/1048576)) + " MiB"
         elif int(file_size/1024) != 0:
-            size_str = str(int(file_size/1024)) + " KB"
+            size_str = str(int(file_size/1024)) + " KiB"
         else:
             size_str = str(file_size)
         file_size = size_str

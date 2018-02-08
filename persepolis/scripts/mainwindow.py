@@ -1312,12 +1312,12 @@ class MainWindow(MainWindow_Ui):
 
                     if file_size != None:
                         if len(file_size) > 2:
-                            unit = file_size[-2:]
+                            unit = file_size[-3:]
                             try:
-                                if unit == 'GB':
-                                    size_value = float(file_size[:-3])
+                                if unit == 'GiB':
+                                    size_value = float(file_size[:-4])
                                 else:
-                                    size_value = int(file_size[:-3])
+                                    size_value = int(file_size[:-4])
                             except:
                                 size_value = None
                         else:
@@ -1330,12 +1330,12 @@ class MainWindow(MainWindow_Ui):
 
                         if free_space != None and size_value != None:
 
-                            if unit == 'GB':
+                            if unit == 'GiB':
                                 free_space = free_space/1073741824
                                 free_space = round(free_space, 2)
-                            elif unit == 'MB':
+                            elif unit == 'MiB':
                                 free_space = int(free_space/1048576)
-                            elif unit == 'KB':
+                            elif unit == 'KiB':
                                 free_space = int(free_space/1024)
                             else:
                                 free_space = int(free_space)

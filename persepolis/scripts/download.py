@@ -397,26 +397,27 @@ def convertDownloadInformation(download_status):
     except:
         downloaded = None
 
-    # convert file_size and downloaded_size to KB and MB and GB
+    # convert file_size and downloaded_size to KiB and MiB and GiB
     if (downloaded != None and file_size != None and file_size != 0):
         file_size_back = file_size
         if int(file_size/1073741824) != 0:
             file_size = file_size/1073741824
-            size_str = str(round(file_size, 2)) + " GB"
+            size_str = str(round(file_size, 2)) + " GiB"
         elif int(file_size/1048576) != 0:
-            size_str = str(int(file_size/1048576)) + " MB"
+            size_str = str(int(file_size/1048576)) + " MiB"
         elif int(file_size/1024) != 0:
-            size_str = str(int(file_size/1024)) + " KB"
+            size_str = str(int(file_size/1024)) + " KiB"
         else:
             size_str = str(file_size)
+
         downloaded_back = downloaded
         if int(downloaded/1073741824) != 0:
             downloaded = downloaded/1073741824
-            downloaded_str = str(round(downloaded, 2)) + " GB"
+            downloaded_str = str(round(downloaded, 2)) + " GiB"
         elif int((downloaded/1048576)) != 0:
-            downloaded_str = str(int(downloaded/1048576)) + " MB"
+            downloaded_str = str(int(downloaded/1048576)) + " MiB"
         elif int(downloaded/1024) != 0:
-            downloaded_str = str(int(downloaded/1024)) + " KB"
+            downloaded_str = str(int(downloaded/1024)) + " KiB"
         else:
             downloaded_str = str(downloaded)
 
@@ -442,14 +443,14 @@ def convertDownloadInformation(download_status):
         estimate_time_left = int((file_size - downloaded)/download_speed)
         if int((download_speed/1073741824)) != 0:
             download_speed = download_speed/1073741824
-            download_speed_str = str(round(download_speed, 2)) + " GB/S"
+            download_speed_str = str(round(download_speed, 2)) + " GiB/S"
         elif int((download_speed/1048576)) != 0:
             download_speed_num = download_speed/1048576
-            download_speed_str = str(round(download_speed_num, 2)) + " MB/S"
+            download_speed_str = str(round(download_speed_num, 2)) + " MiB/S"
         elif int((download_speed/1024)) != 0:
-            download_speed_str = str(int(download_speed/1024)) + " KB/S"
+            download_speed_str = str(int(download_speed/1024)) + " KiB/S"
         else:
-            download_speed_str = str(download_speed)
+            download_speed_str = str(download_speed) + "B/S"
 
         eta = ""
         if estimate_time_left >= 3600:
