@@ -1286,6 +1286,37 @@ class PersepolisDB():
             # update category_db_table
             self.updateCategoryTable([category_dict])
 
+
+# this method replaces:
+# GB >> GiB
+# MB >> MiB
+# KB >> KiB
+# Read this link for more information:
+# https://en.wikipedia.org/wiki/Orders_of_magnitude_(data)
+    def correctDataBase(self):
+
+        # lock data base
+        self.lockCursor()
+
+        for units in [['KB', 'KiB'], ['MB', 'MiB'], ['GB', 'GiB']]:
+            dict = {'old_unit': units[0],
+                    'new_unit': units[1]}
+
+            self.persepolis_db_cursor.execute("""UPDATE download_db_table 
+                    SET size = replace(size, :old_unit, :new_unit)""", dict)
+            self.persepolis_db_cursor.execute("""UPDATE download_db_table 
+                    SET rate = replace(rate, :old_unit, :new_unit)""", dict)
+            self.persepolis_db_cursor.execute("""UPDATE download_db_table 
+                    SET downloaded_size = replace(downloaded_size, :old_unit, :new_unit)""", dict)
+
+    
+        self.persepolis_db_connection.commit()
+
+
+        # job is done! open the lock
+        self.lock = False
+
+
     # close connections
     def closeConnections(self):
         # lock data base
@@ -1296,15 +1327,5 @@ class PersepolisDB():
 
         # job is done! open the lock
         self.lock = False
-
-
-
-
-
-
-
-
-
-
 
 
