@@ -104,9 +104,6 @@ persepolis_db = PersepolisDB()
 # create tables
 persepolis_db.createTables()
 
-# correct data base
-persepolis_db.correctDataBase()
-
 # close connections
 persepolis_db.closeConnections()
 
