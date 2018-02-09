@@ -1,20 +1,20 @@
-<?xml version="1.0" ?><!DOCTYPE TS><TS language="fa_IR" version="2.0">
+<?xml version="1.0" ?><!DOCTYPE TS><TS language="zh_CN" version="2.0">
 <context>
     <name>about_ui_tr</name>
     <message>
         <location filename="../../persepolis/gui/about_ui.py" line="117"/>
         <source>About Persepolis</source>
-        <translation>درباره پرسپولیس</translation>
+        <translation>关于 Persepolis</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/about_ui.py" line="118"/>
         <source>Persepolis Download Manager</source>
-        <translation>دانلود منیجر پرسپولیس</translation>
+        <translation>Persepolis 下载管理器</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/about_ui.py" line="119"/>
         <source>Version 3.0.1</source>
-        <translation>نسخه ۳.۰.۱</translation>
+        <translation>版本号 3.0.1</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/about_ui.py" line="120"/>
@@ -28,36 +28,36 @@ Jafar Akhondali
 H.Rostami</source>
         <comment>TRANSLATORS NOTE: YOU REALLY DON'T NEED TO TRANSLATE THIS PART!</comment>
         <translation>
-علیرضا امیرصمیمی
-محمدرضا عبدالله‌زاده
-صادق علیرضایی
-مصطفی اسدی
-محمدامین واحدی‌نیا
-جعفر آخوندعلی
-ح.رستمی</translation>
+AliReza AmirSamimi
+Mohammadreza Abdollahzadeh
+Sadegh Alirezaie
+Mostafa Asadi
+MohammadAmin Vahedinia
+Jafar Akhondali
+H.Rostami</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/about_ui.py" line="122"/>
         <source>&lt;a href=https://persepolisdm.github.io&gt;https://persepolisdm.github.io&lt;/a&gt;</source>
         <comment>TRANSLATORS NOTE: YOU REALLY DON'T NEED TO TRANSLATE THIS PART!</comment>
-        <translation>https://persepolisdm.github.io</translation>
+        <translation>&lt;a href=https://persepolisdm.github.io&gt;https://persepolisdm.github.io&lt;/a&gt;</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/about_ui.py" line="124"/>
         <source>&lt;a href=https://telegram.me/persepolisdm&gt;https://telegram.me/persepolisdm&lt;/a&gt;</source>
         <comment>TRANSLATORS NOTE: YOU REALLY DON'T NEED TO TRANSLATE THIS PART!</comment>
-        <translation>https://telegram.me/persepolisdm</translation>
+        <translation>&lt;a href=https://telegram.me/persepolisdm&gt;https://telegram.me/persepolisdm&lt;/a&gt;</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/about_ui.py" line="126"/>
         <source>&lt;a href=https://twitter.com/persepolisdm&gt;https://twitter.com/persepolisdm&lt;/a&gt;</source>
         <comment>TRANSLATORS NOTE: YOU REALLY DON'T NEED TO TRANSLATE THIS PART!</comment>
-        <translation>https://twitter.com/persepolisdm</translation>
+        <translation>&lt;a href=https://twitter.com/persepolisdm&gt;https://twitter.com/persepolisdm&lt;/a&gt;</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/about_ui.py" line="128"/>
         <source>Ok</source>
-        <translation>تایید</translation>
+        <translation>确定</translation>
     </message>
 </context>
 <context>
@@ -65,157 +65,157 @@ H.Rostami</source>
     <message>
         <location filename="../../persepolis/gui/addlink_ui.py" line="398"/>
         <source>Enter Your Link</source>
-        <translation>پیوند را وارد کنید</translation>
+        <translation>请输入链接地址：</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/addlink_ui.py" line="400"/>
         <source>Download Link : </source>
-        <translation>پیوند دانلود :</translation>
+        <translation>下载地址：</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/addlink_ui.py" line="402"/>
         <source>Add to category : </source>
-        <translation>افزودن به دسته :</translation>
+        <translation>添加至目录：</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/addlink_ui.py" line="404"/>
         <source>Change File Name : </source>
-        <translation>تغییر نام پرونده :</translation>
+        <translation>修改文件名：</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/addlink_ui.py" line="406"/>
         <source>Detect system proxy setting</source>
-        <translation>تشخیص پراکسی سیستم</translation>
+        <translation>检测系统代理设置</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/addlink_ui.py" line="437"/>
         <source>Proxy</source>
-        <translation>پراکسی</translation>
+        <translation>代理</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/addlink_ui.py" line="408"/>
         <source>Proxy PassWord : </source>
-        <translation>گذرواژه پراکسی:</translation>
+        <translation>代理口令：</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/addlink_ui.py" line="409"/>
         <source>IP : </source>
-        <translation>آی‌پی :</translation>
+        <translation>IP：</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/addlink_ui.py" line="410"/>
         <source>Proxy UserName : </source>
-        <translation>نام‌کاربری پراکسی‌:</translation>
+        <translation>代理用户名：</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/addlink_ui.py" line="411"/>
         <source>Port:</source>
-        <translation>پورت : </translation>
+        <translation>端口：</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/addlink_ui.py" line="413"/>
         <source>Download UserName and PassWord</source>
-        <translation>نام‌کاربری و گذرواژه دانلود</translation>
+        <translation>下载用户名和口令</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/addlink_ui.py" line="414"/>
         <source>Download UserName : </source>
-        <translation>نام کاربری دانلود:</translation>
+        <translation>下载用户名</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/addlink_ui.py" line="415"/>
         <source>Download PassWord : </source>
-        <translation>گذرواژّ دانلود:</translation>
+        <translation>下载口令</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/addlink_ui.py" line="417"/>
         <source>Change Download Folder</source>
-        <translation>تغییر پوشه دانلود</translation>
+        <translation>更改下载文件夹</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/addlink_ui.py" line="418"/>
         <source>Download Folder : </source>
-        <translation>پوشه دانلود:</translation>
+        <translation>下载文件夹：</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/addlink_ui.py" line="420"/>
         <source>Start Time</source>
-        <translation>زمان شروع</translation>
+        <translation>开始时间</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/addlink_ui.py" line="421"/>
         <source>End Time</source>
-        <translation>زمان پایان</translation>
+        <translation>结束时间</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/addlink_ui.py" line="423"/>
         <source>Limit Speed</source>
-        <translation>محدودیت سرعت</translation>
+        <translation>速度限制</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/addlink_ui.py" line="424"/>
         <source>KB/S</source>
-        <translation>کیلوبایت بر ثانیه</translation>
+        <translation>KB/秒</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/addlink_ui.py" line="425"/>
         <source>MB/S</source>
-        <translation>مگابایت بر ثانیه</translation>
+        <translation>MB/秒</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/addlink_ui.py" line="427"/>
         <source>Number Of Connections :</source>
-        <translation>شمار اتصال‌ها</translation>
+        <translation>连接数</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/addlink_ui.py" line="429"/>
         <source>Cancel</source>
-        <translation>لغو</translation>
+        <translation>取消</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/addlink_ui.py" line="430"/>
         <source>OK</source>
-        <translation>تایید</translation>
+        <translation>确定</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/addlink_ui.py" line="432"/>
         <source>Download later</source>
-        <translation>بعدا دانلودکن</translation>
+        <translation>稍后下载</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/addlink_ui.py" line="434"/>
         <source>Link</source>
-        <translation>پیوند</translation>
+        <translation>链接</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/addlink_ui.py" line="440"/>
         <source>More Options</source>
-        <translation>گزینه‌های بیشتر</translation>
+        <translation>更多选项</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/addlink_ui.py" line="443"/>
         <source>Advanced Options</source>
-        <translation>گزینه‌های پیشرفته</translation>
+        <translation>高级选项</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/addlink_ui.py" line="446"/>
         <source>Referrer: </source>
-        <translation>ارجاع دهنده:</translation>
+        <translation>Referrer 字段：</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/addlink_ui.py" line="448"/>
         <source>Header: </source>
-        <translation>هدر:‌ </translation>
+        <translation>Header 字段：</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/addlink_ui.py" line="450"/>
         <source>Load cookies: </source>
-        <translation>کوکی‌ها:</translation>
+        <translation>加载 cookies：</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/addlink_ui.py" line="452"/>
         <source>User agent: </source>
-        <translation>عوامل کاربر:</translation>
+        <translation>用户代理：</translation>
     </message>
 </context>
 <context>
@@ -223,12 +223,12 @@ H.Rostami</source>
     <message>
         <location filename="../../persepolis/scripts/after_download.py" line="64"/>
         <source>&lt;b&gt;File name&lt;/b&gt; : </source>
-        <translation>&lt;b&gt;نام پرونده&lt;/b&gt; : </translation>
+        <translation>&lt;b&gt;文件名&lt;/b&gt;：</translation>
     </message>
     <message>
         <location filename="../../persepolis/scripts/after_download.py" line="72"/>
         <source>&lt;b&gt;Size&lt;/b&gt; : </source>
-        <translation>&lt;b&gt;اندازه&lt;/b&gt; : </translation>
+        <translation>&lt;b&gt;大小&lt;/b&gt;：</translation>
     </message>
 </context>
 <context>
@@ -236,42 +236,42 @@ H.Rostami</source>
     <message>
         <location filename="../../persepolis/gui/after_download_ui.py" line="50"/>
         <source>Persepolis Download Manager</source>
-        <translation>دانلود منیجر پرسپولیس</translation>
+        <translation>Persepolis 下载管理器</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/after_download_ui.py" line="102"/>
         <source>  Open File  </source>
-        <translation>گشودن پرونده</translation>
+        <translation>打开文件</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/after_download_ui.py" line="103"/>
         <source>Open Download Folder</source>
-        <translation>گشودن پوشه دانلود</translation>
+        <translation>打开下载文件夹</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/after_download_ui.py" line="104"/>
         <source>   OK   </source>
-        <translation>تایید</translation>
+        <translation>确定</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/after_download_ui.py" line="105"/>
         <source>Don&apos;t show this message again.</source>
-        <translation>این پیام را دیگر نشان نده.</translation>
+        <translation>不再显示此信息。</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/after_download_ui.py" line="106"/>
         <source>&lt;b&gt;Download Completed!&lt;/b&gt;</source>
-        <translation>&lt;b&gt;دانلود به پایان رسید&lt;/b&gt;</translation>
+        <translation>&lt;b&gt;下载已完成！&lt;/b&gt;</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/after_download_ui.py" line="107"/>
         <source>&lt;b&gt;Save as&lt;/b&gt; : </source>
-        <translation>&lt;b&gt;ذخیره در&lt;/b&gt; : </translation>
+        <translation>&lt;b&gt;另存为&lt;/b&gt;：</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/after_download_ui.py" line="108"/>
         <source>&lt;b&gt;Link&lt;/b&gt; : </source>
-        <translation>&lt;b&gt;پیوند&lt;/b&gt; : </translation>
+        <translation>&lt;b&gt;链接&lt;/b&gt;：</translation>
     </message>
 </context>
 <context>
@@ -279,32 +279,32 @@ H.Rostami</source>
     <message>
         <location filename="../../persepolis/gui/log_window_ui.py" line="93"/>
         <source>Persepolis Log</source>
-        <translation>لاگ پرسپولیس</translation>
+        <translation>Persepolis 日志</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/log_window_ui.py" line="94"/>
         <source>close</source>
-        <translation>بستن</translation>
+        <translation>关闭</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/log_window_ui.py" line="95"/>
         <source>Copy  selected to clipboard</source>
-        <translation>رونوشت از گزیده در کلیپ‌بورد</translation>
+        <translation>复制到剪贴板</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/log_window_ui.py" line="96"/>
         <source>Report Issue</source>
-        <translation>گزارش</translation>
+        <translation>提交问题</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/log_window_ui.py" line="97"/>
         <source>Refresh log messages</source>
-        <translation>بازبینی پیام‌های لاگ</translation>
+        <translation>刷新日志信息</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/log_window_ui.py" line="98"/>
         <source>Clear log messages</source>
-        <translation>پاک‌کردن پیام‌های لاگ</translation>
+        <translation>清除日志信息</translation>
     </message>
 </context>
 <context>
@@ -312,370 +312,370 @@ H.Rostami</source>
     <message>
         <location filename="../../persepolis/scripts/mainwindow.py" line="632"/>
         <source>Persepolis</source>
-        <translation>پرسپولیس</translation>
+        <translation>Persepolis</translation>
     </message>
     <message>
         <location filename="../../persepolis/scripts/mainwindow.py" line="598"/>
         <source>Queue Stopped!</source>
-        <translation>صف متوقف شد!</translation>
+        <translation>队列完成！</translation>
     </message>
     <message>
         <location filename="../../persepolis/scripts/mainwindow.py" line="1603"/>
         <source>Persepolis is shutting down</source>
-        <translation>پرسپولیس در حال خاموش کردن</translation>
+        <translation>Persepolis 正在关闭</translation>
     </message>
     <message>
         <location filename="../../persepolis/scripts/mainwindow.py" line="1603"/>
         <source>your system in 20 seconds</source>
-        <translation>سیستم شما در ۲۰ ثانیه</translation>
+        <translation>你的系统将在 20 秒内</translation>
     </message>
     <message>
         <location filename="../../persepolis/scripts/mainwindow.py" line="632"/>
         <source>Queue completed!</source>
-        <translation>صف به پایان رسید!</translation>
+        <translation>队列完成！</translation>
     </message>
     <message>
         <location filename="../../persepolis/scripts/mainwindow.py" line="2452"/>
         <source>Show main Window</source>
-        <translation>نمایش فهرست اصلی</translation>
+        <translation>显示主窗口</translation>
     </message>
     <message>
         <location filename="../../persepolis/scripts/mainwindow.py" line="862"/>
         <source>Please Wait ...</source>
-        <translation>صبر کنید ...</translation>
+        <translation>请稍等 ...</translation>
     </message>
     <message>
         <location filename="../../persepolis/scripts/mainwindow.py" line="1182"/>
         <source>Ready...</source>
-        <translation>آماده...</translation>
+        <translation>就绪...</translation>
     </message>
     <message>
         <location filename="../../persepolis/scripts/mainwindow.py" line="1188"/>
         <source>Aria2 didn&apos;t respond! be patient!Persepolis tries again in 2 seconds!</source>
-        <translation>آریا۲ پاسخگو نیست! شکیبا باشید! پرسپولیس ۲ ثانیه دیگر دوباره تلاش خواهد کرد!</translation>
+        <translation>Aria2 无回应！ 请耐心等待！Persepolis 将在2秒后再次尝试！</translation>
     </message>
     <message>
         <location filename="../../persepolis/scripts/mainwindow.py" line="1210"/>
         <source>Error...</source>
-        <translation>خطا...</translation>
+        <translation>错误...</translation>
     </message>
     <message>
         <location filename="../../persepolis/scripts/mainwindow.py" line="1211"/>
         <source>Persepolis can not connect to Aria2</source>
-        <translation>پرسپولیس نمی‌تواند به آریا۲ متصل شود</translation>
+        <translation>Persepolis 无法连接到 Aria2</translation>
     </message>
     <message>
         <location filename="../../persepolis/scripts/mainwindow.py" line="1196"/>
         <source>Check your network &amp; Restart Persepolis</source>
-        <translation>شبکه خود را بررسی کنید و پرسپولیس را از نو بگشایید</translation>
+        <translation>检查你的网络并重启 Persepolis</translation>
     </message>
     <message>
         <location filename="../../persepolis/scripts/mainwindow.py" line="1211"/>
         <source>Restart Persepolis</source>
-        <translation>پرسپولیس را از نو بگشایید</translation>
+        <translation>重启 Persepolis</translation>
     </message>
     <message>
         <location filename="../../persepolis/scripts/mainwindow.py" line="1216"/>
         <source>Reconnecting aria2...</source>
-        <translation>اتصال دوباره به آریا۲ ...</translation>
+        <translation>重新连接至 aria2...</translation>
     </message>
     <message>
         <location filename="../../persepolis/scripts/mainwindow.py" line="1235"/>
         <source>Persepolis reconnected aria2 successfully</source>
-        <translation>پرسپولیس دوباره به آریا۲ با موفقیت متصل شد</translation>
+        <translation>Persepolis 重新连接至 aria2 成功</translation>
     </message>
     <message>
         <location filename="../../persepolis/scripts/mainwindow.py" line="1573"/>
         <source>Error - </source>
-        <translation>خطا - </translation>
+        <translation>错误 -</translation>
     </message>
     <message>
         <location filename="../../persepolis/scripts/mainwindow.py" line="1356"/>
         <source>Please change the temporary download folder</source>
-        <translation>لطفا پوشه دانلود موقف را تغییر دهید</translation>
+        <translation>请更改临时下载文件夹</translation>
     </message>
     <message>
         <location filename="../../persepolis/scripts/mainwindow.py" line="1406"/>
         <source>&lt;b&gt;Link&lt;/b&gt; : </source>
-        <translation>&lt;b&gt;پیوند&lt;/b&gt; : </translation>
+        <translation>&lt;b&gt;链接&lt;/b&gt;：</translation>
     </message>
     <message>
         <location filename="../../persepolis/scripts/mainwindow.py" line="1452"/>
         <source>GiB</source>
-        <translation type="unfinished"/>
+        <translation>GiB</translation>
     </message>
     <message>
         <location filename="../../persepolis/scripts/mainwindow.py" line="1454"/>
         <source>MiB</source>
-        <translation type="unfinished"/>
+        <translation>MiB</translation>
     </message>
     <message>
         <location filename="../../persepolis/scripts/mainwindow.py" line="1456"/>
         <source>KiB</source>
-        <translation type="unfinished"/>
+        <translation>KiB</translation>
     </message>
     <message>
         <location filename="../../persepolis/scripts/mainwindow.py" line="1464"/>
         <source>&lt;b&gt;Downloaded&lt;/b&gt; : </source>
-        <translation>&lt;b&gt;دانلود&lt;/b&gt; : </translation>
+        <translation>&lt;b&gt;已下载&lt;/b&gt;：</translation>
     </message>
     <message>
         <location filename="../../persepolis/scripts/mainwindow.py" line="1472"/>
         <source>&lt;b&gt;Transfer rate&lt;/b&gt; : </source>
-        <translation>&lt;b&gt;سرعت&lt;/b&gt; : </translation>
+        <translation>&lt;b&gt;传输速度&lt;/b&gt;：</translation>
     </message>
     <message>
         <location filename="../../persepolis/scripts/mainwindow.py" line="1478"/>
         <source>&lt;b&gt;Estimated time left&lt;/b&gt; : </source>
-        <translation>&lt;b&gt;زمان باقیمانده&lt;/b&gt; : </translation>
+        <translation>&lt;b&gt;预计剩余时间&lt;/b&gt;：</translation>
     </message>
     <message>
         <location filename="../../persepolis/scripts/mainwindow.py" line="1484"/>
         <source>&lt;b&gt;Connections&lt;/b&gt; : </source>
-        <translation>&lt;b&gt;اتصال‌ها&lt;/b&gt; : </translation>
+        <translation>&lt;b&gt;连接数&lt;/b&gt;：</translation>
     </message>
     <message>
         <location filename="../../persepolis/scripts/mainwindow.py" line="1505"/>
         <source>&lt;b&gt;Status&lt;/b&gt; : </source>
-        <translation>&lt;b&gt;وضعیت&lt;/b&gt; : </translation>
+        <translation>&lt;b&gt;状态&lt;/b&gt;：</translation>
     </message>
     <message>
         <location filename="../../persepolis/scripts/mainwindow.py" line="1551"/>
         <source>Download Stopped</source>
-        <translation>دانلود متوقف شد</translation>
+        <translation>下载终止</translation>
     </message>
     <message>
         <location filename="../../persepolis/scripts/mainwindow.py" line="1621"/>
         <source>Download Complete</source>
-        <translation>دانلود به پایان رسید</translation>
+        <translation>下载完成</translation>
     </message>
     <message>
         <location filename="../../persepolis/scripts/mainwindow.py" line="1929"/>
         <source>&lt;b&gt;&lt;center&gt;This link has been added before!                    Are you sure you want to add it again?&lt;/center&gt;&lt;/b&gt;</source>
-        <translation>&lt;b&gt;&lt;center&gt;این پیوند قبلا اضافه شده است !                      آیا مطمئنید می‌خواهید دوباره آن را بیافزایید ؟&lt;/center&gt;&lt;/b&gt;</translation>
+        <translation>&lt;b&gt;&lt;center&gt;此链接已被添加！ 确定要再次添加吗？&lt;/center&gt;&lt;/b&gt;</translation>
     </message>
     <message>
         <location filename="../../persepolis/scripts/mainwindow.py" line="2042"/>
         <source>Download Starts</source>
-        <translation>دانلود آغاز شد</translation>
+        <translation>下载开始</translation>
     </message>
     <message>
         <location filename="../../persepolis/scripts/mainwindow.py" line="2048"/>
         <source>Download Scheduled</source>
-        <translation>دانلود زمانبندی شد</translation>
+        <translation>下载计划</translation>
     </message>
     <message>
         <location filename="../../persepolis/scripts/mainwindow.py" line="2071"/>
         <source>Operation was unsuccessful</source>
         <comment>TRANSLATORS NOTE: full message = &quot;operaton was unsuccessful Please resume &amp;CATEGORY category.&quot;</comment>
-        <translation>عملیات ناموفق بود</translation>
+        <translation>操作失败</translation>
     </message>
     <message>
         <location filename="../../persepolis/scripts/mainwindow.py" line="2071"/>
         <source>Please resume </source>
         <comment>TRANSLATORS NOTE: full message = &quot;operaton was unsuccessful Please resume &amp;CATEGORY category.&quot;</comment>
-        <translation>لطفا دسته را </translation>
+        <translation>请恢复</translation>
     </message>
     <message>
         <location filename="../../persepolis/scripts/mainwindow.py" line="2071"/>
         <source> category.</source>
         <comment>TRANSLATORS NOTE: full message = &quot;operaton was unsuccessful Please resume &amp;CATEGORY category.&quot;</comment>
-        <translation> ادامه دهید.</translation>
+        <translation>目录。</translation>
     </message>
     <message>
         <location filename="../../persepolis/scripts/mainwindow.py" line="2183"/>
         <source>Aria2 disconnected!</source>
-        <translation>آریا۲ متصل نیست!</translation>
+        <translation>Aria2 断开连接！</translation>
     </message>
     <message>
         <location filename="../../persepolis/scripts/mainwindow.py" line="2183"/>
         <source>Persepolis is trying to connect!be patient!</source>
-        <translation>پرسپولیس برای اتصال تلاش می‌کند! شکیبا باشید!</translation>
+        <translation>Persepolis 正在尝试连接！请耐心等待！</translation>
     </message>
     <message>
         <location filename="../../persepolis/scripts/mainwindow.py" line="2186"/>
         <source>Aria2 did not respond!</source>
-        <translation>آریا۲ پاسخ نمی‌دهد!</translation>
+        <translation>Aria2 无应答！</translation>
     </message>
     <message>
         <location filename="../../persepolis/scripts/mainwindow.py" line="2186"/>
         <source>Try agian!</source>
-        <translation>تلاش دوباره!</translation>
+        <translation>再次尝试！</translation>
     </message>
     <message>
         <location filename="../../persepolis/scripts/mainwindow.py" line="2112"/>
         <source>Aria2 did not respond</source>
-        <translation>آریا۲ پاسخ نداد</translation>
+        <translation>Aria2 无应答</translation>
     </message>
     <message>
         <location filename="../../persepolis/scripts/mainwindow.py" line="2112"/>
         <source>Try again</source>
-        <translation>تلاش دوباره</translation>
+        <translation>再次尝试</translation>
     </message>
     <message>
         <location filename="../../persepolis/scripts/mainwindow.py" line="2166"/>
         <source>Operation was unsuccessful</source>
         <comment>TRANSLATORS NOTE: full message = &quot;operaton was unsuccessful Please stop &amp;CATEGORY category.&quot;</comment>
-        <translation>عملیات ناموفق بود</translation>
+        <translation>操作失败</translation>
     </message>
     <message>
         <location filename="../../persepolis/scripts/mainwindow.py" line="2166"/>
         <source>Please stop </source>
         <comment>TRANSLATORS NOTE: full message = &quot;operaton was unsuccessful Please stop &amp;CATEGORY category.&quot;</comment>
-        <translation>لطفا دسته را </translation>
+        <translation>请终止</translation>
     </message>
     <message>
         <location filename="../../persepolis/scripts/mainwindow.py" line="2166"/>
         <source> category.</source>
         <comment>TRANSLATORS NOTE: full message = &quot;operaton was unsuccessful Please stop &amp;CATEGORY category.&quot;</comment>
-        <translation>متوقف کنید.</translation>
+        <translation>目录。</translation>
     </message>
     <message>
         <location filename="../../persepolis/scripts/mainwindow.py" line="2463"/>
         <source>Minimize to system tray</source>
-        <translation>فرستادن برنامه به سینی نمایه</translation>
+        <translation>最小化至系统托盘</translation>
     </message>
     <message>
         <location filename="../../persepolis/scripts/mainwindow.py" line="2828"/>
         <source>Not Found</source>
-        <translation>پیدا نشد</translation>
+        <translation>找不到</translation>
     </message>
     <message>
         <location filename="../../persepolis/scripts/mainwindow.py" line="2644"/>
         <source>Operation was unsuccessful!</source>
         <comment>TRANSLATORS NOTE: full message = &quot;operaton was unsuccessful stop &amp;CATEGORY first.&quot;</comment>
-        <translation>عملیات ناموفق بود!</translation>
+        <translation>操作失败！</translation>
     </message>
     <message>
         <location filename="../../persepolis/scripts/mainwindow.py" line="2644"/>
         <source>Stop </source>
         <comment>TRANSLATORS NOTE: full message = &quot;operaton was unsuccessful stop &amp;CATEGORY first.&quot;</comment>
-        <translation>ابتدا</translation>
+        <translation>终止</translation>
     </message>
     <message>
         <location filename="../../persepolis/scripts/mainwindow.py" line="2644"/>
         <source> first</source>
         <comment>TRANSLATORS NOTE: full message = &quot;operaton was unsuccessful stop &amp;CATEGORY first.&quot;</comment>
-        <translation> دسته را متوقف کنید</translation>
+        <translation>先</translation>
     </message>
     <message>
         <location filename="../../persepolis/scripts/mainwindow.py" line="2661"/>
         <source>Operation was unsuccessful!</source>
         <comment>TRANSLATORS NOTE: full message = &quot;operaton was unsuccessful stop &amp;FILE_NAME first.&quot;</comment>
-        <translation>عملیات ناموفق بود!</translation>
+        <translation>操作失败！</translation>
     </message>
     <message>
         <location filename="../../persepolis/scripts/mainwindow.py" line="2661"/>
         <source>Stop </source>
         <comment>TRANSLATORS NOTE: full message = &quot;operaton was unsuccessful stop &amp;FILE_NAME first.&quot;</comment>
-        <translation>ابتدا</translation>
+        <translation>终止</translation>
     </message>
     <message>
         <location filename="../../persepolis/scripts/mainwindow.py" line="2661"/>
         <source> first</source>
         <comment>TRANSLATORS NOTE: full message = &quot;operaton was unsuccessful stop &amp;FILE_NAME first.&quot;</comment>
-        <translation>متوقف کنید</translation>
+        <translation>先</translation>
     </message>
     <message>
         <location filename="../../persepolis/scripts/mainwindow.py" line="2714"/>
         <source>&lt;b&gt;&lt;center&gt;This operation will delete                     downloaded files from your hard disk&lt;br&gt;PERMANENTLY!&lt;/center&gt;&lt;/b&gt;</source>
-        <translation>&lt;b&gt;&lt;center&gt;این عملیات پرونده‌ها را &lt;br&gt;بدون بازگشت&lt;/b&gt;از دیسک شما پاک می‌کند&lt;/center&gt;</translation>
+        <translation>&lt;b&gt;&lt;center&gt;此操作将从您的硬盘上&lt;br&gt;永久删除下载的文件！&lt;/center&gt;&lt;/b&gt;</translation>
     </message>
     <message>
         <location filename="../../persepolis/scripts/mainwindow.py" line="3866"/>
         <source>&lt;center&gt;Do you want to continue?&lt;/center&gt;</source>
-        <translation>&lt;center&gt;می‌خواهید ادامه دهید ؟&lt;/center&gt;</translation>
+        <translation>&lt;center&gt;你想继续吗？&lt;/center&gt;</translation>
     </message>
     <message>
         <location filename="../../persepolis/scripts/mainwindow.py" line="2765"/>
         <source>Operation was unsuccessful!</source>
         <comment>TRANSLATORS NOTE: full message = &quot;operaton was unsuccessful stop &amp;CATEGORY first&quot;</comment>
-        <translation>عملیات ناموفق بود!</translation>
+        <translation>操作失败！</translation>
     </message>
     <message>
         <location filename="../../persepolis/scripts/mainwindow.py" line="2765"/>
         <source>Stop </source>
         <comment>TRANSLATORS NOTE: full message = &quot;operaton was unsuccessful stop &amp;CATEGORY first&quot;</comment>
-        <translation>ابتدا</translation>
+        <translation>终止</translation>
     </message>
     <message>
         <location filename="../../persepolis/scripts/mainwindow.py" line="2765"/>
         <source> first</source>
         <comment>TRANSLATORS NOTE: full message = &quot;operaton was unsuccessful stop &amp;CATEGORY first&quot;</comment>
-        <translation> متوقف کنید</translation>
+        <translation>先</translation>
     </message>
     <message>
         <location filename="../../persepolis/scripts/mainwindow.py" line="2783"/>
         <source>Operation was unsuccessful!</source>
         <comment>TRANSLATORS NOTE: full message = &quot;operaton was unsuccessful stop &amp;FILE_NAME first&quot;</comment>
-        <translation>عملیات ناموفق بود!</translation>
+        <translation>操作失败！</translation>
     </message>
     <message>
         <location filename="../../persepolis/scripts/mainwindow.py" line="2783"/>
         <source>Stop </source>
         <comment>TRANSLATORS NOTE: full message = &quot;operaton was unsuccessful stop &amp;FILE_NAME first&quot;</comment>
-        <translation>ابتدا </translation>
+        <translation>终止</translation>
     </message>
     <message>
         <location filename="../../persepolis/scripts/mainwindow.py" line="2783"/>
         <source> first</source>
         <comment>TRANSLATORS NOTE: full message = &quot;operaton was unsuccessful stop &amp;FILE_NAME first&quot;</comment>
-        <translation> متوقف کنید</translation>
+        <translation>先</translation>
     </message>
     <message>
         <location filename="../../persepolis/scripts/mainwindow.py" line="3369"/>
         <source>&lt;/b&gt;&quot; is already existed!</source>
-        <translation>&lt;/b&gt;&quot; در حال حاضر موجود است</translation>
+        <translation>&lt;/b&gt;”已存在！</translation>
     </message>
     <message>
         <location filename="../../persepolis/scripts/mainwindow.py" line="3706"/>
         <source>Send selected downloads to</source>
-        <translation>فرستادن دانلودهای منتخب به</translation>
+        <translation>发送选定的下载至</translation>
     </message>
     <message>
         <location filename="../../persepolis/scripts/mainwindow.py" line="3709"/>
         <source>Send to</source>
-        <translation>فرستادن به</translation>
+        <translation>发送至</translation>
     </message>
     <message>
         <location filename="../../persepolis/scripts/mainwindow.py" line="3841"/>
         <source>Sort by</source>
-        <translation>چینش</translation>
+        <translation>排序</translation>
     </message>
     <message>
         <location filename="../../persepolis/scripts/mainwindow.py" line="3863"/>
         <source>&lt;b&gt;&lt;center&gt;This operation will remove                     all download items in this queue&lt;br&gt;from &quot;All Downloads&quot; list!&lt;/center&gt;&lt;/b&gt;</source>
-        <translation>&lt;b&gt;&lt;center&gt;این عملیات تمام دانلودها را از این صف حذف خواهد کرد&lt;/center&gt;&lt;/b&gt;</translation>
+        <translation>&lt;b&gt;&lt;center&gt;该操作将从“所有下载”列表中移除当前队列中的所有下载项目！&lt;/center&gt;&lt;/b&gt;</translation>
     </message>
     <message>
         <location filename="../../persepolis/scripts/mainwindow.py" line="3888"/>
         <source>&lt;b&gt;Sorry! You can&apos;t remove default queue!&lt;/b&gt;</source>
-        <translation>&lt;b&gt;با عرض پوزش شما نمی‌توانید صف پیشفرض را حذف کنید!&lt;/b&gt;</translation>
+        <translation>&lt;b&gt;抱歉! 你不能删除默认队列！&lt;/b&gt;</translation>
     </message>
     <message>
         <location filename="../../persepolis/scripts/mainwindow.py" line="4084"/>
         <source>item transferation was unsuccessful for some items!</source>
-        <translation>جابجایی بعضی پرونده‌ها ناموفق بود!</translation>
+        <translation>某些项目转移失败！</translation>
     </message>
     <message>
         <location filename="../../persepolis/scripts/mainwindow.py" line="4084"/>
         <source>Please stop download progress first</source>
-        <translation>لطفا ابتدا جریان دانلود را متوقف کنید</translation>
+        <translation>请先终止下载进度</translation>
     </message>
     <message>
         <location filename="../../persepolis/scripts/mainwindow.py" line="4114"/>
         <source>Hide options</source>
-        <translation>مخفی کردن گزینه ها</translation>
+        <translation>隐藏选项</translation>
     </message>
     <message>
         <location filename="../../persepolis/scripts/mainwindow.py" line="4117"/>
         <source>Show options</source>
-        <translation>نمایش گزینه‌ها</translation>
+        <translation>显示选项</translation>
     </message>
     <message>
         <location filename="../../persepolis/scripts/mainwindow.py" line="4626"/>
         <source>Stop all downloads first!</source>
-        <translation>ابتدا همه دانلودها را متوقف کن!</translation>
+        <translation>请先终止所有下载</translation>
     </message>
 </context>
 <context>
@@ -683,429 +683,428 @@ H.Rostami</source>
     <message>
         <location filename="../../persepolis/gui/mainwindow_ui.py" line="61"/>
         <source>File</source>
-        <translation>پرونده</translation>
+        <translation>文件</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/mainwindow_ui.py" line="62"/>
         <source>Edit</source>
-        <translation>ویرایش</translation>
+        <translation>编辑</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/mainwindow_ui.py" line="63"/>
         <source>View</source>
-        <translation>نمایش</translation>
+        <translation>视图</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/mainwindow_ui.py" line="64"/>
         <source>Download</source>
-        <translation>دانلود</translation>
+        <translation>下载</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/mainwindow_ui.py" line="65"/>
         <source>Queue</source>
-        <translation>صف</translation>
+        <translation>队列</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/mainwindow_ui.py" line="66"/>
         <source>Video Finder</source>
-        <translation>یابنده ویدئو</translation>
+        <translation>视频搜索</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/mainwindow_ui.py" line="590"/>
         <source>Help</source>
-        <translation>کمک</translation>
+        <translation>帮助</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/mainwindow_ui.py" line="421"/>
         <source>Sort by</source>
-        <translation>چینش</translation>
+        <translation>排序</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/mainwindow_ui.py" line="425"/>
         <source>Persepolis Download Manager</source>
-        <translation>دانلود منیجر پرسپولیس</translation>
+        <translation>Persepolis 下载管理器</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/mainwindow_ui.py" line="392"/>
         <source>Category</source>
-        <translation>دسته</translation>
+        <translation>目录</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/mainwindow_ui.py" line="391"/>
         <source>File Name</source>
-        <translation>نام پرونده</translation>
+        <translation>文件名</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/mainwindow_ui.py" line="391"/>
         <source>Status</source>
-        <translation>وضعیت</translation>
+        <translation>状态</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/mainwindow_ui.py" line="391"/>
         <source>Size</source>
-        <translation>حجم</translation>
+        <translation>大小</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/mainwindow_ui.py" line="391"/>
         <source>Downloaded</source>
-        <translation>دانلود شده</translation>
+        <translation>已下载</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/mainwindow_ui.py" line="391"/>
         <source>Percentage</source>
-        <translation>درصد</translation>
+        <translation>百分比</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/mainwindow_ui.py" line="391"/>
         <source>Connections</source>
-        <translation>اتصال‌ها</translation>
+        <translation>连接数</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/mainwindow_ui.py" line="392"/>
         <source>Transfer rate</source>
-        <translation>سرعت</translation>
+        <translation>下载速度</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/mainwindow_ui.py" line="392"/>
         <source>Estimated time left</source>
-        <translation>زمان باقیمانده</translation>
+        <translation>预计剩余时间</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/mainwindow_ui.py" line="392"/>
         <source>Link</source>
-        <translation>پیوند</translation>
+        <translation>链接</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/mainwindow_ui.py" line="457"/>
         <source>First try date</source>
-        <translation>زمان افزودن</translation>
+        <translation>首次尝试时间</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/mainwindow_ui.py" line="461"/>
         <source>Last try date</source>
-        <translation>آخرین تغییرات</translation>
+        <translation>上次尝试时间</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/mainwindow_ui.py" line="411"/>
         <source>&amp;File</source>
-        <translation>پرونده</translation>
+        <translation>&amp;文件</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/mainwindow_ui.py" line="412"/>
         <source>&amp;Edit</source>
-        <translation>ویرایش</translation>
+        <translation>&amp;编辑</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/mainwindow_ui.py" line="413"/>
         <source>&amp;View</source>
-        <translation>نمایش</translation>
+        <translation>&amp;视图</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/mainwindow_ui.py" line="414"/>
         <source>&amp;Download</source>
-        <translation>دانلود</translation>
+        <translation>&amp;下载</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/mainwindow_ui.py" line="415"/>
         <source>&amp;Queue</source>
-        <translation>صف</translation>
+        <translation>&amp;队列</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/mainwindow_ui.py" line="416"/>
         <source>&amp;Video Finder</source>
-        <translation>یابنده ویدئو</translation>
+        <translation>&amp;视频搜索</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/mainwindow_ui.py" line="417"/>
         <source>&amp;Help</source>
-        <translation>کمک</translation>
+        <translation>&amp;帮助</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/mainwindow_ui.py" line="429"/>
         <source>Menu</source>
-        <translation>فهرست</translation>
+        <translation>菜单</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/mainwindow_ui.py" line="435"/>
         <source>Toolbar</source>
-        <translation>نوار ابزار</translation>
+        <translation>工具栏</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/mainwindow_ui.py" line="441"/>
         <source>Find Video Links</source>
-        <translation>یافتن پیوند ویدئو</translation>
+        <translation>查找视频链接</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/mainwindow_ui.py" line="441"/>
         <source>Download video or audio from youtube and ...</source>
-        <translation>دانلود ویدئو و صدا از یوتویوب و..</translation>
+        <translation>从 Youtube 及其他网站下载视频或音频 </translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/mainwindow_ui.py" line="445"/>
         <source>Stop all active downloads</source>
-        <translation>توقف همه دانلودهای جاری</translation>
+        <translation>终止当前所有下载</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/mainwindow_ui.py" line="449"/>
         <source>File name</source>
-        <translation>نام پرونده</translation>
+        <translation>文件名</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/mainwindow_ui.py" line="453"/>
         <source>File size</source>
-        <translation>حجم پرونده</translation>
+        <translation>文件大小</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/mainwindow_ui.py" line="465"/>
         <source>Download status</source>
-        <translation>وضعیت دانلود</translation>
+        <translation>下载状态</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/mainwindow_ui.py" line="469"/>
         <source>Show system tray icon</source>
-        <translation>نمایش نمایه در سینی نمایه</translation>
+        <translation>显示系统托盘图标</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/mainwindow_ui.py" line="469"/>
         <source>Show/Hide system tray icon</source>
-        <translation>نمایش/عدم نمایش نمایه در سینی سیستم</translation>
+        <translation>显示/隐藏系统托盘图标</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/mainwindow_ui.py" line="474"/>
         <source>Show menubar</source>
-        <translation>نمایش منوبار</translation>
+        <translation>显示菜单栏</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/mainwindow_ui.py" line="479"/>
         <source>Show side panel</source>
-        <translation>نمایش پنل کناری</translation>
+        <translation>显示侧边栏</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/mainwindow_ui.py" line="484"/>
         <source>Minimize to system tray</source>
-        <translation>فرستادن برنامه به سینی نمایه</translation>
+        <translation>最小化至系统托盘</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/mainwindow_ui.py" line="488"/>
         <source>Add New Download Link</source>
-        <translation>افزودن پیوند دانلود نو</translation>
+        <translation>新建下载</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/mainwindow_ui.py" line="492"/>
         <source>Import links from text file</source>
-        <translation>افزودن پیوندها از پرونده متنی</translation>
+        <translation>从文本文件导入链接</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/mainwindow_ui.py" line="492"/>
         <source>Create a Text file and put links in it.line by line!</source>
-        <translation>پرونده‌ای متنی بسازید و هر پیوند را در هر خط قرار دهید</translation>
+        <translation>创建文本文件并添加链接。每个链接后回车！</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/mainwindow_ui.py" line="496"/>
         <source>Resume Download</source>
-        <translation>ادامه دانلود</translation>
+        <translation>继续下载</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/mainwindow_ui.py" line="500"/>
         <source>Pause Download</source>
-        <translation>مکث در دانلود</translation>
+        <translation>暂停下载</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/mainwindow_ui.py" line="504"/>
         <source>Stop Download</source>
-        <translation>توقف دانلود</translation>
+        <translation>终止下载</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/mainwindow_ui.py" line="504"/>
         <source>Stop/Cancel Download</source>
-        <translation>توقف و لغو دانلود</translation>
+        <translation>终止/取消下载</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/mainwindow_ui.py" line="508"/>
         <source>Properties</source>
-        <translation>ویژگی ها</translation>
+        <translation>属性</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/mainwindow_ui.py" line="512"/>
         <source>Progress</source>
-        <translation>پیشرفت</translation>
+        <translation>进度</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/mainwindow_ui.py" line="516"/>
         <source>Open file</source>
-        <translation>گشودن پرونده</translation>
+        <translation>打开文件</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/mainwindow_ui.py" line="520"/>
         <source>Open download folder</source>
-        <translation>گشودن پوشه دانلود</translation>
+        <translation>打开下载文件夹</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/mainwindow_ui.py" line="524"/>
         <source>Open default download folder</source>
-        <translation>گشودن پوشه پیشفرض دانلود</translation>
+        <translation>打开默认下载文件夹</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/mainwindow_ui.py" line="528"/>
         <source>Exit</source>
-        <translation>خروج</translation>
+        <translation>退出</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/mainwindow_ui.py" line="532"/>
         <source>Clear download list</source>
-        <translation>پاک‌کردن فهرست دانلود</translation>
+        <translation>移除下载列表</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/mainwindow_ui.py" line="532"/>
         <source>Clear all items in download list</source>
-        <translation>پاک‌کردن همه فهرست دانلود</translation>
+        <translation>清空下载列表中的所有条目</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/mainwindow_ui.py" line="536"/>
         <source>Remove selected downloads form list</source>
-        <translation>پاک کردن دانلودهای منتخب از فهرست</translation>
+        <translation>从列表中移除选中的下载项</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/mainwindow_ui.py" line="541"/>
         <source>Delete selected download files</source>
-        <translation>پرونده دانلودهای منتخب را حذف کن</translation>
+        <translation>删除已选中的下载文件</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/mainwindow_ui.py" line="546"/>
         <source>Create new queue</source>
-        <translation>صف جدید بساز</translation>
+        <translation>创建新队列</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/mainwindow_ui.py" line="546"/>
         <source>Create new download queue</source>
-        <translation>صف دانلود جدیدی بساز</translation>
+        <translation>创建新的下载队列</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/mainwindow_ui.py" line="550"/>
         <source>Remove this queue</source>
-        <translation>این صف را حذف کن</translation>
+        <translation>移除此队列</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/mainwindow_ui.py" line="554"/>
         <source>Start this queue</source>
-        <translation>صف را شروع کن</translation>
+        <translation>开始队列</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/mainwindow_ui.py" line="558"/>
         <source>Stop this queue</source>
-        <translation>صف را متوقف کن</translation>
+        <translation>终止队列</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/mainwindow_ui.py" line="562"/>
         <source>Move up selected items</source>
-        <translation>آیتم‌های منتخب را به بالا جابجا کن</translation>
+        <translation>上移已选择项</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/mainwindow_ui.py" line="562"/>
         <source>Move currently selected items up by one row</source>
-        <translation>آیتم‌های منتخب را یک خط به بالا جابجا کن</translation>
+        <translation>将已选择项上移一行</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/mainwindow_ui.py" line="566"/>
         <source>Move down selected items</source>
-        <translation>آیتم‌های منتخب را به پایین جابجا کن</translation>
+        <translation>下移已选择项</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/mainwindow_ui.py" line="566"/>
         <source>Move currently selected items down by one row</source>
-        <translation>آیتم‌های منتخب را یک خط به پایین جابجا کن</translation>
+        <translation>将已选择项下移一行</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/mainwindow_ui.py" line="570"/>
         <source>Preferences</source>
-        <translation>شخصی‌سازی</translation>
+        <translation>首选项</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/mainwindow_ui.py" line="574"/>
         <source>About</source>
-        <translation>درباره </translation>
+        <translation>关于</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/mainwindow_ui.py" line="578"/>
         <source>Report an issue</source>
-        <translation>گزارش خطا</translation>
+        <translation>提交问题</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/mainwindow_ui.py" line="582"/>
         <source>Check for newer version</source>
-        <translation>بررسی برای نسخه جدیدتر</translation>
+        <translation>检查新版本</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/mainwindow_ui.py" line="582"/>
         <source>Check for newer release</source>
-        <translation>بررسی برای نسخه جدیدتر</translation>
+        <translation>检查发行版</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/mainwindow_ui.py" line="586"/>
         <source>Show log file</source>
-        <translation>نمایش پرونده لاگ</translation>
+        <translation>显示日志文件</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/mainwindow_ui.py" line="599"/>
         <source>Hide options</source>
-        <translation>مخفی کردن گزینه ها</translation>
+        <translation>隐藏选项</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/mainwindow_ui.py" line="600"/>
         <source>Start Time</source>
-        <translation>زمان شروع</translation>
+        <translation>开始时间</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/mainwindow_ui.py" line="602"/>
         <source>End Time</source>
-        <translation>زمان پایان</translation>
+        <translation>结束时间</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/mainwindow_ui.py" line="604"/>
         <source>Download bottom of
  the list first</source>
-        <translation>ابتدای فهرست را
-دانلودکن</translation>
+        <translation>优先下载列表底部资源</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/mainwindow_ui.py" line="606"/>
         <source>Limit Speed</source>
-        <translation>محدودیت سرعت</translation>
+        <translation>速度限制</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/mainwindow_ui.py" line="607"/>
         <source>KB/S</source>
-        <translation>کیلوبایت بر ثانیه</translation>
+        <translation>KB/秒</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/mainwindow_ui.py" line="608"/>
         <source>MB/S</source>
-        <translation>مگابایت بر ثانیه</translation>
+        <translation>MB/秒</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/mainwindow_ui.py" line="619"/>
         <source>Apply</source>
-        <translation>اعمال</translation>
+        <translation>应用</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/mainwindow_ui.py" line="611"/>
         <source>After download</source>
-        <translation>پس از دانلود</translation>
+        <translation>下载完成后</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/mainwindow_ui.py" line="612"/>
         <source>Shut Down</source>
-        <translation>خاموش ‌کردن</translation>
+        <translation>关机</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/mainwindow_ui.py" line="614"/>
         <source>Keep system awake!</source>
-        <translation>سیستم را روشن نگه‌دار!</translation>
+        <translation>防止系统休眠！</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/mainwindow_ui.py" line="615"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;This option is preventing system from going to sleep.            This is necessary if your power manager is suspending system automatically. &lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;این گزینه از به خواب رفتن سیستم جلوگیری می‌کند............این گزیه اگر سیستم شما بصورت خودکار به خواب می رود ضروری است.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;若你的电源管理器当前正在自动挂起系统，该选项将阻止系统休眠。&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
 </context>
 <context>
@@ -1113,22 +1112,22 @@ H.Rostami</source>
     <message>
         <location filename="../../persepolis/scripts/progress.py" line="153"/>
         <source>Aria2 disconnected!</source>
-        <translation>آریا۲ قطع شد!</translation>
+        <translation>Aria2 未连接！</translation>
     </message>
     <message>
         <location filename="../../persepolis/scripts/progress.py" line="153"/>
         <source>Persepolis is trying to connect!be patient!</source>
-        <translation>پرسپولیس برای اتصال تلاش می‌کند!‌ شکیبا باشید!</translation>
+        <translation>Persepolis 正在尝试连接！请稍等！</translation>
     </message>
     <message>
         <location filename="../../persepolis/scripts/progress.py" line="135"/>
         <source>Aria2 did not respond!</source>
-        <translation>آریا۲ پاسخ نداد!</translation>
+        <translation>Aria2 无应答！</translation>
     </message>
     <message>
         <location filename="../../persepolis/scripts/progress.py" line="135"/>
         <source>Try agian!</source>
-        <translation>تلاش دوباره!</translation>
+        <translation>再次尝试！</translation>
     </message>
 </context>
 <context>
@@ -1136,92 +1135,92 @@ H.Rostami</source>
     <message>
         <location filename="../../persepolis/gui/progress_ui.py" line="50"/>
         <source>Persepolis Download Manager</source>
-        <translation>دانلود منیجر پرسپولیس</translation>
+        <translation>Persepolis 下载管理器</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/progress_ui.py" line="196"/>
         <source>Link :</source>
-        <translation>پیوند:</translation>
+        <translation>链接：</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/progress_ui.py" line="197"/>
         <source>Status : </source>
-        <translation>وضعیت : </translation>
+        <translation>状态：</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/progress_ui.py" line="198"/>
         <source>Downloaded :</source>
-        <translation>دانلود شده :‌ </translation>
+        <translation>已下载：</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/progress_ui.py" line="199"/>
         <source>Transfer rate : </source>
-        <translation>سرعت :‌</translation>
+        <translation>传输速度：</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/progress_ui.py" line="200"/>
         <source>Estimated time left :</source>
-        <translation>زمان باقیمانده</translation>
+        <translation>预计剩余时间：</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/progress_ui.py" line="201"/>
         <source>Number of connections : </source>
-        <translation>شمار اتصال‌ها : </translation>
+        <translation>连接数量：</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/progress_ui.py" line="202"/>
         <source>Download information</source>
-        <translation>اطلاعات دانلود</translation>
+        <translation>下载信息</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/progress_ui.py" line="204"/>
         <source>Limit Speed</source>
-        <translation>محدودیت سرعت</translation>
+        <translation>速度限制</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/progress_ui.py" line="205"/>
         <source>After download</source>
-        <translation>پس از دانلود</translation>
+        <translation>下载完成后</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/progress_ui.py" line="206"/>
         <source>KB/S</source>
-        <translation>کیلوبایت بر ثانیه</translation>
+        <translation>KB/秒</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/progress_ui.py" line="207"/>
         <source>MB/S</source>
-        <translation>مگابایت بر ثانیه</translation>
+        <translation>MB/秒</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/progress_ui.py" line="217"/>
         <source>Apply</source>
-        <translation>اعمال</translation>
+        <translation>应用</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/progress_ui.py" line="210"/>
         <source>Shut Down</source>
-        <translation>خاموش کردن</translation>
+        <translation>关机</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/progress_ui.py" line="212"/>
         <source>Download Options</source>
-        <translation>گزینه‌های دانلود</translation>
+        <translation>下载选项</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/progress_ui.py" line="214"/>
         <source>Resume</source>
-        <translation>ادامه</translation>
+        <translation>继续</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/progress_ui.py" line="215"/>
         <source>Pause</source>
-        <translation>درنگ</translation>
+        <translation>暂停</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/progress_ui.py" line="216"/>
         <source>Stop</source>
-        <translation>توقف</translation>
+        <translation>终止</translation>
     </message>
 </context>
 <context>
@@ -1229,12 +1228,12 @@ H.Rostami</source>
     <message>
         <location filename="../../persepolis/scripts/setting.py" line="899"/>
         <source>&lt;b&gt;&lt;center&gt;Restart Persepolis Please!&lt;/center&gt;&lt;/b&gt;&lt;br&gt;&lt;center&gt;Some changes take effect after restarting persepolis&lt;/center&gt;</source>
-        <translation>&lt;b&gt;&lt;center&gt;لطفا پرسپولیس را ازنو بگشایید!&lt;/center&gt;&lt;/b&gt;&lt;br&gt;&lt;center&gt;بعضی تغییرات پس از آن اثر می‌پذیرند&lt;/center&gt;</translation>
+        <translation>&lt;b&gt;&lt;center&gt;请重新启动 Persepolis！&lt;/center&gt;&lt;/b&gt;&lt;br&gt;&lt;center&gt;某些更改将在重新启动 persepolis 后生效&lt;/center&gt;</translation>
     </message>
     <message>
         <location filename="../../persepolis/scripts/setting.py" line="900"/>
         <source>Restart Persepolis!</source>
-        <translation>پرسپولیس را از نو بگشایید!</translation>
+        <translation>重新启动 Persepolis！</translation>
     </message>
 </context>
 <context>
@@ -1242,307 +1241,307 @@ H.Rostami</source>
     <message>
         <location filename="../../persepolis/gui/setting_ui.py" line="516"/>
         <source>Preferences</source>
-        <translation>شخصی‌سازی</translation>
+        <translation>首选项</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/setting_ui.py" line="242"/>
         <source>language :</source>
-        <translation>زبان:</translation>
+        <translation>语言：</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/setting_ui.py" line="430"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Set number of tries if download failed.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;تعداد تلاش‌ها پس از خطا در دانلود را مشخص کنید&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;若下载失败设置尝试次数&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/setting_ui.py" line="429"/>
         <source>Number of tries : </source>
-        <translation>تعداد تلاش‌ها</translation>
+        <translation>尝试次数：</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/setting_ui.py" line="436"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Set the seconds to wait between retries. Download manager will  retry  downloads  when  the  HTTP  server  returns  a  503 response.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;زمان مکث بین هربار تلاش را در واحد ثانیه مشخص کنید&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt; 设置尝试间隔等待秒数。当 HTTP 服务器返回 503 状态时，下载管理器将会再次尝试下载。&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/setting_ui.py" line="435"/>
         <source>Wait between retries (seconds) : </source>
-        <translation>مکث بین هربار تلاش (ثانیه):</translation>
+        <translation>尝试间隔等待 (秒)：</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/setting_ui.py" line="442"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Set timeout in seconds. &lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;زمان وقفه را مشخص کنید. &lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+        <translation>设置超时秒数。</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/setting_ui.py" line="441"/>
         <source>Time out (seconds) : </source>
-        <translation>وقفه (ثانیه) :</translation>
+        <translation>超时 (秒)：</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/setting_ui.py" line="448"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Using multiple connections can help speed up your download.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;استفاده از چند اتصال می‌تواند به سرعت دانلود شما کمک کند..&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;使用多个连接数可以帮助加快下载速度。&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/setting_ui.py" line="447"/>
         <source>Number of connections : </source>
-        <translation>شمار اتصال‌ها:</translation>
+        <translation>连接数：</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/setting_ui.py" line="451"/>
         <source>RPC port number : </source>
-        <translation>پورت RPC</translation>
+        <translation>RPC 端口号：</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/setting_ui.py" line="452"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt; Specify a port number for JSON-RPC/XML-RPC server to listen to. Possible Values: 1024 - 65535 Default: 6801 &lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;شماره پورتی خاص برای گوش دادن به سرور JSON-RPC/XML-RPC. بین ۱۰۲۴ تا ۶۵۵۳۵ پیش‌فرض:۶۸۰۱ &lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;指定 JSON-RPC / XML-RPC 服务器要监听的端口号。 范围值：1024 - 65535 默认值：6801&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/setting_ui.py" line="455"/>
         <source>Wait between every downloads in queue:</source>
-        <translation>مکث بین هر دانلود در صف</translation>
+        <translation>在队列中每次下载之间等待：</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/setting_ui.py" line="457"/>
         <source>Change aria2 default path</source>
-        <translation>تغییر مسیر پیشفرض آریا۲</translation>
+        <translation>修改 aria2 默认路径</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/setting_ui.py" line="471"/>
         <source>Change</source>
-        <translation>تغییر</translation>
+        <translation>修改</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/setting_ui.py" line="459"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Attention: Wrong path may have caused problem! Do it carefully or don&apos;t change default setting!&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;توجه: مسیر اشتباهی باعث این خطا شده است! با دقت این کار را انجام دهید یا اصلا تنظیمات پیشفرض را تغییری ندهید!&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;注意：错误路径可能会引发问题！ 小心操作或请勿更改默认设置！&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/setting_ui.py" line="464"/>
         <source>Download Options</source>
-        <translation>گزینه‌های دانلود</translation>
+        <translation>下载操作</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/setting_ui.py" line="467"/>
         <source>Download Folder : </source>
-        <translation>پوشه دانلود : </translation>
+        <translation>下载文件夹</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/setting_ui.py" line="470"/>
         <source>Temporary Download Folder : </source>
-        <translation>پوشه موقف دانلود : </translation>
+        <translation>临时下载文件夹：</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/setting_ui.py" line="473"/>
         <source>Create subfolders for Music,Videos,... in default download folder</source>
-        <translation>برای ویدئو ، موسیقی و.. در پوشه پیشفرض دانلود پوشه‌های مجزا بساز</translation>
+        <translation>在默认下载文件夹中创建音乐、视频，... 类别的子文件夹</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/setting_ui.py" line="475"/>
         <source>Save as</source>
-        <translation>ذخیره در</translation>
+        <translation>另存为</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/setting_ui.py" line="478"/>
         <source>Enable notification sounds</source>
-        <translation>فعال کردن صدای آگاه‌سازی</translation>
+        <translation>启动下载提示音</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/setting_ui.py" line="481"/>
         <source>Volume : </source>
-        <translation>میزان صدا :‌ </translation>
+        <translation>音量：</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/setting_ui.py" line="483"/>
         <source>Notifications</source>
-        <translation>آگاه‌سازی ها</translation>
+        <translation>提示</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/setting_ui.py" line="486"/>
         <source>Style : </source>
-        <translation>سبک : </translation>
+        <translation>风格：</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/setting_ui.py" line="487"/>
         <source>Color scheme : </source>
-        <translation>قالب رنگ : </translation>
+        <translation>颜色主题：</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/setting_ui.py" line="488"/>
         <source>Icons : </source>
-        <translation>نمایه‌ها : </translation>
+        <translation>图标：</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/setting_ui.py" line="490"/>
         <source>ToolBar&apos;s icons size : </source>
-        <translation>اندازه نمایه‌ها در نواز ابزار :‌ </translation>
+        <translation>工具栏图标尺寸：</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/setting_ui.py" line="492"/>
         <source>Notification type : </source>
-        <translation>روش آگاه‌سازی :‌</translation>
+        <translation>提示类型：</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/setting_ui.py" line="494"/>
         <source>Font : </source>
-        <translation>فونت : </translation>
+        <translation>字体：</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/setting_ui.py" line="495"/>
         <source>Size : </source>
-        <translation>اندازه :‌ </translation>
+        <translation>大小：</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/setting_ui.py" line="497"/>
         <source>Enable system tray icon.</source>
-        <translation>فعال کردن نمایه در سینی نمایه</translation>
+        <translation>启用系统托盘图标。</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/setting_ui.py" line="498"/>
         <source>Show download complete dialog,when download has finished.</source>
-        <translation>نمایش پنجره پایان دانلود پس از اتمام دانلود.</translation>
+        <translation>当下载完成时，显示下载完成对话框。</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/setting_ui.py" line="501"/>
         <source>Show menubar.</source>
-        <translation>نمایش منوبار </translation>
+        <translation>显示菜单栏。</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/setting_ui.py" line="502"/>
         <source>Show side panel.</source>
-        <translation>نمایش پنل کناری</translation>
+        <translation>显示侧边栏。</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/setting_ui.py" line="503"/>
         <source>Show download&apos;s progress window</source>
-        <translation>نمایش پنجره پیشرفت دانلود</translation>
+        <translation>显示下载进度窗口</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/setting_ui.py" line="506"/>
         <source>Run Persepolis at startup</source>
-        <translation>اجرای پرسپولیس در ابتدای نشست</translation>
+        <translation>开机自动运行 Persepolis</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/setting_ui.py" line="508"/>
         <source>Keep system awake!</source>
-        <translation>سیستم را روشن نگه‌دار!</translation>
+        <translation>防止系统休眠！</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/setting_ui.py" line="509"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;This option is preventing system from going to sleep.            This is necessary if your power manager is suspending system automatically. &lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;این گزینه از به خواب رفتن سیستم جلوگیری می‌کند............این گزیه اگر سیستم شما بصورت خودکار به خواب می رود ضروری است.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;若你的电源管理器当前正在自动挂起系统，该选项将阻止系统休眠。&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/setting_ui.py" line="513"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Format HH:MM&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;قالب ساعت:دقیقه&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;格式：HH:MM&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/setting_ui.py" line="520"/>
         <source>Show this columns:</source>
-        <translation>نمایش ستون‌ها :</translation>
+        <translation>显示此列：</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/setting_ui.py" line="521"/>
         <source>File Name</source>
-        <translation>نام پرونده</translation>
+        <translation>文件名</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/setting_ui.py" line="522"/>
         <source>Status</source>
-        <translation>وضعیت</translation>
+        <translation>状态</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/setting_ui.py" line="523"/>
         <source>Size</source>
-        <translation>حجم</translation>
+        <translation>大小</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/setting_ui.py" line="524"/>
         <source>Downloaded</source>
-        <translation>دانلود شده</translation>
+        <translation>已下载</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/setting_ui.py" line="525"/>
         <source>Percentage</source>
-        <translation>درصد</translation>
+        <translation>百分比</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/setting_ui.py" line="526"/>
         <source>Connections</source>
-        <translation>اتصال‌ها</translation>
+        <translation>连接数</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/setting_ui.py" line="527"/>
         <source>Transfer rate</source>
-        <translation>سرعت</translation>
+        <translation>传输速度</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/setting_ui.py" line="528"/>
         <source>Estimated time left</source>
-        <translation>زمان باقیمانده</translation>
+        <translation>预计剩余时间</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/setting_ui.py" line="529"/>
         <source>First try date</source>
-        <translation>زمان افزودن</translation>
+        <translation>首次尝试时间</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/setting_ui.py" line="530"/>
         <source>Last try date</source>
-        <translation>آخرین تغییرات</translation>
+        <translation>上次尝试时间</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/setting_ui.py" line="531"/>
         <source>Category</source>
-        <translation>دسته</translation>
+        <translation>目录</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/setting_ui.py" line="534"/>
         <source>Columns customization</source>
-        <translation>شخصی‌سازی ستون‌ها</translation>
+        <translation>自定义列</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/setting_ui.py" line="538"/>
         <source>Video Finder Options</source>
-        <translation>گزینه‌های یابنده ویدئو</translation>
+        <translation>视频搜索选项</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/setting_ui.py" line="541"/>
         <source>Enable Video Finder</source>
-        <translation>فعال کردن یابنده ویدئو</translation>
+        <translation>启用视频搜索</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/setting_ui.py" line="543"/>
         <source>Hide videos with no audio</source>
-        <translation>مخفی کردن ویدئوهای بدون صدا</translation>
+        <translation>隐藏无音频的视频</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/setting_ui.py" line="545"/>
         <source>Hide audios with no video</source>
-        <translation>مخفی کردن صداهای بدون ویدئو</translation>
+        <translation>隐藏无视频的音频</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/setting_ui.py" line="546"/>
         <source>Maximum number of links to capture :&lt;br/&gt;&lt;small&gt;(If browser sends multiple video links at a time)&lt;/small&gt;</source>
-        <translation>حداکثر تعداد پیوند برای بررسی : &lt;br/&gt;&lt;small&gt;(اگر مرورگر همزمان چند پیوند را فرستاد)&lt;/small&gt;</translation>
+        <translation>要捕获的最大链接数：&lt;br/&gt;&lt;small&gt;(若浏览器一次发送多个视频链接)&lt;/small&gt;</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/setting_ui.py" line="550"/>
         <source>Defaults</source>
-        <translation>پیشفرض</translation>
+        <translation>默认</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/setting_ui.py" line="551"/>
         <source>Cancel</source>
-        <translation>لغو</translation>
+        <translation>取消</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/setting_ui.py" line="552"/>
         <source>OK</source>
-        <translation>تایید</translation>
+        <translation>确定</translation>
     </message>
 </context>
 <context>
@@ -1550,102 +1549,102 @@ H.Rostami</source>
     <message>
         <location filename="../../persepolis/gui/text_queue_ui.py" line="265"/>
         <source>Persepolis Download Manager</source>
-        <translation>دانلود منیجر پرسپولیس</translation>
+        <translation>Persepolis 下载管理器</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/text_queue_ui.py" line="267"/>
         <source>Links</source>
-        <translation>پیوندها</translation>
+        <translation>链接</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/text_queue_ui.py" line="269"/>
         <source>Download options</source>
-        <translation>گزینه‌های دانلود</translation>
+        <translation>下载选项</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/text_queue_ui.py" line="272"/>
         <source>Select All</source>
-        <translation>انتخاب همه</translation>
+        <translation>选中所有</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/text_queue_ui.py" line="273"/>
         <source>Deselect All</source>
-        <translation>عدم انتخاب همه</translation>
+        <translation>取消选中所有</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/text_queue_ui.py" line="275"/>
         <source>Add to queue : </source>
-        <translation>افزودن به صف:</translation>
+        <translation>添加至队列</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/text_queue_ui.py" line="277"/>
         <source>Proxy</source>
-        <translation>پراکسی</translation>
+        <translation>代理</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/text_queue_ui.py" line="278"/>
         <source>Proxy PassWord : </source>
-        <translation>گدرواژه پراکسی:</translation>
+        <translation>代理口令：</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/text_queue_ui.py" line="279"/>
         <source>IP  :</source>
-        <translation>آی‌پی :</translation>
+        <translation>IP：</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/text_queue_ui.py" line="280"/>
         <source>Proxy UserName : </source>
-        <translation>نام‌کاربری پراکسی:</translation>
+        <translation>代理用户名：</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/text_queue_ui.py" line="281"/>
         <source>Port:</source>
-        <translation>پورت:</translation>
+        <translation>端口：</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/text_queue_ui.py" line="283"/>
         <source>Download UserName and PassWord</source>
-        <translation>نام‌کاربری و گذرواژه دانلود</translation>
+        <translation>下载用户名和口令</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/text_queue_ui.py" line="284"/>
         <source>Download UserName : </source>
-        <translation>نام‌کاربری دانلود :</translation>
+        <translation>下载用户名：</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/text_queue_ui.py" line="285"/>
         <source>Download PassWord : </source>
-        <translation>گذرواژه دانلود :</translation>
+        <translation>下载口令：</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/text_queue_ui.py" line="287"/>
         <source>Change Download Folder</source>
-        <translation>تغییر پوشه دانلود</translation>
+        <translation>修改下载文件夹</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/text_queue_ui.py" line="288"/>
         <source>Download Folder : </source>
-        <translation>پوشه دانلود:</translation>
+        <translation>下载文件夹：</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/text_queue_ui.py" line="290"/>
         <source>Limit Speed</source>
-        <translation>محدودیت سرعت</translation>
+        <translation>速度限制</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/text_queue_ui.py" line="292"/>
         <source>Number Of Connections :</source>
-        <translation>شماره اتصال‌ها :</translation>
+        <translation>连接数：</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/text_queue_ui.py" line="294"/>
         <source>OK</source>
-        <translation>تایید</translation>
+        <translation>确定</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/text_queue_ui.py" line="295"/>
         <source>Cancel</source>
-        <translation>لغو</translation>
+        <translation>取消</translation>
     </message>
 </context>
 <context>
@@ -1653,47 +1652,47 @@ H.Rostami</source>
     <message>
         <location filename="../../persepolis/scripts/update.py" line="47"/>
         <source>Checking for newer version</source>
-        <translation>بررسی برای نسخه جدیدتر</translation>
+        <translation>检查新版本</translation>
     </message>
     <message>
         <location filename="../../persepolis/scripts/update.py" line="53"/>
         <source>The newest is the best , We recommend to update Persepolis</source>
-        <translation>همیشه جدیدترین ، بهترینست ، پیشنهاد می‌کنیم پرسپولیس را بروزرسانی کنید</translation>
+        <translation>新版本至善至美，建议你更新 Persepolis。</translation>
     </message>
     <message>
         <location filename="../../persepolis/scripts/update.py" line="58"/>
         <source>This is Persepolis Download Manager version 3.0.1</source>
-        <translation>دانلود منیجر پرسپولیس نسخه ۳.۰.۱</translation>
+        <translation>当前 Persepolis 下载管理器版本为 3.0.1。</translation>
     </message>
     <message>
         <location filename="../../persepolis/scripts/update.py" line="137"/>
         <source>Check for new update</source>
-        <translation>بررسی برای بروزرسانی جدید</translation>
+        <translation>检查更新</translation>
     </message>
     <message>
         <location filename="../../persepolis/scripts/update.py" line="101"/>
         <source>Checking...</source>
-        <translation>بررسی ...</translation>
+        <translation>正在检查 ...</translation>
     </message>
     <message>
         <location filename="../../persepolis/scripts/update.py" line="115"/>
         <source>A newer Persepolis release is available</source>
-        <translation>نسخه جدیدتری از پرسپولیس منتشر شده است</translation>
+        <translation>检测到有新版本的 Persepolis 可用</translation>
     </message>
     <message>
         <location filename="../../persepolis/scripts/update.py" line="129"/>
         <source>Latest version is installed :)</source>
-        <translation>آخرین نسخه پرسپولیس نصب شده است :)</translation>
+        <translation>最新版本已安装 :)</translation>
     </message>
     <message>
         <location filename="../../persepolis/scripts/update.py" line="132"/>
         <source>You are using beta version</source>
-        <translation>شما از نسخه‌های پیش نمایش استفاده می‌کنید</translation>
+        <translation>你当前使用的是 beta 版</translation>
     </message>
     <message>
         <location filename="../../persepolis/scripts/update.py" line="135"/>
         <source>an error occured while checking update.</source>
-        <translation>خطایی در بررسی بروزرسانی رخ داده است.</translation>
+        <translation>检查更新时发生错误。</translation>
     </message>
 </context>
 <context>
@@ -1701,32 +1700,32 @@ H.Rostami</source>
     <message>
         <location filename="../../persepolis/scripts/youtube_addlink.py" line="38"/>
         <source>Video Finder</source>
-        <translation>سیابنده ویدئو</translation>
+        <translation>视频搜索</translation>
     </message>
     <message>
         <location filename="../../persepolis/scripts/youtube_addlink.py" line="79"/>
         <source>Fetch Media List</source>
-        <translation>گرفتن فهرست رسانه</translation>
+        <translation>提取媒体列表</translation>
     </message>
     <message>
         <location filename="../../persepolis/scripts/youtube_addlink.py" line="80"/>
         <source>Download Now</source>
-        <translation>هم‌اکنون دانلود کن</translation>
+        <translation>现在下载</translation>
     </message>
     <message>
         <location filename="../../persepolis/scripts/youtube_addlink.py" line="81"/>
         <source>Select a format</source>
-        <translation>انتخاب فرمت</translation>
+        <translation>选择格式</translation>
     </message>
     <message>
         <location filename="../../persepolis/scripts/youtube_addlink.py" line="117"/>
         <source>Please enter a valid video link</source>
-        <translation>لطفا پیوند ویدئوی درستی را وارد کنید</translation>
+        <translation>请输入有效的视频链接</translation>
     </message>
     <message>
         <location filename="../../persepolis/scripts/youtube_addlink.py" line="131"/>
         <source>Fetching Media Info...</source>
-        <translation>بررسی داده های مدیا</translation>
+        <translation>提取媒体信息 ...</translation>
     </message>
 </context>
 </TS>
