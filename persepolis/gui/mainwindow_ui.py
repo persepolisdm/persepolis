@@ -477,7 +477,7 @@ class MainWindow_Ui(QMainWindow):
         viewMenu.addAction(self.showMenuBarAction)
 
         self.showSidePanelAction = QAction(
-            'Show side panel', self, statusTip=QCoreApplication.translate("mainwindow_ui_tr", 'Show side panel'), triggered=self.showSidePanel)
+            QCoreApplication.translate("mainwindow_ui_tr", 'Show side panel'), self, statusTip=QCoreApplication.translate("mainwindow_ui_tr", 'Show side panel'), triggered=self.showSidePanel)
         self.showSidePanelAction.setCheckable(True)
         viewMenu.addAction(self.showSidePanelAction)
 
