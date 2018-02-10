@@ -204,7 +204,7 @@ class ProgressWindow_Ui(QWidget):
             self.information_tab),  QCoreApplication.translate("progress_ui_tr", "Download information"))
         self.limit_checkBox.setText(QCoreApplication.translate("progress_ui_tr", "Limit Speed"))
         self.after_checkBox.setText(QCoreApplication.translate("progress_ui_tr", "After download"))
-        self.limit_comboBox.setItemText(0,  QCoreApplication.translate("progress_ui_tr", "KB/s"))
+        self.limit_comboBox.setItemText(0,  QCoreApplication.translate("progress_ui_tr", "kB/s"))
         self.limit_comboBox.setItemText(1,  QCoreApplication.translate("progress_ui_tr", "MB/s"))
         self.limit_pushButton.setText(QCoreApplication.translate("progress_ui_tr", "Apply"))
 

@@ -604,7 +604,7 @@ class MainWindow_Ui(QMainWindow):
         self.reverse_checkBox.setText(QCoreApplication.translate("mainwindow_ui_tr", "Download bottom of\n the list first"))
 
         self.limit_checkBox.setText(QCoreApplication.translate("mainwindow_ui_tr", "Limit Speed"))
-        self.limit_comboBox.setItemText(0,  QCoreApplication.translate("mainwindow_ui_tr", "KB/s"))
+        self.limit_comboBox.setItemText(0,  QCoreApplication.translate("mainwindow_ui_tr", "kB/s"))
         self.limit_comboBox.setItemText(1,  QCoreApplication.translate("mainwindow_ui_tr", "MB/s"))
         self.limit_pushButton.setText(QCoreApplication.translate("mainwindow_ui_tr", "Apply"))
 
