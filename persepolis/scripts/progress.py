@@ -113,7 +113,7 @@ class ProgressWindow(ProgressWindow_Ui):
                 version_answer = download.aria2Version()
                 if version_answer == 'did not respond':
                     self.parent.aria2Disconnected()
-                    notifySend(QCoreApplication.translate("progress_src_ui_tr", "Aria2 disconnected!"), QCoreApplication.translate("progress_src_ui_tr", "Persepolis is trying to connect!be patient!"),
+                    notifySend(QCoreApplication.translate("progress_src_ui_tr", "Aria2 disconnected!"), QCoreApplication.translate("progress_src_ui_tr", "Persepolis is trying to connect! be patient!"),
                                10000, 'warning', parent=self.parent)
                 else:
                     notifySend(QCoreApplication.translate("progress_src_ui_tr", "Aria2 did not respond!"), QCoreApplication.translate("progress_src_ui_tr", "Try agian!"), 10000,
@@ -130,7 +130,7 @@ class ProgressWindow(ProgressWindow_Ui):
                 if version_answer == 'did not respond':
                     self.parent.aria2Disconnected()
                     download.downloadStop(self.gid, self.parent)
-                    notifySend("Aria2 disconnected!", "Persepolis is trying to connect!be patient!",
+                    notifySend("Aria2 disconnected!", "Persepolis is trying to connect! be patient!",
                                10000, 'warning', parent=self.parent)
                 else:
                     notifySend(QCoreApplication.translate("progress_src_ui_tr", "Aria2 did not respond!"), QCoreApplication.translate("progress_src_ui_tr", "Try agian!"), 10000,
@@ -151,7 +151,7 @@ class ProgressWindow(ProgressWindow_Ui):
             version_answer = download.aria2Version()
             if version_answer == 'did not respond':
                 self.parent.aria2Disconnected()
-                notifySend(QCoreApplication.translate("progress_src_ui_tr", "Aria2 disconnected!"), QCoreApplication.translate("progress_src_ui_tr", "Persepolis is trying to connect!be patient!"),
+                notifySend(QCoreApplication.translate("progress_src_ui_tr", "Aria2 disconnected!"), QCoreApplication.translate("progress_src_ui_tr", "Persepolis is trying to connect! be patient!"),
                            10000, 'warning', parent=self.parent)
 
     def limitCheckBoxToggled(self, checkBoxes):
@@ -207,7 +207,7 @@ class ProgressWindow(ProgressWindow_Ui):
                 # Wrong password
                 while answer != 0:
                     passwd, ok = QInputDialog.getText(
-                        self, 'PassWord', 'Wrong Password!\nTry again!', QtWidgets.QLineEdit.Password)
+                        self, 'PassWord', 'Wrong Password!\nPlease try again.', QtWidgets.QLineEdit.Password)
                     if ok:
                         answer = os.system(
                             "echo '" + passwd + "' |sudo -S echo 'checking passwd'  ")

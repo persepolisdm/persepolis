@@ -61,7 +61,7 @@ class AfterDownloadWindow(AfterDownloadWindow_Ui):
         # file_name
 
         window_title = str(self.dict['file_name'])
-        file_name = QCoreApplication.translate("after_download_src_ui_tr", "<b>File name</b> : ") + \
+        file_name = QCoreApplication.translate("after_download_src_ui_tr", "<b>File name</b>: ") + \
                 window_title
  
         self.setWindowTitle(window_title)
@@ -69,7 +69,7 @@ class AfterDownloadWindow(AfterDownloadWindow_Ui):
         self.file_name_label.setText(file_name)
 
         # size
-        size = QCoreApplication.translate("after_download_src_ui_tr", "<b>Size</b> : ") + str(self.dict['size'])
+        size = QCoreApplication.translate("after_download_src_ui_tr", "<b>Size</b>: ") + str(self.dict['size'])
         self.size_label.setText(size)
 
         # disable link_lineEdit and save_as_lineEdit

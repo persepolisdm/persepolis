@@ -239,7 +239,7 @@ class Setting_Ui(QWidget):
 # language_label
         self.verticalLayout_3.addLayout(self.horizontalLayout_7)
         self.horizontalLayout_7 = QHBoxLayout()
-        self.lang_label.setText(QCoreApplication.translate("setting_ui_tr", "language :"))
+        self.lang_label.setText(QCoreApplication.translate("setting_ui_tr", "Language:"))
 # color_label
         self.color_label = QLabel(self.layoutWidget3)
         self.horizontalLayout_7.addWidget(self.color_label)
@@ -426,29 +426,29 @@ class Setting_Ui(QWidget):
 
         self.tries_label.setToolTip(
             QCoreApplication.translate("setting_ui_tr", "<html><head/><body><p>Set number of tries if download failed.</p></body></html>"))
-        self.tries_label.setText(QCoreApplication.translate("setting_ui_tr", "Number of tries : "))
+        self.tries_label.setText(QCoreApplication.translate("setting_ui_tr", "Number of tries: "))
         self.tries_spinBox.setToolTip(
             QCoreApplication.translate("setting_ui_tr", "<html><head/><body><p>Set number of tries if download failed.</p></body></html>"))
 
         self.wait_label.setToolTip(
             QCoreApplication.translate("setting_ui_tr", "<html><head/><body><p>Set the seconds to wait between retries. Download manager will  retry  downloads  when  the  HTTP  server  returns  a  503 response.</p></body></html>"))
-        self.wait_label.setText(QCoreApplication.translate("setting_ui_tr", "Wait between retries (seconds) : "))
+        self.wait_label.setText(QCoreApplication.translate("setting_ui_tr", "Wait between retries (seconds): "))
         self.wait_spinBox.setToolTip(
             QCoreApplication.translate("setting_ui_tr", "<html><head/><body><p>Set the seconds to wait between retries. Download manager will  retry  downloads  when  the  HTTP  server  returns  a  503 response.</p></body></html>"))
 
         self.time_out_label.setToolTip(
             QCoreApplication.translate("setting_ui_tr", "<html><head/><body><p>Set timeout in seconds. </p></body></html>"))
-        self.time_out_label.setText(QCoreApplication.translate("setting_ui_tr", "Time out (seconds) : "))
+        self.time_out_label.setText(QCoreApplication.translate("setting_ui_tr", "Time out (seconds): "))
         self.time_out_spinBox.setToolTip(
             QCoreApplication.translate("setting_ui_tr", "<html><head/><body><p>Set timeout in seconds. </p></body></html>"))
 
         self.connections_label.setToolTip(
             QCoreApplication.translate("setting_ui_tr", "<html><head/><body><p>Using multiple connections can help speed up your download.</p></body></html>"))
-        self.connections_label.setText(QCoreApplication.translate("setting_ui_tr", "Number of connections : "))
+        self.connections_label.setText(QCoreApplication.translate("setting_ui_tr", "Number of connections: "))
         self.connections_spinBox.setToolTip(
             QCoreApplication.translate("setting_ui_tr", "<html><head/><body><p>Using multiple connections can help speed up your download.</p></body></html>"))
 
-        self.rpc_port_label.setText(QCoreApplication.translate("setting_ui_tr", "RPC port number : "))
+        self.rpc_port_label.setText(QCoreApplication.translate("setting_ui_tr", "RPC port number: "))
         self.rpc_port_spinbox.setToolTip(
             QCoreApplication.translate("setting_ui_tr", "<html><head/><body><p> Specify a port number for JSON-RPC/XML-RPC server to listen to. Possible Values: 1024 - 65535 Default: 6801 </p></body></html>"))
 
@@ -464,10 +464,10 @@ class Setting_Ui(QWidget):
         self.setting_tabWidget.setTabText(self.setting_tabWidget.indexOf(
             self.download_options_tab),  QCoreApplication.translate("setting_ui_tr", "Download Options"))
 
-        self.download_folder_label.setText(QCoreApplication.translate("setting_ui_tr", "Download Folder : "))
+        self.download_folder_label.setText(QCoreApplication.translate("setting_ui_tr", "Download Folder: "))
         self.download_folder_pushButton.setText(QCoreApplication.translate("setting_ui_tr", "Change"))
 
-        self.temp_download_label.setText(QCoreApplication.translate("setting_ui_tr", "Temporary Download Folder : "))
+        self.temp_download_label.setText(QCoreApplication.translate("setting_ui_tr", "Temporary Download Folder: "))
         self.temp_download_pushButton.setText(QCoreApplication.translate("setting_ui_tr", "Change"))
 
         self.subfolder_checkBox.setText(QCoreApplication.translate("setting_ui_tr", "Create subfolders for Music,Videos,... in default download folder"))
@@ -478,21 +478,21 @@ class Setting_Ui(QWidget):
         self.enable_notifications_checkBox.setText(
             QCoreApplication.translate("setting_ui_tr", "Enable notification sounds"))
 
-        self.volume_label.setText(QCoreApplication.translate("setting_ui_tr", "Volume : "))
+        self.volume_label.setText(QCoreApplication.translate("setting_ui_tr", "Volume: "))
 
         self.setting_tabWidget.setTabText(self.setting_tabWidget.indexOf(
             self.notifications_tab),  QCoreApplication.translate("setting_ui_tr", "Notifications"))
 
-        self.style_label.setText(QCoreApplication.translate("setting_ui_tr", "Style : "))
-        self.color_label.setText(QCoreApplication.translate("setting_ui_tr", "Color scheme : "))
-        self.icon_label.setText(QCoreApplication.translate("setting_ui_tr", "Icons : "))
+        self.style_label.setText(QCoreApplication.translate("setting_ui_tr", "Style: "))
+        self.color_label.setText(QCoreApplication.translate("setting_ui_tr", "Color scheme: "))
+        self.icon_label.setText(QCoreApplication.translate("setting_ui_tr", "Icons: "))
 
-        self.icons_size_label.setText(QCoreApplication.translate("setting_ui_tr", "ToolBar's icons size : "))
+        self.icons_size_label.setText(QCoreApplication.translate("setting_ui_tr", "ToolBar's icons size: "))
 
-        self.notification_label.setText(QCoreApplication.translate("setting_ui_tr", "Notification type : "))
+        self.notification_label.setText(QCoreApplication.translate("setting_ui_tr", "Notification type: "))
 
-        self.font_checkBox.setText(QCoreApplication.translate("setting_ui_tr", "Font : "))
-        self.font_size_label.setText(QCoreApplication.translate("setting_ui_tr", "Size : "))
+        self.font_checkBox.setText(QCoreApplication.translate("setting_ui_tr", "Font: "))
+        self.font_size_label.setText(QCoreApplication.translate("setting_ui_tr", "Size: "))
 
         self.enable_system_tray_checkBox.setText(QCoreApplication.translate("setting_ui_tr", "Enable system tray icon."))
         self.after_download_checkBox.setText(
@@ -543,7 +543,7 @@ class Setting_Ui(QWidget):
         self.hide_no_audio_checkbox.setText(QCoreApplication.translate("setting_ui_tr", 'Hide videos with no audio'))
 
         self.hide_no_video_checkbox.setText(QCoreApplication.translate("setting_ui_tr", 'Hide audios with no video'))
-        self.max_links_label.setText(QCoreApplication.translate("setting_ui_tr", 'Maximum number of links to capture :<br/>'
+        self.max_links_label.setText(QCoreApplication.translate("setting_ui_tr", 'Maximum number of links to capture:<br/>'
                                      '<small>(If browser sends multiple video links at a time)</small>'))
 
 # window buttons

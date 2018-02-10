@@ -132,7 +132,7 @@ class checkupdate(QWidget):
                 self.status_label.setText(QCoreApplication.translate("update_src_ui_tr", 'You are using beta version'))
 
         except Exception as e:
-            self.status_label.setText(QCoreApplication.translate("update_src_ui_tr", 'an error occured while checking update.'))
+            self.status_label.setText(QCoreApplication.translate("update_src_ui_tr", 'An error occured while checking for updates.'))
 
         self.check_button.setText(QCoreApplication.translate("update_src_ui_tr", 'Check for new update'))
 
