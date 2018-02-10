@@ -25,11 +25,9 @@ script:
  - sudo python3 setup.py install
  - persepolis --version
 
-sudo: required
 after_success:
-  - pip install virtualenv
-  - virtualenv ~/env
-  - source ~/env/bin/activate
-  - pip install transifex-client
-  - sudo echo $'[https://www.transifex.com]\nhostname = https://www.transifex.com\nusername = '"$TRANSIFEX_USER"$'\npassword = '"$TRANSIFEX_PASSWORD"$'\ntoken = '"$TRANSIFEX_API_TOKEN"$'\n' > ~/.transifexrc
-  - tx push -s
+ - pip install transifex-client==0.12.5
+ - sudo apt-get install  -y pyqt5-dev-tools
+ - pylupdate5 -translate-function ui_tr resources/translation_files.pro
+ - sudo echo $'[https://www.transifex.com]\napi_hostname = https://api.transifex.com\nhostname = https://www.transifex.com\nusername = '"$TRANSIFEX_USER"$'\npassword = '"$TRANSIFEX_PASSWORD"$'\n' > ~/.transifexrc
+ - tx push -s
