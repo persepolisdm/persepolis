@@ -194,7 +194,7 @@ locale = str(persepolis_setting.value('settings/locale'))
 rtl_locale_list = ['fa_IR']
 
 # left to right languages
-ltr_locale_list = ['en_US']
+ltr_locale_list = ['en_US', 'zh_CN']
 
 if locale in rtl_locale_list:
     persepolis_setting.setValue('ui_direction', 'rtl')
