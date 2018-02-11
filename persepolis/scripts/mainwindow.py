@@ -1419,6 +1419,8 @@ class MainWindow(MainWindow_Ui):
                             downloaded_size_unit = None
                     else:
                         downloaded_size_unit = None
+                else:
+                    downloaded_size_unit = None
 
 
                 if downloaded_size_unit:
