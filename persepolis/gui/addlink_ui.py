@@ -421,8 +421,8 @@ class AddLinkWindow_Ui(QWidget):
         self.end_checkBox.setText(QCoreApplication.translate("addlink_ui_tr", "End Time"))
 
         self.limit_checkBox.setText(QCoreApplication.translate("addlink_ui_tr", "Limit Speed"))
-        self.limit_comboBox.setItemText(0, QCoreApplication.translate("addlink_ui_tr", "kB/s"))
-        self.limit_comboBox.setItemText(1, QCoreApplication.translate("addlink_ui_tr", "MB/s"))
+        self.limit_comboBox.setItemText(0, "KiB/s")
+        self.limit_comboBox.setItemText(1, "MiB/s")
 
         self.connections_label.setText(QCoreApplication.translate("addlink_ui_tr", "Number Of Connections:"))
 
