@@ -1448,6 +1448,8 @@ class MainWindow(MainWindow_Ui):
                             file_size_unit = None
                     else:
                         file_size_unit = None
+                else:
+                    file_size_unit = None
 
                 if file_size_unit:
                     if file_size_unit == 'GiB':
