@@ -557,7 +557,7 @@ class Queue(QThread):
                         # get limitation value
                         self.limit_comboBox_value = self.parent.limit_comboBox.currentText()
                         self.limit_spinBox_value = self.parent.limit_spinBox.value()
-                        if self.limit_comboBox_value == "KiB/S":
+                        if self.limit_comboBox_value == "KiB/s":
                             limit = str(self.limit_spinBox_value) + str("K")
                         else:
                             limit = str(self.limit_spinBox_value) + str("M")
@@ -3607,7 +3607,7 @@ class MainWindow(MainWindow_Ui):
             queue_dict['limit_enable'] = 'no'
 
         # limit_comboBox and limit_spinBox
-        if self.limit_comboBox.currentText() == "KiB/S":
+        if self.limit_comboBox.currentText() == "KiB/s":
             limit = str(self.limit_spinBox.value()) + str("K")
         else:
             limit = str(self.limit_spinBox.value()) + str("M")

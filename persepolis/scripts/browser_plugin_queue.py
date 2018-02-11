@@ -311,7 +311,7 @@ class BrowserPluginQueue(TextQueue_Ui):
         if not(self.limit_checkBox.isChecked()):
             limit = 0
         else:
-            if self.limit_comboBox.currentText() == "KiB/S":
+            if self.limit_comboBox.currentText() == "KiB/s":
                 limit = str(self.limit_spinBox.value()) + str("K")
             else:
                 limit = str(self.limit_spinBox.value()) + str("M")

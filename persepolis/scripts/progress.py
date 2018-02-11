@@ -240,7 +240,7 @@ class ProgressWindow(ProgressWindow_Ui):
 
     def limitPushButtonPressed(self, button):
         self.limit_pushButton.setEnabled(False)
-        if self.limit_comboBox.currentText() == "KiB/S":
+        if self.limit_comboBox.currentText() == "KiB/s":
             limit_value = str(self.limit_spinBox.value()) + str("K")
         else:
             limit_value = str(self.limit_spinBox.value()) + str("M")

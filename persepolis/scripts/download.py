@@ -443,14 +443,14 @@ def convertDownloadInformation(download_status):
         estimate_time_left = int((file_size - downloaded)/download_speed)
         if int((download_speed/1073741824)) != 0:
             download_speed = download_speed/1073741824
-            download_speed_str = str(round(download_speed, 2)) + "GiB/S"
+            download_speed_str = str(round(download_speed, 2)) + "GiB/s"
         elif int((download_speed/1048576)) != 0:
             download_speed_num = download_speed/1048576
-            download_speed_str = str(round(download_speed_num, 2)) + "MiB/S"
+            download_speed_str = str(round(download_speed_num, 2)) + "MiB/s"
         elif int((download_speed/1024)) != 0:
-            download_speed_str = str(int(download_speed/1024)) + "KiB/S"
+            download_speed_str = str(int(download_speed/1024)) + "KiB/s"
         else:
-            download_speed_str = str(download_speed) + "B/S"
+            download_speed_str = str(download_speed) + "B/s"
 
         eta = ""
         if estimate_time_left >= 3600:
