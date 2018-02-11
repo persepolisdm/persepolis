@@ -1419,22 +1419,22 @@ class MainWindow(MainWindow_Ui):
                             downloaded_size_unit = None
                     else:
                         downloaded_size_unit = None
+
+                    if downloaded_size_unit:
+                        if downloaded_size_unit == 'GiB':
+                            downloaded_size_unit = QCoreApplication.translate("mainwindow_src_ui_tr", "GiB") 
+                        elif downloaded_size_unit == 'MiB':
+                            downloaded_size_unit = QCoreApplication.translate("mainwindow_src_ui_tr", "MiB") 
+                        elif downloaded_size_unit == 'KiB':
+                            downloaded_size_unit = QCoreApplication.translate("mainwindow_src_ui_tr", "KiB") 
+
+                        downloaded_size_str = downloaded_size_value + downloaded_size_unit
+
+                    else:
+                        downloaded_size_str = dict['downloaded_size']
+
                 else:
-                    downloaded_size_unit = None
-
-
-                if downloaded_size_unit:
-                    if downloaded_size_unit == 'GiB':
-                        downloaded_size_unit = QCoreApplication.translate("mainwindow_src_ui_tr", "GiB") 
-                    elif downloaded_size_unit == 'MiB':
-                        downloaded_size_unit = QCoreApplication.translate("mainwindow_src_ui_tr", "MiB") 
-                    elif downloaded_size_unit == 'KiB':
-                        downloaded_size_unit = QCoreApplication.translate("mainwindow_src_ui_tr", "KiB") 
-
-                    downloaded_size_str = downloaded_size_value + downloaded_size_unit
-
-                else:
-                    downloaded_size_str = dict['downloaded_size']
+                    downloaded_size_str = 'None'
 
 
 
@@ -1448,23 +1448,24 @@ class MainWindow(MainWindow_Ui):
                             file_size_unit = None
                     else:
                         file_size_unit = None
+
+                    if file_size_unit:
+                        if file_size_unit == 'GiB':
+                            file_size_unit = QCoreApplication.translate("mainwindow_src_ui_tr", "GiB") 
+                        elif file_size_unit == 'MiB':
+                            file_size_unit = QCoreApplication.translate("mainwindow_src_ui_tr", "MiB") 
+                        elif file_size_unit == 'KiB':
+                            file_size_unit = QCoreApplication.translate("mainwindow_src_ui_tr", "KiB") 
+
+                        file_size_str = file_size_value + file_size_unit
+    
+                    else:
+                        file_size_str = str(dict['downloaded_size'])
+
                 else:
-                    file_size_unit = None
+                    file_size_str = 'None'
 
-                if file_size_unit:
-                    if file_size_unit == 'GiB':
-                        file_size_unit = QCoreApplication.translate("mainwindow_src_ui_tr", "GiB") 
-                    elif file_size_unit == 'MiB':
-                        file_size_unit = QCoreApplication.translate("mainwindow_src_ui_tr", "MiB") 
-                    elif file_size_unit == 'KiB':
-                        file_size_unit = QCoreApplication.translate("mainwindow_src_ui_tr", "KiB") 
-
-                    file_size_str = file_size_value + file_size_unit
-
-                else:
-                    file_size_str = dict['downloaded_size']
-
-               
+              
                 downloaded = QCoreApplication.translate("mainwindow_src_ui_tr", "<b>Downloaded</b>: ") \
                         + downloaded_size_str \
                         + "/" \
