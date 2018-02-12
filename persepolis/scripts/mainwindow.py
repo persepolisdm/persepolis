@@ -804,7 +804,11 @@ class MainWindow(MainWindow_Ui):
         # if user highlights multiple items in download_table
         self.multi_items_selected = False
 
-
+        # this variable is changed ti False when 
+        # user clicks on 'hide options' button in
+        # side panel. 
+        # see showQueuePanelOptions method for more information.
+        self.show_queue_panel = True
 # system_tray_icon
         self.system_tray_icon = QSystemTrayIcon()
         self.system_tray_icon.setIcon(
@@ -4089,10 +4093,12 @@ class MainWindow(MainWindow_Ui):
 # this method showing/hiding queue_panel_widget according to
 # queue_panel_show_button text
     def showQueuePanelOptions(self, button):
-        if (self.queue_panel_show_button.text() == 'Show options') or (self.queue_panel_show_button.text() == '&Show options'):
+        if not(self.show_queue_panel):
+            self.show_queue_panel = True
             self.queue_panel_widget_frame.show()
             self.queue_panel_show_button.setText(QCoreApplication.translate("mainwindow_src_ui_tr", 'Hide options'))
         else:
+            self.show_queue_panel = False
             self.queue_panel_widget_frame.hide()
             self.queue_panel_show_button.setText(QCoreApplication.translate("mainwindow_src_ui_tr", 'Show options'))
 
