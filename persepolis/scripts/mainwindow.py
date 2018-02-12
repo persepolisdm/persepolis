@@ -1358,7 +1358,7 @@ class MainWindow(MainWindow_Ui):
                                 logger.sendToLog(error_message, 'ERROR')
 
                                 # show notification
-                                notifySend(QCoreApplication.translate("mainwindow_src_ui_tr", "Error - {}".format(error)),
+                                notifySend(QCoreApplication.translate("mainwindow_src_ui_tr", "Error: ") + error,
                                         QCoreApplication.translate("mainwindow_src_ui_tr", 'Please change the temporary download folder'),
                                         10000, 'fail', parent=self)
 
@@ -2080,7 +2080,7 @@ class MainWindow(MainWindow_Ui):
             # if category is not "single downloads" , then send notification for error
             if category != "Single Downloads":
                 notifySend(QCoreApplication.translate("mainwindow_src_ui_tr", "Operation was not successful."),
-                        QCoreApplication.translate("mainwindow_src_ui_tr", "Please resume {} category.".format(category)),
+                           QCoreApplication.translate("mainwindow_src_ui_tr", "Please resume the following category: ") + category,
                         10000, 'fail', parent=self)
                 return
  
@@ -2140,7 +2140,7 @@ class MainWindow(MainWindow_Ui):
             # if category is not "single downloads" , then send notification for error
             if category != "Single Downloads":
                 notifySend(QCoreApplication.translate("mainwindow_src_ui_tr", "Operation was not successful."), 
-                        QCoreApplication.translate("mainwindow_src_ui_tr", "Please stop {} category.".format(category)),
+                           QCoreApplication.translate("mainwindow_src_ui_tr", "Please stop the following category: ") + category,
                         10000, 'fail', parent=self)
 
                 return
@@ -2182,7 +2182,7 @@ class MainWindow(MainWindow_Ui):
             # if category is not "single downloads" , then send notification for error
             if category != "Single Downloads":
                 notifySend(QCoreApplication.translate("mainwindow_src_ui_tr", "Operation was not successful."),
-                        QCoreApplication.translate("mainwindow_src_ui_tr", "Please stop {} category.".format(category)),
+                           QCoreApplication.translate("mainwindow_src_ui_tr", "Please stop the following category: ") + category,
                         10000, 'fail', parent=self)
 
                 return
@@ -2664,7 +2664,7 @@ class MainWindow(MainWindow_Ui):
                 if queue_status: # if queue was started
                     # show error message
                     notifySend(QCoreApplication.translate("mainwindow_src_ui_tr", "Operation was not successful!"),
-                            QCoreApplication.translate("mainwindow_src_ui_tr", "Operation was not successful! Please stop {} first.".format(category)),
+                               QCoreApplication.translate("mainwindow_src_ui_tr", "Operation was not successful! Please stop the following category first: ") + category,
                             5000, 'fail', parent=self)
 
                     continue
@@ -2682,7 +2682,7 @@ class MainWindow(MainWindow_Ui):
 
                 # show error message
                 notifySend(QCoreApplication.translate("mainwindow_src_ui_tr", "Operation was not successful!"),
-                        QCoreApplication.translate("mainwindow_src_ui_tr", "Please stop {} first".format(file_name)),
+                           QCoreApplication.translate("mainwindow_src_ui_tr", "Please stop the following file first: ") + file_name,
                         5000, 'fail', parent=self)
 
         # find row number for specific gid
@@ -2787,7 +2787,7 @@ class MainWindow(MainWindow_Ui):
                 if queue_status: # if queue was started
                     # show error message
                     notifySend(QCoreApplication.translate("mainwindow_src_ui_tr", "Operation was not successful!"),
-                            QCoreApplication.translate("mainwindow_src_ui_tr", "Please stop {} first".format(category)),
+                               QCoreApplication.translate("mainwindow_src_ui_tr", "Please stop the following category first: ") + category,
                             5000, 'fail', parent=self)
 
                     continue
@@ -2806,7 +2806,7 @@ class MainWindow(MainWindow_Ui):
 
                 # show error message
                 notifySend(QCoreApplication.translate("mainwindow_src_ui_tr",
-                        'Operation was not successful! Stop {} first.'.format(file_name)),
+                                                      'Operation was not successful! Stop the following file first: ') + file_name,
                         5000, 'fail', parent=self)
 
         # remove selected rows
