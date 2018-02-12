@@ -2635,7 +2635,7 @@ class MainWindow(MainWindow_Ui):
 
                 # show error message
                 notifySend(QCoreApplication.translate("mainwindow_src_ui_tr", "Operation was not successful!"),
-                           QCoreApplication.translate("mainwindow_src_ui_tr", "Please stop the following file first: ") + file_name,
+                           QCoreApplication.translate("mainwindow_src_ui_tr", "Please stop the following download first: ") + file_name,
                         5000, 'fail', parent=self)
 
         # find row number for specific gid
@@ -2759,7 +2759,7 @@ class MainWindow(MainWindow_Ui):
 
                 # show error message
                 notifySend(QCoreApplication.translate("mainwindow_src_ui_tr",
-                                                      'Operation was not successful! Stop the following file first: ') + file_name,
+                                                      'Operation was not successful! Stop the following download first: ') + file_name,
                         5000, 'fail', parent=self)
 
         # remove selected rows
