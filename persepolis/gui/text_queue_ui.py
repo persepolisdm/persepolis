@@ -210,8 +210,8 @@ class TextQueue_Ui(QWidget):
         limit_horizontalLayout.addWidget(self.limit_spinBox)
 
         self.limit_comboBox = QComboBox(self.limit_frame)
-        self.limit_comboBox.addItem("KB/S")
-        self.limit_comboBox.addItem("MB/S")
+        self.limit_comboBox.addItem("KiB/S")
+        self.limit_comboBox.addItem("MiB/S")
         limit_horizontalLayout.addWidget(self.limit_comboBox)
 
         limit_verticalLayout.addWidget(self.limit_frame)
