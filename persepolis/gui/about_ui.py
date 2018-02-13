@@ -15,8 +15,8 @@
 """
 
 from PyQt5 import QtCore, QtGui, QtWidgets
-from PyQt5.QtWidgets import QWidget
-from PyQt5.QtGui import QIcon
+from PyQt5.QtWidgets import QWidget, QTabWidget, QHBoxLayout, QVBoxLayout, QLabel, QPushButton
+from PyQt5.QtGui import QIcon, QFont
 from PyQt5.QtCore import Qt, QSize, QPoint, QTranslator, QCoreApplication, QLocale
 from persepolis.gui import resources 
 
@@ -47,74 +47,103 @@ class AboutWindow_Ui(QWidget):
         icons = ':/' + \
             str(self.persepolis_setting.value('settings/icons')) + '/'
 
-        self.setMinimumSize(QtCore.QSize(363, 300))
+        self.setMinimumSize(QtCore.QSize(363, 375))
         self.setWindowIcon(QIcon.fromTheme('persepolis', QIcon(':/persepolis.svg')))
-        self.setLayoutDirection(QtCore.Qt.LeftToRight)
-        self.gridLayout = QtWidgets.QGridLayout(self)
-        self.verticalLayout_2 = QtWidgets.QVBoxLayout()
-        self.horizontalLayout_2 = QtWidgets.QHBoxLayout()
-        self.verticalLayout = QtWidgets.QVBoxLayout()
-        self.title_label = QtWidgets.QLabel(self)
-        font = QtGui.QFont()
+
+        verticalLayout = QVBoxLayout(self)
+
+        self.about_tabWidget = QTabWidget(self)
+
+        # developers_tab
+        self.developers_tab = QWidget(self)
+
+        developers_verticalLayout = QVBoxLayout(self.developers_tab)
+
+        self.title_label = QLabel(self.developers_tab)
+        font = QFont()
         font.setBold(True)
         font.setWeight(75)
         self.title_label.setFont(font)
         self.title_label.setAlignment(QtCore.Qt.AlignCenter)
-        self.verticalLayout.addWidget(self.title_label)
+        developers_verticalLayout.addWidget(self.title_label)
 
-        self.version_label = QtWidgets.QLabel(self)
+        self.version_label = QLabel(self.developers_tab)
         self.version_label.setAlignment(QtCore.Qt.AlignCenter)
-        self.verticalLayout.addWidget(self.version_label)
 
-        self.name_label = QtWidgets.QLabel(self)
+        developers_verticalLayout.addWidget(self.version_label)
+
+        self.name_label = QLabel(self.developers_tab)
         self.name_label.setAlignment(QtCore.Qt.AlignCenter)
-        self.verticalLayout.addWidget(self.name_label)
+        developers_verticalLayout.addWidget(self.name_label)
 
-        self.site2_label = QtWidgets.QLabel(self)
+        self.site2_label = QLabel(self.developers_tab)
         self.site2_label.setTextFormat(QtCore.Qt.RichText)
         self.site2_label.setAlignment(QtCore.Qt.AlignCenter)
         self.site2_label.setOpenExternalLinks(True)
         self.site2_label.setTextInteractionFlags(
             QtCore.Qt.TextBrowserInteraction)
-        self.verticalLayout.addWidget(self.site2_label)
+        developers_verticalLayout.addWidget(self.site2_label)
 
-        self.telegram_label = QtWidgets.QLabel(self)
+        self.telegram_label = QLabel(self.developers_tab)
         self.telegram_label.setTextFormat(QtCore.Qt.RichText)
         self.telegram_label.setAlignment(QtCore.Qt.AlignCenter)
         self.telegram_label.setOpenExternalLinks(True)
         self.telegram_label.setTextInteractionFlags(
             QtCore.Qt.TextBrowserInteraction)
-        self.verticalLayout.addWidget(self.telegram_label)
+        developers_verticalLayout.addWidget(self.telegram_label)
 
-        self.twitter_label = QtWidgets.QLabel(self)
+        self.twitter_label = QLabel(self.developers_tab)
         self.twitter_label.setTextFormat(QtCore.Qt.RichText)
         self.twitter_label.setAlignment(QtCore.Qt.AlignCenter)
         self.twitter_label.setOpenExternalLinks(True)
         self.twitter_label.setTextInteractionFlags(
             QtCore.Qt.TextBrowserInteraction)
-        self.verticalLayout.addWidget(self.twitter_label)
+        developers_verticalLayout.addWidget(self.twitter_label)
 
-        self.horizontalLayout_2.addLayout(self.verticalLayout)
-        self.verticalLayout_2.addLayout(self.horizontalLayout_2)
-        self.horizontalLayout = QtWidgets.QHBoxLayout()
-        spacerItem = QtWidgets.QSpacerItem(
-            40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
-        self.horizontalLayout.addItem(spacerItem)
 
-        self.pushButton = QtWidgets.QPushButton(self)
+        # translators tab
+        self.translators_tab = QWidget(self)
+        translators_tab_verticalLayout = QVBoxLayout(self.translators_tab)
+
+        # persian translators
+        self.persian_translators_label = QLabel(self.translators_tab)
+        self.persian_translators_label.setFont(font)
+        self.persian_translators_label.setAlignment(QtCore.Qt.AlignCenter)
+
+        translators_tab_verticalLayout.addWidget(self.persian_translators_label)
+
+        self.persian_translatos_name_label = QLabel(self.translators_tab)
+        self.persian_translatos_name_label.setAlignment(QtCore.Qt.AlignCenter)
+        translators_tab_verticalLayout.addWidget(self.persian_translatos_name_label)
+
+        # chinese translators
+        self.chinese_translators_label = QLabel(self.translators_tab)
+        self.chinese_translators_label.setFont(font)
+        self.chinese_translators_label.setAlignment(QtCore.Qt.AlignCenter)
+        translators_tab_verticalLayout.addWidget(self.chinese_translators_label)
+
+        self.chinese_translatos_name_label = QLabel(self.translators_tab)
+        self.chinese_translatos_name_label.setAlignment(QtCore.Qt.AlignCenter)
+        translators_tab_verticalLayout.addWidget(self.chinese_translatos_name_label)
+
+        translators_tab_verticalLayout.addStretch(1)
+   
+        verticalLayout.addWidget(self.about_tabWidget)
+        # buttons
+        button_horizontalLayout = QHBoxLayout()
+        button_horizontalLayout.addStretch(1)
+
+        self.pushButton = QPushButton(self)
         self.pushButton.setIcon(QIcon(icons + 'ok'))
         self.pushButton.clicked.connect(self.close)
 
-        self.horizontalLayout.addWidget(self.pushButton)
-        spacerItem1 = QtWidgets.QSpacerItem(
-            40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
-        self.horizontalLayout.addItem(spacerItem1)
-        self.verticalLayout_2.addLayout(self.horizontalLayout)
-        self.gridLayout.addLayout(self.verticalLayout_2, 0, 0, 1, 1)
+        button_horizontalLayout.addWidget(self.pushButton)
 
-        QtCore.QMetaObject.connectSlotsByName(self)
+        verticalLayout.addLayout(button_horizontalLayout)
 
         self.setWindowTitle(QCoreApplication.translate("about_ui_tr", "About Persepolis"))
+
+        # developers_tab
         self.title_label.setText(QCoreApplication.translate("about_ui_tr", "Persepolis Download Manager"))
         self.version_label.setText(QCoreApplication.translate("about_ui_tr", "Version 3.0.1"))
         self.name_label.setText(QCoreApplication.translate("about_ui_tr", 
@@ -125,6 +154,23 @@ class AboutWindow_Ui(QWidget):
             "<a href=https://telegram.me/persepolisdm>https://telegram.me/persepolisdm</a>", "TRANSLATORS NOTE: YOU REALLY DON'T NEED TO TRANSLATE THIS PART!"))
         self.twitter_label.setText(QCoreApplication.translate("about_ui_tr", 
             "<a href=https://twitter.com/persepolisdm>https://twitter.com/persepolisdm</a>", "TRANSLATORS NOTE: YOU REALLY DON'T NEED TO TRANSLATE THIS PART!"))
+        
+        # translators_tab
+        self.persian_translators_label.setText(QCoreApplication.translate("about_ui_tr", "Persian translators:"))
+
+        self.persian_translatos_name_label.setText(QCoreApplication.translate("about_ui_tr", "H.Rostami\nMostafa Asadi"))
+
+        self.chinese_translators_label.setText(QCoreApplication.translate("about_ui_tr", "Chinese translators:"))
+
+        self.chinese_translatos_name_label.setText(QCoreApplication.translate("about_ui_tr", "Davinma\n210hcl\nleoxxx"))
+
+
+
+        # tabs
+        self.about_tabWidget.addTab(self.developers_tab, QCoreApplication.translate("about_ui_tr", "Developers"))
+        self.about_tabWidget.addTab(self.translators_tab, QCoreApplication.translate("about_ui_tr", "Translators"))
+
+        # button
         self.pushButton.setText(QCoreApplication.translate("about_ui_tr", "OK"))
 
 
