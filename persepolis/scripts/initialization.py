@@ -143,7 +143,8 @@ download_path = os.path.join(str(home_address), 'Downloads', 'Persepolis')
 default_setting_dict = {'locale': 'en_US', 'toolbar_icon_size': 32, 'wait-queue': [0, 0], 'awake': 'no', 'custom-font': 'no', 'column0': 'yes', 'column1': 'yes', 'column2': 'yes', 'column3': 'yes', 'column4': 'yes', 'column5': 'yes', 'column6': 'yes', 'column7': 'yes', 'column10': 'yes', 'column11': 'yes', 'column12': 'yes',
                              'subfolder': 'yes', 'startup': 'no', 'show-progress': 'yes', 'show-menubar': 'no', 'show-sidepanel': 'yes', 'rpc-port': 6801, 'notification': 'Native notification', 'after-dialog': 'yes', 'tray-icon': 'yes',
                              'max-tries': 5, 'retry-wait': 0, 'timeout': 60, 'connections': 16, 'download_path_temp': download_path_temp, 'download_path': download_path, 'sound': 'yes', 'sound-volume': 100, 'style': 'Fusion',
-                             'color-scheme': 'Persepolis Light Blue', 'icons': 'Breeze', 'font': 'Ubuntu', 'font-size': 9, 'aria2_path': ''}
+                             'color-scheme': 'Persepolis Light Blue', 'icons': 'Breeze', 'font': 'Ubuntu', 'font-size': 9, 'aria2_path': '', 
+                             'video_finder/enable': 'yes', 'video_finder/hide_no_audio': 'yes', 'video_finder/hide_no_video': 'yes', 'video_finder/max_links': '3'}
 
 # this loop is checking values in persepolis_setting . if value is not
 # valid then value replaced by default_setting_dict value
@@ -200,13 +201,6 @@ if locale in rtl_locale_list:
     persepolis_setting.setValue('ui_direction', 'rtl')
 else:
     persepolis_setting.setValue('ui_direction', 'ltr')
-
-# Check youtube-dl setting
-persepolis_setting.beginGroup('youtube')
-persepolis_setting.setValue('enable', persepolis_setting.value('enable', 'yes'))
-persepolis_setting.setValue('cookie_path', persepolis_tmp)
-persepolis_setting.setValue('max_links', persepolis_setting.value('max_links', 3))
-persepolis_setting.endGroup()
 
 # compatibility
 persepolis_version = float(persepolis_setting.value('version/version', 2.5))

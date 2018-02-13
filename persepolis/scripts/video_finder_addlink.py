@@ -13,6 +13,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
+import platform
 import re
 from random import random
 from time import time, sleep
@@ -25,8 +26,32 @@ from persepolis.scripts import logger, osCommands
 from persepolis.scripts.spider import spider
 from persepolis.scripts.addlink import AddLinkWindow
 
+# os_type >> Linux or Darwin(Mac osx) or Windows(Microsoft Windows) or
+# FreeBSD or OpenBSD
+os_type = platform.system()
 
-class YoutubeAddLink(AddLinkWindow):
+# user home address
+home_address = os.path.expanduser("~")
+
+
+# download manager config folder .
+if os_type == 'Linux' or os_type == 'FreeBSD' or os_type == 'OpenBSD':
+    config_folder = os.path.join(
+        str(home_address), ".config/persepolis_download_manager")
+elif os_type == 'Darwin':
+    config_folder = os.path.join(
+        str(home_address), "Library/Application Support/persepolis_download_manager")
+elif os_type == 'Windows':
+    config_folder = os.path.join(
+        str(home_address), 'AppData', 'Local', 'persepolis_download_manager')
+
+
+# persepolis tmp folder path
+persepolis_tmp = os.path.join(config_folder, 'persepolis_tmp')
+
+
+
+class VideoFinderAddLink(AddLinkWindow):
     formats_showing = []
     media_title = ''
     running_thread = None
@@ -138,7 +163,7 @@ class YoutubeAddLink(AddLinkWindow):
         for k in more_options.keys():
             dictionary_to_send[k] = more_options[k]
         dictionary_to_send['link'] = self.link_lineEdit.text()
-        fetcher_thread = MediaListFetcherThread(self.fetched_result, dictionary_to_send, self.persepolis_setting, self)
+        fetcher_thread = MediaListFetcherThread(self.fetched_result, dictionary_to_send, self)
         self.running_thread = fetcher_thread
         fetcher_thread.start()
 
@@ -178,13 +203,13 @@ class YoutubeAddLink(AddLinkWindow):
                 for f in media_dict['formats']:
                     text = ''
                     if 'acodec' in f.keys():
-                        if f['acodec'] == 'none' and f['vcodec'] != 'none' and self.persepolis_setting.value('youtube/hide_no_audio', 'no') == 'yes':
+                        if f['acodec'] == 'none' and f['vcodec'] != 'none' and self.persepolis_setting.value('settings/video_finder/hide_no_audio', 'yes') == 'yes':
                             continue
                         if f['acodec'] == 'none':
                             text = 'No Audio {}p'.format(f['height'])
 
                     if 'vcodec' in f.keys():
-                        if f['vcodec'] == 'none' and f['acodec'] != 'none' and self.persepolis_setting.value('youtube/hide_no_video', 'no') == 'yes':
+                        if f['vcodec'] == 'none' and f['acodec'] != 'none' and self.persepolis_setting.value('settings/video_finder/hide_no_video', 'yes') == 'yes':
                             continue
 
                         if f['vcodec'] == 'none':  # No video, show audio bit rate
@@ -272,15 +297,13 @@ class MediaListFetcherThread(QThread):
     RESULT = pyqtSignal(dict)
     cookies = '# HTTP cookie file.\n'  # We shall write it in a file when thread starts.
 
-    def __init__(self, receiver_slot, video_dict, pdm_setting, parent):
+    def __init__(self, receiver_slot, video_dict, parent):
         super().__init__()
         self.RESULT.connect(receiver_slot)
         self.video_dict = video_dict
-        self.pdm_setting = pdm_setting
 
 
-        self.cookie_path = os.path.join(self.pdm_setting.value('youtube/cookie_path'),
-                                            '.{}{}'.format(time(), random()))
+        self.cookie_path = os.path.join(persepolis_tmp, '.{}{}'.format(time(), random()))
 
         # youtube options must be added to youtube_dl_options_dict in dictionary format
         self.youtube_dl_options_dict = {'dump_single_json': True,
