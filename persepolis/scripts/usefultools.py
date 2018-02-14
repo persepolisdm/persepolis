@@ -16,7 +16,7 @@
 
 # converting file_size to KiB or MiB or GiB
 def hr_size(size):# human readable size 
-    labels = ['KiB', 'MiB', 'Gib', 'TiB']
+    labels = ['KiB', 'MiB', 'GiB', 'TiB']
     i = -1
     if size < 1024:
         return str(size) + ' B'
