@@ -15,7 +15,7 @@
 """
 
 from PyQt5 import QtCore, QtGui, QtWidgets
-from PyQt5.QtWidgets import QWidget, QTabWidget, QHBoxLayout, QVBoxLayout, QLabel, QPushButton
+from PyQt5.QtWidgets import QWidget, QTabWidget, QHBoxLayout, QVBoxLayout, QLabel, QTextEdit, QPushButton
 from PyQt5.QtGui import QIcon, QFont
 from PyQt5.QtCore import Qt, QSize, QPoint, QTranslator, QCoreApplication, QLocale
 from persepolis.gui import resources 
@@ -47,7 +47,7 @@ class AboutWindow_Ui(QWidget):
         icons = ':/' + \
             str(self.persepolis_setting.value('settings/icons')) + '/'
 
-        self.setMinimumSize(QtCore.QSize(363, 375))
+        self.setMinimumSize(QtCore.QSize(545, 375))
         self.setWindowIcon(QIcon.fromTheme('persepolis', QIcon(':/persepolis.svg')))
 
         verticalLayout = QVBoxLayout(self)
@@ -128,7 +128,19 @@ class AboutWindow_Ui(QWidget):
 
         translators_tab_verticalLayout.addStretch(1)
    
+        # License tab
+        self.license_tab = QWidget(self)
+        license_tab_verticalLayout = QVBoxLayout(self.license_tab)
+
+        self.license_text = QTextEdit(self.license_tab)
+        self.license_text.setReadOnly(True)
+
+        license_tab_verticalLayout.addWidget(self.license_text)
+
+
+
         verticalLayout.addWidget(self.about_tabWidget)
+
         # buttons
         button_horizontalLayout = QHBoxLayout()
         button_horizontalLayout.addStretch(1)
@@ -164,11 +176,27 @@ class AboutWindow_Ui(QWidget):
 
         self.chinese_translatos_name_label.setText(QCoreApplication.translate("about_ui_tr", "Davinma\n210hcl\nleoxxx"))
 
+        # License
+        self.license_text.setPlainText(QCoreApplication.translate("about_ui_tr", """
+            This program is free software: you can redistribute it and/or modify
+            it under the terms of the GNU General Public License as published by
+            the Free Software Foundation, either version 3 of the License, or
+            (at your option) any later version.
+
+            This program is distributed in the hope that it will be useful,
+            but WITHOUT ANY WARRANTY; without even the implied warranty of
+            MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+            GNU General Public License for more details.
+
+            You should have received a copy of the GNU General Public License
+            along with this program.  If not, see http://www.gnu.org/licenses/.
+            """))
 
 
         # tabs
         self.about_tabWidget.addTab(self.developers_tab, QCoreApplication.translate("about_ui_tr", "Developers"))
         self.about_tabWidget.addTab(self.translators_tab, QCoreApplication.translate("about_ui_tr", "Translators"))
+        self.about_tabWidget.addTab(self.license_tab, QCoreApplication.translate("about_ui_tr", "License"))
 
         # button
         self.pushButton.setText(QCoreApplication.translate("about_ui_tr", "OK"))

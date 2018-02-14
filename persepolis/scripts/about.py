@@ -29,7 +29,7 @@ class AboutWindow(AboutWindow_Ui):
 
 # setting window size and position
         size = self.persepolis_setting.value(
-            'AboutWindow/size', QSize(363, 300))
+            'AboutWindow/size', QSize(545, 375))
         position = self.persepolis_setting.value(
             'AboutWindow/position', QPoint(300, 300))
 
