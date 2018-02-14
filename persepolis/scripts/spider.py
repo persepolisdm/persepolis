@@ -98,8 +98,10 @@ def spider(add_link_dictionary):
     # check if file_size is available
     if 'Content-Length' in header.keys():
         file_size = int(header['Content-Length'])
-        #human readable size
+
+        # converting file_size to KiB or MiB or GiB 
         file_size = usefultools.hr_size(file_size)
+
     # return results
     return filename, filesize
 
@@ -194,6 +196,8 @@ def addLinkSpider(add_link_dictionary):
     file_size = None 
     if 'Content-Length' in header.keys():  # checking if file_size is available
         file_size = int(header['Content-Length'])
+        
+        # converting file_size to KiB or MiB or GiB
         file_size = usefultools.hr_size(file_size)
 
     return file_size  # If no Content-Length ? fixed it.

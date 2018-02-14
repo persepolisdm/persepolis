@@ -14,22 +14,18 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-
-def hr_size(size ): # human readable size
+# converting file_size to KiB or MiB or GiB
+def hr_size(size):# human readable size 
     labels = ['KiB', 'MiB', 'Gib', 'TiB']
     i = -1
     if size < 1024:
-        return str(size)+' B'
+        return str(size) + ' B'
 
     while size >= 1024:
         i += 1
         size = size / 1024
 
     p = 2 if i == 2 else None
-    return str(round(size, p))+' '+labels[i]
+    return str(round(size, p)) +' '+ labels[i]
    
 
-
-if __name__ == '__main__':
-    #test
-    print(hr_size(902973455))

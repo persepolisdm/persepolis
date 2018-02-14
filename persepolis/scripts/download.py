@@ -401,8 +401,11 @@ def convertDownloadInformation(download_status):
     # convert file_size and downloaded_size to KiB and MiB and GiB
     if (downloaded != None and file_size != None and file_size != 0):
         file_size_back = file_size
+
+        # converting file_size to KiB or MiB or GiB
         size_str = usefultools.hr_size(file_size)
         downloaded_back = downloaded
+
         downloaded_str = usefultools.hr_size(downloaded)
 
     # find download percent from file_size and downloaded_size
@@ -425,8 +428,9 @@ def convertDownloadInformation(download_status):
     # and find estimate_time_left
     if (downloaded != None and download_speed != 0):
         estimate_time_left = int((file_size - downloaded)/download_speed)
-
-        download_speed_str = usefultools.hr_size(download_speed)+'/s'
+        
+        # converting file_size to KiB or MiB or GiB
+        download_speed_str = usefultools.hr_size(download_speed) + '/s'
 
         eta = ""
         if estimate_time_left >= 3600:
