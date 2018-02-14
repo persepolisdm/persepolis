@@ -13,20 +13,21 @@
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import subprocess
-import xmlrpc.client
-import os
-import time
-import ast
-import shutil
-import platform
-from persepolis.scripts import logger
 from persepolis.scripts.freespace import freeSpace
 from persepolis.scripts.bubble import notifySend
+from persepolis.scripts import usefultools
+from persepolis.scripts import logger
 from PyQt5.QtCore import QSettings
+import xmlrpc.client
 import urllib.parse
+import subprocess
 import traceback
+import platform
+import shutil
+import time
+import ast
 import sys
+import os
 
 # Before reading this file, please read this link! 
 # this link helps you to understand this codes:
@@ -400,26 +401,9 @@ def convertDownloadInformation(download_status):
     # convert file_size and downloaded_size to KiB and MiB and GiB
     if (downloaded != None and file_size != None and file_size != 0):
         file_size_back = file_size
-        if int(file_size/1073741824) != 0:
-            file_size = file_size/1073741824
-            size_str = str(round(file_size, 2)) + " GiB"
-        elif int(file_size/1048576) != 0:
-            size_str = str(int(file_size/1048576)) + " MiB"
-        elif int(file_size/1024) != 0:
-            size_str = str(int(file_size/1024)) + " KiB"
-        else:
-            size_str = str(file_size)
-
+        size_str = usefultools.hr_size(file_size)
         downloaded_back = downloaded
-        if int(downloaded/1073741824) != 0:
-            downloaded = downloaded/1073741824
-            downloaded_str = str(round(downloaded, 2)) + " GiB"
-        elif int((downloaded/1048576)) != 0:
-            downloaded_str = str(int(downloaded/1048576)) + " MiB"
-        elif int(downloaded/1024) != 0:
-            downloaded_str = str(int(downloaded/1024)) + " KiB"
-        else:
-            downloaded_str = str(downloaded)
+        downloaded_str = usefultools.hr_size(downloaded)
 
     # find download percent from file_size and downloaded_size
         file_size = file_size_back
@@ -441,16 +425,8 @@ def convertDownloadInformation(download_status):
     # and find estimate_time_left
     if (downloaded != None and download_speed != 0):
         estimate_time_left = int((file_size - downloaded)/download_speed)
-        if int((download_speed/1073741824)) != 0:
-            download_speed = download_speed/1073741824
-            download_speed_str = str(round(download_speed, 2)) + "GiB/s"
-        elif int((download_speed/1048576)) != 0:
-            download_speed_num = download_speed/1048576
-            download_speed_str = str(round(download_speed_num, 2)) + "MiB/s"
-        elif int((download_speed/1024)) != 0:
-            download_speed_str = str(int(download_speed/1024)) + "KiB/s"
-        else:
-            download_speed_str = str(download_speed) + "B/s"
+
+        download_speed_str = usefultools.hr_size(download_speed)+'/s'
 
         eta = ""
         if estimate_time_left >= 3600:

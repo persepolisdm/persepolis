@@ -13,39 +13,39 @@
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from functools import partial
-import sys
-from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import QAbstractItemView, QAction, QFileDialog, QSystemTrayIcon, QMenu, QApplication, QInputDialog, QMessageBox
-from PyQt5.QtGui import QIcon, QStandardItem, QCursor
 from PyQt5.QtCore import QTime, QCoreApplication, QRect, QSize, QPoint, QThread, pyqtSignal, Qt, QTranslator, QLocale
-import os
-import time
-from time import sleep
-import random
-from persepolis.scripts.after_download import AfterDownloadWindow
-from persepolis.scripts.text_queue import TextQueue
-from persepolis.scripts.browser_plugin_queue import BrowserPluginQueue
-from persepolis.scripts.addlink import AddLinkWindow
-from persepolis.scripts.properties import PropertiesWindow
-from persepolis.scripts.progress import ProgressWindow
-from persepolis.scripts import download
 from persepolis.gui.mainwindow_ui import MainWindow_Ui, QTableWidgetItem
-from persepolis.scripts.log_window import LogWindow
-from persepolis.scripts.play import playNotification
-from persepolis.scripts.bubble import notifySend
-from persepolis.scripts.setting import PreferencesWindow
-from persepolis.scripts.about import AboutWindow
-from persepolis.gui import resources
-from persepolis.scripts import spider
-from persepolis.scripts import osCommands
-from persepolis.scripts import logger
-from persepolis.scripts.freespace import freeSpace
-import platform
-from copy import deepcopy
-from persepolis.scripts.shutdown import shutDown
-from persepolis.scripts.update import checkupdate
 from persepolis.scripts.data_base import PluginsDB, PersepolisDB, TempDB
+from persepolis.scripts.browser_plugin_queue import BrowserPluginQueue
+from persepolis.scripts.after_download import AfterDownloadWindow
+from persepolis.scripts.properties import PropertiesWindow
+from persepolis.scripts.setting import PreferencesWindow
+from persepolis.scripts.progress import ProgressWindow
+from PyQt5.QtGui import QIcon, QStandardItem, QCursor
+from persepolis.scripts.play import playNotification
+from persepolis.scripts.addlink import AddLinkWindow
+from persepolis.scripts.text_queue import TextQueue
+from persepolis.scripts.log_window import LogWindow
+from persepolis.scripts.freespace import freeSpace
+from persepolis.scripts.update import checkupdate
+from persepolis.scripts.shutdown import shutDown
+from persepolis.scripts.about import AboutWindow
+from persepolis.scripts.bubble import notifySend
+from PyQt5 import QtCore, QtGui, QtWidgets
+from persepolis.scripts import osCommands
+from persepolis.scripts import download
+from persepolis.scripts import logger
+from persepolis.scripts import spider
+from persepolis.gui import resources
+from functools import partial
+from copy import deepcopy
+from time import sleep
+import platform
+import random
+import time
+import sys
+import os
 
 # THIS FILE CREATES MAIN WINDOW
 

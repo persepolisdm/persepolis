@@ -373,7 +373,10 @@ def main():
         persepolis_download_manager = PersepolisApplication(sys.argv)
 
         # Enable High DPI display with PyQt5
-        persepolis_download_manager.setAttribute(Qt.AA_EnableHighDpiScaling)
+        try:
+            persepolis_download_manager.setAttribute(Qt.AA_EnableHighDpiScaling)
+        except:
+            pass
         if hasattr(QStyleFactory, 'AA_UseHighDpiPixmaps'):
             persepolis_download_manager.setAttribute(Qt.AA_UseHighDpiPixmaps)
 
