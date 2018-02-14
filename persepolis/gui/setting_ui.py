@@ -364,25 +364,25 @@ class Setting_Ui(QWidget):
 
         self.setting_tabWidget.addTab(self.columns_tab, '')
 
-        # youtube_tab
-        self.youtube_tab = QWidget()
-        self.layoutWidgetYTD = QWidget(self.youtube_tab)
-        self.youtube_layout = QVBoxLayout(self.layoutWidgetYTD)
-        self.youtube_layout.setContentsMargins(20, 30, 0, 0)
+        # video_finder_tab
+        self.video_finder_tab = QWidget()
+        self.layoutWidgetYTD = QWidget(self.video_finder_tab)
+        self.video_finder_layout = QVBoxLayout(self.layoutWidgetYTD)
+        self.video_finder_layout.setContentsMargins(20, 30, 0, 0)
 
-        self.youtube_verticalLayout = QVBoxLayout()
+        self.video_finder_verticalLayout = QVBoxLayout()
 
         # Whether to enable video link capturing.
-        self.enable_ytd_checkbox = QCheckBox(self.layoutWidgetYTD)
-        self.youtube_layout.addWidget(self.enable_ytd_checkbox)
+        self.enable_video_finder_checkbox = QCheckBox(self.layoutWidgetYTD)
+        self.video_finder_layout.addWidget(self.enable_video_finder_checkbox)
 
         # If we should hide videos with no audio
         self.hide_no_audio_checkbox = QCheckBox(self.layoutWidgetYTD)
-        self.youtube_verticalLayout.addWidget(self.hide_no_audio_checkbox)
+        self.video_finder_verticalLayout.addWidget(self.hide_no_audio_checkbox)
 
         # If we should hide audios without video
         self.hide_no_video_checkbox = QCheckBox(self.layoutWidgetYTD)
-        self.youtube_verticalLayout.addWidget(self.hide_no_video_checkbox)
+        self.video_finder_verticalLayout.addWidget(self.hide_no_video_checkbox)
 
         self.max_links_horizontalLayout = QHBoxLayout()
 
@@ -395,16 +395,16 @@ class Setting_Ui(QWidget):
         self.max_links_spinBox.setMinimum(1)
         self.max_links_spinBox.setMaximum(16)
         self.max_links_horizontalLayout.addWidget(self.max_links_spinBox)
-        self.youtube_verticalLayout.addLayout(self.max_links_horizontalLayout)
+        self.video_finder_verticalLayout.addLayout(self.max_links_horizontalLayout)
 
-        self.youtube_dl_path_horizontalLayout = QHBoxLayout()
+        self.video_finder_dl_path_horizontalLayout = QHBoxLayout()
 
-        self.youtube_frame = QFrame(self.youtube_tab)
-        self.youtube_frame.setLayout(self.youtube_verticalLayout)
+        self.video_finder_frame = QFrame(self.video_finder_tab)
+        self.video_finder_frame.setLayout(self.video_finder_verticalLayout)
 
-        self.youtube_layout.addWidget(self.youtube_frame)
+        self.video_finder_layout.addWidget(self.video_finder_frame)
 
-        self.setting_tabWidget.addTab(self.youtube_tab, "")
+        self.setting_tabWidget.addTab(self.video_finder_tab, "")
 
 
 # defaults_pushButton
@@ -536,9 +536,9 @@ class Setting_Ui(QWidget):
 
 # Video Finder options tab
         self.setting_tabWidget.setTabText(self.setting_tabWidget.indexOf(
-            self.youtube_tab), QCoreApplication.translate("setting_ui_tr",  "Video Finder Options"))
+            self.video_finder_tab), QCoreApplication.translate("setting_ui_tr",  "Video Finder Options"))
 
-        self.enable_ytd_checkbox.setText(QCoreApplication.translate("setting_ui_tr", 'Enable Video Finder'))
+        self.enable_video_finder_checkbox.setText(QCoreApplication.translate("setting_ui_tr", 'Enable Video Finder'))
 
         self.hide_no_audio_checkbox.setText(QCoreApplication.translate("setting_ui_tr", 'Hide videos with no audio'))
 

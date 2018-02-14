@@ -12,6 +12,7 @@ before_install:
   - sudo apt-get install -y sound-theme-freedesktop     
   - sudo apt-get install -y libnotify-bin
   - sudo apt-get install -y libqt5svg5
+  - sudo apt-get install -y python3-pyqt5.qtsvg
   - sudo apt-get install -y python3-setuptools
   - sudo apt-get install -y python3-pip
   - sudo apt-get install -y python3-pyqt5

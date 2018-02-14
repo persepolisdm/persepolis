@@ -68,7 +68,7 @@ class MenuWidget(QPushButton):
 
         sortMenu = viewMenu.addMenu(QCoreApplication.translate("mainwindow_ui_tr", 'Sort by'))
 
-        videoFinderMenu.addAction(self.parent.youtubeAddLinkAction)
+        videoFinderMenu.addAction(self.parent.videoFinderAddLinkAction)
 
         downloadMenu.addAction(self.parent.stopAllAction)
 
@@ -438,9 +438,9 @@ class MainWindow_Ui(QMainWindow):
 
 
 #toolBar and menubar and actions
-        self.youtubeAddLinkAction = QAction(QIcon(icons + 'video_finder'), QCoreApplication.translate("mainwindow_ui_tr", 'Find Video Links'), self, statusTip=QCoreApplication.translate("mainwindow_ui_tr", 'Download video or audio from youtube and ...'),
-                                            triggered=self.showYoutubeAddLinkWindow)
-        videoFinderMenu.addAction(self.youtubeAddLinkAction)
+        self.videoFinderAddLinkAction = QAction(QIcon(icons + 'video_finder'), QCoreApplication.translate("mainwindow_ui_tr", 'Find Video Links'), self, statusTip=QCoreApplication.translate("mainwindow_ui_tr", 'Download video or audio from youtube and ...'),
+                                            triggered=self.showVideoFinderAddLinkWindow)
+        videoFinderMenu.addAction(self.videoFinderAddLinkAction)
 
         self.stopAllAction = QAction(QIcon(icons + 'stop_all'), QCoreApplication.translate("mainwindow_ui_tr", 'Stop all active downloads'),
                                      self, statusTip='Stop all active downloads', triggered=self.stopAllDownloads)
@@ -622,6 +622,6 @@ class MainWindow_Ui(QMainWindow):
         icons = ':/' + str(icons) + '/'
 
         action_icon_dict = {self.stopAllAction: 'stop_all', self.minimizeAction: 'minimize', self.addlinkAction: 'add', self.addtextfileAction: 'file', self.resumeAction: 'play', self.pauseAction: 'pause', self.stopAction: 'stop', self.propertiesAction: 'setting', self.progressAction: 'window', self.openFileAction: 'file', self.openDownloadFolderAction: 'folder', self.openDefaultDownloadFolderAction: 'folder', self.exitAction: 'exit',
-                self.removeSelectedAction: 'multi_remove', self.deleteSelectedAction: 'multi_trash', self.createQueueAction: 'add_queue', self.removeQueueAction: 'remove_queue', self.startQueueAction: 'start_queue', self.stopQueueAction: 'stop_queue', self.preferencesAction: 'preferences', self.aboutAction: 'about', self.issueAction: 'about', self.updateAction: 'about', self.youtubeAddLinkAction: 'video_finder', self.qmenu: 'menu'}
+                self.removeSelectedAction: 'multi_remove', self.deleteSelectedAction: 'multi_trash', self.createQueueAction: 'add_queue', self.removeQueueAction: 'remove_queue', self.startQueueAction: 'start_queue', self.stopQueueAction: 'stop_queue', self.preferencesAction: 'preferences', self.aboutAction: 'about', self.issueAction: 'about', self.updateAction: 'about', self.videoFinderAddLinkAction: 'video_finder', self.qmenu: 'menu'}
         for key in action_icon_dict.keys():
             key.setIcon(QIcon(icons + str(action_icon_dict[key])))

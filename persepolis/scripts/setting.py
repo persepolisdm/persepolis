@@ -285,6 +285,20 @@ class PreferencesWindow(Setting_Ui):
         else:
             self.column12_checkBox.setChecked(False)
 
+# video_finder
+        self.enable_video_finder_checkbox.stateChanged.connect(self.videoFinderFram)
+        self.enable_video_finder_checkbox.setChecked(persepolis_setting.value('video_finder/enable', 'yes') == 'yes')
+        self.hide_no_audio_checkbox.setChecked(persepolis_setting.value('video_finder/hide_no_audio') == 'yes')
+        self.hide_no_video_checkbox.setChecked(persepolis_setting.value('video_finder/hide_no_video') == 'yes')
+        try:  # Integer casting may raise exception.
+            self.max_links_spinBox.setValue(int(persepolis_setting.value('video_finder/max_links', 3)))
+        except:
+            pass
+
+        self.videoFinderFram()
+
+
+
 # ok cancel default button
         self.cancel_pushButton.clicked.connect(self.close)
         self.defaults_pushButton.clicked.connect(
@@ -311,17 +325,6 @@ class PreferencesWindow(Setting_Ui):
 
         self.resize(size)
         self.move(position)
-
-        self.enable_ytd_checkbox.stateChanged.connect(self.youtube_downloader_toggled)
-        self.enable_ytd_checkbox.setChecked(persepolis_setting.value('youtube/enable', 'yes') == 'yes')
-        self.hide_no_audio_checkbox.setChecked(persepolis_setting.value('youtube/hide_no_audio', 'no') == 'yes')
-        self.hide_no_video_checkbox.setChecked(persepolis_setting.value('youtube/hide_no_video', 'no') == 'yes')
-        try:  # Integer casting may raise exception.
-            self.max_links_spinBox.setValue(int(persepolis_setting.value('youtube/max_links', 5)))
-        except:
-            pass
-        self.youtube_downloader_toggled()
-
 # Papirus icons can be used with small sizes(smaller than 48)
     def iconSizeComboBoxCanged(self, index):
         self.icon_comboBox.clear()
@@ -459,7 +462,8 @@ class PreferencesWindow(Setting_Ui):
         self.setting_dict = {'locale': 'en_US', 'toolbar_icon_size': 32, 'wait-queue': [0, 0], 'awake': 'no', 'custom-font': 'no', 'column0': 'yes', 'column1': 'yes', 'column2': 'yes', 'column3': 'yes', 'column4': 'yes', 'column5': 'yes', 'column6': 'yes', 'column7': 'yes', 'column10': 'yes', 'column11': 'yes', 'column12': 'yes',
                              'subfolder': 'yes', 'startup': 'no', 'show-progress': 'yes', 'show-menubar': 'no', 'show-sidepanel': 'yes', 'rpc-port': 6801, 'notification': 'Native notification', 'after-dialog': 'yes', 'tray-icon': 'yes',
                              'max-tries': 5, 'retry-wait': 0, 'timeout': 60, 'connections': 16, 'download_path_temp': download_path_temp_default, 'download_path': download_path_default, 'sound': 'yes', 'sound-volume': 100, 'style': 'Fusion',
-                             'color-scheme': 'Persepolis Light Blue', 'icons': 'Breeze', 'font': 'Ubuntu', 'font-size': 9, 'aria2_path': ''}
+                             'color-scheme': 'Persepolis Light Blue', 'icons': 'Breeze', 'font': 'Ubuntu', 'font-size': 9, 'aria2_path': '',
+                             'video_finder/enable': 'yes', 'video_finder/hide_no_audio': 'yes', 'video_finder/hide_no_video': 'yes', 'video_finder/max_links': '3'}
 
         self.tries_spinBox.setValue(int(self.setting_dict['max-tries']))
         self.wait_spinBox.setValue(int(self.setting_dict['retry-wait']))
@@ -558,17 +562,19 @@ class PreferencesWindow(Setting_Ui):
         self.column11_checkBox.setChecked(True)
         self.column12_checkBox.setChecked(True)
 
+# video finder
+        self.enable_video_finder_checkbox.setChecked(True)
+        self.hide_no_audio_checkbox.setChecked(True)
+        self.hide_no_video_checkbox.setChecked(True)
+        self.max_links_spinBox.setValue(3)
+
+
 
 
         self.persepolis_setting.endGroup()
 
-        self.enable_ytd_checkbox.setChecked(True)
-        self.hide_no_audio_checkbox.setChecked(False)
-        self.hide_no_video_checkbox.setChecked(False)
-        self.max_links_spinBox.setValue(3)
-
-    def youtube_downloader_toggled(self):
-        self.youtube_frame.setEnabled(self.enable_ytd_checkbox.isChecked())
+    def videoFinderFram(self):
+        self.video_finder_frame.setEnabled(self.enable_video_finder_checkbox.isChecked())
 
     def okPushButtonPressed(self, button):
 
@@ -881,6 +887,26 @@ class PreferencesWindow(Setting_Ui):
             self.persepolis_setting.setValue('column12', 'no')
             self.parent.download_table.setColumnHidden(12, True)
 
+# video_finder
+        if self.enable_video_finder_checkbox.isChecked():
+            enable = 'yes'
+        else:
+            enable = 'no'
+
+        if self.hide_no_audio_checkbox.isChecked():
+            hide_no_audio = 'yes'
+        else:
+            hide_no_audio = 'no'
+
+        if self.hide_no_video_checkbox.isChecked():
+            hide_no_video = 'yes'
+        else:
+            hide_no_video = 'no'
+        self.persepolis_setting.setValue('video_finder/enable', enable)
+        self.persepolis_setting.setValue('video_finder/hide_no_audio', hide_no_audio)
+        self.persepolis_setting.setValue('video_finder/hide_no_video', hide_no_video)
+        self.persepolis_setting.setValue('video_finder/max_links', self.max_links_spinBox.value())
+
         # saving value of persepolis_setting in second_key_value_dict.
         self.second_key_value_dict = {}
         for member in self.persepolis_setting.allKeys():
@@ -904,19 +930,5 @@ class PreferencesWindow(Setting_Ui):
         self.persepolis_setting.endGroup()
         self.persepolis_setting.sync()
 
-        enable = 'yes'
-        hide_no_audio = 'no'
-        hide_no_video = 'no'
-        if not self.enable_ytd_checkbox.isChecked():
-            enable = 'no'
-        if self.hide_no_audio_checkbox.isChecked():
-            hide_no_audio = 'yes'
-        if self.hide_no_video_checkbox.isChecked():
-            hide_no_video = 'yes'
-        self.persepolis_setting.setValue('youtube/enable', enable)
-        self.persepolis_setting.setValue('youtube/hide_no_audio', hide_no_audio)
-        self.persepolis_setting.setValue('youtube/hide_no_video', hide_no_video)
-        self.persepolis_setting.setValue('youtube/max_links', self.max_links_spinBox.value())
-        self.persepolis_setting.sync()
 
         self.close()
