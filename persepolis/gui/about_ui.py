@@ -14,12 +14,17 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 
-from PyQt5 import QtSvg, QtCore, QtGui, QtWidgets
+from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import QWidget, QTabWidget, QHBoxLayout, QVBoxLayout, QLabel, QTextEdit, QPushButton
 from PyQt5.QtGui import QIcon, QFont
 from PyQt5.QtCore import Qt, QSize, QPoint, QTranslator, QCoreApplication, QLocale
 from persepolis.gui import resources 
 
+try:
+    from PyQt5 import QtSvg
+    qtsvg_available = True
+except:
+    qtsvg_available = False
 
 class AboutWindow_Ui(QWidget):
     def __init__(self,persepolis_setting):
@@ -63,15 +68,15 @@ class AboutWindow_Ui(QWidget):
         
 
         # persepolis icon
-        persepolis_icon_verticalLayout = QVBoxLayout()
+        if qtsvg_available:
+            persepolis_icon_verticalLayout = QVBoxLayout()
+            self.persepolis_icon = QtSvg.QSvgWidget(':/persepolis.svg')
+            self.persepolis_icon.setFixedSize(QSize(64, 64))
 
-        self.persepolis_icon = QtSvg.QSvgWidget(':/persepolis.svg')
-        self.persepolis_icon.setFixedSize(QSize(64, 64))
+            persepolis_icon_verticalLayout.addWidget(self.persepolis_icon)
+            persepolis_icon_verticalLayout.addStretch(1)
 
-        persepolis_icon_verticalLayout.addWidget(self.persepolis_icon)
-        persepolis_icon_verticalLayout.addStretch(1)
-
-        about_tab_horizontalLayout.addLayout(persepolis_icon_verticalLayout)
+            about_tab_horizontalLayout.addLayout(persepolis_icon_verticalLayout)
 
         self.title_label = QLabel(self.about_tab)
         font = QFont()
