@@ -866,7 +866,7 @@ class MainWindow(MainWindow_Ui):
 
 
 # set message for statusbar
-        self.statusbar.showMessage(QCoreApplication.translate("mainwindow_src_ui_tr", 'Please Wait ...'))
+        self.statusbar.showMessage(QCoreApplication.translate("mainwindow_src_ui_tr", 'Please Wait...'))
 
         self.checkSelectedRow()
 
@@ -1222,7 +1222,7 @@ class MainWindow(MainWindow_Ui):
 
             logger.sendToLog('Persepolis can not connect to Aria2', 'ERROR')
         else:
-            self.statusbar.showMessage(QCoreApplication.translate("mainwindow_src_ui_tr", 'Reconnecting aria2...'))
+            self.statusbar.showMessage(QCoreApplication.translate("mainwindow_src_ui_tr", 'Reconnecting Aria2...'))
             logger.sendToLog('Reconnecting Aria2 ...', 'INFO')
 
             # get items with 'downloading' or 'waiting' status from data base and restart them.
@@ -2158,11 +2158,11 @@ class MainWindow(MainWindow_Ui):
                     self.aria2Disconnected()
                     download.downloadStop(gid, self)
                     notifySend(QCoreApplication.translate("mainwindow_src_ui_tr", "Aria2 disconnected!"),
-                            QCoreApplication.translate("mainwindow_src_ui_tr", "Persepolis is trying to connect!be patient!"),
+                            QCoreApplication.translate("mainwindow_src_ui_tr", "Persepolis is trying to connect! be patient!"),
                             10000, 'warning', parent=self)
                 else:
                     notifySend(QCoreApplication.translate("mainwindow_src_ui_tr", "Aria2 did not respond!"),
-                            QCoreApplication.translate("mainwindow_src_ui_tr", "Try agian!"),
+                               QCoreApplication.translate("mainwindow_src_ui_tr", "Please try again."),
                             10000, 'critical', parent=self)
 
 # This method called if properties button pressed by user in MainWindow

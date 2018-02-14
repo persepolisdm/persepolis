@@ -922,7 +922,7 @@ class PreferencesWindow(Setting_Ui):
         # if any thing changed that needs restarting, then notify user about "Some changes take effect after restarting persepolis"
         if show_message_box:
             restart_messageBox = QMessageBox()                
-            restart_messageBox.setText(QCoreApplication.translate("setting_src_ui_tr", '<b><center>Restart Persepolis Please!</center></b><br><center>Some changes take effect after restarting persepolis</center>'))
+            restart_messageBox.setText(QCoreApplication.translate("setting_src_ui_tr", '<b><center>Restart Persepolis Please!</center></b><br><center>Some changes take effect after restarting Persepolis</center>'))
             restart_messageBox.setWindowTitle(QCoreApplication.translate("setting_src_ui_tr", 'Restart Persepolis!'))
             restart_messageBox.exec_()
 
