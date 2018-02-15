@@ -4548,6 +4548,13 @@ class MainWindow(MainWindow_Ui):
     def queueSpiderCallBack(self, filename, child, row_number):
         item = QTableWidgetItem(str(filename))
 
+        # add checkbox to the item
+        item.setFlags(QtCore.Qt.ItemIsUserCheckable | QtCore.Qt.ItemIsEnabled)
+        if child.links_table.item(int(row_number), 0).checkState() == 2:
+            item.setCheckState(QtCore.Qt.Checked)
+        else:
+            item.setCheckState(QtCore.Qt.Unchecked)
+
         child.links_table.setItem(int(row_number), 0, item)
 
 # see addlink.py file
