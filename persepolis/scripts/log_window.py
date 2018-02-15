@@ -13,28 +13,20 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-import os
-from persepolis.scripts import osCommands
-import platform
+from persepolis.scripts.useful_tools import determineConfigFolder
 from persepolis.gui.log_window_ui import LogWindow_Ui
-from PyQt5 import QtCore, QtWidgets
+from persepolis.scripts import osCommands
 from PyQt5.QtCore import QPoint, QSize
+from PyQt5 import QtCore, QtWidgets
+import platform
+import os
 
 os_type = platform.system()
 
 home_address = os.path.expanduser("~")
 
 # config_folder
-if os_type == 'Linux' or os_type == 'FreeBSD' or os_type == 'OpenBSD':
-    config_folder = os.path.join(
-        str(home_address), ".config/persepolis_download_manager")
-elif os_type == 'Darwin':
-    config_folder = os.path.join(
-        str(home_address), "Library/Application Support/persepolis_download_manager")
-elif os_type == 'Windows':
-    config_folder = os.path.join(
-        str(home_address), 'AppData', 'Local', 'persepolis_download_manager')
-
+config_folder = determineConfigFolder(os_type, home_address)
 
 class LogWindow(LogWindow_Ui):
     def __init__(self, persepolis_setting):

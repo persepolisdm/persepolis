@@ -16,14 +16,16 @@
 
 # THIS FILE CONTAINING SOME VARIABLES , ... THAT USING FOR INITIALIZING PERSEPOLIS
 
+from persepolis.scripts.browser_integration import browserIntegration
+from persepolis.scripts.useful_tools import determineConfigFolder
+from persepolis.scripts import osCommands
+from PyQt5.QtCore import QSettings
+import subprocess
+import platform
+import shutil
 import time
 import os
-import shutil
-from persepolis.scripts import osCommands
-import platform
-from PyQt5.QtCore import QSettings
-from persepolis.scripts.browser_integration import browserIntegration
-import subprocess
+
 # initialization
 
 # user home address
@@ -34,16 +36,7 @@ home_address = os.path.expanduser("~")
 os_type = platform.system()
 
 # download manager config folder .
-if os_type == 'Linux' or os_type == 'FreeBSD' or os_type == 'OpenBSD':
-    config_folder = os.path.join(
-        str(home_address), ".config/persepolis_download_manager")
-elif os_type == 'Darwin':
-    config_folder = os.path.join(
-        str(home_address), "Library/Application Support/persepolis_download_manager")
-elif os_type == 'Windows':
-    config_folder = os.path.join(
-        str(home_address), 'AppData', 'Local', 'persepolis_download_manager')
-
+config_folder = determineConfigFolder(os_type, home_address)
 
 # persepolis tmp folder path
 persepolis_tmp = os.path.join(config_folder, 'persepolis_tmp')

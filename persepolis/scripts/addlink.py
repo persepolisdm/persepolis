@@ -15,16 +15,16 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 
-import os
-from PyQt5 import QtWidgets, QtCore
 from PyQt5.QtWidgets import QHBoxLayout,  QApplication,  QFileDialog,  QCheckBox, QLineEdit, QPushButton
-from PyQt5.QtGui import QIcon
 from PyQt5.QtCore import QPoint, QSize, QDir, QThread, pyqtSignal
 from persepolis.gui.addlink_ui import AddLinkWindow_Ui
-from functools import partial
+from persepolis.scripts.check_proxy import getProxy
 from persepolis.scripts import spider
 from persepolis.scripts import logger
-from persepolis.scripts.check_proxy import getProxy
+from PyQt5 import QtWidgets, QtCore
+from PyQt5.QtGui import QIcon
+from functools import partial
+import os
 
 
 class AddLinkSpiderThread(QThread):

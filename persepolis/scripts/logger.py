@@ -15,25 +15,18 @@
 
 
 
-import logging
-import platform
-import os
+from persepolis.scripts.useful_tools import determineConfigFolder
 from persepolis.scripts import osCommands
+import platform
+import logging
+import os
 
 os_type = platform.system()
 
 home_address = os.path.expanduser("~")
 
 # config_folder
-if os_type == 'Linux' or os_type == 'FreeBSD' or os_type == 'OpenBSD':
-    config_folder = os.path.join(
-        str(home_address), ".config/persepolis_download_manager")
-elif os_type == 'Darwin':
-    config_folder = os.path.join(
-        str(home_address), "Library/Application Support/persepolis_download_manager")
-elif os_type == 'Windows':
-    config_folder = os.path.join(
-        str(home_address), 'AppData\Local\persepolis_download_manager')
+config_folder =  determineConfigFolder(os_type, home_address)
 
 # log file address
 log_file = os.path.join(str(config_folder), 'persepolisdm.log')

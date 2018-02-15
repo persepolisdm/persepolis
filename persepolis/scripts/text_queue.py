@@ -13,15 +13,16 @@
 #
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+from PyQt5.QtCore import QDir , QPoint , QSize, QThread , pyqtSignal
+from PyQt5.QtWidgets import QTableWidgetItem , QFileDialog
 from persepolis.gui.text_queue_ui import TextQueue_Ui
 from PyQt5 import QtWidgets , QtCore , QtGui
-from PyQt5.QtGui import QIcon
-from PyQt5.QtWidgets import QTableWidgetItem , QFileDialog
-from PyQt5.QtCore import QDir , QPoint , QSize, QThread , pyqtSignal
-import os 
 from persepolis.scripts import logger
 from persepolis.scripts import spider
+from PyQt5.QtGui import QIcon
 from functools import partial
+import os 
 
 # This thread finds filename
 class QueueSpiderThread(QThread):

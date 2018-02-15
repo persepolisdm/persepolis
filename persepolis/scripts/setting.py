@@ -13,17 +13,17 @@
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from persepolis.gui.setting_ui import Setting_Ui
-import os
-import sys
-import copy
-from PyQt5 import QtWidgets
-from PyQt5.QtWidgets import QFileDialog, QStyleFactory, QMessageBox
-from PyQt5.QtGui import QFont
 from PyQt5.QtCore import QTime, QSize, QPoint, QDir , QTranslator, QCoreApplication, QLocale
+from PyQt5.QtWidgets import QFileDialog, QStyleFactory, QMessageBox
+from persepolis.gui.setting_ui import Setting_Ui
 from persepolis.scripts import osCommands
-import platform
 from persepolis.scripts import startup
+from PyQt5.QtGui import QFont
+from PyQt5 import QtWidgets
+import platform
+import copy
+import sys
+import os
 
 home_address = os.path.expanduser("~")
 os_type = platform.system()
