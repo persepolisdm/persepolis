@@ -23,11 +23,11 @@ from persepolis.scripts.properties import PropertiesWindow
 from persepolis.scripts.setting import PreferencesWindow
 from persepolis.scripts.progress import ProgressWindow
 from PyQt5.QtGui import QIcon, QStandardItem, QCursor
+from persepolis.scripts.useful_tools import freeSpace
 from persepolis.scripts.play import playNotification
 from persepolis.scripts.addlink import AddLinkWindow
 from persepolis.scripts.text_queue import TextQueue
 from persepolis.scripts.log_window import LogWindow
-from persepolis.scripts.freespace import freeSpace
 from persepolis.scripts.update import checkupdate
 from persepolis.scripts.shutdown import shutDown
 from persepolis.scripts.about import AboutWindow
@@ -1320,7 +1320,7 @@ class MainWindow(MainWindow_Ui):
                     file_size = dict['size']
 
                     if file_size != None:
-                        if len(file_size) > 2:
+                        if file_size[-2:] != ' B':
                             unit = file_size[-3:]
                             try:
                                 if unit == 'GiB':
@@ -1338,8 +1338,10 @@ class MainWindow(MainWindow_Ui):
                                 size_value = None
 
                         if free_space != None and size_value != None:
-
-                            if unit == 'GiB':
+                            if unit == 'TiB':
+                                free_space = free_space/(1073741824*1024)
+                                free_space = round(free_space, 2)
+                            elif unit == 'GiB':
                                 free_space = free_space/1073741824
                                 free_space = round(free_space, 2)
                             elif unit == 'MiB':

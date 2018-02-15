@@ -14,8 +14,10 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-# converting file_size to KiB or MiB or GiB
-def hr_size(size):# human readable size 
+from persepolis.scripts import logger
+
+# this function converts file_size to KiB or MiB or GiB
+def humanReadbleSize(size): 
     labels = ['KiB', 'MiB', 'GiB', 'TiB']
     i = -1
     if size < 1024:
@@ -25,7 +27,27 @@ def hr_size(size):# human readable size
         i += 1
         size = size / 1024
 
-    p = 2 if i == 2 else None
+    p = 2 if i > 1 else None
     return str(round(size, p)) +' '+ labels[i]
    
+# this function checks free space in hard disk.
+def freeSpace(dir):
+    try:
+        import psutil
+    except:
+        logger.sendToLog("psutil in not installed!", "ERROR")
+
+        return None
+
+    try:
+        dir_space = psutil.disk_usage(dir)
+        free_space = dir_space.free
+        return int(free_space)
+
+    except Exception as e:
+        # log in to the log file
+        logger.sendToLog("persepolis couldn't find free space value:\n" + str(e), "ERROR")
+
+        return None
+
 

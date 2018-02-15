@@ -375,10 +375,13 @@ def main():
         # Enable High DPI display with PyQt5
         try:
             persepolis_download_manager.setAttribute(Qt.AA_EnableHighDpiScaling)
+            if hasattr(QStyleFactory, 'AA_UseHighDpiPixmaps'):
+                persepolis_download_manager.setAttribute(Qt.AA_UseHighDpiPixmaps)
         except:
-            pass
-        if hasattr(QStyleFactory, 'AA_UseHighDpiPixmaps'):
-            persepolis_download_manager.setAttribute(Qt.AA_UseHighDpiPixmaps)
+            from persepolis.scripts import logger
+
+            # write error_message in log file.
+            logger.sendToLog('Qt.AA_UseHighDpiPixmaps is not available!', "ERROR")
 
         # set organization name and domain and apllication name
         QCoreApplication.setOrganizationName('persepolis_download_manager')

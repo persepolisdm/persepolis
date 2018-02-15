@@ -13,9 +13,8 @@
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from persepolis.scripts.freespace import freeSpace
+from persepolis.scripts.useful_tools import freeSpace, humanReadbleSize
 from persepolis.scripts.bubble import notifySend
-from persepolis.scripts import usefultools
 from persepolis.scripts import logger
 from PyQt5.QtCore import QSettings
 import xmlrpc.client
@@ -403,10 +402,10 @@ def convertDownloadInformation(download_status):
         file_size_back = file_size
 
         # converting file_size to KiB or MiB or GiB
-        size_str = usefultools.hr_size(file_size)
+        size_str = humanReadbleSize(file_size)
         downloaded_back = downloaded
 
-        downloaded_str = usefultools.hr_size(downloaded)
+        downloaded_str = humanReadbleSize(downloaded)
 
     # find download percent from file_size and downloaded_size
         file_size = file_size_back
@@ -430,7 +429,7 @@ def convertDownloadInformation(download_status):
         estimate_time_left = int((file_size - downloaded)/download_speed)
         
         # converting file_size to KiB or MiB or GiB
-        download_speed_str = usefultools.hr_size(download_speed) + '/s'
+        download_speed_str = humanReadbleSize(download_speed) + '/s'
 
         eta = ""
         if estimate_time_left >= 3600:

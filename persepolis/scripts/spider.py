@@ -14,7 +14,7 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from requests.cookies import cookiejar_from_dict
-from persepolis.scripts import usefultools
+from persepolis.scripts.useful_tools import humanReadbleSize
 from http.cookies import SimpleCookie
 from requests import Session
 import requests
@@ -100,7 +100,7 @@ def spider(add_link_dictionary):
         file_size = int(header['Content-Length'])
 
         # converting file_size to KiB or MiB or GiB 
-        file_size = usefultools.hr_size(file_size)
+        file_size = humanReadbleSize(file_size)
 
     # return results
     return filename, filesize
@@ -198,6 +198,6 @@ def addLinkSpider(add_link_dictionary):
         file_size = int(header['Content-Length'])
         
         # converting file_size to KiB or MiB or GiB
-        file_size = usefultools.hr_size(file_size)
+        file_size = humanReadbleSize(file_size)
 
     return file_size  # If no Content-Length ? fixed it.
