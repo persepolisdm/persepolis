@@ -13,18 +13,20 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
-import platform
-import re
-from random import random
-from time import time, sleep
-import youtube_dl
-import os
-from PyQt5.QtCore import QThread, pyqtSignal, QCoreApplication, QTranslator, QLocale
+
 from PyQt5.QtWidgets import QPushButton, QTextEdit, QFrame, QLabel, QComboBox, QHBoxLayout, QApplication
-from copy import deepcopy
+from PyQt5.QtCore import QThread, pyqtSignal, QCoreApplication, QTranslator, QLocale
+from persepolis.scripts.addlink import AddLinkWindow
+from persepolis.scripts.useful_tools import determineConfigFolder
 from persepolis.scripts import logger, osCommands
 from persepolis.scripts.spider import spider
-from persepolis.scripts.addlink import AddLinkWindow
+from time import time, sleep
+from copy import deepcopy
+from random import random
+import youtube_dl
+import platform
+import re
+import os
 
 # os_type >> Linux or Darwin(Mac osx) or Windows(Microsoft Windows) or
 # FreeBSD or OpenBSD
@@ -35,16 +37,7 @@ home_address = os.path.expanduser("~")
 
 
 # download manager config folder .
-if os_type == 'Linux' or os_type == 'FreeBSD' or os_type == 'OpenBSD':
-    config_folder = os.path.join(
-        str(home_address), ".config/persepolis_download_manager")
-elif os_type == 'Darwin':
-    config_folder = os.path.join(
-        str(home_address), "Library/Application Support/persepolis_download_manager")
-elif os_type == 'Windows':
-    config_folder = os.path.join(
-        str(home_address), 'AppData', 'Local', 'persepolis_download_manager')
-
+config_folder =  determineConfigFolder(os_type, home_address)
 
 # persepolis tmp folder path
 persepolis_tmp = os.path.join(config_folder, 'persepolis_tmp')

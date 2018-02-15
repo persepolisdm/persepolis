@@ -15,12 +15,12 @@
 
 
 
+from persepolis.scripts import logger
+import subprocess
+import platform
+import requests
 import urllib
 import os
-import requests
-from persepolis.scripts import logger
-import platform
-import subprocess
 
 # finding platform
 os_type = platform.system()

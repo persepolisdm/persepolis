@@ -14,16 +14,16 @@
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from PyQt5 import QtCore, QtGui, QtWidgets
-from PyQt5.QtWidgets import QWidget, QSizePolicy,  QInputDialog
 from PyQt5.QtCore import QSize, QPoint, QThread, QTranslator, QCoreApplication, QLocale
+from PyQt5.QtWidgets import QWidget, QSizePolicy,  QInputDialog
 from persepolis.gui.progress_ui import ProgressWindow_Ui
-import os
-import time
-from persepolis.scripts import download
-from persepolis.scripts.bubble import notifySend
-import platform
 from persepolis.scripts.shutdown import shutDown
+from persepolis.scripts.bubble import notifySend
+from PyQt5 import QtCore, QtGui, QtWidgets
+from persepolis.scripts import download
+import platform
+import time
+import os
 
 os_type = platform.system()
 

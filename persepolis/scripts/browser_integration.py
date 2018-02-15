@@ -13,26 +13,18 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-import platform
-import os
-import sys
+from persepolis.scripts.useful_tools import determineConfigFolder
 from persepolis.scripts import osCommands
+import platform
+import sys
+import os
 
 os_type = platform.system()
 
 home_address = str(os.path.expanduser("~"))
 
 # download manager config folder .
-if os_type == 'Linux' or os_type == 'FreeBSD' or os_type == 'OpenBSD':
-    config_folder = os.path.join(
-        str(home_address), ".config/persepolis_download_manager")
-elif os_type == 'Darwin':
-    config_folder = os.path.join(
-        str(home_address), "Library/Application Support/persepolis_download_manager")
-elif os_type == 'Windows':
-    config_folder = os.path.join(
-        str(home_address), 'AppData', 'Local', 'persepolis_download_manager')
-
+config_folder = determineConfigFolder(os_type, home_address)
 
 # browser can be firefox or chromium or chrome
 
