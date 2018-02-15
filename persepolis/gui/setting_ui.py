@@ -438,7 +438,7 @@ class Setting_Ui(QWidget):
 
         self.time_out_label.setToolTip(
             QCoreApplication.translate("setting_ui_tr", "<html><head/><body><p>Set timeout in seconds. </p></body></html>"))
-        self.time_out_label.setText(QCoreApplication.translate("setting_ui_tr", "Time out (seconds): "))
+        self.time_out_label.setText(QCoreApplication.translate("setting_ui_tr", "Timeout (seconds): "))
         self.time_out_spinBox.setToolTip(
             QCoreApplication.translate("setting_ui_tr", "<html><head/><body><p>Set timeout in seconds. </p></body></html>"))
 
@@ -454,7 +454,7 @@ class Setting_Ui(QWidget):
 
         self.wait_queue_label.setText(QCoreApplication.translate("setting_ui_tr", 'Wait between every downloads in queue:'))
 
-        self.aria2_path_checkBox.setText(QCoreApplication.translate("setting_ui_tr", 'Change aria2 default path'))
+        self.aria2_path_checkBox.setText(QCoreApplication.translate("setting_ui_tr", 'Change Aria2 default path'))
         self.aria2_path_pushButton.setText(QCoreApplication.translate("setting_ui_tr", 'Change'))
         aria2_path_tooltip =QCoreApplication.translate("setting_ui_tr", "<html><head/><body><p>Attention: Wrong path may have caused problem! Do it carefully or don't change default setting!</p></body></html>" )
         self.aria2_path_checkBox.setToolTip(aria2_path_tooltip)
@@ -487,7 +487,7 @@ class Setting_Ui(QWidget):
         self.color_label.setText(QCoreApplication.translate("setting_ui_tr", "Color scheme: "))
         self.icon_label.setText(QCoreApplication.translate("setting_ui_tr", "Icons: "))
 
-        self.icons_size_label.setText(QCoreApplication.translate("setting_ui_tr", "ToolBar's icons size: "))
+        self.icons_size_label.setText(QCoreApplication.translate("setting_ui_tr", "Toolbar's icons size: "))
 
         self.notification_label.setText(QCoreApplication.translate("setting_ui_tr", "Notification type: "))
 
@@ -496,7 +496,7 @@ class Setting_Ui(QWidget):
 
         self.enable_system_tray_checkBox.setText(QCoreApplication.translate("setting_ui_tr", "Enable system tray icon."))
         self.after_download_checkBox.setText(
-            QCoreApplication.translate("setting_ui_tr", "Show download complete dialog,when download has finished."))
+            QCoreApplication.translate("setting_ui_tr", "Show download complete dialog when download has finished."))
 
         self.show_menubar_checkbox.setText(QCoreApplication.translate("setting_ui_tr", "Show menubar."))
         self.show_sidepanel_checkbox.setText(QCoreApplication.translate("setting_ui_tr", "Show side panel."))

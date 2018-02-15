@@ -201,7 +201,7 @@ class ProgressWindow_Ui(QWidget):
         self.time_label.setText(QCoreApplication.translate("progress_ui_tr", "Estimated time left:"))
         self.connections_label.setText(QCoreApplication.translate("progress_ui_tr", "Number of connections: "))
         self.progress_tabWidget.setTabText(self.progress_tabWidget.indexOf(
-            self.information_tab),  QCoreApplication.translate("progress_ui_tr", "Download information"))
+            self.information_tab),  QCoreApplication.translate("progress_ui_tr", "Download Information"))
         self.limit_checkBox.setText(QCoreApplication.translate("progress_ui_tr", "Limit Speed"))
         self.after_checkBox.setText(QCoreApplication.translate("progress_ui_tr", "After download"))
         self.limit_comboBox.setItemText(0, "KiB/s")

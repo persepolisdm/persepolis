@@ -438,7 +438,7 @@ class MainWindow_Ui(QMainWindow):
 
 
 #toolBar and menubar and actions
-        self.videoFinderAddLinkAction = QAction(QIcon(icons + 'video_finder'), QCoreApplication.translate("mainwindow_ui_tr", 'Find Video Links'), self, statusTip=QCoreApplication.translate("mainwindow_ui_tr", 'Download video or audio from youtube and ...'),
+        self.videoFinderAddLinkAction = QAction(QIcon(icons + 'video_finder'), QCoreApplication.translate("mainwindow_ui_tr", 'Find Video Links'), self, statusTip=QCoreApplication.translate("mainwindow_ui_tr", 'Download video or audio from Youtube, Vimeo, etc...'),
                                             triggered=self.showVideoFinderAddLinkWindow)
         videoFinderMenu.addAction(self.videoFinderAddLinkAction)
 
@@ -533,7 +533,7 @@ class MainWindow_Ui(QMainWindow):
                                          self, statusTip=QCoreApplication.translate("mainwindow_ui_tr", 'Clear all items in download list'), triggered=self.clearDownloadList)
         editMenu.addAction(self.clearAction)
 
-        self.removeSelectedAction = QAction(QIcon(icons + 'remove'), QCoreApplication.translate("mainwindow_ui_tr", 'Remove selected downloads form list'),
+        self.removeSelectedAction = QAction(QIcon(icons + 'remove'), QCoreApplication.translate("mainwindow_ui_tr", 'Remove selected downloads from list'),
                                             self, statusTip=QCoreApplication.translate("mainwindow_ui_tr", 'Remove selected downloads form list'), triggered=self.removeSelected)
         editMenu.addAction(self.removeSelectedAction)
         self.removeSelectedAction.setEnabled(False)
