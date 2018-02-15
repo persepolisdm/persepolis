@@ -14,14 +14,15 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 
+from persepolis.scripts.useful_tools import determineConfigFolder
+from persepolis.scripts import logger
+from time import sleep
+import traceback
+import platform
 import sqlite3
+import random
 import ast
 import os
-import platform
-from time import sleep
-import random
-import traceback
-from persepolis.scripts import logger
 
 # get home address for this user
 home_address = os.path.expanduser("~")
@@ -32,16 +33,7 @@ os_type = platform.system()
 
 
 # download manager config folder .
-if os_type == 'Linux' or os_type == 'FreeBSD' or os_type == 'OpenBSD':
-    config_folder = os.path.join(
-        str(home_address), ".config/persepolis_download_manager")
-elif os_type == 'Darwin':
-    config_folder = os.path.join(
-        str(home_address), "Library/Application Support/persepolis_download_manager")
-elif os_type == 'Windows':
-    config_folder = os.path.join(
-        str(home_address), 'AppData', 'Local', 'persepolis_download_manager')
-
+config_folder =  determineConfigFolder(os_type, home_address)
 
 # persepolis tmp folder path
 persepolis_tmp = os.path.join(config_folder, 'persepolis_tmp')
@@ -580,33 +572,33 @@ class PersepolisDB():
         # job is done! open the lock
         self.lock = False
 
+        if len(list) != 0:
+            # item must be inserted to gid_list of 'All Downloads' and gid_list of category
+            # find download category and gid
+            category = dict['category']
 
-        # item must be inserted to gid_list of 'All Downloads' and gid_list of category
-        # find download category and gid
-        category = dict['category']
+            # get category_dict from data base
+            category_dict = self.searchCategoryInCategoryTable(category)
 
-        # get category_dict from data base
-        category_dict = self.searchCategoryInCategoryTable(category)
+            # get all_downloads_dict from data base
+            all_downloads_dict = self.searchCategoryInCategoryTable('All Downloads')
 
-        # get all_downloads_dict from data base
-        all_downloads_dict = self.searchCategoryInCategoryTable('All Downloads')
+            # get gid_list
+            category_gid_list = category_dict['gid_list']
 
-        # get gid_list
-        category_gid_list = category_dict['gid_list']
-
-        all_downloads_gid_list = all_downloads_dict['gid_list']
-
-        for dict in list:
-            gid = dict['gid']
+            all_downloads_gid_list = all_downloads_dict['gid_list']
+    
+            for dict in list:
+                gid = dict['gid']
          
-            # add gid of item to gid_list
-            category_gid_list.append(gid)
-            all_downloads_gid_list.append(gid)
+                # add gid of item to gid_list
+                category_gid_list.append(gid)
+                all_downloads_gid_list.append(gid)
 
 
-        # updata category_db_table
-        self.updateCategoryTable([all_downloads_dict])
-        self.updateCategoryTable([category_dict])
+            # updata category_db_table
+            self.updateCategoryTable([all_downloads_dict])
+            self.updateCategoryTable([category_dict])
 
 
     # insert in addlink table in persepolis.db 

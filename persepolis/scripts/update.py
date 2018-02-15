@@ -13,12 +13,12 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-from PyQt5 import QtWidgets, QtCore
-from PyQt5.QtGui import QIcon
 from PyQt5.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QLabel, QPushButton
 from PyQt5.QtCore import QSize, QPoint, QTranslator, QCoreApplication, QLocale
-import platform
 from persepolis.scripts import osCommands
+from PyQt5 import QtWidgets, QtCore
+from PyQt5.QtGui import QIcon
+import platform
 import requests
 import platform
 import ast

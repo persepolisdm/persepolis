@@ -13,10 +13,10 @@
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import os
-import platform
 from persepolis.scripts.play import playNotification
 from PyQt5.QtCore import QSettings
+import platform
+import os
 
 # platform
 os_type = platform.system()

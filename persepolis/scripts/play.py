@@ -12,11 +12,11 @@
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import os
 from persepolis.scripts import logger
-import platform
 from PyQt5.QtCore import QSettings
 import subprocess
+import platform
+import os
 
 os_type = platform.system()
 

@@ -13,39 +13,39 @@
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from functools import partial
-import sys
-from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import QAbstractItemView, QAction, QFileDialog, QSystemTrayIcon, QMenu, QApplication, QInputDialog, QMessageBox
-from PyQt5.QtGui import QIcon, QStandardItem, QCursor
 from PyQt5.QtCore import QTime, QCoreApplication, QRect, QSize, QPoint, QThread, pyqtSignal, Qt, QTranslator, QLocale
-import os
-import time
-from time import sleep
-import random
-from persepolis.scripts.after_download import AfterDownloadWindow
-from persepolis.scripts.text_queue import TextQueue
-from persepolis.scripts.browser_plugin_queue import BrowserPluginQueue
-from persepolis.scripts.addlink import AddLinkWindow
-from persepolis.scripts.properties import PropertiesWindow
-from persepolis.scripts.progress import ProgressWindow
-from persepolis.scripts import download
+from persepolis.scripts.useful_tools import freeSpace, determineConfigFolder
 from persepolis.gui.mainwindow_ui import MainWindow_Ui, QTableWidgetItem
-from persepolis.scripts.log_window import LogWindow
-from persepolis.scripts.play import playNotification
-from persepolis.scripts.bubble import notifySend
-from persepolis.scripts.setting import PreferencesWindow
-from persepolis.scripts.about import AboutWindow
-from persepolis.gui import resources
-from persepolis.scripts import spider
-from persepolis.scripts import osCommands
-from persepolis.scripts import logger
-from persepolis.scripts.freespace import freeSpace
-import platform
-from copy import deepcopy
-from persepolis.scripts.shutdown import shutDown
-from persepolis.scripts.update import checkupdate
 from persepolis.scripts.data_base import PluginsDB, PersepolisDB, TempDB
+from persepolis.scripts.browser_plugin_queue import BrowserPluginQueue
+from persepolis.scripts.after_download import AfterDownloadWindow
+from persepolis.scripts.properties import PropertiesWindow
+from persepolis.scripts.setting import PreferencesWindow
+from persepolis.scripts.progress import ProgressWindow
+from PyQt5.QtGui import QIcon, QStandardItem, QCursor
+from persepolis.scripts.play import playNotification
+from persepolis.scripts.addlink import AddLinkWindow
+from persepolis.scripts.text_queue import TextQueue
+from persepolis.scripts.log_window import LogWindow
+from persepolis.scripts.update import checkupdate
+from persepolis.scripts.shutdown import shutDown
+from persepolis.scripts.about import AboutWindow
+from persepolis.scripts.bubble import notifySend
+from PyQt5 import QtCore, QtGui, QtWidgets
+from persepolis.scripts import osCommands
+from persepolis.scripts import download
+from persepolis.scripts import logger
+from persepolis.scripts import spider
+from persepolis.gui import resources
+from functools import partial
+from copy import deepcopy
+from time import sleep
+import platform
+import random
+import time
+import sys
+import os
 
 # THIS FILE CREATES MAIN WINDOW
 
@@ -97,16 +97,7 @@ os_type = platform.system()
 
 
 # config_folder
-if os_type == 'Linux' or os_type == 'FreeBSD' or os_type == 'OpenBSD':
-    config_folder = os.path.join(
-        str(home_address), ".config/persepolis_download_manager")
-elif os_type == 'Darwin':
-    config_folder = os.path.join(
-        str(home_address), "Library/Application Support/persepolis_download_manager")
-elif os_type == 'Windows':
-    config_folder = os.path.join(
-        str(home_address), 'AppData', 'Local', 'persepolis_download_manager')
-
+config_folder = determineConfigFolder(os_type, home_address)
 
 download_info_folder = os.path.join(config_folder, "download_info")
 
@@ -1320,7 +1311,7 @@ class MainWindow(MainWindow_Ui):
                     file_size = dict['size']
 
                     if file_size != None:
-                        if len(file_size) > 2:
+                        if file_size[-2:] != ' B':
                             unit = file_size[-3:]
                             try:
                                 if unit == 'GiB':
@@ -1338,8 +1329,10 @@ class MainWindow(MainWindow_Ui):
                                 size_value = None
 
                         if free_space != None and size_value != None:
-
-                            if unit == 'GiB':
+                            if unit == 'TiB':
+                                free_space = free_space/(1073741824*1024)
+                                free_space = round(free_space, 2)
+                            elif unit == 'GiB':
                                 free_space = free_space/1073741824
                                 free_space = round(free_space, 2)
                             elif unit == 'MiB':
@@ -4545,6 +4538,13 @@ class MainWindow(MainWindow_Ui):
 # see browser_plugin_queue.py file
     def queueSpiderCallBack(self, filename, child, row_number):
         item = QTableWidgetItem(str(filename))
+
+        # add checkbox to the item
+        item.setFlags(QtCore.Qt.ItemIsUserCheckable | QtCore.Qt.ItemIsEnabled)
+        if child.links_table.item(int(row_number), 0).checkState() == 2:
+            item.setCheckState(QtCore.Qt.Checked)
+        else:
+            item.setCheckState(QtCore.Qt.Unchecked)
 
         child.links_table.setItem(int(row_number), 0, item)
 

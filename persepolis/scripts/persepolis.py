@@ -13,10 +13,11 @@
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+from persepolis.scripts.useful_tools import determineConfigFolder
+from copy import deepcopy
+import platform
 import sys
 import os
-import platform
-from copy import deepcopy
 
 # finding os platform
 os_type = platform.system()
@@ -40,13 +41,7 @@ import json
 home_address = os.path.expanduser("~")
 
 # persepolis config_folder
-if os_type == 'Linux' or os_type == 'FreeBSD'  or os_type == 'OpenBSD':
-    config_folder = os.path.join(str(home_address), ".config/persepolis_download_manager")
-elif os_type == 'Darwin':
-    config_folder = os.path.join(str(home_address), "Library/Application Support/persepolis_download_manager")
-elif os_type == 'Windows' :
-    config_folder = os.path.join(str(home_address), 'AppData\Local\persepolis_download_manager')
-
+config_folder = determineConfigFolder(os_type, home_address)
 
 # persepolis tmp folder path
 persepolis_tmp = os.path.join(config_folder, 'persepolis_tmp')
@@ -373,9 +368,15 @@ def main():
         persepolis_download_manager = PersepolisApplication(sys.argv)
 
         # Enable High DPI display with PyQt5
-        persepolis_download_manager.setAttribute(Qt.AA_EnableHighDpiScaling)
-        if hasattr(QStyleFactory, 'AA_UseHighDpiPixmaps'):
-            persepolis_download_manager.setAttribute(Qt.AA_UseHighDpiPixmaps)
+        try:
+            persepolis_download_manager.setAttribute(Qt.AA_EnableHighDpiScaling)
+            if hasattr(QStyleFactory, 'AA_UseHighDpiPixmaps'):
+                persepolis_download_manager.setAttribute(Qt.AA_UseHighDpiPixmaps)
+        except:
+            from persepolis.scripts import logger
+
+            # write error_message in log file.
+            logger.sendToLog('Qt.AA_UseHighDpiPixmaps is not available!', "ERROR")
 
         # set organization name and domain and apllication name
         QCoreApplication.setOrganizationName('persepolis_download_manager')

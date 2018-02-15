@@ -13,10 +13,11 @@
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import requests
-from http.cookies import SimpleCookie
+from persepolis.scripts.useful_tools import humanReadbleSize
 from requests.cookies import cookiejar_from_dict
+from http.cookies import SimpleCookie
 from requests import Session
+import requests
 
 
 # for more information about "requests" library , please see
@@ -98,17 +99,8 @@ def spider(add_link_dictionary):
     if 'Content-Length' in header.keys():
         file_size = int(header['Content-Length'])
 
-        # convert file_size to KiB or MiB or GiB
-        if int(file_size/1073741824) != 0:
-            file_size = file_size/1073741824
-            size_str = str(round(file_size, 2)) + " GiB"
-        elif int(file_size/1048576) != 0:
-            size_str = str(int(file_size/1048576)) + " MiB"
-        elif int(file_size/1024) != 0:
-            size_str = str(int(file_size/1024)) + " KiB"
-        else:
-            size_str = str(file_size)
-        filesize = size_str
+        # converting file_size to KiB or MiB or GiB 
+        file_size = humanReadbleSize(file_size)
 
     # return results
     return filename, filesize
@@ -204,15 +196,8 @@ def addLinkSpider(add_link_dictionary):
     file_size = None 
     if 'Content-Length' in header.keys():  # checking if file_size is available
         file_size = int(header['Content-Length'])
-        if int(file_size/1073741824) != 0:  # converting file_size to KiB or MiB or GiB
-            file_size = file_size/1073741824
-            size_str = str(round(file_size, 2)) + " GiB"
-        elif int(file_size/1048576) != 0:
-            size_str = str(int(file_size/1048576)) + " MiB"
-        elif int(file_size/1024) != 0:
-            size_str = str(int(file_size/1024)) + " KiB"
-        else:
-            size_str = str(file_size)
-        file_size = size_str
+        
+        # converting file_size to KiB or MiB or GiB
+        file_size = humanReadbleSize(file_size)
 
     return file_size  # If no Content-Length ? fixed it.

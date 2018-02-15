@@ -12,13 +12,15 @@
 #
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-import time
-import os
-import ast
-from persepolis.scripts.newopen import readList
-from persepolis.scripts.data_base import PersepolisDB 
-import platform
+
+from persepolis.scripts.useful_tools import determineConfigFolder
 from persepolis.scripts.osCommands import remove, removeDir
+from persepolis.scripts.data_base import PersepolisDB 
+from persepolis.scripts.newopen import readList
+import platform
+import time
+import ast
+import os
 
 home_address = os.path.expanduser("~")
 
@@ -27,16 +29,7 @@ os_type = platform.system()
 
 
 # config_folder
-if os_type == 'Linux' or os_type == 'FreeBSD' or os_type == 'OpenBSD':
-    config_folder = os.path.join(
-        str(home_address), ".config/persepolis_download_manager")
-elif os_type == 'Darwin':
-    config_folder = os.path.join(
-        str(home_address), "Library/Application Support/persepolis_download_manager")
-elif os_type == 'Windows':
-    config_folder = os.path.join(
-        str(home_address), 'AppData', 'Local', 'persepolis_download_manager')
-
+config_folder = determineConfigFolder(os_type, home_address)
 
 download_info_folder = os.path.join(config_folder, "download_info")
 
