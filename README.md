@@ -1,4 +1,4 @@
-# Persepolis Download Manager [![Build Status](https://travis-ci.org/persepolisdm/persepolis.svg?branch=master)](https://travis-ci.org/persepolisdm/persepolis)
+# Persepolis Download Manager [![Overall downloads on Github](https://img.shields.io/github/downloads/persepolisdm/persepolis/total.svg?maxAge=3600)][![GitHub license](https://img.shields.io/github/license/persepolisdm/persepolis.svg)](https://github.com/persepolisdm/persepolis/blob/master/LICENSE) [![Build Status](https://travis-ci.org/persepolisdm/persepolis.svg?branch=master)](https://travis-ci.org/persepolisdm/persepolis)
  
  Persepolis Download Manager is a GUI for aria2. 
  
