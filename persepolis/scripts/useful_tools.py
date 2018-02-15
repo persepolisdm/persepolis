@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
 #    the Free Software Foundation, either version 3 of the License, or
@@ -11,12 +12,25 @@
 #
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
 
 
 from persepolis.scripts import logger
 
+# this function converts file_size to KiB or MiB or GiB
+def humanReadbleSize(size): 
+    labels = ['KiB', 'MiB', 'GiB', 'TiB']
+    i = -1
+    if size < 1024:
+        return str(size) + ' B'
 
+    while size >= 1024:
+        i += 1
+        size = size / 1024
+
+    p = 2 if i > 1 else None
+    return str(round(size, p)) +' '+ labels[i]
+   
+# this function checks free space in hard disk.
 def freeSpace(dir):
     try:
         import psutil
