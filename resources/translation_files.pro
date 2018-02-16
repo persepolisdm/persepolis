@@ -17,6 +17,6 @@ SOURCES +=  ../persepolis/gui/about_ui.py \
 	    ../persepolis/scripts/progress.py \
 	    ../persepolis/scripts/update.py \
         ../persepolis/scripts/setting.py \
-			../persepolis/scripts/youtube_addlink.py
+			../persepolis/scripts/video_finder_addlink.py
 TRANSLATIONS += locales/ui.ts
 
