@@ -1,6 +1,6 @@
 # Persepolis Download Manager 
 
-[![Latest stable release](https://img.shields.io/github/release/persepolisdm/persepolis.svg?maxAge=3600)](https://github.com/persepolisdm/persepolis/releases) [![Total downloads](https://img.shields.io/github/downloads/persepolisdm/persepolis/total.svg)]() [![GitHub license](https://img.shields.io/github/license/persepolisdm/persepolis.svg)](https://github.com/persepolisdm/persepolis/blob/master/LICENSE) [![Build Status](https://travis-ci.org/persepolisdm/persepolis.svg?branch=master)](https://travis-ci.org/persepolisdm/persepolis)
+[![Latest stable release](https://img.shields.io/github/release/persepolisdm/persepolis.svg?maxAge=3600)](https://github.com/persepolisdm/persepolis/releases) [![Total downloads](https://img.shields.io/github/downloads/persepolisdm/persepolis/total.svg)](https://github.com/persepolisdm/persepolis) [![GitHub license](https://img.shields.io/github/license/persepolisdm/persepolis.svg)](https://github.com/persepolisdm/persepolis/blob/master/LICENSE) [![Build Status](https://travis-ci.org/persepolisdm/persepolis.svg?branch=master)](https://travis-ci.org/persepolisdm/persepolis) [![HitCount](http://hits.dwyl.com/persepolisdm/persepolis.svg)](http://hits.dwyl.com/persepolisdm/persepolis)
  
  Persepolis Download Manager is a GUI for aria2. 
  
