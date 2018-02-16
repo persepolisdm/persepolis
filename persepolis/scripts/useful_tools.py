@@ -16,6 +16,12 @@
 
 import os
 
+try:
+    from persepolis.scripts import logger
+    logger_availability = True
+except:
+    logger_availability = False
+
 # determine the config folder path base on the oprating system
 def determineConfigFolder(os_type, home_address):
 
@@ -33,7 +39,6 @@ def determineConfigFolder(os_type, home_address):
 
 
 
-from persepolis.scripts import logger
 
 # this function converts file_size to KiB or MiB or GiB
 def humanReadbleSize(size): 
@@ -54,7 +59,8 @@ def freeSpace(dir):
     try:
         import psutil
     except:
-        logger.sendToLog("psutil in not installed!", "ERROR")
+        if logger_availability:
+            logger.sendToLog("psutil in not installed!", "ERROR")
 
         return None
 
@@ -65,7 +71,8 @@ def freeSpace(dir):
 
     except Exception as e:
         # log in to the log file
-        logger.sendToLog("persepolis couldn't find free space value:\n" + str(e), "ERROR")
+        if logger_availability:
+            logger.sendToLog("persepolis couldn't find free space value:\n" + str(e), "ERROR")
 
         return None
 
