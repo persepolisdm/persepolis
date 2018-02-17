@@ -250,6 +250,7 @@
 
         <file>locales/ui_fa_IR.qm</file>
         <file>locales/ui_zh_CN.qm</file>
+        <file>locales/ui_fr_FR.qm</file>
 
 	</qresource>	
 </RCC>
