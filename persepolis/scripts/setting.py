@@ -123,7 +123,7 @@ class PreferencesWindow(Setting_Ui):
         self.lang_comboBox.setCurrentIndex(current_locale)
 # set color_scheme
         color_scheme = ['System', 'Persepolis Dark Red', 'Persepolis Dark Blue', 'Persepolis ArcDark Red',
-                        'Persepolis ArcDark Blue', 'Persepolis Light Red', 'Persepolis Light Blue']
+                        'Persepolis ArcDark Blue', 'Persepolis Light Red', 'Persepolis Light Blue', 'New Light Style', 'New Dark Style']
         self.color_comboBox.addItems(color_scheme)
 
         current_color_index = self.color_comboBox.findText(

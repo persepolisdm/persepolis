@@ -3,45 +3,45 @@
 <context>
     <name>about_ui_tr</name>
     <message>
-        <location filename="../../persepolis/gui/about_ui.py" line="246"/>
+        <location filename="../../persepolis/gui/about_ui.py" line="284"/>
         <source>About Persepolis</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/about_ui.py" line="198"/>
+        <location filename="../../persepolis/gui/about_ui.py" line="225"/>
         <source>Persepolis Download Manager</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/about_ui.py" line="199"/>
+        <location filename="../../persepolis/gui/about_ui.py" line="226"/>
         <source>Version 3.0.1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/about_ui.py" line="200"/>
+        <location filename="../../persepolis/gui/about_ui.py" line="227"/>
         <source>&lt;a href=https://persepolisdm.github.io&gt;https://persepolisdm.github.io&lt;/a&gt;</source>
         <comment>TRANSLATORS NOTE: YOU REALLY DON&apos;T NEED TO TRANSLATE THIS PART!</comment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/about_ui.py" line="204"/>
+        <location filename="../../persepolis/gui/about_ui.py" line="231"/>
         <source>&lt;a href=https://telegram.me/persepolisdm&gt;https://telegram.me/persepolisdm&lt;/a&gt;</source>
         <comment>TRANSLATORS NOTE: YOU REALLY DON&apos;T NEED TO TRANSLATE THIS PART!</comment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/about_ui.py" line="208"/>
+        <location filename="../../persepolis/gui/about_ui.py" line="235"/>
         <source>&lt;a href=https://twitter.com/persepolisdm&gt;https://twitter.com/persepolisdm&lt;/a&gt;</source>
         <comment>TRANSLATORS NOTE: YOU REALLY DON&apos;T NEED TO TRANSLATE THIS PART!</comment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/about_ui.py" line="213"/>
+        <location filename="../../persepolis/gui/about_ui.py" line="240"/>
         <source>Developers:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/about_ui.py" line="215"/>
+        <location filename="../../persepolis/gui/about_ui.py" line="242"/>
         <source>
 AliReza AmirSamimi
 Mohammadreza Abdollahzadeh
@@ -54,46 +54,61 @@ H.Rostami</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/about_ui.py" line="220"/>
+        <location filename="../../persepolis/gui/about_ui.py" line="262"/>
         <source>Persian translators:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/about_ui.py" line="222"/>
+        <location filename="../../persepolis/gui/about_ui.py" line="264"/>
         <source>H.Rostami
 Mostafa Asadi</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/about_ui.py" line="224"/>
+        <location filename="../../persepolis/gui/about_ui.py" line="251"/>
         <source>Chinese translators:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/about_ui.py" line="226"/>
+        <location filename="../../persepolis/gui/about_ui.py" line="253"/>
         <source>Davinma
 210hcl
 leoxxx</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/about_ui.py" line="247"/>
+        <location filename="../../persepolis/gui/about_ui.py" line="285"/>
         <source>Developers</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/about_ui.py" line="248"/>
+        <location filename="../../persepolis/gui/about_ui.py" line="286"/>
         <source>Translators</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/about_ui.py" line="249"/>
+        <location filename="../../persepolis/gui/about_ui.py" line="287"/>
         <source>License</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/about_ui.py" line="252"/>
+        <location filename="../../persepolis/gui/about_ui.py" line="290"/>
         <source>OK</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../persepolis/gui/about_ui.py" line="246"/>
+        <source>Special thanks to:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../persepolis/gui/about_ui.py" line="256"/>
+        <source>French translator:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../persepolis/gui/about_ui.py" line="258"/>
+        <source>Simon Porte</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
