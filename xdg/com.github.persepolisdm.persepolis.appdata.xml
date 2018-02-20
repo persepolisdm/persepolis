@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+​<component type="desktop-application">
+	​<id>com.github.persepolisdm.persepolis</id>
+	​<metadata_license>FSFAP</metadata_license>
+	​<project_license>GPL-3.0+</project_license>
+	​<name>Persepolis Download Manager</name>
+	​<summary>Download manager</summary>
+  ​
+	<description>
+​		<p>
+			Persepolis is easy to use graphical download manager that speed up
+			your downloads!
+​		</p>
+		<p>Persepolis features:</p>
+​			<ul>
+​				<li>Multi segment downloading</li>
+​				<li>Scheduling downloads</li>
+				<li>Download queue</li>
+				<li>Downloading video from Youtube and ...</li>
+				<li>Persepolis has browser extension for Firefox and Chromium , ....</li>
+​			</ul>
+​	</description>
+
+	<launchable type="desktop-id">com.github.persepolisdm.persepolis.desktop</launchable>
+  ​
+​	<screenshots>
+​		<screenshot type="default">
+​			<caption>Persepolis Download Manaer</caption>
+​			<image>https://persepolisdm.github.io/img/screen/persepolis.png</image>
+		</screenshot>
+	</screenshots>
+  ​
+	<url type="homepage">http://persepolisdm.github.io/</url>
+	<developer_name>AliReza AmirSamimi</developer_name>
+​</component>
+<!-- vim:set ts=2 sw=2 et: -->

@@ -113,14 +113,16 @@ DESCRIPTION = 'Persepolis Download Manager'
 if os_type == 'Linux':
     DATA_FILES = [
         ('/usr/share/man/man1/', ['man/persepolis.1.gz']),
-        ('/usr/share/applications/', ['xdg/persepolis.desktop']),
+        ('/usr/share/applications/', ['xdg/com.github.persepolisdm.persepolis.desktop']),
+        ('/usr/share/metainfo/', ['xdg/com.github.persepolisdm.persepolis.appdata.xml']),
         ('/usr/share/pixmaps/', ['resources/persepolis.svg']),
         ('/usr/share/pixmaps/', ['resources/persepolis-tray.svg'])
         ]
 elif os_type == 'FreeBSD' or os_type == 'OpenBSD':
     DATA_FILES = [
         ('/usr/local/share/man/man1/', ['man/persepolis.1.gz']),
-        ('/usr/local/share/applications/', ['xdg/persepolis.desktop']),
+        ('/usr/local/share/applications/', ['xdg/com.github.persepolisdm.persepolis.desktop']),
+        ('/usr/local/share/metainfo/', ['xdg/com.github.persepolisdm.persepolis.appdata.xml']),
         ('/usr/local/share/pixmaps/', ['resources/persepolis.svg']),
         ('/usr/local/share/pixmaps/', ['resources/persepolis-tray.svg'])
         ]

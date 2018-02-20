@@ -30,7 +30,8 @@ if os_type == 'Linux':
     path_list = ['/usr/share/man/man1/persepolis.1.gz',
     '/usr/share/pixmaps/persepolis.svg',
     '/usr/share/pixmaps/persepolis-tray.svg',
-    '/usr/share/applications/persepolis.desktop',
+    '/usr/share/applications/com.github.persepolisdm.persepolis.desktop',
+    '/usr/share/metainfo/com.github.persepolisdm.persepolis.appdata.xml',
     '/usr/bin/persepolis']
 
     #finding persepolis directories in /usr/lib/python3.6/site-packages/
@@ -42,7 +43,8 @@ elif os_type == 'FreeBSD' or os_type == 'OpenBSD':
     path_list = ['/usr/local/share/man/man1/persepolis.1.gz',
     '/usr/local/share/pixmaps/persepolis.svg',
     '/usr/local/share/pixmaps/persepolis-tray.svg',
-    '/usr/local/share/applications/persepolis.desktop',
+    '/usr/local/share/applications/com.github.persepolisdm.persepolis.desktop',
+    '/usr/local/share/metainfo/com.github.persepolisdm.persepolis.appdata.xml',
     '/usr/local/bin/persepolis']
 
     #finding persepolis directories in /usr/lib/python3.6/site-packages/
