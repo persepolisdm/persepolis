@@ -158,13 +158,13 @@ class PersepolisApplication(QApplication):
             self.setStyleSheet("QMenu::item:selected { background-color : #2a82da ;color : white } QToolTip { color: #ffffff; background-color: #353535; border: 1px solid white; }")
 
         elif color_scheme == 'New Dark Style':
-            file = QFile(":/style/dark_style.qss")
+            file = QFile(":/dark_style.qss")
             file.open(QFile.ReadOnly | QFile.Text)
             stream = QTextStream(file)
             self.setStyleSheet(stream.readAll())
 
         elif color_scheme == 'New Light Style':
-            file = QFile(":/style/light_style.qss")
+            file = QFile(":/light_style.qss")
             file.open(QFile.ReadOnly | QFile.Text)
             stream = QTextStream(file)
             self.setStyleSheet(stream.readAll())

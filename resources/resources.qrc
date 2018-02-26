@@ -255,7 +255,7 @@
 	</qresource>	
 
 
-    <qresource prefix="/style">
+    <qresource>
 
         <file>light-style/hmovetoolbar.svg</file>
         <file>light-style/vmovetoolbar.svg</file>
