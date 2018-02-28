@@ -100,8 +100,9 @@ if lock_file_validation:
 
 from PyQt5.QtWidgets import QApplication, QStyleFactory  
 from PyQt5.QtGui import QFont   
-from PyQt5.QtCore import QCoreApplication, QSettings, Qt
+from PyQt5.QtCore import QFile, QTextStream, QCoreApplication, QSettings, Qt
 from persepolis.gui.palettes import DarkRedPallete, DarkBluePallete, ArcDarkRedPallete, ArcDarkBluePallete, LightRedPallete, LightBluePallete
+from persepolis.gui import resources 
 from persepolis.scripts.error_window import ErrorWindow
 import traceback
 
@@ -155,6 +156,19 @@ class PersepolisApplication(QApplication):
             persepolis_light_blue = LightBluePallete()
             self.setPalette(persepolis_light_blue)
             self.setStyleSheet("QMenu::item:selected { background-color : #2a82da ;color : white } QToolTip { color: #ffffff; background-color: #353535; border: 1px solid white; }")
+
+        elif color_scheme == 'New Dark Style':
+            file = QFile(":/dark_style.qss")
+            file.open(QFile.ReadOnly | QFile.Text)
+            stream = QTextStream(file)
+            self.setStyleSheet(stream.readAll())
+
+        elif color_scheme == 'New Light Style':
+            file = QFile(":/light_style.qss")
+            file.open(QFile.ReadOnly | QFile.Text)
+            stream = QTextStream(file)
+            self.setStyleSheet(stream.readAll())
+
 
 
 
