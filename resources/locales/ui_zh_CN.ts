@@ -499,7 +499,7 @@ H.Rostami</translation>
     </message>
     <message>
         <location filename="../../persepolis/scripts/mainwindow.py" line="2186"/>
-        <source>Try agian!</source>
+        <source>Try again!</source>
         <translation>再次尝试！</translation>
     </message>
     <message>
@@ -1126,7 +1126,7 @@ H.Rostami</translation>
     </message>
     <message>
         <location filename="../../persepolis/scripts/progress.py" line="135"/>
-        <source>Try agian!</source>
+        <source>Try again!</source>
         <translation>再次尝试！</translation>
     </message>
 </context>
