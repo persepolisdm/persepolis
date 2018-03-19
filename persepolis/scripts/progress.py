@@ -133,7 +133,7 @@ class ProgressWindow(ProgressWindow_Ui):
                     notifySend("Aria2 disconnected!", "Persepolis is trying to connect! be patient!",
                                10000, 'warning', parent=self.parent)
                 else:
-                    notifySend(QCoreApplication.translate("progress_src_ui_tr", "Aria2 did not respond!"), QCoreApplication.translate("progress_src_ui_tr", "Try agian!"), 10000,
+                    notifySend(QCoreApplication.translate("progress_src_ui_tr", "Aria2 did not respond!"), QCoreApplication.translate("progress_src_ui_tr", "Try again!"), 10000,
                                'critical', parent=self.parent)
 
     def stopPushButtonPressed(self, button):

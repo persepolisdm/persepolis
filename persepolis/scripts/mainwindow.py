@@ -2056,7 +2056,7 @@ class MainWindow(MainWindow_Ui):
                                 10000, 'warning', parent=self)
                     else:
                         notifySend(QCoreApplication.translate("mainwindow_src_ui_tr", "Aria2 did not respond!"),
-                                QCoreApplication.translate("mainwindow_src_ui_tr", "Try agian!"),
+                                QCoreApplication.translate("mainwindow_src_ui_tr", "Try again!"),
                                 10000, 'warning', parent=self)
 
             else:
