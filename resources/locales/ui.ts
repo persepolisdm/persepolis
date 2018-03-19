@@ -523,7 +523,7 @@ leoxxx</source>
     </message>
     <message>
         <location filename="../../persepolis/scripts/mainwindow.py" line="2058"/>
-        <source>Try agian!</source>
+        <source>Try again!</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -1100,7 +1100,7 @@ leoxxx</source>
     </message>
     <message>
         <location filename="../../persepolis/scripts/progress.py" line="135"/>
-        <source>Try agian!</source>
+        <source>Try again!</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
