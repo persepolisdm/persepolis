@@ -113,8 +113,13 @@ def returnDefaultSettings():
     icons = 'Breeze'
     if os_type == 'Linux' or os_type == 'FreeBSD' or 'os_type' == 'OpenBSD':
         if desktop_env == 'KDE':
-            style = 'System'
-            color_scheme = 'System'
+            if 'Breeze' in available_styles:
+                style = 'Breeze'
+                color_scheme = 'System'
+            else:
+                style = 'Fusion'
+                color_scheme = 'Persepolis Light Blue'
+
         elif desktop_env == 'GNOME':
     # finout user prefers dark theme or light theme :)
     # read this links for more information:

@@ -426,7 +426,6 @@ def main():
         elif ui_direction in 'ltr':
             persepolis_download_manager.setLayoutDirection(Qt.LeftToRight)
 
-
         # run mainwindow
         try:
             mainwindow = MainWindow(start_in_tray, persepolis_download_manager, persepolis_download_manager.setting)
