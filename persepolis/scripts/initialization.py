@@ -16,12 +16,11 @@
 
 # THIS FILE CONTAINING SOME VARIABLES , ... THAT USING FOR INITIALIZING PERSEPOLIS
 
+from persepolis.scripts.useful_tools import determineConfigFolder, osAndDesktopEnvironment, returnDefaultSettings
 from persepolis.scripts.browser_integration import browserIntegration
-from persepolis.scripts.useful_tools import determineConfigFolder
 from persepolis.scripts import osCommands
 from PyQt5.QtCore import QSettings
 import subprocess
-import platform
 import shutil
 import time
 import os
@@ -33,7 +32,7 @@ home_address = os.path.expanduser("~")
 
 # os_type >> Linux or Darwin(Mac osx) or Windows(Microsoft Windows) or
 # FreeBSD or OpenBSD
-os_type = platform.system()
+os_type, desktop_env = osAndDesktopEnvironment() 
 
 # download manager config folder .
 config_folder = determineConfigFolder(os_type, home_address)
@@ -121,24 +120,7 @@ persepolis_setting = QSettings('persepolis_download_manager', 'persepolis')
 
 persepolis_setting.beginGroup('settings')
 
-# download files is downloading in temporary folder(download_path_temp) and then they will be moved to user download folder(download_path) after completion.
-# persepolis temporary download folder
-if os_type != 'Windows':
-    download_path_temp = str(home_address) + '/.persepolis'
-else:
-    download_path_temp = os.path.join(
-        str(home_address), 'AppData', 'Local', 'persepolis')
-
-# user download folder path    
-download_path = os.path.join(str(home_address), 'Downloads', 'Persepolis')
-
-# Persepolis default setting
-default_setting_dict = {'locale': 'en_US', 'toolbar_icon_size': 32, 'wait-queue': [0, 0], 'awake': 'no', 'custom-font': 'no', 'column0': 'yes', 'column1': 'yes', 'column2': 'yes', 'column3': 'yes', 'column4': 'yes', 'column5': 'yes', 'column6': 'yes', 'column7': 'yes', 'column10': 'yes', 'column11': 'yes', 'column12': 'yes',
-                             'subfolder': 'yes', 'startup': 'no', 'show-progress': 'yes', 'show-menubar': 'no', 'show-sidepanel': 'yes', 'rpc-port': 6801, 'notification': 'Native notification', 'after-dialog': 'yes', 'tray-icon': 'yes',
-                             'max-tries': 5, 'retry-wait': 0, 'timeout': 60, 'connections': 16, 'download_path_temp': download_path_temp, 'download_path': download_path, 'sound': 'yes', 'sound-volume': 100, 'style': 'Fusion',
-                             'color-scheme': 'Persepolis Light Blue', 'icons': 'Breeze', 'font': 'Ubuntu', 'font-size': 9, 'aria2_path': '', 
-                             'video_finder/enable': 'yes', 'video_finder/hide_no_audio': 'yes', 'video_finder/hide_no_video': 'yes', 'video_finder/max_links': '3'}
-
+default_setting_dict = returnDefaultSettings()
 # this loop is checking values in persepolis_setting . if value is not
 # valid then value replaced by default_setting_dict value
 for key in default_setting_dict.keys():
@@ -146,6 +128,7 @@ for key in default_setting_dict.keys():
     setting_value = persepolis_setting.value(key, default_setting_dict[key])
     persepolis_setting.setValue(key, setting_value)
 
+# download files is downloading in temporary folder(download_path_temp) and then they will be moved to user download folder(download_path) after completion.
 # Check that mount point is available of not!
 if not(os.path.exists(persepolis_setting.value('download_path_temp'))):
     persepolis_setting.setValue('download_path_temp', default_setting_dict['download_path_temp'])

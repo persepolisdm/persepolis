@@ -15,25 +15,24 @@
 
 
 
+from persepolis.scripts.useful_tools import osAndDesktopEnvironment
 from persepolis.scripts import logger
 import subprocess
-import platform
 import requests
 import urllib
 import os
-
-# finding platform
-os_type = platform.system()
-platform = 'platform : ' + os_type
-logger.sendToLog(platform, "INFO")
-
 
 # get proxy function
 def getProxy():
     socks_proxy = False
 
-    # finding desktop environment
-    desktop = os.environ.get('XDG_CURRENT_DESKTOP')
+    # find os and desktop environment
+    os_type, desktop = osAndDesktopEnvironment() 
+
+    # write in log
+    platform = 'platform : ' + os_type
+    logger.sendToLog(platform, "INFO")
+
     proxy = {}
     if os_type == 'Linux' or os_type == 'FreeBSD' or os_type == 'OpenBSD':
         if desktop is None:
