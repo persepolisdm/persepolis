@@ -726,7 +726,7 @@ class PersepolisDB():
         # lock data base
         self.lockCursor()
 
-        self.persepolis_db_cursor.execute("""SELECT * FROM addlink_db_table WHERE link = '{}'""".format(str(link)))
+        self.persepolis_db_cursor.execute("""SELECT * FROM addlink_db_table WHERE link = (?)""", (link,))
         list = self.persepolis_db_cursor.fetchall()
 
         # job is done! open the lock
