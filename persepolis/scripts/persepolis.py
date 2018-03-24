@@ -134,7 +134,7 @@ class PersepolisApplication(QApplication):
             persepolis_dark_red = DarkRedPallete()
             self.setPalette(persepolis_dark_red)
             self.setStyleSheet("QMenu::item:selected {background-color : #d64937 ;color : white} QToolTip { color: #ffffff; background-color: #353535; border: 1px solid white; }")
-        elif color_scheme == 'Persepolis Dark Blue':
+        elif color_scheme == 'Persepolis  Old Dark Blue':
             persepolis_dark_blue = DarkBluePallete()
             self.setPalette(persepolis_dark_blue)
             self.setStyleSheet("QMenu::item:selected { background-color : #2a82da ;color : white } QToolTip { color: #ffffff; background-color: #353535; border: 1px solid white; }")
@@ -152,18 +152,18 @@ class PersepolisApplication(QApplication):
             self.setPalette(persepolis_light_red)
             self.setStyleSheet("QMenu::item:selected {background-color : #d64937 ;color : white} QToolTip { color: #ffffff; background-color: #353535; border: 1px solid white; }")
 
-        elif color_scheme == 'Persepolis Light Blue':
+        elif color_scheme == 'Persepolis Old Light Blue':
             persepolis_light_blue = LightBluePallete()
             self.setPalette(persepolis_light_blue)
             self.setStyleSheet("QMenu::item:selected { background-color : #2a82da ;color : white } QToolTip { color: #ffffff; background-color: #353535; border: 1px solid white; }")
 
-        elif color_scheme == 'New Dark Style':
+        elif color_scheme == 'Persepolis Dark Blue':
             file = QFile(":/dark_style.qss")
             file.open(QFile.ReadOnly | QFile.Text)
             stream = QTextStream(file)
             self.setStyleSheet(stream.readAll())
 
-        elif color_scheme == 'New Light Style':
+        elif color_scheme == 'Persepolis Light Blue':
             file = QFile(":/light_style.qss")
             file.open(QFile.ReadOnly | QFile.Text)
             stream = QTextStream(file)
