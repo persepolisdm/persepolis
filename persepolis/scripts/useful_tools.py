@@ -110,6 +110,8 @@ def returnDefaultSettings():
 
     # find available styles(It's depends on operating system and desktop environments).
     available_styles = QStyleFactory.keys()
+    style = 'Fusion'
+    color_scheme = 'Persepolis Light Blue'
     icons = 'Breeze'
     if os_type == 'Linux' or os_type == 'FreeBSD' or 'os_type' == 'OpenBSD':
         if desktop_env == 'KDE':
