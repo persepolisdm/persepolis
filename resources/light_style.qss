@@ -1,13 +1,27 @@
 /*
  *  Breeze stylesheet.
  *
- *  :author: Colin Duquesnoy
- *  :editor: Alex Huszagh
- *  :license: MIT, see LICENSE.md
+ *  :editor: AliReza AmirSamimi 
+ *  :license: GPL3 (read LICENSE file)
+ *  The original project is published under MIT license.
  *
- *  This is originally a fork of QDarkStyleSheet, and is based on Breeze/
- *  BreezeDark color scheme, but is in no way affiliated with KDE.
+ *  This is originally a fork of this project: 
+ *  https://github.com/XLTools/BreezeStyleSheets
  *
+ * --------------------------------------------------------------------
+ * THE GPL3 License
+ *   This program is free software: you can redistribute it and/or modify
+ *   it under the terms of the GNU General Public License as published by
+ *   the Free Software Foundation, either version 3 of the License, or
+ *   (at your option) any later version.
+ *
+ *   This program is distributed in the hope that it will be useful,
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *   GNU General Public License for more details.
+ *
+ *   You should have received a copy of the GNU General Public License
+ *   along with this program.  If not, see <http://www.gnu.org/licenses/>.
  * ---------------------------------------------------------------------
  *  The MIT License (MIT)
  *
@@ -644,6 +658,8 @@ QPushButton
     padding: 0.5ex;
     border-radius: 0.2ex;
     outline: none;
+    min-width: 70px;
+
 }
 
 QPushButton:disabled
@@ -1288,7 +1304,7 @@ QSlider::sub-page:vertical
 QToolButton
 {
     background-color: transparent;
-    border: 0.1ex solid #BAB9B8;
+    /*border: 0.1ex solid #BAB9B8;*/
     border-radius: 0.2ex;
     margin: 0.3ex;
     padding: 0.5ex;
