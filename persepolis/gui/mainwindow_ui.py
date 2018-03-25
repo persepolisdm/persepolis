@@ -413,7 +413,7 @@ class MainWindow_Ui(QMainWindow):
         viewMenu = self.menubar.addMenu(QCoreApplication.translate("mainwindow_ui_tr", '&View'))
         downloadMenu = self.menubar.addMenu(QCoreApplication.translate("mainwindow_ui_tr", '&Download'))
         queueMenu = self.menubar.addMenu(QCoreApplication.translate("mainwindow_ui_tr", '&Queue'))
-        videoFinderMenu = self.menubar.addMenu(QCoreApplication.translate("mainwindow_ui_tr", '&Video Finder'))
+        videoFinderMenu = self.menubar.addMenu(QCoreApplication.translate("mainwindow_ui_tr", 'V&ideo Finder'))
         helpMenu = self.menubar.addMenu(QCoreApplication.translate("mainwindow_ui_tr", '&Help'))
 
 
