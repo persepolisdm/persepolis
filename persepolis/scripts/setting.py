@@ -125,7 +125,7 @@ class PreferencesWindow(Setting_Ui):
 # set color_scheme
         color_scheme = ['System', 'Persepolis Light Blue', 'Persepolis Dark Blue', 
                         'Persepolis ArcDark Blue', 'Persepolis ArcDark Red',
-                        'Persepolis Dark Red', 'Persepolis Light Red', 
+                        'Persepolis Old Dark Red', 'Persepolis Old Light Red', 
                         'Persepolis Old Dark Blue', 'Persepolis Old light Blue']
         self.color_comboBox.addItems(color_scheme)
 

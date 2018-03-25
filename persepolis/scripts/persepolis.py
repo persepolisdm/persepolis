@@ -130,7 +130,7 @@ class PersepolisApplication(QApplication):
 # color_scheme 
     def setPersepolisColorScheme(self, color_scheme):
         self.persepolis_color_scheme = color_scheme
-        if color_scheme == 'Persepolis Dark Red':
+        if color_scheme == 'Persepolis Old Dark Red':
             persepolis_dark_red = DarkRedPallete()
             self.setPalette(persepolis_dark_red)
             self.setStyleSheet("QMenu::item:selected {background-color : #d64937 ;color : white} QToolTip { color: #ffffff; background-color: #353535; border: 1px solid white; }")
@@ -147,7 +147,7 @@ class PersepolisApplication(QApplication):
             persepolis_arcdark_blue = ArcDarkBluePallete()
             self.setPalette(persepolis_arcdark_blue)
             self.setStyleSheet("QMenu::item:selected {background-color : #5294e2 ; color : white } QToolTip { color: #ffffff; background-color: #353945; border: 1px solid white; } QPushButton {background-color: #353945  } QTabWidget {background-color : #353945;} QMenu {background-color: #353945 }")
-        elif color_scheme == 'Persepolis Light Red':
+        elif color_scheme == 'Persepolis Old Light Red':
             persepolis_light_red = LightRedPallete()
             self.setPalette(persepolis_light_red)
             self.setStyleSheet("QMenu::item:selected {background-color : #d64937 ;color : white} QToolTip { color: #ffffff; background-color: #353535; border: 1px solid white; }")
