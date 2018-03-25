@@ -241,14 +241,11 @@ def downloadAria(gid, parent):
             aria_dict ['http-user']= str(download_user)
             aria_dict ['http-passwd']= str(download_passwd)
 
-        print(aria_dict)
         aria_dict_copy = aria_dict.copy()
         # remove empty key[value] from aria_dict
         for aria_dict_key in aria_dict_copy.keys():
             if aria_dict_copy[aria_dict_key] in [None, 'None', '']:
                 del aria_dict[aria_dict_key]
-
-        print(aria_dict)
 
         try:
             answer = server.aria2.addUri([link], aria_dict)
