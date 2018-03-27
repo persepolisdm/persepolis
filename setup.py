@@ -36,12 +36,15 @@ else:
     sys.exit(1)
 
 # Checking dependencies!
+not_installed = ''
+
 # PyQt5
 try:
     import PyQt5
     print('python3-pyqt5 is found')
 except:
     print('Error : python3-pyqt5 is not installed!')
+    not_installed = not_installed + 'PyQt5, '
 
 # python3-requests
 try:
@@ -49,6 +52,7 @@ try:
     print('python3-requests is found!')
 except:
     print('Error : requests is not installed!')
+    not_installed = not_installed + 'python3-requests, '
 
 # python3-setproctitle
 try:
@@ -56,6 +60,7 @@ try:
     print('python3-setproctitle is found!')
 except:
     print("Warning: setproctitle is not installed!")
+    not_installed = not_installed + 'python3-setproctitle, '
 
 # psutil
 try:
@@ -63,18 +68,21 @@ try:
     print('python3-psutil is found!')
 except:
     print("Warning: python3-psutil is not installed!")
+    not_installed = not_installed + 'psutil, '
 
 # youtube_dl
 try:
     import youtube_dl
-    print('youtube_dl is found')
+    print('youtube-dl is found')
 except:
-    print('Warning: youtube_dl is not installed!')
+    print('Warning: youtube-dl is not installed!')
+    not_installed = not_installed + 'youtube-dl, '
 
 # aria2
 answer = os.system('aria2c --version 1>/dev/null')
 if answer != 0:
     print("Error aria2 not installed!")
+    not_installed = not_installed + 'aria2c, '
 else:
     print('aria2 is found!')
 
@@ -82,6 +90,7 @@ else:
 answer = os.system('notify-send --version 1>/dev/null')
 if answer != 0:
     print("Error libnotify-bin is not installed!")
+    not_installed = not_installed + 'libnotify-bin, '
 else:
     print('libnotify-bin is found!')
 
@@ -89,6 +98,7 @@ else:
 answer = os.system('paplay --version 1>/dev/null')
 if answer != 0:
     print("Warning: paplay not installed!You need pulseaudio for sound notifications!")
+    not_installed = not_installed + 'paplay, '
 else:
     print('paplay is found!')
 
@@ -102,7 +112,20 @@ if os.path.isdir(notifications_path):
     print('sound-theme-freedesktop is found!')
 else:
     print('Warning: sound-theme-freedesktop is not installed! you need this package for sound notifications!')
- 
+    not_installed = not_installed + 'sound-theme-freedesktop'
+
+# show warning , if dependencies not installed!
+if not_installed != '':
+    print('########################')
+    print('####### WARNING ########')
+    print('########################')
+    print('Some dependencies are not installed .It causes some problems for persepolis! : \n')
+    print(not_installed + '\n\n')
+    print('Read this link for more information: \n')
+    print('https://github.com/persepolisdm/persepolis/wiki/git-installation-instruction\n\n')
+    answer = input('Do you want to continue?(y/n)')
+    if answer not in ['y', 'Y', 'yes']:
+        sys.exit(1)
 
 if sys.argv[1] == "test":
    print('We have not unit test :)')
