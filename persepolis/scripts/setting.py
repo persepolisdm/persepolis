@@ -104,7 +104,9 @@ class PreferencesWindow(Setting_Ui):
         # find available styles(It's depends on operating system and desktop environments).
         available_styles = QStyleFactory.keys()
         for style in available_styles:
-            self.style_comboBox.addItem(style)
+            # 'GTK' or 'gtk' styles may cause to crashing! Eliminate them!
+            if 'gtk' not in str(style) and 'GTK' not in str(style):
+                self.style_comboBox.addItem(style)
 
         # System >> for system default style
         # when user select System for style section, the default system style is using.
