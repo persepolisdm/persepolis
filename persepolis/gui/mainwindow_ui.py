@@ -14,8 +14,8 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from PyQt5 import QtCore, QtGui, QtWidgets
-from PyQt5.QtWidgets import QDateTimeEdit, QDoubleSpinBox, QPushButton, QComboBox,  QMenu, QTreeView, QSplitter, QSizePolicy, QGridLayout, QHBoxLayout, QVBoxLayout, QMenu, QTableWidgetItem, QAbstractItemView, QApplication, QToolBar, QMenuBar, QStatusBar, QTableWidget, QAction, QMainWindow, QWidget, QFrame, QAbstractItemView, QCheckBox, QSpinBox, QLabel
-from PyQt5.QtGui import QIcon, QStandardItemModel, QStandardItem
+from PyQt5.QtWidgets import QShortcut, QDateTimeEdit, QDoubleSpinBox, QPushButton, QComboBox,  QMenu, QTreeView, QSplitter, QSizePolicy, QGridLayout, QHBoxLayout, QVBoxLayout, QMenu, QTableWidgetItem, QAbstractItemView, QApplication, QToolBar, QMenuBar, QStatusBar, QTableWidget, QAction, QMainWindow, QWidget, QFrame, QAbstractItemView, QCheckBox, QSpinBox, QLabel
+from PyQt5.QtGui import QKeySequence, QIcon, QStandardItemModel, QStandardItem
 from PyQt5.QtCore import QCoreApplication, QRect, QSize, Qt, QTranslator, QLocale
 from persepolis.gui import resources 
 
@@ -440,6 +440,9 @@ class MainWindow_Ui(QMainWindow):
 #toolBar and menubar and actions
         self.videoFinderAddLinkAction = QAction(QIcon(icons + 'video_finder'), QCoreApplication.translate("mainwindow_ui_tr", 'Find Video Links'), self, statusTip=QCoreApplication.translate("mainwindow_ui_tr", 'Download video or audio from Youtube, Vimeo, etc...'),
                                             triggered=self.showVideoFinderAddLinkWindow)
+
+        QShortcut(QKeySequence('Ctrl+I'), self, self.showVideoFinderAddLinkWindow)
+
         videoFinderMenu.addAction(self.videoFinderAddLinkAction)
 
         self.stopAllAction = QAction(QIcon(icons + 'stop_all'), QCoreApplication.translate("mainwindow_ui_tr", 'Stop all active downloads'),
@@ -482,11 +485,14 @@ class MainWindow_Ui(QMainWindow):
         viewMenu.addAction(self.showSidePanelAction)
 
         self.minimizeAction = QAction(QIcon(icons + 'minimize'), QCoreApplication.translate("mainwindow_ui_tr", 'Minimize to system tray'), self,
-                                      shortcut="Ctrl+W", statusTip=QCoreApplication.translate("mainwindow_ui_tr", "Minimize to system tray"), triggered=self.minMaxTray)
+                                      statusTip=QCoreApplication.translate("mainwindow_ui_tr", "Minimize to system tray"), triggered=self.minMaxTray)
+        QShortcut(QKeySequence('Ctrl+W'), self, self.minMaxTray)
+
         viewMenu.addAction(self.minimizeAction)
 
         self.addlinkAction = QAction(QIcon(icons + 'add'), QCoreApplication.translate("mainwindow_ui_tr", 'Add New Download Link'), self,
-                                     shortcut="Ctrl+N", statusTip=QCoreApplication.translate("mainwindow_ui_tr", "Add New Download Link"), triggered=self.addLinkButtonPressed)
+                                     statusTip=QCoreApplication.translate("mainwindow_ui_tr", "Add New Download Link"), triggered=self.addLinkButtonPressed)
+        QShortcut(QKeySequence('Ctrl+N'), self, self.addLinkButtonPressed)
         fileMenu.addAction(self.addlinkAction)
 
         self.addtextfileAction = QAction(QIcon(icons + 'file'), QCoreApplication.translate("mainwindow_ui_tr", 'Import links from text file'), self,
@@ -494,23 +500,28 @@ class MainWindow_Ui(QMainWindow):
         fileMenu.addAction(self.addtextfileAction)
 
         self.resumeAction = QAction(QIcon(icons + 'play'), QCoreApplication.translate("mainwindow_ui_tr", 'Resume Download'), self,
-                                    shortcut="Ctrl+R", statusTip=QCoreApplication.translate("mainwindow_ui_tr", "Resume Download"), triggered=self.resumeButtonPressed)
+                                    statusTip=QCoreApplication.translate("mainwindow_ui_tr", "Resume Download"), triggered=self.resumeButtonPressed)
+        QShortcut(QKeySequence('Ctrl+R'), self, self.resumeButtonPressed)
         downloadMenu.addAction(self.resumeAction)
 
         self.pauseAction = QAction(QIcon(icons + 'pause'), QCoreApplication.translate("mainwindow_ui_tr", 'Pause Download'), self,
-                                   shortcut="Ctrl+C", statusTip=QCoreApplication.translate("mainwindow_ui_tr", "Pause Download"), triggered=self.pauseButtonPressed)
+                                   statusTip=QCoreApplication.translate("mainwindow_ui_tr", "Pause Download"), triggered=self.pauseButtonPressed)
+        QShortcut(QKeySequence('Ctrl+C'), self, self.pauseButtonPressed)
         downloadMenu.addAction(self.pauseAction)
 
-        self.stopAction = QAction(QIcon(icons + 'stop'), QCoreApplication.translate("mainwindow_ui_tr", 'Stop Download'), self, shortcut="Ctrl+S",
+        self.stopAction = QAction(QIcon(icons + 'stop'), QCoreApplication.translate("mainwindow_ui_tr", 'Stop Download'), self,
                                   statusTip=QCoreApplication.translate("mainwindow_ui_tr", "Stop/Cancel Download"), triggered=self.stopButtonPressed)
+        QShortcut(QKeySequence('Ctrl+S'), self, self.stopButtonPressed)
         downloadMenu.addAction(self.stopAction)
 
         self.propertiesAction = QAction(QIcon(icons + 'setting'), QCoreApplication.translate("mainwindow_ui_tr", 'Properties'), self,
-                                        shortcut="Ctrl+P", statusTip=QCoreApplication.translate("mainwindow_ui_tr", "Properties"), triggered=self.propertiesButtonPressed)
+                                        statusTip=QCoreApplication.translate("mainwindow_ui_tr", "Properties"), triggered=self.propertiesButtonPressed)
+        QShortcut(QKeySequence('Ctrl+P'), self, self.propertiesButtonPressed)
         downloadMenu.addAction(self.propertiesAction)
 
         self.progressAction = QAction(QIcon(icons + 'window'), QCoreApplication.translate("mainwindow_ui_tr", 'Progress'), self,
-                                      shortcut="Ctrl+Z", statusTip=QCoreApplication.translate("mainwindow_ui_tr", "Progress"), triggered=self.progressButtonPressed)
+                                      statusTip=QCoreApplication.translate("mainwindow_ui_tr", "Progress"), triggered=self.progressButtonPressed)
+        QShortcut(QKeySequence('Ctrl+Z'), self, self.progressButtonPressed)
         downloadMenu.addAction(self.progressAction)
 
         self.openFileAction = QAction(QIcon(
@@ -526,7 +537,8 @@ class MainWindow_Ui(QMainWindow):
         fileMenu.addAction(self.openDefaultDownloadFolderAction)
 
         self.exitAction = QAction(QIcon(icons + 'exit'), QCoreApplication.translate("mainwindow_ui_tr", 'Exit'), self,
-                                  shortcut="Ctrl+Q", statusTip=QCoreApplication.translate("mainwindow_ui_tr", "Exit"), triggered=self.closeEvent)
+                                  statusTip=QCoreApplication.translate("mainwindow_ui_tr", "Exit"), triggered=self.closeEvent)
+        QShortcut(QKeySequence('Ctrl+Q'), self, self.closeEvent)
         fileMenu.addAction(self.exitAction)
 
         self.clearAction = QAction(QIcon(icons + 'multi_remove'), QCoreApplication.translate("mainwindow_ui_tr", 'Clear download list'),

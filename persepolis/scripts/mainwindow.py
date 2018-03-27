@@ -1877,7 +1877,7 @@ class MainWindow(MainWindow_Ui):
 
 
 # This method creates addlinkwindow when user presses plus button in MainWindow
-    def addLinkButtonPressed(self, button):
+    def addLinkButtonPressed(self, button=None):
         addlinkwindow = AddLinkWindow(self, self.callBack, self.persepolis_setting)
         self.addlinkwindows_list.append(addlinkwindow)
         self.addlinkwindows_list[len(self.addlinkwindows_list) - 1].show()
@@ -2018,7 +2018,7 @@ class MainWindow(MainWindow_Ui):
 
 
 # when user presses resume button this method is called
-    def resumeButtonPressed(self, button):
+    def resumeButtonPressed(self, button=None):
         self.resumeAction.setEnabled(False)
         selected_row_return = self.selectedRow()  # finding user's selected row
 
@@ -2078,7 +2078,7 @@ class MainWindow(MainWindow_Ui):
                 5000, 'critical', parent=self)
 
 # this method called if user presses stop button in MainWindow
-    def stopButtonPressed(self, button):
+    def stopButtonPressed(self, button=None):
 
         self.stopAction.setEnabled(False)
         selected_row_return = self.selectedRow()  # finding user's selected row
@@ -2119,7 +2119,7 @@ class MainWindow(MainWindow_Ui):
 
 
 # this method called if user presses pause button in MainWindow
-    def pauseButtonPressed(self, button):
+    def pauseButtonPressed(self, button=None):
         self.pauseAction.setEnabled(False)
 
         # find selected row
@@ -2159,7 +2159,7 @@ class MainWindow(MainWindow_Ui):
                             10000, 'critical', parent=self)
 
 # This method called if properties button pressed by user in MainWindow
-    def propertiesButtonPressed(self, button):
+    def propertiesButtonPressed(self, button=None):
         self.propertiesAction.setEnabled(False)
         selected_row_return = self.selectedRow()  # finding user's selected row
 
@@ -2228,7 +2228,7 @@ class MainWindow(MainWindow_Ui):
 
 # This method is called if user presses "show/hide progress window" button in
 # MainWindow
-    def progressButtonPressed(self, button):
+    def progressButtonPressed(self, button=None):
     # find user's selected row
         selected_row_return = self.selectedRow()
         if selected_row_return != None:
@@ -2283,7 +2283,7 @@ class MainWindow(MainWindow_Ui):
 
 # close event
 # when user closes application then this method is called
-    def closeEvent(self, event):
+    def closeEvent(self, event=None):
         # save window size  and position
         self.persepolis_setting.setValue('MainWindow/size', self.size())
         self.persepolis_setting.setValue('MainWindow/position', self.pos())
@@ -2417,7 +2417,7 @@ class MainWindow(MainWindow_Ui):
             self.minMaxTray(click)
 
 # when minMaxTray method called ,this method shows/hides main window
-    def minMaxTray(self, menu):
+    def minMaxTray(self, menu=None):
         # hide MainWindow if it's visible
         # Show MainWindow if it's hided
         if self.isVisible():
@@ -2436,7 +2436,7 @@ class MainWindow(MainWindow_Ui):
         self.minimizeAction.setIcon(QIcon(icons + 'minimize'))
 
 # stopAllDownloads stops all downloads
-    def stopAllDownloads(self, menu):
+    def stopAllDownloads(self, menu=None):
 
         # stop all queues
         for queue in self.queue_list_dict.values():
@@ -4634,7 +4634,7 @@ class MainWindow(MainWindow_Ui):
         checking_flag = 0
 
 
-    def showVideoFinderAddLinkWindow(self, menu):
+    def showVideoFinderAddLinkWindow(self, menu=None):
         video_finder_addlink_window = VideoFinderAddLink(self, self.callBack, self.persepolis_setting)
         self.addlinkwindows_list.append(video_finder_addlink_window)
         video_finder_addlink_window.show()
