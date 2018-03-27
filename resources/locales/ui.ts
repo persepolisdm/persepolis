@@ -785,11 +785,6 @@ leoxxx</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/mainwindow_ui.py" line="416"/>
-        <source>&amp;Video Finder</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <location filename="../../persepolis/gui/mainwindow_ui.py" line="417"/>
         <source>&amp;Help</source>
         <translation type="unfinished"></translation>
@@ -1075,6 +1070,11 @@ leoxxx</source>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;This option is preventing system from going to sleep.            This is necessary if your power manager is suspending system automatically. &lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <location filename="../../persepolis/gui/mainwindow_ui.py" line="416"/>
+        <source>V&amp;ideo Finder</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>progress_src_ui_tr</name>
@@ -1190,12 +1190,12 @@ leoxxx</source>
 <context>
     <name>setting_src_ui_tr</name>
     <message>
-        <location filename="../../persepolis/scripts/setting.py" line="914"/>
+        <location filename="../../persepolis/scripts/setting.py" line="916"/>
         <source>&lt;b&gt;&lt;center&gt;Restart Persepolis Please!&lt;/center&gt;&lt;/b&gt;&lt;br&gt;&lt;center&gt;Some changes take effect after restarting Persepolis&lt;/center&gt;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../persepolis/scripts/setting.py" line="915"/>
+        <location filename="../../persepolis/scripts/setting.py" line="917"/>
         <source>Restart Persepolis!</source>
         <translation type="unfinished"></translation>
     </message>
