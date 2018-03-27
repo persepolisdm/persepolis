@@ -122,7 +122,7 @@ def returnDefaultSettings():
                 style = 'Fusion'
                 color_scheme = 'Persepolis Light Blue'
 
-        elif desktop_env == 'GNOME':
+        else:
     # finout user prefers dark theme or light theme :)
     # read this links for more information:
     # https://wiki.archlinux.org/index.php/GTK%2B#Basic_theme_configuration
