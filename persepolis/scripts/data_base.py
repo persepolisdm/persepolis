@@ -18,22 +18,14 @@ from persepolis.scripts.useful_tools import determineConfigFolder
 from persepolis.scripts import logger
 from time import sleep
 import traceback
-import platform
 import sqlite3
 import random
 import ast
 import os
 
-# get home address for this user
-home_address = os.path.expanduser("~")
-
-# find os platform
-os_type = platform.system()
-
-
 
 # download manager config folder .
-config_folder =  determineConfigFolder(os_type, home_address)
+config_folder =  determineConfigFolder()
 
 # persepolis tmp folder path
 persepolis_tmp = os.path.join(config_folder, 'persepolis_tmp')

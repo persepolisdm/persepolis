@@ -16,7 +16,7 @@
 
 # THIS FILE CONTAINING SOME VARIABLES , ... THAT USING FOR INITIALIZING PERSEPOLIS
 
-from persepolis.scripts.useful_tools import determineConfigFolder, osAndDesktopEnvironment, returnDefaultSettings
+from persepolis.scripts.useful_tools import determineConfigFolder, returnDefaultSettings
 from persepolis.scripts.browser_integration import browserIntegration
 from persepolis.scripts import osCommands
 from PyQt5.QtCore import QSettings
@@ -27,19 +27,11 @@ import os
 
 # initialization
 
-# user home address
-home_address = os.path.expanduser("~")
-
-# os_type >> Linux or Darwin(Mac osx) or Windows(Microsoft Windows) or
-# FreeBSD or OpenBSD
-os_type, desktop_env = osAndDesktopEnvironment() 
-
 # download manager config folder .
-config_folder = determineConfigFolder(os_type, home_address)
+config_folder = determineConfigFolder()
 
 # persepolis tmp folder path
 persepolis_tmp = os.path.join(config_folder, 'persepolis_tmp')
-
 
 # create folders
 for folder in [config_folder, persepolis_tmp]:

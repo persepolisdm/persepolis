@@ -17,19 +17,12 @@ from persepolis.scripts.useful_tools import determineConfigFolder
 from persepolis.scripts.osCommands import remove, removeDir
 from persepolis.scripts.data_base import PersepolisDB 
 from persepolis.scripts.newopen import readList
-import platform
 import time
 import ast
 import os
 
-home_address = os.path.expanduser("~")
-
-# finding os platform
-os_type = platform.system()
-
-
 # config_folder
-config_folder = determineConfigFolder(os_type, home_address)
+config_folder = determineConfigFolder()
 
 download_info_folder = os.path.join(config_folder, "download_info")
 

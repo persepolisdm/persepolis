@@ -17,16 +17,11 @@
 
 from persepolis.scripts.useful_tools import determineConfigFolder
 from persepolis.scripts import osCommands
-import platform
 import logging
 import os
 
-os_type = platform.system()
-
-home_address = os.path.expanduser("~")
-
 # config_folder
-config_folder =  determineConfigFolder(os_type, home_address)
+config_folder =  determineConfigFolder()
 
 # log file address
 log_file = os.path.join(str(config_folder), 'persepolisdm.log')

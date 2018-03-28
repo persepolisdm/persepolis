@@ -13,14 +13,13 @@
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from persepolis.scripts.useful_tools import determineConfigFolder
+from persepolis.scripts.useful_tools import osAndDesktopEnvironment, determineConfigFolder
 from copy import deepcopy
-import platform
 import sys
 import os
 
 # finding os platform
-os_type = platform.system()
+os_type, desktop_env = osAndDesktopEnvironment()  
 
 # Don't run persepolis as root!
 if os_type == 'Linux' or os_type == 'FreeBSD'  or os_type == 'OpenBSD' or os_type == 'Darwin':
@@ -41,7 +40,7 @@ import json
 home_address = os.path.expanduser("~")
 
 # persepolis config_folder
-config_folder = determineConfigFolder(os_type, home_address)
+config_folder = determineConfigFolder()
 
 # persepolis tmp folder path
 persepolis_tmp = os.path.join(config_folder, 'persepolis_tmp')

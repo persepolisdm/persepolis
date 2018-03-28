@@ -18,15 +18,10 @@ from persepolis.gui.log_window_ui import LogWindow_Ui
 from persepolis.scripts import osCommands
 from PyQt5.QtCore import QPoint, QSize
 from PyQt5 import QtCore, QtWidgets
-import platform
 import os
 
-os_type = platform.system()
-
-home_address = os.path.expanduser("~")
-
 # config_folder
-config_folder = determineConfigFolder(os_type, home_address)
+config_folder = determineConfigFolder()
 
 class LogWindow(LogWindow_Ui):
     def __init__(self, persepolis_setting):

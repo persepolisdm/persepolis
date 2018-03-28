@@ -34,8 +34,7 @@ home_address = os.path.expanduser("~")
 
 
 # determine the config folder path base on the oprating system
-def determineConfigFolder(os_type, home_address):
-
+def determineConfigFolder():
     if os_type == 'Linux' or os_type == 'FreeBSD' or os_type == 'OpenBSD':
         config_folder = os.path.join(
             str(home_address), ".config/persepolis_download_manager")

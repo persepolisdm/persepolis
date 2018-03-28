@@ -24,7 +24,7 @@ os_type = platform.system()
 home_address = str(os.path.expanduser("~"))
 
 # download manager config folder .
-config_folder = determineConfigFolder(os_type, home_address)
+config_folder = determineConfigFolder()
 
 # browser can be firefox or chromium or chrome
 

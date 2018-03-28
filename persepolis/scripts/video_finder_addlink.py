@@ -24,20 +24,11 @@ from time import time, sleep
 from copy import deepcopy
 from random import random
 import youtube_dl
-import platform
 import re
 import os
 
-# os_type >> Linux or Darwin(Mac osx) or Windows(Microsoft Windows) or
-# FreeBSD or OpenBSD
-os_type = platform.system()
-
-# user home address
-home_address = os.path.expanduser("~")
-
-
 # download manager config folder .
-config_folder =  determineConfigFolder(os_type, home_address)
+config_folder =  determineConfigFolder()
 
 # persepolis tmp folder path
 persepolis_tmp = os.path.join(config_folder, 'persepolis_tmp')

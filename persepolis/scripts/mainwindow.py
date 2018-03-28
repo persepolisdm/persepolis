@@ -15,7 +15,7 @@
 
 from PyQt5.QtWidgets import QAbstractItemView, QAction, QFileDialog, QSystemTrayIcon, QMenu, QApplication, QInputDialog, QMessageBox
 from PyQt5.QtCore import QTime, QCoreApplication, QRect, QSize, QPoint, QThread, pyqtSignal, Qt, QTranslator, QLocale
-from persepolis.scripts.useful_tools import freeSpace, determineConfigFolder
+from persepolis.scripts.useful_tools import freeSpace, determineConfigFolder, osAndDesktopEnvironment
 from persepolis.gui.mainwindow_ui import MainWindow_Ui, QTableWidgetItem
 from persepolis.scripts.data_base import PluginsDB, PersepolisDB, TempDB
 from persepolis.scripts.browser_plugin_queue import BrowserPluginQueue
@@ -41,7 +41,6 @@ from persepolis.gui import resources
 from functools import partial
 from copy import deepcopy
 from time import sleep
-import platform
 import random
 import time
 import sys
@@ -89,15 +88,11 @@ button_pressed_counter = 0
 global plugin_links_checked
 plugin_links_checked = False
 
-# get home address for this user
-home_address = os.path.expanduser("~")
-
 # find os platform
-os_type = platform.system()
-
+os_type, desktop_env = osAndDesktopEnvironment()
 
 # config_folder
-config_folder = determineConfigFolder(os_type, home_address)
+config_folder = determineConfigFolder()
 
 download_info_folder = os.path.join(config_folder, "download_info")
 
@@ -844,7 +839,7 @@ class MainWindow(MainWindow_Ui):
             self.showMenuBarAction.setChecked(False)
             self.toolBar2.show()
 
-        if platform.system() == 'Darwin':
+        if 'os_type' == 'Darwin':
             self.showMenuBarAction.setEnabled(False)
 
         # check user preferences for showing or hiding sidepanel.
