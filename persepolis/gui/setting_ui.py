@@ -54,286 +54,302 @@ class Setting_Ui(QWidget):
         icons = ':/' + str(self.persepolis_setting.value('settings/icons')) + '/'
 
 
-        self.verticalLayout_2 = QVBoxLayout(self)
+        # main layout 
+        window_verticalLayout = QVBoxLayout(self)
+
+        # setting_tabWidget
         self.setting_tabWidget = QTabWidget(self)
-# download_options_tab
+
+        # download_options_tab
         self.download_options_tab = QWidget()
-        self.layoutWidget = QWidget(self.download_options_tab)
-        self.download_options_verticalLayout = QVBoxLayout(self.layoutWidget)
-        self.download_options_verticalLayout.setContentsMargins(21, 21, 0, 0)
-        self.download_options_verticalLayout.setObjectName(
-            "download_options_verticalLayout")
-        self.horizontalLayout_5 = QHBoxLayout()
-# tries_label
-        self.tries_label = QLabel(self.layoutWidget)
-        self.horizontalLayout_5.addWidget(self.tries_label)
-# tries_spinBox
-        self.tries_spinBox = QSpinBox(self.layoutWidget)
+        download_options_tab_verticalLayout = QVBoxLayout(self.download_options_tab)
+        download_options_tab_verticalLayout.setContentsMargins(21, 21, 0, 0)
+
+        # tries
+        tries_horizontalLayout = QHBoxLayout()
+
+        self.tries_label = QLabel(self.download_options_tab)
+        tries_horizontalLayout.addWidget(self.tries_label)
+
+        self.tries_spinBox = QSpinBox(self.download_options_tab)
         self.tries_spinBox.setMinimum(1)
 
-        self.horizontalLayout_5.addWidget(self.tries_spinBox)
-        self.download_options_verticalLayout.addLayout(self.horizontalLayout_5)
-        self.horizontalLayout_4 = QHBoxLayout()
-# wait_label
-        self.wait_label = QLabel(self.layoutWidget)
-        self.horizontalLayout_4.addWidget(self.wait_label)
-# wait_spinBox
-        self.wait_spinBox = QSpinBox(self.layoutWidget)
-        self.horizontalLayout_4.addWidget(self.wait_spinBox)
+        tries_horizontalLayout.addWidget(self.tries_spinBox)
+        download_options_tab_verticalLayout.addLayout(tries_horizontalLayout)
 
-        self.download_options_verticalLayout.addLayout(self.horizontalLayout_4)
-        self.horizontalLayout_3 = QHBoxLayout()
-# time_out_label
-        self.time_out_label = QLabel(self.layoutWidget)
-        self.horizontalLayout_3.addWidget(self.time_out_label)
-# time_out_spinBox
-        self.time_out_spinBox = QSpinBox(self.layoutWidget)
-        self.horizontalLayout_3.addWidget(self.time_out_spinBox)
+        #wait
+        wait_horizontalLayout = QHBoxLayout()
 
-        self.download_options_verticalLayout.addLayout(self.horizontalLayout_3)
-        self.horizontalLayout_2 = QHBoxLayout()
-# connections_label
-        self.connections_label = QLabel(self.layoutWidget)
-        self.horizontalLayout_2.addWidget(self.connections_label)
-# connections_spinBox
-        self.connections_spinBox = QSpinBox(self.layoutWidget)
+        self.wait_label = QLabel(self.download_options_tab)
+        wait_horizontalLayout.addWidget(self.wait_label)
+
+        self.wait_spinBox = QSpinBox(self.download_options_tab)
+        wait_horizontalLayout.addWidget(self.wait_spinBox)
+
+        download_options_tab_verticalLayout.addLayout(wait_horizontalLayout)
+
+        # time_out
+        time_out_horizontalLayout = QHBoxLayout()
+
+        self.time_out_label = QLabel(self.download_options_tab)
+        time_out_horizontalLayout.addWidget(self.time_out_label)
+
+        self.time_out_spinBox = QSpinBox(self.download_options_tab)
+        time_out_horizontalLayout.addWidget(self.time_out_spinBox)
+
+        download_options_tab_verticalLayout.addLayout(time_out_horizontalLayout)
+
+        # connections
+        connections_horizontalLayout = QHBoxLayout()
+
+        self.connections_label = QLabel(self.download_options_tab)
+        connections_horizontalLayout.addWidget(self.connections_label)
+
+        self.connections_spinBox = QSpinBox(self.download_options_tab)
         self.connections_spinBox.setMinimum(1)
         self.connections_spinBox.setMaximum(16)
-        self.horizontalLayout_2.addWidget(self.connections_spinBox)
+        connections_horizontalLayout.addWidget(self.connections_spinBox)
 
-        self.download_options_verticalLayout.addLayout(self.horizontalLayout_2)
-# rpc_port_label
-        self.rpc_port_label = QLabel(self.layoutWidget)
+        download_options_tab_verticalLayout.addLayout(connections_horizontalLayout)
+
+        # rpc_port
+        self.rpc_port_label = QLabel(self.download_options_tab)
         self.rpc_horizontalLayout = QHBoxLayout()
         self.rpc_horizontalLayout.addWidget(self.rpc_port_label)
-# rpc_port_spinbox
-        self.rpc_port_spinbox = QSpinBox(self.layoutWidget)
+
+        self.rpc_port_spinbox = QSpinBox(self.download_options_tab)
         self.rpc_port_spinbox.setMinimum(1024)
         self.rpc_port_spinbox.setMaximum(65535)
         self.rpc_horizontalLayout.addWidget(self.rpc_port_spinbox)
 
-        self.download_options_verticalLayout.addLayout(
+        download_options_tab_verticalLayout.addLayout(
             self.rpc_horizontalLayout)
 
-
-# wait_queue
+        # wait_queue
         wait_queue_horizontalLayout = QHBoxLayout() 
 
-        self.wait_queue_label = QLabel(self.layoutWidget)
+        self.wait_queue_label = QLabel(self.download_options_tab)
         wait_queue_horizontalLayout.addWidget(self.wait_queue_label)
 
-        self.wait_queue_time = QDateTimeEdit(self.layoutWidget)
+        self.wait_queue_time = QDateTimeEdit(self.download_options_tab)
         self.wait_queue_time.setDisplayFormat('H:mm')
         wait_queue_horizontalLayout.addWidget(self.wait_queue_time)
         
-        self.download_options_verticalLayout.addLayout(
+        download_options_tab_verticalLayout.addLayout(
             wait_queue_horizontalLayout) 
 
-# change aria2 path
+        # change aria2 path
         aria2_path_verticalLayout = QVBoxLayout()
 
-        self.aria2_path_checkBox = QCheckBox(self.layoutWidget)
+        self.aria2_path_checkBox = QCheckBox(self.download_options_tab)
         aria2_path_verticalLayout.addWidget(self.aria2_path_checkBox)
 
         aria2_path_horizontalLayout = QHBoxLayout()
 
-        self.aria2_path_lineEdit = QLineEdit(self.layoutWidget)
+        self.aria2_path_lineEdit = QLineEdit(self.download_options_tab)
         aria2_path_horizontalLayout.addWidget(self.aria2_path_lineEdit)
 
-        self.aria2_path_pushButton = QPushButton(self.layoutWidget)
+        self.aria2_path_pushButton = QPushButton(self.download_options_tab)
         aria2_path_horizontalLayout.addWidget(self.aria2_path_pushButton)
 
         aria2_path_verticalLayout.addLayout(aria2_path_horizontalLayout)
 
-        self.download_options_verticalLayout.addLayout(
-                aria2_path_verticalLayout)
+        download_options_tab_verticalLayout.addLayout(aria2_path_verticalLayout)
+
+        download_options_tab_verticalLayout.addStretch(1)
 
         self.setting_tabWidget.addTab(self.download_options_tab, "")
-# save_as_tab
+
+
+        # save_as_tab
         self.save_as_tab = QWidget()
 
-        self.layoutWidget1 = QWidget(self.save_as_tab)
+        save_as_tab_verticalLayout = QVBoxLayout(self.save_as_tab)
+        save_as_tab_verticalLayout.setContentsMargins(20, 30, 0, 0)
 
-        self.save_as_verticalLayout = QVBoxLayout(self.layoutWidget1)
-        self.save_as_verticalLayout.setContentsMargins(20, 30, 0, 0)
-
+        # download_folder
         self.download_folder_horizontalLayout = QHBoxLayout()
-# download_folder_label
-        self.download_folder_label = QLabel(self.layoutWidget1)
+
+        self.download_folder_label = QLabel(self.save_as_tab)
         self.download_folder_horizontalLayout.addWidget(
             self.download_folder_label)
-# download_folder_lineEdit
-        self.download_folder_lineEdit = QLineEdit(self.layoutWidget1)
-        self.download_folder_horizontalLayout.addWidget(
-            self.download_folder_lineEdit)
-# download_folder_pushButton
-        self.download_folder_pushButton = QPushButton(self.layoutWidget1)
-        self.download_folder_horizontalLayout.addWidget(
-            self.download_folder_pushButton)
 
-        self.save_as_verticalLayout.addLayout(
-            self.download_folder_horizontalLayout)
+        self.download_folder_lineEdit = QLineEdit(self.save_as_tab)
+        self.download_folder_horizontalLayout.addWidget(self.download_folder_lineEdit)
+
+        self.download_folder_pushButton = QPushButton(self.save_as_tab)
+        self.download_folder_horizontalLayout.addWidget(self.download_folder_pushButton)
+
+        save_as_tab_verticalLayout.addLayout(self.download_folder_horizontalLayout)
+
+        # temp_download_folder
         self.temp_horizontalLayout = QHBoxLayout()
-# temp_download_label
-        self.temp_download_label = QLabel(self.layoutWidget1)
+
+        self.temp_download_label = QLabel(self.save_as_tab)
         self.temp_horizontalLayout.addWidget(self.temp_download_label)
-# temp_download_lineEdit
-        self.temp_download_lineEdit = QLineEdit(self.layoutWidget1)
+
+        self.temp_download_lineEdit = QLineEdit(self.save_as_tab)
         self.temp_horizontalLayout.addWidget(self.temp_download_lineEdit)
-# temp_download_pushButton
-        self.temp_download_pushButton = QPushButton(self.layoutWidget1)
+
+        self.temp_download_pushButton = QPushButton(self.save_as_tab)
         self.temp_horizontalLayout.addWidget(self.temp_download_pushButton)
 
-        self.save_as_verticalLayout.addLayout(self.temp_horizontalLayout)
+        save_as_tab_verticalLayout.addLayout(self.temp_horizontalLayout)
 
-# create subfolder checkBox
-        self.subfolder_checkBox = QCheckBox(self.layoutWidget1)
-        self.save_as_verticalLayout.addWidget(self.subfolder_checkBox)
+        # create subfolder
+        self.subfolder_checkBox = QCheckBox(self.save_as_tab)
+        save_as_tab_verticalLayout.addWidget(self.subfolder_checkBox)
+
+        save_as_tab_verticalLayout.addStretch(1)
         
         self.setting_tabWidget.addTab(self.save_as_tab, "")
-# notifications_tab
+
+        # notifications_tab
         self.notifications_tab = QWidget()
-        self.layoutWidget2 = QWidget(self.notifications_tab)
-        self.verticalLayout_4 = QVBoxLayout(self.layoutWidget2)
-        self.verticalLayout_4.setContentsMargins(21, 21, 0, 0)
-# enable_notifications_checkBox
-        self.enable_notifications_checkBox = QCheckBox(self.layoutWidget2)
-        self.verticalLayout_4.addWidget(self.enable_notifications_checkBox)
-# sound_frame
-        self.sound_frame = QFrame(self.layoutWidget2)
+        notification_tab_verticalLayout = QVBoxLayout(self.notifications_tab)
+        notification_tab_verticalLayout.setContentsMargins(21, 21, 0, 0)
+
+        self.enable_notifications_checkBox = QCheckBox(self.notifications_tab)
+        notification_tab_verticalLayout.addWidget(self.enable_notifications_checkBox)
+
+        self.sound_frame = QFrame(self.notifications_tab)
         self.sound_frame.setFrameShape(QFrame.StyledPanel)
         self.sound_frame.setFrameShadow(QFrame.Raised)
 
-        self.verticalLayout = QVBoxLayout(self.sound_frame)
-# volume_label
+        verticalLayout = QVBoxLayout(self.sound_frame)
+
         self.volume_label = QLabel(self.sound_frame)
-        self.verticalLayout.addWidget(self.volume_label)
-# volume_dial
+        verticalLayout.addWidget(self.volume_label)
+
         self.volume_dial = QDial(self.sound_frame)
         self.volume_dial.setProperty("value", 100)
-        self.verticalLayout.addWidget(self.volume_dial)
+        verticalLayout.addWidget(self.volume_dial)
 
-        self.verticalLayout_4.addWidget(self.sound_frame)
+        notification_tab_verticalLayout.addWidget(self.sound_frame)
+
+        # message_notification
+        message_notification_horizontalLayout = QHBoxLayout()
+        self.notification_label = QLabel(self.notifications_tab)
+        message_notification_horizontalLayout.addWidget(self.notification_label)
+
+        self.notification_comboBox = QComboBox(self.notifications_tab)
+        message_notification_horizontalLayout.addWidget(self.notification_comboBox)
+        notification_tab_verticalLayout.addLayout(message_notification_horizontalLayout)
+
+        notification_tab_verticalLayout.addStretch(1)
+
         self.setting_tabWidget.addTab(self.notifications_tab, "")
-# style_tab
+
+        # style_tab
         self.style_tab = QWidget()
-        self.layoutWidget3 = QWidget(self.style_tab)
-        self.verticalLayout_3 = QVBoxLayout(self.layoutWidget3)
-        self.verticalLayout_3.setContentsMargins(21, 21, 0, 0)
-        self.horizontalLayout_8 = QHBoxLayout()
-# style_label
-        self.style_label = QLabel(self.layoutWidget3)
-        self.horizontalLayout_8.addWidget(self.style_label)
-# style_comboBox
-        self.style_comboBox = QComboBox(self.layoutWidget3)
-        self.horizontalLayout_8.addWidget(self.style_comboBox)
+        style_tab_verticalLayout = QVBoxLayout(self.style_tab)
+        style_tab_verticalLayout.setContentsMargins(21, 21, 0, 0)
 
-        self.verticalLayout_3.addLayout(self.horizontalLayout_8)
-        self.horizontalLayout_7 = QHBoxLayout()        
-# language_combox
-        self.lang_label = QLabel(self.layoutWidget3)
-        self.horizontalLayout_7.addWidget(self.lang_label)
-        self.lang_comboBox = QComboBox(self.layoutWidget3)
-        self.horizontalLayout_7.addWidget(self.lang_comboBox)
+        # style
+        style_horizontalLayout = QHBoxLayout()
 
-# language_label
-        self.verticalLayout_3.addLayout(self.horizontalLayout_7)
-        self.horizontalLayout_7 = QHBoxLayout()
+        self.style_label = QLabel(self.style_tab)
+        style_horizontalLayout.addWidget(self.style_label)
+
+        self.style_comboBox = QComboBox(self.style_tab)
+        style_horizontalLayout.addWidget(self.style_comboBox)
+
+        style_tab_verticalLayout.addLayout(style_horizontalLayout)
+
+        # language
+        language_horizontalLayout = QHBoxLayout()        
+
+        self.lang_label = QLabel(self.style_tab)
+        language_horizontalLayout.addWidget(self.lang_label)
+        self.lang_comboBox = QComboBox(self.style_tab)
+        language_horizontalLayout.addWidget(self.lang_comboBox)
+
+        style_tab_verticalLayout.addLayout(language_horizontalLayout)
+        language_horizontalLayout = QHBoxLayout()
         self.lang_label.setText(QCoreApplication.translate("setting_ui_tr", "Language:"))
-# color_label
-        self.color_label = QLabel(self.layoutWidget3)
-        self.horizontalLayout_7.addWidget(self.color_label)
-# color_comboBox
-        self.color_comboBox = QComboBox(self.layoutWidget3)
-        self.horizontalLayout_7.addWidget(self.color_comboBox)
 
-        self.verticalLayout_3.addLayout(self.horizontalLayout_7)
-# icon_label
-        self.horizontalLayout_12 = QHBoxLayout()
-        self.icon_label = QLabel(self.layoutWidget3)
-        self.horizontalLayout_12.addWidget(self.icon_label)
+        # color scheme
+        self.color_label = QLabel(self.style_tab)
+        language_horizontalLayout.addWidget(self.color_label)
 
-# icon_comboBox
-        self.icon_comboBox = QComboBox(self.layoutWidget3)
-        self.horizontalLayout_12.addWidget(self.icon_comboBox)
+        self.color_comboBox = QComboBox(self.style_tab)
+        language_horizontalLayout.addWidget(self.color_comboBox)
 
-        self.verticalLayout_3.addLayout(self.horizontalLayout_12)
+        style_tab_verticalLayout.addLayout(language_horizontalLayout)
 
-# icons_size_comboBox
+        # icons
+        icons_horizontalLayout = QHBoxLayout()
+        self.icon_label = QLabel(self.style_tab)
+        icons_horizontalLayout.addWidget(self.icon_label)
+
+        self.icon_comboBox = QComboBox(self.style_tab)
+        icons_horizontalLayout.addWidget(self.icon_comboBox)
+
+        style_tab_verticalLayout.addLayout(icons_horizontalLayout)
+
         self.icons_size_horizontalLayout = QHBoxLayout()
-        self.icons_size_label = QLabel(self.layoutWidget3)
+        self.icons_size_label = QLabel(self.style_tab)
         self.icons_size_horizontalLayout.addWidget(self.icons_size_label)
 
-        self.icons_size_comboBox = QComboBox(self.layoutWidget3)
+        self.icons_size_comboBox = QComboBox(self.style_tab)
         self.icons_size_horizontalLayout.addWidget(self.icons_size_comboBox)
 
-        self.verticalLayout_3.addLayout(self.icons_size_horizontalLayout)
+        style_tab_verticalLayout.addLayout(self.icons_size_horizontalLayout)
 
-       
+        # font
+        font_horizontalLayout = QHBoxLayout()
+        self.font_checkBox = QCheckBox(self.style_tab)
+        font_horizontalLayout.addWidget(self.font_checkBox)
 
-        self.horizontalLayout_6 = QHBoxLayout()
-# notification_label
-        self.horizontalLayout_13 = QHBoxLayout()
-        self.notification_label = QLabel(self.layoutWidget3)
-        self.horizontalLayout_13.addWidget(self.notification_label)
-# notification_comboBox
-        self.notification_comboBox = QComboBox(self.layoutWidget3)
-        self.horizontalLayout_13.addWidget(self.notification_comboBox)
-        self.verticalLayout_3.addLayout(self.horizontalLayout_13)
-# font_checkBox
-        self.font_checkBox = QCheckBox(self.layoutWidget3)
-        self.horizontalLayout_6.addWidget(self.font_checkBox)
-# fontComboBox
-        self.fontComboBox = QFontComboBox(self.layoutWidget3)
-        self.horizontalLayout_6.addWidget(self.fontComboBox)
-# font_size_label
-        self.font_size_label = QLabel(self.layoutWidget3)
-        self.horizontalLayout_6.addWidget(self.font_size_label)
-# font_size_spinBox
-        self.font_size_spinBox = QSpinBox(self.layoutWidget3)
+        self.fontComboBox = QFontComboBox(self.style_tab)
+        font_horizontalLayout.addWidget(self.fontComboBox)
+
+        self.font_size_label = QLabel(self.style_tab)
+        font_horizontalLayout.addWidget(self.font_size_label)
+
+        self.font_size_spinBox = QSpinBox(self.style_tab)
         self.font_size_spinBox.setMinimum(1)
-        self.horizontalLayout_6.addWidget(self.font_size_spinBox)
+        font_horizontalLayout.addWidget(self.font_size_spinBox)
 
-        self.verticalLayout_3.addLayout(self.horizontalLayout_6)
+        style_tab_verticalLayout.addLayout(font_horizontalLayout)
         self.setting_tabWidget.addTab(self.style_tab, "")
-        self.verticalLayout_2.addWidget(self.setting_tabWidget)
-        self.horizontalLayout = QHBoxLayout()
-        spacerItem = QSpacerItem(
-            40, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
-        self.horizontalLayout.addItem(spacerItem)
-# Enable system tray icon
-        self.enable_system_tray_checkBox = QCheckBox(self.layoutWidget3)
-        self.verticalLayout_3.addWidget(self.enable_system_tray_checkBox)
-# after_download dialog
+        window_verticalLayout.addWidget(self.setting_tabWidget)
+
+        # Enable system tray icon
+        self.enable_system_tray_checkBox = QCheckBox(self.style_tab)
+        style_tab_verticalLayout.addWidget(self.enable_system_tray_checkBox)
+
+        # after_download dialog
         self.after_download_checkBox = QCheckBox()
-        self.verticalLayout_3.addWidget(self.after_download_checkBox)
+        style_tab_verticalLayout.addWidget(self.after_download_checkBox)
 
-# show_menubar_checkbox
+        # show_menubar_checkbox
         self.show_menubar_checkbox = QCheckBox()
-        self.verticalLayout_3.addWidget(self.show_menubar_checkbox)
+        style_tab_verticalLayout.addWidget(self.show_menubar_checkbox)
 
-# show_sidepanel_checkbox
+        # show_sidepanel_checkbox
         self.show_sidepanel_checkbox = QCheckBox()
-        self.verticalLayout_3.addWidget(self.show_sidepanel_checkbox)
+        style_tab_verticalLayout.addWidget(self.show_sidepanel_checkbox)
 
-# hide progress window
+        # hide progress window
         self.show_progress_window_checkbox = QCheckBox()
-        self.verticalLayout_3.addWidget(self.show_progress_window_checkbox)
+        style_tab_verticalLayout.addWidget(self.show_progress_window_checkbox)
 
-# add persepolis to startup
+        # add persepolis to startup
         self.startup_checkbox = QCheckBox()
-        self.verticalLayout_3.addWidget(self.startup_checkbox)
+        style_tab_verticalLayout.addWidget(self.startup_checkbox)
 
-# keep system awake
+        # keep system awake
         self.keep_awake_checkBox = QCheckBox()
-        self.verticalLayout_3.addWidget(self.keep_awake_checkBox)
+        style_tab_verticalLayout.addWidget(self.keep_awake_checkBox)
 
-# columns_tab
+        style_tab_verticalLayout.addStretch(1)
+
+        # columns_tab
         self.columns_tab = QWidget()
-        layoutWidget4 = QWidget(self.columns_tab)
 
-        column_verticalLayout = QVBoxLayout(layoutWidget4)
-        column_verticalLayout.setContentsMargins(21, 21, 0, 0)
+        columns_tab_verticalLayout = QVBoxLayout(self.columns_tab)
+        columns_tab_verticalLayout.setContentsMargins(21, 21, 0, 0)
 
         # creating checkBox for columns
         self.show_column_label = QLabel()
@@ -349,79 +365,88 @@ class Setting_Ui(QWidget):
         self.column11_checkBox = QCheckBox()
         self.column12_checkBox = QCheckBox()
 
-        column_verticalLayout.addWidget(self.show_column_label) 
-        column_verticalLayout.addWidget(self.column0_checkBox) 
-        column_verticalLayout.addWidget(self.column1_checkBox) 
-        column_verticalLayout.addWidget(self.column2_checkBox) 
-        column_verticalLayout.addWidget(self.column3_checkBox) 
-        column_verticalLayout.addWidget(self.column4_checkBox) 
-        column_verticalLayout.addWidget(self.column5_checkBox) 
-        column_verticalLayout.addWidget(self.column6_checkBox) 
-        column_verticalLayout.addWidget(self.column7_checkBox) 
-        column_verticalLayout.addWidget(self.column10_checkBox) 
-        column_verticalLayout.addWidget(self.column11_checkBox) 
-        column_verticalLayout.addWidget(self.column12_checkBox) 
+        columns_tab_verticalLayout.addWidget(self.show_column_label) 
+        columns_tab_verticalLayout.addWidget(self.column0_checkBox) 
+        columns_tab_verticalLayout.addWidget(self.column1_checkBox) 
+        columns_tab_verticalLayout.addWidget(self.column2_checkBox) 
+        columns_tab_verticalLayout.addWidget(self.column3_checkBox) 
+        columns_tab_verticalLayout.addWidget(self.column4_checkBox) 
+        columns_tab_verticalLayout.addWidget(self.column5_checkBox) 
+        columns_tab_verticalLayout.addWidget(self.column6_checkBox) 
+        columns_tab_verticalLayout.addWidget(self.column7_checkBox) 
+        columns_tab_verticalLayout.addWidget(self.column10_checkBox) 
+        columns_tab_verticalLayout.addWidget(self.column11_checkBox) 
+        columns_tab_verticalLayout.addWidget(self.column12_checkBox) 
+
+        columns_tab_verticalLayout.addStretch(1)
 
         self.setting_tabWidget.addTab(self.columns_tab, '')
 
         # video_finder_tab
         self.video_finder_tab = QWidget()
-        self.layoutWidgetYTD = QWidget(self.video_finder_tab)
-        self.video_finder_layout = QVBoxLayout(self.layoutWidgetYTD)
-        self.video_finder_layout.setContentsMargins(20, 30, 0, 0)
 
-        self.video_finder_verticalLayout = QVBoxLayout()
+        video_finder_layout = QVBoxLayout(self.video_finder_tab)
+        video_finder_layout.setContentsMargins(21, 21, 0, 0)
+
+        video_finder_tab_verticalLayout = QVBoxLayout()
 
         # Whether to enable video link capturing.
-        self.enable_video_finder_checkbox = QCheckBox(self.layoutWidgetYTD)
-        self.video_finder_layout.addWidget(self.enable_video_finder_checkbox)
+        self.enable_video_finder_checkbox = QCheckBox(self.video_finder_tab)
+        video_finder_layout.addWidget(self.enable_video_finder_checkbox)
 
         # If we should hide videos with no audio
-        self.hide_no_audio_checkbox = QCheckBox(self.layoutWidgetYTD)
-        self.video_finder_verticalLayout.addWidget(self.hide_no_audio_checkbox)
+        self.hide_no_audio_checkbox = QCheckBox(self.video_finder_tab)
+        video_finder_tab_verticalLayout.addWidget(self.hide_no_audio_checkbox)
 
         # If we should hide audios without video
-        self.hide_no_video_checkbox = QCheckBox(self.layoutWidgetYTD)
-        self.video_finder_verticalLayout.addWidget(self.hide_no_video_checkbox)
+        self.hide_no_video_checkbox = QCheckBox(self.video_finder_tab)
+        video_finder_tab_verticalLayout.addWidget(self.hide_no_video_checkbox)
 
-        self.max_links_horizontalLayout = QHBoxLayout()
+        max_links_horizontalLayout = QHBoxLayout()
 
         # max_links_label
-        self.max_links_label = QLabel(self.layoutWidgetYTD)
+        self.max_links_label = QLabel(self.video_finder_tab)
 
-        self.max_links_horizontalLayout.addWidget(self.max_links_label)
+        max_links_horizontalLayout.addWidget(self.max_links_label)
         # max_links_spinBox
-        self.max_links_spinBox = QSpinBox(self.layoutWidgetYTD)
+        self.max_links_spinBox = QSpinBox(self.video_finder_tab)
         self.max_links_spinBox.setMinimum(1)
         self.max_links_spinBox.setMaximum(16)
-        self.max_links_horizontalLayout.addWidget(self.max_links_spinBox)
-        self.video_finder_verticalLayout.addLayout(self.max_links_horizontalLayout)
+        max_links_horizontalLayout.addWidget(self.max_links_spinBox)
+        video_finder_tab_verticalLayout.addLayout(max_links_horizontalLayout)
 
         self.video_finder_dl_path_horizontalLayout = QHBoxLayout()
 
         self.video_finder_frame = QFrame(self.video_finder_tab)
-        self.video_finder_frame.setLayout(self.video_finder_verticalLayout)
+        self.video_finder_frame.setLayout(video_finder_tab_verticalLayout)
 
-        self.video_finder_layout.addWidget(self.video_finder_frame)
+        video_finder_tab_verticalLayout.addStretch(1)
+
+        video_finder_layout.addWidget(self.video_finder_frame)
 
         self.setting_tabWidget.addTab(self.video_finder_tab, "")
 
+        # window buttons
+        buttons_horizontalLayout = QHBoxLayout()
+        buttons_horizontalLayout.addStretch(1)
 
-# defaults_pushButton
         self.defaults_pushButton = QPushButton(self)
-        self.horizontalLayout.addWidget(self.defaults_pushButton)
-# cancel_pushButton
+        buttons_horizontalLayout.addWidget(self.defaults_pushButton)
+
         self.cancel_pushButton = QPushButton(self)
         self.cancel_pushButton.setIcon(QIcon(icons + 'remove'))
-        self.horizontalLayout.addWidget(self.cancel_pushButton)
-# ok_pushButton
+        buttons_horizontalLayout.addWidget(self.cancel_pushButton)
+
         self.ok_pushButton = QPushButton(self)
         self.ok_pushButton.setIcon(QIcon(icons + 'ok'))
-        self.horizontalLayout.addWidget(self.ok_pushButton)
+        buttons_horizontalLayout.addWidget(self.ok_pushButton)
 
-        self.verticalLayout_2.addLayout(self.horizontalLayout)
+        window_verticalLayout.addLayout(buttons_horizontalLayout)
+
+        # set style_tab for default
         self.setting_tabWidget.setCurrentIndex(3)
 
+        # labels and translations
         self.setWindowTitle(QCoreApplication.translate("setting_ui_tr", "Preferences"))
 
         self.tries_label.setToolTip(

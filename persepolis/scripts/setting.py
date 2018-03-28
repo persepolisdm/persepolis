@@ -124,13 +124,9 @@ class PreferencesWindow(Setting_Ui):
         current_locale = self.lang_comboBox.findData(
             str(self.persepolis_setting.value('locale')))
         self.lang_comboBox.setCurrentIndex(current_locale)
-# set color_scheme
-        color_scheme = ['System', 'Persepolis Light Blue', 'Persepolis Dark Blue', 
-                        'Persepolis ArcDark Blue', 'Persepolis ArcDark Red',
-                        'Persepolis Old Dark Red', 'Persepolis Old Light Red', 
-                        'Persepolis Old Dark Blue', 'Persepolis Old light Blue']
-        self.color_comboBox.addItems(color_scheme)
-
+        self.lang_comboBox.currentIndexChanged.connect(self.styleComboBoxChanged)
+        self.styleComboBoxChanged()
+ 
         current_color_index = self.color_comboBox.findText(
             str(self.persepolis_setting.value('color-scheme')))
         self.color_comboBox.setCurrentIndex(current_color_index)
@@ -360,9 +356,21 @@ class PreferencesWindow(Setting_Ui):
 
 
 # active color_comboBox only when user is select "Fusion" style.
-    def styleComboBoxChanged(self, index):
+    def styleComboBoxChanged(self, index=None):
+        # clear color_comboBox
+        self.color_comboBox.clear()
+
+        # get current style
         selected_style = self.style_comboBox.currentText()
+
         if selected_style != 'Fusion':
+            # color_comboBox item
+            color_scheme = ['System']
+
+            # add item
+            self.color_comboBox.addItems(color_scheme)
+ 
+            # set 'System' for color_scheme
             current_color_index = self.color_comboBox.findText('System')
             self.color_comboBox.setCurrentIndex(current_color_index)
 
@@ -372,7 +380,35 @@ class PreferencesWindow(Setting_Ui):
             # enable color_comboBox
             self.color_comboBox.setEnabled(True)
 
-    
+            # get current language
+            selected_language = self.lang_comboBox.currentText()
+
+            # some color schemes wouldn't work properly with Persian language.
+            if selected_language == 'فارسی':
+                # color_comboBox items
+                color_scheme = ['Persepolis Light Blue', 'Persepolis Dark Blue'] 
+
+                # add items
+                self.color_comboBox.addItems(color_scheme)
+
+                # set 'Persepolis Light Blue' for color_scheme
+                current_color_index = self.color_comboBox.findText('Persepolis Light Blue')
+                self.color_comboBox.setCurrentIndex(current_color_index)
+
+            else:
+                # color_comboBox items
+                color_scheme = ['System', 'Persepolis Light Blue', 'Persepolis Dark Blue', 
+                        'Persepolis ArcDark Blue', 'Persepolis ArcDark Red',
+                        'Persepolis Old Dark Red', 'Persepolis Old Light Red', 
+                        'Persepolis Old Dark Blue', 'Persepolis Old light Blue']
+ 
+                # add items
+                self.color_comboBox.addItems(color_scheme)
+
+                # set 'Persepolis Light Blue' for color_scheme
+                current_color_index = self.color_comboBox.findText('Persepolis Light Blue')
+                self.color_comboBox.setCurrentIndex(current_color_index)
+
 
     def fontCheckBoxState(self,checkBox):
         # deactive fontComboBox and font_size_spinBox if font_checkBox not checked!
