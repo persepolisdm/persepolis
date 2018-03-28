@@ -2,45 +2,45 @@
 <context>
     <name>about_ui_tr</name>
     <message>
-        <location filename="../../persepolis/gui/about_ui.py" line="246"/>
+        <location filename="../../persepolis/gui/about_ui.py" line="284"/>
         <source>About Persepolis</source>
         <translation>À propos de Persepolis</translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/about_ui.py" line="198"/>
+        <location filename="../../persepolis/gui/about_ui.py" line="225"/>
         <source>Persepolis Download Manager</source>
         <translation>Gestionnaire de téléchargement Persepolis</translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/about_ui.py" line="199"/>
+        <location filename="../../persepolis/gui/about_ui.py" line="226"/>
         <source>Version 3.0.1</source>
         <translation>Version 3.0.1</translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/about_ui.py" line="200"/>
+        <location filename="../../persepolis/gui/about_ui.py" line="227"/>
         <source>&lt;a href=https://persepolisdm.github.io&gt;https://persepolisdm.github.io&lt;/a&gt;</source>
         <comment>TRANSLATORS NOTE: YOU REALLY DON'T NEED TO TRANSLATE THIS PART!</comment>
         <translation>&lt;a href=https://persepolisdm.github.io&gt;https://persepolisdm.github.io&lt;/a&gt;</translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/about_ui.py" line="204"/>
+        <location filename="../../persepolis/gui/about_ui.py" line="231"/>
         <source>&lt;a href=https://telegram.me/persepolisdm&gt;https://telegram.me/persepolisdm&lt;/a&gt;</source>
         <comment>TRANSLATORS NOTE: YOU REALLY DON'T NEED TO TRANSLATE THIS PART!</comment>
         <translation>&lt;a href=https://telegram.me/persepolisdm&gt;https://telegram.me/persepolisdm&lt;/a&gt;</translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/about_ui.py" line="208"/>
+        <location filename="../../persepolis/gui/about_ui.py" line="235"/>
         <source>&lt;a href=https://twitter.com/persepolisdm&gt;https://twitter.com/persepolisdm&lt;/a&gt;</source>
         <comment>TRANSLATORS NOTE: YOU REALLY DON'T NEED TO TRANSLATE THIS PART!</comment>
         <translation>&lt;a href=https://twitter.com/persepolisdm&gt;https://twitter.com/persepolisdm&lt;/a&gt;</translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/about_ui.py" line="213"/>
+        <location filename="../../persepolis/gui/about_ui.py" line="240"/>
         <source>Developers:</source>
         <translation>Développeurs :</translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/about_ui.py" line="215"/>
+        <location filename="../../persepolis/gui/about_ui.py" line="242"/>
         <source>
 AliReza AmirSamimi
 Mohammadreza Abdollahzadeh
@@ -60,24 +60,24 @@ Jafar Akhondali
 H.Rostami</translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/about_ui.py" line="220"/>
+        <location filename="../../persepolis/gui/about_ui.py" line="262"/>
         <source>Persian translators:</source>
         <translation>Traducteurs persan :</translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/about_ui.py" line="222"/>
+        <location filename="../../persepolis/gui/about_ui.py" line="264"/>
         <source>H.Rostami
 Mostafa Asadi</source>
         <translation>H.Rostami
 Mostafa Asadi</translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/about_ui.py" line="224"/>
+        <location filename="../../persepolis/gui/about_ui.py" line="251"/>
         <source>Chinese translators:</source>
         <translation>Traducteurs chinois :</translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/about_ui.py" line="226"/>
+        <location filename="../../persepolis/gui/about_ui.py" line="253"/>
         <source>Davinma
 210hcl
 leoxxx</source>
@@ -86,24 +86,39 @@ leoxxx</source>
 leoxxx</translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/about_ui.py" line="247"/>
+        <location filename="../../persepolis/gui/about_ui.py" line="285"/>
         <source>Developers</source>
         <translation>Développeurs</translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/about_ui.py" line="248"/>
+        <location filename="../../persepolis/gui/about_ui.py" line="286"/>
         <source>Translators</source>
         <translation>Traducteurs</translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/about_ui.py" line="249"/>
+        <location filename="../../persepolis/gui/about_ui.py" line="287"/>
         <source>License</source>
         <translation>Licence</translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/about_ui.py" line="252"/>
+        <location filename="../../persepolis/gui/about_ui.py" line="290"/>
         <source>OK</source>
         <translation>OK</translation>
+    </message>
+    <message>
+        <location filename="../../persepolis/gui/about_ui.py" line="246"/>
+        <source>Special thanks to:</source>
+        <translation>Remerciement spéciaux à :</translation>
+    </message>
+    <message>
+        <location filename="../../persepolis/gui/about_ui.py" line="256"/>
+        <source>French translator:</source>
+        <translation>Traducteur français :</translation>
+    </message>
+    <message>
+        <location filename="../../persepolis/gui/about_ui.py" line="258"/>
+        <source>Simon Porte</source>
+        <translation>Simon Porte</translation>
     </message>
 </context>
 <context>
@@ -325,7 +340,7 @@ leoxxx</translation>
     <message>
         <location filename="../../persepolis/gui/log_window_ui.py" line="95"/>
         <source>Copy selected to clipboard</source>
-        <translation type="unfinished"/>
+        <translation>Copier la sélection dans le presse-papier</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/log_window_ui.py" line="96"/>
@@ -378,7 +393,7 @@ leoxxx</translation>
     <message>
         <location filename="../../persepolis/scripts/mainwindow.py" line="860"/>
         <source>Please Wait...</source>
-        <translation type="unfinished"/>
+        <translation>Veuillez patienter...</translation>
     </message>
     <message>
         <location filename="../../persepolis/scripts/mainwindow.py" line="1180"/>
@@ -413,7 +428,7 @@ leoxxx</translation>
     <message>
         <location filename="../../persepolis/scripts/mainwindow.py" line="1216"/>
         <source>Reconnecting Aria2...</source>
-        <translation type="unfinished"/>
+        <translation>Reconnexion à Aria2...</translation>
     </message>
     <message>
         <location filename="../../persepolis/scripts/mainwindow.py" line="1235"/>
@@ -538,12 +553,12 @@ leoxxx</translation>
     <message>
         <location filename="../../persepolis/scripts/mainwindow.py" line="2153"/>
         <source>Persepolis is trying to connect! be patient!</source>
-        <translation type="unfinished"/>
+        <translation>Persepolis essaye de se connecter ! Soyez patient !</translation>
     </message>
     <message>
         <location filename="../../persepolis/scripts/mainwindow.py" line="2157"/>
         <source>Please try again.</source>
-        <translation type="unfinished"/>
+        <translation>Veuillez réessayer.</translation>
     </message>
     <message>
         <location filename="../../persepolis/scripts/mainwindow.py" line="2435"/>
@@ -779,11 +794,6 @@ leoxxx</translation>
         <translation>&amp;File d&apos;attente</translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/mainwindow_ui.py" line="416"/>
-        <source>&amp;Video Finder</source>
-        <translation>&amp;Recherche de vidéos</translation>
-    </message>
-    <message>
         <location filename="../../persepolis/gui/mainwindow_ui.py" line="417"/>
         <source>&amp;Help</source>
         <translation>&amp;Aide</translation>
@@ -806,7 +816,7 @@ leoxxx</translation>
     <message>
         <location filename="../../persepolis/gui/mainwindow_ui.py" line="441"/>
         <source>Download video or audio from Youtube, Vimeo, etc...</source>
-        <translation type="unfinished"/>
+        <translation>Télécharger des vidéos ou de l&apos;audio depuis Youtube, Vimeo, etc.</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/mainwindow_ui.py" line="445"/>
@@ -931,7 +941,7 @@ leoxxx</translation>
     <message>
         <location filename="../../persepolis/gui/mainwindow_ui.py" line="536"/>
         <source>Remove selected downloads from list</source>
-        <translation type="unfinished"/>
+        <translation>Supprimer le téléchargement sélectionné de la liste</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/mainwindow_ui.py" line="536"/>
@@ -1070,6 +1080,11 @@ leoxxx</translation>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;This option is preventing system from going to sleep.            This is necessary if your power manager is suspending system automatically. &lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Cette option empêche votre système de se mettre en veille. Ceci est nécessaire si votre gestionnaire d&apos;alimentation met le système en veille automatiquement. &lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
+    <message>
+        <location filename="../../persepolis/gui/mainwindow_ui.py" line="416"/>
+        <source>V&amp;ideo Finder</source>
+        <translation>&amp;Recherche de vidéos</translation>
+    </message>
 </context>
 <context>
     <name>progress_src_ui_tr</name>
@@ -1091,7 +1106,7 @@ leoxxx</translation>
     <message>
         <location filename="../../persepolis/scripts/progress.py" line="118"/>
         <source>Please try again.</source>
-        <translation type="unfinished"/>
+        <translation>Veuillez réessayer.</translation>
     </message>
     <message>
         <location filename="../../persepolis/scripts/progress.py" line="135"/>
@@ -1139,7 +1154,7 @@ leoxxx</translation>
     <message>
         <location filename="../../persepolis/gui/progress_ui.py" line="202"/>
         <source>Download Information</source>
-        <translation type="unfinished"/>
+        <translation>Information de téléchargement</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/progress_ui.py" line="204"/>
@@ -1185,12 +1200,12 @@ leoxxx</translation>
 <context>
     <name>setting_src_ui_tr</name>
     <message>
-        <location filename="../../persepolis/scripts/setting.py" line="925"/>
+        <location filename="../../persepolis/scripts/setting.py" line="916"/>
         <source>&lt;b&gt;&lt;center&gt;Restart Persepolis Please!&lt;/center&gt;&lt;/b&gt;&lt;br&gt;&lt;center&gt;Some changes take effect after restarting Persepolis&lt;/center&gt;</source>
-        <translation type="unfinished"/>
+        <translation>&lt;b&gt;&lt;center&gt;Veuillez redémarrer Persepolis !&lt;/center&gt;&lt;/b&gt;&lt;br&gt;&lt;center&gt;Certains changements prendront effet après le redémarrage de Persepolis&lt;/center&gt;</translation>
     </message>
     <message>
-        <location filename="../../persepolis/scripts/setting.py" line="926"/>
+        <location filename="../../persepolis/scripts/setting.py" line="917"/>
         <source>Restart Persepolis!</source>
         <translation>Redémarrer Persepolis !</translation>
     </message>
@@ -1235,7 +1250,7 @@ leoxxx</translation>
     <message>
         <location filename="../../persepolis/gui/setting_ui.py" line="441"/>
         <source>Timeout (seconds): </source>
-        <translation type="unfinished"/>
+        <translation>Temporisation (secondes) :</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/setting_ui.py" line="448"/>
@@ -1265,7 +1280,7 @@ leoxxx</translation>
     <message>
         <location filename="../../persepolis/gui/setting_ui.py" line="457"/>
         <source>Change Aria2 default path</source>
-        <translation type="unfinished"/>
+        <translation>Modifier le chemin par défaut d&apos;aria2</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/setting_ui.py" line="471"/>
@@ -1335,7 +1350,7 @@ leoxxx</translation>
     <message>
         <location filename="../../persepolis/gui/setting_ui.py" line="490"/>
         <source>Toolbar&apos;s icons size: </source>
-        <translation type="unfinished"/>
+        <translation>Taille des icônes de la barre d&apos;outils :</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/setting_ui.py" line="492"/>
@@ -1360,7 +1375,7 @@ leoxxx</translation>
     <message>
         <location filename="../../persepolis/gui/setting_ui.py" line="498"/>
         <source>Show download complete dialog when download has finished.</source>
-        <translation type="unfinished"/>
+        <translation>Afficher le dialogue de téléchargement terminé lorsque le téléchargement est fini.</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/setting_ui.py" line="501"/>
@@ -1659,32 +1674,32 @@ leoxxx</translation>
     <message>
         <location filename="../../persepolis/scripts/video_finder_addlink.py" line="56"/>
         <source>Video Finder</source>
-        <translation type="unfinished"/>
+        <translation>Recherche de vidéos</translation>
     </message>
     <message>
         <location filename="../../persepolis/scripts/video_finder_addlink.py" line="97"/>
         <source>Fetch Media List</source>
-        <translation type="unfinished"/>
+        <translation>Récupérer la liste des médias</translation>
     </message>
     <message>
         <location filename="../../persepolis/scripts/video_finder_addlink.py" line="98"/>
         <source>Download Now</source>
-        <translation type="unfinished"/>
+        <translation>Télécharger maintenant</translation>
     </message>
     <message>
         <location filename="../../persepolis/scripts/video_finder_addlink.py" line="99"/>
         <source>Select a format</source>
-        <translation type="unfinished"/>
+        <translation>Sélectionner un format</translation>
     </message>
     <message>
         <location filename="../../persepolis/scripts/video_finder_addlink.py" line="135"/>
         <source>Please enter a valid video link</source>
-        <translation type="unfinished"/>
+        <translation>Veuillez saisir un lien vidéo valide</translation>
     </message>
     <message>
         <location filename="../../persepolis/scripts/video_finder_addlink.py" line="149"/>
         <source>Fetching Media Info...</source>
-        <translation type="unfinished"/>
+        <translation>Récupération des informations média...</translation>
     </message>
 </context>
 </TS>
