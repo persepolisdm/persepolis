@@ -14,11 +14,11 @@
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from PyQt5 import QtWidgets, QtGui, QtCore
 from PyQt5.QtWidgets import QPushButton, QApplication, QWidget, QTabWidget, QVBoxLayout, QTableWidget, QAbstractItemView, QLabel, QLineEdit, QHBoxLayout, QSpinBox, QComboBox, QFrame, QCheckBox, QGridLayout
 from PyQt5.QtCore import Qt, QTranslator, QCoreApplication, QLocale
-from PyQt5.QtGui import QIcon
+from PyQt5 import QtWidgets, QtGui, QtCore
 from persepolis.gui import resources
+from PyQt5.QtGui import QIcon
 
 
 class TextQueue_Ui(QWidget):
@@ -29,7 +29,7 @@ class TextQueue_Ui(QWidget):
         icons = ':/' + \
             str(self.persepolis_setting.value('settings/icons')) + '/'
             
-# add support for other languages
+        # add support for other languages
         locale = str(self.persepolis_setting.value('settings/locale'))
         QLocale.setDefault(QLocale(locale))
         self.translator = QTranslator()
@@ -46,17 +46,19 @@ class TextQueue_Ui(QWidget):
             self.setLayoutDirection(Qt.LeftToRight)
 
 
-
         self.setWindowIcon(QIcon.fromTheme('persepolis', QIcon(':/persepolis.svg')))
         window_verticalLayout = QVBoxLayout()
         self.setLayout(window_verticalLayout)
-# queue_tabWidget
+
+        # queue_tabWidget
         self.queue_tabWidget = QTabWidget(self)
         window_verticalLayout.addWidget(self.queue_tabWidget)
-# links_tab
+
+        # links_tab
         self.links_tab = QWidget()
         links_tab_verticalLayout = QVBoxLayout(self.links_tab)
-# link table
+
+        # link table
         self.links_table = QTableWidget(self.links_tab)
         links_tab_verticalLayout.addWidget(self.links_table)
 
@@ -74,7 +76,7 @@ class TextQueue_Ui(QWidget):
         self.links_table.horizontalHeader().setStretchLastSection(True)
 
 
-# add_queue
+        # add_queue
         add_queue_horizontalLayout = QHBoxLayout()
 
         self.select_all_pushButton = QPushButton(self.links_tab)
@@ -92,14 +94,16 @@ class TextQueue_Ui(QWidget):
         add_queue_horizontalLayout.addWidget(self.add_queue_comboBox)
 
         links_tab_verticalLayout.addLayout(add_queue_horizontalLayout)
+
+        links_tab_verticalLayout.addStretch(1)
         self.queue_tabWidget.addTab(self.links_tab, "")
 
 
-# options_tab
+        # options_tab
         self.options_tab = QWidget()
         options_tab_verticalLayout = QVBoxLayout(self.options_tab)
 
-# proxy
+        # proxy
         proxy_verticalLayout = QVBoxLayout()
 
         self.proxy_checkBox = QCheckBox(self.options_tab)
@@ -141,7 +145,7 @@ class TextQueue_Ui(QWidget):
         proxy_verticalLayout.addWidget(self.proxy_frame)
         options_tab_verticalLayout.addLayout(proxy_verticalLayout)
 
-# download UserName & Password
+        # download UserName & Password
         download_horizontalLayout = QHBoxLayout()
         download_horizontalLayout.setContentsMargins(-1, 10, -1, -1)
 
@@ -169,7 +173,8 @@ class TextQueue_Ui(QWidget):
         download_gridLayout.addWidget(self.download_pass_lineEdit, 1, 1, 1, 1)
         download_verticalLayout.addWidget(self.download_frame)
         download_horizontalLayout.addLayout(download_verticalLayout)
-# select folder
+
+        # select folder
         self.folder_frame = QFrame(self.options_tab)
         self.folder_frame.setFrameShape(QFrame.StyledPanel)
         self.folder_frame.setFrameShadow(QFrame.Raised)
@@ -192,7 +197,7 @@ class TextQueue_Ui(QWidget):
         self.queue_tabWidget.addTab(self.options_tab, '')
 
 
-# limit Speed
+        # limit Speed
         limit_verticalLayout = QVBoxLayout()
 
         self.limit_checkBox = QCheckBox(self.options_tab)
@@ -220,7 +225,7 @@ class TextQueue_Ui(QWidget):
         limit_connections_horizontalLayout.addLayout(limit_verticalLayout)
 
 
-# number of connections
+        # number of connections
         connections_horizontalLayout = QHBoxLayout()
         connections_horizontalLayout.setContentsMargins(-1, 10, -1, -1)
 
@@ -240,28 +245,27 @@ class TextQueue_Ui(QWidget):
         horizontalLayout_3.addWidget(self.connections_spinBox)
         connections_horizontalLayout.addWidget(self.connections_frame)
 
-        limit_connections_horizontalLayout.addLayout(
-            connections_horizontalLayout)
+        limit_connections_horizontalLayout.addLayout(connections_horizontalLayout)
 
-        options_tab_verticalLayout.addLayout(
-            limit_connections_horizontalLayout)
+        options_tab_verticalLayout.addLayout(limit_connections_horizontalLayout)
 
+        options_tab_verticalLayout.addStretch(1)
 
-# buttons
+        # buttons
         buttons_horizontalLayout = QHBoxLayout()
         buttons_horizontalLayout.addStretch(1)
-# ok_pushButton
+        # ok_pushButton
         self.ok_pushButton = QPushButton(self)
         self.ok_pushButton.setIcon(QIcon(icons + 'ok'))
         buttons_horizontalLayout.addWidget(self.ok_pushButton)
-# cancel_pushButton
+        # cancel_pushButton
         self.cancel_pushButton = QPushButton(self)
         self.cancel_pushButton.setIcon(QIcon(icons + 'remove'))
         buttons_horizontalLayout.addWidget(self.cancel_pushButton)
 
         window_verticalLayout.addLayout(buttons_horizontalLayout)
 
-# labels
+        # labels
         self.setWindowTitle(QCoreApplication.translate("text_ui_tr", "Persepolis Download Manager"))
 
         self.queue_tabWidget.setTabText(
