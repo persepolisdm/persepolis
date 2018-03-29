@@ -115,147 +115,147 @@ leoxxx</source>
 <context>
     <name>addlink_ui_tr</name>
     <message>
-        <location filename="../../persepolis/gui/addlink_ui.py" line="398"/>
+        <location filename="../../persepolis/gui/addlink_ui.py" line="407"/>
         <source>Enter Your Link</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/addlink_ui.py" line="400"/>
+        <location filename="../../persepolis/gui/addlink_ui.py" line="409"/>
         <source>Download Link: </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/addlink_ui.py" line="402"/>
+        <location filename="../../persepolis/gui/addlink_ui.py" line="411"/>
         <source>Add to category: </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/addlink_ui.py" line="404"/>
+        <location filename="../../persepolis/gui/addlink_ui.py" line="413"/>
         <source>Change File Name: </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/addlink_ui.py" line="406"/>
+        <location filename="../../persepolis/gui/addlink_ui.py" line="415"/>
         <source>Detect system proxy setting</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/addlink_ui.py" line="437"/>
+        <location filename="../../persepolis/gui/addlink_ui.py" line="446"/>
         <source>Proxy</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/addlink_ui.py" line="408"/>
+        <location filename="../../persepolis/gui/addlink_ui.py" line="417"/>
         <source>Proxy PassWord: </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/addlink_ui.py" line="409"/>
+        <location filename="../../persepolis/gui/addlink_ui.py" line="418"/>
         <source>IP: </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/addlink_ui.py" line="410"/>
+        <location filename="../../persepolis/gui/addlink_ui.py" line="419"/>
         <source>Proxy UserName: </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/addlink_ui.py" line="411"/>
+        <location filename="../../persepolis/gui/addlink_ui.py" line="420"/>
         <source>Port:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/addlink_ui.py" line="413"/>
+        <location filename="../../persepolis/gui/addlink_ui.py" line="422"/>
         <source>Download UserName and PassWord</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/addlink_ui.py" line="414"/>
+        <location filename="../../persepolis/gui/addlink_ui.py" line="423"/>
         <source>Download UserName: </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/addlink_ui.py" line="415"/>
+        <location filename="../../persepolis/gui/addlink_ui.py" line="424"/>
         <source>Download PassWord: </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/addlink_ui.py" line="417"/>
+        <location filename="../../persepolis/gui/addlink_ui.py" line="426"/>
         <source>Change Download Folder</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/addlink_ui.py" line="418"/>
+        <location filename="../../persepolis/gui/addlink_ui.py" line="427"/>
         <source>Download Folder: </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/addlink_ui.py" line="420"/>
+        <location filename="../../persepolis/gui/addlink_ui.py" line="429"/>
         <source>Start Time</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/addlink_ui.py" line="421"/>
+        <location filename="../../persepolis/gui/addlink_ui.py" line="430"/>
         <source>End Time</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/addlink_ui.py" line="423"/>
+        <location filename="../../persepolis/gui/addlink_ui.py" line="432"/>
         <source>Limit Speed</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/addlink_ui.py" line="427"/>
+        <location filename="../../persepolis/gui/addlink_ui.py" line="436"/>
         <source>Number Of Connections:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/addlink_ui.py" line="429"/>
+        <location filename="../../persepolis/gui/addlink_ui.py" line="438"/>
         <source>Cancel</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/addlink_ui.py" line="430"/>
+        <location filename="../../persepolis/gui/addlink_ui.py" line="439"/>
         <source>OK</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/addlink_ui.py" line="432"/>
+        <location filename="../../persepolis/gui/addlink_ui.py" line="441"/>
         <source>Download later</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/addlink_ui.py" line="434"/>
+        <location filename="../../persepolis/gui/addlink_ui.py" line="443"/>
         <source>Link</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/addlink_ui.py" line="440"/>
+        <location filename="../../persepolis/gui/addlink_ui.py" line="449"/>
         <source>More Options</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/addlink_ui.py" line="443"/>
+        <location filename="../../persepolis/gui/addlink_ui.py" line="452"/>
         <source>Advanced Options</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/addlink_ui.py" line="446"/>
+        <location filename="../../persepolis/gui/addlink_ui.py" line="455"/>
         <source>Referrer: </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/addlink_ui.py" line="448"/>
+        <location filename="../../persepolis/gui/addlink_ui.py" line="457"/>
         <source>Header: </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/addlink_ui.py" line="450"/>
+        <location filename="../../persepolis/gui/addlink_ui.py" line="459"/>
         <source>Load cookies: </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/addlink_ui.py" line="452"/>
+        <location filename="../../persepolis/gui/addlink_ui.py" line="461"/>
         <source>User agent: </source>
         <translation type="unfinished"></translation>
     </message>
@@ -281,37 +281,37 @@ leoxxx</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/after_download_ui.py" line="102"/>
+        <location filename="../../persepolis/gui/after_download_ui.py" line="110"/>
         <source>  Open File  </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/after_download_ui.py" line="103"/>
+        <location filename="../../persepolis/gui/after_download_ui.py" line="111"/>
         <source>Open Download Folder</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/after_download_ui.py" line="104"/>
+        <location filename="../../persepolis/gui/after_download_ui.py" line="112"/>
         <source>   OK   </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/after_download_ui.py" line="105"/>
+        <location filename="../../persepolis/gui/after_download_ui.py" line="113"/>
         <source>Don&apos;t show this message again.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/after_download_ui.py" line="106"/>
+        <location filename="../../persepolis/gui/after_download_ui.py" line="114"/>
         <source>&lt;b&gt;Download Completed!&lt;/b&gt;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/after_download_ui.py" line="107"/>
+        <location filename="../../persepolis/gui/after_download_ui.py" line="115"/>
         <source>&lt;b&gt;Save as&lt;/b&gt;: </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/after_download_ui.py" line="108"/>
+        <location filename="../../persepolis/gui/after_download_ui.py" line="116"/>
         <source>&lt;b&gt;Link&lt;/b&gt;: </source>
         <translation type="unfinished"></translation>
     </message>
@@ -352,302 +352,302 @@ leoxxx</source>
 <context>
     <name>mainwindow_src_ui_tr</name>
     <message>
-        <location filename="../../persepolis/scripts/mainwindow.py" line="625"/>
+        <location filename="../../persepolis/scripts/mainwindow.py" line="620"/>
         <source>Persepolis</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../persepolis/scripts/mainwindow.py" line="589"/>
+        <location filename="../../persepolis/scripts/mainwindow.py" line="584"/>
         <source>Queue Stopped!</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../persepolis/scripts/mainwindow.py" line="1564"/>
+        <location filename="../../persepolis/scripts/mainwindow.py" line="1559"/>
         <source>Persepolis is shutting down</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../persepolis/scripts/mainwindow.py" line="1564"/>
+        <location filename="../../persepolis/scripts/mainwindow.py" line="1559"/>
         <source>your system in 20 seconds</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../persepolis/scripts/mainwindow.py" line="625"/>
+        <location filename="../../persepolis/scripts/mainwindow.py" line="620"/>
         <source>Queue completed!</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../persepolis/scripts/mainwindow.py" line="2424"/>
+        <location filename="../../persepolis/scripts/mainwindow.py" line="2419"/>
         <source>Show main Window</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../persepolis/scripts/mainwindow.py" line="860"/>
+        <location filename="../../persepolis/scripts/mainwindow.py" line="855"/>
         <source>Please Wait...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../persepolis/scripts/mainwindow.py" line="1180"/>
+        <location filename="../../persepolis/scripts/mainwindow.py" line="1175"/>
         <source>Ready...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../persepolis/scripts/mainwindow.py" line="1186"/>
+        <location filename="../../persepolis/scripts/mainwindow.py" line="1181"/>
         <source>Aria2 didn&apos;t respond! be patient! Persepolis tries again in 2 seconds!</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../persepolis/scripts/mainwindow.py" line="1209"/>
+        <location filename="../../persepolis/scripts/mainwindow.py" line="1204"/>
         <source>Error...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../persepolis/scripts/mainwindow.py" line="1210"/>
+        <location filename="../../persepolis/scripts/mainwindow.py" line="1205"/>
         <source>Persepolis can not connect to Aria2</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../persepolis/scripts/mainwindow.py" line="1194"/>
+        <location filename="../../persepolis/scripts/mainwindow.py" line="1189"/>
         <source>Check your network &amp; Restart Persepolis</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../persepolis/scripts/mainwindow.py" line="1210"/>
+        <location filename="../../persepolis/scripts/mainwindow.py" line="1205"/>
         <source>Restart Persepolis</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../persepolis/scripts/mainwindow.py" line="1216"/>
+        <location filename="../../persepolis/scripts/mainwindow.py" line="1211"/>
         <source>Reconnecting Aria2...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../persepolis/scripts/mainwindow.py" line="1235"/>
+        <location filename="../../persepolis/scripts/mainwindow.py" line="1230"/>
         <source>Persepolis reconnected aria2 successfully</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../persepolis/scripts/mainwindow.py" line="1358"/>
+        <location filename="../../persepolis/scripts/mainwindow.py" line="1353"/>
         <source>Error: </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../persepolis/scripts/mainwindow.py" line="1358"/>
+        <location filename="../../persepolis/scripts/mainwindow.py" line="1353"/>
         <source>Please change the temporary download folder</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../persepolis/scripts/mainwindow.py" line="1409"/>
+        <location filename="../../persepolis/scripts/mainwindow.py" line="1404"/>
         <source>&lt;b&gt;Link&lt;/b&gt;: </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../persepolis/scripts/mainwindow.py" line="1425"/>
+        <location filename="../../persepolis/scripts/mainwindow.py" line="1420"/>
         <source>&lt;b&gt;Downloaded&lt;/b&gt;: </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../persepolis/scripts/mainwindow.py" line="1433"/>
+        <location filename="../../persepolis/scripts/mainwindow.py" line="1428"/>
         <source>&lt;b&gt;Transfer rate&lt;/b&gt;: </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../persepolis/scripts/mainwindow.py" line="1439"/>
+        <location filename="../../persepolis/scripts/mainwindow.py" line="1434"/>
         <source>&lt;b&gt;Estimated time left&lt;/b&gt;: </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../persepolis/scripts/mainwindow.py" line="1445"/>
+        <location filename="../../persepolis/scripts/mainwindow.py" line="1440"/>
         <source>&lt;b&gt;Connections&lt;/b&gt;: </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../persepolis/scripts/mainwindow.py" line="1466"/>
+        <location filename="../../persepolis/scripts/mainwindow.py" line="1461"/>
         <source>&lt;b&gt;Status&lt;/b&gt;: </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../persepolis/scripts/mainwindow.py" line="1512"/>
+        <location filename="../../persepolis/scripts/mainwindow.py" line="1507"/>
         <source>Download Stopped</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../persepolis/scripts/mainwindow.py" line="1534"/>
+        <location filename="../../persepolis/scripts/mainwindow.py" line="1529"/>
         <source>Error - </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../persepolis/scripts/mainwindow.py" line="1583"/>
+        <location filename="../../persepolis/scripts/mainwindow.py" line="1578"/>
         <source>Download Complete</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../persepolis/scripts/mainwindow.py" line="1891"/>
+        <location filename="../../persepolis/scripts/mainwindow.py" line="1886"/>
         <source>&lt;b&gt;&lt;center&gt;This link has been added before!                    Are you sure you want to add it again?&lt;/center&gt;&lt;/b&gt;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../persepolis/scripts/mainwindow.py" line="2004"/>
+        <location filename="../../persepolis/scripts/mainwindow.py" line="1999"/>
         <source>Download Starts</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../persepolis/scripts/mainwindow.py" line="2010"/>
+        <location filename="../../persepolis/scripts/mainwindow.py" line="2005"/>
         <source>Download Scheduled</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../persepolis/scripts/mainwindow.py" line="2134"/>
+        <location filename="../../persepolis/scripts/mainwindow.py" line="2129"/>
         <source>Operation was not successful.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../persepolis/scripts/mainwindow.py" line="2032"/>
+        <location filename="../../persepolis/scripts/mainwindow.py" line="2027"/>
         <source>Please resume the following category: </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../persepolis/scripts/mainwindow.py" line="2153"/>
+        <location filename="../../persepolis/scripts/mainwindow.py" line="2148"/>
         <source>Aria2 disconnected!</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../persepolis/scripts/mainwindow.py" line="2116"/>
+        <location filename="../../persepolis/scripts/mainwindow.py" line="2111"/>
         <source>Persepolis is trying to connect!be patient!</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../persepolis/scripts/mainwindow.py" line="2157"/>
+        <location filename="../../persepolis/scripts/mainwindow.py" line="2152"/>
         <source>Aria2 did not respond!</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../persepolis/scripts/mainwindow.py" line="2058"/>
+        <location filename="../../persepolis/scripts/mainwindow.py" line="2053"/>
         <source>Try again!</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../persepolis/scripts/mainwindow.py" line="2076"/>
+        <location filename="../../persepolis/scripts/mainwindow.py" line="2071"/>
         <source>Aria2 did not respond</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../persepolis/scripts/mainwindow.py" line="2076"/>
+        <location filename="../../persepolis/scripts/mainwindow.py" line="2071"/>
         <source>Try again</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../persepolis/scripts/mainwindow.py" line="2134"/>
+        <location filename="../../persepolis/scripts/mainwindow.py" line="2129"/>
         <source>Please stop the following category: </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../persepolis/scripts/mainwindow.py" line="2153"/>
+        <location filename="../../persepolis/scripts/mainwindow.py" line="2148"/>
         <source>Persepolis is trying to connect! be patient!</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../persepolis/scripts/mainwindow.py" line="2157"/>
+        <location filename="../../persepolis/scripts/mainwindow.py" line="2152"/>
         <source>Please try again.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../persepolis/scripts/mainwindow.py" line="2435"/>
+        <location filename="../../persepolis/scripts/mainwindow.py" line="2430"/>
         <source>Minimize to system tray</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../persepolis/scripts/mainwindow.py" line="2804"/>
+        <location filename="../../persepolis/scripts/mainwindow.py" line="2799"/>
         <source>Not Found</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../persepolis/scripts/mainwindow.py" line="2739"/>
+        <location filename="../../persepolis/scripts/mainwindow.py" line="2734"/>
         <source>Operation was not successful!</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../persepolis/scripts/mainwindow.py" line="2616"/>
+        <location filename="../../persepolis/scripts/mainwindow.py" line="2611"/>
         <source>Operation was not successful! Please stop the following category first: </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../persepolis/scripts/mainwindow.py" line="2634"/>
+        <location filename="../../persepolis/scripts/mainwindow.py" line="2629"/>
         <source>Please stop the following download first: </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../persepolis/scripts/mainwindow.py" line="2688"/>
+        <location filename="../../persepolis/scripts/mainwindow.py" line="2683"/>
         <source>&lt;b&gt;&lt;center&gt;This operation will delete                     downloaded files from your hard disk&lt;br&gt;PERMANENTLY!&lt;/center&gt;&lt;/b&gt;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../persepolis/scripts/mainwindow.py" line="3842"/>
+        <location filename="../../persepolis/scripts/mainwindow.py" line="3837"/>
         <source>&lt;center&gt;Do you want to continue?&lt;/center&gt;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../persepolis/scripts/mainwindow.py" line="2739"/>
+        <location filename="../../persepolis/scripts/mainwindow.py" line="2734"/>
         <source>Please stop the following category first: </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../persepolis/scripts/mainwindow.py" line="2758"/>
+        <location filename="../../persepolis/scripts/mainwindow.py" line="2753"/>
         <source>Operation was not successful! Stop the following download first: </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../persepolis/scripts/mainwindow.py" line="3345"/>
+        <location filename="../../persepolis/scripts/mainwindow.py" line="3340"/>
         <source>&lt;/b&gt;&quot; already exists!</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../persepolis/scripts/mainwindow.py" line="3682"/>
+        <location filename="../../persepolis/scripts/mainwindow.py" line="3677"/>
         <source>Send selected downloads to</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../persepolis/scripts/mainwindow.py" line="3685"/>
+        <location filename="../../persepolis/scripts/mainwindow.py" line="3680"/>
         <source>Send to</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../persepolis/scripts/mainwindow.py" line="3817"/>
+        <location filename="../../persepolis/scripts/mainwindow.py" line="3812"/>
         <source>Sort by</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../persepolis/scripts/mainwindow.py" line="3839"/>
+        <location filename="../../persepolis/scripts/mainwindow.py" line="3834"/>
         <source>&lt;b&gt;&lt;center&gt;This operation will remove                     all download items in this queue&lt;br&gt;from &quot;All Downloads&quot; list!&lt;/center&gt;&lt;/b&gt;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../persepolis/scripts/mainwindow.py" line="3864"/>
+        <location filename="../../persepolis/scripts/mainwindow.py" line="3859"/>
         <source>&lt;b&gt;Sorry! You can&apos;t remove default queue!&lt;/b&gt;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../persepolis/scripts/mainwindow.py" line="4060"/>
+        <location filename="../../persepolis/scripts/mainwindow.py" line="4055"/>
         <source>Some items didn&apos;t transferred successfully!</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../persepolis/scripts/mainwindow.py" line="4060"/>
+        <location filename="../../persepolis/scripts/mainwindow.py" line="4055"/>
         <source>Please stop download progress first.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../persepolis/scripts/mainwindow.py" line="4092"/>
+        <location filename="../../persepolis/scripts/mainwindow.py" line="4087"/>
         <source>Hide options</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../persepolis/scripts/mainwindow.py" line="4096"/>
+        <location filename="../../persepolis/scripts/mainwindow.py" line="4091"/>
         <source>Show options</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../persepolis/scripts/mainwindow.py" line="4612"/>
+        <location filename="../../persepolis/scripts/mainwindow.py" line="4607"/>
         <source>Stop all downloads first!</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1112,77 +1112,77 @@ leoxxx</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/progress_ui.py" line="196"/>
+        <location filename="../../persepolis/gui/progress_ui.py" line="202"/>
         <source>Link:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/progress_ui.py" line="197"/>
+        <location filename="../../persepolis/gui/progress_ui.py" line="203"/>
         <source>Status: </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/progress_ui.py" line="198"/>
+        <location filename="../../persepolis/gui/progress_ui.py" line="204"/>
         <source>Downloaded:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/progress_ui.py" line="199"/>
+        <location filename="../../persepolis/gui/progress_ui.py" line="205"/>
         <source>Transfer rate: </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/progress_ui.py" line="200"/>
+        <location filename="../../persepolis/gui/progress_ui.py" line="206"/>
         <source>Estimated time left:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/progress_ui.py" line="201"/>
+        <location filename="../../persepolis/gui/progress_ui.py" line="207"/>
         <source>Number of connections: </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/progress_ui.py" line="202"/>
+        <location filename="../../persepolis/gui/progress_ui.py" line="208"/>
         <source>Download Information</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/progress_ui.py" line="204"/>
+        <location filename="../../persepolis/gui/progress_ui.py" line="210"/>
         <source>Limit Speed</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/progress_ui.py" line="205"/>
+        <location filename="../../persepolis/gui/progress_ui.py" line="211"/>
         <source>After download</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/progress_ui.py" line="217"/>
+        <location filename="../../persepolis/gui/progress_ui.py" line="223"/>
         <source>Apply</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/progress_ui.py" line="210"/>
+        <location filename="../../persepolis/gui/progress_ui.py" line="216"/>
         <source>Shut Down</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/progress_ui.py" line="212"/>
+        <location filename="../../persepolis/gui/progress_ui.py" line="218"/>
         <source>Download Options</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/progress_ui.py" line="214"/>
+        <location filename="../../persepolis/gui/progress_ui.py" line="220"/>
         <source>Resume</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/progress_ui.py" line="215"/>
+        <location filename="../../persepolis/gui/progress_ui.py" line="221"/>
         <source>Pause</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/progress_ui.py" line="216"/>
+        <location filename="../../persepolis/gui/progress_ui.py" line="222"/>
         <source>Stop</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1511,102 +1511,102 @@ leoxxx</source>
 <context>
     <name>text_ui_tr</name>
     <message>
-        <location filename="../../persepolis/gui/text_queue_ui.py" line="265"/>
+        <location filename="../../persepolis/gui/text_queue_ui.py" line="269"/>
         <source>Persepolis Download Manager</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/text_queue_ui.py" line="267"/>
+        <location filename="../../persepolis/gui/text_queue_ui.py" line="271"/>
         <source>Links</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/text_queue_ui.py" line="269"/>
+        <location filename="../../persepolis/gui/text_queue_ui.py" line="273"/>
         <source>Download options</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/text_queue_ui.py" line="272"/>
+        <location filename="../../persepolis/gui/text_queue_ui.py" line="276"/>
         <source>Select All</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/text_queue_ui.py" line="273"/>
+        <location filename="../../persepolis/gui/text_queue_ui.py" line="277"/>
         <source>Deselect All</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/text_queue_ui.py" line="275"/>
+        <location filename="../../persepolis/gui/text_queue_ui.py" line="279"/>
         <source>Add to queue: </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/text_queue_ui.py" line="277"/>
+        <location filename="../../persepolis/gui/text_queue_ui.py" line="281"/>
         <source>Proxy</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/text_queue_ui.py" line="278"/>
+        <location filename="../../persepolis/gui/text_queue_ui.py" line="282"/>
         <source>Proxy PassWord: </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/text_queue_ui.py" line="279"/>
+        <location filename="../../persepolis/gui/text_queue_ui.py" line="283"/>
         <source>IP:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/text_queue_ui.py" line="280"/>
+        <location filename="../../persepolis/gui/text_queue_ui.py" line="284"/>
         <source>Proxy UserName: </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/text_queue_ui.py" line="281"/>
+        <location filename="../../persepolis/gui/text_queue_ui.py" line="285"/>
         <source>Port:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/text_queue_ui.py" line="283"/>
+        <location filename="../../persepolis/gui/text_queue_ui.py" line="287"/>
         <source>Download UserName and PassWord</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/text_queue_ui.py" line="284"/>
+        <location filename="../../persepolis/gui/text_queue_ui.py" line="288"/>
         <source>Download UserName: </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/text_queue_ui.py" line="285"/>
+        <location filename="../../persepolis/gui/text_queue_ui.py" line="289"/>
         <source>Download PassWord: </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/text_queue_ui.py" line="287"/>
+        <location filename="../../persepolis/gui/text_queue_ui.py" line="291"/>
         <source>Change Download Folder</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/text_queue_ui.py" line="288"/>
+        <location filename="../../persepolis/gui/text_queue_ui.py" line="292"/>
         <source>Download Folder: </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/text_queue_ui.py" line="290"/>
+        <location filename="../../persepolis/gui/text_queue_ui.py" line="294"/>
         <source>Limit Speed</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/text_queue_ui.py" line="292"/>
+        <location filename="../../persepolis/gui/text_queue_ui.py" line="296"/>
         <source>Number Of Connections:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/text_queue_ui.py" line="294"/>
+        <location filename="../../persepolis/gui/text_queue_ui.py" line="298"/>
         <source>OK</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/text_queue_ui.py" line="295"/>
+        <location filename="../../persepolis/gui/text_queue_ui.py" line="299"/>
         <source>Cancel</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1662,32 +1662,32 @@ leoxxx</source>
 <context>
     <name>ytaddlink_src_ui_tr</name>
     <message>
-        <location filename="../../persepolis/scripts/video_finder_addlink.py" line="56"/>
+        <location filename="../../persepolis/scripts/video_finder_addlink.py" line="47"/>
         <source>Video Finder</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../persepolis/scripts/video_finder_addlink.py" line="97"/>
+        <location filename="../../persepolis/scripts/video_finder_addlink.py" line="88"/>
         <source>Fetch Media List</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../persepolis/scripts/video_finder_addlink.py" line="98"/>
+        <location filename="../../persepolis/scripts/video_finder_addlink.py" line="89"/>
         <source>Download Now</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../persepolis/scripts/video_finder_addlink.py" line="99"/>
+        <location filename="../../persepolis/scripts/video_finder_addlink.py" line="90"/>
         <source>Select a format</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../persepolis/scripts/video_finder_addlink.py" line="135"/>
+        <location filename="../../persepolis/scripts/video_finder_addlink.py" line="126"/>
         <source>Please enter a valid video link</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../persepolis/scripts/video_finder_addlink.py" line="149"/>
+        <location filename="../../persepolis/scripts/video_finder_addlink.py" line="140"/>
         <source>Fetching Media Info...</source>
         <translation type="unfinished"></translation>
     </message>

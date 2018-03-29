@@ -594,18 +594,13 @@ QMenu::separator
     margin-right: 0.5ex;
 }
 
-QFrame[frameShape="2"],  /* QFrame::Panel == 0x0003 */
-QFrame[frameShape="3"],  /* QFrame::WinPanel == 0x0003 */
-QFrame[frameShape="4"],  /* QFrame::HLine == 0x0004 */
-QFrame[frameShape="5"],  /* QFrame::VLine == 0x0005 */
-QFrame[frameShape="6"]  /* QFrame::StyledPanel == 0x0006 */
+QFrame[frameShape="6"]
 {
-    border-width: 0.1ex;
-    padding: 0.1ex;
+    padding: 0.5ex;
     border-style: solid;
-    border-color: #EFF0F1;
-    background-color: #bcbfc2;
-    border-radius: 0.5ex;
+    border: 0.1ex solid #BAB9B8;
+    border-radius: 0.2ex;
+    color: #31363B;
 }
 
 QStackedWidget
@@ -1560,8 +1555,10 @@ QProgressBar::chunk:horizontal
 
 QAbstractSpinBox
 {
-    background-color: #EFF0F1;
+    background-color: #FCFCFC;
+
 }
+
 
 QSpinBox,
 QDoubleSpinBox
