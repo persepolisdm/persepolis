@@ -184,7 +184,7 @@ class PropertiesWindow(AddLinkWindow_Ui):
 
             # set time
             q_time = QTime(int(hour), int(minute))
-            self.end_time_qDateTimeEdit(q_time)
+            self.end_time_qDateTimeEdit.setTime(q_time)
 
             self.end_checkBox.setChecked(True)
 
