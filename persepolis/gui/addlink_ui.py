@@ -15,11 +15,11 @@
 """
 
 
-from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import QTabWidget, QDateTimeEdit, QDoubleSpinBox, QPushButton, QComboBox, QSpinBox, QVBoxLayout, QHBoxLayout, QLabel, QApplication, QWidget, QFileDialog, QMessageBox, QSizePolicy, QGridLayout, QCheckBox, QFrame, QLineEdit, QPushButton
-from PyQt5.QtGui import QIcon
-from persepolis.gui import resources 
 from PyQt5.QtCore import Qt, QTranslator, QCoreApplication, QLocale
+from PyQt5 import QtCore, QtGui, QtWidgets
+from persepolis.gui import resources 
+from PyQt5.QtGui import QIcon
 
 
 
@@ -52,6 +52,7 @@ class AddLinkWindow_Ui(QWidget):
         self.setMinimumSize(QtCore.QSize(520, 425))
         self.setWindowIcon(QIcon.fromTheme('persepolis', QIcon(':/persepolis.svg')))
 
+        # main layout
         window_verticalLayout = QVBoxLayout()
 
         # add link tab widget
@@ -118,6 +119,8 @@ class AddLinkWindow_Ui(QWidget):
 
         link_tab_verticalLayout.addLayout(queue_horizontalLayout)
 
+        link_tab_verticalLayout.addStretch(1)
+
         self.add_link_tabWidget.addTab(self.link_tab, '')
 
 
@@ -176,6 +179,8 @@ class AddLinkWindow_Ui(QWidget):
         gridLayout.addWidget(self.proxy_pass_lineEdit, 2, 3, 1, 1)
 
         proxy_verticalLayout.addWidget(self.proxy_frame)
+
+        proxy_verticalLayout.addStretch(1)
 
         self.add_link_tabWidget.addTab(self.proxy_tab, '')
 
@@ -320,6 +325,8 @@ class AddLinkWindow_Ui(QWidget):
 
         more_options_tab_verticalLayout.addLayout(connections_horizontalLayout)
 
+        more_options_tab_verticalLayout.addStretch(1)
+
         self.add_link_tabWidget.addTab(self.more_options_tab, '') 
 
         # advance options
@@ -370,6 +377,8 @@ class AddLinkWindow_Ui(QWidget):
         load_cookies_horizontalLayout.addWidget(self.load_cookies_lineEdit)
 
         advance_options_tab_verticalLayout.addLayout(load_cookies_horizontalLayout)
+
+        advance_options_tab_verticalLayout.addStretch(1)
 
         self.add_link_tabWidget.addTab(self.advance_options_tab, '') 
 
