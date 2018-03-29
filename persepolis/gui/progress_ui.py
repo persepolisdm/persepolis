@@ -15,11 +15,11 @@
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import QCheckBox, QProgressBar, QFrame, QDoubleSpinBox, QComboBox, QWidget, QTabWidget, QVBoxLayout, QHBoxLayout, QPushButton, QLabel, QWidget, QSizePolicy
-from PyQt5.QtGui import QIcon
 from PyQt5.QtCore import Qt, QTranslator, QCoreApplication, QLocale
+from PyQt5 import QtCore, QtGui, QtWidgets
 from persepolis.gui import resources
+from PyQt5.QtGui import QIcon
 
 class ProgressWindow_Ui(QWidget):
     def __init__(self, persepolis_setting):
@@ -83,13 +83,16 @@ class ProgressWindow_Ui(QWidget):
         self.connections_label = QLabel(self.information_tab)
         information_verticalLayout.addWidget(self.connections_label)
 
+        information_verticalLayout.addStretch(1)
+
 # add information_tab to progress_tabWidget
         self.progress_tabWidget.addTab(self.information_tab, "")
 
 # options_tab
         self.options_tab = QWidget()
-        options_tab_horizontalLayout = QHBoxLayout(self.options_tab)
-        options_tab_horizontalLayout.setContentsMargins(11, 11, 11, 11)
+        options_tab_verticalLayout = QVBoxLayout(self.options_tab)
+        options_tab_horizontalLayout = QHBoxLayout()
+#         options_tab_horizontalLayout.setContentsMargins(11, 11, 11, 11)
 
         
 # limit_checkBox
@@ -130,6 +133,9 @@ class ProgressWindow_Ui(QWidget):
 
 
         options_tab_horizontalLayout.addLayout(limit_verticalLayout)
+
+        options_tab_verticalLayout.addLayout(options_tab_horizontalLayout)
+        options_tab_verticalLayout.addStretch(1)
 
 # after_checkBox
         self.after_checkBox = QCheckBox(self.options_tab)
