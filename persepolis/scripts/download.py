@@ -206,6 +206,19 @@ def downloadAria(gid, parent):
         add_link_dictionary = parent.persepolis_db.searchGidInAddLinkTable(gid)
         limit = add_link_dictionary['limit_value']
 
+        # convert Mega to Kilo, RPC does not Support floating point numbers. 
+        if limit != '0':
+            limit_number = limit[:-1]
+            limit_number = float(limit_number)
+            limit_unit = limit[-1]
+            if limit_unit == 'K':
+                limit_number = round(limit_number)
+            else:
+                limit_number = round(1024*limit_number)
+                limit_unit = 'K'
+            limit = str(limit_number) + limit_unit
+
+
 # set start_time value to None in data_base!
         parent.persepolis_db.setDefaultGidInAddlinkTable(gid, start_time=True)
 
