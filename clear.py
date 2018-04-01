@@ -53,10 +53,6 @@ if uid != 0:
     if you want to clean unwanted files that created by setup tools')
     sys.exit(1)
 
-
-# finding current directory
-setup_dir = os.getcwd()
-
 #clearing __pycache__
 src_pycache = os.path.join(setup_dir, 'persepolis', '__pycache__')
 gui_pycache = os.path.join(setup_dir, 'persepolis', 'gui', '__pycache__')
