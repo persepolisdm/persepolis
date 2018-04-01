@@ -33,8 +33,7 @@ else:
 
 
 # finding current directory
-cwd = os.path.abspath(__file__)
-setup_dir = os.path.dirname(cwd)
+setup_dir = os.getcwd()
 
 #clearing __pycache__
 src_pycache = os.path.join(setup_dir, 'persepolis', '__pycache__')
@@ -53,11 +52,6 @@ if uid != 0:
     print('Run this script as root\n\
     if you want to clean unwanted files that created by setup tools')
     sys.exit(1)
-
-
-# finding current directory
-cwd = os.path.abspath(__file__)
-setup_dir = os.path.dirname(cwd)
 
 #clearing __pycache__
 src_pycache = os.path.join(setup_dir, 'persepolis', '__pycache__')
