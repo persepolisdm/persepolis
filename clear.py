@@ -33,8 +33,7 @@ else:
 
 
 # finding current directory
-cwd = os.path.abspath(__file__)
-setup_dir = os.path.dirname(cwd)
+setup_dir = os.getcwd()
 
 #clearing __pycache__
 src_pycache = os.path.join(setup_dir, 'persepolis', '__pycache__')
@@ -56,8 +55,7 @@ if uid != 0:
 
 
 # finding current directory
-cwd = os.path.abspath(__file__)
-setup_dir = os.path.dirname(cwd)
+setup_dir = os.getcwd()
 
 #clearing __pycache__
 src_pycache = os.path.join(setup_dir, 'persepolis', '__pycache__')
