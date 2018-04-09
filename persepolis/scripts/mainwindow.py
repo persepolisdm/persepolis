@@ -1819,7 +1819,8 @@ class MainWindow(MainWindow_Ui):
             # please don't add porn sites!
             supported_sites_list = [
                 'youtube.com/watch',
-                'aparat.com/v/'
+                'aparat.com/v/',
+                'vimeo.com/'
             ]
 
             for link in list_of_links:
