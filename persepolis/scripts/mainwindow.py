@@ -46,7 +46,15 @@ import time
 import sys
 import os
 
-# THIS FILE CREATES MAIN WINDOW
+try:
+    from persepolis.scripts.video_finder_addlink import VideoFinderAddLink
+    youtube_dl_is_installed = True
+except ModuleNotFoundError:
+    # if youtube_dl madule is not installed:
+    logger.sendToLog(
+                "youtube_dl is not installed.", "ERROR")
+    youtube_dl_is_installed = False
+
 
 # The GID (or gid) is a key to manage each download. Each download will be assigned a unique GID.
 # The GID is stored as 64-bit binary value in aria2. For RPC access,
@@ -59,7 +67,6 @@ import os
 # shutdown_notification = 0 >> persepolis is running
 # 1 >> persepolis is ready for closing(closeEvent  is called)
 # 2 >> OK, let's close application!
-from persepolis.scripts.video_finder_addlink import VideoFinderAddLink
 
 global shutdown_notification
 shutdown_notification = 0
@@ -1835,11 +1842,7 @@ class MainWindow(MainWindow_Ui):
                 # if link is on of supported_sites_list member, the open video_finder_addlink_window
                 if max_links and video_finder_supported:
                     max_links = max_links - 1
-                    video_finder_addlink_window = VideoFinderAddLink(self, self.callBack, self.persepolis_setting, link)
-                    self.addlinkwindows_list.append(video_finder_addlink_window)
-                    video_finder_addlink_window.show()
-                    video_finder_addlink_window.raise_()
-                    video_finder_addlink_window.activateWindow()
+                    self.showVideoFinderAddLinkWindow(input_dict=link)
                 else:
                     # if link is not on of supported_sites_list then add it to not_video_finder_links
                     not_video_finder_links.append(link)
@@ -4630,9 +4633,23 @@ class MainWindow(MainWindow_Ui):
         checking_flag = 0
 
 
-    def showVideoFinderAddLinkWindow(self, menu=None):
-        video_finder_addlink_window = VideoFinderAddLink(self, self.callBack, self.persepolis_setting)
-        self.addlinkwindows_list.append(video_finder_addlink_window)
-        video_finder_addlink_window.show()
-        video_finder_addlink_window.raise_()
-        video_finder_addlink_window.activateWindow()
+    def showVideoFinderAddLinkWindow(self,input_dict=None, menu=None):
+        # first check youtube_dl_is_installed value!
+        # if youtube_dl is not installed show an error message.
+        if youtube_dl_is_installed:
+            if not(input_dict):
+                input_dict = {}
+            video_finder_addlink_window = VideoFinderAddLink(parent=self, receiver_slot=self.callBack, settings=self.persepolis_setting, video_dict=input_dict)
+            self.addlinkwindows_list.append(video_finder_addlink_window)
+            video_finder_addlink_window.show()
+            video_finder_addlink_window.raise_()
+            video_finder_addlink_window.activateWindow()
+        else:
+            error_messageBox = QMessageBox()
+            error_messageBox.setText(
+                    QCoreApplication.translate("mainwindow_src_ui_tr", 'youtube-dl is not installed!'))
+            error_messageBox.setWindowTitle('Error!')
+            error_messageBox.exec_()
+            return
+
+
