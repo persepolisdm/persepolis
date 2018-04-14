@@ -206,10 +206,13 @@ class CheckDownloadInfoThread(QThread):
 # 3 >> deleteFileAction is done it's job and It is called removeButtonPressed.
 
 
-            # whait until aria gets ready!(see StartAria2Thread for more information)
+            # wait until aria gets ready!(see StartAria2Thread for more information)
             while shutdown_notification == 0 and aria_startup_answer != 'ready':
                 sleep(1)
 
+            # data base is updated one time in five times.
+            update_data_base = False
+            update_data_base_counter = 0
             while shutdown_notification != 1:
                 sleep(0.2)
                 # if checking_flag is equal to 1, it means that user pressed
@@ -239,18 +242,19 @@ class CheckDownloadInfoThread(QThread):
                 try:
                     for gid in active_gid_list:
 
-                    # if gid not in gid_list, so download is completed or stopped or error occured!
-                    # because aria2 returns active downloads status with tellActive function in download.py file.
-                    # and complete or stopped or errored downloads are not active downloads.
-                    # so we must get download information with tellStatus function.
-                    # see download.py file (tellStatus and tellActive functions) for more information.
-                    # if aria do not return download information with tellStatus and tellActive,
-                    # then perhaps some error occured.so download information must be in data_base.
+                        # if gid not in gid_list, so download is completed or stopped or error occured!
+                        # because aria2 returns active downloads status with tellActive function in download.py file.
+                        # and complete or stopped or errored downloads are not active downloads.
+                        # so we must get download information with tellStatus function.
+                        # see download.py file (tellStatus and tellActive functions) for more information.
+                        # if aria doesn't not return download information with tellStatus and tellActive,
+                        # then perhaps some error occured.so download information must be in data_base.
                         if gid not in gid_list:
 
                             returned_dict = download.tellStatus(gid, self.parent)
                             if returned_dict:
                                 download_status_list.append(returned_dict)
+                                update_data_base = True
                             else:
                                 # check data_base
                                 returned_dict = self.parent.persepolis_db.searchGidInDownloadTable(gid)
@@ -270,8 +274,19 @@ class CheckDownloadInfoThread(QThread):
                     # first emit a signal for updating MainWindow.
                     self.DOWNLOAD_INFO_SIGNAL.emit(download_status_list)
 
+                    # data base is updated 1 time in 5 times.
+                    if update_data_base_counter == 4:
+                        update_data_base = True
+                    else:
+                        update_data_base_counter = update_data_base_counter + 1
+
                     # updat data base!
-                    self.parent.persepolis_db.updateDownloadTable(download_status_list)
+                    if update_data_base:
+                        self.parent.persepolis_db.updateDownloadTable(download_status_list)
+
+                        # data base is updated 1 time in 5 times.
+                        update_data_base = False
+                        update_data_base_counter = -1
 
                 except:
                     # continue the loop if any error occured.
