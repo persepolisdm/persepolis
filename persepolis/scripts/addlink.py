@@ -26,9 +26,9 @@ from PyQt5.QtGui import QIcon
 from functools import partial
 import os
 
-
+# find file name and file size
 class AddLinkSpiderThread(QThread):
-    ADDLINKSPIDERSIGNAL = pyqtSignal(str)
+    ADDLINKSPIDERSIGNAL = pyqtSignal(dict)
 
     def __init__(self, add_link_dictionary):
         QThread.__init__(self)
@@ -36,12 +36,21 @@ class AddLinkSpiderThread(QThread):
 
     def run(self):
         try :
-            filesize = spider.addLinkSpider(self.add_link_dictionary)
-            if filesize:
-                self.ADDLINKSPIDERSIGNAL.emit(filesize)
-            else:
+            # get file name and file size
+            file_name, file_size = spider.addLinkSpider(self.add_link_dictionary)
+
+            spider_dict = {'file_size': file_size, 'file_name': file_name}
+            
+            # emit results
+            self.ADDLINKSPIDERSIGNAL.emit(spider_dict)
+
+            # write an ERROR in log, If spider couldn't find file_name or file_size.
+            if not(file_name):
                 logger.sendToLog(
-                    "Spider couldn't find download information", "ERROR")
+                    "Spider couldn't find file name", "ERROR")
+            if not(file_size):
+                logger.sendToLog(
+                    "Spider couldn't find file size", "ERROR")
         except Exception as e:
             logger.sendToLog(
                 "Spider couldn't find download information", "ERROR")

@@ -193,11 +193,23 @@ def addLinkSpider(add_link_dictionary):
     except:
         header = {}
 
+    # find file size
     file_size = None 
     if 'Content-Length' in header.keys():  # checking if file_size is available
         file_size = int(header['Content-Length'])
         
         # converting file_size to KiB or MiB or GiB
-        file_size = humanReadbleSize(file_size)
+        file_size = str(humanReadbleSize(file_size))
 
-    return file_size  # If no Content-Length ? fixed it.
+    # find file name
+    file_name = None
+    if 'Content-Disposition' in header.keys():  # checking if filename is available
+        content_disposition = header['Content-Disposition']
+        if content_disposition.find('filename') != -1:
+            filename_splited = content_disposition.split('filename=')
+            filename_splited = filename_splited[-1]
+            # getting file name in desired format
+            file_name = str(filename_splited[1:-1])
+
+ 
+    return file_name, file_size  # If no Content-Length ? fixed it.

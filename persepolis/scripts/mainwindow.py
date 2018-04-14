@@ -4548,11 +4548,18 @@ class MainWindow(MainWindow_Ui):
         child.links_table.setItem(int(row_number), 0, item)
 
 # see addlink.py file
-    def addLinkSpiderCallBack(self, filesize, child):
+    def addLinkSpiderCallBack(self, spider_dict, child):
+        # get file_name and file_size
+        file_name = spider_dict['file_name']
+        file_size = spider_dict['file_size']
 
-        if str(filesize) != '***':
-            filesize = 'Size: ' + str(filesize)
-            child.size_label.setText(filesize)
+        if file_size:
+            file_size = 'Size: ' + str(file_size)
+            child.size_label.setText(file_size)
+
+        if file_name and not(child.change_name_checkBox.isChecked()):
+            child.change_name_lineEdit.setText(file_name)
+            child.change_name_checkBox.setChecked(True)
 
     def spiderUpdate(self, dict):
         gid = dict['gid']
