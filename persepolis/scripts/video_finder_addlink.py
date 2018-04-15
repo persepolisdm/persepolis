@@ -190,24 +190,26 @@ class VideoFinderAddLink(AddLinkWindow):
                         if f['acodec'] == 'none' and f['vcodec'] != 'none' and self.persepolis_setting.value('settings/video_finder/hide_no_audio', 'yes') == 'yes':
                             continue
                         if f['acodec'] == 'none':
-                            text = 'No Audio {}p'.format(f['height'])
+                            text = text + '- No Audio'
 
                     if 'vcodec' in f.keys():
                         if f['vcodec'] == 'none' and f['acodec'] != 'none' and self.persepolis_setting.value('settings/video_finder/hide_no_video', 'yes') == 'yes':
                             continue
 
                         if f['vcodec'] == 'none':  # No video, show audio bit rate
-                            text = 'Only Audio {}kbps'.format(f['abr'])
+                            text = text + '- Only Audio {}kbps'.format(f['abr'])
 
                     if 'height' in f.keys():
-                        text = '{}p'.format(f['height'])
+                        text = text + ' ' + '{}p'.format(f['height'])
+
 
                     if 'ext' in f.keys():
-                        text = '{} .{}'.format(text, f['ext'])
+                        text = text + ' ' + '.{}'.format(f['ext'])
 
                     if 'filesize' in f.keys() and f['filesize']:
                         # Youtube api does not supply file size for some formats, so check it.
-                        text = '{} - {}'.format(text, get_readable_size(f['filesize']))
+                        text = text + ' ' + '{}'.format(get_readable_size(f['filesize']))
+
 
                     else:  # Start spider to find file size
                         input_dict = deepcopy(self.plugin_add_link_dictionary)
