@@ -103,7 +103,7 @@ def spider(add_link_dictionary):
         file_size = humanReadbleSize(file_size)
 
     # return results
-    return filename, filesize
+    return filename, file_size
 
 
 # this function finds and returns file name for links.
