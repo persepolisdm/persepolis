@@ -15,7 +15,7 @@
 
 
 from PyQt5 import QtCore, QtGui, QtWidgets
-from PyQt5.QtWidgets import QDateTimeEdit, QCheckBox, QVBoxLayout, QHBoxLayout, QFrame, QWidget, QLabel, QLineEdit, QTabWidget, QSpinBox, QPushButton, QDial, QComboBox, QFontComboBox, QSpacerItem, QSizePolicy
+from PyQt5.QtWidgets import QAbstractItemView, QTableWidget, QDateTimeEdit, QCheckBox, QVBoxLayout, QHBoxLayout, QFrame, QWidget, QLabel, QLineEdit, QTabWidget, QSpinBox, QPushButton, QDial, QComboBox, QFontComboBox, QSpacerItem, QSizePolicy
 from PyQt5.QtGui import QIcon
 import pkg_resources
 from PyQt5.QtCore import Qt, QTranslator, QCoreApplication, QLocale
@@ -426,6 +426,30 @@ class Setting_Ui(QWidget):
 
         self.setting_tabWidget.addTab(self.video_finder_tab, "")
 
+        # shortcut tab
+        self.shortcut_tab = QWidget()
+        shortcut_tab_verticalLayout = QVBoxLayout(self.shortcut_tab)
+        shortcut_tab_verticalLayout.setContentsMargins(21, 21, 0, 0)
+
+        # shortcut_table
+        self.shortcut_table = QTableWidget(self)
+        self.shortcut_table.setColumnCount(2)
+        self.shortcut_table.setSelectionBehavior(QAbstractItemView.SelectRows)
+        self.shortcut_table.setSelectionMode(QAbstractItemView.SingleSelection)
+        self.shortcut_table.setEditTriggers(QAbstractItemView.NoEditTriggers)
+        self.shortcut_table.verticalHeader().hide()
+
+        shortcut_table_header = [QCoreApplication.translate("setting_ui_tr", 'Action'),
+                QCoreApplication.translate("setting_ui_tr",'Shortcut')] 
+
+        self.shortcut_table.setHorizontalHeaderLabels(shortcut_table_header)
+
+        shortcut_tab_verticalLayout.addWidget(self.shortcut_table)
+
+
+        self.setting_tabWidget.addTab(self.shortcut_tab, QCoreApplication.translate("setting_ui_tr", "Shortcuts"))
+
+
         # window buttons
         buttons_horizontalLayout = QHBoxLayout()
         buttons_horizontalLayout.addStretch(1)
@@ -445,6 +469,7 @@ class Setting_Ui(QWidget):
 
         # set style_tab for default
         self.setting_tabWidget.setCurrentIndex(3)
+
 
         # labels and translations
         self.setWindowTitle(QCoreApplication.translate("setting_ui_tr", "Preferences"))
