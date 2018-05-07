@@ -15,7 +15,7 @@
 
 
 from PyQt5 import QtCore, QtGui, QtWidgets
-from PyQt5.QtWidgets import QAbstractItemView, QTableWidget, QDateTimeEdit, QCheckBox, QVBoxLayout, QHBoxLayout, QFrame, QWidget, QLabel, QLineEdit, QTabWidget, QSpinBox, QPushButton, QDial, QComboBox, QFontComboBox, QSpacerItem, QSizePolicy
+from PyQt5.QtWidgets import QAbstractItemView, QTableWidget, QTableWidgetItem, QDateTimeEdit, QCheckBox, QVBoxLayout, QHBoxLayout, QFrame, QWidget, QLabel, QLineEdit, QTabWidget, QSpinBox, QPushButton, QDial, QComboBox, QFontComboBox, QSpacerItem, QSizePolicy
 from PyQt5.QtGui import QIcon
 import pkg_resources
 from PyQt5.QtCore import Qt, QTranslator, QCoreApplication, QLocale
@@ -440,7 +440,7 @@ class Setting_Ui(QWidget):
         self.shortcut_table.verticalHeader().hide()
 
         shortcut_table_header = [QCoreApplication.translate("setting_ui_tr", 'Action'),
-                QCoreApplication.translate("setting_ui_tr",'Shortcut')] 
+                QCoreApplication.translate("setting_ui_tr", 'Shortcut')] 
 
         self.shortcut_table.setHorizontalHeaderLabels(shortcut_table_header)
 
@@ -448,6 +448,28 @@ class Setting_Ui(QWidget):
 
 
         self.setting_tabWidget.addTab(self.shortcut_tab, QCoreApplication.translate("setting_ui_tr", "Shortcuts"))
+
+        # Actions
+        actions_list = [QCoreApplication.translate('setting_ui_tr', 'Quit'),
+                        QCoreApplication.translate('setting_ui_tr', 'Minimize main window to the tray icon'),
+                        QCoreApplication.translate('setting_ui_tr', 'Remove download items'),
+                        QCoreApplication.translate('setting_ui_tr', 'Delete download items'),
+                        QCoreApplication.translate('setting_ui_tr', 'Move up selected items'),
+                        QCoreApplication.translate('setting_ui_tr', 'Move down selected items'),
+                        QCoreApplication.translate('setting_ui_tr', 'Add new download link'),
+                        QCoreApplication.translate('setting_ui_tr', 'Add new Video link'),
+                        QCoreApplication.translate('setting_ui_tr', 'Import links from text file')]
+
+        # add actions to the shortcut_table
+        j = 0
+        for action in actions_list:
+            item = QTableWidgetItem(str(action))
+
+            # insert item in shortcut_table
+            self.shortcut_table.insertRow(j)
+            self.shortcut_table.setItem(j, 0, item)
+
+            j = j + 1
 
 
         # window buttons

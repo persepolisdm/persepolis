@@ -2594,7 +2594,7 @@ class MainWindow(MainWindow_Ui):
 
 
 # this method is called when user presses 'remove selected items' button
-    def removeSelected(self, menu):
+    def removeSelected(self, menu=None):
         # if checking_flag is equal to 1, it means that user pressed remove or
         # delete button or ... . so checking download information must be
         # stopped until job is done!
@@ -2690,7 +2690,7 @@ class MainWindow(MainWindow_Ui):
 
 
 # this method is called when user presses 'delete selected items'
-    def deleteSelected(self, menu):
+    def deleteSelected(self, menu=None):
         # showing Warning message to the user.
         # checking persepolis_setting first!
         # perhaps user was checking "do not show this message again"
@@ -3420,7 +3420,7 @@ class MainWindow(MainWindow_Ui):
 
 # this method is importing a text file for creating queue .
 # text file must contain links . 1 link per line!
-    def importText(self, item):
+    def importText(self, item=None):
         # get file path
         f_path, filters = QFileDialog.getOpenFileName(
             self, 'Select the text file that contains links')
@@ -4361,7 +4361,7 @@ class MainWindow(MainWindow_Ui):
 
 # this method is called when user pressed moveUpSelectedAction
 # this method subtituts selected  items with upper one
-    def moveUpSelected(self, menu):
+    def moveUpSelected(self, menu=None):
         global button_pressed_counter
         button_pressed_counter = button_pressed_counter + 1
 # if checking_flag is equal to 1, it means that user pressed remove or
@@ -4386,8 +4386,7 @@ class MainWindow(MainWindow_Ui):
         current_category_tree_text = str(current_category_tree_index.data())
 
         # get gid_list from data base
-        category_dict = self.persepolis_db.searchCategoryInCategoryTable(
-                        current_category_tree_text)
+        category_dict = self.persepolis_db.searchCategoryInCategoryTable(current_category_tree_text)
 
         gid_list = category_dict['gid_list']
 
@@ -4452,7 +4451,7 @@ class MainWindow(MainWindow_Ui):
 
 # this method is called if user pressed moveDownSelected action
 # this method is subtituting selected download item with lower download item
-    def moveDownSelected(self, menu):
+    def moveDownSelected(self, menu=None):
         global button_pressed_counter
         button_pressed_counter = button_pressed_counter + 1
 # if checking_flag is equal to 1, it means that user pressed remove or

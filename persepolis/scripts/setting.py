@@ -14,7 +14,7 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from PyQt5.QtCore import QTime, QSize, QPoint, QDir , QTranslator, QCoreApplication, QLocale
-from PyQt5.QtWidgets import QFileDialog, QStyleFactory, QMessageBox
+from PyQt5.QtWidgets import QFileDialog, QStyleFactory, QMessageBox, QTableWidgetItem
 from persepolis.scripts.useful_tools import returnDefaultSettings
 from persepolis.gui.setting_ui import Setting_Ui
 from persepolis.scripts import osCommands
@@ -297,6 +297,26 @@ class PreferencesWindow(Setting_Ui):
             pass
 
         self.videoFinderFram()
+
+# shortcuts
+        shortcuts_list = [self.parent.exitAction_shortcut.key().toString(),
+                        self.parent.minimizeAction_shortcut.key().toString(),
+                        self.parent.removeSelectedAction_shortcut.key().toString(),
+                        self.parent.deleteSelectedAction_shortcut.key().toString(),
+                        self.parent.moveUpSelectedAction_shortcut.key().toString(),
+                        self.parent.moveDownSelectedAction_shortcut.key().toString(),
+                        self.parent.addlinkAction_shortcut.key().toString(),
+                        self.parent.videoFinderAddLinkAction_shortcut.key().toString(),
+                        self.parent.addtextfileAction_shortcut.key().toString()]
+        # add shortcuts to the shortcut_table
+        j = 0
+        for shortcut in shortcuts_list:
+            item = QTableWidgetItem(shortcut)
+
+            # insert item in shortcut_table
+            self.shortcut_table.setItem(j, 1, item)
+
+            j = j + 1
 
 
 

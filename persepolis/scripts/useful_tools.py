@@ -14,8 +14,8 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from PyQt5.QtWidgets import QStyleFactory
-import os
 import platform
+import os
 
 try:
     from persepolis.scripts import logger
@@ -181,6 +181,17 @@ def returnDefaultSettings():
         color_scheme = 'Persepolis Light Blue'
         icons = 'Breeze'
 
+    # keyboard shortcuts
+    delete_shortcut = "Ctrl+D" 
+    remove_shortcut = "Ctrl+R" 
+    add_new_download_shortcut = "Ctrl+N" 
+    import_text_shortcut = "Ctrl+O" 
+    video_finder_shortcut = "Ctrl+V"
+    quit_shortcut = "Ctrl+Q"
+    hide_window_shortcut = "Ctrl+W"
+    move_up_selection_shortcut = "Ctrl+Up" 
+    move_down_selection_shortcut = "Ctrl+Down" 
+
 
     # Persepolis default setting
     default_setting_dict = {'locale': 'en_US', 'toolbar_icon_size': 32, 'wait-queue': [0, 0], 'awake': 'no', 'custom-font': 'no', 'column0': 'yes',
@@ -190,6 +201,10 @@ def returnDefaultSettings():
                         'tray-icon': 'yes', 'max-tries': 5, 'retry-wait': 0, 'timeout': 60, 'connections': 16, 'download_path_temp': download_path_temp,
                         'download_path': download_path, 'sound': 'yes', 'sound-volume': 100, 'style': style, 'color-scheme': color_scheme,
                         'icons': icons, 'font': 'Ubuntu', 'font-size': 9, 'aria2_path': '', 'video_finder/enable': 'yes', 'video_finder/hide_no_audio': 'yes',
-                        'video_finder/hide_no_video': 'yes', 'video_finder/max_links': '3'}
+                        'video_finder/hide_no_video': 'yes', 'video_finder/max_links': '3', 'shortcuts/delete_shortcut': delete_shortcut,
+                        'shortcuts/remove_shortcut': remove_shortcut, 'shortcuts/add_new_download_shortcut': add_new_download_shortcut,
+                        'shortcuts/import_text_shortcut': import_text_shortcut, 'shortcuts/video_finder_shortcut': video_finder_shortcut,
+                        'shortcuts/quit_shortcut': quit_shortcut, 'shortcuts/hide_window_shortcut': hide_window_shortcut,
+                        'shortcuts/move_up_selection_shortcut': move_up_selection_shortcut, 'shortcuts/move_down_selection_shortcut': move_down_selection_shortcut}
 
     return default_setting_dict
