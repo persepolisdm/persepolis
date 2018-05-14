@@ -13,13 +13,13 @@
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from PyQt5.QtCore import QTime, QSize, QPoint, QDir , QTranslator, QCoreApplication, QLocale
+from PyQt5.QtCore import Qt, QEvent, QTime, QSize, QPoint, QDir , QTranslator, QCoreApplication, QLocale
 from PyQt5.QtWidgets import QFileDialog, QStyleFactory, QMessageBox, QTableWidgetItem
+from persepolis.gui.setting_ui import Setting_Ui, KeyCapturingWindow_Ui
 from persepolis.scripts.useful_tools import returnDefaultSettings
-from persepolis.gui.setting_ui import Setting_Ui
 from persepolis.scripts import osCommands
 from persepolis.scripts import startup
-from PyQt5.QtGui import QFont
+from PyQt5.QtGui import QFont, QKeySequence
 from PyQt5 import QtWidgets
 import platform
 import copy
@@ -29,6 +29,33 @@ import os
 home_address = os.path.expanduser("~")
 os_type = platform.system()
 
+class KeyCapturingWindow(KeyCapturingWindow_Ui):
+    def __init__(self, callback, persepolis_setting):
+        super().__init__(persepolis_setting)
+        self.persepolis_setting = persepolis_setting
+        self.callback = callback
+        self.setWindowModality(Qt.WindowModal)
+
+        self.ok_pushButton.clicked.connect(self.okPushButtonPressed)
+        self.cancel_pushButton.clicked.connect(self.close)
+
+        self.installEventFilter(self)
+
+    def eventFilter(self, source, event):
+        if event.type() == QEvent.KeyPress:
+            if event.key():
+                # show new keys in window
+                self.capturedKeyLabel.setText(str(QKeySequence(event.modifiers()|event.key()).toString()))
+        return super(KeyCapturingWindow, self).eventFilter(source, event)
+
+    
+    def okPushButtonPressed(self, button):
+        # return new keys
+        self.callback(self.capturedKeyLabel.text())
+        self.close()
+
+    def closeEvent(self, event):
+        self.destroy()
 
 class PreferencesWindow(Setting_Ui):
     def __init__(self, parent, persepolis_setting):
@@ -299,7 +326,18 @@ class PreferencesWindow(Setting_Ui):
         self.videoFinderFram()
 
 # shortcuts
-        shortcuts_list = [self.parent.exitAction_shortcut.key().toString(),
+        self.qshortcuts_list = [self.parent.exitAction_shortcut,
+                        self.parent.minimizeAction_shortcut,
+                        self.parent.removeSelectedAction_shortcut,
+                        self.parent.deleteSelectedAction_shortcut,
+                        self.parent.moveUpSelectedAction_shortcut,
+                        self.parent.moveDownSelectedAction_shortcut,
+                        self.parent.addlinkAction_shortcut,
+                        self.parent.videoFinderAddLinkAction_shortcut,
+                        self.parent.addtextfileAction_shortcut]
+
+
+        self.shortcuts_list = [self.parent.exitAction_shortcut.key().toString(),
                         self.parent.minimizeAction_shortcut.key().toString(),
                         self.parent.removeSelectedAction_shortcut.key().toString(),
                         self.parent.deleteSelectedAction_shortcut.key().toString(),
@@ -308,16 +346,22 @@ class PreferencesWindow(Setting_Ui):
                         self.parent.addlinkAction_shortcut.key().toString(),
                         self.parent.videoFinderAddLinkAction_shortcut.key().toString(),
                         self.parent.addtextfileAction_shortcut.key().toString()]
+
         # add shortcuts to the shortcut_table
         j = 0
-        for shortcut in shortcuts_list:
+        for shortcut in self.shortcuts_list:
             item = QTableWidgetItem(shortcut)
+
+            # align center
+            item.setTextAlignment(0x0004 | 0x0080)
 
             # insert item in shortcut_table
             self.shortcut_table.setItem(j, 1, item)
 
             j = j + 1
 
+        # If user doubleclicks on a row, then run showCaptureKeyboardWindow method
+        self.shortcut_table.itemDoubleClicked.connect(self.showCaptureKeyboardWindow)
 
 
 # ok cancel default button
@@ -373,8 +417,44 @@ class PreferencesWindow(Setting_Ui):
 
         self.icon_comboBox.setCurrentIndex(current_icons_index)
 
+# run this method if user doubleclicks on an item in shortcut_table
+    def showCaptureKeyboardWindow(self):
+        # show KeyCapturingWindow
+        keyboard_capture_window = KeyCapturingWindow(self.callBack, self.persepolis_setting)
+
+        self.parent.capturekeywindows_list.append(keyboard_capture_window)
+        self.parent.capturekeywindows_list[len(self.parent.capturekeywindows_list) - 1].show()
+    
+    def callBack(self, keys):
+        # do nothing if keys is empty
+        if not(keys):
+            return
+
+        # check that if shortcut used before.
+        if keys in self.shortcuts_list:
+            self.msgBox = QMessageBox()
+            self.msgBox.setText(QCoreApplication.translate("setting_src_ui_tr", "<b><center>This shortcut has been used before!\
+                    Use another one!</center></b>"))
+            self.msgBox.setIcon(QMessageBox.Warning)
+            reply = self.msgBox.exec_()
+
+        # set new shortcut
+        else:
+            selected_row = self.shortcut_table.selectionModel().selectedRows()[0].row()
+
+            item = QTableWidgetItem(keys)
+
+            # align center
+            item.setTextAlignment(0x0004 | 0x0080)
+
+            # insert item in shortcut_table
+            self.shortcut_table.setItem(selected_row, 1, item)
+
+            # set keys in shortcuts_list
+            self.shortcuts_list[selected_row] = keys
 
 
+ 
 # active color_comboBox only when user is select "Fusion" style.
     def styleComboBoxChanged(self, index=None):
         # clear color_comboBox
@@ -615,7 +695,31 @@ class PreferencesWindow(Setting_Ui):
         self.hide_no_video_checkbox.setChecked(True)
         self.max_links_spinBox.setValue(3)
 
+# shortcuts
+        self.shortcuts_list = [self.setting_dict['shortcuts/quit_shortcut'],
+                        self.setting_dict['shortcuts/hide_window_shortcut'],
+                        self.setting_dict['shortcuts/remove_shortcut'],
+                        self.setting_dict['shortcuts/delete_shortcut'],
+                        self.setting_dict['shortcuts/move_up_selection_shortcut'],
+                        self.setting_dict['shortcuts/move_down_selection_shortcut'],
+                        self.setting_dict['shortcuts/add_new_download_shortcut'],
+                        self.setting_dict['shortcuts/video_finder_shortcut'],
+                        self.setting_dict['shortcuts/import_text_shortcut']]
 
+        # add shortcuts to the shortcut_table
+        j = 0
+        for shortcut in self.shortcuts_list:
+            item = QTableWidgetItem(shortcut)
+
+            # align center
+            item.setTextAlignment(0x0004 | 0x0080)
+
+            # insert item in shortcut_table
+            self.shortcut_table.setItem(j, 1, item)
+
+            j = j + 1
+
+ 
 
 
         self.persepolis_setting.endGroup()
@@ -933,6 +1037,15 @@ class PreferencesWindow(Setting_Ui):
         else:
             self.persepolis_setting.setValue('column12', 'no')
             self.parent.download_table.setColumnHidden(12, True)
+
+# shortcuts
+        # set new shortcuts
+        i = 0
+        for qshortcut in self.qshortcuts_list:
+            # set keys for QShortcut
+            qshortcut.setKey(self.shortcuts_list[i])
+
+            i = i + 1
 
 # video_finder
         if self.enable_video_finder_checkbox.isChecked():

@@ -812,11 +812,12 @@ class MainWindow(MainWindow_Ui):
         # if user highlights multiple items in download_table
         self.multi_items_selected = False
 
-        # this variable is changed ti False when 
+        # this variable is changed to False when 
         # user clicks on 'hide options' button in
         # side panel. 
         # see showQueuePanelOptions method for more information.
         self.show_queue_panel = True
+
 # system_tray_icon
         self.system_tray_icon = QSystemTrayIcon()
         self.system_tray_icon.setIcon(
@@ -873,16 +874,16 @@ class MainWindow(MainWindow_Ui):
             self.showSidePanelAction.setChecked(False)
 
 
-# set message for statusbar
+        # set message for statusbar
         self.statusbar.showMessage(QCoreApplication.translate("mainwindow_src_ui_tr", 'Please Wait...'))
 
         self.checkSelectedRow()
 
 
-# list of threads
+        # list of threads
         self.threadPool = []
 
-# start aria2
+        # start aria2
         start_aria = StartAria2Thread()
         self.threadPool.append(start_aria)
         self.threadPool[0].start()
@@ -956,8 +957,8 @@ class MainWindow(MainWindow_Ui):
                 i = i + 1
 
 
-# defining some lists and dictionaries for running addlinkwindows and
-# propertieswindows and propertieswindows , ...
+        # defining some lists and dictionaries for running addlinkwindows and
+        # propertieswindows and propertieswindows , ...
         self.addlinkwindows_list = []
         self.propertieswindows_list = []
         self.progress_window_list = []
@@ -968,91 +969,91 @@ class MainWindow(MainWindow_Ui):
         self.checkupdatewindow_list = []
         self.logwindow_list = []
         self.progress_window_list_dict = {}
+        self.capturekeywindows_list = []
 
-# queue_list_dict contains queue threads >> queue_list_dict[name of queue]
+        # queue_list_dict contains queue threads >> queue_list_dict[name of queue]
         self.queue_list_dict = {}
 
-# CheckDownloadInfoThread
+        # CheckDownloadInfoThread
         check_download_info = CheckDownloadInfoThread(self)
         self.threadPool.append(check_download_info)
         self.threadPool[1].start()
         self.threadPool[1].DOWNLOAD_INFO_SIGNAL.connect(self.checkDownloadInfo)
         self.threadPool[1].RECONNECTARIASIGNAL.connect(self.reconnectAria)
 
-# CheckSelectedRowThread
+        # CheckSelectedRowThread
         check_selected_row = CheckSelectedRowThread()
         self.threadPool.append(check_selected_row)
         self.threadPool[2].start()
         self.threadPool[2].CHECKSELECTEDROWSIGNAL.connect(
                                     self.checkSelectedRow)
 
-# CheckingThread
+        # CheckingThread
         check_browser_plugin = CheckingThread()
         self.threadPool.append(check_browser_plugin)
         self.threadPool[3].start()
         self.threadPool[3].CHECKPLUGINDBSIGNAL.connect(self.checkPluginCall)
         self.threadPool[3].SHOWMAINWINDOWSIGNAL.connect(self.showMainWindow)
 
-# keepAwake
+        # keepAwake
         keep_awake = KeepAwakeThread()
         self.threadPool.append(keep_awake)
         self.threadPool[len(self.threadPool) - 1].start()
         self.threadPool[len(self.threadPool) - 1].KEEPSYSTEMAWAKESIGNAL.connect(self.keepAwake)
 
 
-# finding number or row that user selected!
+        # finding number or row that user selected!
         self.download_table.itemSelectionChanged.connect(self.selectedRow)
 
 
-# if user  doubleclicks on an item in download_table , then openFile
-# function  executes
+        # if user  doubleclicks on an item in download_table , then openFile
+        # function  executes
         self.download_table.itemDoubleClicked.connect(self.openFile)
 
-# connecting queue_panel_show_button to showQueuePanelOptions
+        # connecting queue_panel_show_button to showQueuePanelOptions
         self.queue_panel_show_button.clicked.connect(
             self.showQueuePanelOptions)
 
-# connecting start_checkBox to startFrame
+        # connecting start_checkBox to startFrame
         self.start_checkBox.toggled.connect(self.startFrame)
-#         self.startFrame('menu')
+
         self.start_checkBox.setChecked(False)
 
-# connecting end_checkBox to endFrame
+        # connecting end_checkBox to endFrame
         self.end_checkBox.toggled.connect(self.endFrame)
-#         self.endFrame('menu')
         self.end_checkBox.setChecked(False)
 
-# connecting after_checkBox to afterFrame
+        # connecting after_checkBox to afterFrame
         self.after_checkBox.toggled.connect(self.afterFrame)
         self.after_checkBox.setChecked(False)
 
-# connecting limit_checkBox to limitFrame
+        # connecting limit_checkBox to limitFrame
         self.limit_checkBox.toggled.connect(self.limitFrame)
 
-# connecting limit_pushButton to limitPushButtonPressed
+        # connecting limit_pushButton to limitPushButtonPressed
         self.limit_pushButton.clicked.connect(self.limitPushButtonPressed)
 
-# connecting limit_comboBox and limit_spinBox to limitComboBoxChanged
+        # connecting limit_comboBox and limit_spinBox to limitComboBoxChanged
         self.limit_comboBox.currentIndexChanged.connect(
             self.limitComboBoxChanged)
         self.limit_spinBox.valueChanged.connect(self.limitComboBoxChanged)
 
-# connecting after_pushButton to afterPushButtonPressed
+        # connecting after_pushButton to afterPushButtonPressed
         self.after_pushButton.clicked.connect(self.afterPushButtonPressed)
 
-# setting index of all downloads for category_tree
+        # setting index of all downloads for category_tree
         global current_category_tree_index
         current_category_tree_index = self.category_tree_model.index(0, 0)
         self.category_tree.setCurrentIndex(current_category_tree_index)
 
-# this line set toolBar And Context Menu Items
+        # this line set toolBar And Context Menu Items
         self.toolBarAndContextMenuItems('All Downloads')
 
         # It will be enabled after aria2 startup!(see startAriaMessage method)
         # .This line added for solving crash problems on startup
         self.category_tree_qwidget.setEnabled(False)
 
-# keep_awake_checkBox
+        # keep_awake_checkBox
         if str(self.persepolis_setting.value('settings/awake')) == 'yes':
             self.keep_awake_checkBox.setChecked(True)
         else:
@@ -1061,59 +1062,59 @@ class MainWindow(MainWindow_Ui):
         self.keep_awake_checkBox.toggled.connect(self.keepAwakeCheckBoxToggled)
 
 
-# finding windows_size
+        # finding windows_size
         size = self.persepolis_setting.value(
             'MainWindow/size', QSize(900, 500))
         position = self.persepolis_setting.value(
             'MainWindow/position', QPoint(300, 300))
 
-# setting window size
+        # setting window size
         self.resize(size)
         self.move(position)
 
 
-# download_table column size
-# column 0
+        # download_table column size
+        # column 0
         size = self.persepolis_setting.value(
             'MainWindow/column0', '300')
         self.download_table.setColumnWidth(0, int(size))
-#column 1
+        # column 1
         size = self.persepolis_setting.value(
             'MainWindow/column1', '100')
         self.download_table.setColumnWidth(1, int(size))
-#column 2
+        # column 2
         size = self.persepolis_setting.value(
             'MainWindow/column2', '100')
         self.download_table.setColumnWidth(2, int(size))
-#column 3
+        # column 3
         size = self.persepolis_setting.value(
             'MainWindow/column3', '120')
         self.download_table.setColumnWidth(3, int(size))
-#column 4
+        # column 4
         size = self.persepolis_setting.value(
             'MainWindow/column4', '100')
         self.download_table.setColumnWidth(4, int(size))
-#column 5
+        # column 5
         size = self.persepolis_setting.value(
             'MainWindow/column5', '120')
         self.download_table.setColumnWidth(5, int(size))
-#column 6
+        # column 6
         size = self.persepolis_setting.value(
             'MainWindow/column6', '100')
         self.download_table.setColumnWidth(6, int(size))
-#column 7
+        # column 7
         size = self.persepolis_setting.value(
             'MainWindow/column7', '100')
         self.download_table.setColumnWidth(7, int(size))
-#column 10
+        # column 10
         size = self.persepolis_setting.value(
             'MainWindow/column10', '200')
         self.download_table.setColumnWidth(10, int(size))
-#column 11
+        # column 11
         size = self.persepolis_setting.value(
             'MainWindow/column11', '200')
         self.download_table.setColumnWidth(11, int(size))
-#column 12
+        # column 12
         size = self.persepolis_setting.value(
             'MainWindow/column11', '200')
         self.download_table.setColumnWidth(12, int(size))
@@ -1184,7 +1185,7 @@ class MainWindow(MainWindow_Ui):
         self.toolBar2.setIconSize(QSize(icons_size, icons_size))
 
 
-# check reverse_checkBox
+        # check reverse_checkBox
         self.reverse_checkBox.setChecked(False)
 
 # startAriaMessage function is showing some message on statusbar and

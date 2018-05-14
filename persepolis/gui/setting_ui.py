@@ -21,6 +21,61 @@ import pkg_resources
 from PyQt5.QtCore import Qt, QTranslator, QCoreApplication, QLocale
 from persepolis.gui import resources 
 
+class KeyCapturingWindow_Ui(QWidget):
+    def __init__(self, persepolis_setting):
+        super().__init__()
+        icon = QtGui.QIcon()
+
+        self.persepolis_setting = persepolis_setting
+
+        # add support for other languages
+        locale = str(self.persepolis_setting.value('settings/locale'))
+        QLocale.setDefault(QLocale(locale))
+        self.translator = QTranslator()
+        if self.translator.load(':/translations/locales/ui_' + locale, 'ts'):
+            QCoreApplication.installTranslator(self.translator)
+
+        self.setWindowIcon(QIcon.fromTheme('persepolis', QIcon(':/persepolis.svg')))
+        self.setWindowTitle(QCoreApplication.translate("setting_ui_tr", 'Preferences'))
+
+        # set ui direction
+        ui_direction = self.persepolis_setting.value('ui_direction')
+
+        if ui_direction == 'rtl':
+            self.setLayoutDirection(Qt.RightToLeft)
+        
+        elif ui_direction in 'ltr':
+            self.setLayoutDirection(Qt.LeftToRight)
+
+        global icons
+        icons = ':/' + str(self.persepolis_setting.value('settings/icons')) + '/'
+
+        window_verticalLayout = QVBoxLayout(self)
+
+        self.pressKeyLabel = QLabel(self)
+        window_verticalLayout.addWidget(self.pressKeyLabel)
+
+        self.capturedKeyLabel = QLabel(self)
+        window_verticalLayout.addWidget(self.capturedKeyLabel)
+
+        # window buttons
+        buttons_horizontalLayout = QHBoxLayout()
+        buttons_horizontalLayout.addStretch(1)
+
+        self.cancel_pushButton = QPushButton(self)
+        self.cancel_pushButton.setIcon(QIcon(icons + 'remove'))
+        buttons_horizontalLayout.addWidget(self.cancel_pushButton)
+
+        self.ok_pushButton = QPushButton(self)
+        self.ok_pushButton.setIcon(QIcon(icons + 'ok'))
+        buttons_horizontalLayout.addWidget(self.ok_pushButton)
+
+        window_verticalLayout.addLayout(buttons_horizontalLayout)
+
+        # labels
+        self.pressKeyLabel.setText(QCoreApplication.translate("setting_ui_tr", "Press new keys"))
+        self.cancel_pushButton.setText(QCoreApplication.translate("setting_ui_tr", "Cancel"))
+        self.ok_pushButton.setText(QCoreApplication.translate("setting_ui_tr", "OK"))
 
 
 class Setting_Ui(QWidget):
@@ -465,12 +520,17 @@ class Setting_Ui(QWidget):
         for action in actions_list:
             item = QTableWidgetItem(str(action))
 
+            # align center
+            item.setTextAlignment(0x0004 | 0x0080)
+
             # insert item in shortcut_table
             self.shortcut_table.insertRow(j)
             self.shortcut_table.setItem(j, 0, item)
 
             j = j + 1
 
+
+        self.shortcut_table.resizeColumnsToContents()
 
         # window buttons
         buttons_horizontalLayout = QHBoxLayout()
