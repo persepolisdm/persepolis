@@ -34,7 +34,6 @@ class KeyCapturingWindow(KeyCapturingWindow_Ui):
         super().__init__(persepolis_setting)
         self.persepolis_setting = persepolis_setting
         self.callback = callback
-        self.setWindowModality(Qt.WindowModal)
 
         self.ok_pushButton.clicked.connect(self.okPushButtonPressed)
         self.cancel_pushButton.clicked.connect(self.close)
