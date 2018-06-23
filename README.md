@@ -1,4 +1,7 @@
-# Persepolis Download Manager 
+<p align="center">
+  <img src="27415805-6673a3c4-571e-11e7-86bc-9c91e338b0e2.png" width="128px"/>
+</p>
+<h1 align="center">Persepolis Download Manager</h1>
 [![Latest stable release](https://img.shields.io/github/release/persepolisdm/persepolis.svg?maxAge=3600)](https://github.com/persepolisdm/persepolis/releases) [![Total downloads](https://img.shields.io/github/downloads/persepolisdm/persepolis/total.svg)](https://github.com/persepolisdm/persepolis) [![GitHub license](https://img.shields.io/github/license/persepolisdm/persepolis.svg)](https://github.com/persepolisdm/persepolis/blob/master/LICENSE) [![Build Status](https://travis-ci.org/persepolisdm/persepolis.svg?branch=master)](https://travis-ci.org/persepolisdm/persepolis) [![GitHub last commit](https://img.shields.io/github/last-commit/persepolisdm/persepolis.svg)](https://github.com/persepolisdm/persepolis/commits/master) [![GitHub contributors](https://img.shields.io/github/contributors/persepolisdm/persepolis.svg)](https://github.com/persepolisdm/persepolis/graphs/contributors) [![GitHub commit activity the past week, 4 weeks, year](https://img.shields.io/github/commit-activity/y/persepolisdm/persepolis.svg)](https://github.com/persepolisdm/persepolis/commits/master) [![AUR](https://img.shields.io/aur/version/persepolis.svg)](https://aur.archlinux.org/packages/persepolis) [![Twitter Follow](https://img.shields.io/twitter/follow/persepolisdm.svg?style=social&label=Follow)](https://twitter.com/persepolisdm)
 
 > **Content**  
