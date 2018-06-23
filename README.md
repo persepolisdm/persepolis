@@ -31,14 +31,9 @@ It exemplifies the Achaemenid style of architecture. UNESCO declared the ruins o
 
 ### **Screenshots**
 
-#### GNU/Linux
-![ScreenShot](https://persepolisdm.github.io/img/screen/persepolis.png)
-
-#### Mac OSX
-![ScreenShot](https://persepolisdm.github.io/img/screen/mac.png)
-
-#### Microsoft Windows
-![ScreenShot](https://persepolisdm.github.io/img/screen/windows.png)
+|GNU/Linux|Mac OSX|Windows|
+|:---:|:---:|:---:|
+|![](https://persepolisdm.github.io/img/screen/persepolis.png)|![](https://persepolisdm.github.io/img/screen/mac.png)|![](https://persepolisdm.github.io/img/screen/windows.png)|
 
 ### Credits
 
