@@ -1,26 +1,28 @@
-language: python
-dist: trusty
+group: travis_latest
 sudo: required
+language: python
 python:
-  - "3.4"
-virtualenv:
-  system_site_packages: true
+  - "3.6"
+
 before_install:
   - sudo apt-get -qq update
-  - sudo apt-get install -y python3
-  - sudo apt-get install -y aria2
-  - sudo apt-get install -y sound-theme-freedesktop     
-  - sudo apt-get install -y libnotify-bin
-  - sudo apt-get install -y libqt5svg5
-  - sudo apt-get install -y python3-pyqt5.qtsvg
-  - sudo apt-get install -y python3-setuptools
-  - sudo apt-get install -y python3-pip
-  - sudo apt-get install -y python3-pyqt5
-  - sudo apt-get install -y pulseaudio
-  - sudo apt-get install -y python3-psutil
-  - sudo pip3 install youtube-dl  
-  - sudo pip3 install requests
-  - sudo pip3 install setproctitle
+  - pip install --upgrade pip setuptools
+  - pip install flake8 requests setproctitle youtube-dl 
+
+addons:
+  apt:
+    packages:
+    - aria2
+    - sound-theme-freedesktop
+    - libnotify-bin
+    - libqt5svg5
+    - python3-pyqt5
+    - python3-pyqt5.qtsvg
+    - pulseaudio
+
+before_script:
+    # stop the build if there are Python syntax errors or undefined names
+    - flake8 . --count --select=E901,E999,F821,F822,F823 --show-source --statistics
 
 script:
  - sudo python3 setup.py install
