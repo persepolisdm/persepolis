@@ -7,7 +7,7 @@ python:
 before_install:
   - sudo apt-get -qq update
   - pip install --upgrade pip setuptools
-  - pip install flake8 requests setproctitle youtube-dl 
+  - pip install flake8 psutil requests setproctitle youtube-dl 
 
 addons:
   apt:
