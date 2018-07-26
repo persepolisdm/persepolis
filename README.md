@@ -2,6 +2,7 @@
   <img src="27415805-6673a3c4-571e-11e7-86bc-9c91e338b0e2.png" width="128px"/>
 </p>
 <h1 align="center">Persepolis Download Manager</h1>
+
 [![Latest stable release](https://img.shields.io/github/release/persepolisdm/persepolis.svg?maxAge=3600)](https://github.com/persepolisdm/persepolis/releases) [![Total downloads](https://img.shields.io/github/downloads/persepolisdm/persepolis/total.svg)](https://github.com/persepolisdm/persepolis) [![GitHub license](https://img.shields.io/github/license/persepolisdm/persepolis.svg)](https://github.com/persepolisdm/persepolis/blob/master/LICENSE) [![Build Status](https://travis-ci.org/persepolisdm/persepolis.svg?branch=master)](https://travis-ci.org/persepolisdm/persepolis) [![GitHub last commit](https://img.shields.io/github/last-commit/persepolisdm/persepolis.svg)](https://github.com/persepolisdm/persepolis/commits/master) [![GitHub contributors](https://img.shields.io/github/contributors/persepolisdm/persepolis.svg)](https://github.com/persepolisdm/persepolis/graphs/contributors) [![GitHub commit activity the past week, 4 weeks, year](https://img.shields.io/github/commit-activity/y/persepolisdm/persepolis.svg)](https://github.com/persepolisdm/persepolis/commits/master) [![AUR](https://img.shields.io/aur/version/persepolis.svg)](https://aur.archlinux.org/packages/persepolis) [![Twitter Follow](https://img.shields.io/twitter/follow/persepolisdm.svg?style=social&label=Follow)](https://twitter.com/persepolisdm)
 
 > **Content**  
@@ -11,12 +12,12 @@
 > - [Credits](https://github.com/persepolisdm/persepolis/README.md#credits)  
 
 ### **About**
-Persepolis is a Download Manager & a GUI For [aria2](https://github.com/aria2/aria2). It's written in Python. Persepolis is a sample of free and open source softwares. It's developed For GNU/Linux Distributions, BSDs, MacOS and Microsoft Windows.  
+Persepolis is a download manager & a GUI For [Aria2](https://github.com/aria2/aria2). It's written in Python. Persepolis is a sample of free and open source softwares. It's developed For GNU/Linux distributions, BSDs, MacOS and Microsoft Windows.  
 - Multi segment downloading
 - Scheduling downloads
 - Download queuing
 - Finding and downloading video from Youtube, Vimeo, DailyMotion, etc.  
-
+- and much more...
 
 ### **FAQ**
 > **Where does the name come from?**
@@ -69,4 +70,4 @@ It exemplifies the Achaemenid style of architecture. UNESCO declared the ruins o
 [Persepolis website (En)](https://persepolisdm.github.io/) | [Persepolis website (Fa)](https://persepolisdm.github.io/fa) | [Twitter](https://twitter.com/persepolisdm) | [Telegram Channel](https://telegram.me/persepolisdm)
 
 ---
-_Is there any mistake in README.md? Report it in [issue tracker]() or correct it by yourself._
+_Is there any mistake in README.md? Report it in [issue tracker](https://github.com/persepolisdm/persepolis/issues) or correct it by yourself._
