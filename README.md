@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://persepolisdm.github.io/img/screen/persepolis_readme.png?raw=true" width="128px"/>
+  <img src="persepolisdm.github.io/img/screen/persepolisـreadme.png" width="128px"/>
 </p>
 <h1 align="center">Persepolis Download Manager</h1>
 
