@@ -597,6 +597,15 @@ class MainWindow_Ui(QMainWindow):
         editMenu.addAction(self.deleteSelectedAction)
         self.deleteSelectedAction.setEnabled(False)
 
+        # moveSelectedDownloadsAction
+        self.moveSelectedDownloadsAction = QAction(QIcon(icons + 'folder'), QCoreApplication.translate("mainwindow_ui_tr", 'move selected download files to another destination'),
+                                            self, statusTip=QCoreApplication.translate("mainwindow_ui_tr", 'move selected download files to another destination'), triggered=self.moveSelectedDownloads)
+
+        editMenu.addAction(self.moveSelectedDownloadsAction)
+        self.moveSelectedDownloadsAction.setEnabled(False)
+
+
+
         # createQueueAction
         self.createQueueAction = QAction(QIcon(icons + 'add_queue'), QCoreApplication.translate("mainwindow_ui_tr", 'Create new queue'),
                                          self, statusTip=QCoreApplication.translate("mainwindow_ui_tr", 'Create new download queue'), triggered=self.createQueue)

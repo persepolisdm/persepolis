@@ -14,7 +14,7 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from PyQt5.QtWidgets import QAbstractItemView, QAction, QFileDialog, QSystemTrayIcon, QMenu, QApplication, QInputDialog, QMessageBox
-from PyQt5.QtCore import QTime, QCoreApplication, QRect, QSize, QPoint, QThread, pyqtSignal, Qt, QTranslator, QLocale
+from PyQt5.QtCore import QDir, QTime, QCoreApplication, QRect, QSize, QPoint, QThread, pyqtSignal, Qt, QTranslator, QLocale
 from persepolis.scripts.useful_tools import freeSpace, determineConfigFolder, osAndDesktopEnvironment
 from persepolis.gui.mainwindow_ui import MainWindow_Ui, QTableWidgetItem
 from persepolis.scripts.data_base import PluginsDB, PersepolisDB, TempDB
@@ -1665,7 +1665,7 @@ class MainWindow(MainWindow_Ui):
 
         return my_gid
 
-# this methode returns index of all selected rows in list format
+# this method returns index of all selected rows in list format
     def userSelectedRows(self):
         try:
             # Find selected rows
@@ -1732,6 +1732,7 @@ class MainWindow(MainWindow_Ui):
                     self.progressAction.setEnabled(True)
                     self.openDownloadFolderAction.setEnabled(False)
                     self.openFileAction.setEnabled(False)
+                    self.moveSelectedDownloadsAction.setEnabled(False)
 
                 elif status == "stopped" or status == "error":
                     self.stopAction.setEnabled(False)
@@ -1741,6 +1742,7 @@ class MainWindow(MainWindow_Ui):
                     self.progressAction.setEnabled(False)
                     self.openDownloadFolderAction.setEnabled(False)
                     self.openFileAction.setEnabled(False)
+                    self.moveSelectedDownloadsAction.setEnabled(False)
 
                 elif status == "downloading":
                     self.resumeAction.setEnabled(False)
@@ -1750,6 +1752,7 @@ class MainWindow(MainWindow_Ui):
                     self.progressAction.setEnabled(True)
                     self.openDownloadFolderAction.setEnabled(False)
                     self.openFileAction.setEnabled(False)
+                    self.moveSelectedDownloadsAction.setEnabled(False)
 
                 elif status == "waiting":
                     self.stopAction.setEnabled(True)
@@ -1759,6 +1762,7 @@ class MainWindow(MainWindow_Ui):
                     self.progressAction.setEnabled(True)
                     self.openDownloadFolderAction.setEnabled(False)
                     self.openFileAction.setEnabled(False)
+                    self.moveSelectedDownloadsAction.setEnabled(False)
 
                 elif status == "complete":
                     self.stopAction.setEnabled(False)
@@ -1768,6 +1772,7 @@ class MainWindow(MainWindow_Ui):
                     self.progressAction.setEnabled(False)
                     self.openDownloadFolderAction.setEnabled(True)
                     self.openFileAction.setEnabled(True)
+                    self.moveSelectedDownloadsAction.setEnabled(True)
 
                 elif status == "paused":
                     self.stopAction.setEnabled(True)
@@ -1777,6 +1782,7 @@ class MainWindow(MainWindow_Ui):
                     self.progressAction.setEnabled(True)
                     self.openDownloadFolderAction.setEnabled(False)
                     self.openFileAction.setEnabled(False)
+                    self.moveSelectedDownloadsAction.setEnabled(False)
 
                 else:
                     self.progressAction.setEnabled(False)
@@ -1786,6 +1792,7 @@ class MainWindow(MainWindow_Ui):
                     self.propertiesAction.setEnabled(False)
                     self.openDownloadFolderAction.setEnabled(False)
                     self.openFileAction.setEnabled(False)
+                    self.moveSelectedDownloadsAction.setEnabled(False)
 
             else:
                 self.resumeAction.setEnabled(True)
@@ -1797,18 +1804,22 @@ class MainWindow(MainWindow_Ui):
                     self.progressAction.setEnabled(False)
                     self.openDownloadFolderAction.setEnabled(True)
                     self.openFileAction.setEnabled(True)
+                    self.moveSelectedDownloadsAction.setEnabled(True)
+
 
                 elif status == "stopped" or status == "error":
                     self.propertiesAction.setEnabled(True)
                     self.progressAction.setEnabled(False)
                     self.openDownloadFolderAction.setEnabled(False)
                     self.openFileAction.setEnabled(False)
+                    self.moveSelectedDownloadsAction.setEnabled(False)
 
                 elif status == "scheduled" or status == "downloading" or status == "paused" or status == "waiting":
                     self.propertiesAction.setEnabled(False)
                     self.progressAction.setEnabled(False)
                     self.openDownloadFolderAction.setEnabled(False)
                     self.openFileAction.setEnabled(False)
+                    self.moveSelectedDownloadsAction.setEnabled(False)
 
         else:
             self.progressAction.setEnabled(False)
@@ -1818,6 +1829,7 @@ class MainWindow(MainWindow_Ui):
             self.propertiesAction.setEnabled(False)
             self.openDownloadFolderAction.setEnabled(False)
             self.openFileAction.setEnabled(False)
+            self.moveSelectedDownloadsAction.setEnabled(False)
 
 
 # when user requests calls persepolis with browser plugin,
@@ -3735,7 +3747,7 @@ class MainWindow(MainWindow_Ui):
             # add actions to download_table's context menu
             list = [self.openFileAction, self.openDownloadFolderAction, self.resumeAction,
                     self.pauseAction, self.stopAction, self.removeSelectedAction,
-                    self.deleteSelectedAction, self.propertiesAction, self.progressAction]
+                    self.deleteSelectedAction, self.propertiesAction, self.progressAction, self.moveSelectedDownloadsAction]
 
             for action in list:
                 self.download_table.tablewidget_menu.addAction(action)
@@ -3763,7 +3775,7 @@ class MainWindow(MainWindow_Ui):
             # add actions to download_table's context menu
             list = [self.openFileAction, self.openDownloadFolderAction, self.resumeAction,
                     self.pauseAction, self.stopAction, self.removeSelectedAction,
-                    self.deleteSelectedAction, self.propertiesAction, self.progressAction]
+                    self.deleteSelectedAction, self.propertiesAction, self.progressAction, self.moveSelectedDownloadsAction]
 
             for action in list:
                 self.download_table.tablewidget_menu.addAction(action)
@@ -3790,7 +3802,7 @@ class MainWindow(MainWindow_Ui):
             self.toolBar.addSeparator()
 
             # add actions to download_table's context menu
-            for action in [self.openFileAction, self.openDownloadFolderAction, self.removeSelectedAction, self.deleteSelectedAction, self.propertiesAction]:
+            for action in [self.openFileAction, self.openDownloadFolderAction, self.removeSelectedAction, self.deleteSelectedAction, self.propertiesAction, self.moveSelectedDownloadsAction]:
                 self.download_table.tablewidget_menu.addAction(action)
 
             # update category_tree_menu(right click menu for category_tree items)
@@ -4450,9 +4462,11 @@ class MainWindow(MainWindow_Ui):
         self.persepolis_db.updateCategoryTable([category_dict])
 
 
+
 # this method is called if user pressed moveDownSelected action
 # this method is subtituting selected download item with lower download item
     def moveDownSelected(self, menu=None):
+
         global button_pressed_counter
         button_pressed_counter = button_pressed_counter + 1
 # if checking_flag is equal to 1, it means that user pressed remove or
@@ -4546,6 +4560,122 @@ class MainWindow(MainWindow_Ui):
 
         # update data base
         self.persepolis_db.updateCategoryTable([category_dict])
+
+# this method is called if user pressed moveSelectedDownloads action
+# this method moves download files to anpther destination. 
+    def moveSelectedDownloads(self, menu=None):
+
+        # initialize the path. 
+        initializing_path = self.persepolis_setting.value(
+            'MainWindow/moving_path', None)
+
+        # if initializing_path is not available, so use default download_path.
+        if not(initializing_path):
+            initializing = str(
+                self.persepolis_setting.value('settings/download_path'))
+
+
+        # open file manager and get new download path
+        fname = QFileDialog.getExistingDirectory(
+            self, 'Select a directory', initializing_path)
+
+        if fname:
+            # Returns pathName with the '/' separators converted to separators that are appropriate for the underlying operating system.
+            # On Windows, toNativeSeparators("c:/winnt/system32") returns
+            # "c:\winnt\system32".
+            new_folder_path = QDir.toNativeSeparators(fname)
+
+            # save new_folder_path as initializing_path
+            self.persepolis_setting.setValue(
+                'MainWindow/moving_path', new_folder_path)
+
+
+        else:
+            return
+
+
+        # if checking_flag is equal to 1, it means that user pressed remove or
+        # delete button or ... . so checking download information must be
+        # stopped until job is done!
+        if checking_flag != 2:
+            wait_check = WaitThread()
+            self.threadPool.append(wait_check)
+            self.threadPool[len(self.threadPool) - 1].start()
+            self.threadPool[len(self.threadPool) -
+                            1].QTABLEREADY.connect(partial(self.moveSelectedDownloads2, new_folder_path))
+        else:
+            self.moveSelectedDownloads2(new_folder_path)
+
+
+
+    def moveSelectedDownloads2(self, new_folder_path):
+
+
+
+        gid_list = []
+        # find selected rows!
+        for row in self.userSelectedRows():
+            # get download status
+            status = self.download_table.item(row, 1).text()
+
+            # find category
+            category = self.download_table.item(row, 12).text()
+
+
+            # only download items with "complete" can be moved.
+            if (status == 'complete'):
+                # find gid
+                gid = self.download_table.item(row, 8).text()
+                # add gid to gid_list
+                gid_list.append(gid)
+ 
+            else:
+                # find filename
+                file_name = self.download_table.item(row, 0).text()
+
+                # show error message
+                notifySend(QCoreApplication.translate("mainwindow_src_ui_tr",
+                                                      'Operation was not successful! Following download must be completed first: ') + file_name,
+                        5000, 'fail', parent=self)
+
+        add_link_dict_list = []
+        # move selected downloads
+        # find row number for specific gid
+        for gid in gid_list:
+            for i in range(self.download_table.rowCount()):
+                row_gid = self.download_table.item(i, 8).text()
+                if gid == row_gid:
+                    row = i
+                    break
+
+            # find download path
+            dict = self.persepolis_db.searchGidInAddLinkTable(gid)
+            old_file_path = dict['download_path']
+
+            # find file_name
+            file_name = os.path.basename(old_file_path) 
+
+
+            move_answer = osCommands.moveFile(old_file_path, new_folder_path)
+
+
+            if not(move_answer):
+                notifySend(str(file_name), QCoreApplication.translate("mainwindow_src_ui_tr", 'Operation was not successful!'),
+                            5000, 'warning', parent=self)
+            else:
+                new_file_path = os.path.join(new_folder_path, file_name) 
+                add_link_dict = {'gid': gid,
+                                'download_path': new_file_path}
+
+                # add add_link_dict to add_link_dict_list
+                add_link_dict_list.append(add_link_dict)
+
+        # update data base 
+        self.persepolis_db.updateAddLinkTable(add_link_dict_list)
+
+        # telling the CheckDownloadInfoThread that job is done!
+        global checking_flag
+        checking_flag = 0
 
 
 

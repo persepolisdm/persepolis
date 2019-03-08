@@ -64,3 +64,16 @@ def removeDir(folder_path):  # removeDir removes folder : folder_path
 
 def makeDirs(folder_path):  # make new folders
     os.makedirs(folder_path, exist_ok=True)
+
+# move downloaded file to another destination.
+def moveFile(old_file_path, new_folder_path):
+    import traceback
+
+    if os.path.isfile(old_file_path) and os.path.isdir(new_folder_path):
+        try:
+            shutil.move(old_file_path, new_folder_path) 
+            return 1
+        except:
+            return 0
+    else:
+        return 0
