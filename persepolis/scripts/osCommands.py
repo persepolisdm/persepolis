@@ -31,9 +31,11 @@ def touch(file_path):
 
 def xdgOpen(file_path):
     if os_type == 'Linux' or os_type == 'FreeBSD' or os_type == 'OpenBSD':  # GNU/Linux systems
-        os.system('xdg-open "' + file_path + '" &')
+        subprocess.Popen(['xdg-open', file_path], shell=False)
+
     elif os_type == 'Darwin':  # OS X systems
-        os.system('open "' + file_path + '" &')
+        subprocess.Popen(['open', file_path], shell=False)
+
     elif os_type == 'Windows':
         CREATE_NO_WINDOW = 0x08000000
         subprocess.Popen(['cmd', '/C', 'start', file_path,  file_path],
