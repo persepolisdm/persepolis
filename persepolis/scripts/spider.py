@@ -77,7 +77,7 @@ def spider(add_link_dictionary):
         header = {}
 
     filename = None
-    filesize = None
+    file_size = None
     if 'Content-Disposition' in header.keys():  # checking if filename is available
         content_disposition = header['Content-Disposition']
         if content_disposition.find('filename') != -1:
