@@ -513,10 +513,24 @@ def convertDownloadInformation(download_status):
 # this method is returning file_path of file in the user's download folder
 # and move downloaded file after download completion.
 def downloadCompleteAction(parent, path, download_path, file_name, file_size):
+
+    # remove query from name, If file_name contains query components. 
+    # check if query existed.
+    # query form is 1.mp3?foo=bar 2.mp3?blatz=pow 3.mp3?fizz=buzz
+    file_name_split = file_name.split('.')
+    file_extension = file_name_split[-1]
+    file_name_without_extension = file_name_split[0]
+
+    # if '?' in file_extension, then file_name contains query components.
+    if '?' in file_extension:
+        file_extension = file_extension.split('?')[0]
+        file_name = '.'.join([file_name_without_extension, file_extension]) 
+
+
+    # rename file if file already existed
     i = 1
     file_path = os.path.join(download_path, file_name)
 
-# rename file if file already existed
     while os.path.isfile(file_path):
         file_name_split = file_name.split('.')
         extension_length = len(file_name_split[-1]) + 1
@@ -569,6 +583,11 @@ def findDownloadPath(file_name, download_path, subfolder):
     # convert extension letters to lower case
     # for example "JPG" will be converted in "jpg"
     file_extension = file_extension.lower()
+
+    # remove query from file_extension if existed
+    # if '?' in file_extension, then file_name contains query components.
+    if '?' in file_extension:
+        file_extension = file_extension.split('?')[0]
 
     # audio formats
     audio = ['act', 'aiff', 'aac', 'amr', 'ape', 'au', 'awb', 'dct', 'dss', 'dvf', 'flac', 'gsm', 'iklax', 'ivs', 'm4a',
