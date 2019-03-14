@@ -3740,6 +3740,7 @@ class MainWindow(MainWindow_Ui):
             self.toolBar.insertSeparator(self.addlinkAction)
             self.toolBar.insertSeparator(self.resumeAction)
             self.toolBar.insertSeparator(self.removeSelectedAction)
+            self.toolBar.insertSeparator(self.propertiesAction)
             self.toolBar.insertSeparator(self.videoFinderAddLinkAction)
             self.toolBar.insertSeparator(self.exitAction)
             self.toolBar.addSeparator()
@@ -3767,7 +3768,9 @@ class MainWindow(MainWindow_Ui):
                 self.toolBar.addAction(i)
 
             self.toolBar.insertSeparator(self.addlinkAction)
+            self.toolBar.insertSeparator(self.resumeAction)
             self.toolBar.insertSeparator(self.removeSelectedAction)
+            self.toolBar.insertSeparator(self.propertiesAction)
             self.toolBar.insertSeparator(self.videoFinderAddLinkAction)
             self.toolBar.insertSeparator(self.exitAction)
             self.toolBar.addSeparator()
@@ -3795,6 +3798,8 @@ class MainWindow(MainWindow_Ui):
                 self.toolBar.addAction(i)
 
             self.toolBar.insertSeparator(self.addlinkAction)
+            self.toolBar.insertSeparator(self.removeSelectedAction)
+            self.toolBar.insertSeparator(self.propertiesAction)
             self.toolBar.insertSeparator(self.startQueueAction)
             self.toolBar.insertSeparator(self.minimizeAction)
             self.toolBar.insertSeparator(self.videoFinderAddLinkAction)
