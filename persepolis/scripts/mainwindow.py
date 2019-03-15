@@ -2311,6 +2311,11 @@ class MainWindow(MainWindow_Ui):
 # close event
 # when user closes application then this method is called
     def closeEvent(self, event=None):
+        #set close event just for minimizing to tray
+        pass
+
+#close application actions is in this method (to close program completely this method must call)
+    def closeAction(self, event):
         # save window size  and position
         self.persepolis_setting.setValue('MainWindow/size', self.size())
         self.persepolis_setting.setValue('MainWindow/position', self.pos())
