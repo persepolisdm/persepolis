@@ -568,9 +568,9 @@ class MainWindow_Ui(QMainWindow):
 
         # exitAction
         self.exitAction = QAction(QIcon(icons + 'exit'), QCoreApplication.translate("mainwindow_ui_tr", 'Exit'), self,
-                                  statusTip=QCoreApplication.translate("mainwindow_ui_tr", "Exit"), triggered=self.closeEvent)
+                                  statusTip=QCoreApplication.translate("mainwindow_ui_tr", "Exit"), triggered=self.closeAction)
 
-        self.exitAction_shortcut = QShortcut(self.persepolis_setting.value('quit_shortcut'), self, self.closeEvent)
+        self.exitAction_shortcut = QShortcut(self.persepolis_setting.value('quit_shortcut'), self, self.closeAction)
 
         fileMenu.addAction(self.exitAction)
 

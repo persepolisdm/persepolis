@@ -204,6 +204,12 @@ class PreferencesWindow(Setting_Ui):
         self.volume_dial.setNotchesVisible(True)
         self.volume_dial.valueChanged.connect(self.dialChanged)
 
+# hide window
+        if str(self.persepolis_setting.value('hide-window')) == 'yes':
+            self.hide_window_checkBox.setChecked(True)
+        else:
+            self.hide_window_checkBox.setChecked(False)
+
 # tray icon
         if str(self.persepolis_setting.value('tray-icon')) == 'yes':
             self.enable_system_tray_checkBox.setChecked(True)
@@ -654,6 +660,9 @@ class PreferencesWindow(Setting_Ui):
 
 # sound frame
         self.enable_notifications_checkBox.setChecked(True)
+# hide window
+        self.hide_window_checkBox.setChecked(False)
+
 # tray icon
         self.enable_system_tray_checkBox.setChecked(True)
 # after_download_checkBox
@@ -810,6 +819,12 @@ class PreferencesWindow(Setting_Ui):
 # if user select qt notification  >> enable_system_tray icon
         if self.persepolis_setting.value('notification') == 'QT notification':
             self.enable_system_tray_checkBox.setChecked(True)
+
+# hide_window_checkBox
+        if self.hide_window_checkBox.isChecked():
+            self.persepolis_setting.setValue('hide-window', 'yes')
+        else:
+            self.persepolis_setting.setValue('hide-window', 'no')
 
 # enable_system_tray_checkBox
         if self.enable_system_tray_checkBox.isChecked():
