@@ -198,7 +198,7 @@ def returnDefaultSettings():
                         'column1': 'yes', 'column2': 'yes', 'column3': 'yes', 'column4': 'yes', 'column5': 'yes', 'column6': 'yes', 'column7': 'yes',
                         'column10': 'yes', 'column11': 'yes', 'column12': 'yes', 'subfolder': 'yes', 'startup': 'no', 'show-progress': 'yes',
                         'show-menubar': 'no', 'show-sidepanel': 'yes', 'rpc-port': 6801, 'notification': 'Native notification', 'after-dialog': 'yes',
-                        'tray-icon': 'yes', 'max-tries': 5, 'retry-wait': 0, 'timeout': 60, 'connections': 16, 'download_path_temp': download_path_temp,
+                        'tray-icon': 'yes', 'hide-window': 'no', 'max-tries': 5, 'retry-wait': 0, 'timeout': 60, 'connections': 16, 'download_path_temp': download_path_temp,
                         'download_path': download_path, 'sound': 'yes', 'sound-volume': 100, 'style': style, 'color-scheme': color_scheme,
                         'icons': icons, 'font': 'Ubuntu', 'font-size': 9, 'aria2_path': '', 'video_finder/enable': 'yes', 'video_finder/hide_no_audio': 'yes',
                         'video_finder/hide_no_video': 'yes', 'video_finder/max_links': '3', 'shortcuts/delete_shortcut': delete_shortcut,
