@@ -460,4 +460,4 @@ class AddLinkWindow(AddLinkWindow_Ui):
         self.persepolis_setting.setValue('AddLinkWindow/size', self.size())
         self.persepolis_setting.setValue('AddLinkWindow/position', self.pos())
         self.persepolis_setting.sync()
-        self.destroy()
+        event.accept()

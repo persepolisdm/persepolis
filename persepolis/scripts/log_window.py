@@ -122,4 +122,4 @@ class LogWindow(LogWindow_Ui):
         self.persepolis_setting.setValue('LogWindow/size', self.size())
         self.persepolis_setting.setValue('LogWindow/position', self.pos())
         self.persepolis_setting.sync()
-        self.destroy()
+        event.accept()

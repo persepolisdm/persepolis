@@ -370,6 +370,10 @@ class Setting_Ui(QWidget):
         self.setting_tabWidget.addTab(self.style_tab, "")
         window_verticalLayout.addWidget(self.setting_tabWidget)
 
+        # hide window if close button clicked
+        self.hide_window_checkBox = QCheckBox(self.style_tab)
+        style_tab_verticalLayout.addWidget(self.hide_window_checkBox)
+
         # Enable system tray icon
         self.enable_system_tray_checkBox = QCheckBox(self.style_tab)
         style_tab_verticalLayout.addWidget(self.enable_system_tray_checkBox)
@@ -625,6 +629,10 @@ class Setting_Ui(QWidget):
 
         self.font_checkBox.setText(QCoreApplication.translate("setting_ui_tr", "Font: "))
         self.font_size_label.setText(QCoreApplication.translate("setting_ui_tr", "Size: "))
+
+        self.hide_window_checkBox.setText(QCoreApplication.translate("setting_ui_tr", "Hide main window if close button clicked."))
+        self.hide_window_checkBox.setToolTip(
+            QCoreApplication.translate("setting_ui_tr", "<html><head/><body><p>This feature may not work in your operating system.</p></body></html>"))
 
         self.enable_system_tray_checkBox.setText(QCoreApplication.translate("setting_ui_tr", "Enable system tray icon."))
         self.after_download_checkBox.setText(

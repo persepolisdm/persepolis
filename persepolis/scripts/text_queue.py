@@ -378,4 +378,4 @@ class TextQueue(TextQueue_Ui):
         self.persepolis_setting.setValue('TextQueue/position', self.pos())
         self.persepolis_setting.sync()
 
-        self.destroy()
+        event.accept()

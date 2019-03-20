@@ -54,7 +54,7 @@ class KeyCapturingWindow(KeyCapturingWindow_Ui):
         self.close()
 
     def closeEvent(self, event):
-        self.destroy()
+        event.accept()
 
 class PreferencesWindow(Setting_Ui):
     def __init__(self, parent, persepolis_setting):
@@ -532,7 +532,7 @@ class PreferencesWindow(Setting_Ui):
         self.persepolis_setting.setValue(
             'PreferencesWindow/position', self.pos())
         self.persepolis_setting.sync()
-        self.destroy()
+        event.accept()
 
         if self.parent.isVisible() == False:
             self.parent.minMaxTray(event)

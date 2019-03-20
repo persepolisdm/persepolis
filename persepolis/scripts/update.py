@@ -143,4 +143,4 @@ class checkupdate(QWidget):
         self.persepolis_setting.setValue(
             'checkupdate/position', self.pos())
         self.persepolis_setting.sync()
-        self.destroy()
+        event.accept()

@@ -49,4 +49,4 @@ class Windows_Notification(Windows_Notification_UI):
         self.close()
 
     def closeEvent(self, event):
-        self.destroy()
+        event.accept()
