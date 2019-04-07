@@ -42,25 +42,25 @@ It exemplifies the Achaemenid style of architecture. UNESCO declared the ruins o
 ### Credits
 
 **Alireza Amirsamimi:** Persepolis lead developer and manager  
-[GitHub](https://github.com/alireza-amirsamimi) | [E-mail](alireza.amirsamimi@ubuntu.ir)
+[GitHub](https://github.com/alireza-amirsamimi) | [E-mail](mailto:alireza.amirsamimi@ubuntu.ir)
 
 **Mohammadreza Abdollahzadeh:** Arch Linux and BSD support  
-[GitHub](https://github.com/morealaz) | [E-mail](morealaz@gmail.com)
+[GitHub](https://github.com/morealaz) | [E-mail](mailto:morealaz@gmail.com)
 
 **Mostafa Asadi:** Ubuntu, Debian and Windows support  
-[GitHub](https://github.com/mostafaasadi) | [E-mail](mostafaasadi73@gmail.com)
+[GitHub](https://github.com/mostafaasadi) | [E-mail](mailto:mostafaasadi73@gmail.com)
 
 **MohammadAmin Vahedinia:** Mac OSX support  
-[GitHub](https://github.com/Mr0Null) | [E-mail](persepolisdm@vahedinia.me)
+[GitHub](https://github.com/Mr0Null) | [E-mail](mailto:persepolisdm@vahedinia.me)
 
 **Sadegh Alirezaie:** Persepolis website support  
-[GitHub](https://github.com/Alirezaies) | [E-mail](sadegh@webgo.ir)
+[GitHub](https://github.com/Alirezaies) | [E-mail](mailto:sadegh@webgo.ir)
 
 **Jafar Akhondali:** Browsers add-ons support  
-[GitHub](https://github.com/JafarAkhondali) | [E-mail](jafar.akhondali@yahoo.com)
+[GitHub](https://github.com/JafarAkhondali) | [E-mail](mailto:jafar.akhondali@yahoo.com)
 
 **H Rostami:** UI translation, Fedora & OpenSuse support  
-[GitHub](https://github.com/hayyan71) | [E-mail](hayyan71@yahoo.com)
+[GitHub](https://github.com/hayyan71) | [E-mail](mailto:hayyan71@yahoo.com)
 
 [Persepolis website (En)](https://persepolisdm.github.io/) | [Persepolis website (Fa)](https://persepolisdm.github.io/fa) | [Twitter](https://twitter.com/persepolisdm) | [Telegram Channel](https://telegram.me/persepolisdm)
 
