@@ -54,7 +54,7 @@ It exemplifies the Achaemenid style of architecture. UNESCO declared the ruins o
 [GitHub](https://github.com/Mr0Null) | [E-mail](mailto:persepolisdm@vahedinia.me)
 
 **Sadegh Alirezaie:** Persepolis website support  
-[GitHub](https://github.com/Alirezaies) | [E-mail](mailto:sadegh@webgo.ir)
+[GitHub](https://github.com/Alirezaies) | [E-mail](mailto:alirezaie@sadegh.io)
 
 **Jafar Akhondali:** Browsers add-ons support  
 [GitHub](https://github.com/JafarAkhondali) | [E-mail](mailto:jafar.akhondali@yahoo.com)
