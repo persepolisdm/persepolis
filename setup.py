@@ -126,10 +126,10 @@ try:
 except (ImportError, AttributeError):
 	pass
 
-def y_n(question):
+def yesOrNot(question):
 	reply = str(input(question+' (y/n): ')).lower().strip()
 	if reply == "":
-		return y_n(question)
+		return yesOrNot(question)
 	# elif reply[0] == 'y':
 	elif reply == 'y' or reply == 'yes':
 		return True
@@ -137,7 +137,7 @@ def y_n(question):
 	elif reply == 'n' or reply == 'no':
 		return False
 	else:
-		return y_n(question)
+		return yesOrNot(question)
 
 # show warning , if dependencies not installed!
 if not_installed != '':
@@ -148,7 +148,7 @@ if not_installed != '':
 	print(not_installed + '\n\n')
 	print('Read this link for more information: \n')
 	print('https://github.com/persepolisdm/persepolis/wiki/git-installation-instruction\n\n')
-	answer = y_n('Do you want to continue?')
+	answer = yesOrNot('Do you want to continue?')
 	if answer == False:
 		sys.exit(1)
 
