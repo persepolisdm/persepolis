@@ -28,6 +28,8 @@ if len(sys.argv) == 1 or ( len(sys.argv) > 1 and sys.argv[1].lower() !="install"
 	print('Write "install" as argument to install this software.')
 	sys.exit(0)
 
+sys.argv[1]=sys.argv[1].lower()
+
 # finding os platform
 os_type = platform.system()
 
