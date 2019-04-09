@@ -120,6 +120,9 @@ else:
 	print('Warning: sound-theme-freedesktop is not installed! you need this package for sound notifications!')
 	not_installed = not_installed + 'sound-theme-freedesktop'
 
+# try: input = raw_input
+# except NameError: pass
+
 try:
 	import __builtin__
 	input = getattr(__builtin__, 'raw_input')
