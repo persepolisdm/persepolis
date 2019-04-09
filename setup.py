@@ -119,8 +119,15 @@ if os.path.isdir(notifications_path):
 else:
 	print('Warning: sound-theme-freedesktop is not installed! you need this package for sound notifications!')
 	not_installed = not_installed + 'sound-theme-freedesktop'
+
+try:
+	import __builtin__
+	input = getattr(__builtin__, 'raw_input')
+except (ImportError, AttributeError):
+	pass
+
 def y_n(question):
-	reply = str(raw_input(question+' (y/n): ')).lower().strip()
+	reply = str(input(question+' (y/n): ')).lower().strip()
 	if reply == "":
 		return y_n(question)
 	# elif reply[0] == 'y':
