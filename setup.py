@@ -110,12 +110,16 @@ else:
 	not_installed = not_installed + 'sound-theme-freedesktop'
 def y_n(question):
 	reply = str(raw_input(question+' (y/n): ')).lower().strip()
-	if reply[0] == 'y':
+	if reply == "":
+		return y_n(question)
+	# elif reply[0] == 'y':
+	elif reply == 'y' or reply == 'yes':
 		return True
-	if reply[0] == 'n':
+	# elif reply[0] == 'n':
+	elif reply == 'n' or reply == 'no':
 		return False
 	else:
-		return yes_or_no(question)
+		return y_n(question)
 # show warning , if dependencies not installed!
 if not_installed != '':
 	print('########################')
