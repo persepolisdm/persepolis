@@ -19,6 +19,15 @@ import sys
 import platform
 import shutil
 
+if len(sys.argv) > 1 and sys.argv[1] == "test":
+	print('We have not unit test :)')
+	sys.exit(0)
+
+## --help, help
+if len(sys.argv) == 1 or ( len(sys.argv) > 1 and sys.argv[1].lower() !="install" ):
+	print('Write "install" as argument to install this software.')
+	sys.exit(0)
+
 # finding os platform
 os_type = platform.system()
 
@@ -120,6 +129,7 @@ def y_n(question):
 		return False
 	else:
 		return y_n(question)
+
 # show warning , if dependencies not installed!
 if not_installed != '':
 	print('########################')
@@ -132,10 +142,6 @@ if not_installed != '':
 	answer = y_n('Do you want to continue?')
 	if answer == False:
 		sys.exit(1)
-
-if len(sys.argv) > 1 and sys.argv[1] == "test":
-	print('We have not unit test :)')
-	sys.exit('0')
 
 DESCRIPTION = 'Persepolis Download Manager'
 
