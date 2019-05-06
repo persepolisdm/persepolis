@@ -144,7 +144,6 @@ class MenuWidget(QPushButton):
 
 
 # viewMenu submenus
-
 # DownloadTableWidget Class adds QMenu to QTableWidget Class
 class DownloadTableWidget(QTableWidget):
     def __init__(self, parent):
@@ -160,7 +159,7 @@ class DownloadTableWidget(QTableWidget):
             self.setLayoutDirection(Qt.LeftToRight)
 
 
-# creating context menu
+        # creating context menu
         self.tablewidget_menu = QMenu(self)
         self.sendMenu = self.tablewidget_menu.addMenu('')
 
@@ -183,10 +182,10 @@ class CategoryTreeView(QTreeView):
             self.setLayoutDirection(Qt.LeftToRight)
 
 
-# creating context menu
+        # creating context menu
         self.category_tree_menu = QMenu(self)
 
-# connecting actication  event
+        # connecting actication  event
         self.activated.connect(parent.categoryTreeSelected)
         self.pressed.connect(parent.categoryTreeSelected)
 
@@ -227,15 +226,20 @@ class MainWindow_Ui(QMainWindow):
 
         self.centralwidget = QWidget(self)
         self.verticalLayout = QVBoxLayout(self.centralwidget)
+
         # enable drag and drop
         self.setAcceptDrops(True)
-# frame
+
+        # frame
         self.frame = QFrame(self.centralwidget)
 
-# download_table_horizontalLayout
+        # download_table_horizontalLayout
         download_table_horizontalLayout = QHBoxLayout()
-        tabels_splitter = QSplitter(Qt.Horizontal)
-# category_tree
+        horizontal_splitter = QSplitter(Qt.Horizontal)
+
+        vertical_splitter = QSplitter(Qt.Vertical)
+
+        # category_tree
         self.category_tree_qwidget = QWidget(self)
         category_tree_verticalLayout = QVBoxLayout()
         self.category_tree = CategoryTreeView(self)
@@ -251,15 +255,17 @@ class MainWindow_Ui(QMainWindow):
 
         self.category_tree.header().setDefaultAlignment(Qt.AlignCenter)
         
-# queue_panel
+        # queue_panel
         self.queue_panel_widget = QWidget(self)
 
         queue_panel_verticalLayout_main = QVBoxLayout(self.queue_panel_widget)
-# queue_panel_show_button
+
+        # queue_panel_show_button
         self.queue_panel_show_button = QPushButton(self)
 
         queue_panel_verticalLayout_main.addWidget(self.queue_panel_show_button)
-# queue_panel_widget_frame
+
+        # queue_panel_widget_frame
         self.queue_panel_widget_frame = QFrame(self)
         self.queue_panel_widget_frame.setFrameShape(QFrame.StyledPanel)
         self.queue_panel_widget_frame.setFrameShadow(QFrame.Raised)
@@ -270,10 +276,10 @@ class MainWindow_Ui(QMainWindow):
         queue_panel_verticalLayout = QVBoxLayout(self.queue_panel_widget_frame)
         queue_panel_verticalLayout_main.setContentsMargins(50, -1, 50, -1)
 
-# start_end_frame
+        # start_end_frame
         self.start_end_frame = QFrame(self)
 
-# start time
+        # start time
         start_verticalLayout = QVBoxLayout(self.start_end_frame)
         self.start_checkBox = QCheckBox(self)
         start_verticalLayout.addWidget(self.start_checkBox)
@@ -289,8 +295,8 @@ class MainWindow_Ui(QMainWindow):
         start_frame_verticalLayout.addWidget(self.start_time_qDataTimeEdit)
   
         start_verticalLayout.addWidget(self.start_frame)
-# end time
 
+        # end time
         self.end_checkBox = QCheckBox(self)
         start_verticalLayout.addWidget(self.end_checkBox)
 
@@ -311,80 +317,90 @@ class MainWindow_Ui(QMainWindow):
 
         queue_panel_verticalLayout.addWidget(self.start_end_frame)
 
-# limit_after_frame
+        # limit_after_frame
         self.limit_after_frame = QFrame(self)
-# limit_checkBox
+
+        # limit_checkBox
         limit_verticalLayout = QVBoxLayout(self.limit_after_frame)
         self.limit_checkBox = QCheckBox(self)
         limit_verticalLayout.addWidget(self.limit_checkBox)
-# limit_frame
+
+        # limit_frame
         self.limit_frame = QFrame(self)
         self.limit_frame.setFrameShape(QFrame.StyledPanel)
         self.limit_frame.setFrameShadow(QFrame.Raised)
         limit_verticalLayout.addWidget(self.limit_frame)
 
         limit_frame_verticalLayout = QVBoxLayout(self.limit_frame)
-# limit_spinBox
+
+        # limit_spinBox
         limit_frame_horizontalLayout = QHBoxLayout()
         self.limit_spinBox = QDoubleSpinBox(self)
         self.limit_spinBox.setMinimum(1)
         self.limit_spinBox.setMaximum(1023)
         limit_frame_horizontalLayout.addWidget(self.limit_spinBox)
-# limit_comboBox
+
+        # limit_comboBox
         self.limit_comboBox = QComboBox(self)
         self.limit_comboBox.addItem("")
         self.limit_comboBox.addItem("")
         limit_frame_horizontalLayout.addWidget(self.limit_comboBox)
         limit_frame_verticalLayout.addLayout(limit_frame_horizontalLayout)
-# limit_pushButton
+
+        # limit_pushButton
         self.limit_pushButton = QPushButton(self)
         limit_frame_verticalLayout.addWidget(self.limit_pushButton)
 
-# after_checkBox
+        # after_checkBox
         self.after_checkBox = QtWidgets.QCheckBox(self)
         limit_verticalLayout.addWidget(self.after_checkBox)
-# after_frame
+
+        # after_frame
         self.after_frame = QtWidgets.QFrame(self)
         self.after_frame.setFrameShape(QtWidgets.QFrame.StyledPanel)
         self.after_frame.setFrameShadow(QtWidgets.QFrame.Raised)
         limit_verticalLayout.addWidget(self.after_frame)
 
         after_frame_verticalLayout = QVBoxLayout(self.after_frame)
-# after_comboBox
+
+        # after_comboBox
         self.after_comboBox = QComboBox(self)
         self.after_comboBox.addItem("")
 
         after_frame_verticalLayout.addWidget(self.after_comboBox)
-# after_pushButton
+
+        # after_pushButton
         self.after_pushButton = QPushButton(self)
         after_frame_verticalLayout.addWidget(self.after_pushButton)
 
         queue_panel_verticalLayout.addWidget(self.limit_after_frame)
         category_tree_verticalLayout.addWidget(self.queue_panel_widget)
 
-# keep_awake_checkBox
+        # keep_awake_checkBox
         self.keep_awake_checkBox = QCheckBox(self)
         queue_panel_verticalLayout.addWidget(self.keep_awake_checkBox)
 
         self.category_tree_qwidget.setLayout(category_tree_verticalLayout)
-        tabels_splitter.addWidget(self.category_tree_qwidget)
+        horizontal_splitter.addWidget(self.category_tree_qwidget)
 
-# download table widget
+        # download table widget
         self.download_table_content_widget = QWidget(self)
         download_table_content_widget_verticalLayout = QVBoxLayout(
             self.download_table_content_widget)
 
+       
+        # download_table
         self.download_table = DownloadTableWidget(self)
-        download_table_content_widget_verticalLayout.addWidget(
-            self.download_table)
-        tabels_splitter.addWidget(self.download_table_content_widget)
+        vertical_splitter.addWidget(self.download_table)
+
+        horizontal_splitter.addWidget(self.download_table_content_widget)
 
         self.download_table.setColumnCount(13)
         self.download_table.setSelectionBehavior(QAbstractItemView.SelectRows)
         self.download_table.setEditTriggers(QAbstractItemView.NoEditTriggers)
         self.download_table.verticalHeader().hide()
 
-# hide gid and download dictioanry section
+        # hide gid and download dictioanry section
         self.download_table.setColumnHidden(8, True)
         self.download_table.setColumnHidden(9, True)
 
@@ -393,18 +409,55 @@ class MainWindow_Ui(QMainWindow):
 
         self.download_table.setHorizontalHeaderLabels(download_table_header)
 
-# fixing the size of download_table when window is Maximized!
+        # fixing the size of download_table when window is Maximized!
         self.download_table.horizontalHeader().setSectionResizeMode(0)
         self.download_table.horizontalHeader().setStretchLastSection(True)
 
-        tabels_splitter.setStretchFactor(0, 3) # category_tree width
-        tabels_splitter.setStretchFactor(1, 10)  # ratio of tables's width
-        download_table_horizontalLayout.addWidget(tabels_splitter)
+        horizontal_splitter.setStretchFactor(0, 3) # category_tree width
+        horizontal_splitter.setStretchFactor(1, 10)  # ratio of tables's width
+
+
+        # video_finder_widget
+        self.video_finder_widget = QWidget(self)
+        video_finder_horizontalLayout = QHBoxLayout(self.video_finder_widget)
+
+        self.muxing_pushButton = QPushButton(self)
+        self.muxing_pushButton.setIcon(QIcon(icons + 'video_finder'))
+        video_finder_horizontalLayout.addWidget(self.muxing_pushButton)
+        video_finder_horizontalLayout.addSpacing(20)
+
+        video_audio_verticalLayout = QVBoxLayout()
+
+        self.video_label = QLabel(self)
+        video_audio_verticalLayout.addWidget(self.video_label)
+
+        self.audio_label = QLabel(self)
+        video_audio_verticalLayout.addWidget(self.audio_label)
+        video_finder_horizontalLayout.addLayout(video_audio_verticalLayout)
+
+        status_muxing_verticalLayout = QVBoxLayout()
+
+        self.video_finder_status_label = QLabel(self)
+        status_muxing_verticalLayout.addWidget(self.video_finder_status_label)
+
+        self.muxing_status_label = QLabel(self)
+        status_muxing_verticalLayout.addWidget(self.muxing_status_label)
+        video_finder_horizontalLayout.addLayout(status_muxing_verticalLayout)
+
+        vertical_splitter.addWidget(self.video_finder_widget)
+
+        download_table_content_widget_verticalLayout.addWidget(vertical_splitter)
+
+
+        download_table_horizontalLayout.addWidget(horizontal_splitter)
+
         self.frame.setLayout(download_table_horizontalLayout)
+
         self.verticalLayout.addWidget(self.frame)
+
         self.setCentralWidget(self.centralwidget)
 
-# menubar
+        # menubar
         self.menubar = QMenuBar(self)
         self.menubar.setGeometry(QRect(0, 0, 600, 24))
         self.setMenuBar(self.menubar)
@@ -417,13 +470,15 @@ class MainWindow_Ui(QMainWindow):
         helpMenu = self.menubar.addMenu(QCoreApplication.translate("mainwindow_ui_tr", '&Help'))
 
 
-# viewMenu submenus
+        # viewMenu submenus
         sortMenu = viewMenu.addMenu(QCoreApplication.translate("mainwindow_ui_tr", 'Sort by'))
-# statusbar
+
+        # statusbar
         self.statusbar = QStatusBar(self)
         self.setStatusBar(self.statusbar)
         self.statusbar.showMessage(QCoreApplication.translate("mainwindow_ui_tr", "Persepolis Download Manager"))
-# toolBar
+
+        # toolBar
         self.toolBar2 = QToolBar(self)
         self.addToolBar(QtCore.Qt.TopToolBarArea, self.toolBar2)
         self.toolBar2.setWindowTitle(QCoreApplication.translate("mainwindow_ui_tr", 'Menu'))
@@ -437,7 +492,7 @@ class MainWindow_Ui(QMainWindow):
         self.toolBar.setMovable(False)
 
 
-#toolBar and menubar and actions
+        #toolBar and menubar and actions
         self.persepolis_setting.beginGroup('settings/shortcuts')
 
         # videoFinderAddLinkAction
@@ -702,6 +757,14 @@ class MainWindow_Ui(QMainWindow):
             This is necessary if your power manager is suspending system automatically. </p></body></html>"))
  
         self.after_pushButton.setText(QCoreApplication.translate("mainwindow_ui_tr", "Apply"))
+
+        self.muxing_pushButton.setText(QCoreApplication.translate("mainwindow_ui_tr", "start muxing"))
+
+        self.video_label.setText(QCoreApplication.translate("mainwindow_ui_tr", "<b>Video file status: </b>"))
+        self.audio_label.setText(QCoreApplication.translate("mainwindow_ui_tr", "<b>Audio file status: </b>"))
+
+        self.video_finder_status_label.setText(QCoreApplication.translate("mainwindow_ui_tr", "<b>Status: </b>"))
+        self.muxing_status_label.setText(QCoreApplication.translate("mainwindow_ui_tr", "<b>Muxing status: </b>"))
 
     def changeIcon(self, icons):
         icons = ':/' + str(icons) + '/'

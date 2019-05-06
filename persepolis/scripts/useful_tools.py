@@ -14,6 +14,8 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from PyQt5.QtWidgets import QStyleFactory
+import urllib.parse
+import subprocess
 import platform
 import os
 
@@ -71,6 +73,44 @@ def humanReadbleSize(size):
     p = 2 if i > 1 else None
     return str(round(size, p)) +' '+ labels[i]
    
+# this function converts human readble size to byte
+def convertToByte(file_size):
+
+    # if unit is not in Byte
+    if file_size[-2:] != ' B':
+
+        unit = file_size[-3:]
+
+        # persepolis uses float type for GiB and TiB
+        if unit == 'GiB' or unit == 'TiB':
+
+            size_value = float(file_size[:-4])
+
+        else:
+            size_value = int(file_size[:-4])
+    else:
+        unit = None
+        size_value = int(file_size[:-3])
+ 
+    # covert them in byte 
+    if not(unit):
+        in_byte_value = size_value
+
+    elif unit == 'KiB':
+        in_byte_value = size_value*1024
+
+    elif unit == 'MiB':
+        in_byte_value = size_value*1024*1024
+
+    elif unit == 'GiB':
+        in_byte_value = size_value*1024*1024*1024
+
+    elif unit == 'TiB':
+        in_byte_value = size_value*1024*1024*1024*1024
+
+    return int(in_byte_value)
+
+
 # this function checks free space in hard disk.
 def freeSpace(dir):
     try:
@@ -208,3 +248,98 @@ def returnDefaultSettings():
                         'shortcuts/move_up_selection_shortcut': move_up_selection_shortcut, 'shortcuts/move_down_selection_shortcut': move_down_selection_shortcut}
 
     return default_setting_dict
+
+def muxer(parent, video_finder_dictionary):
+
+    result_dictionary = {'error': 'no_error',
+            'ffmpeg_error_message': None,
+            'final_path': None,
+            'final_size': None}
+
+
+    # find file path
+    video_file_dictionary = parent.persepolis_db.searchGidInAddLinkTable(video_finder_dictionary['video_gid']) 
+    audio_file_dictionary = parent.persepolis_db.searchGidInAddLinkTable(video_finder_dictionary['audio_gid']) 
+
+    # find inputs and output file path for ffmpeg
+    video_file_path = video_file_dictionary['download_path']
+    audio_file_path = audio_file_dictionary['download_path']
+    final_path = video_finder_dictionary['download_path']
+
+    # caculate final file's size
+    video_file_size = parent.persepolis_db.searchGidInDownloadTable(video_finder_dictionary['video_gid'])['size']
+    audio_file_size = parent.persepolis_db.searchGidInDownloadTable(video_finder_dictionary['audio_gid'])['size']
+
+    # convert size to byte
+    video_file_size = convertToByte(video_file_size)
+    audio_file_size = convertToByte(audio_file_size)
+
+    final_file_size = video_file_size + audio_file_size
+
+    # check free space
+    free_space = freeSpace(final_path)
+
+    if free_space:
+        if final_file_size > free_space:
+            result_dictionary['error'] = 'not enough free space'
+
+        else:
+
+            # find final file's name 
+            final_file_name = urllib.parse.unquote(os.path.basename(video_file_path))
+
+            if parent.persepolis_setting.value('settings/download_path') == final_path:
+                if parent.persepolis_setting.value('settings/subfolder') == 'yes':
+                    final_path = os.path.join(final_path, 'Videos')
+
+
+            # rename file if file already existed
+            i = 1
+            final_path_pluse_name = os.path.join(final_path, final_file_name)
+
+            while os.path.isfile(final_path_pluse_name):
+
+                file_name_split = final_file_name.split('.')
+                extension_length = len(file_name_split[-1]) + 1
+
+                new_name = final_file_name[0:-extension_length] + \
+                    '_' + str(i) + final_file_name[-extension_length:]
+
+                final_path_pluse_name = os.path.join(final_path, new_name)
+                i = i + 1
+
+            # start muxing
+            if os_type == 'Linux' or os_type == 'FreeBSD' or os_type == 'OpenBSD':
+                pipe = subprocess.Popen(['ffmpeg', '-i', video_file_path,
+                                    '-i', audio_file_path,
+                                    '-c', 'copy',
+                                    '-shortest',
+                                    '-map', '0:v:0',
+                                    '-map', '1:a:0',
+                                    '-loglevel', 'error',
+                                    '-strict', '-2',
+                                    final_path_pluse_name], stderr=subprocess.PIPE, shell=False)
+
+            elif os_type == 'Darwin':
+                # ffmpeg codes
+                pass
+
+            elif os_type == 'Windows':
+                # ffmpeg codes
+                pass
+
+            if pipe.wait() == 0:
+                # muxing ended successful.
+                result_dictionary['error'] = 'no error'
+
+                result_dictionary['final_path'] = final_path_pluse_name
+                result_dictionary['final_size'] = humanReadbleSize(final_file_size)
+
+            else:
+                result_dictionary['error'] = 'ffmpeg error'
+                out, ffmpeg_error_message = pipe.communicate()
+
+                result_dictionary['ffmpeg_error_message'] = ffmpeg_error_message.decode('utf-8')
+                        
+            
+    return result_dictionary 
