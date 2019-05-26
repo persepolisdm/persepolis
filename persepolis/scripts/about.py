@@ -21,13 +21,14 @@ from persepolis.gui import resources
 from PyQt5.QtWidgets import QWidget
 from PyQt5.QtGui import QIcon
 
+
 class AboutWindow(AboutWindow_Ui):
     def __init__(self, persepolis_setting):
         super().__init__(persepolis_setting)
 
         self.persepolis_setting = persepolis_setting
 
-# setting window size and position
+        # setting window size and position
         size = self.persepolis_setting.value(
             'AboutWindow/size', QSize(545, 375))
         position = self.persepolis_setting.value(

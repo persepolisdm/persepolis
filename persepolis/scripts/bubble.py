@@ -27,6 +27,7 @@ if os_type == 'Darwin':
 elif os_type == 'Windows':
     from persepolis.scripts.windows_notification import Windows_Notification
 
+
 # notifySend use notify-send program in user's system for sending notifications
 # and use playNotification function in play.py file for playing sound
 # notifications
@@ -37,7 +38,6 @@ def notifySend(message1, message2, time, sound, parent=None):
         notifications_path = '/usr/local/share/sounds/freedesktop/stereo/'
     else:
         notifications_path = ''
-
 
     if sound == 'ok':
         file = os.path.join(notifications_path, 'complete.oga')
@@ -59,7 +59,6 @@ def notifySend(message1, message2, time, sound, parent=None):
         file = os.path.join(notifications_path, 'dialog-information.oga')
         playNotification(str(file))
 
-
     # load settings
     persepolis_setting = QSettings('persepolis_download_manager', 'persepolis')
 
@@ -69,7 +68,7 @@ def notifySend(message1, message2, time, sound, parent=None):
     message1 = str(message1)
     message2 = str(message2)
 
-# using Qt notification or Native system notification
+    # using Qt notification or Native system notification
     if enable_notification == 'QT notification':
         parent.system_tray_icon.showMessage(message1, message2, 0, 10000)
     else:
@@ -81,5 +80,6 @@ def notifySend(message1, message2, time, sound, parent=None):
             notifyMac("Persepolis Download Manager", message1, message2)
 
         elif os_type == 'Windows':
-            message = Windows_Notification(parent=parent, time=time, text1=message1, text2=message2, persepolis_setting=persepolis_setting)
+            message = Windows_Notification(parent=parent, time=time, text1=message1, text2=message2,
+                                           persepolis_setting=persepolis_setting)
             message.show()

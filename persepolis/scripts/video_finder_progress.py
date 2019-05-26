@@ -14,7 +14,7 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from PyQt5.QtCore import QSize, QPoint, QThread, QTranslator, QCoreApplication, QLocale
-from PyQt5.QtWidgets import QWidget, QSizePolicy,  QInputDialog
+from PyQt5.QtWidgets import QWidget, QSizePolicy, QInputDialog
 from persepolis.gui.video_finder_progress_ui import VideoFinderProgressWindow_Ui
 from persepolis.scripts.shutdown import shutDown
 from persepolis.scripts.bubble import notifySend
@@ -50,7 +50,6 @@ class VideoFinderProgressWindow(VideoFinderProgressWindow_Ui):
         # this variable can be changed by checkDownloadInfo method in mainwindow.py 
         # self.gid defines that wich gid is downloaded. 
         self.gid = gid_list[0]
-
 
         # this variable used as category name in ShutDownThread
         self.video_finder_plus_gid = 'video_finder_' + str(gid_list[0])
@@ -97,7 +96,7 @@ class VideoFinderProgressWindow(VideoFinderProgressWindow_Ui):
 
         self.limit_spinBox.valueChanged.connect(self.limitComboBoxChanged)
 
-  # set window size and position
+        # set window size and position
         size = self.persepolis_setting.value(
             'ProgressWindow/size', QSize(595, 274))
         position = self.persepolis_setting.value(
@@ -120,16 +119,18 @@ class VideoFinderProgressWindow(VideoFinderProgressWindow_Ui):
             # if aria2 did not respond , then this function is checking for aria2
             # availability , and if aria2 disconnected then aria2Disconnected is
             # executed
-            if not(answer):
+            if not (answer):
                 version_answer = download.aria2Version()
                 if version_answer == 'did not respond':
                     self.parent.aria2Disconnected()
-                    notifySend(QCoreApplication.translate("progress_src_ui_tr", "Aria2 disconnected!"), QCoreApplication.translate("progress_src_ui_tr", "Persepolis is trying to connect! be patient!"),
+                    notifySend(QCoreApplication.translate("progress_src_ui_tr", "Aria2 disconnected!"),
+                               QCoreApplication.translate("progress_src_ui_tr",
+                                                          "Persepolis is trying to connect! be patient!"),
                                10000, 'warning', parent=self.parent)
                 else:
-                    notifySend(QCoreApplication.translate("progress_src_ui_tr", "Aria2 did not respond!"), QCoreApplication.translate("progress_src_ui_tr", "Please try again."), 10000,
+                    notifySend(QCoreApplication.translate("progress_src_ui_tr", "Aria2 did not respond!"),
+                               QCoreApplication.translate("progress_src_ui_tr", "Please try again."), 10000,
                                'warning', parent=self.parent)
-
 
     def pausePushButtonPressed(self, button):
 
@@ -139,7 +140,7 @@ class VideoFinderProgressWindow(VideoFinderProgressWindow_Ui):
             # if aria2 did not respond , then this function is checking for aria2
             # availability , and if aria2 disconnected then aria2Disconnected is
             # executed
-            if not(answer):
+            if not (answer):
                 version_answer = download.aria2Version()
                 if version_answer == 'did not respond':
                     self.parent.aria2Disconnected()
@@ -147,20 +148,20 @@ class VideoFinderProgressWindow(VideoFinderProgressWindow_Ui):
                     notifySend("Aria2 disconnected!", "Persepolis is trying to connect! be patient!",
                                10000, 'warning', parent=self.parent)
                 else:
-                    notifySend(QCoreApplication.translate("progress_src_ui_tr", "Aria2 did not respond!"), QCoreApplication.translate("progress_src_ui_tr", "Try again!"), 10000,
+                    notifySend(QCoreApplication.translate("progress_src_ui_tr", "Aria2 did not respond!"),
+                               QCoreApplication.translate("progress_src_ui_tr", "Try again!"), 10000,
                                'critical', parent=self.parent)
 
     def stopPushButtonPressed(self, button):
-        
+
         # cancel shut down progress
         dictionary = {'category': self.video_finder_plus_gid,
-                'shutdown': 'canceled'}
+                      'shutdown': 'canceled'}
 
         self.parent.temp_db.updateQueueTable(dictionary)
 
-
         answer = download.downloadStop(self.gid, self.parent)
-        
+
         # if aria2 did not respond , then this function is checking for aria2
         # availability , and if aria2 disconnected then aria2Disconnected is
         # executed
@@ -168,7 +169,9 @@ class VideoFinderProgressWindow(VideoFinderProgressWindow_Ui):
             version_answer = download.aria2Version()
             if version_answer == 'did not respond':
                 self.parent.aria2Disconnected()
-                notifySend(QCoreApplication.translate("progress_src_ui_tr", "Aria2 disconnected!"), QCoreApplication.translate("progress_src_ui_tr", "Persepolis is trying to connect! be patient!"),
+                notifySend(QCoreApplication.translate("progress_src_ui_tr", "Aria2 disconnected!"),
+                           QCoreApplication.translate("progress_src_ui_tr",
+                                                      "Persepolis is trying to connect! be patient!"),
                            10000, 'warning', parent=self.parent)
 
     def limitCheckBoxToggled(self, checkBoxes):
@@ -185,7 +188,7 @@ class VideoFinderProgressWindow(VideoFinderProgressWindow_Ui):
             # check download status is "scheduled" or not!
             for i in [0, 1]:
                 gid = self.gid_list[i]
-                dictionary = self.parent.persepolis_db.searchGidInDownloadTable(gid) 
+                dictionary = self.parent.persepolis_db.searchGidInDownloadTable(gid)
                 status = dictionary['status']
 
                 if status != 'scheduled':
@@ -216,16 +219,16 @@ class VideoFinderProgressWindow(VideoFinderProgressWindow_Ui):
             # so user canceled shutdown after download
             # write cancel value in data_base for this gid
             dictionary = {'category': self.video_finder_plus_gid,
-                        'shutdown': 'canceled'}
+                          'shutdown': 'canceled'}
 
             self.parent.temp_db.updateQueueTable(dictionary)
-    
+
     def afterPushButtonPressed(self, button):
 
         self.after_pushButton.setEnabled(False)
 
         # For Linux and Mac OSX and FreeBSD and OpenBSD
-        if os_type != 'Windows':  
+        if os_type != 'Windows':
 
             # get root password
             passwd, ok = QInputDialog.getText(
@@ -265,7 +268,7 @@ class VideoFinderProgressWindow(VideoFinderProgressWindow_Ui):
             else:
                 self.after_checkBox.setChecked(False)
 
-        else:  
+        else:
             # for Windows
             for gid in gid_list:
                 shutdown_enable = ShutDownThread(self.parent, self.video_finder_plus_gid)
@@ -297,5 +300,3 @@ class VideoFinderProgressWindow(VideoFinderProgressWindow_Ui):
                 # update limit value in data_base
                 add_link_dictionary = {'gid': gid, 'limit_value': limit_value}
                 self.parent.persepolis_db.updateAddLinkTable([add_link_dictionary])
-
-

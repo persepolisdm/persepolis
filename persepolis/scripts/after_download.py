@@ -21,7 +21,6 @@ from PyQt5 import QtCore
 import os
 
 
-
 class AfterDownloadWindow(AfterDownloadWindow_Ui):
     def __init__(self, parent, dict, persepolis_setting):
         super().__init__(persepolis_setting)
@@ -62,8 +61,8 @@ class AfterDownloadWindow(AfterDownloadWindow_Ui):
 
         window_title = str(self.dict['file_name'])
         file_name = QCoreApplication.translate("after_download_src_ui_tr", "<b>File name</b>: ") + \
-                window_title
- 
+                    window_title
+
         self.setWindowTitle(window_title)
 
         self.file_name_label.setText(file_name)
@@ -76,7 +75,7 @@ class AfterDownloadWindow(AfterDownloadWindow_Ui):
         self.link_lineEdit.setEnabled(False)
         self.save_as_lineEdit.setEnabled(False)
 
-         # set window size and position
+        # set window size and position
         size = self.persepolis_setting.value(
             'AfterDownloadWindow/size', QSize(570, 290))
         position = self.persepolis_setting.value(
@@ -86,7 +85,7 @@ class AfterDownloadWindow(AfterDownloadWindow_Ui):
 
     def openFile(self):
         # execute file
-        file_path = self.add_link_dict['download_path'] 
+        file_path = self.add_link_dict['download_path']
 
         if os.path.isfile(file_path):
             osCommands.xdgOpen(file_path)
@@ -94,10 +93,9 @@ class AfterDownloadWindow(AfterDownloadWindow_Ui):
         # close window
         self.close()
 
-
     def openFolder(self):
         # open download folder
-        file_path = self.add_link_dict['download_path'] 
+        file_path = self.add_link_dict['download_path']
 
         file_name = os.path.basename(file_path)
 
@@ -113,15 +111,13 @@ class AfterDownloadWindow(AfterDownloadWindow_Ui):
         # close window
         self.close()
 
-
     def okButtonPressed(self):
         if self.dont_show_checkBox.isChecked():
             self.persepolis_setting.setValue('settings/after-dialog', 'no')
             self.persepolis_setting.sync()
-            
+
         # close window
         self.close()
-
 
     def closeEvent(self, event):
         # saving window size and position

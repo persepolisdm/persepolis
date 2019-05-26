@@ -1,4 +1,3 @@
-
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
 #    the Free Software Foundation, either version 3 of the License, or
@@ -31,8 +30,8 @@ def playNotification(file):
     # volume of notification in persepolis_setting(an integer between 0 to 100)
     volume_percent = int(persepolis_setting.value('settings/sound-volume'))
 
-# Paplay volume value must be between 0 (silent) and 65536 (100% volume)
-    volume = int((65536 * volume_percent)/100)
+    # Paplay volume value must be between 0 (silent) and 65536 (100% volume)
+    volume = int((65536 * volume_percent) / 100)
 
     if enable_notification == 'yes':
         if os_type == 'Linux' or os_type == 'FreeBSD' or os_type == 'OpenBSD':

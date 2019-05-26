@@ -16,17 +16,16 @@
 from PyQt5 import QtGui, QtWidgets, QtCore
 from PyQt5.QtWidgets import QWidget, QTextEdit, QVBoxLayout, QHBoxLayout, QPushButton, QLabel
 from PyQt5.QtGui import QIcon
-from persepolis.gui import resources 
+from persepolis.gui import resources
 from PyQt5.QtCore import Qt, QTranslator, QCoreApplication, QLocale
 
 
-
 class LogWindow_Ui(QWidget):
-    def __init__(self,persepolis_setting):
+    def __init__(self, persepolis_setting):
         super().__init__()
 
         self.persepolis_setting = persepolis_setting
-		
+
         # add support for other languages
         locale = str(self.persepolis_setting.value('settings/locale'))
         QLocale.setDefault(QLocale(locale))
@@ -39,13 +38,12 @@ class LogWindow_Ui(QWidget):
 
         if ui_direction == 'rtl':
             self.setLayoutDirection(Qt.RightToLeft)
-        
+
         elif ui_direction in 'ltr':
             self.setLayoutDirection(Qt.LeftToRight)
 
-
         icons = ':/' + \
-            str(self.persepolis_setting.value('settings/icons')) + '/'
+                str(self.persepolis_setting.value('settings/icons')) + '/'
 
         # finding windows_size
         self.setMinimumSize(QtCore.QSize(620, 300))
@@ -55,40 +53,40 @@ class LogWindow_Ui(QWidget):
         horizontalLayout = QHBoxLayout()
         horizontalLayout.addStretch(1)
 
-# text_edit
+        # text_edit
         self.text_edit = QTextEdit(self)
         self.text_edit.setReadOnly(True)
 
         verticalLayout.addWidget(self.text_edit)
 
-# clear_log_pushButton
+        # clear_log_pushButton
         self.clear_log_pushButton = QPushButton(self)
         horizontalLayout.addWidget(self.clear_log_pushButton)
 
-# refresh_log_pushButton
+        # refresh_log_pushButton
         self.refresh_log_pushButton = QPushButton(self)
         self.refresh_log_pushButton.setIcon(QIcon(icons + 'refresh'))
         horizontalLayout.addWidget(self.refresh_log_pushButton)
 
-# report_pushButton
+        # report_pushButton
         self.report_pushButton = QPushButton(self)
         self.report_pushButton.setIcon(QIcon(icons + 'about'))
         horizontalLayout.addWidget(self.report_pushButton)
 
         self.copy_log_pushButton = QPushButton(self)
 
-# copy_log_pushButton
+        # copy_log_pushButton
         self.copy_log_pushButton.setIcon(QIcon(icons + 'clipboard'))
         horizontalLayout.addWidget(self.copy_log_pushButton)
 
-# close_pushButton
+        # close_pushButton
         self.close_pushButton = QPushButton(self)
         self.close_pushButton.setIcon(QIcon(icons + 'remove'))
         horizontalLayout.addWidget(self.close_pushButton)
 
         verticalLayout.addLayout(horizontalLayout)
 
-# set labels
+        # set labels
 
         self.setWindowTitle(QCoreApplication.translate("log_window_ui_tr", 'Persepolis Log'))
         self.close_pushButton.setText(QCoreApplication.translate("log_window_ui_tr", 'close'))
@@ -96,10 +94,10 @@ class LogWindow_Ui(QWidget):
         self.report_pushButton.setText(QCoreApplication.translate("log_window_ui_tr", "Report Issue"))
         self.refresh_log_pushButton.setText(QCoreApplication.translate("log_window_ui_tr", 'Refresh log messages'))
         self.clear_log_pushButton.setText(QCoreApplication.translate("log_window_ui_tr", 'Clear log messages'))
+
     def changeIcon(self, icons):
         icons = ':/' + str(icons) + '/'
 
         self.close_pushButton.setIcon(QIcon(icons + 'remove'))
         self.copy_log_pushButton.setIcon(QIcon(icons + 'clipboard'))
         self.report_pushButton.setIcon(QIcon(icons + 'about'))
-

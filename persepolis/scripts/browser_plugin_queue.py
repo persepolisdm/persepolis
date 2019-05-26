@@ -51,7 +51,6 @@ class QueueSpiderThread(QThread):
                 str(e), exc_info=True)
 
 
-
 class BrowserPluginQueue(TextQueue_Ui):
     def __init__(self, parent, list_of_links, callback, persepolis_setting):
         super().__init__(persepolis_setting)
@@ -62,7 +61,7 @@ class BrowserPluginQueue(TextQueue_Ui):
 
         global icons
         icons = ':/' + \
-            str(self.persepolis_setting.value('settings/icons')) + '/'
+                str(self.persepolis_setting.value('settings/icons')) + '/'
 
         self.list_of_links.reverse()
 
@@ -81,7 +80,7 @@ class BrowserPluginQueue(TextQueue_Ui):
                 file_name = '***'
 
             if file_name == '***':
-            # spider finds file name
+                # spider finds file name
                 new_spider = QueueSpiderThread(dict)
                 self.parent.threadPool.append(new_spider)
                 self.parent.threadPool[len(self.parent.threadPool) - 1].start()
@@ -105,9 +104,9 @@ class BrowserPluginQueue(TextQueue_Ui):
             # insert link
             self.links_table.setItem(0, 1, item)
 
-# get categories name and add them to add_queue_comboBox
+        # get categories name and add them to add_queue_comboBox
         categories_list = self.parent.persepolis_db.categoriesList()
- 
+
         for queue in categories_list:
             if queue != 'All Downloads':
                 self.add_queue_comboBox.addItem(queue)
@@ -115,8 +114,7 @@ class BrowserPluginQueue(TextQueue_Ui):
         self.add_queue_comboBox.addItem(
             QIcon(icons + 'add_queue'), 'Create new queue')
 
-
-# entry initialization
+        # entry initialization
         global connections
         connections = int(
             self.persepolis_setting.value('settings/connections'))
@@ -124,53 +122,49 @@ class BrowserPluginQueue(TextQueue_Ui):
         download_path = str(
             self.persepolis_setting.value('settings/download_path'))
 
-
-# initialization
+        # initialization
         self.connections_spinBox.setValue(connections)
         self.download_folder_lineEdit.setText(download_path)
         self.download_folder_lineEdit.setEnabled(False)
 
-# ip_lineEdit initialization
+        # ip_lineEdit initialization
         settings_ip = self.persepolis_setting.value(
             'add_link_initialization/ip', None)
         if settings_ip:
             self.ip_lineEdit.setText(str(settings_ip))
 
-# proxy user lineEdit initialization
+        # proxy user lineEdit initialization
         settings_proxy_user = self.persepolis_setting.value(
             'add_link_initialization/proxy_user', None)
         if settings_proxy_user:
             self.proxy_user_lineEdit.setText(str(settings_proxy_user))
 
-# port_spinBox initialization
+        # port_spinBox initialization
         settings_port = self.persepolis_setting.value(
             'add_link_initialization/port', 0)
 
         self.port_spinBox.setValue(int(int(settings_port)))
 
-
-# download UserName initialization
+        # download UserName initialization
         settings_download_user = self.persepolis_setting.value(
             'add_link_initialization/download_user', None)
         if settings_download_user:
             self.download_user_lineEdit.setText(str(settings_download_user))
 
-
-# connect folder_pushButton
+        # connect folder_pushButton
         self.folder_pushButton.clicked.connect(self.changeFolder)
 
-# connect OK and canel button
+        # connect OK and canel button
 
         self.cancel_pushButton.clicked.connect(self.close)
         self.ok_pushButton.clicked.connect(self.okButtonPressed)
 
-# connect select_all_pushButton  deselect_all_pushButton
+        # connect select_all_pushButton  deselect_all_pushButton
         self.select_all_pushButton.clicked.connect(self.selectAll)
 
         self.deselect_all_pushButton.clicked.connect(self.deselectAll)
 
-
-#frames and checkBoxes
+        # frames and checkBoxes
         self.proxy_frame.setEnabled(False)
         self.proxy_checkBox.toggled.connect(self.proxyFrame)
 
@@ -183,29 +177,29 @@ class BrowserPluginQueue(TextQueue_Ui):
         # set focus to ok button
         self.ok_pushButton.setFocus()
 
-# add_queue_comboBox event
+        # add_queue_comboBox event
         self.add_queue_comboBox.currentIndexChanged.connect(self.queueChanged)
 
-# set window size and position
+        # set window size and position
         size = self.persepolis_setting.value('TextQueue/size', QSize(700, 500))
         position = self.persepolis_setting.value(
             'TextQueue/position', QPoint(300, 300))
         self.resize(size)
         self.move(position)
 
-# this method selects all links in links_table
+    # this method selects all links in links_table
     def selectAll(self, button):
         for i in range(self.links_table.rowCount()):
             item = self.links_table.item(i, 0)
             item.setCheckState(QtCore.Qt.Checked)
 
-# this method uncheckes all check boxes
+    # this method uncheckes all check boxes
     def deselectAll(self, button):
         for i in range(self.links_table.rowCount()):
             item = self.links_table.item(i, 0)
             item.setCheckState(QtCore.Qt.Unchecked)
 
-# this method is called, when user changes add_queue_comboBox
+    # this method is called, when user changes add_queue_comboBox
     def queueChanged(self, combo):
         if str(self.add_queue_comboBox.currentText()) == 'Create new queue':
             # if user want to create new queue, then call createQueue method from mainwindow(parent)
@@ -230,8 +224,7 @@ class BrowserPluginQueue(TextQueue_Ui):
             else:
                 self.add_queue_comboBox.setCurrentIndex(0)
 
-
-# activate frames if checkBoxes checked
+    # activate frames if checkBoxes checked
     def proxyFrame(self, checkBox):
 
         if self.proxy_checkBox.isChecked():
@@ -266,7 +259,6 @@ class BrowserPluginQueue(TextQueue_Ui):
         if os.path.isdir(fname):
             self.download_folder_lineEdit.setText(fname)
 
-
     def okButtonPressed(self, button):
         # write user's input data to init file
         self.persepolis_setting.setValue(
@@ -278,37 +270,37 @@ class BrowserPluginQueue(TextQueue_Ui):
         self.persepolis_setting.setValue(
             'add_link_initialization/download_user', self.download_user_lineEdit.text())
 
-        if not(self.proxy_checkBox.isChecked()):
+        if not (self.proxy_checkBox.isChecked()):
             ip = None
             port = None
             proxy_user = None
             proxy_passwd = None
         else:
             ip = self.ip_lineEdit.text()
-            if not(ip):
+            if not ip:
                 ip = None
             port = self.port_spinBox.value()
-            if not(port):
+            if not port:
                 port = None
             proxy_user = self.proxy_user_lineEdit.text()
-            if not(proxy_user):
+            if not proxy_user:
                 proxy_user = None
             proxy_passwd = self.proxy_pass_lineEdit.text()
-            if not(proxy_passwd):
+            if not proxy_passwd:
                 proxy_passwd = None
 
-        if not(self.download_checkBox.isChecked()):
+        if not (self.download_checkBox.isChecked()):
             download_user = None
             download_passwd = None
         else:
             download_user = self.download_user_lineEdit.text()
-            if not(download_user):
+            if not download_user:
                 download_user = None
             download_passwd = self.download_pass_lineEdit.text()
-            if not(download_passwd):
+            if not download_passwd:
                 download_passwd = None
 
-        if not(self.limit_checkBox.isChecked()):
+        if not (self.limit_checkBox.isChecked()):
             limit = 0
         else:
             if self.limit_comboBox.currentText() == "KiB/s":
@@ -333,7 +325,7 @@ class BrowserPluginQueue(TextQueue_Ui):
                 'download_passwd': download_passwd,
                 'connections': connections,
                 'limit_value': limit,
-                'download_path' : download_path,
+                'download_path': download_path,
                 'referer': None,
                 'load_cookies': None,
                 'user_agent': None,
@@ -341,8 +333,7 @@ class BrowserPluginQueue(TextQueue_Ui):
                 'after_download': None
                 }
 
-
-# find checked links in links_table
+        # find checked links in links_table
 
         self.list_of_links.reverse()
         self.add_link_dictionary_list = []
@@ -351,7 +342,7 @@ class BrowserPluginQueue(TextQueue_Ui):
             item = self.links_table.item(row, 0)
 
             # if item is checked
-            if (item.checkState() == 2):
+            if item.checkState() == 2:
                 # Create a copy from dict and add it to add_link_dictionary_list
                 self.add_link_dictionary_list.append(
                     deepcopy(dict))
@@ -373,17 +364,14 @@ class BrowserPluginQueue(TextQueue_Ui):
 
                 i = i + 1
 
-
         # reverse list
         self.add_link_dictionary_list.reverse()
-
 
         # Create callback for mainwindow
         self.callback(self.add_link_dictionary_list, category)
 
         # close window
         self.close()
-
 
     def closeEvent(self, event):
         self.persepolis_setting.setValue('TextQueue/size', self.size())

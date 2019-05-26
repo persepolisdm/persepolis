@@ -18,16 +18,18 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import QWidget, QTabWidget, QHBoxLayout, QVBoxLayout, QLabel, QTextEdit, QPushButton
 from PyQt5.QtGui import QIcon, QFont
 from PyQt5.QtCore import Qt, QSize, QPoint, QTranslator, QCoreApplication, QLocale
-from persepolis.gui import resources 
+from persepolis.gui import resources
 
 try:
     from PyQt5 import QtSvg
+
     qtsvg_available = True
 except:
     qtsvg_available = False
 
+
 class AboutWindow_Ui(QWidget):
-    def __init__(self,persepolis_setting):
+    def __init__(self, persepolis_setting):
         super().__init__()
 
         self.persepolis_setting = persepolis_setting
@@ -44,13 +46,12 @@ class AboutWindow_Ui(QWidget):
 
         if ui_direction == 'rtl':
             self.setLayoutDirection(Qt.RightToLeft)
-        
+
         elif ui_direction in 'ltr':
             self.setLayoutDirection(Qt.LeftToRight)
 
-
         icons = ':/' + \
-            str(self.persepolis_setting.value('settings/icons')) + '/'
+                str(self.persepolis_setting.value('settings/icons')) + '/'
 
         self.setMinimumSize(QSize(545, 375))
         self.setWindowIcon(QIcon.fromTheme('persepolis', QIcon(':/persepolis.svg')))
@@ -65,7 +66,6 @@ class AboutWindow_Ui(QWidget):
         about_tab_horizontalLayout = QHBoxLayout(self.about_tab)
 
         about_tab_verticalLayout = QVBoxLayout()
-        
 
         # persepolis icon
         if qtsvg_available:
@@ -119,7 +119,6 @@ class AboutWindow_Ui(QWidget):
 
         about_tab_horizontalLayout.addLayout(about_tab_verticalLayout)
 
-
         # developers_tab
         # developers
         self.developers_tab = QWidget(self)
@@ -131,13 +130,11 @@ class AboutWindow_Ui(QWidget):
         self.developers_title_label.setFont(font)
         self.developers_title_label.setAlignment(Qt.AlignCenter)
         developers_verticalLayout.addWidget(self.developers_title_label)
- 
 
         self.name_label = QLabel(self.developers_tab)
         self.name_label.setAlignment(Qt.AlignCenter)
 
         developers_verticalLayout.addWidget(self.name_label)
-
 
         # contributors
         self.contributors_thank_label = QLabel(self.developers_tab)
@@ -191,9 +188,8 @@ class AboutWindow_Ui(QWidget):
         self.persian_translatos_name_label.setAlignment(Qt.AlignCenter)
         translators_tab_verticalLayout.addWidget(self.persian_translatos_name_label)
 
-
         translators_tab_verticalLayout.addStretch(1)
-   
+
         # License tab
         self.license_tab = QWidget(self)
         license_tab_verticalLayout = QVBoxLayout(self.license_tab)
@@ -202,8 +198,6 @@ class AboutWindow_Ui(QWidget):
         self.license_text.setReadOnly(True)
 
         license_tab_verticalLayout.addWidget(self.license_text)
-
-
 
         verticalLayout.addWidget(self.about_tabWidget)
 
@@ -224,27 +218,28 @@ class AboutWindow_Ui(QWidget):
         # about_tab
         self.title_label.setText(QCoreApplication.translate("about_ui_tr", "Persepolis Download Manager"))
         self.version_label.setText(QCoreApplication.translate("about_ui_tr", "Version 3.1.0"))
-        self.site2_label.setText(QCoreApplication.translate("about_ui_tr", 
-            "<a href=https://persepolisdm.github.io>https://persepolisdm.github.io</a>",
-            "TRANSLATORS NOTE: YOU REALLY DON'T NEED TO TRANSLATE THIS PART!"))
+        self.site2_label.setText(QCoreApplication.translate("about_ui_tr",
+                                                            "<a href=https://persepolisdm.github.io>https://persepolisdm.github.io</a>",
+                                                            "TRANSLATORS NOTE: YOU REALLY DON'T NEED TO TRANSLATE THIS PART!"))
 
-        self.telegram_label.setText(QCoreApplication.translate("about_ui_tr", 
-            "<a href=https://telegram.me/persepolisdm>https://telegram.me/persepolisdm</a>",
-            "TRANSLATORS NOTE: YOU REALLY DON'T NEED TO TRANSLATE THIS PART!"))
+        self.telegram_label.setText(QCoreApplication.translate("about_ui_tr",
+                                                               "<a href=https://telegram.me/persepolisdm>https://telegram.me/persepolisdm</a>",
+                                                               "TRANSLATORS NOTE: YOU REALLY DON'T NEED TO TRANSLATE THIS PART!"))
 
-        self.twitter_label.setText(QCoreApplication.translate("about_ui_tr", 
-            "<a href=https://twitter.com/persepolisdm>https://twitter.com/persepolisdm</a>",
-            "TRANSLATORS NOTE: YOU REALLY DON'T NEED TO TRANSLATE THIS PART!"))
+        self.twitter_label.setText(QCoreApplication.translate("about_ui_tr",
+                                                              "<a href=https://twitter.com/persepolisdm>https://twitter.com/persepolisdm</a>",
+                                                              "TRANSLATORS NOTE: YOU REALLY DON'T NEED TO TRANSLATE THIS PART!"))
 
-        #developers_tab
+        # developers_tab
         self.developers_title_label.setText(QCoreApplication.translate('about_ui_tr', 'Developers:'))
 
-        self.name_label.setText(QCoreApplication.translate("about_ui_tr", 
-            "\nAliReza AmirSamimi\nMohammadreza Abdollahzadeh\nSadegh Alirezaie\nMostafa Asadi\nMohammadAmin Vahedinia\nJafar Akhondali\nH.Rostami",
-            "TRANSLATORS NOTE: YOU REALLY DON'T NEED TO TRANSLATE THIS PART!"))
+        self.name_label.setText(QCoreApplication.translate("about_ui_tr",
+                                                           "\nAliReza AmirSamimi\nMohammadreza Abdollahzadeh\nSadegh Alirezaie\nMostafa Asadi\nMohammadAmin Vahedinia\nJafar Akhondali\nH.Rostami",
+                                                           "TRANSLATORS NOTE: YOU REALLY DON'T NEED TO TRANSLATE THIS PART!"))
 
         self.contributors_thank_label.setText(QCoreApplication.translate('about_ui_tr', 'Special thanks to:'))
-        self.contributors_link_label.setText("<a href=https://github.com/persepolisdm/persepolis/graphs/contributors>our contributors</a>")
+        self.contributors_link_label.setText(
+            "<a href=https://github.com/persepolisdm/persepolis/graphs/contributors>our contributors</a>")
 
         # translators_tab
         # Chinese
@@ -257,11 +252,11 @@ class AboutWindow_Ui(QWidget):
 
         self.french_translatos_name_label.setText(QCoreApplication.translate("about_ui_tr", "Simon Porte"))
 
-
         # Persian
         self.persian_translators_label.setText(QCoreApplication.translate("about_ui_tr", "Persian translators:"))
 
-        self.persian_translatos_name_label.setText(QCoreApplication.translate("about_ui_tr", "H.Rostami\nMostafa Asadi"))
+        self.persian_translatos_name_label.setText(
+            QCoreApplication.translate("about_ui_tr", "H.Rostami\nMostafa Asadi"))
 
         # License
         self.license_text.setPlainText("""
@@ -279,7 +274,6 @@ class AboutWindow_Ui(QWidget):
             along with this program.  If not, see http://www.gnu.org/licenses/.
             """)
 
-
         # tabs
         self.about_tabWidget.addTab(self.about_tab, QCoreApplication.translate("about_ui_tr", "About Persepolis"))
         self.about_tabWidget.addTab(self.developers_tab, QCoreApplication.translate("about_ui_tr", "Developers"))
@@ -288,5 +282,3 @@ class AboutWindow_Ui(QWidget):
 
         # button
         self.pushButton.setText(QCoreApplication.translate("about_ui_tr", "OK"))
-
-

@@ -13,16 +13,15 @@
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from PyQt5.QtWidgets import QCheckBox , QWidget , QVBoxLayout , QHBoxLayout , QPushButton , QLabel , QLineEdit  
-from PyQt5.QtCore import Qt, QTranslator, QCoreApplication,QLocale
-from PyQt5 import QtCore, QtWidgets , QtGui
-from persepolis.gui import resources 
+from PyQt5.QtWidgets import QCheckBox, QWidget, QVBoxLayout, QHBoxLayout, QPushButton, QLabel, QLineEdit
+from PyQt5.QtCore import Qt, QTranslator, QCoreApplication, QLocale
+from PyQt5 import QtCore, QtWidgets, QtGui
+from persepolis.gui import resources
 from PyQt5.QtGui import QIcon
 
 
-
 class AfterDownloadWindow_Ui(QWidget):
-    def __init__(self,persepolis_setting):
+    def __init__(self, persepolis_setting):
         super().__init__()
 
         self.persepolis_setting = persepolis_setting
@@ -39,17 +38,16 @@ class AfterDownloadWindow_Ui(QWidget):
 
         if ui_direction == 'rtl':
             self.setLayoutDirection(Qt.RightToLeft)
-        
+
         elif ui_direction in 'ltr':
             self.setLayoutDirection(Qt.LeftToRight)
 
-
         icons = ':/' + str(self.persepolis_setting.value('settings/icons')) + '/'
 
-        self.setWindowIcon(QIcon.fromTheme('persepolis' ,QIcon(':/persepolis.svg')))
+        self.setWindowIcon(QIcon.fromTheme('persepolis', QIcon(':/persepolis.svg')))
         self.setWindowTitle(QCoreApplication.translate("after_download_ui_tr", "Persepolis Download Manager"))
 
-        #complete_label
+        # complete_label
         window_verticalLayout = QVBoxLayout()
         window_verticalLayout.setContentsMargins(21, 21, 21, 21)
 
@@ -110,13 +108,13 @@ class AfterDownloadWindow_Ui(QWidget):
         self.open_pushButtun.setText(QCoreApplication.translate("after_download_ui_tr", "  Open File  "))
         self.open_folder_pushButtun.setText(QCoreApplication.translate("after_download_ui_tr", "Open Download Folder"))
         self.ok_pushButton.setText(QCoreApplication.translate("after_download_ui_tr", "   OK   "))
-        self.dont_show_checkBox.setText(QCoreApplication.translate("after_download_ui_tr", "Don't show this message again."))
+        self.dont_show_checkBox.setText(
+            QCoreApplication.translate("after_download_ui_tr", "Don't show this message again."))
         self.complete_label.setText(QCoreApplication.translate("after_download_ui_tr", "<b>Download Completed!</b>"))
         self.save_as_label.setText(QCoreApplication.translate("after_download_ui_tr", "<b>Save as</b>: "))
-        self.link_label.setText(QCoreApplication.translate("after_download_ui_tr", "<b>Link</b>: " )) 
+        self.link_label.setText(QCoreApplication.translate("after_download_ui_tr", "<b>Link</b>: "))
 
-
-    def changeIcon(self , icons ):
+    def changeIcon(self, icons):
         icons = ':/' + str(icons) + '/'
         self.ok_pushButton.setIcon(QIcon(icons + 'ok'))
         self.open_folder_pushButtun.setIcon(QIcon(icons + 'folder'))

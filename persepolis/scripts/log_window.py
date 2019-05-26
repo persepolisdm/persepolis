@@ -23,6 +23,7 @@ import os
 # config_folder
 config_folder = determineConfigFolder()
 
+
 class LogWindow(LogWindow_Ui):
     def __init__(self, persepolis_setting):
         super().__init__(persepolis_setting)
@@ -31,7 +32,7 @@ class LogWindow(LogWindow_Ui):
 
         self.copy_log_pushButton.setEnabled(False)
 
-# log file address
+        # log file address
         self.log_file = os.path.join(str(config_folder), 'persepolisdm.log')
 
         f = open(self.log_file, 'r')
@@ -62,7 +63,7 @@ class LogWindow(LogWindow_Ui):
         self.clear_log_pushButton.clicked.connect(
             self.clearLogPushButtonPressed)
 
-# setting window size and position
+        # setting window size and position
         size = self.persepolis_setting.value(
             'LogWindow/size', QSize(720, 300))
         position = self.persepolis_setting.value(
@@ -81,8 +82,6 @@ class LogWindow(LogWindow_Ui):
         self.text_edit.clear()
         self.text_edit.insertPlainText(self.text)
 
-
-
     def reportPushButtonPressed(self, button):
         osCommands.xdgOpen('https://github.com/persepolisdm/persepolis/issues')
 
@@ -96,11 +95,11 @@ class LogWindow(LogWindow_Ui):
             self.copy_log_pushButton.setEnabled(False)
 
     def copyPushButtonPressed(self, button):
-#         clipboard = QApplication.clipboard()
-#         clipboard.setText(self.text)
+        #         clipboard = QApplication.clipboard()
+        #         clipboard.setText(self.text)
         self.text_edit.copy()
 
-# this method is refresh log messages in text_edit
+    # this method is refresh log messages in text_edit
     def refreshLogPushButtonPressed(self, button):
         f = open(self.log_file, 'r')
         f_lines = f.readlines()
@@ -113,12 +112,11 @@ class LogWindow(LogWindow_Ui):
         self.text_edit.clear()
         self.text_edit.insertPlainText(self.text)
 
-
     def closeEvent(self, event):
         self.layout().setSizeConstraint(QtWidgets.QLayout.SetDefaultConstraint)
-        self.setMinimumSize(QSize(self.width() , self.minimum_height))
-        self.resize(QSize(self.width() , self.minimum_height))
- 
+        self.setMinimumSize(QSize(self.width(), self.minimum_height))
+        self.resize(QSize(self.width(), self.minimum_height))
+
         self.persepolis_setting.setValue('LogWindow/size', self.size())
         self.persepolis_setting.setValue('LogWindow/position', self.pos())
         self.persepolis_setting.sync()

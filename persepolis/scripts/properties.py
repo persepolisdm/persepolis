@@ -30,7 +30,6 @@ class PropertiesWindow(AddLinkWindow_Ui):
         self.persepolis_setting = persepolis_setting
         self.video_finder_dictionary = video_finder_dictionary
 
-
         self.download_later_pushButton.hide()  # hide download_later_pushButton
         self.change_name_checkBox.hide()  # hide change_name_checkBox
         self.change_name_lineEdit.hide()  # hide change_name_lineEdit
@@ -58,23 +57,23 @@ class PropertiesWindow(AddLinkWindow_Ui):
 
         self.callback = callback
 
-# detect_proxy_pushButton
+        # detect_proxy_pushButton
         self.detect_proxy_pushButton.clicked.connect(
-                self.detectProxy)
+            self.detectProxy)
 
-# connect folder_pushButton
+        # connect folder_pushButton
         self.folder_pushButton.clicked.connect(self.changeFolder)
         self.download_folder_lineEdit.setEnabled(False)
 
         self.ok_pushButton.setEnabled(False)
         self.link_lineEdit.textChanged.connect(self.linkLineChanged)
 
-# connect OK and canel button
+        # connect OK and canel button
 
         self.cancel_pushButton.clicked.connect(self.close)
         self.ok_pushButton.clicked.connect(self.okButtonPressed)
 
-#frames and checkBoxes
+        # frames and checkBoxes
         self.proxy_frame.setEnabled(False)
         self.proxy_checkBox.toggled.connect(self.proxyFrame)
 
@@ -90,7 +89,6 @@ class PropertiesWindow(AddLinkWindow_Ui):
         self.end_frame.setEnabled(False)
         self.end_checkBox.toggled.connect(self.endFrame)
 
-
         # get information from data base
         self.add_link_dictionary_1 = self.parent.persepolis_db.searchGidInAddLinkTable(self.gid_1)
         self.download_table_dict_1 = self.parent.persepolis_db.searchGidInDownloadTable(self.gid_1)
@@ -98,7 +96,6 @@ class PropertiesWindow(AddLinkWindow_Ui):
         if video_finder_dictionary:
             self.add_link_dictionary_2 = self.parent.persepolis_db.searchGidInAddLinkTable(self.gid_2)
             self.download_table_dict_2 = self.parent.persepolis_db.searchGidInDownloadTable(self.gid_2)
-
 
         # create a copy from add_link_dictionary for checking changes finally!
         self.add_link_dictionary_1_backup = {}
@@ -110,92 +107,88 @@ class PropertiesWindow(AddLinkWindow_Ui):
             for key in self.add_link_dictionary_2.keys():
                 self.add_link_dictionary_2_backup[key] = self.add_link_dictionary_2[key]
 
-
-# initialization
-# disable folder_frame when download is complete
+        # initialization
+        # disable folder_frame when download is complete
         if self.video_finder_dictionary:
-            if self.video_finder_dictionary['video_completed'] == 'yes' or self.video_finder_dictionary['audio_completed'] == 'yes':
+            if self.video_finder_dictionary['video_completed'] == 'yes' or self.video_finder_dictionary[
+                'audio_completed'] == 'yes':
                 self.folder_frame.setEnabled(False)
         else:
             if self.download_table_dict_1['status'] == 'complete':
                 self.folder_frame.setEnabled(False)
 
-
-# link
+        # link
         self.link_lineEdit.setText(self.add_link_dictionary_1['link'])
 
         if self.video_finder_dictionary:
             self.link_lineEdit_2.setText(self.add_link_dictionary_2['link'])
 
-# ip_lineEdit initialization
+        # ip_lineEdit initialization
         if self.add_link_dictionary_1['ip']:
             self.proxy_checkBox.setChecked(True)
             self.ip_lineEdit.setText(self.add_link_dictionary_1['ip'])
-# port_spinBox initialization
+            # port_spinBox initialization
             try:
                 self.port_spinBox.setValue(
                     int(self.add_link_dictionary_1['port']))
             except:
                 pass
-# proxy user lineEdit initialization
+            # proxy user lineEdit initialization
             try:
                 self.proxy_user_lineEdit.setText(
                     self.add_link_dictionary_1['proxy_user'])
             except:
                 pass
-# proxy pass lineEdit initialization
+            # proxy pass lineEdit initialization
             try:
                 self.proxy_pass_lineEdit.setText(
                     self.add_link_dictionary_1['proxy_passwd'])
             except:
                 pass
 
-
-# download UserName initialization
+        # download UserName initialization
         if self.add_link_dictionary_1['download_user']:
             self.download_checkBox.setChecked(True)
             self.download_user_lineEdit.setText(
                 self.add_link_dictionary_1['download_user'])
-# download PassWord initialization
+            # download PassWord initialization
             try:
                 self.download_pass_lineEdit.setText(
                     self.add_link_dictionary_1['download_passwd'])
             except:
                 pass
 
-# folder_path
+        # folder_path
         try:
             self.download_folder_lineEdit.setText(
                 self.add_link_dictionary_1['download_path'])
         except:
-                pass
+            pass
 
-# connections
+        # connections
         try:
             self.connections_spinBox.setValue(
                 int(self.add_link_dictionary_1['connections']))
         except:
             pass
 
-# get categories name and add them to add_queue_comboBox
+        # get categories name and add them to add_queue_comboBox
         categories_list = self.parent.persepolis_db.categoriesList()
         for queue in categories_list:
             if queue != 'All Downloads':
                 self.add_queue_comboBox.addItem(queue)
 
         # finding current queue and setting it!
-        self.current_category = self.download_table_dict_1['category'] 
+        self.current_category = self.download_table_dict_1['category']
 
         current_category_index = self.add_queue_comboBox.findText(
             self.current_category)
         self.add_queue_comboBox.setCurrentIndex(current_category_index)
 
-
-# add_queue_comboBox event
+        # add_queue_comboBox event
         self.add_queue_comboBox.currentIndexChanged.connect(self.queueChanged)
 
-
-# limit speed
+        # limit speed
         limit = str(self.add_link_dictionary_1['limit_value'])
         if limit != '0':
             self.limit_checkBox.setChecked(True)
@@ -207,17 +200,17 @@ class PropertiesWindow(AddLinkWindow_Ui):
             else:
                 self.limit_comboBox.setCurrentIndex(1)
 
-# start_time
+        # start_time
         if self.add_link_dictionary_1['start_time']:
             # get hour and minute
             hour, minute = self.add_link_dictionary_1['start_time'].split(':')
-            
+
             # set time
             q_time = QTime(int(hour), int(minute))
             self.start_time_qDataTimeEdit.setTime(q_time)
 
             self.start_checkBox.setChecked(True)
-# end_time
+        # end_time
         if self.add_link_dictionary_1['end_time']:
             # get hour and minute
             hour, minute = self.add_link_dictionary_1['end_time'].split(':')
@@ -233,7 +226,7 @@ class PropertiesWindow(AddLinkWindow_Ui):
             self.referer_lineEdit.setText(str(self.add_link_dictionary_1['referer']))
 
         if self.add_link_dictionary_1['header']:
-            self.header_lineEdit.setText(str(self.add_link_dictionary_1['header'])) 
+            self.header_lineEdit.setText(str(self.add_link_dictionary_1['header']))
 
         if self.add_link_dictionary_1['user_agent']:
             self.user_agent_lineEdit.setText(str(self.add_link_dictionary_1['user_agent']))
@@ -241,10 +234,7 @@ class PropertiesWindow(AddLinkWindow_Ui):
         if self.add_link_dictionary_1['load_cookies']:
             self.load_cookies_lineEdit.setText((self.add_link_dictionary_1['load_cookies']))
 
- 
-
-
-# set window size and position
+        # set window size and position
         size = self.persepolis_setting.value(
             'PropertiesWindow/size', QSize(520, 425))
         position = self.persepolis_setting.value(
@@ -252,7 +242,7 @@ class PropertiesWindow(AddLinkWindow_Ui):
         self.resize(size)
         self.move(position)
 
-# detect system proxy setting, and set ip_lineEdit and port_spinBox
+    # detect system proxy setting, and set ip_lineEdit and port_spinBox
     def detectProxy(self, button):
         # get system proxy information
         system_proxy_dict = getProxy()
@@ -277,8 +267,7 @@ class PropertiesWindow(AddLinkWindow_Ui):
             self.proxy_checkBox.setChecked(False)
             self.detect_proxy_label.setText('No proxy detected!')
 
-
-# activate frames if checkBoxes checked
+    # activate frames if checkBoxes checked
     def proxyFrame(self, checkBox):
 
         if self.proxy_checkBox.isChecked():
@@ -346,37 +335,37 @@ class PropertiesWindow(AddLinkWindow_Ui):
             self.end_checkBox.setEnabled(True)
 
     def okButtonPressed(self, button):
-        if not(self.proxy_checkBox.isChecked()):
+        if not (self.proxy_checkBox.isChecked()):
             ip = None
             port = None
             proxy_user = None
             proxy_passwd = None
         else:
             ip = self.ip_lineEdit.text()
-            if not(ip):
+            if not (ip):
                 ip = None
             port = str(self.port_spinBox.value())
-            if not(port):
+            if not (port):
                 port = None
             proxy_user = self.proxy_user_lineEdit.text()
-            if not(proxy_user):
+            if not (proxy_user):
                 proxy_user = None
             proxy_passwd = self.proxy_pass_lineEdit.text()
-            if not(proxy_passwd):
+            if not (proxy_passwd):
                 proxy_passwd = None
 
-        if not(self.download_checkBox.isChecked()):
+        if not (self.download_checkBox.isChecked()):
             download_user = None
             download_passwd = None
         else:
             download_user = self.download_user_lineEdit.text()
-            if not(download_user):
+            if not (download_user):
                 download_user = None
             download_passwd = self.download_pass_lineEdit.text()
-            if not(download_passwd):
+            if not (download_passwd):
                 download_passwd = None
 
-        if not(self.limit_checkBox.isChecked()):
+        if not (self.limit_checkBox.isChecked()):
             limit = 0
         else:
             if self.limit_comboBox.currentText() == "KiB/s":
@@ -384,19 +373,19 @@ class PropertiesWindow(AddLinkWindow_Ui):
             else:
                 limit = str(self.limit_spinBox.value()) + str("M")
 
-        if not(self.start_checkBox.isChecked()):
+        if not (self.start_checkBox.isChecked()):
             start_time = None
         else:
             start_time = self.start_time_qDataTimeEdit.text()
 
-        if not(self.end_checkBox.isChecked()):
+        if not (self.end_checkBox.isChecked()):
             end_time = None
         else:
             end_time = self.end_time_qDateTimeEdit.text()
 
         connections = self.connections_spinBox.value()
         download_path = self.download_folder_lineEdit.text()
- 
+
         # referer
         if self.referer_lineEdit.text() != '':
             referer = self.referer_lineEdit.text()
@@ -405,18 +394,18 @@ class PropertiesWindow(AddLinkWindow_Ui):
 
         # header
         if self.header_lineEdit.text() != '':
-            header = self.header_lineEdit.text() 
+            header = self.header_lineEdit.text()
         else:
             header = None
 
         # user_agent
-        if self.user_agent_lineEdit.text() != '': 
+        if self.user_agent_lineEdit.text() != '':
             user_agent = self.user_agent_lineEdit.text()
         else:
             user_agent = None
 
         # load_cookies
-        if self.load_cookies_lineEdit.text() != '': 
+        if self.load_cookies_lineEdit.text() != '':
             load_cookies = self.load_cookies_lineEdit.text()
         else:
             load_cookies = None
@@ -456,27 +445,23 @@ class PropertiesWindow(AddLinkWindow_Ui):
             self.add_link_dictionary_2['user_agent'] = user_agent
             self.add_link_dictionary_2['load_cookies'] = load_cookies
 
-
         new_category = str(self.add_queue_comboBox.currentText())
 
         # it means category changed and data base must be updated.
-        if new_category != self.current_category:  
+        if new_category != self.current_category:
 
             self.download_table_dict_1['category'] = new_category
             # update data base
             self.parent.persepolis_db.updateDownloadTable([self.download_table_dict_1])
 
             if self.video_finder_dictionary:
-
                 # category for audio and video must be same as each other
                 self.download_table_dict_2['category'] = new_category
                 self.parent.persepolis_db.updateDownloadTable([self.download_table_dict_2])
 
-
         # if any thing in add_link_dictionary_1 is changed,then update data base!
         for key in self.add_link_dictionary_1.keys():
             if self.add_link_dictionary_1[key] != self.add_link_dictionary_1_backup[key]:
-                
                 # update data base
                 self.parent.persepolis_db.updateAddLinkTable([self.add_link_dictionary_1])
 
@@ -492,7 +477,6 @@ class PropertiesWindow(AddLinkWindow_Ui):
         if self.video_finder_dictionary:
             for key in self.add_link_dictionary_2.keys():
                 if self.add_link_dictionary_2[key] != self.add_link_dictionary_2_backup[key]:
-                
                     # update data base
                     self.parent.persepolis_db.updateAddLinkTable([self.add_link_dictionary_2])
 
@@ -507,9 +491,8 @@ class PropertiesWindow(AddLinkWindow_Ui):
             # if download_path was changed, then update video_finder_db_table in data base
             if self.add_link_dictionary_1['download_path'] != self.add_link_dictionary_1_backup['download_path']:
                 dictionary = {'video_gid': self.gid_1,
-                        'download_path': download_path}
+                              'download_path': download_path}
                 self.parent.persepolis_db.updateVideoFinderTable[dictionary]
-
 
         # callback to mainwindow
         self.callback(self.add_link_dictionary_1, self.gid_1, new_category, self.video_finder_dictionary)
