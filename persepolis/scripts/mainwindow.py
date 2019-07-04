@@ -430,7 +430,7 @@ class VideoFinder(QThread):
             start_time = add_link_dictionary['start_time']
             end_time = add_link_dictionary['end_time']
 
-            if video_completed == 'no' and start_time:
+            if self.video_completed == 'no' and start_time:
 
                 # set start time only for video
                 # because video will downloaded first and start time must be set for first video! not second one
@@ -462,7 +462,6 @@ class VideoFinder(QThread):
                 sleep(1)
 
         if self.video_completed == 'yes':
-            print('bing')
 
             # video is downloaded completely! 
             # let's start audio downloading

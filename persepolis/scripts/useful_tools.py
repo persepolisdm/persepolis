@@ -288,6 +288,19 @@ def muxer(parent, video_finder_dictionary):
             # find final file's name 
             final_file_name = urllib.parse.unquote(os.path.basename(video_file_path))
 
+            # if video's extension is 'mp4' then the final output file's extension is 'mp4'
+            # if video's extension is 'webm' then the final output file's extension is 'mkv'
+
+            file_name_split = final_file_name.split('.')
+            video_extension = file_name_split[-1] 
+
+            if video_extension == 'webm':
+                extension_length = len(file_name_split[-1]) + 1
+
+                final_file_name = final_file_name[0:-extension_length] + '.mkv' 
+
+
+
             if parent.persepolis_setting.value('settings/download_path') == final_path:
                 if parent.persepolis_setting.value('settings/subfolder') == 'yes':
                     final_path = os.path.join(final_path, 'Videos')
@@ -299,7 +312,6 @@ def muxer(parent, video_finder_dictionary):
 
             while os.path.isfile(final_path_pluse_name):
 
-                file_name_split = final_file_name.split('.')
                 extension_length = len(file_name_split[-1]) + 1
 
                 new_name = final_file_name[0:-extension_length] + \
@@ -329,7 +341,7 @@ def muxer(parent, video_finder_dictionary):
                 pass
 
             if pipe.wait() == 0:
-                # muxing ended successful.
+                # muxing was finished successfully.
                 result_dictionary['error'] = 'no error'
 
                 result_dictionary['final_path'] = final_path_pluse_name
