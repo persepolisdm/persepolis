@@ -47,6 +47,7 @@ import time
 import sys
 import os
 
+global youtube_dl_is_installed
 try:
     from persepolis.scripts.video_finder_addlink import VideoFinderAddLink
     youtube_dl_is_installed = True
@@ -56,6 +57,9 @@ except ModuleNotFoundError:
                 "youtube_dl is not installed.", "ERROR")
     youtube_dl_is_installed = False
 
+# CheckFfmpegIsInstalledThread thread can change this variable.
+global ffmpeg_is_installed
+ffmpeg_is_installed = True
 
 # The GID (or gid) is a key to manage each download. Each download will be assigned a unique GID.
 # The GID is stored as 64-bit binary value in aria2. For RPC access,
@@ -114,6 +118,19 @@ persepolis_tmp = os.path.join(config_folder, 'persepolis_tmp')
 plugin_ready = os.path.join(persepolis_tmp, 'persepolis-plugin-ready')
 
 show_window_file = os.path.join(persepolis_tmp, 'show-window')
+
+# this thread checks ffmpeg availability in linux and bsd
+class CheckFfmpegIsInstalledThread(QThread):
+    def __init__(self):
+        QThread.__init__(self)
+
+    def run(self):
+        global ffmpeg_is_installed
+        answer = os.system('ffmpeg -version 1>/dev/null')
+        if answer != 0:
+            ffmpeg_is_installed = False
+        else:
+            ffmpeg_is_installed = True
 
 # start aria2 when Persepolis starts
 class StartAria2Thread(QThread):
@@ -1108,7 +1125,7 @@ class MainWindow(MainWindow_Ui):
             self.showMenuBarAction.setChecked(False)
             self.toolBar2.show()
 
-        if 'os_type' == 'Darwin':
+        if os_type == 'Darwin':
             self.showMenuBarAction.setEnabled(False)
 
         # check user preferences for showing or hiding sidepanel.
@@ -1135,7 +1152,7 @@ class MainWindow(MainWindow_Ui):
         self.threadPool[0].start()
         self.threadPool[0].ARIA2RESPONDSIGNAL.connect(self.startAriaMessage)
 
-# initializing
+    # initializing
         # create an object for PluginsDB
         self.plugins_db = PluginsDB()
 
@@ -1255,6 +1272,12 @@ class MainWindow(MainWindow_Ui):
         self.threadPool.append(keep_awake)
         self.threadPool[len(self.threadPool) - 1].start()
         self.threadPool[len(self.threadPool) - 1].KEEPSYSTEMAWAKESIGNAL.connect(self.keepAwake)
+
+        # check if ffmpeg is installed
+        if os_type == 'Linux' or os_type == 'FreeBSD' or os_type == 'OpenBSD':
+            check_ffmpeg_is_installed = CheckFfmpegIsInstalledThread()
+            self.threadPool.append(check_ffmpeg_is_installed)
+            self.threadPool[len(self.threadPool) - 1].start()
 
 
         # finding number or row that user selected!
@@ -5557,9 +5580,9 @@ class MainWindow(MainWindow_Ui):
 
     def showVideoFinderAddLinkWindow(self,input_dict=None, menu=None):
 
-        # first check youtube_dl_is_installed value!
-        # if youtube_dl is not installed show an error message.
-        if youtube_dl_is_installed:
+        # first check youtube_dl_is_installed and ffmpeg_is_installed value!
+        # if youtube_dl or ffmpeg is not installed show an error message.
+        if youtube_dl_is_installed and ffmpeg_is_installed:
             if not(input_dict):
                 input_dict = {}
             video_finder_addlink_window = VideoFinderAddLink(parent=self, receiver_slot=self.videoFinderCallBack, settings=self.persepolis_setting, video_dict=input_dict)
@@ -5568,9 +5591,17 @@ class MainWindow(MainWindow_Ui):
             video_finder_addlink_window.raise_()
             video_finder_addlink_window.activateWindow()
         else:
+            error_message = ''
+
+            if not(youtube_dl_is_installed):
+                error_message = QCoreApplication.translate("mainwindow_src_ui_tr", 'youtube-dl is not installed!')
+                error_message = error_message + '\n'
+    
+            if not(ffmpeg_is_installed):
+                error_message = error_message + QCoreApplication.translate("mainwindow_src_ui_tr", 'ffmpeg is not installed!') 
+
             error_messageBox = QMessageBox()
-            error_messageBox.setText(
-                    QCoreApplication.translate("mainwindow_src_ui_tr", 'youtube-dl is not installed!'))
+            error_messageBox.setText(error_message)
             error_messageBox.setWindowTitle('Error!')
             error_messageBox.exec_()
             return
