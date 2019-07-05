@@ -60,7 +60,7 @@ def osAndDesktopEnvironment():
 
 
 # this function converts file_size to KiB or MiB or GiB
-def humanReadbleSize(size): 
+def humanReadbleSize(size):
     labels = ['KiB', 'MiB', 'GiB', 'TiB']
     i = -1
     if size < 1024:
@@ -70,9 +70,9 @@ def humanReadbleSize(size):
         i += 1
         size = size / 1024
 
-    p = 2 if i > 1 else None
+    p = 2 if i > 0 else None
     return str(round(size, p)) +' '+ labels[i]
-   
+
 # this function converts human readble size to byte
 def convertToByte(file_size):
 
@@ -87,12 +87,12 @@ def convertToByte(file_size):
             size_value = float(file_size[:-4])
 
         else:
-            size_value = int(file_size[:-4])
+            size_value = float(file_size[:-4])
     else:
         unit = None
-        size_value = int(file_size[:-3])
- 
-    # covert them in byte 
+        size_value = float(file_size[:-3])
+
+    # covert them in byte
     if not(unit):
         in_byte_value = size_value
 
@@ -134,7 +134,7 @@ def freeSpace(dir):
         return None
 
 def returnDefaultSettings():
-    os_type, desktop_env = osAndDesktopEnvironment() 
+    os_type, desktop_env = osAndDesktopEnvironment()
 
     # persepolis temporary download folder
     if os_type != 'Windows':
@@ -143,7 +143,7 @@ def returnDefaultSettings():
         download_path_temp = os.path.join(
             str(home_address), 'AppData', 'Local', 'persepolis')
 
-    # user download folder path    
+    # user download folder path
     download_path = os.path.join(str(home_address), 'Downloads', 'Persepolis')
 
 
@@ -174,7 +174,7 @@ def returnDefaultSettings():
                     gtk3_confing_file_path = '/etc/gtk-3.0/settings.ini'
                 else:
                     gtk3_confing_file_path = None
-    
+
             # read this for more information:
             dark_theme = False
             if gtk3_confing_file_path:
@@ -203,7 +203,7 @@ def returnDefaultSettings():
                 else:
                     style = 'Fusion'
                     color_scheme = 'Persepolis Light Blue'
-    
+
     elif os_type == 'Darwin':
         style = 'Fusion'
         color_scheme = 'Persepolis Light Blue'
@@ -222,15 +222,15 @@ def returnDefaultSettings():
         icons = 'Breeze'
 
     # keyboard shortcuts
-    delete_shortcut = "Ctrl+D" 
-    remove_shortcut = "Ctrl+R" 
-    add_new_download_shortcut = "Ctrl+N" 
-    import_text_shortcut = "Ctrl+O" 
+    delete_shortcut = "Ctrl+D"
+    remove_shortcut = "Ctrl+R"
+    add_new_download_shortcut = "Ctrl+N"
+    import_text_shortcut = "Ctrl+O"
     video_finder_shortcut = "Ctrl+V"
     quit_shortcut = "Ctrl+Q"
     hide_window_shortcut = "Ctrl+W"
-    move_up_selection_shortcut = "Ctrl+Up" 
-    move_down_selection_shortcut = "Ctrl+Down" 
+    move_up_selection_shortcut = "Ctrl+Up"
+    move_down_selection_shortcut = "Ctrl+Down"
 
 
     # Persepolis default setting
@@ -258,8 +258,8 @@ def muxer(parent, video_finder_dictionary):
 
 
     # find file path
-    video_file_dictionary = parent.persepolis_db.searchGidInAddLinkTable(video_finder_dictionary['video_gid']) 
-    audio_file_dictionary = parent.persepolis_db.searchGidInAddLinkTable(video_finder_dictionary['audio_gid']) 
+    video_file_dictionary = parent.persepolis_db.searchGidInAddLinkTable(video_finder_dictionary['video_gid'])
+    audio_file_dictionary = parent.persepolis_db.searchGidInAddLinkTable(video_finder_dictionary['audio_gid'])
 
     # find inputs and output file path for ffmpeg
     video_file_path = video_file_dictionary['download_path']
@@ -285,19 +285,19 @@ def muxer(parent, video_finder_dictionary):
 
         else:
 
-            # find final file's name 
+            # find final file's name
             final_file_name = urllib.parse.unquote(os.path.basename(video_file_path))
 
             # if video's extension is 'mp4' then the final output file's extension is 'mp4'
             # if video's extension is 'webm' then the final output file's extension is 'mkv'
 
             file_name_split = final_file_name.split('.')
-            video_extension = file_name_split[-1] 
+            video_extension = file_name_split[-1]
 
             if video_extension == 'webm':
                 extension_length = len(file_name_split[-1]) + 1
 
-                final_file_name = final_file_name[0:-extension_length] + '.mkv' 
+                final_file_name = final_file_name[0:-extension_length] + '.mkv'
 
 
 
@@ -337,8 +337,15 @@ def muxer(parent, video_finder_dictionary):
                 pass
 
             elif os_type == 'Windows':
-                # ffmpeg codes
-                pass
+                pipe = subprocess.Popen(['ffmpeg', '-i', video_file_path,
+                                    '-i', audio_file_path,
+                                    '-c', 'copy',
+                                    '-shortest',
+                                    '-map', '0:v:0',
+                                    '-map', '1:a:0',
+                                    '-loglevel', 'error',
+                                    '-strict', '-2',
+                                    final_path_pluse_name], stderr=subprocess.PIPE, shell=False)
 
             if pipe.wait() == 0:
                 # muxing was finished successfully.
@@ -352,6 +359,6 @@ def muxer(parent, video_finder_dictionary):
                 out, ffmpeg_error_message = pipe.communicate()
 
                 result_dictionary['ffmpeg_error_message'] = ffmpeg_error_message.decode('utf-8')
-                        
-            
-    return result_dictionary 
+
+
+    return result_dictionary
