@@ -150,7 +150,10 @@ class FileSizeFetcherThread(QThread):
         self.key = thread_key
 
     def run(self):
-        self.FOUND.emit({'thread_key': self.key, 'file_size': spider(self.dictionary)[1]})
+        spider_file_size = spider(self.dictionary)[1]
+        print(spider_file_size)
+        self.FOUND.emit({'thread_key': self.key,
+            'file_size': spider_file_size})
 
 
 

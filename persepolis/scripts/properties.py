@@ -16,7 +16,7 @@
 
 from persepolis.gui.addlink_ui import AddLinkWindow_Ui
 from persepolis.scripts.check_proxy import getProxy
-from PyQt5.QtCore import QSize, QPoint, QDir, QTime
+from PyQt5.QtCore import QSize, QPoint, QDir, QTime, QCoreApplication
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import QLabel, QLineEdit, QFileDialog
 import os

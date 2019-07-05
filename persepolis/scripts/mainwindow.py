@@ -2773,6 +2773,7 @@ class MainWindow(MainWindow_Ui):
 
     # This method called if properties button pressed by user in MainWindow
     def propertiesButtonPressed(self, button=None):
+        result_dictionary = None
         self.propertiesAction.setEnabled(False)
         selected_row_return = self.selectedRow()  # finding user's selected row
 
