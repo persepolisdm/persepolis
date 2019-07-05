@@ -18,22 +18,45 @@ from persepolis.gui.addlink_ui import AddLinkWindow_Ui
 from persepolis.scripts.check_proxy import getProxy
 from PyQt5.QtCore import QSize, QPoint, QDir, QTime
 from PyQt5 import QtCore, QtGui, QtWidgets
-from PyQt5.QtWidgets import QFileDialog
+from PyQt5.QtWidgets import QLabel, QLineEdit, QFileDialog
 import os
 
 
 class PropertiesWindow(AddLinkWindow_Ui):
-    def __init__(self, callback, gid, persepolis_setting, parent):
+    def __init__(self, parent, callback, gid, persepolis_setting, video_finder_dictionary=None):
         super().__init__(persepolis_setting)
 
         self.parent = parent
         self.persepolis_setting = persepolis_setting
+        self.video_finder_dictionary = video_finder_dictionary
+
+
         self.download_later_pushButton.hide()  # hide download_later_pushButton
         self.change_name_checkBox.hide()  # hide change_name_checkBox
         self.change_name_lineEdit.hide()  # hide change_name_lineEdit
 
+        # add new QLineEdit and QLineEdit for audio link if we have video finder links
+        if self.video_finder_dictionary:
+
+            self.link_label_2 = QLabel(self.link_frame)
+            self.link_horizontalLayout.addWidget(self.link_label_2)
+
+            self.link_lineEdit_2 = QLineEdit(self.link_frame)
+            self.link_horizontalLayout.addWidget(self.link_lineEdit_2)
+            self.link_lineEdit_2.textChanged.connect(self.linkLineChanged)
+
+            self.link_label.setText(QCoreApplication.translate("addlink_ui_tr", "Video Link: "))
+            self.link_label_2.setText(QCoreApplication.translate("addlink_ui_tr", "Audio Link: "))
+
+            # gid_1 >> video_gid , gid_2 >> audio_gid
+            self.gid_1 = self.video_finder_dictionary['video_gid']
+            self.gid_2 = self.video_finder_dictionary['audio_gid']
+
+        else:
+
+            self.gid_1 = gid
+
         self.callback = callback
-        self.gid = gid
 
 # detect_proxy_pushButton
         self.detect_proxy_pushButton.clicked.connect(
@@ -50,6 +73,7 @@ class PropertiesWindow(AddLinkWindow_Ui):
 
         self.cancel_pushButton.clicked.connect(self.close)
         self.ok_pushButton.clicked.connect(self.okButtonPressed)
+
 #frames and checkBoxes
         self.proxy_frame.setEnabled(False)
         self.proxy_checkBox.toggled.connect(self.proxyFrame)
@@ -68,72 +92,88 @@ class PropertiesWindow(AddLinkWindow_Ui):
 
 
         # get information from data base
-        self.add_link_dictionary = self.parent.persepolis_db.searchGidInAddLinkTable(self.gid)
+        self.add_link_dictionary_1 = self.parent.persepolis_db.searchGidInAddLinkTable(self.gid_1)
+        self.download_table_dict_1 = self.parent.persepolis_db.searchGidInDownloadTable(self.gid_1)
 
-        self.download_table_dict = self.parent.persepolis_db.searchGidInDownloadTable(gid)
+        if video_finder_dictionary:
+            self.add_link_dictionary_2 = self.parent.persepolis_db.searchGidInAddLinkTable(self.gid_2)
+            self.download_table_dict_2 = self.parent.persepolis_db.searchGidInDownloadTable(self.gid_2)
+
 
         # create a copy from add_link_dictionary for checking changes finally!
-        self.add_link_dictionary_backup = {}
-        for key in self.add_link_dictionary.keys():
-            self.add_link_dictionary_backup[key] = self.add_link_dictionary[key]
+        self.add_link_dictionary_1_backup = {}
+        for key in self.add_link_dictionary_1.keys():
+            self.add_link_dictionary_1_backup[key] = self.add_link_dictionary_1[key]
+
+        if video_finder_dictionary:
+            self.add_link_dictionary_2_backup = {}
+            for key in self.add_link_dictionary_2.keys():
+                self.add_link_dictionary_2_backup[key] = self.add_link_dictionary_2[key]
+
 
 # initialization
 # disable folder_frame when download is complete
-        status = self.download_table_dict['status']
-        if status == 'complete':
-            self.folder_frame.setEnabled(False)
+        if self.video_finder_dictionary:
+            if self.video_finder_dictionary['video_completed'] == 'yes' or self.video_finder_dictionary['audio_completed'] == 'yes':
+                self.folder_frame.setEnabled(False)
+        else:
+            if self.download_table_dict_1['status'] == 'complete':
+                self.folder_frame.setEnabled(False)
 
 
 # link
-        self.link_lineEdit.setText(self.add_link_dictionary['link'])
+        self.link_lineEdit.setText(self.add_link_dictionary_1['link'])
+
+        if self.video_finder_dictionary:
+            self.link_lineEdit_2.setText(self.add_link_dictionary_2['link'])
 
 # ip_lineEdit initialization
-        if self.add_link_dictionary['ip']:
+        if self.add_link_dictionary_1['ip']:
             self.proxy_checkBox.setChecked(True)
-            self.ip_lineEdit.setText(self.add_link_dictionary['ip'])
+            self.ip_lineEdit.setText(self.add_link_dictionary_1['ip'])
 # port_spinBox initialization
             try:
                 self.port_spinBox.setValue(
-                    int(self.add_link_dictionary['port']))
+                    int(self.add_link_dictionary_1['port']))
             except:
                 pass
 # proxy user lineEdit initialization
             try:
                 self.proxy_user_lineEdit.setText(
-                    self.add_link_dictionary['proxy_user'])
+                    self.add_link_dictionary_1['proxy_user'])
             except:
                 pass
 # proxy pass lineEdit initialization
             try:
                 self.proxy_pass_lineEdit.setText(
-                    self.add_link_dictionary['proxy_passwd'])
+                    self.add_link_dictionary_1['proxy_passwd'])
             except:
                 pass
 
 
 # download UserName initialization
-        if self.add_link_dictionary['download_user']:
+        if self.add_link_dictionary_1['download_user']:
             self.download_checkBox.setChecked(True)
             self.download_user_lineEdit.setText(
-                self.add_link_dictionary['download_user'])
+                self.add_link_dictionary_1['download_user'])
 # download PassWord initialization
             try:
                 self.download_pass_lineEdit.setText(
-                    self.add_link_dictionary['download_passwd'])
+                    self.add_link_dictionary_1['download_passwd'])
             except:
                 pass
 
 # folder_path
         try:
             self.download_folder_lineEdit.setText(
-                self.add_link_dictionary['download_path'])
+                self.add_link_dictionary_1['download_path'])
         except:
                 pass
 
 # connections
         try:
             self.connections_spinBox.setValue(
-                int(self.add_link_dictionary['connections']))
+                int(self.add_link_dictionary_1['connections']))
         except:
             pass
 
@@ -143,8 +183,8 @@ class PropertiesWindow(AddLinkWindow_Ui):
             if queue != 'All Downloads':
                 self.add_queue_comboBox.addItem(queue)
 
-    # finding current queue and setting it!
-        self.current_category = self.download_table_dict['category'] 
+        # finding current queue and setting it!
+        self.current_category = self.download_table_dict_1['category'] 
 
         current_category_index = self.add_queue_comboBox.findText(
             self.current_category)
@@ -156,7 +196,7 @@ class PropertiesWindow(AddLinkWindow_Ui):
 
 
 # limit speed
-        limit = str(self.add_link_dictionary['limit_value'])
+        limit = str(self.add_link_dictionary_1['limit_value'])
         if limit != '0':
             self.limit_checkBox.setChecked(True)
             limit_number = limit[0:-1]
@@ -168,9 +208,9 @@ class PropertiesWindow(AddLinkWindow_Ui):
                 self.limit_comboBox.setCurrentIndex(1)
 
 # start_time
-        if self.add_link_dictionary['start_time']:
+        if self.add_link_dictionary_1['start_time']:
             # get hour and minute
-            hour, minute = self.add_link_dictionary['start_time'].split(':')
+            hour, minute = self.add_link_dictionary_1['start_time'].split(':')
             
             # set time
             q_time = QTime(int(hour), int(minute))
@@ -178,9 +218,9 @@ class PropertiesWindow(AddLinkWindow_Ui):
 
             self.start_checkBox.setChecked(True)
 # end_time
-        if self.add_link_dictionary['end_time']:
+        if self.add_link_dictionary_1['end_time']:
             # get hour and minute
-            hour, minute = self.add_link_dictionary['end_time'].split(':')
+            hour, minute = self.add_link_dictionary_1['end_time'].split(':')
 
             # set time
             q_time = QTime(int(hour), int(minute))
@@ -189,22 +229,22 @@ class PropertiesWindow(AddLinkWindow_Ui):
             self.end_checkBox.setChecked(True)
 
         # referer
-        if self.add_link_dictionary['referer']:
-            self.referer_lineEdit.setText(str(self.add_link_dictionary['referer']))
+        if self.add_link_dictionary_1['referer']:
+            self.referer_lineEdit.setText(str(self.add_link_dictionary_1['referer']))
 
-        if self.add_link_dictionary['header']:
-            self.header_lineEdit.setText(str(self.add_link_dictionary['header'])) 
+        if self.add_link_dictionary_1['header']:
+            self.header_lineEdit.setText(str(self.add_link_dictionary_1['header'])) 
 
-        if self.add_link_dictionary['user_agent']:
-            self.user_agent_lineEdit.setText(str(self.add_link_dictionary['user_agent']))
+        if self.add_link_dictionary_1['user_agent']:
+            self.user_agent_lineEdit.setText(str(self.add_link_dictionary_1['user_agent']))
 
-        if self.add_link_dictionary['load_cookies']:
-            self.load_cookies_lineEdit.setText((self.add_link_dictionary['load_cookies']))
+        if self.add_link_dictionary_1['load_cookies']:
+            self.load_cookies_lineEdit.setText((self.add_link_dictionary_1['load_cookies']))
 
  
 
 
- # set window size and position
+# set window size and position
         size = self.persepolis_setting.value(
             'PropertiesWindow/size', QSize(520, 425))
         position = self.persepolis_setting.value(
@@ -236,8 +276,6 @@ class PropertiesWindow(AddLinkWindow_Ui):
         else:
             self.proxy_checkBox.setChecked(False)
             self.detect_proxy_label.setText('No proxy detected!')
-
-
 
 
 # activate frames if checkBoxes checked
@@ -356,7 +394,6 @@ class PropertiesWindow(AddLinkWindow_Ui):
         else:
             end_time = self.end_time_qDateTimeEdit.text()
 
-        link = self.link_lineEdit.text()
         connections = self.connections_spinBox.value()
         download_path = self.download_folder_lineEdit.text()
  
@@ -384,50 +421,98 @@ class PropertiesWindow(AddLinkWindow_Ui):
         else:
             load_cookies = None
 
-        self.add_link_dictionary['start_time'] = start_time
-        self.add_link_dictionary['end_time'] = end_time
-        self.add_link_dictionary['link'] = link
-        self.add_link_dictionary['ip'] = ip
-        self.add_link_dictionary['port'] = port
-        self.add_link_dictionary['proxy_user'] = proxy_user
-        self.add_link_dictionary['proxy_passwd'] = proxy_passwd
-        self.add_link_dictionary['download_user'] = download_user
-        self.add_link_dictionary['download_passwd'] = download_passwd
-        self.add_link_dictionary['download_path'] = download_path
-        self.add_link_dictionary['limit_value'] = limit
-        self.add_link_dictionary['connections'] = connections
-        self.add_link_dictionary['referer'] = referer
-        self.add_link_dictionary['header'] = header
-        self.add_link_dictionary['user_agent'] = user_agent
-        self.add_link_dictionary['load_cookies'] = load_cookies
+        self.add_link_dictionary_1['start_time'] = start_time
+        self.add_link_dictionary_1['end_time'] = end_time
+        self.add_link_dictionary_1['link'] = self.link_lineEdit.text()
+        self.add_link_dictionary_1['ip'] = ip
+        self.add_link_dictionary_1['port'] = port
+        self.add_link_dictionary_1['proxy_user'] = proxy_user
+        self.add_link_dictionary_1['proxy_passwd'] = proxy_passwd
+        self.add_link_dictionary_1['download_user'] = download_user
+        self.add_link_dictionary_1['download_passwd'] = download_passwd
+        self.add_link_dictionary_1['download_path'] = download_path
+        self.add_link_dictionary_1['limit_value'] = limit
+        self.add_link_dictionary_1['connections'] = connections
+        self.add_link_dictionary_1['referer'] = referer
+        self.add_link_dictionary_1['header'] = header
+        self.add_link_dictionary_1['user_agent'] = user_agent
+        self.add_link_dictionary_1['load_cookies'] = load_cookies
+
+        if self.video_finder_dictionary:
+            self.add_link_dictionary_2['start_time'] = start_time
+            self.add_link_dictionary_2['end_time'] = end_time
+            self.add_link_dictionary_2['link'] = self.link_lineEdit_2.text()
+            self.add_link_dictionary_2['ip'] = ip
+            self.add_link_dictionary_2['port'] = port
+            self.add_link_dictionary_2['proxy_user'] = proxy_user
+            self.add_link_dictionary_2['proxy_passwd'] = proxy_passwd
+            self.add_link_dictionary_2['download_user'] = download_user
+            self.add_link_dictionary_2['download_passwd'] = download_passwd
+            self.add_link_dictionary_2['download_path'] = download_path
+            self.add_link_dictionary_2['limit_value'] = limit
+            self.add_link_dictionary_2['connections'] = connections
+            self.add_link_dictionary_2['referer'] = referer
+            self.add_link_dictionary_2['header'] = header
+            self.add_link_dictionary_2['user_agent'] = user_agent
+            self.add_link_dictionary_2['load_cookies'] = load_cookies
+
 
         new_category = str(self.add_queue_comboBox.currentText())
 
         # it means category changed and data base must be updated.
         if new_category != self.current_category:  
-            self.download_table_dict['category'] = new_category
 
+            self.download_table_dict_1['category'] = new_category
             # update data base
-            self.parent.persepolis_db.updateDownloadTable([self.download_table_dict])
+            self.parent.persepolis_db.updateDownloadTable([self.download_table_dict_1])
 
-        # if any thing in add_link_dictionary is changed,then update data base!
-        for key in self.add_link_dictionary.keys():
-            if self.add_link_dictionary[key] != self.add_link_dictionary_backup[key]:
+            if self.video_finder_dictionary:
+
+                # category for audio and video must be same as each other
+                self.download_table_dict_2['category'] = new_category
+                self.parent.persepolis_db.updateDownloadTable([self.download_table_dict_2])
+
+
+        # if any thing in add_link_dictionary_1 is changed,then update data base!
+        for key in self.add_link_dictionary_1.keys():
+            if self.add_link_dictionary_1[key] != self.add_link_dictionary_1_backup[key]:
                 
                 # update data base
-                self.parent.persepolis_db.updateAddLinkTable([self.add_link_dictionary])
+                self.parent.persepolis_db.updateAddLinkTable([self.add_link_dictionary_1])
 
                 # break the loop
                 break
 
         # if link changed, then update download_db_table in data base
-        if self.add_link_dictionary['link'] != self.add_link_dictionary_backup['link']:
-            dict = {'gid': self.gid, 'link': link}
-            self.parent.persepolis_db.updateDownloadTable([dict])
+        if self.add_link_dictionary_1['link'] != self.add_link_dictionary_1_backup['link']:
+            dictionary = {'gid': self.gid_1, 'link': link}
+            self.parent.persepolis_db.updateDownloadTable([dictionary])
+
+        # if any thing in add_link_dictionary_2 is changed,then update data base!
+        if self.video_finder_dictionary:
+            for key in self.add_link_dictionary_2.keys():
+                if self.add_link_dictionary_2[key] != self.add_link_dictionary_2_backup[key]:
+                
+                    # update data base
+                    self.parent.persepolis_db.updateAddLinkTable([self.add_link_dictionary_2])
+
+                    # break the loop
+                    break
+
+            # if link changed, then update download_db_table in data base
+            if self.add_link_dictionary_2['link'] != self.add_link_dictionary_2_backup['link']:
+                dictionary = {'gid': self.gid_2, 'link': link}
+                self.parent.persepolis_db.updateDownloadTable([dictionary])
+
+            # if download_path was changed, then update video_finder_db_table in data base
+            if self.add_link_dictionary_1['download_path'] != self.add_link_dictionary_1_backup['download_path']:
+                dictionary = {'video_gid': self.gid_1,
+                        'download_path': download_path}
+                self.parent.persepolis_db.updateVideoFinderTable[dictionary]
 
 
         # callback to mainwindow
-        self.callback(self.add_link_dictionary, self.gid, new_category)
+        self.callback(self.add_link_dictionary_1, self.gid_1, new_category, self.video_finder_dictionary)
 
         # close window
         self.close()
