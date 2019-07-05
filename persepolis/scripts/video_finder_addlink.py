@@ -151,7 +151,6 @@ class FileSizeFetcherThread(QThread):
 
     def run(self):
         spider_file_size = spider(self.dictionary)[1]
-        print(spider_file_size)
         self.FOUND.emit({'thread_key': self.key,
             'file_size': spider_file_size})
 
@@ -273,7 +272,7 @@ class VideoFinderAddLink(AddLinkWindow):
         self.link_lineEdit.textChanged.disconnect(super().linkLineChanged)  # Should be disconnected.
         self.link_lineEdit.textChanged.connect(self.linkLineChangedHere)
 
-        self.setMinimumSize(500, 400)
+        self.setMinimumSize(650, 480)
 
         self.status_box_textEdit.hide()
         self.format_selection_frame.hide()
