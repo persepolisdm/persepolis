@@ -42,6 +42,7 @@ from persepolis.gui import resources
 from functools import partial
 from copy import deepcopy
 from time import sleep
+import urllib.parse
 import random
 import time
 import sys
@@ -5830,7 +5831,7 @@ class MainWindow(MainWindow_Ui):
             self.persepolis_db.deleteItemInDownloadTable(complete_dictionary['audio_gid'], complete_dictionary['category'])
 
 
-            # file size and downloaded size and download path must be changed for video
+            # file name and file size and downloaded size and download path must be changed for video
             video_add_link_dictionary['download_path'] = complete_dictionary['final_path']
 
             # update data base
@@ -5842,6 +5843,8 @@ class MainWindow(MainWindow_Ui):
 
             video_download_table_dict['size'] = complete_dictionary['final_size']           
             video_download_table_dict['downloaded_size'] = complete_dictionary['final_size']
+            video_download_table_dict['file_name'] = urllib.parse.unquote(os.path.basename(complete_dictionary['final_path']))
+
 
             # update data base
             self.persepolis_db.updateDownloadTable([video_download_table_dict])
@@ -5856,6 +5859,12 @@ class MainWindow(MainWindow_Ui):
                     break
 
             if row != None:
+                # creafe a QTableWidgetItem
+                item = QTableWidgetItem(str(video_download_table_dict['file_name']))
+
+                # set item
+                self.download_table.setItem(row, 0, item)
+
                 # create a QTableWidgetItem
                 item = QTableWidgetItem(str(video_download_table_dict['size']))
 
