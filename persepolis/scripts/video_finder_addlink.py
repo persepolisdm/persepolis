@@ -333,6 +333,10 @@ class VideoFinderAddLink(AddLinkWindow):
         # Clear media list
         self.media_comboBox.clear()
         self.format_selection_frame.hide()
+        self.advanced_format_selection_checkBox.hide()
+        self.advanced_format_selection_frame.hide()
+        self.video_format_selection_comboBox.clear()
+        self.audio_format_selection_comboBox.clear()
         self.change_name_lineEdit.clear()
         self.threadPool.clear()
         self.change_name_checkBox.setChecked(False)
