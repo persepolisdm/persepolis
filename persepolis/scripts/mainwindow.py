@@ -519,7 +519,8 @@ class VideoFinder(QThread):
             error_message = result_dictionary['error']
             ffmpeg_error_message = result_dictionary['ffmpeg_error_message']
 
-            logger.sendToLog('ffmpeg error: ' + str(ffmpeg_error_message), 'ERROR')
+            if ffmpeg_error_message:
+                logger.sendToLog('ffmpeg error: ' + str(ffmpeg_error_message), 'ERROR')
 
             if error_message == 'no error':
                 self.video_finder_dictionary['muxing_status'] = 'complete'
