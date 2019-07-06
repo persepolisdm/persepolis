@@ -65,10 +65,11 @@ def startAria():
     # in macintosh
     elif os_type == 'Darwin':
         if aria2_path == "" or aria2_path == None or os.path.isfile(str(aria2_path)) == False:
+
             cwd = sys.argv[0] 
             current_directory = os.path.dirname(cwd)
+            aria2d = os.path.join(current_directory, 'aria2c')
 
-            aria2d = current_directory + "/aria2c"
         else:
             aria2d = aria2_path
 

@@ -120,18 +120,37 @@ plugin_ready = os.path.join(persepolis_tmp, 'persepolis-plugin-ready')
 
 show_window_file = os.path.join(persepolis_tmp, 'show-window')
 
-# this thread checks ffmpeg availability in linux and bsd
+# this thread checks ffmpeg availability.
 class CheckFfmpegIsInstalledThread(QThread):
     def __init__(self):
         QThread.__init__(self)
 
     def run(self):
         global ffmpeg_is_installed
-        answer = os.system('ffmpeg -version 1>/dev/null')
-        if answer != 0:
-            ffmpeg_is_installed = False
-        else:
+
+        if os_type == 'Linux' or os_type == 'FreeBSD' or os_type == 'OpenBSD':       
+            answer = os.system('ffmpeg -version 1>/dev/null')
+
+        elif os_type == 'Darwin':
+
+            cwd = sys.argv[0] 
+            current_directory = os.path.dirname(cwd)
+            ffmpeg_path = os.path.join(current_directory, 'ffmpeg')
+
+            answer = os.path.exists(ffmpeg_path)
+
+        elif os_type == 'Windows':
+
+            cwd = sys.argv[0] 
+            current_directory = os.path.dirname(cwd)
+            ffmpeg_path = os.path.join(current_directory, 'ffmpeg.exe')
+
+            answer = os.path.exists(ffmpeg_path)
+
+        if answer:
             ffmpeg_is_installed = True
+        else:
+            ffmpeg_is_installed = False
 
 # start aria2 when Persepolis starts
 class StartAria2Thread(QThread):
@@ -1276,10 +1295,9 @@ class MainWindow(MainWindow_Ui):
         self.threadPool[len(self.threadPool) - 1].KEEPSYSTEMAWAKESIGNAL.connect(self.keepAwake)
 
         # check if ffmpeg is installed
-        if os_type == 'Linux' or os_type == 'FreeBSD' or os_type == 'OpenBSD':
-            check_ffmpeg_is_installed = CheckFfmpegIsInstalledThread()
-            self.threadPool.append(check_ffmpeg_is_installed)
-            self.threadPool[len(self.threadPool) - 1].start()
+        check_ffmpeg_is_installed = CheckFfmpegIsInstalledThread()
+        self.threadPool.append(check_ffmpeg_is_installed)
+        self.threadPool[len(self.threadPool) - 1].start()
 
 
         # finding number or row that user selected!
