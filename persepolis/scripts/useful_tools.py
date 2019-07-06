@@ -17,6 +17,7 @@ from PyQt5.QtWidgets import QStyleFactory
 import urllib.parse
 import subprocess
 import platform
+from pathlib import Path
 import os
 
 try:
@@ -320,6 +321,7 @@ def muxer(parent, video_finder_dictionary):
                 final_path_pluse_name = os.path.join(final_path, new_name)
                 i = i + 1
 
+            ffmpeg_is_not_available = False
             # start muxing
             if os_type == 'Linux' or os_type == 'FreeBSD' or os_type == 'OpenBSD':
                 pipe = subprocess.Popen(['ffmpeg', '-i', video_file_path,
@@ -333,14 +335,30 @@ def muxer(parent, video_finder_dictionary):
                                     final_path_pluse_name], stderr=subprocess.PIPE, shell=False)
 
             elif os_type == 'Darwin':
-                # ffmpeg codes
-                pass
+                # ...path/Persepolis Download Manager.app/Contents/MacOS/ffmpeg
+                ffmpeg = Path(__file__).parent.parent.joinpath('ffmpeg').absolute()
+                if Path(ffmpeg).exists():
+                    pipe = subprocess.Popen([ffmpeg, '-i', video_file_path,
+                                        '-i', audio_file_path,
+                                        '-c', 'copy',
+                                        '-shortest',
+                                        '-map', '0:v:0',
+                                        '-map', '1:a:0',
+                                        '-loglevel', 'error',
+                                        '-strict', '-2',
+                                        final_path_pluse_name], stderr=subprocess.PIPE, shell=False)
+                else:
+                    ffmpeg_is_not_available = True
 
             elif os_type == 'Windows':
                 # ffmpeg codes
                 pass
 
-            if pipe.wait() == 0:
+            if ffmpeg_is_not_available:
+                result_dictionary['error'] = 'ffmpeg error'
+                result_dictionary['ffmpeg_error_message'] = 'ffmpeg binary not found'
+
+            elif pipe.wait() == 0:
                 # muxing was finished successfully.
                 result_dictionary['error'] = 'no error'
 
