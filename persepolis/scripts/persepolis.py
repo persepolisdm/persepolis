@@ -190,7 +190,7 @@ parser.add_argument('--version', action='version', version='Persepolis Download 
 
 
 # Clears unwated args ( like args from Browers via NHM )
-args, _ = parser.parse_known_args()
+args, unkownargs = parser.parse_known_args()
 
 # if --execute >> yes  >>> persepolis main window  will start. 
 # if --execute >> no >>> persepolis started before!
@@ -207,8 +207,9 @@ browser_plugin_dict ={'link': None,
             }
 
 
-#if args.chromium != 'no' or args.parent_window:
-if args.parent_window or args.args:
+# This dirty trick will show Persepolis version when there are unknown args
+# Unknown args are sent by Browsers for NHM
+if args.parent_window or unkownargs:
 
 # Platform specific configuration
     if os_type == "Windows":
