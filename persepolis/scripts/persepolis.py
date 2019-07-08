@@ -189,16 +189,8 @@ parser.add_argument('--parent-window', action='store', nargs = 1, help='this swi
 parser.add_argument('--version', action='version', version='Persepolis Download Manager 3.1.0')
 
 
-parser.add_argument('args', nargs=argparse.REMAINDER)
-
-#args, unknown = parser.parse_known_args(['chromium','--link','--referer','--cookie','--agent','--headers','--name','--default','--clear','--tray','--parent-window','--version'])
-args  = parser.parse_args()
-
-# terminal arguments are send download information with terminal arguments(link , referer , cookie , agent , headers , name )
-# persepolis plugins (for chromium and chrome and opera and vivaldi and firefox) are use native message host system for 
-# sending download information to persepolis.
-# see this repo for more information:
-#   https://github.com/persepolisdm/Persepolis-WebExtension
+# Clears unwated args ( like args from Browers via NHM )
+args, _ = parser.parse_known_args()
 
 # if --execute >> yes  >>> persepolis main window  will start. 
 # if --execute >> no >>> persepolis started before!
