@@ -17,7 +17,8 @@ from persepolis.scripts.useful_tools import determineConfigFolder
 from persepolis.gui.log_window_ui import LogWindow_Ui
 from persepolis.scripts import osCommands
 from PyQt5.QtCore import QPoint, QSize
-from PyQt5 import QtCore, QtWidgets
+from PyQt5.QtGui import QIcon
+from PyQt5 import QtWidgets
 import os
 
 # config_folder
@@ -123,3 +124,12 @@ class LogWindow(LogWindow_Ui):
         self.persepolis_setting.setValue('LogWindow/position', self.pos())
         self.persepolis_setting.sync()
         event.accept()
+
+    def changeIcon(self, icons):
+        icons = ':/' + str(icons) + '/'
+
+        self.close_pushButton.setIcon(QIcon(icons + 'remove'))
+        self.copy_log_pushButton.setIcon(QIcon(icons + 'clipboard'))
+        self.report_pushButton.setIcon(QIcon(icons + 'about'))
+        self.refresh_log_pushButton.setIcon(QIcon(icons + 'refresh'))
+

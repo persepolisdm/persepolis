@@ -459,11 +459,3 @@ class AddLinkWindow_Ui(QWidget):
         self.load_cookies_label.setText(QCoreApplication.translate("addlink_ui_tr", 'Load cookies: '))
 
         self.user_agent_label.setText(QCoreApplication.translate("addlink_ui_tr", 'User agent: '))
-
-    def changeIcon(self, icons):
-        icons = ':/' + str(icons) + '/'
-
-        self.folder_pushButton.setIcon(QIcon(icons + 'folder'))
-        self.download_later_pushButton.setIcon(QIcon(icons + 'stop'))
-        self.cancel_pushButton.setIcon(QIcon(icons + 'remove'))
-        self.ok_pushButton.setIcon(QIcon(icons + 'ok'))

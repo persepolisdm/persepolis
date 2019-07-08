@@ -15,12 +15,12 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from PyQt5.QtCore import QSize, QPoint, QThread, QTranslator, QCoreApplication, QLocale
-from PyQt5.QtWidgets import QWidget, QSizePolicy,  QInputDialog
+from PyQt5.QtWidgets import QLineEdit, QWidget, QSizePolicy,  QInputDialog
 from persepolis.gui.progress_ui import ProgressWindow_Ui
 from persepolis.scripts.shutdown import shutDown
 from persepolis.scripts.bubble import notifySend
-from PyQt5 import QtCore, QtGui, QtWidgets
 from persepolis.scripts import download
+from PyQt5.QtGui import QIcon
 import platform
 import time
 import os
@@ -205,7 +205,7 @@ class ProgressWindow(ProgressWindow_Ui):
         if os_type != 'Windows':  # For Linux and Mac OSX and FreeBSD and OpenBSD
             # get root password
             passwd, ok = QInputDialog.getText(
-                self, 'PassWord', 'Please enter root password:', QtWidgets.QLineEdit.Password)
+                self, 'PassWord', 'Please enter root password:', QLineEdit.Password)
             if ok:
                 # check password is true or not!
                 answer = os.system("echo '" + passwd +
@@ -213,7 +213,7 @@ class ProgressWindow(ProgressWindow_Ui):
                 # Wrong password
                 while answer != 0:
                     passwd, ok = QInputDialog.getText(
-                        self, 'PassWord', 'Wrong Password!\nPlease try again.', QtWidgets.QLineEdit.Password)
+                        self, 'PassWord', 'Wrong Password!\nPlease try again.', QLineEdit.Password)
                     if ok:
                         answer = os.system(
                             "echo '" + passwd + "' |sudo -S echo 'checking passwd'  ")
@@ -250,8 +250,9 @@ class ProgressWindow(ProgressWindow_Ui):
             limit_value = str(self.limit_spinBox.value()) + str("K")
         else:
             limit_value = str(self.limit_spinBox.value()) + str("M")
-# if download was started before , send the limit_speed request to aria2 .
-# else save the request in data_base
+
+    # if download was started before , send the limit_speed request to aria2 .
+    # else save the request in data_base
 
         if self.status != 'scheduled':
             download.limitSpeed(self.gid, limit_value)
@@ -260,4 +261,9 @@ class ProgressWindow(ProgressWindow_Ui):
             add_link_dictionary = {'gid': self.gid, 'limit_value': limit_value}
             self.parent.persepolis_db.updateAddLinkTable([add_link_dictionary])
 
+    def changeIcon(self, icons):
+        icons = ':/' + str(icons) + '/'
 
+        self.resume_pushButton.setIcon(QIcon(icons + 'play'))
+        self.pause_pushButton.setIcon(QIcon(icons + 'pause'))
+        self.stop_pushButton.setIcon(QIcon(icons + 'stop'))

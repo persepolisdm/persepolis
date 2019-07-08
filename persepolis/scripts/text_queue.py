@@ -14,10 +14,9 @@
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from PyQt5.QtCore import QDir , QPoint , QSize, QThread , pyqtSignal
-from PyQt5.QtWidgets import QTableWidgetItem , QFileDialog
+from PyQt5.QtCore import Qt, QDir, QPoint, QSize, QThread, pyqtSignal
+from PyQt5.QtWidgets import QTableWidgetItem, QFileDialog
 from persepolis.gui.text_queue_ui import TextQueue_Ui
-from PyQt5 import QtWidgets , QtCore , QtGui
 from persepolis.scripts import logger
 from persepolis.scripts import spider
 from PyQt5.QtGui import QIcon
@@ -96,9 +95,9 @@ class TextQueue(TextQueue_Ui):
             item = QTableWidgetItem(file_name)
 
             # add checkbox to the item
-            item.setFlags(QtCore.Qt.ItemIsUserCheckable |
-                          QtCore.Qt.ItemIsEnabled)
-            item.setCheckState(QtCore.Qt.Checked)
+            item.setFlags(Qt.ItemIsUserCheckable |
+                          Qt.ItemIsEnabled)
+            item.setCheckState(Qt.Checked)
 
             # insert file_name
             self.links_table.setItem(0, 0, item)
@@ -107,7 +106,7 @@ class TextQueue(TextQueue_Ui):
             item = QTableWidgetItem(str(link))
             self.links_table.setItem(0, 1, item)
 
-# get categories name and add them to add_queue_comboBox
+        # get categories name and add them to add_queue_comboBox
         categories_list = self.parent.persepolis_db.categoriesList()
  
         for queue in categories_list:
@@ -132,47 +131,46 @@ class TextQueue(TextQueue_Ui):
         self.download_folder_lineEdit.setText(download_path)
         self.download_folder_lineEdit.setEnabled(False)
 
-# ip_lineEdit initialization
+        # ip_lineEdit initialization
         settings_ip = self.persepolis_setting.value(
             'add_link_initialization/ip', None)
         if settings_ip:
             self.ip_lineEdit.setText(str(settings_ip))
 
-# proxy user lineEdit initialization
+        # proxy user lineEdit initialization
         settings_proxy_user = self.persepolis_setting.value(
             'add_link_initialization/proxy_user', None)
         if settings_proxy_user:
             self.proxy_user_lineEdit.setText(str(settings_proxy_user))
 
-# port_spinBox initialization
+        # port_spinBox initialization
         settings_port = self.persepolis_setting.value(
             'add_link_initialization/port', 0)
 
         self.port_spinBox.setValue(int(int(settings_port)))
 
 
-# download UserName initialization
+        # download UserName initialization
         settings_download_user = self.persepolis_setting.value(
             'add_link_initialization/download_user', None)
         if settings_download_user:
             self.download_user_lineEdit.setText(str(settings_download_user))
 
 
-# connect folder_pushButton
+        # connect folder_pushButton
         self.folder_pushButton.clicked.connect(self.changeFolder)
 
-# connect OK and canel button
-
+        # connect OK and canel button
         self.cancel_pushButton.clicked.connect(self.close)
         self.ok_pushButton.clicked.connect(self.okButtonPressed)
 
-# connect select_all_pushButton  deselect_all_pushButton
+        # connect select_all_pushButton  deselect_all_pushButton
         self.select_all_pushButton.clicked.connect(self.selectAll)
 
         self.deselect_all_pushButton.clicked.connect(self.deselectAll)
 
 
-#frames and checkBoxes
+        #frames and checkBoxes
         self.proxy_frame.setEnabled(False)
         self.proxy_checkBox.toggled.connect(self.proxyFrame)
 
@@ -185,29 +183,29 @@ class TextQueue(TextQueue_Ui):
         # set focus to ok button
         self.ok_pushButton.setFocus()
 
-# add_queue_comboBox event
+        # add_queue_comboBox event
         self.add_queue_comboBox.currentIndexChanged.connect(self.queueChanged)
 
-# setting window size and position
+        # setting window size and position
         size = self.persepolis_setting.value('TextQueue/size', QSize(700, 500))
         position = self.persepolis_setting.value(
             'TextQueue/position', QPoint(300, 300))
         self.resize(size)
         self.move(position)
 
-# this method checkes all check boxes
+    # this method checkes all check boxes
     def selectAll(self, button):
         for i in range(self.links_table.rowCount()):
             item = self.links_table.item(i, 0)
-            item.setCheckState(QtCore.Qt.Checked)
+            item.setCheckState(Qt.Checked)
 
-# this method deselect all check boxes
+    # this method deselect all check boxes
     def deselectAll(self, button):
         for i in range(self.links_table.rowCount()):
             item = self.links_table.item(i, 0)
-            item.setCheckState(QtCore.Qt.Unchecked)
+            item.setCheckState(Qt.Unchecked)
 
-# this method is called, when user changes add_queue_comboBox
+    # this method is called, when user changes add_queue_comboBox
     def queueChanged(self, combo):
         if str(self.add_queue_comboBox.currentText()) == 'Create new queue':
             # if user want to create new queue, then call createQueue method from mainwindow(parent)
@@ -232,7 +230,7 @@ class TextQueue(TextQueue_Ui):
             else:
                 self.add_queue_comboBox.setCurrentIndex(0)
 
- # activate frames if checkBoxes checked
+    # activate frames if checkBoxes checked
     def proxyFrame(self, checkBox):
 
         if self.proxy_checkBox.isChecked():
@@ -343,7 +341,7 @@ class TextQueue(TextQueue_Ui):
 
 
 
-# find checked links in links_table
+        # find checked links in links_table
         self.add_link_dictionary_list = []
         i = 0
         for row in range(self.links_table.rowCount()):
@@ -379,3 +377,10 @@ class TextQueue(TextQueue_Ui):
         self.persepolis_setting.sync()
 
         event.accept()
+
+    def changeIcon(self, icons):
+        icons = ':/' + str(icons) + '/'
+
+        self.folder_pushButton.setIcon(QIcon(icons + 'folder'))
+        self.ok_pushButton.setIcon(QIcon(icons + 'ok'))
+        self.cancel_pushButton.setIcon(QIcon(icons + 'remove'))

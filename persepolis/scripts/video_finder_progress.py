@@ -14,12 +14,12 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from PyQt5.QtCore import QSize, QPoint, QThread, QTranslator, QCoreApplication, QLocale
-from PyQt5.QtWidgets import QWidget, QSizePolicy,  QInputDialog
+from PyQt5.QtWidgets import QLineEdit, QWidget, QSizePolicy,  QInputDialog
 from persepolis.gui.video_finder_progress_ui import VideoFinderProgressWindow_Ui
 from persepolis.scripts.shutdown import shutDown
 from persepolis.scripts.bubble import notifySend
-from PyQt5 import QtCore, QtGui, QtWidgets
 from persepolis.scripts import download
+from PyQt5.QtGui import QIcon
 import platform
 import time
 import os
@@ -229,7 +229,7 @@ class VideoFinderProgressWindow(VideoFinderProgressWindow_Ui):
 
             # get root password
             passwd, ok = QInputDialog.getText(
-                self, 'PassWord', 'Please enter root password:', QtWidgets.QLineEdit.Password)
+                self, 'PassWord', 'Please enter root password:', QLineEdit.Password)
 
             if ok:
                 # check password is true or not!
@@ -238,7 +238,7 @@ class VideoFinderProgressWindow(VideoFinderProgressWindow_Ui):
                 # Wrong password
                 while answer != 0:
                     passwd, ok = QInputDialog.getText(
-                        self, 'PassWord', 'Wrong Password!\nPlease try again.', QtWidgets.QLineEdit.Password)
+                        self, 'PassWord', 'Wrong Password!\nPlease try again.', QLineEdit.Password)
                     if ok:
                         answer = os.system(
                             "echo '" + passwd + "' |sudo -S echo 'checking passwd'  ")
@@ -298,4 +298,9 @@ class VideoFinderProgressWindow(VideoFinderProgressWindow_Ui):
                 add_link_dictionary = {'gid': gid, 'limit_value': limit_value}
                 self.parent.persepolis_db.updateAddLinkTable([add_link_dictionary])
 
+    def changeIcon(self, icons):
+        icons = ':/' + str(icons) + '/'
 
+        self.resume_pushButton.setIcon(QIcon(icons + 'play'))
+        self.pause_pushButton.setIcon(QIcon(icons + 'pause'))
+        self.stop_pushButton.setIcon(QIcon(icons + 'stop'))

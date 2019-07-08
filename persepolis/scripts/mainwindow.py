@@ -13,7 +13,7 @@
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from PyQt5.QtWidgets import QAbstractItemView, QAction, QFileDialog, QSystemTrayIcon, QMenu, QApplication, QInputDialog, QMessageBox
+from PyQt5.QtWidgets import QCheckBox, QLineEdit, QAbstractItemView, QAction, QFileDialog, QSystemTrayIcon, QMenu, QApplication, QInputDialog, QMessageBox
 from PyQt5.QtCore import QDir, QTime, QCoreApplication, QRect, QSize, QPoint, QThread, pyqtSignal, Qt, QTranslator, QLocale
 from persepolis.scripts.useful_tools import muxer, freeSpace, determineConfigFolder, osAndDesktopEnvironment
 from persepolis.scripts.video_finder_progress import VideoFinderProgressWindow
@@ -21,10 +21,10 @@ from persepolis.gui.mainwindow_ui import MainWindow_Ui, QTableWidgetItem
 from persepolis.scripts.data_base import PluginsDB, PersepolisDB, TempDB
 from persepolis.scripts.browser_plugin_queue import BrowserPluginQueue
 from persepolis.scripts.after_download import AfterDownloadWindow
+from PyQt5.QtGui import QFont, QIcon, QStandardItem, QCursor
 from persepolis.scripts.properties import PropertiesWindow
 from persepolis.scripts.setting import PreferencesWindow
 from persepolis.scripts.progress import ProgressWindow
-from PyQt5.QtGui import QIcon, QStandardItem, QCursor
 from persepolis.scripts.play import playNotification
 from persepolis.scripts.addlink import AddLinkWindow
 from persepolis.scripts.text_queue import TextQueue
@@ -33,7 +33,6 @@ from persepolis.scripts.update import checkupdate
 from persepolis.scripts.shutdown import shutDown
 from persepolis.scripts.about import AboutWindow
 from persepolis.scripts.bubble import notifySend
-from PyQt5 import QtCore, QtGui, QtWidgets
 from persepolis.scripts import osCommands
 from persepolis.scripts import download
 from persepolis.scripts import logger
@@ -130,6 +129,10 @@ class CheckFfmpegIsInstalledThread(QThread):
 
         if os_type == 'Linux' or os_type == 'FreeBSD' or os_type == 'OpenBSD':       
             answer = os.system('ffmpeg -version 1>/dev/null')
+            if answer == 0:
+                answer = True
+            else:
+                answer = False
 
         elif os_type == 'Darwin':
 
@@ -1198,7 +1201,7 @@ class MainWindow(MainWindow_Ui):
         # add queues to category_tree(left side panel)
         for category_name in queues_list:
             new_queue_category = QStandardItem(category_name)
-            font = QtGui.QFont()
+            font = QFont()
             font.setBold(True)
             new_queue_category.setFont(font)
             new_queue_category.setEditable(False)
@@ -1921,7 +1924,7 @@ class MainWindow(MainWindow_Ui):
 
                         # eliminate window information! in progress_window_list
                         # and progress_window_list_dict
-                        self.progress_window_list[member_number] = []
+                        del self.progress_window_list[member_number]
                         del self.progress_window_list_dict[gid]
 
                     # if download stopped:
@@ -2013,7 +2016,9 @@ class MainWindow(MainWindow_Ui):
                             # show download complete dialog
                             afterdownloadwindow = AfterDownloadWindow(
                                     self, dict, self.persepolis_setting)
+
                             self.afterdownload_list.append(afterdownloadwindow)
+
                             self.afterdownload_list[len(
                                 self.afterdownload_list) - 1].show()
 
@@ -3456,7 +3461,7 @@ class MainWindow(MainWindow_Ui):
             self.msgBox.setInformativeText(QCoreApplication.translate("mainwindow_src_ui_tr", "<center>Do you want to continue?</center>"))
             self.msgBox.setStandardButtons(QMessageBox.Yes | QMessageBox.No)
             self.msgBox.setIcon(QMessageBox.Warning)
-            dont_show_checkBox = QtWidgets.QCheckBox("don't show this message again")
+            dont_show_checkBox = QCheckBox("don't show this message again")
             self.msgBox.setCheckBox(dont_show_checkBox)
             reply = self.msgBox.exec_()
 
@@ -4153,7 +4158,7 @@ class MainWindow(MainWindow_Ui):
 
             # insert new item in category_tree
             new_queue_category = QStandardItem(queue_name)
-            font = QtGui.QFont()
+            font = QFont()
             font.setBold(True)
             new_queue_category.setFont(font)
             new_queue_category.setEditable(False)
@@ -4655,7 +4660,7 @@ class MainWindow(MainWindow_Ui):
             self.remove_queue_msgBox.setInformativeText(QCoreApplication.translate("mainwindow_src_ui_tr", "<center>Do you want to continue?</center>"))
             self.remove_queue_msgBox.setStandardButtons(QMessageBox.Yes | QMessageBox.No)
             self.remove_queue_msgBox.setIcon(QMessageBox.Warning)
-            dont_show_checkBox = QtWidgets.QCheckBox("don't show this message again")
+            dont_show_checkBox = QCheckBox("don't show this message again")
             self.remove_queue_msgBox.setCheckBox(dont_show_checkBox)
             reply = self.remove_queue_msgBox.exec_()
 
@@ -4978,13 +4983,13 @@ class MainWindow(MainWindow_Ui):
 
             # get root password from user
             passwd, ok = QInputDialog.getText(
-                self, 'PassWord', 'Please enter root password:', QtWidgets.QLineEdit.Password)
+                self, 'PassWord', 'Please enter root password:', QLineEdit.Password)
             if ok:
                 answer = os.system("echo '" + passwd +
                                    "' |sudo -S echo 'checking passwd'  ")
                 while answer != 0:
                     passwd, ok = QInputDialog.getText(
-                        self, 'PassWord', 'Wrong Password!\nPlease try again.', QtWidgets.QLineEdit.Password)
+                        self, 'PassWord', 'Wrong Password!\nPlease try again.', QLineEdit.Password)
                     if ok:
                         # checking password
                         answer = os.system(
@@ -5497,11 +5502,11 @@ class MainWindow(MainWindow_Ui):
         item = QTableWidgetItem(str(filename))
 
         # add checkbox to the item
-        item.setFlags(QtCore.Qt.ItemIsUserCheckable | QtCore.Qt.ItemIsEnabled)
+        item.setFlags(Qt.ItemIsUserCheckable | Qt.ItemIsEnabled)
         if child.links_table.item(int(row_number), 0).checkState() == 2:
-            item.setCheckState(QtCore.Qt.Checked)
+            item.setCheckState(Qt.Checked)
         else:
-            item.setCheckState(QtCore.Qt.Unchecked)
+            item.setCheckState(Qt.Unchecked)
 
         child.links_table.setItem(int(row_number), 0, item)
 
@@ -5971,4 +5976,15 @@ class MainWindow(MainWindow_Ui):
             # create new progress_window
             self.progressBarOpen(gid)
 
+    def changeIcon(self, new_icons):
 
+        global icons
+        icons = ':/' + str(new_icons) + '/'
+
+        action_icon_dict = {self.stopAllAction: 'stop_all', self.minimizeAction: 'minimize', self.addlinkAction: 'add', self.addtextfileAction: 'file', self.resumeAction: 'play', self.pauseAction: 'pause', self.stopAction: 'stop', self.propertiesAction: 'setting', self.progressAction: 'window', self.openFileAction: 'file', self.openDownloadFolderAction: 'folder', self.openDefaultDownloadFolderAction: 'folder', self.exitAction: 'exit',
+                self.createQueueAction: 'add_queue', self.removeQueueAction: 'remove_queue', self.startQueueAction: 'start_queue', self.stopQueueAction: 'stop_queue', self.preferencesAction: 'preferences', self.aboutAction: 'about', self.issueAction: 'about', self.updateAction: 'about', self.videoFinderAddLinkAction: 'video_finder', self.qmenu: 'menu'}
+
+        for key in action_icon_dict.keys():
+            key.setIcon(QIcon(icons + str(action_icon_dict[key])))
+
+        self.selectDownloads()

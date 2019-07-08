@@ -16,7 +16,6 @@
 
 from PyQt5.QtWidgets import QPushButton, QApplication, QWidget, QTabWidget, QVBoxLayout, QTableWidget, QAbstractItemView, QLabel, QLineEdit, QHBoxLayout, QSpinBox, QComboBox, QFrame, QCheckBox, QGridLayout
 from PyQt5.QtCore import Qt, QTranslator, QCoreApplication, QLocale
-from PyQt5 import QtWidgets, QtGui, QtCore
 from persepolis.gui import resources
 from PyQt5.QtGui import QIcon
 
@@ -116,7 +115,7 @@ class TextQueue_Ui(QWidget):
         proxy_gridLayout = QGridLayout(self.proxy_frame)
 
         self.ip_lineEdit = QLineEdit(self.proxy_frame)
-        self.ip_lineEdit.setInputMethodHints(QtCore.Qt.ImhNone)
+        self.ip_lineEdit.setInputMethodHints(Qt.ImhNone)
         proxy_gridLayout.addWidget(self.ip_lineEdit, 0, 1, 1, 1)
 
         self.proxy_pass_label = QLabel(self.proxy_frame)
@@ -189,7 +188,7 @@ class TextQueue_Ui(QWidget):
         self.folder_pushButton.setIcon(QIcon(icons + 'folder'))
 
         self.folder_label = QLabel(self.folder_frame)
-        self.folder_label.setAlignment(QtCore.Qt.AlignCenter)
+        self.folder_label.setAlignment(Qt.AlignCenter)
         folder_gridLayout.addWidget(self.folder_label, 1, 0, 1, 1)
         download_horizontalLayout.addWidget(self.folder_frame)
         options_tab_verticalLayout.addLayout(download_horizontalLayout)
@@ -297,10 +296,3 @@ class TextQueue_Ui(QWidget):
 
         self.ok_pushButton.setText(QCoreApplication.translate("text_ui_tr", 'OK'))
         self.cancel_pushButton.setText(QCoreApplication.translate("text_ui_tr", 'Cancel'))
-
-    def changeIcon(self, icons):
-        icons = ':/' + str(icons) + '/'
-
-        self.ok_pushButton.setIcon(QIcon(icons + 'ok'))
-        self.cancel_pushButton.setIcon(QIcon(icons + 'remove'))
-        self.folder_pushButton.setIcon(QIcon(icons + 'folder'))

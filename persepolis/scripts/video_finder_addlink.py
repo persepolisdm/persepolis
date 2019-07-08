@@ -773,5 +773,3 @@ class VideoFinderAddLink(AddLinkWindow):
         
         # close window
         self.close()
-
-

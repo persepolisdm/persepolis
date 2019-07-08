@@ -17,10 +17,9 @@ from PyQt5.QtCore import Qt, QEvent, QTime, QSize, QPoint, QDir , QTranslator, Q
 from PyQt5.QtWidgets import QFileDialog, QStyleFactory, QMessageBox, QTableWidgetItem
 from persepolis.gui.setting_ui import Setting_Ui, KeyCapturingWindow_Ui
 from persepolis.scripts.useful_tools import returnDefaultSettings
+from PyQt5.QtGui import QFont, QKeySequence
 from persepolis.scripts import osCommands
 from persepolis.scripts import startup
-from PyQt5.QtGui import QFont, QKeySequence
-from PyQt5 import QtWidgets
 import platform
 import copy
 import sys
@@ -770,9 +769,12 @@ class PreferencesWindow(Setting_Ui):
         self.persepolis_setting.setValue('icons', icons)
 
         if icons != self.current_icon:  # it means icons changed
+            for windows_list in [self.parent.logwindow_list, self.parent.about_window_list,
+                    self.parent.addlinkwindows_list, self.parent.propertieswindows_list,
+                    self.parent.afterdownload_list, self.parent.text_queue_window_list,
+                    self.parent.progress_window_list, self.parent.plugin_queue_window_list]:
 
-            for list in [self.parent.logwindow_list, self.parent.about_window_list, self.parent.addlinkwindows_list, self.parent.propertieswindows_list, self.parent.afterdownload_list, self.parent.text_queue_window_list, self.parent.progress_window_list]:
-                for window in list:
+                for window in windows_list:
                     window.changeIcon(icons)
 
             self.parent.changeIcon(icons)

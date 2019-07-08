@@ -13,9 +13,8 @@
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import QShortcut, QDateTimeEdit, QDoubleSpinBox, QPushButton, QComboBox,  QMenu, QTreeView, QSplitter, QSizePolicy, QGridLayout, QHBoxLayout, QVBoxLayout, QMenu, QTableWidgetItem, QAbstractItemView, QApplication, QToolBar, QMenuBar, QStatusBar, QTableWidget, QAction, QMainWindow, QWidget, QFrame, QAbstractItemView, QCheckBox, QSpinBox, QLabel
-from PyQt5.QtGui import QKeySequence, QIcon, QStandardItemModel, QStandardItem
+from PyQt5.QtGui import QCursor, QKeySequence, QIcon, QStandardItemModel, QStandardItem
 from PyQt5.QtCore import QCoreApplication, QRect, QSize, Qt, QTranslator, QLocale
 from persepolis.gui import resources 
 
@@ -164,7 +163,7 @@ class DownloadTableWidget(QTableWidget):
         self.sendMenu = self.tablewidget_menu.addMenu('')
 
     def contextMenuEvent(self, event):
-        self.tablewidget_menu.popup(QtGui.QCursor.pos())
+        self.tablewidget_menu.popup(QCursor.pos())
 
 
 # CategoryTreeView Class adds QMenu to QTreeView
@@ -190,7 +189,7 @@ class CategoryTreeView(QTreeView):
         self.pressed.connect(parent.categoryTreeSelected)
 
     def contextMenuEvent(self, event):
-        self.category_tree_menu.popup(QtGui.QCursor.pos())
+        self.category_tree_menu.popup(QCursor.pos())
 
 
 class MainWindow_Ui(QMainWindow):
@@ -352,13 +351,13 @@ class MainWindow_Ui(QMainWindow):
         limit_frame_verticalLayout.addWidget(self.limit_pushButton)
 
         # after_checkBox
-        self.after_checkBox = QtWidgets.QCheckBox(self)
+        self.after_checkBox = QCheckBox(self)
         limit_verticalLayout.addWidget(self.after_checkBox)
 
         # after_frame
-        self.after_frame = QtWidgets.QFrame(self)
-        self.after_frame.setFrameShape(QtWidgets.QFrame.StyledPanel)
-        self.after_frame.setFrameShadow(QtWidgets.QFrame.Raised)
+        self.after_frame = QFrame(self)
+        self.after_frame.setFrameShape(QFrame.StyledPanel)
+        self.after_frame.setFrameShadow(QFrame.Raised)
         limit_verticalLayout.addWidget(self.after_frame)
 
         after_frame_verticalLayout = QVBoxLayout(self.after_frame)
@@ -480,13 +479,13 @@ class MainWindow_Ui(QMainWindow):
 
         # toolBar
         self.toolBar2 = QToolBar(self)
-        self.addToolBar(QtCore.Qt.TopToolBarArea, self.toolBar2)
+        self.addToolBar(Qt.TopToolBarArea, self.toolBar2)
         self.toolBar2.setWindowTitle(QCoreApplication.translate("mainwindow_ui_tr", 'Menu'))
         self.toolBar2.setFloatable(False)
         self.toolBar2.setMovable(False)
 
         self.toolBar = QToolBar(self)
-        self.addToolBar(QtCore.Qt.TopToolBarArea, self.toolBar)
+        self.addToolBar(Qt.TopToolBarArea, self.toolBar)
         self.toolBar.setWindowTitle(QCoreApplication.translate("mainwindow_ui_tr", 'Toolbar'))
         self.toolBar.setFloatable(False)
         self.toolBar.setMovable(False)
@@ -765,11 +764,3 @@ class MainWindow_Ui(QMainWindow):
 
         self.video_finder_status_label.setText(QCoreApplication.translate("mainwindow_ui_tr", "<b>Status: </b>"))
         self.muxing_status_label.setText(QCoreApplication.translate("mainwindow_ui_tr", "<b>Muxing status: </b>"))
-
-    def changeIcon(self, icons):
-        icons = ':/' + str(icons) + '/'
-
-        action_icon_dict = {self.stopAllAction: 'stop_all', self.minimizeAction: 'minimize', self.addlinkAction: 'add', self.addtextfileAction: 'file', self.resumeAction: 'play', self.pauseAction: 'pause', self.stopAction: 'stop', self.propertiesAction: 'setting', self.progressAction: 'window', self.openFileAction: 'file', self.openDownloadFolderAction: 'folder', self.openDefaultDownloadFolderAction: 'folder', self.exitAction: 'exit',
-                self.removeSelectedAction: 'multi_remove', self.deleteSelectedAction: 'multi_trash', self.createQueueAction: 'add_queue', self.removeQueueAction: 'remove_queue', self.startQueueAction: 'start_queue', self.stopQueueAction: 'stop_queue', self.preferencesAction: 'preferences', self.aboutAction: 'about', self.issueAction: 'about', self.updateAction: 'about', self.videoFinderAddLinkAction: 'video_finder', self.qmenu: 'menu'}
-        for key in action_icon_dict.keys():
-            key.setIcon(QIcon(icons + str(action_icon_dict[key])))

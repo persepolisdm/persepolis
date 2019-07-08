@@ -14,17 +14,16 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import QAbstractItemView, QTableWidget, QTableWidgetItem, QDateTimeEdit, QCheckBox, QVBoxLayout, QHBoxLayout, QFrame, QWidget, QLabel, QLineEdit, QTabWidget, QSpinBox, QPushButton, QDial, QComboBox, QFontComboBox, QSpacerItem, QSizePolicy
-from PyQt5.QtGui import QIcon
-import pkg_resources
 from PyQt5.QtCore import Qt, QTranslator, QCoreApplication, QLocale
 from persepolis.gui import resources 
+from PyQt5.QtGui import QIcon
+import pkg_resources
 
 class KeyCapturingWindow_Ui(QWidget):
     def __init__(self, persepolis_setting):
         super().__init__()
-        icon = QtGui.QIcon()
+        icon = QIcon()
 
         self.persepolis_setting = persepolis_setting
 
@@ -81,7 +80,7 @@ class KeyCapturingWindow_Ui(QWidget):
 class Setting_Ui(QWidget):
     def __init__(self, persepolis_setting):
         super().__init__()
-        icon = QtGui.QIcon()
+        icon = QIcon()
 
         self.persepolis_setting = persepolis_setting
 
