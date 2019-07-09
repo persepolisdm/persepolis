@@ -2397,41 +2397,41 @@ class MainWindow(MainWindow_Ui):
         # notify that job is done!and new links can be received form plugins_db
         plugin_links_checked = True
 
-        # Capture youtube,... media as per setting.
-        if self.persepolis_setting.value('settings/video_finder/enable', 'yes') == 'yes':
-            not_video_finder_links = []  # Store non-video_finder links to process normally.
+        not_video_finder_links = []  # Store non-video_finder links to process normally.
 
-            # get maximum of youtube,... link from persepolis_setting
-            max_links = int(self.persepolis_setting.value('settings/video_finder/max_links', 3))
+        # get maximum of youtube,... link from persepolis_setting
+        max_links = int(self.persepolis_setting.value('settings/video_finder/max_links', 3))
 
-            # add your favorite site in this list
-            # please don't add porn sites!
-            supported_sites_list = [
+        # add your favorite site in this list
+        # please don't add porn sites!
+        supported_sites_list = [
                 'youtube.com/watch',
                 'aparat.com/v/',
                 'vimeo.com/',
                 'dailymotion.com/video'
             ]
 
-            for link in list_of_links:
-                # if link is on of supported_sites_list member then change
-                # video_finder_supported to True value.
-                video_finder_supported = False
-                for supported_site in supported_sites_list:
-                    if supported_site in link['link']:
-                        video_finder_supported = True
-                        break
+        for link in list_of_links:
 
-                # if link is on of supported_sites_list member, the open video_finder_addlink_window
-                if max_links and video_finder_supported:
-                    max_links = max_links - 1
-                    self.showVideoFinderAddLinkWindow(input_dict=link)
-                else:
-                    # if link is not on of supported_sites_list then add it to not_video_finder_links
-                    not_video_finder_links.append(link)
+            # if link is on of supported_sites_list member then change
+            # video_finder_supported to True value.
+            video_finder_supported = False
 
-            # video_finder links also will stay here, those coming after specified max.
-            list_of_links = not_video_finder_links
+            for supported_site in supported_sites_list:
+                if supported_site in link['link']:
+                    video_finder_supported = True
+                    break
+
+            # if link is on of supported_sites_list member, the open video_finder_addlink_window
+            if max_links and video_finder_supported:
+                max_links = max_links - 1
+                self.showVideoFinderAddLinkWindow(input_dict=link)
+            else:
+                # if link is not on of supported_sites_list then add it to not_video_finder_links
+                not_video_finder_links.append(link)
+
+        # video_finder links also will stay here, those coming after specified max.
+        list_of_links = not_video_finder_links
 
         # It means we have only one link in list_of_links
         if len(list_of_links) == 1:

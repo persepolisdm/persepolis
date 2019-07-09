@@ -455,8 +455,8 @@ class VideoFinderAddLink(AddLinkWindow):
                             text = text + ' ' + '{}p'.format(f['height'])
 
                     if 'vcodec' in f.keys():
-                        if f['vcodec'] == 'none' and f['acodec'] != 'none' and self.persepolis_setting.value('settings/video_finder/hide_no_video', 'yes') == 'yes':
-                            continue
+#                         if f['vcodec'] == 'none' and f['acodec'] != 'none':
+#                             continue
 
                         # No video, show audio bit rate
                         if f['vcodec'] == 'none':  

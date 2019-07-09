@@ -76,19 +76,19 @@ class PreferencesWindow(Setting_Ui):
         self.rpc_port_spinbox.setValue(
             int(self.persepolis_setting.value('rpc-port')))
 
-# add support for other languages
+        # add support for other languages
         locale = str(self.persepolis_setting.value('settings/locale'))
         QLocale.setDefault(QLocale(locale))
         self.translator = QTranslator()
         if self.translator.load(':/translations/locales/ui_' + locale, 'ts'):
             QCoreApplication.installTranslator(self.translator)
             
-# wait_queue
+        # wait_queue
         wait_queue_list = self.persepolis_setting.value('wait-queue')
         q_time = QTime(int(wait_queue_list[0]), int(wait_queue_list[1]))
         self.wait_queue_time.setTime(q_time)
 
-# change aria2 path
+        # change aria2 path
         self.aria2_path_pushButton.clicked.connect(self.changeAria2Path)
         self.aria2_path_checkBox.toggled.connect(self.ariaCheckBoxToggled)
         aria2_path = self.persepolis_setting.value('settings/aria2_path')
@@ -104,24 +104,25 @@ class PreferencesWindow(Setting_Ui):
             for widget in self.aria2_path_checkBox, self.aria2_path_lineEdit, self.aria2_path_pushButton:
                 widget.hide()
 
-# save_as_tab
+        # save_as_tab
         self.download_folder_lineEdit.setText(
             str(self.persepolis_setting.value('download_path')))
         self.temp_download_lineEdit.setText(
             str(self.persepolis_setting.value('download_path_temp')))
 
-# subfolder
+        # subfolder
         if str(self.persepolis_setting.value('subfolder')) == 'yes':
             self.subfolder_checkBox.setChecked(True)
         else:
             self.subfolder_checkBox.setChecked(False)
 
-# notifications_tab
+        # notifications_tab
         self.volume_label.setText(
             'Volume : ' + str(self.persepolis_setting.value('sound-volume')))
         self.volume_dial.setValue(
             int(self.persepolis_setting.value('sound-volume')))
-# set style
+
+        # set style
         # if style_comboBox is changed, self.styleComboBoxChanged is called.
         self.style_comboBox.currentIndexChanged.connect(self.styleComboBoxChanged)
 
@@ -141,7 +142,8 @@ class PreferencesWindow(Setting_Ui):
             str(self.persepolis_setting.value('style')))
         if current_style_index != -1:
             self.style_comboBox.setCurrentIndex(current_style_index)
-# available language
+
+        # available language
         available_language = ['en_US', 'fa_IR', 'zh_CN', 'fr_FR']
         for lang in available_language:
             self.lang_comboBox.addItem(str(QLocale(lang).nativeLanguageName()), lang)
@@ -157,7 +159,8 @@ class PreferencesWindow(Setting_Ui):
         self.color_comboBox.setCurrentIndex(current_color_index)
 
         self.current_icon = self.persepolis_setting.value('icons')
-# icon size
+
+        # icon size
         size = ['128', '64', '48', '32', '24', '16']
         self.icons_size_comboBox.addItems(size)
         current_icons_size_index = self.icons_size_comboBox.findText(
@@ -169,13 +172,14 @@ class PreferencesWindow(Setting_Ui):
 
         self.iconSizeComboBoxCanged(1)
         
-# set notification
+        # set notification
         notifications = ['Native notification', 'QT notification']
         self.notification_comboBox.addItems(notifications)
         current_notification_index = self.notification_comboBox.findText(
             str(self.persepolis_setting.value('notification')))
         self.notification_comboBox.setCurrentIndex(current_notification_index)
-# set font
+
+        # set font
         font_setting = QFont()
         font_setting.setFamily(str(self.persepolis_setting.value('font')))
         self.fontComboBox.setCurrentFont(font_setting)
@@ -183,14 +187,15 @@ class PreferencesWindow(Setting_Ui):
         self.font_size_spinBox.setValue(
             int(self.persepolis_setting.value('font-size')))
 
-# sound frame
+        # sound frame
         self.sound_frame.setEnabled(False)
         self.enable_notifications_checkBox.toggled.connect(self.soundFrame)
         if str(self.persepolis_setting.value('sound')) == 'yes':
             self.enable_notifications_checkBox.setChecked(True)
         else:
             self.enable_notifications_checkBox.setChecked(False)
-# connect folder buttons
+
+        # connect folder buttons
         self.download_folder_lineEdit.setEnabled(False)
         self.download_folder_pushButton.clicked.connect(
             self.downloadFolderPushButtonClicked)
@@ -199,22 +204,23 @@ class PreferencesWindow(Setting_Ui):
             self.tempDownloadPushButtonClicked)
 
 
-# dial
+        # dial
         self.volume_dial.setNotchesVisible(True)
         self.volume_dial.valueChanged.connect(self.dialChanged)
 
-# hide window
+        # hide window
         if str(self.persepolis_setting.value('hide-window')) == 'yes':
             self.hide_window_checkBox.setChecked(True)
         else:
             self.hide_window_checkBox.setChecked(False)
 
-# tray icon
+        # tray icon
         if str(self.persepolis_setting.value('tray-icon')) == 'yes':
             self.enable_system_tray_checkBox.setChecked(True)
         else:
             self.enable_notifications_checkBox.setChecked(False)
-# show_menubar
+
+        # show_menubar
         if str(self.persepolis_setting.value('show-menubar')) == 'yes':
             self.show_menubar_checkbox.setChecked(True)
         else:
@@ -223,31 +229,32 @@ class PreferencesWindow(Setting_Ui):
         if platform.system() == 'Darwin':
             self.show_menubar_checkbox.setChecked(True)
             self.show_menubar_checkbox.hide()
-# show_sidepanel
+
+        # show_sidepanel
         if str(self.persepolis_setting.value('show-sidepanel')) == 'yes':
             self.show_sidepanel_checkbox.setChecked(True)
         else:
             self.show_sidepanel_checkbox.setChecked(False)
 
-# show ProgressWindow
+        # show ProgressWindow
         if str(self.persepolis_setting.value('show-progress')) == 'yes':
             self.show_progress_window_checkbox.setChecked(True)
         else:
             self.show_progress_window_checkbox.setChecked(False)
 
-# after download dialog
+        # after download dialog
         if str(self.persepolis_setting.value('after-dialog')) == 'yes':
             self.after_download_checkBox.setChecked(True)
         else:
             self.after_download_checkBox.setChecked(False)
 
-# run persepolis at startup checkBox
+        # run persepolis at startup checkBox
         if str(self.persepolis_setting.value('startup')) == 'yes':
             self.startup_checkbox.setChecked(True)
         else:
             self.startup_checkbox.setChecked(False)
 
-# font_checkBox
+        # font_checkBox
         if str(self.persepolis_setting.value('custom-font')) == 'yes':
             self.font_checkBox.setChecked(True)
         else:
@@ -255,13 +262,13 @@ class PreferencesWindow(Setting_Ui):
         
         self.fontCheckBoxState(self.font_checkBox)
 
-# keep_awake_checkBox
+        # keep_awake_checkBox
         if str(self.persepolis_setting.value('awake')) == 'yes':
             self.keep_awake_checkBox.setChecked(True)
         else:
             self.keep_awake_checkBox.setChecked(False)
 
-# columns_tab
+        # columns_tab
         if str(self.persepolis_setting.value('column0')) == 'yes':
             self.column0_checkBox.setChecked(True)
         else:
@@ -317,19 +324,13 @@ class PreferencesWindow(Setting_Ui):
         else:
             self.column12_checkBox.setChecked(False)
 
-# video_finder
-        self.enable_video_finder_checkbox.stateChanged.connect(self.videoFinderFram)
-        self.enable_video_finder_checkbox.setChecked(persepolis_setting.value('video_finder/enable', 'yes') == 'yes')
-        self.hide_no_audio_checkbox.setChecked(persepolis_setting.value('video_finder/hide_no_audio') == 'yes')
-        self.hide_no_video_checkbox.setChecked(persepolis_setting.value('video_finder/hide_no_video') == 'yes')
+        # video_finder
         try:  # Integer casting may raise exception.
             self.max_links_spinBox.setValue(int(persepolis_setting.value('video_finder/max_links', 3)))
         except:
             pass
 
-        self.videoFinderFram()
-
-# shortcuts
+        # shortcuts
         self.qshortcuts_list = [self.parent.exitAction_shortcut,
                         self.parent.minimizeAction_shortcut,
                         self.parent.removeSelectedAction_shortcut,
@@ -368,25 +369,26 @@ class PreferencesWindow(Setting_Ui):
         self.shortcut_table.itemDoubleClicked.connect(self.showCaptureKeyboardWindow)
 
 
-# ok cancel default button
+        # ok cancel default button
         self.cancel_pushButton.clicked.connect(self.close)
         self.defaults_pushButton.clicked.connect(
             self.defaultsPushButtonPressed)
         self.ok_pushButton.clicked.connect(self.okPushButtonPressed)
 
-# font_checkBox connect
+        # font_checkBox connect
         self.font_checkBox.stateChanged.connect(self.fontCheckBoxState)
 
-# saving initial value of self.persepolis_setting in self.first_key_value_dict
-# at the end! in the okPushButtonPressed method, first_key_value_dict will compared with second_key_value_dict. 
-# if any thing changed , then a message box notify user about "some changes take effect after restarting persepolis".
+        # saving initial value of self.persepolis_setting in self.first_key_value_dict
+        # at the end! in the okPushButtonPressed method, first_key_value_dict will compared with second_key_value_dict. 
+        # if any thing changed , then a message box notify user about "some changes take effect after restarting persepolis".
         self.first_key_value_dict = {}
         for member in self.persepolis_setting.allKeys():
             self.first_key_value_dict[member] = str(self.persepolis_setting.value(member)) 
 
 
         self.persepolis_setting.endGroup()
-# setting window size and position
+
+        # setting window size and position
         size = self.persepolis_setting.value(
             'PreferencesWindow/size', QSize(578, 565))
         position = self.persepolis_setting.value(
@@ -394,7 +396,8 @@ class PreferencesWindow(Setting_Ui):
 
         self.resize(size)
         self.move(position)
-# Papirus icons can be used with small sizes(smaller than 48)
+
+    # Papirus icons can be used with small sizes(smaller than 48)
     def iconSizeComboBoxCanged(self, index):
         self.icon_comboBox.clear()
         selected_size = int(self.icons_size_comboBox.currentText())
@@ -421,8 +424,9 @@ class PreferencesWindow(Setting_Ui):
 
         self.icon_comboBox.setCurrentIndex(current_icons_index)
 
-# run this method if user doubleclicks on an item in shortcut_table
+    # run this method if user doubleclicks on an item in shortcut_table
     def showCaptureKeyboardWindow(self):
+
         # show KeyCapturingWindow
         keyboard_capture_window = KeyCapturingWindow(self.callBack, self.persepolis_setting)
 
@@ -459,8 +463,9 @@ class PreferencesWindow(Setting_Ui):
 
 
  
-# active color_comboBox only when user is select "Fusion" style.
+    # active color_comboBox only when user is select "Fusion" style.
     def styleComboBoxChanged(self, index=None):
+
         # clear color_comboBox
         self.color_comboBox.clear()
 
@@ -515,6 +520,7 @@ class PreferencesWindow(Setting_Ui):
 
 
     def fontCheckBoxState(self,checkBox):
+
         # deactive fontComboBox and font_size_spinBox if font_checkBox not checked!
         if self.font_checkBox.isChecked():
             self.fontComboBox.setEnabled(True)
@@ -526,6 +532,7 @@ class PreferencesWindow(Setting_Ui):
 
 
     def closeEvent(self, event):
+
         # saving window size and position
         self.persepolis_setting.setValue('PreferencesWindow/size', self.size())
         self.persepolis_setting.setValue(
@@ -538,17 +545,21 @@ class PreferencesWindow(Setting_Ui):
         self.close()
 
     def soundFrame(self, checkBox):
+
         if self.enable_notifications_checkBox.isChecked():
             self.sound_frame.setEnabled(True)
         else:
             self.sound_frame.setEnabled(False)
 
     def ariaCheckBoxToggled(self, checkBox):
+
         if self.aria2_path_checkBox.isChecked():
             self.aria2_path_pushButton.setEnabled(True)
         else:
             self.aria2_path_pushButton.setEnabled(False)
+
     def changeAria2Path(self, button):
+
         cwd = sys.argv[0]
         cwd = os.path.dirname(cwd)
 
@@ -563,6 +574,7 @@ class PreferencesWindow(Setting_Ui):
 
 
     def downloadFolderPushButtonClicked(self, button):
+
         download_path = str(
             self.persepolis_setting.value('settings/download_path'))
         fname = QFileDialog.getExistingDirectory(
@@ -579,19 +591,23 @@ class PreferencesWindow(Setting_Ui):
 
 
     def tempDownloadPushButtonClicked(self, button):
+
         download_path_temp = str(
             self.persepolis_setting.value('settings/download_path_temp'))
         fname = QFileDialog.getExistingDirectory(
             self, 'Open f', download_path_temp)
+
         if fname:
             self.temp_download_lineEdit.setText(fname)
             self.persepolis_setting.setValue(
                 'settings/download_path_temp', str(fname))
 
     def dialChanged(self, dial):
+
         self.volume_label.setText('Volume : ' + str(self.volume_dial.value()))
 
     def defaultsPushButtonPressed(self, button):
+
         self.persepolis_setting.beginGroup('settings')
 
         self.setting_dict = returnDefaultSettings()
@@ -601,16 +617,17 @@ class PreferencesWindow(Setting_Ui):
         self.time_out_spinBox.setValue(int(self.setting_dict['timeout']))
         self.connections_spinBox.setValue(
             int(self.setting_dict['connections']))
+
         self.rpc_port_spinbox.setValue(int(self.setting_dict['rpc-port']))
         self.aria2_path_lineEdit.setText('')
         self.aria2_path_checkBox.setChecked(False)
 
-# wait-queue
+        # wait-queue
         wait_queue_list = self.setting_dict['wait-queue']
         q_time = QTime(wait_queue_list[0], wait_queue_list[1])
         self.wait_queue_time.setTime(q_time)
 
-# save_as_tab
+        # save_as_tab
         self.download_folder_lineEdit.setText(
             str(self.setting_dict['download_path']))
         self.temp_download_lineEdit.setText(
@@ -618,38 +635,42 @@ class PreferencesWindow(Setting_Ui):
 
         self.subfolder_checkBox.setChecked(True)
 
-# notifications_tab
+        # notifications_tab
         self.volume_label.setText(
             'Volume : ' + str(self.setting_dict['sound-volume']))
         self.volume_dial.setValue(int(self.setting_dict['sound-volume']))
-# set style
+
+        # set style
         current_style_index = self.style_comboBox.findText(
             str(self.setting_dict['style']))
         self.style_comboBox.setCurrentIndex(current_style_index)
-# set language
+
+        # set language
         current_locale = self.lang_comboBox.findData(
             str(self.setting_dict['locale']))
         self.lang_comboBox.setCurrentIndex(current_locale)
-# set color_scheme
+
+        # set color_scheme
         current_color_index = self.color_comboBox.findText(
             str(self.setting_dict['color-scheme']))
         self.color_comboBox.setCurrentIndex(current_color_index)
-# set icons
+
+        # set icons
         current_icons_index = self.icon_comboBox.findText(
             str(self.setting_dict['icons']))
         self.icon_comboBox.setCurrentIndex(current_icons_index)
 
-# set icons size
+        # set icons size
         current_icons_size_index = self.icons_size_comboBox.findText(
             str(self.setting_dict['toolbar_icon_size']))
         self.icons_size_comboBox.setCurrentIndex(current_icons_size_index)
 
-# set notification
+        # set notification
         current_notification_index = self.notification_comboBox.findText(
             str(self.setting_dict['notification']))
         self.notification_comboBox.setCurrentIndex(current_notification_index)
 
-# set font
+        # set font
         self.font_checkBox.setChecked(False)
         font_setting = QFont()
         font_setting.setFamily(str(self.setting_dict['font']))
@@ -657,33 +678,37 @@ class PreferencesWindow(Setting_Ui):
 
         self.font_size_spinBox.setValue(int(self.setting_dict['font-size']))
 
-# sound frame
+        # sound frame
         self.enable_notifications_checkBox.setChecked(True)
-# hide window
+
+        # hide window
         self.hide_window_checkBox.setChecked(False)
 
-# tray icon
+        # tray icon
         self.enable_system_tray_checkBox.setChecked(True)
-# after_download_checkBox
+
+        # after_download_checkBox
         self.after_download_checkBox.setChecked(True)
-# hide menubar for linux
+
+        # hide menubar for linux
         if platform.system == 'Darwin':
             self.show_menubar_checkbox.setChecked(True)
         else:
             self.show_menubar_checkbox.setChecked(False)
-# show side panel
+
+        # show side panel
         self.show_sidepanel_checkbox.setChecked(True)
 
-# show progress window
+        # show progress window
         self.show_progress_window_checkbox.setChecked(True)
 
-# run persepolis at startup checkBox
+        # run persepolis at startup checkBox
         self.startup_checkbox.setChecked(False)
 
-# keep_awake_checkBox
+        # keep_awake_checkBox
         self.keep_awake_checkBox.setChecked(False)
 
-# columns_tab
+        # columns_tab
         self.column0_checkBox.setChecked(True)
         self.column1_checkBox.setChecked(True)
         self.column2_checkBox.setChecked(True)
@@ -696,13 +721,10 @@ class PreferencesWindow(Setting_Ui):
         self.column11_checkBox.setChecked(True)
         self.column12_checkBox.setChecked(True)
 
-# video finder
-        self.enable_video_finder_checkbox.setChecked(True)
-        self.hide_no_audio_checkbox.setChecked(True)
-        self.hide_no_video_checkbox.setChecked(True)
+        # video finder
         self.max_links_spinBox.setValue(3)
 
-# shortcuts
+        # shortcuts
         self.shortcuts_list = [self.setting_dict['shortcuts/quit_shortcut'],
                         self.setting_dict['shortcuts/hide_window_shortcut'],
                         self.setting_dict['shortcuts/remove_shortcut'],
@@ -731,9 +753,6 @@ class PreferencesWindow(Setting_Ui):
 
         self.persepolis_setting.endGroup()
 
-    def videoFinderFram(self):
-        self.video_finder_frame.setEnabled(self.enable_video_finder_checkbox.isChecked())
-
     def okPushButtonPressed(self, button):
 
         self.persepolis_setting.beginGroup('settings')
@@ -759,11 +778,11 @@ class PreferencesWindow(Setting_Ui):
         self.persepolis_setting.setValue(
             'wait-queue', self.wait_queue_time.text().split(':'))
 
-# change aria2_path
+        # change aria2_path
         if self.aria2_path_checkBox.isChecked():
             self.persepolis_setting.setValue('settings/aria2_path', str(self.aria2_path_lineEdit.text())) 
 
-# changing icons
+        # changing icons
 
         icons = self.icon_comboBox.currentText()
         self.persepolis_setting.setValue('icons', icons)
@@ -779,7 +798,7 @@ class PreferencesWindow(Setting_Ui):
 
             self.parent.changeIcon(icons)
 
-# icons size
+        # icons size
         icons_size = self.icons_size_comboBox.currentText()
         self.persepolis_setting.setValue('toolbar_icon_size', icons_size)
 
@@ -788,20 +807,19 @@ class PreferencesWindow(Setting_Ui):
         self.parent.toolBar2.setIconSize(QSize(icons_size, icons_size))
 
 
-# style
+        # style
         style = str(self.style_comboBox.currentText())
         self.persepolis_setting.setValue('style', style)
 
-# language
+        # language
         locale = str(self.lang_comboBox.itemData(self.lang_comboBox.currentIndex()))
         self.persepolis_setting.setValue('locale', locale)
 
-# color_scheme
+        # color_scheme
         color_scheme = self.color_comboBox.currentText()
         self.persepolis_setting.setValue('color-scheme', color_scheme)
 
-# font and font size
-
+        # font and font size
         current_font = self.fontComboBox.currentFont()
         current_font = current_font.key()
         current_font = current_font.split(',')
@@ -818,17 +836,18 @@ class PreferencesWindow(Setting_Ui):
            
 
         self.persepolis_setting.setValue('custom-font', custom_font)
-# if user select qt notification  >> enable_system_tray icon
+
+        # if user select qt notification  >> enable_system_tray icon
         if self.persepolis_setting.value('notification') == 'QT notification':
             self.enable_system_tray_checkBox.setChecked(True)
 
-# hide_window_checkBox
+        # hide_window_checkBox
         if self.hide_window_checkBox.isChecked():
             self.persepolis_setting.setValue('hide-window', 'yes')
         else:
             self.persepolis_setting.setValue('hide-window', 'no')
 
-# enable_system_tray_checkBox
+        # enable_system_tray_checkBox
         if self.enable_system_tray_checkBox.isChecked():
             self.persepolis_setting.setValue('tray-icon', 'yes')
             self.parent.system_tray_icon.show()
@@ -840,13 +859,13 @@ class PreferencesWindow(Setting_Ui):
             self.parent.minimizeAction.setEnabled(False)
             self.parent.trayAction.setChecked(False)
 
-# after_download_checkBox
+        # after_download_checkBox
         if self.after_download_checkBox.isChecked():
             self.persepolis_setting.setValue('after-dialog', 'yes')
         else:
             self.persepolis_setting.setValue('after-dialog', 'no')
 
-# show_menubar_checkbox
+        # show_menubar_checkbox
         if self.show_menubar_checkbox.isChecked():
             self.persepolis_setting.setValue('show-menubar', 'yes')
             self.parent.menubar.show()
@@ -859,7 +878,7 @@ class PreferencesWindow(Setting_Ui):
             self.parent.toolBar2.show()
             self.parent.showMenuBarAction.setChecked(False)
 
-# show_sidepanel_checkbox
+        # show_sidepanel_checkbox
         if self.show_sidepanel_checkbox.isChecked():
             self.persepolis_setting.setValue('show-sidepanel', 'yes')
             self.parent.category_tree_qwidget.show()
@@ -867,7 +886,7 @@ class PreferencesWindow(Setting_Ui):
             self.persepolis_setting.setValue('show-sidepanel', 'no')
             self.parent.category_tree_qwidget.hide()
 
-# show_progress_window_checkbox
+        # show_progress_window_checkbox
         if self.show_progress_window_checkbox.isChecked():
             self.persepolis_setting.setValue('show-progress', 'yes')
         else:
@@ -887,7 +906,7 @@ class PreferencesWindow(Setting_Ui):
                 startup.removestartup()  # removing Persepolis from system's startup
 
 
-# keep_awake_checkBox
+        # keep_awake_checkBox
         if self.keep_awake_checkBox.isChecked():
             self.persepolis_setting.setValue('awake', 'yes')
             self.parent.keep_awake_checkBox.setChecked(True)
@@ -895,8 +914,8 @@ class PreferencesWindow(Setting_Ui):
             self.persepolis_setting.setValue('awake', 'no')
             self.parent.keep_awake_checkBox.setChecked(False)
 
-# this section  creates temporary download folder and download folder and
-# download sub folders if they did not existed.
+        # this section  creates temporary download folder and download folder and
+        # download sub folders if they did not existed.
 
 
         download_path_temp = self.persepolis_setting.value(
@@ -922,7 +941,7 @@ class PreferencesWindow(Setting_Ui):
         else:
             self.persepolis_setting.setValue('sound', 'no')
 
-# columns_tab
+        # columns_tab
         if self.column0_checkBox.isChecked():
             self.persepolis_setting.setValue('column0', 'yes')
             self.parent.download_table.setColumnHidden(0, False)
@@ -1054,7 +1073,7 @@ class PreferencesWindow(Setting_Ui):
             self.persepolis_setting.setValue('column12', 'no')
             self.parent.download_table.setColumnHidden(12, True)
 
-# shortcuts
+        # shortcuts
         # set new shortcuts
         i = 0
         for qshortcut in self.qshortcuts_list:
@@ -1063,24 +1082,7 @@ class PreferencesWindow(Setting_Ui):
 
             i = i + 1
 
-# video_finder
-        if self.enable_video_finder_checkbox.isChecked():
-            enable = 'yes'
-        else:
-            enable = 'no'
-
-        if self.hide_no_audio_checkbox.isChecked():
-            hide_no_audio = 'yes'
-        else:
-            hide_no_audio = 'no'
-
-        if self.hide_no_video_checkbox.isChecked():
-            hide_no_video = 'yes'
-        else:
-            hide_no_video = 'no'
-        self.persepolis_setting.setValue('video_finder/enable', enable)
-        self.persepolis_setting.setValue('video_finder/hide_no_audio', hide_no_audio)
-        self.persepolis_setting.setValue('video_finder/hide_no_video', hide_no_video)
+        # video_finder
         self.persepolis_setting.setValue('video_finder/max_links', self.max_links_spinBox.value())
 
         # saving value of persepolis_setting in second_key_value_dict.
