@@ -373,6 +373,10 @@ if len(plugin_list) != 0:
 def main():
     # if lock_file is existed , it means persepolis is still running!
     if lock_file_validation:  
+
+        # set QT_AUTO_SCREEN_SCALE_FACTOR to 1 for "high DPI displays" 
+        os.environ['QT_AUTO_SCREEN_SCALE_FACTOR'] = '1'
+
         # run mainwindow
 
         # set color_scheme and style
