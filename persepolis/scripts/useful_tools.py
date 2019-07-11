@@ -88,10 +88,10 @@ def convertToByte(file_size):
             size_value = float(file_size[:-4])
 
         else:
-            size_value = int(file_size[:-4])
+            size_value = int(float(file_size[:-4]))
     else:
         unit = None
-        size_value = int(file_size[:-3])
+        size_value = int(float(file_size[:-3]))
  
     # covert them in byte 
     if not(unit):
