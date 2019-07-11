@@ -14,7 +14,7 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from PyQt5.QtWidgets import QCheckBox, QLineEdit, QAbstractItemView, QAction, QFileDialog, QSystemTrayIcon, QMenu, QApplication, QInputDialog, QMessageBox
-from PyQt5.QtCore import QDir, QTime, QCoreApplication, QRect, QSize, QPoint, QThread, pyqtSignal, Qt, QTranslator, QLocale
+from PyQt5.QtCore import QDir, QTime, QCoreApplication, QRect, QSize, QPoint, QThread, pyqtSignal, Qt, QTranslator, QLocale, QT_VERSION_STR
 from persepolis.scripts.useful_tools import muxer, freeSpace, determineConfigFolder, osAndDesktopEnvironment
 from persepolis.scripts.video_finder_progress import VideoFinderProgressWindow
 from persepolis.gui.mainwindow_ui import MainWindow_Ui, QTableWidgetItem
@@ -35,6 +35,7 @@ from persepolis.scripts.about import AboutWindow
 from persepolis.scripts.bubble import notifySend
 from persepolis.scripts import osCommands
 from persepolis.scripts import download
+from PyQt5.Qt import PYQT_VERSION_STR
 from persepolis.scripts import logger
 from persepolis.scripts import spider
 from persepolis.gui import resources
@@ -42,6 +43,7 @@ from functools import partial
 from copy import deepcopy
 from time import sleep
 import urllib.parse
+import subprocess
 import random
 import time
 import sys
@@ -57,7 +59,7 @@ except ModuleNotFoundError:
                 "youtube_dl is not installed.", "ERROR")
     youtube_dl_is_installed = False
 
-# CheckFfmpegIsInstalledThread thread can change this variable.
+# CheckVersionsThread thread can change this variable.
 global ffmpeg_is_installed
 ffmpeg_is_installed = True
 
@@ -120,7 +122,9 @@ plugin_ready = os.path.join(persepolis_tmp, 'persepolis-plugin-ready')
 show_window_file = os.path.join(persepolis_tmp, 'show-window')
 
 # this thread checks ffmpeg availability.
-class CheckFfmpegIsInstalledThread(QThread):
+# this thread checks ffmpeg and python and pyqt and qt versions and write them in log file.
+# this thread writes osi type and desktop env. in log file.
+class CheckVersionsThread(QThread):
     def __init__(self):
         QThread.__init__(self)
 
@@ -129,6 +133,7 @@ class CheckFfmpegIsInstalledThread(QThread):
 
         if os_type == 'Linux' or os_type == 'FreeBSD' or os_type == 'OpenBSD':       
             answer = os.system('ffmpeg -version 1>/dev/null')
+            ffmpeg_path = 'ffmpeg'
             if answer == 0:
                 answer = True
             else:
@@ -150,10 +155,48 @@ class CheckFfmpegIsInstalledThread(QThread):
 
             answer = os.path.exists(ffmpeg_path)
 
-        if answer:
-            ffmpeg_is_installed = True
-        else:
-            ffmpeg_is_installed = False
+        try:
+            pipe = subprocess.Popen([ffmpeg_path, '-version'], 
+                    stdout=subprocess.PIPE, shell=False) 
+
+
+            if pipe.wait() == 0:
+                ffmpeg_is_installed = True
+                ffmpeg_output, error = pipe.communicate()
+                ffmpeg_output = ffmpeg_output.decode('utf-8')
+
+            else:
+                ffmpeg_is_installed = False 
+                ffmpeg_output = 'ffmpeg is not installed'
+        except:
+            ffmpeg_is_installed = False 
+            ffmpeg_output = 'ffmpeg is not installed'
+
+
+            
+        ffmpeg_output = '\n**********\n'\
+                + str(ffmpeg_output)\
+                + '\n**********\n'
+
+        logger.sendToLog(ffmpeg_output, "INFO")
+
+        # log python version
+        logger.sendToLog('python version: '\
+                + str(sys.version))
+
+        # log qt version
+        logger.sendToLog('QT version: '\
+                + str(QT_VERSION_STR))
+        # log pyqt version
+        logger.sendToLog('PyQt version: '\
+                + str(PYQT_VERSION_STR))
+
+        # log os and desktop env.
+        logger.sendToLog('Operating system: '\
+                + os_type)
+
+        logger.sendToLog('Desktop env.: '\
+                + desktop_env)
 
 # start aria2 when Persepolis starts
 class StartAria2Thread(QThread):
@@ -175,29 +218,37 @@ class StartAria2Thread(QThread):
 
         # if Aria2 wasn't started before, so start it!
         if answer == 'did not respond':
+
             # write in log file.
-            logger.sendToLog(
-                            "Starting Aria2", "INFO")
+            logger.sendToLog("Starting Aria2", "INFO")
 
             # try 5 time if aria2 doesn't respond!
             for i in range(5):
+
                 answer = download.startAria()
+
                 if answer == 'did not respond' and i != 4:
+
                     signal_str = 'try again'
                     self.ARIA2RESPONDSIGNAL.emit(signal_str)
                     sleep(2)
+
                 else:
                     break
 
         # if Aria2 doesn't respond to Persepolis ,ARIA2RESPONDSIGNAL is
         # emitting no
         if answer == 'did not respond':
+
             signal_str = 'no'
+
         else:
+
             # Aria2 is responding :)
             signal_str = 'yes'
-            logger.sendToLog(
-                            "Aria2 is running", "INFO")
+            logger.sendToLog("Aria2 is running", "INFO")
+            logger.sendToLog("Aria2 version: "\
+                    + answer['version'], "INFO")
 
         # emit the signal
         # ARIA2RESPONDSIGNAL have 3 conditions >>>
@@ -1298,7 +1349,7 @@ class MainWindow(MainWindow_Ui):
         self.threadPool[len(self.threadPool) - 1].KEEPSYSTEMAWAKESIGNAL.connect(self.keepAwake)
 
         # check if ffmpeg is installed
-        check_ffmpeg_is_installed = CheckFfmpegIsInstalledThread()
+        check_ffmpeg_is_installed = CheckVersionsThread()
         self.threadPool.append(check_ffmpeg_is_installed)
         self.threadPool[len(self.threadPool) - 1].start()
 

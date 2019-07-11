@@ -58,7 +58,6 @@ server = xmlrpc.client.ServerProxy(server_uri, allow_none=True)
 def startAria():
     # in Linux and BSD
     if os_type == 'Linux' or os_type == 'FreeBSD' or os_type == 'OpenBSD':
-        os.system("aria2c --version 1> /dev/null")
         os.system("aria2c --no-conf  --enable-rpc --rpc-listen-port '" +
                   str(port) + "' --rpc-max-request-size=2M --rpc-listen-all --quiet=true &")
 

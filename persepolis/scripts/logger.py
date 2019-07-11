@@ -13,8 +13,6 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-
-
 from persepolis.scripts.useful_tools import determineConfigFolder
 from persepolis.scripts import osCommands
 import logging
@@ -43,6 +41,7 @@ handler.setFormatter(formatter)
 
 # add the handlers to the logger
 logObj.addHandler(handler)
+
 
 
 def sendToLog(text="", type="INFO"):
