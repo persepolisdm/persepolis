@@ -195,8 +195,10 @@ class CheckVersionsThread(QThread):
         logger.sendToLog('Operating system: '\
                 + os_type)
 
-        logger.sendToLog('Desktop env.: '\
-                + desktop_env)
+        # windows and mac haven't desktop_env
+        if desktop_env:
+            logger.sendToLog('Desktop env.: '\
+                    + str(desktop_env))
 
 # start aria2 when Persepolis starts
 class StartAria2Thread(QThread):
