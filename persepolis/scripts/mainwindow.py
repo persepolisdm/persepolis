@@ -44,6 +44,7 @@ from copy import deepcopy
 from time import sleep
 import urllib.parse
 import subprocess
+import textwrap
 import random
 import time
 import sys
@@ -173,6 +174,9 @@ class CheckVersionsThread(QThread):
             ffmpeg_output = 'ffmpeg is not installed'
 
 
+        # wrap ffmpeg_output with width=70
+        wrapper = textwrap.TextWrapper()
+        ffmpeg_output = wrapper.fill(ffmpeg_output)
             
         ffmpeg_output = '\n**********\n'\
                 + str(ffmpeg_output)\
