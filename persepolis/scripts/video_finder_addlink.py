@@ -16,17 +16,22 @@
 
 from PyQt5.QtWidgets import QCheckBox, QPushButton, QTextEdit, QFrame, QLabel, QComboBox, QHBoxLayout, QApplication
 from PyQt5.QtCore import QThread, pyqtSignal, QCoreApplication, QTranslator, QLocale
-from persepolis.scripts.addlink import AddLinkWindow
 from persepolis.scripts.useful_tools import determineConfigFolder
+from persepolis.scripts.addlink import AddLinkWindow
 from persepolis.scripts import logger, osCommands
 from persepolis.scripts.spider import spider
 from time import time, sleep
-from copy import deepcopy
-from random import random
-import youtube_dl
 from functools import partial
+from random import random
+from copy import deepcopy
+import youtube_dl
 import re
 import os
+
+# write youtube_dl version in log
+logger.sendToLog('youtube_dl version: '\
+        + str(youtube_dl.version.__version__),
+        'INFO')
 
 # download manager config folder .
 config_folder =  determineConfigFolder()
@@ -455,8 +460,8 @@ class VideoFinderAddLink(AddLinkWindow):
                             text = text + ' ' + '{}p'.format(f['height'])
 
                     if 'vcodec' in f.keys():
-                        if f['vcodec'] == 'none' and f['acodec'] != 'none' and self.persepolis_setting.value('settings/video_finder/hide_no_video', 'yes') == 'yes':
-                            continue
+#                         if f['vcodec'] == 'none' and f['acodec'] != 'none':
+#                             continue
 
                         # No video, show audio bit rate
                         if f['vcodec'] == 'none':  
