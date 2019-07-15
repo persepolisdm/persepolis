@@ -814,6 +814,7 @@ def endTime(end_time, gid, parent):
     # get current time
     sigma_now = nowTime()
 
+    answer = 'end'
     # while current time is not equal to end_time, continue the loop
     while sigma_end != sigma_now:
 
