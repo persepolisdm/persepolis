@@ -723,10 +723,9 @@ class Queue(QThread):
                         break
 
             for gid in gid_list:
-
                 # if gid is related to video finder, so start  Video Finder thread for checking status
                 # check video_finder_threads_dict, perhaps a thread started before for this gid
-                if (gid in self.parent.all_video_finder_video_gid_list) and (gid not in self.parent.video_finder_threads_dict.keys()):
+                if (gid in self.parent.all_video_finder_gid_list) and (gid not in self.parent.video_finder_threads_dict.keys()):
 
                     video_finder_dictionary = self.parent.persepolis_db.searchGidInVideoFinderTable(gid)
 
@@ -738,11 +737,10 @@ class Queue(QThread):
                     self.parent.threadPool[len(self.parent.threadPool) - 1].start()
                     self.parent.threadPool[len(self.parent.threadPool) - 1].VIDEOFINDERCOMPLETED.connect(self.parent.videoFinderCompleted)
 
-                    video_finder_list.append(video_finder_gid_list)
-
                     # add thread to video_finder_threads_dict
                     self.parent.video_finder_threads_dict[video_finder_dictionary['video_gid']] = new_video_finder
 
+                    video_finder_list.append(video_finder_gid_list)
 
 
                 add_link_dict = {'gid': gid}
@@ -897,7 +895,7 @@ class Queue(QThread):
                             if video_finder_dictionary['video_completed'] == 'no' or video_finder_dictionary['audio_completed'] == 'no':
 
                                 video_finder_dictionary['checking'] = 'no'
-                                self.parent.persepolidds_db.updateVideoFinderTable([video_finder_dictionary])
+                                self.parent.persepolis_db.updateVideoFinderTable([video_finder_dictionary])
 
                                 video_finder_thread = self.parent.video_finder_threads_dict[video_gid]
                                 video_finder_thread.checking = 'no'
@@ -1700,6 +1698,8 @@ class MainWindow(MainWindow_Ui):
             if gid in self.all_video_finder_gid_list:
                 
                 video_finder_dictionary = self.persepolis_db.searchGidInVideoFinderTable(gid)
+                video_gid = video_finder_dictionary['video_gid']
+
                 video_finder_thread = self.video_finder_threads_dict[video_finder_dictionary['video_gid']]
                 video_finder_link = True
 
@@ -5975,21 +5975,22 @@ class MainWindow(MainWindow_Ui):
             # update download_table (refreshing!)
             self.download_table.viewport().update()
 
-            # show download complete dialog
-            afterdownloadwindow = AfterDownloadWindow(
-                                    self, video_download_table_dict, self.persepolis_setting)
+            if complete_dictionary['category'] == 'Single Downloads':
+                # show download complete dialog
+                afterdownloadwindow = AfterDownloadWindow(
+                                        self, video_download_table_dict, self.persepolis_setting)
 
-            self.afterdownload_list.append(afterdownloadwindow)
+                self.afterdownload_list.append(afterdownloadwindow)
 
-            self.afterdownload_list[len(
-                                self.afterdownload_list) - 1].show()
+                self.afterdownload_list[len(
+                                    self.afterdownload_list) - 1].show()
 
-            # bringing AfterDownloadWindow on top
-            self.afterdownload_list[len(
-                                self.afterdownload_list) - 1].raise_()
+                # bringing AfterDownloadWindow on top
+                self.afterdownload_list[len(
+                                    self.afterdownload_list) - 1].raise_()
 
-            self.afterdownload_list[len(
-                                self.afterdownload_list) - 1].activateWindow()
+                self.afterdownload_list[len(
+                                    self.afterdownload_list) - 1].activateWindow()
 
         elif error_message == 'not enough free space':
             # show error message
