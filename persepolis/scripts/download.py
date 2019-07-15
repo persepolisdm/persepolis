@@ -86,6 +86,7 @@ def startAria():
         else:
             aria2d = aria2_path
 
+        # NO_WINDOW option avoids opening additional CMD window in MS Windows.
         NO_WINDOW = 0x08000000
 
         if not os.path.exists(aria2d):

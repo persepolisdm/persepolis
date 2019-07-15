@@ -133,12 +133,7 @@ class CheckVersionsThread(QThread):
         global ffmpeg_is_installed
 
         if os_type == 'Linux' or os_type == 'FreeBSD' or os_type == 'OpenBSD':       
-            answer = os.system('ffmpeg -version 1>/dev/null')
             ffmpeg_path = 'ffmpeg'
-            if answer == 0:
-                answer = True
-            else:
-                answer = False
 
         elif os_type == 'Darwin':
 
@@ -146,21 +141,24 @@ class CheckVersionsThread(QThread):
             current_directory = os.path.dirname(cwd)
             ffmpeg_path = os.path.join(current_directory, 'ffmpeg')
 
-            answer = os.path.exists(ffmpeg_path)
-
         elif os_type == 'Windows':
 
             cwd = sys.argv[0] 
             current_directory = os.path.dirname(cwd)
             ffmpeg_path = os.path.join(current_directory, 'ffmpeg.exe')
 
-            answer = os.path.exists(ffmpeg_path)
-
         try:
-            pipe = subprocess.Popen([ffmpeg_path, '-version'], 
+            if os_type == 'Windows':
+
+                # NO_WINDOW option avoids opening additional CMD in MS Windows.
+                NO_WINDOW = 0x08000000
+                pipe = subprocess.Popen([ffmpeg_path, '-version'], 
+                    stdout=subprocess.PIPE, shell=False, creationflags=NO_WINDOW) 
+            else:
+
+                pipe = subprocess.Popen([ffmpeg_path, '-version'], 
                     stdout=subprocess.PIPE, shell=False) 
-
-
+ 
             if pipe.wait() == 0:
                 ffmpeg_is_installed = True
                 ffmpeg_output, error = pipe.communicate()
@@ -169,7 +167,7 @@ class CheckVersionsThread(QThread):
             else:
                 ffmpeg_is_installed = False 
                 ffmpeg_output = 'ffmpeg is not installed'
-        except:
+        except: 
             ffmpeg_is_installed = False 
             ffmpeg_output = 'ffmpeg is not installed'
 
