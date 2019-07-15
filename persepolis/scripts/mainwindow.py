@@ -515,7 +515,7 @@ class VideoFinder(QThread):
             # create an item for this thread in temp_db if not exists!
             try:
                 video_finder_plus_gid = 'video_finder_' + str(video_gid)
-                self.parent.temp_db.insertInQueueTable()
+                self.parent.temp_db.insertInQueueTable(video_finder_plus_gid)
             except:
                 # release lock
                 self.parent.temp_db.lock = False
@@ -527,7 +527,7 @@ class VideoFinder(QThread):
 
             if self.video_completed == 'no' and start_time:
 
-                # set start time only for video
+                # set start time only for video and cancel start time for audio. 
                 # because video will downloaded first and start time must be set for first video! not second one
                 self.parent.persepolis_db.setDefaultGidInAddlinkTable(audio_gid, start_time=True)
             
@@ -634,6 +634,22 @@ class VideoFinder(QThread):
             self.VIDEOFINDERCOMPLETED.emit(complete_dictionary)
             
         self.active = 'no'
+
+        if category == 'Single Downloads':
+
+            #check if user selected shutdown after download in progress window.
+            shutdown_dict = self.parent.temp_db.returnCategory(video_finder_plus_gid)
+            shutdown_status = shutdown_dict['shutdown']
+
+            if shutdown_status == 'wait':
+
+                # it means user want to persepolis shutdown system after download.
+                # write 'shutdown' value for this category in temp_db
+                shutdown_dict = {'category': video_finder_plus_gid,
+                        'shutdown': 'shutdown'}
+                self.parent.temp_db.updateQueueTable(shutdown_dict)
+
+
 
 
 # this thread is managing queue and sending download request to aria2

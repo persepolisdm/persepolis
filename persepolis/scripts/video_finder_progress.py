@@ -97,7 +97,7 @@ class VideoFinderProgressWindow(VideoFinderProgressWindow_Ui):
 
         self.limit_spinBox.valueChanged.connect(self.limitComboBoxChanged)
 
-  # set window size and position
+        # set window size and position
         size = self.persepolis_setting.value(
             'ProgressWindow/size', QSize(595, 274))
         position = self.persepolis_setting.value(
