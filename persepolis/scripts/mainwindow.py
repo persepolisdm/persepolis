@@ -4893,19 +4893,29 @@ class MainWindow(MainWindow_Ui):
                     video_finder_dictionary = self.persepolis_db.searchGidInVideoFinderTable(gid)
 
                     # check the Video Finder tread status
-                    video_finder_thread = self.video_finder_threads_dict[video_finder_dictionary['video_gid']]
+                    if video_finder_dictionary['video_gid'] in self.video_finder_threads_dict:
+                        video_finder_thread = self.video_finder_threads_dict[video_finder_dictionary['video_gid']]
 
-                    if video_finder_thread.active == 'yes': 
+                        if video_finder_thread.active == 'no': 
+
+                            # add both of video and audio links
+                            gid_list.append(video_finder_dictionary['video_gid'])
+                            gid_list.append(video_finder_dictionary['audio_gid'])
+                            continue
+
+                        else:
+
+                            send_message = True
+                            continue
+                        
+                    else:
 
                         # add both of video and audio links
                         gid_list.append(video_finder_dictionary['video_gid'])
                         gid_list.append(video_finder_dictionary['audio_gid'])
                         continue
 
-                    else:
 
-                        send_message = True
-                        continue
 
 
                 # append gid to gid_list
