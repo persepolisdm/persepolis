@@ -983,7 +983,8 @@ class Queue(QThread):
 
                 # KILL aria2c if didn't respond. R.I.P :))
                 if not(answer) and (os_type != 'Windows'):
-                    os.system('killall aria2c')
+
+                    subprocess.Popen(['killall', 'aria2c'], shell=False)
 
                 # write 'shutdown' value for this category in temp_db
                 shutdown_dict = {'category': self.category, 'shutdown': 'shutdown'}
@@ -2056,7 +2057,8 @@ class MainWindow(MainWindow_Ui):
 
                         # KILL aria2c in Unix like systems, if didn't respond. R.I.P :))
                         if not(answer) and (os_type != 'Windows'):
-                            os.system('killall aria2c')
+
+                            subprocess.Popen(['killall', 'aria2c'], shell=False)
 
                         # send notification
                         notifySend(QCoreApplication.translate("mainwindow_src_ui_tr", 'Persepolis is shutting down'),
@@ -5066,15 +5068,30 @@ class MainWindow(MainWindow_Ui):
             passwd, ok = QInputDialog.getText(
                 self, 'PassWord', 'Please enter root password:', QLineEdit.Password)
             if ok:
-                answer = os.system("echo '" + passwd +
-                                   "' |sudo -S echo 'checking passwd'  ")
+                pipe = subprocess.Popen(['sudo', '-S', 'echo', 'hello'], stdout=subprocess.DEVNULL,
+                    stdin=subprocess.PIPE,
+                    stderr=subprocess.DEVNULL,
+                    shell=False)
+                pipe.communicate(passwd.encode())
+
+                answer = pipe.wait()
+
                 while answer != 0:
+
+                    # ask password again!
                     passwd, ok = QInputDialog.getText(
                         self, 'PassWord', 'Wrong Password!\nPlease try again.', QLineEdit.Password)
+
                     if ok:
                         # checking password
-                        answer = os.system(
-                            "echo '" + passwd + "' |sudo -S echo 'checking passwd'  ")
+                        pipe = subprocess.Popen(['sudo', '-S', 'echo', 'hello'], stdout=subprocess.DEVNULL,
+                            stdin=subprocess.PIPE,
+                            stderr=subprocess.DEVNULL,
+                            shell=False)
+                        pipe.communicate(passwd.encode())
+
+                        answer = pipe.wait()
+
                     else:
                         ok = False
                         break

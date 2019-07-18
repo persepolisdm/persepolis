@@ -58,8 +58,11 @@ server = xmlrpc.client.ServerProxy(server_uri, allow_none=True)
 def startAria():
     # in Linux and BSD
     if os_type == 'Linux' or os_type == 'FreeBSD' or os_type == 'OpenBSD':
-        os.system("aria2c --no-conf  --enable-rpc --rpc-listen-port '" +
-                  str(port) + "' --rpc-max-request-size=2M --rpc-listen-all --quiet=true &")
+
+        subprocess.Popen(['aria2c', '--no-conf',
+            '--enable-rpc', '--rpc-listen-port=' + str(port),
+            '--rpc-max-request-size=2M',
+            '--rpc-listen-all', '--quiet=true'], shell=False)
 
     # in macintosh
     elif os_type == 'Darwin':
@@ -72,9 +75,11 @@ def startAria():
         else:
             aria2d = aria2_path
 
-        os.system("'" + aria2d + "' --version 1> /dev/null")
-        os.system("'" + aria2d + "' --no-conf  --enable-rpc --rpc-listen-port '" +
-                  str(port) + "' --rpc-max-request-size=2M --rpc-listen-all --quiet=true &")
+        subprocess.Popen([aria2d, '--no-conf',
+            '--enable-rpc', '--rpc-listen-port=' + str(port),
+            '--rpc-max-request-size=2M',
+            '--rpc-listen-all', '--quiet=true'], shell=False)
+
 
     # in Windows
     elif os_type == 'Windows':
@@ -850,7 +855,8 @@ def endTime(end_time, gid, parent):
 
         # If aria2c not respond, so kill it. R.I.P :)) 
         if (answer == 'None') and (os_type != 'Windows'):
-            os.system("killall aria2c")
+
+            subprocess.Popen(['killall', 'aria2c'], shell=False)
 
         # change end_time value to None in data_base
         parent.persepolis_db.setDefaultGidInAddlinkTable(gid, end_time=True)

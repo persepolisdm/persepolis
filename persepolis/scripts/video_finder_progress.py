@@ -20,9 +20,9 @@ from persepolis.scripts.shutdown import shutDown
 from persepolis.scripts.bubble import notifySend
 from persepolis.scripts import download
 from PyQt5.QtGui import QIcon
+import subprocess
 import platform
 import time
-import os
 
 os_type = platform.system()
 
@@ -232,16 +232,32 @@ class VideoFinderProgressWindow(VideoFinderProgressWindow_Ui):
                 self, 'PassWord', 'Please enter root password:', QLineEdit.Password)
 
             if ok:
+
                 # check password is true or not!
-                answer = os.system("echo '" + passwd +
-                                   "' |sudo -S echo 'checking passwd'  ")
+                pipe = subprocess.Popen(['sudo', '-S', 'echo', 'hello'], stdout=subprocess.DEVNULL,
+                    stdin=subprocess.PIPE,
+                    stderr=subprocess.DEVNULL,
+                    shell=False)
+                pipe.communicate(passwd.encode())
+
+                answer = pipe.wait()
+
                 # Wrong password
                 while answer != 0:
+
                     passwd, ok = QInputDialog.getText(
                         self, 'PassWord', 'Wrong Password!\nPlease try again.', QLineEdit.Password)
+
                     if ok:
-                        answer = os.system(
-                            "echo '" + passwd + "' |sudo -S echo 'checking passwd'  ")
+
+                        pipe = subprocess.Popen(['sudo', '-S', 'echo', 'hello'], stdout=subprocess.DEVNULL,
+                            stdin=subprocess.PIPE,
+                            stderr=subprocess.DEVNULL,
+                            shell=False)
+                        pipe.communicate(passwd.encode())
+
+                        answer = pipe.wait()
+
                     else:
                         ok = False
                         break
