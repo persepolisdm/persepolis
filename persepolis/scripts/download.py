@@ -58,23 +58,28 @@ server = xmlrpc.client.ServerProxy(server_uri, allow_none=True)
 def startAria():
     # in Linux and BSD
     if os_type == 'Linux' or os_type == 'FreeBSD' or os_type == 'OpenBSD':
-        os.system("aria2c --version 1> /dev/null")
-        os.system("aria2c --no-conf  --enable-rpc --rpc-listen-port '" +
-                  str(port) + "' --rpc-max-request-size=2M --rpc-listen-all --quiet=true &")
+
+        subprocess.Popen(['aria2c', '--no-conf',
+            '--enable-rpc', '--rpc-listen-port=' + str(port),
+            '--rpc-max-request-size=2M',
+            '--rpc-listen-all', '--quiet=true'], shell=False)
 
     # in macintosh
     elif os_type == 'Darwin':
         if aria2_path == "" or aria2_path == None or os.path.isfile(str(aria2_path)) == False:
+
             cwd = sys.argv[0] 
             current_directory = os.path.dirname(cwd)
+            aria2d = os.path.join(current_directory, 'aria2c')
 
-            aria2d = current_directory + "/aria2c"
         else:
             aria2d = aria2_path
 
-        os.system("'" + aria2d + "' --version 1> /dev/null")
-        os.system("'" + aria2d + "' --no-conf  --enable-rpc --rpc-listen-port '" +
-                  str(port) + "' --rpc-max-request-size=2M --rpc-listen-all --quiet=true &")
+        subprocess.Popen([aria2d, '--no-conf',
+            '--enable-rpc', '--rpc-listen-port=' + str(port),
+            '--rpc-max-request-size=2M',
+            '--rpc-listen-all', '--quiet=true'], shell=False)
+
 
     # in Windows
     elif os_type == 'Windows':
@@ -86,6 +91,7 @@ def startAria():
         else:
             aria2d = aria2_path
 
+        # NO_WINDOW option avoids opening additional CMD window in MS Windows.
         NO_WINDOW = 0x08000000
 
         if not os.path.exists(aria2d):
@@ -328,7 +334,7 @@ def tellStatus(gid, parent):
     if (converted_info_dict['status'] == "complete"):
         file_name = converted_info_dict['file_name']
  
-        # find download_path from addlink_db_table in data_base
+        # find user prefered download_path from addlink_db_table in data_base
         add_link_dictionary = parent.persepolis_db.searchGidInAddLinkTable(gid)
 
         persepolis_setting.sync()
@@ -346,7 +352,6 @@ def tellStatus(gid, parent):
         file_status = file_status[1:-1]
         file_status = ast.literal_eval(file_status)
 
-        # find user defined download path
         path = str(file_status['path'])
 
         # file_name
@@ -358,7 +363,12 @@ def tellStatus(gid, parent):
         except:
             file_size = None
 
-        file_path = downloadCompleteAction(parent, path, download_path, file_name, file_size)
+        # if file is related to VideoFinder thread, don't move it from temp folder...
+        video_finder_dictionary = parent.persepolis_db.searchGidInVideoFinderTable(gid)
+        if video_finder_dictionary:
+            file_path = path
+        else:
+            file_path = downloadCompleteAction(parent, path, download_path, file_name, file_size)
 
         # update download_path in addlink_db_table
         add_link_dictionary['download_path'] = file_path
@@ -513,7 +523,6 @@ def convertDownloadInformation(download_status):
 # this method is returning file_path of file in the user's download folder
 # and move downloaded file after download completion.
 def downloadCompleteAction(parent, path, download_path, file_name, file_size):
-
     # remove query from name, If file_name contains query components. 
     # check if query existed.
     # query form is 1.mp3?foo=bar 2.mp3?blatz=pow 3.mp3?fizz=buzz
@@ -615,7 +624,8 @@ def findDownloadPath(file_name, download_path, subfolder):
         if file_extension in audio:
             return os.path.join(download_path, 'Audios')
 
-        elif file_extension in video:
+        # aria2c downloads youtube links file_name with 'videoplayback' name?!
+        elif (file_extension in video) or (file_name == 'videoplayback'):
             return os.path.join(download_path, 'Videos')
 
         elif file_extension in document:
@@ -809,6 +819,7 @@ def endTime(end_time, gid, parent):
     # get current time
     sigma_now = nowTime()
 
+    answer = 'end'
     # while current time is not equal to end_time, continue the loop
     while sigma_end != sigma_now:
 
@@ -844,7 +855,8 @@ def endTime(end_time, gid, parent):
 
         # If aria2c not respond, so kill it. R.I.P :)) 
         if (answer == 'None') and (os_type != 'Windows'):
-            os.system("killall aria2c")
+
+            subprocess.Popen(['killall', 'aria2c'], shell=False)
 
         # change end_time value to None in data_base
         parent.persepolis_db.setDefaultGidInAddlinkTable(gid, end_time=True)

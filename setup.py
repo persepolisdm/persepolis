@@ -114,6 +114,15 @@ else:
     print('Warning: sound-theme-freedesktop is not installed! you need this package for sound notifications!')
     not_installed = not_installed + 'sound-theme-freedesktop'
 
+# ffmpeg
+answer = os.system('ffmpeg -version 1>/dev/null')
+if answer != 0:
+    print("Warning: ffmpeg not installed!")
+    not_installed = not_installed + 'ffmpeg, '
+else:
+    print('ffmpeg is found!')
+
+
 # show warning , if dependencies not installed!
 if not_installed != '':
     print('########################')

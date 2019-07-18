@@ -16,8 +16,7 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from PyQt5.QtWidgets import QCheckBox, QProgressBar, QFrame, QDoubleSpinBox, QComboBox, QWidget, QTabWidget, QVBoxLayout, QHBoxLayout, QPushButton, QLabel, QWidget, QSizePolicy
-from PyQt5.QtCore import Qt, QTranslator, QCoreApplication, QLocale
-from PyQt5 import QtCore, QtGui, QtWidgets
+from PyQt5.QtCore import Qt, QTranslator, QCoreApplication, QLocale, QSize
 from persepolis.gui import resources
 from PyQt5.QtGui import QIcon
 
@@ -45,7 +44,7 @@ class ProgressWindow_Ui(QWidget):
 
 
 # window
-        self.setMinimumSize(QtCore.QSize(595, 284))
+        self.setMinimumSize(QSize(595, 284))
 
         self.setWindowIcon(QIcon.fromTheme('persepolis', QIcon(':/persepolis.svg')))
         self.setWindowTitle(QCoreApplication.translate("progress_ui_tr", "Persepolis Download Manager"))
@@ -103,8 +102,8 @@ class ProgressWindow_Ui(QWidget):
 
 # limit_frame
         self.limit_frame = QFrame(self.options_tab)
-        self.limit_frame.setFrameShape(QtWidgets.QFrame.StyledPanel)
-        self.limit_frame.setFrameShadow(QtWidgets.QFrame.Raised)
+        self.limit_frame.setFrameShape(QFrame.StyledPanel)
+        self.limit_frame.setFrameShadow(QFrame.Raised)
         limit_frame_verticalLayout = QVBoxLayout(self.limit_frame)
         limit_frame_horizontalLayout = QHBoxLayout()
 
@@ -145,8 +144,8 @@ class ProgressWindow_Ui(QWidget):
 
 # after_frame
         self.after_frame = QFrame(self.options_tab)
-        self.after_frame.setFrameShape(QtWidgets.QFrame.StyledPanel)
-        self.after_frame.setFrameShadow(QtWidgets.QFrame.Raised)
+        self.after_frame.setFrameShape(QFrame.StyledPanel)
+        self.after_frame.setFrameShadow(QFrame.Raised)
 
         after_frame_verticalLayout = QVBoxLayout(self.after_frame)
 
@@ -186,12 +185,12 @@ class ProgressWindow_Ui(QWidget):
         button_horizontalLayout.addWidget(self.resume_pushButton)
 
 # pause_pushButton
-        self.pause_pushButton = QtWidgets.QPushButton(self)
+        self.pause_pushButton = QPushButton(self)
         self.pause_pushButton.setIcon(QIcon(icons + 'pause'))
         button_horizontalLayout.addWidget(self.pause_pushButton)
 
 # stop_pushButton
-        self.stop_pushButton = QtWidgets.QPushButton(self)
+        self.stop_pushButton = QPushButton(self)
         self.stop_pushButton.setIcon(QIcon(icons + 'stop'))
         button_horizontalLayout.addWidget(self.stop_pushButton)
 
@@ -222,10 +221,3 @@ class ProgressWindow_Ui(QWidget):
         self.pause_pushButton.setText(QCoreApplication.translate("progress_ui_tr", "Pause"))
         self.stop_pushButton.setText(QCoreApplication.translate("progress_ui_tr", "Stop"))
         self.after_pushButton.setText(QCoreApplication.translate("progress_ui_tr", "Apply"))
-
-    def changeIcon(self, icons):
-        icons = ':/' + str(icons) + '/'
-
-        self.resume_pushButton.setIcon(QIcon(icons + 'play'))
-        self.pause_pushButton.setIcon(QIcon(icons + 'pause'))
-        self.stop_pushButton.setIcon(QIcon(icons + 'stop'))

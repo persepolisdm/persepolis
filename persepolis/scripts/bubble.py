@@ -15,8 +15,10 @@
 
 from persepolis.scripts.play import playNotification
 from PyQt5.QtCore import QSettings
+import subprocess
 import platform
 import os
+
 
 # platform
 os_type = platform.system()
@@ -31,6 +33,7 @@ elif os_type == 'Windows':
 # and use playNotification function in play.py file for playing sound
 # notifications
 def notifySend(message1, message2, time, sound, parent=None):
+
     if os_type == 'Linux':
         notifications_path = '/usr/share/sounds/freedesktop/stereo/'
     elif os_type == 'FreeBSD' or os_type == 'OpenBSD':
@@ -69,13 +72,15 @@ def notifySend(message1, message2, time, sound, parent=None):
     message1 = str(message1)
     message2 = str(message2)
 
-# using Qt notification or Native system notification
+    # using Qt notification or Native system notification
     if enable_notification == 'QT notification':
         parent.system_tray_icon.showMessage(message1, message2, 0, 10000)
     else:
         if os_type == 'Linux' or os_type == 'FreeBSD' or os_type == 'OpenBSD':
-            os.system("notify-send --icon='persepolis' --app-name='Persepolis Download Manager' --expire-time='" +
-                      time + "' '" + message1 + "' \ '" + message2 + "' ")
+            subprocess.Popen(['notify-send', '--icon', 'persepolis',
+                '--app-name', 'Persepolis Download Manager',
+                '--expire-time', time,
+                message1, message2],stderr=subprocess.PIPE, shell=False)
 
         elif os_type == 'Darwin':
             notifyMac("Persepolis Download Manager", message1, message2)

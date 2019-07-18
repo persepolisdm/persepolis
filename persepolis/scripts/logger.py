@@ -13,8 +13,6 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-
-
 from persepolis.scripts.useful_tools import determineConfigFolder
 from persepolis.scripts import osCommands
 import logging
@@ -29,7 +27,7 @@ if not(os.path.isfile(log_file)):
     osCommands.touch(log_file)
 
 # define logging object
-logObj = logging.getLogger("Persepolis Download Manager")
+logObj = logging.getLogger("Persepolis")
 logObj.setLevel(logging.INFO)
 
 # create a file handler
@@ -43,6 +41,7 @@ handler.setFormatter(formatter)
 
 # add the handlers to the logger
 logObj.addHandler(handler)
+
 
 
 def sendToLog(text="", type="INFO"):

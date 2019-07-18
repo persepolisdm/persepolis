@@ -15,13 +15,12 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 
-from PyQt5.QtWidgets import QHBoxLayout,  QApplication,  QFileDialog,  QCheckBox, QLineEdit, QPushButton
-from PyQt5.QtCore import QPoint, QSize, QDir, QThread, pyqtSignal
+from PyQt5.QtWidgets import QHBoxLayout, QApplication, QFileDialog, QCheckBox, QLineEdit, QPushButton
+from PyQt5.QtCore import Qt, QPoint, QSize, QDir, QThread, pyqtSignal
 from persepolis.gui.addlink_ui import AddLinkWindow_Ui
 from persepolis.scripts.check_proxy import getProxy
 from persepolis.scripts import spider
 from persepolis.scripts import logger
-from PyQt5 import QtWidgets, QtCore
 from PyQt5.QtGui import QIcon
 from functools import partial
 import os
@@ -319,10 +318,10 @@ class AddLinkWindow(AddLinkWindow_Ui):
         # if one of the queues selected by user , start time and end time must
         # be deactivated
         if self.add_queue_comboBox.currentIndex() != 0:
-            self.start_checkBox.setCheckState(QtCore.Qt.Unchecked)
+            self.start_checkBox.setCheckState(Qt.Unchecked)
             self.start_checkBox.setEnabled(False)
 
-            self.end_checkBox.setCheckState(QtCore.Qt.Unchecked)
+            self.end_checkBox.setCheckState(Qt.Unchecked)
             self.end_checkBox.setEnabled(False)
 
         else:
@@ -461,3 +460,11 @@ class AddLinkWindow(AddLinkWindow_Ui):
         self.persepolis_setting.setValue('AddLinkWindow/position', self.pos())
         self.persepolis_setting.sync()
         event.accept()
+
+    def changeIcon(self, icons):
+        icons = ':/' + str(icons) + '/'
+
+        self.folder_pushButton.setIcon(QIcon(icons + 'folder'))
+        self.download_later_pushButton.setIcon(QIcon(icons + 'stop'))
+        self.cancel_pushButton.setIcon(QIcon(icons + 'remove'))
+        self.ok_pushButton.setIcon(QIcon(icons + 'ok'))

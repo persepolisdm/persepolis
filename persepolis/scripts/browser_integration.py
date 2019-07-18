@@ -15,6 +15,7 @@
 
 from persepolis.scripts.useful_tools import determineConfigFolder
 from persepolis.scripts import osCommands
+import subprocess
 import platform
 import sys
 import os
@@ -166,7 +167,8 @@ def browserIntegration(browser):
     f.close()
 
     if os_type != 'Windows':
-        os.system('chmod +x \"' + str(native_message_file) + '\"')
+
+        pipe = subprocess.Popen(['chmod', '+x', str(native_message_file)], shell=False)
 
     else:
         import winreg
@@ -234,6 +236,4 @@ def browserIntegration(browser):
 
         # make persepolis_run_shell executable
 
-
- 
-        os.system('chmod +x \"' + exec_path + '\"')
+        pipe = subprocess.Popen(['chmod', '+x', exec_path], shell=False)

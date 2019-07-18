@@ -17,7 +17,7 @@ from PyQt5.QtCore import QSize, QPoint, QTranslator, QCoreApplication, QLocale
 from persepolis.gui.after_download_ui import AfterDownloadWindow_Ui
 from persepolis.scripts.play import playNotification
 from persepolis.scripts import osCommands
-from PyQt5 import QtCore
+from PyQt5.QtGui import QIcon
 import os
 
 
@@ -131,3 +131,9 @@ class AfterDownloadWindow(AfterDownloadWindow_Ui):
             'AfterDownloadWindow/position', self.pos())
         self.persepolis_setting.sync()
         event.accept()
+
+    def changeIcon(self , icons):
+        icons = ':/' + str(icons) + '/'
+        self.ok_pushButton.setIcon(QIcon(icons + 'ok'))
+        self.open_folder_pushButtun.setIcon(QIcon(icons + 'folder'))
+        self.open_pushButtun.setIcon(QIcon(icons + 'file'))

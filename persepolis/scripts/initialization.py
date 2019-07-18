@@ -53,7 +53,8 @@ with open(log_file) as f:
 # if number of lines in log_file is more than 300, then keep last 200 lines in log_file.
 if lines < 300:
     f = open(log_file, 'a')
-    f.writelines('Persepolis Download Manager, '\
+    f.writelines('===================================================\n'\
+            + 'Persepolis Download Manager, '\
             + current_time\
             +'\n')
     f.close()
