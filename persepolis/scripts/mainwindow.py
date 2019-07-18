@@ -155,9 +155,13 @@ class CheckVersionsThread(QThread):
                 pipe = subprocess.Popen([ffmpeg_path, '-version'], 
                     stdout=subprocess.PIPE, shell=False, creationflags=NO_WINDOW) 
             else:
-
-                pipe = subprocess.Popen([ffmpeg_path, '-version'], 
-                    stdout=subprocess.PIPE, shell=False) 
+                pipe = subprocess.Popen(
+                    [ffmpeg_path, '-version'],
+                    stdout=subprocess.PIPE,
+                    stdin=subprocess.PIPE,
+                    stderr=subprocess.PIPE,
+                    shell=False,
+                    creationflags=NO_WINDOW)
  
             if pipe.wait() == 0:
                 ffmpeg_is_installed = True
