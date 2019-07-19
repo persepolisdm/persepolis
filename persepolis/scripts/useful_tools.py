@@ -366,7 +366,12 @@ def muxer(parent, video_finder_dictionary):
                                     '-map', '1:a:0',
                                     '-loglevel', 'error',
                                     '-strict', '-2',
-                                    final_path_pluse_name], stderr=subprocess.PIPE, shell=False, creationflags=NO_WINDOW)
+                                    final_path_pluse_name],
+                                    stdout=subprocess.PIPE,
+                                    stdin=subprocess.PIPE,
+                                    stderr=subprocess.PIPE,
+                                    shell=False,
+                                    creationflags=NO_WINDOW)
 
             if pipe.wait() == 0:
                 # muxing was finished successfully.
