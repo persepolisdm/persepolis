@@ -71,7 +71,7 @@ def humanReadbleSize(size):
         i += 1
         size = size / 1024
 
-    p = 2 if i > 0 else None
+    p = 2 if i > 1 else None
     return str(round(size, p)) +' '+ labels[i]
    
 # this function converts human readble size to byte
