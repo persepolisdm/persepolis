@@ -153,16 +153,20 @@ class CheckVersionsThread(QThread):
                 # NO_WINDOW option avoids opening additional CMD in MS Windows.
                 NO_WINDOW = 0x08000000
                 pipe = subprocess.Popen([ffmpeg_path, '-version'], 
-                    stdout=subprocess.PIPE, shell=False, creationflags=NO_WINDOW) 
+                    stdout=subprocess.PIPE,
+                    stderr=subprocess.PIPE,
+                    stdin=subprocess.PIPE,
+                    shell=False,
+                    creationflags=NO_WINDOW) 
+
             else:
                 pipe = subprocess.Popen(
                     [ffmpeg_path, '-version'],
                     stdout=subprocess.PIPE,
                     stdin=subprocess.PIPE,
                     stderr=subprocess.PIPE,
-                    shell=False,
-                    creationflags=NO_WINDOW)
- 
+                    shell=False)
+
             if pipe.wait() == 0:
                 ffmpeg_is_installed = True
                 ffmpeg_output, error = pipe.communicate()
@@ -988,7 +992,11 @@ class Queue(QThread):
                 # KILL aria2c if didn't respond. R.I.P :))
                 if not(answer) and (os_type != 'Windows'):
 
-                    subprocess.Popen(['killall', 'aria2c'], shell=False)
+                    subprocess.Popen(['killall', 'aria2c'],
+                            stderr=subprocess.PIPE,
+                            stdout=subprocess.PIPE,
+                            stdin=subprocess.PIPE,
+                            shell=False)
 
                 # write 'shutdown' value for this category in temp_db
                 shutdown_dict = {'category': self.category, 'shutdown': 'shutdown'}
@@ -2062,7 +2070,11 @@ class MainWindow(MainWindow_Ui):
                         # KILL aria2c in Unix like systems, if didn't respond. R.I.P :))
                         if not(answer) and (os_type != 'Windows'):
 
-                            subprocess.Popen(['killall', 'aria2c'], shell=False)
+                            subprocess.Popen(['killall', 'aria2c'],
+                                    stderr=subprocess.PIPE,
+                                    stdout=subprocess.PIPE,
+                                    stdin=subprocess.PIPE,
+                                    shell=False)
 
                         # send notification
                         notifySend(QCoreApplication.translate("mainwindow_src_ui_tr", 'Persepolis is shutting down'),
@@ -5072,10 +5084,12 @@ class MainWindow(MainWindow_Ui):
             passwd, ok = QInputDialog.getText(
                 self, 'PassWord', 'Please enter root password:', QLineEdit.Password)
             if ok:
-                pipe = subprocess.Popen(['sudo', '-S', 'echo', 'hello'], stdout=subprocess.DEVNULL,
-                    stdin=subprocess.PIPE,
-                    stderr=subprocess.DEVNULL,
-                    shell=False)
+                pipe = subprocess.Popen(['sudo', '-S', 'echo', 'hello'], 
+                        stdout=subprocess.DEVNULL,
+                        stdin=subprocess.PIPE,
+                        stderr=subprocess.DEVNULL,
+                        shell=False)
+
                 pipe.communicate(passwd.encode())
 
                 answer = pipe.wait()
@@ -5088,10 +5102,12 @@ class MainWindow(MainWindow_Ui):
 
                     if ok:
                         # checking password
-                        pipe = subprocess.Popen(['sudo', '-S', 'echo', 'hello'], stdout=subprocess.DEVNULL,
-                            stdin=subprocess.PIPE,
-                            stderr=subprocess.DEVNULL,
-                            shell=False)
+                        pipe = subprocess.Popen(['sudo', '-S', 'echo', 'hello'], 
+                                stdout=subprocess.DEVNULL,
+                                stdin=subprocess.PIPE,
+                                stderr=subprocess.DEVNULL,
+                                shell=False)
+
                         pipe.communicate(passwd.encode())
 
                         answer = pipe.wait()

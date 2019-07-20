@@ -37,7 +37,11 @@ def playNotification(file):
         if os_type == 'Linux' or os_type == 'FreeBSD' or os_type == 'OpenBSD':
 
             pipe = subprocess.Popen(['paplay', '--volume=' + str(volume),
-                str(file)], shell=False)
+                str(file)],
+                stderr=subprocess.PIPE,
+                stdout=subprocess.PIPE,
+                stdin=subprocess.PIPE,
+                shell=False)
 
             answer = pipe.wait()
 
@@ -50,13 +54,25 @@ def playNotification(file):
 
             pipe = subprocess.Popen(['osascript', '-e',
                 'set', 'volume', 'alert',
-                'volume', str(volume)], shell=False)
+                'volume', str(volume)],
+                stderr=subprocess.PIPE,
+                stdout=subprocess.PIPE,
+                stdin=subprocess.PIPE,
+                shell=False)
 
             pipe = subprocess.Popen(['osascript', '-e',
-                'beep', '3'], shell=False)
+                'beep', '3'],
+                stderr=subprocess.PIPE,
+                stdout=subprocess.PIPE,
+                stdin=subprocess.PIPE,
+                shell=False)
 
         elif os_type == 'Windows':
 
             CREATE_NO_WINDOW = 0x08000000
             subprocess.Popen(['rundll32', 'user32.dll,MessageBeep'],
-                             shell=False, creationflags=CREATE_NO_WINDOW)
+                    stderr=subprocess.PIPE,
+                    stdout=subprocess.PIPE,
+                    stdin=subprocess.PIPE,
+                    shell=False,
+                    creationflags=CREATE_NO_WINDOW)

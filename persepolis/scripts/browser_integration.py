@@ -168,7 +168,11 @@ def browserIntegration(browser):
 
     if os_type != 'Windows':
 
-        pipe = subprocess.Popen(['chmod', '+x', str(native_message_file)], shell=False)
+        pipe = subprocess.Popen(['chmod', '+x', str(native_message_file)], 
+                stderr=subprocess.PIPE,
+                stdout=subprocess.PIPE,
+                stdin=subprocess.PIPE,
+                shell=False)
 
     else:
         import winreg
@@ -236,4 +240,8 @@ def browserIntegration(browser):
 
         # make persepolis_run_shell executable
 
-        pipe = subprocess.Popen(['chmod', '+x', exec_path], shell=False)
+        pipe = subprocess.Popen(['chmod', '+x', exec_path], 
+                stderr=subprocess.PIPE,
+                stdout=subprocess.PIPE,
+                stdin=subprocess.PIPE,
+                shell=False)

@@ -330,7 +330,11 @@ def muxer(parent, video_finder_dictionary):
                                     '-map', '1:a:0',
                                     '-loglevel', 'error',
                                     '-strict', '-2',
-                                    final_path_pluse_name], stderr=subprocess.PIPE, shell=False)
+                                    final_path_pluse_name],
+                                    stderr=subprocess.PIPE, 
+                                    stdout=subprocess.PIPE,
+                                    stdin=subprocess.PIPE,
+                                    shell=False)
 
             elif os_type == 'Darwin':
                 # ffmpeg path in mac
@@ -347,7 +351,11 @@ def muxer(parent, video_finder_dictionary):
                                     '-map', '1:a:0',
                                     '-loglevel', 'error',
                                     '-strict', '-2',
-                                    final_path_pluse_name], stderr=subprocess.PIPE, shell=False)
+                                    final_path_pluse_name], 
+                                    stderr=subprocess.PIPE,
+                                    stdout=subprocess.PIPE,
+                                    stdin=subprocess.PIPE,
+                                    shell=False)
 
             elif os_type == 'Windows':
                 # ffmpeg path in windows

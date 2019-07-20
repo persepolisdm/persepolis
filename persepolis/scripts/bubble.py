@@ -80,7 +80,11 @@ def notifySend(message1, message2, time, sound, parent=None):
             subprocess.Popen(['notify-send', '--icon', 'persepolis',
                 '--app-name', 'Persepolis Download Manager',
                 '--expire-time', time,
-                message1, message2],stderr=subprocess.PIPE, shell=False)
+                message1, message2],
+                stderr=subprocess.PIPE,
+                stdout=subprocess.PIPE,
+                stdin=subprocess.PIPE,
+                shell=False)
 
         elif os_type == 'Darwin':
             notifyMac("Persepolis Download Manager", message1, message2)

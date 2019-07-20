@@ -210,10 +210,12 @@ class ProgressWindow(ProgressWindow_Ui):
 
             if ok:
                 # check password is true or not!
-                pipe = subprocess.Popen(['sudo', '-S', 'echo', 'hello'], stdout=subprocess.DEVNULL,
-                    stdin=subprocess.PIPE,
-                    stderr=subprocess.DEVNULL,
-                    shell=False)
+                pipe = subprocess.Popen(['sudo', '-S', 'echo', 'hello'],
+                        stdout=subprocess.DEVNULL,
+                        stdin=subprocess.PIPE,
+                        stderr=subprocess.DEVNULL,
+                        shell=False)
+
                 pipe.communicate(passwd.encode())
 
                 answer = pipe.wait()
@@ -226,10 +228,12 @@ class ProgressWindow(ProgressWindow_Ui):
 
                     if ok:
                         # checking password
-                        pipe = subprocess.Popen(['sudo', '-S', 'echo', 'hello'], stdout=subprocess.DEVNULL,
-                            stdin=subprocess.PIPE,
-                            stderr=subprocess.DEVNULL,
-                            shell=False)
+                        pipe = subprocess.Popen(['sudo', '-S', 'echo', 'hello'],
+                                stdout=subprocess.DEVNULL,
+                                stdin=subprocess.PIPE,
+                                stderr=subprocess.DEVNULL,
+                                shell=False)
+
                         pipe.communicate(passwd.encode())
 
                         answer = pipe.wait()

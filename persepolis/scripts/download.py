@@ -62,7 +62,11 @@ def startAria():
         subprocess.Popen(['aria2c', '--no-conf',
             '--enable-rpc', '--rpc-listen-port=' + str(port),
             '--rpc-max-request-size=2M',
-            '--rpc-listen-all', '--quiet=true'], shell=False)
+            '--rpc-listen-all', '--quiet=true'], 
+            stderr=subprocess.PIPE,
+            stdout=subprocess.PIPE,
+            stdin=subprocess.PIPE,
+            sshell=False)
 
     # in macintosh
     elif os_type == 'Darwin':
@@ -78,7 +82,11 @@ def startAria():
         subprocess.Popen([aria2d, '--no-conf',
             '--enable-rpc', '--rpc-listen-port=' + str(port),
             '--rpc-max-request-size=2M',
-            '--rpc-listen-all', '--quiet=true'], shell=False)
+            '--rpc-listen-all', '--quiet=true'],
+            stderr=subprocess.PIPE,
+            stdout=subprocess.PIPE,
+            stdin=subprocess.PIPE,
+            shell=False)
 
 
     # in Windows
@@ -99,7 +107,12 @@ def startAria():
             return None
         # aria2 command in windows
         subprocess.Popen([aria2d, '--no-conf', '--enable-rpc', '--rpc-listen-port=' + str(port),
-                          '--rpc-max-request-size=2M', '--rpc-listen-all', '--quiet=true'], shell=False, creationflags=NO_WINDOW)
+                            '--rpc-max-request-size=2M', '--rpc-listen-all', '--quiet=true'], 
+                            stderr=subprocess.PIPE,
+                            stdout=subprocess.PIPE,
+                            stdin=subprocess.PIPE,
+                            shell=False,
+                            creationflags=NO_WINDOW)
 
     time.sleep(2)
 
@@ -856,7 +869,13 @@ def endTime(end_time, gid, parent):
         # If aria2c not respond, so kill it. R.I.P :)) 
         if (answer == 'None') and (os_type != 'Windows'):
 
-            subprocess.Popen(['killall', 'aria2c'], shell=False)
+            subprocess.Popen(['killall', 'aria2c'],
+                    stderr=subprocess.PIPE,
+                    stdout=subprocess.PIPE,
+                    stdin=subprocess.PIPE,
+                    shell=False)
+
+
 
         # change end_time value to None in data_base
         parent.persepolis_db.setDefaultGidInAddlinkTable(gid, end_time=True)

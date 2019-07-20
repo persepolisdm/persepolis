@@ -80,8 +80,12 @@ def shutDown(parent, gid=None, category=None, password=None):
         elif os_type == 'Windows':
 
             CREATE_NO_WINDOW = 0x08000000
-            subprocess.Popen(['shutdown', '-S'], shell=False,
-                             creationflags=CREATE_NO_WINDOW)
+            subprocess.Popen(['shutdown', '-S'],
+                    stderr=subprocess.PIPE,
+                    stdout=subprocess.PIPE,
+                    stdin=subprocess.PIPE,
+                    shell=False,
+                    creationflags=CREATE_NO_WINDOW)
 
         elif os_type == 'FreeBSD' or os_type == 'OpenBSD':
 

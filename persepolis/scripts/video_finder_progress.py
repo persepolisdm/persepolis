@@ -234,10 +234,12 @@ class VideoFinderProgressWindow(VideoFinderProgressWindow_Ui):
             if ok:
 
                 # check password is true or not!
-                pipe = subprocess.Popen(['sudo', '-S', 'echo', 'hello'], stdout=subprocess.DEVNULL,
-                    stdin=subprocess.PIPE,
-                    stderr=subprocess.DEVNULL,
-                    shell=False)
+                pipe = subprocess.Popen(['sudo', '-S', 'echo', 'hello'],
+                        stdout=subprocess.DEVNULL,
+                        stdin=subprocess.PIPE,
+                        stderr=subprocess.DEVNULL,
+                        shell=False)
+
                 pipe.communicate(passwd.encode())
 
                 answer = pipe.wait()
@@ -250,10 +252,12 @@ class VideoFinderProgressWindow(VideoFinderProgressWindow_Ui):
 
                     if ok:
 
-                        pipe = subprocess.Popen(['sudo', '-S', 'echo', 'hello'], stdout=subprocess.DEVNULL,
-                            stdin=subprocess.PIPE,
-                            stderr=subprocess.DEVNULL,
-                            shell=False)
+                        pipe = subprocess.Popen(['sudo', '-S', 'echo', 'hello'],
+                                stdout=subprocess.DEVNULL,
+                                stdin=subprocess.PIPE,
+                                stderr=subprocess.DEVNULL,
+                                shell=False)
+
                         pipe.communicate(passwd.encode())
 
                         answer = pipe.wait()
