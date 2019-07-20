@@ -66,7 +66,7 @@ def startAria():
             stderr=subprocess.PIPE,
             stdout=subprocess.PIPE,
             stdin=subprocess.PIPE,
-            sshell=False)
+            shell=False)
 
     # in macintosh
     elif os_type == 'Darwin':

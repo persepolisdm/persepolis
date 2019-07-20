@@ -123,7 +123,7 @@ def browserIntegration(browser):
         exec_path = os.path.join(
             current_directory, 'Persepolis Download Manager.exe')
 
-        # the execution path in jason file for Windows must in form of
+        # the execution path in json file for Windows must in form of
         # c:\\Users\\...\\Persepolis Download Manager.exe , so we need 2
         # "\" in address
         exec_path = exec_path.replace('\\', r'\\')
@@ -168,13 +168,20 @@ def browserIntegration(browser):
 
     if os_type != 'Windows':
 
-        pipe = subprocess.Popen(['chmod', '+x', str(native_message_file)], 
+        pipe_json = subprocess.Popen(['chmod', '+x', str(native_message_file)], 
                 stderr=subprocess.PIPE,
                 stdout=subprocess.PIPE,
                 stdin=subprocess.PIPE,
                 shell=False)
 
+        if pipe_json.wait() == 0:
+            json_done = True
+        else:
+            json_done = False
+
+
     else:
+        native_done = None
         import winreg
         # add the key to the windows registry
         if browser in ['chrome','chromium','opera','vivaldi']:
@@ -187,9 +194,13 @@ def browserIntegration(browser):
                 winreg.SetValueEx(gintKey, '', 0,winreg.REG_SZ, native_message_file)
                 # close connection to pdmchromewrapper
                 winreg.CloseKey(gintKey)
-                return True
+
+                json_done = True
+
             except WindowsError:
-                return False
+
+                json_done = False
+
         elif browser == 'firefox':
             try:
                 # create pdmchromewrapper key under NativeMessagingHosts for firefox
@@ -200,11 +211,14 @@ def browserIntegration(browser):
                 winreg.SetValueEx(fintKey, '', 0,winreg.REG_SZ, native_message_file)
                 # close connection to pdmchromewrapper
                 winreg.CloseKey(fintKey)
-                return True
-            except WindowsError:
-                return False
 
-                 
+                json_done = True
+
+            except WindowsError:
+
+                json_done = False
+
+                
     # create persepolis_run_shell file for gnu/linux and BSD and Mac 
     # firefox and chromium and ... call persepolis with Native Messaging system. 
     # json file calls persepolis_run_shell file.
@@ -240,8 +254,15 @@ def browserIntegration(browser):
 
         # make persepolis_run_shell executable
 
-        pipe = subprocess.Popen(['chmod', '+x', exec_path], 
+        pipe_native = subprocess.Popen(['chmod', '+x', exec_path], 
                 stderr=subprocess.PIPE,
                 stdout=subprocess.PIPE,
                 stdin=subprocess.PIPE,
                 shell=False)
+
+        if pipe_native.wait() == 0:
+            native_done = True
+        else:
+            native_done = False
+
+    return json_done, native_done
