@@ -3647,9 +3647,9 @@ class MainWindow(MainWindow_Ui):
                 file_name = self.download_table.item(row, 0).text()
 
                 # show error message
-                notifySend(QCoreApplication.translate("mainwindow_src_ui_tr",
-                                                      'Operation was not successful! Stop the following download first: ') + file_name,
-                        5000, 'fail', parent=self)
+                notifySend(QCoreApplication.translate("mainwindow_src_ui_tr", "Operation was not successful!"),
+                    QCoreApplication.translate("mainwindow_src_ui_tr", "Stop the following download first: ") + file_name,
+                    5000, 'fail', parent=self)
 
         # remove selected rows
 
