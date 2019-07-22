@@ -240,29 +240,36 @@ if args.parent_window or args.args:
     text = sys.stdin.buffer.read(text_length).decode("utf-8")
     
     if text:
-        new_list = json.loads(text)
+        new_dict = json.loads(text)
 
-        for item in new_list['url_links']:
-            copy_dict = deepcopy(browser_plugin_dict)
-            if 'url' in item.keys():
-                copy_dict['link'] = str(item['url'])
+        if 'url_links' in new_dict:
 
-                if 'header' in item.keys() and item['header'] != '':
-                    copy_dict['header'] = item['header']
+            # new_dict is sended by persepolis browser add-on.
+            # new_dict['url_links'] contains some lists.
+            # every list contains link information.
+            for item in new_dict['url_links']:
 
-                if 'referrer' in item.keys() and item['referrer'] != '':
-                    copy_dict['referer'] = item['referrer']
+                copy_dict = deepcopy(browser_plugin_dict)
 
-                if 'filename' in item.keys() and item['filename'] != '':
-                    copy_dict['out'] = os.path.basename(str(item['filename']))
+                if 'url' in item.keys():
+                    copy_dict['link'] = str(item['url'])
+
+                    if 'header' in item.keys() and item['header'] != '':
+                        copy_dict['header'] = item['header']
+
+                    if 'referrer' in item.keys() and item['referrer'] != '':
+                        copy_dict['referer'] = item['referrer']
+
+                    if 'filename' in item.keys() and item['filename'] != '':
+                        copy_dict['out'] = os.path.basename(str(item['filename']))
                 
-                if 'useragent' in item.keys() and item['useragent'] != '':
-                    copy_dict['user_agent'] = item['useragent']
+                    if 'useragent' in item.keys() and item['useragent'] != '':
+                        copy_dict['user_agent'] = item['useragent']
                 
-                if 'cookies' in item.keys() and item['cookies'] != '':
-                    copy_dict['load_cookies'] = item['cookies']
+                    if 'cookies' in item.keys() and item['cookies'] != '':
+                        copy_dict['load_cookies'] = item['cookies']
 
-                plugin_list.append(copy_dict)
+                    plugin_list.append(copy_dict)
 
 # persepolis --clear >> remove config_folder
 if args.clear:
