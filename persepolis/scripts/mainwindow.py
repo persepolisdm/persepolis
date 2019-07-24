@@ -691,6 +691,7 @@ class Queue(QThread):
         # It is helps for checking new downloads in queue
         # and retrying failed downloads.
         for counter in range(5):
+
             # read downloads information from data base
             download_table_dict = self.parent.persepolis_db.returnItemsInDownloadTable(self.category)
             category_table_dict = self.parent.persepolis_db.searchCategoryInCategoryTable(self.category)
@@ -703,6 +704,7 @@ class Queue(QThread):
 
             # check that if user set start time
             if self.start_time and counter == 0:
+
                 # find first download
                 # set start time for first download in queue
                 # status of first download must not be complete
@@ -731,6 +733,7 @@ class Queue(QThread):
                         break
 
             for gid in gid_list:
+
                 # if gid is related to video finder, so start  Video Finder thread for checking status
                 # check video_finder_threads_dict, perhaps a thread started before for this gid
                 if (gid in self.parent.all_video_finder_gid_list) and (gid not in self.parent.video_finder_threads_dict.keys()):
@@ -769,6 +772,7 @@ class Queue(QThread):
                 dictionary['status'] = status
 
                 if self.end_time:
+
                     # it means user was set end time for download
                     # set end_hour and end_minute
                     add_link_dict['end_time'] = self.end_time

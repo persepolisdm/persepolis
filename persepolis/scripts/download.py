@@ -841,10 +841,13 @@ def endTime(end_time, gid, parent):
         status = dict['status']
 
         # check download status
-        if status == 'downloading' or status == 'paused' or status == 'waiting':
+        if status == 'scheduled' or status == 'downloading' or status == 'paused' or status == 'waiting':
+
             # download continues!
             answer = 'continue'
+
         else:
+
             # Download completed or stopped by user
             # so break the loop
             answer = 'end'

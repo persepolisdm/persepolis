@@ -57,6 +57,7 @@ def shutDown(parent, gid=None, category=None, password=None):
 
         logger.sendToLog("Shutting down in 20 seconds", "INFO")
         sleep(20)
+
         if os_type == 'Linux':
 
             pipe = subprocess.Popen(['sudo', '-S', 'poweroff'],
