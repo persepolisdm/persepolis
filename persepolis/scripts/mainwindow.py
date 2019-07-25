@@ -1149,7 +1149,7 @@ class KeepAwakeThread(QThread):
                 new_cursor_array = [int(cursor_position.x()) , int(cursor_position.y())]
 
                 if new_cursor_array == old_cursor_array :
-                # So cursor position didn't change for 60 second.
+                # So cursor position didn't change for 20 second.
                     if add : # Moving mouse position one time +10 pixel and one time -10 pixel!
                         self.KEEPSYSTEMAWAKESIGNAL.emit(add)
                         add = False
@@ -1378,6 +1378,7 @@ class MainWindow(MainWindow_Ui):
         self.threadPool[3].SHOWMAINWINDOWSIGNAL.connect(self.showMainWindow)
 
         # keepAwake
+        self.ongoing_downloads = 0
         keep_awake = KeepAwakeThread()
         self.threadPool.append(keep_awake)
         self.threadPool[len(self.threadPool) - 1].start()
@@ -1653,11 +1654,15 @@ class MainWindow(MainWindow_Ui):
 
 # read KeepAwakeThread for more information
     def keepAwake(self, add):
+
         # finding cursor position
         cursor_position = QCursor.pos()
         cursor_array = [int(cursor_position.x()) , int(cursor_position.y())]
 
-        if self.persepolis_setting.value('settings/awake') == 'yes':
+        # check user selected option.
+        # don't do anything if we haven't any active downloads
+        if self.persepolis_setting.value('settings/awake') == 'yes' and self.ongoing_downloads != 0:
+
             if add == True and self.keep_awake_checkBox.isChecked() == True: # Moving mouse position one time +1 pixel and one time -1 pixel!
                 QCursor.setPos(cursor_array[0] + 1, cursor_array[1] + 1)
             else:
@@ -1681,6 +1686,11 @@ class MainWindow(MainWindow_Ui):
 #                       'Transfer rate', 'Estimated time left', 'Gid', 'Link', 'First try date', 'Last try date', 'Category']
 
     def checkDownloadInfo(self, list):
+
+        # number of ongoing downloads.
+        # this variable helps keepAwake method.
+        self.ongoing_downloads = len(list)
+
         systemtray_tooltip_text = 'Persepolis Download Manager'
 
         for dict in list:
