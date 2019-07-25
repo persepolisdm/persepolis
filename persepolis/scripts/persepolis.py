@@ -271,6 +271,7 @@ if args.parent_window or args.args:
 
                     plugin_list.append(copy_dict)
 
+
 # persepolis --clear >> remove config_folder
 if args.clear:
     from persepolis.scripts.data_base import PersepolisDB
@@ -356,6 +357,7 @@ if ('link' in add_link_dictionary.keys()):
     plugin_list.append(plugin_dict)
 
 if len(plugin_list) != 0:
+
     # import PluginsDB
     from persepolis.scripts.data_base import PluginsDB
     
@@ -379,7 +381,7 @@ if len(plugin_list) != 0:
 
 def main():
     # if lock_file is existed , it means persepolis is still running!
-    if lock_file_validation:  
+    if lock_file_validation and not((args.parent_window or args.args) and len(plugin_list) == 0):  
 
         # set QT_AUTO_SCREEN_SCALE_FACTOR to 1 for "high DPI displays" 
         os.environ['QT_AUTO_SCREEN_SCALE_FACTOR'] = '1'
