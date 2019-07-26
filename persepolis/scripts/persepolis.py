@@ -233,8 +233,11 @@ if args.parent_window or unkownargs:
     text = sys.stdin.buffer.read(text_length).decode("utf-8")
     
     if text:
+        
         new_list = json.loads(text)
-
+        if 'version' in new_list:
+            # This is a message from INIT of extension.
+            iii = 1
         for item in new_list['url_links']:
             copy_dict = deepcopy(browser_plugin_dict)
             if 'url' in item.keys():
