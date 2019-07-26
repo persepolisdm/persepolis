@@ -619,16 +619,16 @@ class VideoFinder(QThread):
             self.parent.persepolis_db.updateVideoFinderTable([self.video_finder_dictionary])
 
            
-            if category != "Single Downloads":
-                # check queue condition!
-                # wait unitl queue ended.  
-                queue_status = self.parent.queue_list_dict[str(category)].start
-
-                while queue_status: # if queue is still active
-                    # wait
-                    sleep(5)
-                    queue_status = self.parent.queue_list_dict[str(category)].start
- 
+#             if category != "Single Downloads":
+#                 # check queue condition!
+#                 # wait unitl queue ended.  
+#                 queue_status = self.parent.queue_list_dict[str(category)].start
+# 
+#                 while queue_status: # if queue is still active
+#                     # wait
+#                     sleep(5)
+#                     queue_status = self.parent.queue_list_dict[str(category)].start
+#  
 
             complete_dictionary = {'error': error_message,
                     'final_path': result_dictionary['final_path'],
@@ -854,6 +854,28 @@ class Queue(QThread):
                         # write in log the complete_message
                         logger.sendToLog(complete_message, 'INFO')
 
+                        # check that is this related to video finder thread or not.
+                        if gid in self.parent.all_video_finder_gid_list:
+
+                            # find related thread
+                            for list in video_finder_list:
+
+                                if gid in list:
+
+                                    video_gid = list[0]
+
+                                    video_finder_thread = self.parent.video_finder_threads_dict[video_gid] 
+
+                                    # check the video and audio and muxing_status
+                                    if video_finder_thread.video_completed == 'yes' and video_finder_thread.audio_completed == 'yes':
+
+                                        # wait until end of muxing
+                                        while video_finder_thread.active == 'yes':
+
+                                            sleep(0.2)
+
+                                break
+
 
                     if self.stop:
                         # it means user stopped queue
@@ -952,40 +974,9 @@ class Queue(QThread):
             if self.break_for_loop:
                 break
 
-        # TODO
         if self.start:
             # if queue finished :
             self.start = False
-
-            for video_finder_gid_list in video_finder_list:
-
-                video_gid = video_finder_gid_list[0]
-                        
-                video_finder_dictionary = self.parent.persepolis_db.searchGidInVideoFinderTable(video_gid)
-
-                if video_finder_dictionary:
-
-                    # tell video finder thread to stop checking
-                    if video_finder_dictionary['video_completed'] == 'no' or video_finder_dictionary['audio_completed'] == 'no':
-
-                        video_finder_dictionary['checking'] = 'no'
-                        self.parent.persepolis_db.updateVideoFinderTable([video_finder_dictionary])
-
-                        video_finder_thread = self.parent.video_finder_threads_dict[video_gid]
-                        video_finder_thread.checking = 'no'
-
-                    elif video_finder_dictionary['video_completed'] == 'yes' and video_finder_dictionary['muxing_status'] == 'started': 
-
-                        # downloads were completed and video finder started Muxing
-                        # wait until the end of muxing
-                        # don't turn of the computer. 
-                        # video finder will be deleted from data base when muxing ended.
-                        # so check data base every 1 second
-                        video_finder_thread = self.parent.video_finder_threads_dict[video_finder_dictionary['video_gid']] 
-                        while video_finder_thread.active == 'yes':
-                            sleep(1)
-
-
 
             # this section is sending shutdown signal to the shutdown script(if user
             # select shutdown for after download)
