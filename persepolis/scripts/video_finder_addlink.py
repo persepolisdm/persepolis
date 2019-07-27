@@ -14,18 +14,21 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 
-from PyQt5.QtWidgets import QPushButton, QTextEdit, QFrame, QLabel, QComboBox, QHBoxLayout, QApplication
-from PyQt5.QtCore import QThread, pyqtSignal, QCoreApplication, QTranslator, QLocale
-from persepolis.scripts.addlink import AddLinkWindow
-from persepolis.scripts.useful_tools import determineConfigFolder
-from persepolis.scripts import logger, osCommands
-from persepolis.scripts.spider import spider
-from time import time, sleep
+import os
+import re
 from copy import deepcopy
 from random import random
+from time import time, sleep
+
 import youtube_dl
-import re
-import os
+from PyQt5.QtCore import QThread, pyqtSignal, QCoreApplication, QTranslator, QLocale
+from PyQt5.QtWidgets import QPushButton, QTextEdit, QFrame, QLabel, QComboBox, QHBoxLayout, QApplication
+
+from persepolis.constants import STATUS
+from persepolis.scripts import logger, osCommands
+from persepolis.scripts.addlink import AddLinkWindow
+from persepolis.scripts.spider import spider
+from persepolis.scripts.useful_tools import determineConfigFolder
 
 # download manager config folder .
 config_folder =  determineConfigFolder()
@@ -170,8 +173,8 @@ class VideoFinderAddLink(AddLinkWindow):
 
     def fetched_result(self, media_dict):
         self.url_submit_button.setEnabled(True)
-        if 'error' in media_dict.keys():
-            self.status_box.setText('<font color="#f11">' + str(media_dict['error']) + '</font>')
+        if STATUS.DOWNLOAD.ERROR in media_dict.keys():
+            self.status_box.setText('<font color="#f11">' + str(media_dict[STATUS.DOWNLOAD.ERROR]) + '</font>')
             self.status_box.show()
         else:  # Show the media list
             self.media_title = media_dict['title']
@@ -352,15 +355,14 @@ class MediaListFetcherThread(QThread):
                 download=False
                 )
 
-
-            error = "error"  # Or comment out this line to show full stderr.
+            error = STATUS.DOWNLOAD.ERROR  # Or comment out this line to show full stderr.
             if result:
                 ret_val = result
             else:
-                ret_val = {'error': str(error)}
+                ret_val = {STATUS.DOWNLOAD.ERROR: str(error)}
 
         except Exception as ex:
-            ret_val = {'error': str(ex)}
+            ret_val = {STATUS.DOWNLOAD.ERROR: str(ex)}
         finally:  # Delete cookie file
             try:
                 osCommands.remove(self.cookie_path)

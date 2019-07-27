@@ -13,18 +13,23 @@
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from PyQt5.QtCore import Qt, QEvent, QTime, QSize, QPoint, QDir , QTranslator, QCoreApplication, QLocale
-from PyQt5.QtWidgets import QFileDialog, QStyleFactory, QMessageBox, QTableWidgetItem
+import os
+import platform
+import sys
+
+from PyQt5.QtCore import (
+    QEvent, QTime, QSize, QPoint, QDir, QTranslator, QCoreApplication, QLocale
+)
+from PyQt5.QtGui import QFont, QKeySequence
+from PyQt5.QtWidgets import (
+    QFileDialog, QStyleFactory, QMessageBox, QTableWidgetItem
+)
+
+from persepolis.constants import OS
 from persepolis.gui.setting_ui import Setting_Ui, KeyCapturingWindow_Ui
-from persepolis.scripts.useful_tools import returnDefaultSettings
 from persepolis.scripts import osCommands
 from persepolis.scripts import startup
-from PyQt5.QtGui import QFont, QKeySequence
-from PyQt5 import QtWidgets
-import platform
-import copy
-import sys
-import os
+from persepolis.scripts.useful_tools import returnDefaultSettings
 
 home_address = os.path.expanduser("~")
 os_type = platform.system()
@@ -101,7 +106,7 @@ class PreferencesWindow(Setting_Ui):
 
         self.ariaCheckBoxToggled('aria2')
 
-        if os_type == 'Linux' or os_type == 'FreeBSD' or os_type == 'OpenBSD':
+        if os_type == OS.LINUX or os_type == OS.FREE_BSD or os_type == OS.OPEN_BSD:
             for widget in self.aria2_path_checkBox, self.aria2_path_lineEdit, self.aria2_path_pushButton:
                 widget.hide()
 
@@ -221,7 +226,7 @@ class PreferencesWindow(Setting_Ui):
         else:
             self.show_menubar_checkbox.setChecked(False)
 
-        if platform.system() == 'Darwin':
+        if platform.system() == OS.DARWIN:
             self.show_menubar_checkbox.setChecked(True)
             self.show_menubar_checkbox.hide()
 # show_sidepanel
@@ -668,7 +673,7 @@ class PreferencesWindow(Setting_Ui):
 # after_download_checkBox
         self.after_download_checkBox.setChecked(True)
 # hide menubar for linux
-        if platform.system == 'Darwin':
+        if platform.system == OS.DARWIN:
             self.show_menubar_checkbox.setChecked(True)
         else:
             self.show_menubar_checkbox.setChecked(False)

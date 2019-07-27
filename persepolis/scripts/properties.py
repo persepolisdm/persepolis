@@ -14,12 +14,15 @@
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import os
+
+from PyQt5 import QtCore
+from PyQt5.QtCore import QSize, QPoint, QDir, QTime
+from PyQt5.QtWidgets import QFileDialog
+
+from persepolis.constants import STATUS
 from persepolis.gui.addlink_ui import AddLinkWindow_Ui
 from persepolis.scripts.check_proxy import getProxy
-from PyQt5.QtCore import QSize, QPoint, QDir, QTime
-from PyQt5 import QtCore, QtGui, QtWidgets
-from PyQt5.QtWidgets import QFileDialog
-import os
 
 
 class PropertiesWindow(AddLinkWindow_Ui):
@@ -80,7 +83,7 @@ class PropertiesWindow(AddLinkWindow_Ui):
 # initialization
 # disable folder_frame when download is complete
         status = self.download_table_dict['status']
-        if status == 'complete':
+        if status == STATUS.DOWNLOAD.COMPLETE:
             self.folder_frame.setEnabled(False)
 
 

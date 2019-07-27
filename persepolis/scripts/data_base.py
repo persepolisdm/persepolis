@@ -14,15 +14,14 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 
-from persepolis.scripts.useful_tools import determineConfigFolder
-from persepolis.scripts import logger
-from time import sleep
-import traceback
-import sqlite3
-import random
 import ast
 import os
+import random
+import sqlite3
+from time import sleep
 
+from persepolis.constants import STATUS
+from persepolis.scripts.useful_tools import determineConfigFolder
 
 # download manager config folder .
 config_folder =  determineConfigFolder()
@@ -1098,8 +1097,12 @@ class PersepolisDB():
                                         reverse = 'no', limit_enable = 'no', after_download = 'no'""")
 
     # change status of download to 'stopped' if status isn't 'complete' or 'error'
-        self.persepolis_db_cursor.execute("""UPDATE download_db_table SET status = 'stopped' 
-                                        WHERE status NOT IN ('complete', 'error')""")
+        self.persepolis_db_cursor.execute("""UPDATE download_db_table SET status = '{0}' 
+                                        WHERE status NOT IN ('{1}', '{2}')""".format(
+            STATUS.DOWNLOAD.STOPPED,
+            STATUS.DOWNLOAD.COMPLETE,
+            STATUS.DOWNLOAD.ERROR
+        ))
 
     # change start_time and end_time and
     # after_download value to None in addlink_db_table!
@@ -1122,11 +1125,18 @@ class PersepolisDB():
 
         # find download items is download_db_table with status = "downloading" or "waiting" or paused or scheduled
         if category:
-            self.persepolis_db_cursor.execute("""SELECT gid FROM download_db_table WHERE (category = '{}') AND (status = 'downloading' OR status = 'waiting' 
-                                            OR status = 'scheduled' OR status = 'paused')""".format(str(category)))
+            self.persepolis_db_cursor.execute("""SELECT gid FROM download_db_table WHERE (category = '{0}') AND (status = '{1}' OR status = '{2}' 
+                                            OR status = '{3}' OR status = '{4}')""".format(str(category),
+                                                                                           STATUS.DOWNLOAD.DOWNLOADING,
+                                                                                           STATUS.DOWNLOAD.WAITING,
+                                                                                           STATUS.DOWNLOAD.SCHEDULED,
+                                                                                           STATUS.DOWNLOAD.PAUSED))
         else:
-            self.persepolis_db_cursor.execute("""SELECT gid FROM download_db_table WHERE (status = 'downloading' OR status = 'waiting' 
-                                            OR status = 'scheduled' OR status = 'paused')""")
+            self.persepolis_db_cursor.execute("""SELECT gid FROM download_db_table WHERE (status = '{0}' OR status = '{1}' 
+                                            OR status = '{2}' OR status = '{3}')""".format(STATUS.DOWNLOAD.DOWNLOADING,
+                                                                                           STATUS.DOWNLOAD.WAITING,
+                                                                                           STATUS.DOWNLOAD.SCHEDULED,
+                                                                                           STATUS.DOWNLOAD.PAUSED))
 
 
         # create a list for returning answer
@@ -1148,7 +1158,9 @@ class PersepolisDB():
         self.lockCursor()
 
         # find download items is download_db_table with status = "downloading" or "waiting" or paused or scheduled
-        self.persepolis_db_cursor.execute("""SELECT gid FROM download_db_table WHERE (status = 'downloading' OR status = 'waiting')""")
+        self.persepolis_db_cursor.execute(
+            """SELECT gid FROM download_db_table WHERE (status = '{0}' OR status = '{1}')""".format(
+                STATUS.DOWNLOAD.DOWNLOADING, STATUS.DOWNLOAD.WAITING))
 
 
         # create a list for returning answer
@@ -1170,7 +1182,8 @@ class PersepolisDB():
         self.lockCursor()
 
         # find download items is download_db_table with status = "downloading" or "waiting" or paused or scheduled
-        self.persepolis_db_cursor.execute("""SELECT gid FROM download_db_table WHERE (status = 'paused')""")
+        self.persepolis_db_cursor.execute(
+            """SELECT gid FROM download_db_table WHERE (status = '{0}')""".format(STATUS.DOWNLOAD.PAUSED))
 
 
         # create a list for returning answer

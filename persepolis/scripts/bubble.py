@@ -13,27 +13,30 @@
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from persepolis.scripts.play import playNotification
-from PyQt5.QtCore import QSettings
-import platform
 import os
+import platform
+
+from PyQt5.QtCore import QSettings
+
+from persepolis.constants import OS
+from persepolis.scripts.play import playNotification
 
 # platform
 os_type = platform.system()
 
-if os_type == 'Darwin':
+if os_type == OS.DARWIN:
     from persepolis.scripts.mac_notification import notifyMac
 
-elif os_type == 'Windows':
+elif os_type == OS.WINDOWS:
     from persepolis.scripts.windows_notification import Windows_Notification
 
 # notifySend use notify-send program in user's system for sending notifications
 # and use playNotification function in play.py file for playing sound
 # notifications
 def notifySend(message1, message2, time, sound, parent=None):
-    if os_type == 'Linux':
+    if os_type == OS.LINUX:
         notifications_path = '/usr/share/sounds/freedesktop/stereo/'
-    elif os_type == 'FreeBSD' or os_type == 'OpenBSD':
+    elif os_type == OS.FREE_BSD or os_type == OS.OPEN_BSD:
         notifications_path = '/usr/local/share/sounds/freedesktop/stereo/'
     else:
         notifications_path = ''
@@ -73,13 +76,13 @@ def notifySend(message1, message2, time, sound, parent=None):
     if enable_notification == 'QT notification':
         parent.system_tray_icon.showMessage(message1, message2, 0, 10000)
     else:
-        if os_type == 'Linux' or os_type == 'FreeBSD' or os_type == 'OpenBSD':
+        if os_type == OS.LINUX or os_type == OS.FREE_BSD or os_type == OS.OPEN_BSD:
             os.system("notify-send --icon='persepolis' --app-name='Persepolis Download Manager' --expire-time='" +
                       time + "' '" + message1 + "' \ '" + message2 + "' ")
 
-        elif os_type == 'Darwin':
+        elif os_type == OS.DARWIN:
             notifyMac("Persepolis Download Manager", message1, message2)
 
-        elif os_type == 'Windows':
+        elif os_type == OS.WINDOWS:
             message = Windows_Notification(parent=parent, time=time, text1=message1, text2=message2, persepolis_setting=persepolis_setting)
             message.show()

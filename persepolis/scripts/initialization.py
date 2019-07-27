@@ -16,14 +16,15 @@
 
 # THIS FILE CONTAINING SOME VARIABLES , ... THAT USING FOR INITIALIZING PERSEPOLIS
 
-from persepolis.scripts.useful_tools import determineConfigFolder, returnDefaultSettings
-from persepolis.scripts.browser_integration import browserIntegration
-from persepolis.scripts import osCommands
-from PyQt5.QtCore import QSettings
-import subprocess
-import shutil
-import time
 import os
+import time
+
+from PyQt5.QtCore import QSettings
+
+from persepolis.constants import BROWSER
+from persepolis.scripts import osCommands
+from persepolis.scripts.browser_integration import browserIntegration
+from persepolis.scripts.useful_tools import determineConfigFolder, returnDefaultSettings
 
 # initialization
 
@@ -152,7 +153,7 @@ for folder in folder_list:
 persepolis_setting.endGroup()
 
 # Browser integration for Firefox and chromium and google chrome
-for browser in ['chrome', 'chromium', 'opera', 'vivaldi', 'firefox']:
+for browser in [BROWSER.CHROME, BROWSER.CHROMIUM, BROWSER.OPERA, BROWSER.FIREFOX, BROWSER.FIREFOX]:
     browserIntegration(browser)
 
 

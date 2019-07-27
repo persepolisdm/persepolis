@@ -13,11 +13,13 @@
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from persepolis.scripts import logger
-from time import sleep
-import subprocess
-import platform
 import os
+import platform
+import subprocess
+from time import sleep
+
+from persepolis.constants import OS
+from persepolis.scripts import logger
 
 # find os platform
 os_type = platform.system()
@@ -58,16 +60,16 @@ def shutDown(parent, gid=None, category=None, password=None):
 
         logger.sendToLog("Shutting down in 20 seconds", "INFO")
         sleep(20)
-        if os_type == 'Linux':
+        if os_type == OS.LINUX:
             os.system('echo "' + password + '" |sudo -S poweroff')
 
-        elif os_type == 'Darwin':
+        elif os_type == OS.DARWIN:
             os.system('echo "' + password + '" |sudo -S shutdown -h now ')
 
-        elif os_type == 'Windows':
+        elif os_type == OS.WINDOWS:
             CREATE_NO_WINDOW = 0x08000000
             subprocess.Popen(['shutdown', '-S'], shell=False,
                              creationflags=CREATE_NO_WINDOW)
 
-        elif os_type == 'FreeBSD' or os_type == 'OpenBSD':
+        elif os_type == OS.FREE_BSD or os_type == OS.OPEN_BSD:
             os.system('echo "' + password + '" |sudo -S shutdown -p now ')

@@ -13,10 +13,12 @@
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import subprocess
+import os
 import platform
 import shutil
-import os
+import subprocess
+
+from persepolis.constants import OS
 
 os_type = platform.system()
 
@@ -30,13 +32,13 @@ def touch(file_path):
 
 
 def xdgOpen(file_path):
-    if os_type == 'Linux' or os_type == 'FreeBSD' or os_type == 'OpenBSD':  # GNU/Linux systems
+    if os_type == OS.LINUX or os_type == OS.FREE_BSD or os_type == OS.OPEN_BSD:  # GNU/Linux systems
         subprocess.Popen(['xdg-open', file_path], shell=False)
 
-    elif os_type == 'Darwin':  # OS X systems
+    elif os_type == OS.DARWIN:  # OS X systems
         subprocess.Popen(['open', file_path], shell=False)
 
-    elif os_type == 'Windows':
+    elif os_type == OS.WINDOWS:
         CREATE_NO_WINDOW = 0x08000000
         subprocess.Popen(['cmd', '/C', 'start', file_path,  file_path],
                          shell=False, creationflags=CREATE_NO_WINDOW)
@@ -69,8 +71,6 @@ def makeDirs(folder_path):  # make new folders
 
 # move downloaded file to another destination.
 def moveFile(old_file_path, new_folder_path):
-    import traceback
-
     if os.path.isfile(old_file_path) and os.path.isdir(new_folder_path):
         try:
             shutil.move(old_file_path, new_folder_path) 

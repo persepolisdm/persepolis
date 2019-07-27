@@ -13,15 +13,17 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-from PyQt5.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QLabel, QPushButton
-from PyQt5.QtCore import QSize, QPoint, QTranslator, QCoreApplication, QLocale
-from persepolis.scripts import osCommands
-from PyQt5 import QtWidgets, QtCore
-from PyQt5.QtGui import QIcon
-import platform
-import requests
-import platform
 import ast
+import platform
+
+import requests
+from PyQt5 import QtCore
+from PyQt5.QtCore import QSize, QPoint, QTranslator, QCoreApplication, QLocale
+from PyQt5.QtGui import QIcon
+from PyQt5.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QLabel, QPushButton
+
+from persepolis.constants import OS
+from persepolis.scripts import osCommands
 
 # finding os_type
 os_type = platform.system()
@@ -114,7 +116,7 @@ class checkupdate(QWidget):
             if float(server_version) > float(self.client_version):
                 self.status_label.setText(QCoreApplication.translate("update_src_ui_tr", 'A newer Persepolis release is available'))
 
-                if os_type == 'Windows':
+                if os_type == OS.WINDOWS:
                     self.winUpdatedl()  # this function download latest release
                     # find system architect
                     if platform.architecture()[0] == '64bit':
@@ -122,7 +124,7 @@ class checkupdate(QWidget):
                     elif platform.architecture()[0] == '32bit':
                         osCommands.xdgOpen(updatesource_dict['win32dlurl'])
 
-                elif os_type == 'Darwin':
+                elif os_type == OS.DARWIN:
                     osCommands.xdgOpen(updatesource_dict['macdlurl'])  # it will download latest release for mac
 
             elif float(server_version) == float(self.client_version):

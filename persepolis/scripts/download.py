@@ -13,20 +13,23 @@
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from persepolis.scripts.useful_tools import freeSpace, humanReadbleSize
-from persepolis.scripts.bubble import notifySend
-from persepolis.scripts import logger
-from PyQt5.QtCore import QSettings
-import xmlrpc.client
-import urllib.parse
-import subprocess
-import traceback
+import ast
+import os
 import platform
 import shutil
-import time
-import ast
+import subprocess
 import sys
-import os
+import time
+import traceback
+import urllib.parse
+import xmlrpc.client
+
+from PyQt5.QtCore import QSettings
+
+from persepolis.constants import OS, STATUS
+from persepolis.scripts import logger
+from persepolis.scripts.bubble import notifySend
+from persepolis.scripts.useful_tools import freeSpace, humanReadbleSize
 
 # Before reading this file, please read this link! 
 # this link helps you to understand this codes:
@@ -57,13 +60,13 @@ server = xmlrpc.client.ServerProxy(server_uri, allow_none=True)
 # start aria2 with RPC
 def startAria():
     # in Linux and BSD
-    if os_type == 'Linux' or os_type == 'FreeBSD' or os_type == 'OpenBSD':
+    if os_type == OS.LINUX or os_type == OS.FREE_BSD or os_type == OS.OPEN_BSD:
         os.system("aria2c --version 1> /dev/null")
         os.system("aria2c --no-conf  --enable-rpc --rpc-listen-port '" +
                   str(port) + "' --rpc-max-request-size=2M --rpc-listen-all --quiet=true &")
 
     # in macintosh
-    elif os_type == 'Darwin':
+    elif os_type == OS.DARWIN:
         if aria2_path == "" or aria2_path == None or os.path.isfile(str(aria2_path)) == False:
             cwd = sys.argv[0] 
             current_directory = os.path.dirname(cwd)
@@ -77,7 +80,7 @@ def startAria():
                   str(port) + "' --rpc-max-request-size=2M --rpc-listen-all --quiet=true &")
 
     # in Windows
-    elif os_type == 'Windows':
+    elif os_type == OS.WINDOWS:
         if aria2_path == "" or aria2_path == None or os.path.isfile(str(aria2_path)) == False:
             cwd = sys.argv[0] 
             current_directory = os.path.dirname(cwd)
@@ -172,9 +175,9 @@ def downloadAria(gid, parent):
 
 # update status and last_try_date in data_base 
     if start_time:
-        status = "scheduled"
+        status = STATUS.DOWNLOAD.SCHEDULED
     else:
-        status = "waiting"
+        status = STATUS.DOWNLOAD.WAITING
 
     # get last_try_date
     now_date = nowDate()
@@ -198,9 +201,9 @@ def downloadAria(gid, parent):
     if start_time:
         start_time_status = startTime(start_time, gid, parent)
     else:
-        start_time_status = "downloading"
+        start_time_status = STATUS.DOWNLOAD.DOWNLOADING
 
-    if start_time_status == "scheduled":
+    if start_time_status == STATUS.DOWNLOAD.SCHEDULED:
         # read limit value again from data_base before starting download!
         # perhaps user changed this in progress bar window
         add_link_dictionary = parent.persepolis_db.searchGidInAddLinkTable(gid)
@@ -226,7 +229,7 @@ def downloadAria(gid, parent):
     persepolis_setting.sync()
     download_path_temp = persepolis_setting.value('settings/download_path_temp')
 
-    if start_time_status != 'stopped':
+    if start_time_status != STATUS.DOWNLOAD.STOPPED:
         # send download request to aria2
         aria_dict = {
             'gid': gid,
@@ -270,7 +273,7 @@ def downloadAria(gid, parent):
         except:
 
             # write error status in data_base
-            dict = {'gid': gid, 'status': 'error'}
+            dict = {'gid': gid, 'status': STATUS.DOWNLOAD.ERROR}
             parent.persepolis_db.updateDownloadTable([dict])
 
             # write ERROR messages in log
@@ -325,7 +328,7 @@ def tellStatus(gid, parent):
 
 
 # if download has completed , then move file to the download folder
-    if (converted_info_dict['status'] == "complete"):
+    if (converted_info_dict['status'] == STATUS.DOWNLOAD.COMPLETE):
         file_name = converted_info_dict['file_name']
  
         # find download_path from addlink_db_table in data_base
@@ -365,9 +368,9 @@ def tellStatus(gid, parent):
         parent.persepolis_db.updateAddLinkTable([add_link_dictionary])
 
 # if an error occured!
-    if (converted_info_dict['status'] == "error"):
+    if (converted_info_dict['status'] == STATUS.DOWNLOAD.ERROR):
         # add errorMessage to converted_info_dict
-        converted_info_dict['error'] = str(download_status['errorMessage'])
+        converted_info_dict[STATUS.DOWNLOAD.ERROR] = str(download_status['errorMessage'])
 
         # remove download from aria2
         server.aria2.removeDownloadResult(gid)
@@ -483,11 +486,11 @@ def convertDownloadInformation(download_status):
 
 # rename active status to downloading
     if (status_str == "active"):
-        status_str = "downloading"
+        status_str = STATUS.DOWNLOAD.DOWNLOADING
 
 # rename removed status to stopped
     if (status_str == "removed"):
-        status_str = "stopped"
+        status_str = STATUS.DOWNLOAD.STOPPED
 
     if (status_str == "None"):
         status_str = None
@@ -651,12 +654,12 @@ def downloadStop(gid, parent):
     # if status is "scheduled", then download request has not been sended to aria2!
     # so no need to send stop request to aria2. 
     # if status in not "scheduled" so stop request must be sended to aria2. 
-    if status != 'scheduled':
+    if status != STATUS.DOWNLOAD.SCHEDULED:
         try:
             # send remove download request to aira2. 
             # see aria2 documentation for more informations.
             answer = server.aria2.remove(gid)
-            if status == 'downloading':
+            if status == STATUS.DOWNLOAD.DOWNLOADING:
                 server.aria2.removeDownloadResult(gid)
         except:
             answer = "None"
@@ -667,15 +670,15 @@ def downloadStop(gid, parent):
     # if download has not been completed yet,
     # so just chang status of download to "stopped" in data base.
     else:
-        answer = 'stopped'
+        answer = STATUS.DOWNLOAD.STOPPED
 
-    if status != 'complete':
+    if status != STATUS.DOWNLOAD.COMPLETE:
         # change start_time end_time and after_download value to None in date base
         parent.persepolis_db.setDefaultGidInAddlinkTable(gid, 
                 start_time=True, end_time=True, after_download=True)
 
         # change status of download to "stopped" in data base
-        dict = {'gid': gid, 'status': 'stopped'}        
+        dict = {'gid': gid, 'status': STATUS.DOWNLOAD.STOPPED}
         parent.persepolis_db.updateDownloadTable([dict])
 
     return answer
@@ -777,9 +780,9 @@ def startTime(start_time, gid, parent):
     sigma_start = sigmaTime(start_time) 
 
     # get current time
-    sigma_now = nowTime()  
+    sigma_now = nowTime()
 
-    status = 'scheduled'
+    status = STATUS.DOWNLOAD.SCHEDULED
 
   # this loop is countinuing until download time arrival!
     while sigma_start != sigma_now:
@@ -792,11 +795,11 @@ def startTime(start_time, gid, parent):
         
         # if data_base_download_status = stopped >> it means that user
         # canceled download , and loop must be breaked!
-        if data_base_download_status == 'stopped':
-            status = 'stopped'
+        if data_base_download_status == STATUS.DOWNLOAD.STOPPED:
+            status = STATUS.DOWNLOAD.STOPPED
             break
         else:
-            status = 'scheduled'
+            status = STATUS.DOWNLOAD.SCHEDULED
 
 # if user canceled download , then return 'stopped' and if download time arrived then return 'scheduled'!
     return status  
@@ -817,7 +820,7 @@ def endTime(end_time, gid, parent):
         status = dict['status']
 
         # check download status
-        if status == 'downloading' or status == 'paused' or status == 'waiting':
+        if status == STATUS.DOWNLOAD.DOWNLOADING or status == STATUS.DOWNLOAD.PAUSED or status == STATUS.DOWNLOAD.WAITING:
             # download continues!
             answer = 'continue'
         else:
@@ -843,7 +846,7 @@ def endTime(end_time, gid, parent):
             i = i + 1
 
         # If aria2c not respond, so kill it. R.I.P :)) 
-        if (answer == 'None') and (os_type != 'Windows'):
+        if (answer == 'None') and (os_type != OS.WINDOWS):
             os.system("killall aria2c")
 
         # change end_time value to None in data_base

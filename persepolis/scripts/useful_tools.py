@@ -13,9 +13,12 @@
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from PyQt5.QtWidgets import QStyleFactory
-import platform
 import os
+import platform
+
+from PyQt5.QtWidgets import QStyleFactory
+
+from persepolis.constants import OS
 
 try:
     from persepolis.scripts import logger
@@ -35,13 +38,13 @@ home_address = os.path.expanduser("~")
 
 # determine the config folder path base on the oprating system
 def determineConfigFolder():
-    if os_type == 'Linux' or os_type == 'FreeBSD' or os_type == 'OpenBSD':
+    if os_type == OS.LINUX or os_type == OS.FREE_BSD or os_type == OS.OPEN_BSD:
         config_folder = os.path.join(
             str(home_address), ".config/persepolis_download_manager")
-    elif os_type == 'Darwin':
+    elif os_type == OS.DARWIN:
         config_folder = os.path.join(
             str(home_address), "Library/Application Support/persepolis_download_manager")
-    elif os_type == 'Windows':
+    elif os_type == OS.WINDOWS:
         config_folder = os.path.join(
             str(home_address), 'AppData', 'Local', 'persepolis_download_manager')
 
@@ -50,7 +53,7 @@ def determineConfigFolder():
 # this function returns operating system and desktop environment(for linux and bsd).
 def osAndDesktopEnvironment():
     desktop_env = None
-    if os_type == 'Linux' or os_type == 'FreeBSD' or os_type == 'OpenBSD':
+    if os_type == OS.LINUX or os_type == OS.FREE_BSD or os_type == OS.OPEN_BSD:
         # find desktop environment('KDE', 'GNOME', ...)
         desktop_env = os.environ.get('XDG_CURRENT_DESKTOP')
 
@@ -97,7 +100,7 @@ def returnDefaultSettings():
     os_type, desktop_env = osAndDesktopEnvironment() 
 
     # persepolis temporary download folder
-    if os_type != 'Windows':
+    if os_type != OS.WINDOWS:
         download_path_temp = str(home_address) + '/.persepolis'
     else:
         download_path_temp = os.path.join(
@@ -112,7 +115,7 @@ def returnDefaultSettings():
     style = 'Fusion'
     color_scheme = 'Persepolis Light Blue'
     icons = 'Breeze'
-    if os_type == 'Linux' or os_type == 'FreeBSD' or 'os_type' == 'OpenBSD':
+    if os_type == OS.LINUX or os_type == OS.FREE_BSD or 'os_type' == OS.OPEN_BSD:
         if desktop_env == 'KDE':
             if 'Breeze' in available_styles:
                 style = 'Breeze'
@@ -163,15 +166,15 @@ def returnDefaultSettings():
                 else:
                     style = 'Fusion'
                     color_scheme = 'Persepolis Light Blue'
-    
-    elif os_type == 'Darwin':
+
+    elif os_type == OS.DARWIN:
         style = 'Fusion'
         color_scheme = 'Persepolis Light Blue'
         icons = 'Breeze'
 
 
 
-    elif os_type == 'Windows':
+    elif os_type == OS.WINDOWS:
         style = 'Fusion'
         color_scheme = 'Persepolis Old Light Blue'
         icons = 'Breeze'

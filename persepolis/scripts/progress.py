@@ -14,16 +14,20 @@
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from PyQt5.QtCore import QSize, QPoint, QThread, QTranslator, QCoreApplication, QLocale
-from PyQt5.QtWidgets import QWidget, QSizePolicy,  QInputDialog
-from persepolis.gui.progress_ui import ProgressWindow_Ui
-from persepolis.scripts.shutdown import shutDown
-from persepolis.scripts.bubble import notifySend
-from PyQt5 import QtCore, QtGui, QtWidgets
-from persepolis.scripts import download
-import platform
-import time
 import os
+import platform
+
+from PyQt5 import QtWidgets
+from PyQt5.QtCore import (
+    QSize, QPoint, QThread, QTranslator, QCoreApplication, QLocale
+)
+from PyQt5.QtWidgets import QInputDialog
+
+from persepolis.constants import OS, STATUS
+from persepolis.gui.progress_ui import ProgressWindow_Ui
+from persepolis.scripts import download
+from persepolis.scripts.bubble import notifySend
+from persepolis.scripts.shutdown import shutDown
 
 os_type = platform.system()
 
@@ -104,7 +108,7 @@ class ProgressWindow(ProgressWindow_Ui):
         self.hide()
 
     def resumePushButtonPressed(self, button):
-        if self.status == "paused":
+        if self.status == STATUS.DOWNLOAD.PAUSED:
             answer = download.downloadUnpause(self.gid)
 # if aria2 did not respond , then this function is checking for aria2
 # availability , and if aria2 disconnected then aria2Disconnected is
@@ -120,7 +124,7 @@ class ProgressWindow(ProgressWindow_Ui):
                                'warning', parent=self.parent)
 
     def pausePushButtonPressed(self, button):
-        if self.status == "downloading":
+        if self.status == STATUS.DOWNLOAD.DOWNLOADING:
             answer = download.downloadPause(self.gid)
 # if aria2 did not respond , then this function is checking for aria2
 # availability , and if aria2 disconnected then aria2Disconnected is
@@ -166,7 +170,7 @@ class ProgressWindow(ProgressWindow_Ui):
             self.limit_frame.setEnabled(False)
 
             # check download status is "scheduled" or not!
-            if self.status != 'scheduled':
+            if self.status != STATUS.DOWNLOAD.SCHEDULED:
                 # tell aria2 for unlimiting speed
                 download.limitSpeed(self.gid, "0")
             else:
@@ -196,7 +200,7 @@ class ProgressWindow(ProgressWindow_Ui):
     def afterPushButtonPressed(self, button):
         self.after_pushButton.setEnabled(False)
 
-        if os_type != 'Windows':  # For Linux and Mac OSX and FreeBSD and OpenBSD
+        if os_type != OS.WINDOWS:  # For Linux and Mac OSX and FreeBSD and OpenBSD
             # get root password
             passwd, ok = QInputDialog.getText(
                 self, 'PassWord', 'Please enter root password:', QtWidgets.QLineEdit.Password)
@@ -247,7 +251,7 @@ class ProgressWindow(ProgressWindow_Ui):
 # if download was started before , send the limit_speed request to aria2 .
 # else save the request in data_base
 
-        if self.status != 'scheduled':
+        if self.status != STATUS.DOWNLOAD.SCHEDULED:
             download.limitSpeed(self.gid, limit_value)
         else:
             # update limit value in data_base
