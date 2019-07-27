@@ -244,7 +244,6 @@ class VideoFinderAddLink(AddLinkWindow):
 
         # Set Texts
         self.url_submit_pushButtontton.setText(QCoreApplication.translate("ytaddlink_src_ui_tr", 'Fetch Media List'))
-        self.ok_pushButton.setText(QCoreApplication.translate("ytaddlink_src_ui_tr", 'Download Now'))
         select_format_label.setText(QCoreApplication.translate("ytaddlink_src_ui_tr", 'Select a format'))
 
         self.video_format_selection_label.setText(QCoreApplication.translate("ytaddlink_src_ui_tr", 'Video format:'))

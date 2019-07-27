@@ -58,8 +58,15 @@ server = xmlrpc.client.ServerProxy(server_uri, allow_none=True)
 def startAria():
     # in Linux and BSD
     if os_type == 'Linux' or os_type == 'FreeBSD' or os_type == 'OpenBSD':
-        os.system("aria2c --no-conf  --enable-rpc --rpc-listen-port '" +
-                  str(port) + "' --rpc-max-request-size=2M --rpc-listen-all --quiet=true &")
+
+        subprocess.Popen(['aria2c', '--no-conf',
+            '--enable-rpc', '--rpc-listen-port=' + str(port),
+            '--rpc-max-request-size=2M',
+            '--rpc-listen-all', '--quiet=true'], 
+            stderr=subprocess.PIPE,
+            stdout=subprocess.PIPE,
+            stdin=subprocess.PIPE,
+            shell=False)
 
     # in macintosh
     elif os_type == 'Darwin':
@@ -72,9 +79,15 @@ def startAria():
         else:
             aria2d = aria2_path
 
-        os.system("'" + aria2d + "' --version 1> /dev/null")
-        os.system("'" + aria2d + "' --no-conf  --enable-rpc --rpc-listen-port '" +
-                  str(port) + "' --rpc-max-request-size=2M --rpc-listen-all --quiet=true &")
+        subprocess.Popen([aria2d, '--no-conf',
+            '--enable-rpc', '--rpc-listen-port=' + str(port),
+            '--rpc-max-request-size=2M',
+            '--rpc-listen-all', '--quiet=true'],
+            stderr=subprocess.PIPE,
+            stdout=subprocess.PIPE,
+            stdin=subprocess.PIPE,
+            shell=False)
+
 
     # in Windows
     elif os_type == 'Windows':
@@ -86,6 +99,7 @@ def startAria():
         else:
             aria2d = aria2_path
 
+        # NO_WINDOW option avoids opening additional CMD window in MS Windows.
         NO_WINDOW = 0x08000000
 
         if not os.path.exists(aria2d):
@@ -93,7 +107,12 @@ def startAria():
             return None
         # aria2 command in windows
         subprocess.Popen([aria2d, '--no-conf', '--enable-rpc', '--rpc-listen-port=' + str(port),
-                          '--rpc-max-request-size=2M', '--rpc-listen-all', '--quiet=true'], shell=False, creationflags=NO_WINDOW)
+                            '--rpc-max-request-size=2M', '--rpc-listen-all', '--quiet=true'], 
+                            stderr=subprocess.PIPE,
+                            stdout=subprocess.PIPE,
+                            stdin=subprocess.PIPE,
+                            shell=False,
+                            creationflags=NO_WINDOW)
 
     time.sleep(2)
 
@@ -813,6 +832,7 @@ def endTime(end_time, gid, parent):
     # get current time
     sigma_now = nowTime()
 
+    answer = 'end'
     # while current time is not equal to end_time, continue the loop
     while sigma_end != sigma_now:
 
@@ -821,10 +841,13 @@ def endTime(end_time, gid, parent):
         status = dict['status']
 
         # check download status
-        if status == 'downloading' or status == 'paused' or status == 'waiting':
+        if status == 'scheduled' or status == 'downloading' or status == 'paused' or status == 'waiting':
+
             # download continues!
             answer = 'continue'
+
         else:
+
             # Download completed or stopped by user
             # so break the loop
             answer = 'end'
@@ -848,7 +871,14 @@ def endTime(end_time, gid, parent):
 
         # If aria2c not respond, so kill it. R.I.P :)) 
         if (answer == 'None') and (os_type != 'Windows'):
-            os.system("killall aria2c")
+
+            subprocess.Popen(['killall', 'aria2c'],
+                    stderr=subprocess.PIPE,
+                    stdout=subprocess.PIPE,
+                    stdin=subprocess.PIPE,
+                    shell=False)
+
+
 
         # change end_time value to None in data_base
         parent.persepolis_db.setDefaultGidInAddlinkTable(gid, end_time=True)

@@ -233,32 +233,44 @@ if args.parent_window or unkownargs:
     text = sys.stdin.buffer.read(text_length).decode("utf-8")
     
     if text:
+
         
-        new_list = json.loads(text)
         if 'version' in new_list:
             # This is a message from INIT of extension.
             iii = 1
-        for item in new_list['url_links']:
-            copy_dict = deepcopy(browser_plugin_dict)
-            if 'url' in item.keys():
-                copy_dict['link'] = str(item['url'])
 
-                if 'header' in item.keys() and item['header'] != '':
-                    copy_dict['header'] = item['header']
+        new_dict = json.loads(text)
 
-                if 'referrer' in item.keys() and item['referrer'] != '':
-                    copy_dict['referer'] = item['referrer']
+        if 'url_links' in new_dict:
 
-                if 'filename' in item.keys() and item['filename'] != '':
-                    copy_dict['out'] = os.path.basename(str(item['filename']))
+
+            # new_dict is sended by persepolis browser add-on.
+            # new_dict['url_links'] contains some lists.
+            # every list contains link information.
+            for item in new_dict['url_links']:
+
+                copy_dict = deepcopy(browser_plugin_dict)
+
+                if 'url' in item.keys():
+                    copy_dict['link'] = str(item['url'])
+
+                    if 'header' in item.keys() and item['header'] != '':
+                        copy_dict['header'] = item['header']
+
+                    if 'referrer' in item.keys() and item['referrer'] != '':
+                        copy_dict['referer'] = item['referrer']
+
+                    if 'filename' in item.keys() and item['filename'] != '':
+                        copy_dict['out'] = os.path.basename(str(item['filename']))
                 
-                if 'useragent' in item.keys() and item['useragent'] != '':
-                    copy_dict['user_agent'] = item['useragent']
+                    if 'useragent' in item.keys() and item['useragent'] != '':
+                        copy_dict['user_agent'] = item['useragent']
                 
-                if 'cookies' in item.keys() and item['cookies'] != '':
-                    copy_dict['load_cookies'] = item['cookies']
+                    if 'cookies' in item.keys() and item['cookies'] != '':
+                        copy_dict['load_cookies'] = item['cookies']
 
-                plugin_list.append(copy_dict)
+                    plugin_list.append(copy_dict)
+
 
 # persepolis --clear >> remove config_folder
 if args.clear:
@@ -345,6 +357,7 @@ if ('link' in add_link_dictionary.keys()):
     plugin_list.append(plugin_dict)
 
 if len(plugin_list) != 0:
+
     # import PluginsDB
     from persepolis.scripts.data_base import PluginsDB
     
@@ -368,7 +381,7 @@ if len(plugin_list) != 0:
 
 def main():
     # if lock_file is existed , it means persepolis is still running!
-    if lock_file_validation:  
+    if lock_file_validation and not((args.parent_window or args.args) and len(plugin_list) == 0):  
 
         # set QT_AUTO_SCREEN_SCALE_FACTOR to 1 for "high DPI displays" 
         os.environ['QT_AUTO_SCREEN_SCALE_FACTOR'] = '1'

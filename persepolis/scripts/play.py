@@ -16,7 +16,6 @@ from persepolis.scripts import logger
 from PyQt5.QtCore import QSettings
 import subprocess
 import platform
-import os
 
 os_type = platform.system()
 
@@ -36,18 +35,44 @@ def playNotification(file):
 
     if enable_notification == 'yes':
         if os_type == 'Linux' or os_type == 'FreeBSD' or os_type == 'OpenBSD':
-            answer = os.system("paplay --volume='" + str(volume) + "' '" + file + "' &")
+
+            pipe = subprocess.Popen(['paplay', '--volume=' + str(volume),
+                str(file)],
+                stderr=subprocess.PIPE,
+                stdout=subprocess.PIPE,
+                stdin=subprocess.PIPE,
+                shell=False)
+
+            answer = pipe.wait()
+
             if answer != 0:
                 logger.sendToLog(
                     "paplay not installed!Install it for playing sound notification", "WARNING")
 
 
         elif os_type == 'Darwin':
-            os.system("osascript -e 'set volume alert volume " +
-                      str(volume) + "'")
-            os.system("osascript -e 'beep 3' &")
+
+            pipe = subprocess.Popen(['osascript', '-e',
+                'set', 'volume', 'alert',
+                'volume', str(volume)],
+                stderr=subprocess.PIPE,
+                stdout=subprocess.PIPE,
+                stdin=subprocess.PIPE,
+                shell=False)
+
+            pipe = subprocess.Popen(['osascript', '-e',
+                'beep', '3'],
+                stderr=subprocess.PIPE,
+                stdout=subprocess.PIPE,
+                stdin=subprocess.PIPE,
+                shell=False)
 
         elif os_type == 'Windows':
+
             CREATE_NO_WINDOW = 0x08000000
             subprocess.Popen(['rundll32', 'user32.dll,MessageBeep'],
-                             shell=False, creationflags=CREATE_NO_WINDOW)
+                    stderr=subprocess.PIPE,
+                    stdout=subprocess.PIPE,
+                    stdin=subprocess.PIPE,
+                    shell=False,
+                    creationflags=CREATE_NO_WINDOW)
