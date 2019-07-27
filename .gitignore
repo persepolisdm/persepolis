@@ -1,6 +1,7 @@
 __pycache__/
 *.pyc
 .env
+.venv
 *.orig
 root/
 build/
@@ -8,3 +9,4 @@ persepolis.egg-info/
 man/persepolis.1.gz
 .idea/
 .mypy_cache
+dist/
