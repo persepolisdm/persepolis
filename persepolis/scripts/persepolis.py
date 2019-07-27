@@ -195,7 +195,7 @@ args, unkownargs = parser.parse_known_args()
 
 # if --execute >> yes  >>> persepolis main window  will start. 
 # if --execute >> no >>> persepolis started before!
-version = False
+browser_url = True
 
 add_link_dictionary = {}
 plugin_list = []
@@ -237,14 +237,6 @@ if args.parent_window or unkownargs:
         
         new_dict = json.loads(text)
 
-        if 'version' in new_dict:
-
-            # This is a message from INIT of extension.
-            # if version is in keys, so the browser message is for initialization.
-            # don't execute persepolis for initialization message from browser.
-            version = True 
-
-
         if 'url_links' in new_dict:
 
 
@@ -274,6 +266,9 @@ if args.parent_window or unkownargs:
                         copy_dict['load_cookies'] = item['cookies']
 
                     plugin_list.append(copy_dict)
+
+        else:
+            browser_url = False
 
 
 # persepolis --clear >> remove config_folder
@@ -382,10 +377,9 @@ if len(plugin_list) != 0:
     start_in_tray = True 
 
 
-
 def main():
     # if lock_file is existed , it means persepolis is still running!
-    if lock_file_validation and not((args.parent_window) and len(plugin_list) == 0) and version == False:  
+    if lock_file_validation and not((args.parent_window or unkownargs) and browser_url == False):  
 
         # set QT_AUTO_SCREEN_SCALE_FACTOR to 1 for "high DPI displays" 
         os.environ['QT_AUTO_SCREEN_SCALE_FACTOR'] = '1'
