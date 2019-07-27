@@ -190,11 +190,12 @@ parser.add_argument('--version', action='version', version='Persepolis Download 
 
 
 # Clears unwated args ( like args from Browers via NHM )
+# unkown arguments (may sent by browser) will save in unkownargs.
 args, unkownargs = parser.parse_known_args()
 
 # if --execute >> yes  >>> persepolis main window  will start. 
 # if --execute >> no >>> persepolis started before!
-
+version = False
 
 add_link_dictionary = {}
 plugin_list = []
@@ -233,13 +234,16 @@ if args.parent_window or unkownargs:
     text = sys.stdin.buffer.read(text_length).decode("utf-8")
     
     if text:
-
         
-        if 'version' in new_list:
-            # This is a message from INIT of extension.
-            iii = 1
-
         new_dict = json.loads(text)
+
+        if 'version' in new_dict:
+
+            # This is a message from INIT of extension.
+            # if version is in keys, so the browser message is for initialization.
+            # don't execute persepolis for initialization message from browser.
+            version = True 
+
 
         if 'url_links' in new_dict:
 
@@ -381,7 +385,7 @@ if len(plugin_list) != 0:
 
 def main():
     # if lock_file is existed , it means persepolis is still running!
-    if lock_file_validation and not((args.parent_window or args.args) and len(plugin_list) == 0):  
+    if lock_file_validation and not((args.parent_window) and len(plugin_list) == 0) and version == False:  
 
         # set QT_AUTO_SCREEN_SCALE_FACTOR to 1 for "high DPI displays" 
         os.environ['QT_AUTO_SCREEN_SCALE_FACTOR'] = '1'
