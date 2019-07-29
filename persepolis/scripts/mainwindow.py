@@ -4331,6 +4331,8 @@ class MainWindow(MainWindow_Ui):
     # See importText and pluginQueue method for more information.
     def queueCallback(self, add_link_dictionary_list, category):
 
+        download_table_dict_list = []
+
         # defining path of category_file
         selected_category = str(category)
 
@@ -4395,8 +4397,7 @@ class MainWindow(MainWindow_Ui):
                     'last_try_date': date,
                     'category': category}
 
-            # add dict to download_table_list
-            download_table_list.append(dictionary)
+            download_table_dict_list.append(dictionary)
 
             # create a row in download_table
             self.download_table.insertRow(0)
@@ -4415,11 +4416,9 @@ class MainWindow(MainWindow_Ui):
 
 
         # write information in data_base
-        self.persepolis_db.insertInDownloadTable(download_table_list)
+        self.persepolis_db.insertInDownloadTable(download_table_dict_list)
         self.persepolis_db.insertInAddLinkTable(add_link_dictionary_list)
 
-
-    #TODO edit
 
     # this method is called , when user clicks on an item in
     # category_tree (left side panel)
