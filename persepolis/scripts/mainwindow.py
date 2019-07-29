@@ -566,6 +566,13 @@ class VideoFinder(QThread):
 
         if self.video_completed == 'yes':
 
+            if self.video_finder_dictionary['video_completed'] == 'no':
+
+                # update data base
+                self.video_finder_dictionary['video_completed'] = 'yes'
+
+                self.parent.persepolis_db.updateVideoFinderTable([self.video_finder_dictionary])
+
             # video is downloaded completely! 
             # let's start audio downloading
             if self.audio_completed == 'no':
@@ -591,9 +598,10 @@ class VideoFinder(QThread):
         # lets start muxing!
         if self.video_completed == 'yes' and self.audio_completed == 'yes':
 
+            self.video_finder_dictionary['audio_completed'] = 'yes'
             self.video_finder_dictionary['checking'] = 'no'
-
             self.video_finder_dictionary['muxing_status'] = 'started'
+
             self.muxing = 'started'
 
             # update data base
@@ -656,6 +664,7 @@ class VideoFinder(QThread):
                 shutdown_dict = {'category': video_finder_plus_gid,
                         'shutdown': 'shutdown'}
                 self.parent.temp_db.updateQueueTable(shutdown_dict)
+
 
 
 
@@ -736,22 +745,24 @@ class Queue(QThread):
 
                 # if gid is related to video finder, so start  Video Finder thread for checking status
                 # check video_finder_threads_dict, perhaps a thread started before for this gid
-                if (gid in self.parent.all_video_finder_gid_list) and (gid not in self.parent.video_finder_threads_dict.keys()):
+                if (gid in self.parent.all_video_finder_gid_list):
 
                     video_finder_dictionary = self.parent.persepolis_db.searchGidInVideoFinderTable(gid)
 
+                    if video_finder_dictionary['video_gid'] not in self.parent.video_finder_threads_dict.keys():
 
-                    video_finder_gid_list = [video_finder_dictionary['video_gid'], video_finder_dictionary['audio_gid']]
+                        # start new video finder thread
+                        video_finder_gid_list = [video_finder_dictionary['video_gid'], video_finder_dictionary['audio_gid']]
 
-                    new_video_finder = VideoFinder(video_finder_dictionary, self.parent)
-                    self.parent.threadPool.append(new_video_finder)
-                    self.parent.threadPool[len(self.parent.threadPool) - 1].start()
-                    self.parent.threadPool[len(self.parent.threadPool) - 1].VIDEOFINDERCOMPLETED.connect(self.parent.videoFinderCompleted)
+                        new_video_finder = VideoFinder(video_finder_dictionary, self.parent)
+                        self.parent.threadPool.append(new_video_finder)
+                        self.parent.threadPool[len(self.parent.threadPool) - 1].start()
+                        self.parent.threadPool[len(self.parent.threadPool) - 1].VIDEOFINDERCOMPLETED.connect(self.parent.videoFinderCompleted)
 
-                    # add thread to video_finder_threads_dict
-                    self.parent.video_finder_threads_dict[video_finder_dictionary['video_gid']] = new_video_finder
+                        # add thread to video_finder_threads_dict
+                        self.parent.video_finder_threads_dict[video_finder_dictionary['video_gid']] = new_video_finder
 
-                    video_finder_list.append(video_finder_gid_list)
+                        video_finder_list.append(video_finder_gid_list)
 
 
                 add_link_dict = {'gid': gid}
@@ -864,15 +875,16 @@ class Queue(QThread):
 
                                     video_gid = list[0]
 
-                                    video_finder_thread = self.parent.video_finder_threads_dict[video_gid] 
+                                    if video_gid in self.parent.video_finder_threads_dict:
+                                        video_finder_thread = self.parent.video_finder_threads_dict[video_gid] 
 
-                                    # check the video and audio and muxing_status
-                                    if video_finder_thread.video_completed == 'yes' and video_finder_thread.audio_completed == 'yes':
+                                        # check the video and audio and muxing_status
+                                        if video_finder_thread.video_completed == 'yes' and video_finder_thread.audio_completed == 'yes':
 
-                                        # wait until end of muxing
-                                        while video_finder_thread.active == 'yes':
+                                            # wait until end of muxing
+                                            while video_finder_thread.active == 'yes':
 
-                                            sleep(0.2)
+                                                sleep(0.5)
 
                                 break
 
