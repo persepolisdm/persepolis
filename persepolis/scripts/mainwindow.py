@@ -627,17 +627,6 @@ class VideoFinder(QThread):
             self.parent.persepolis_db.updateVideoFinderTable([self.video_finder_dictionary])
 
            
-#             if category != "Single Downloads":
-#                 # check queue condition!
-#                 # wait unitl queue ended.  
-#                 queue_status = self.parent.queue_list_dict[str(category)].start
-# 
-#                 while queue_status: # if queue is still active
-#                     # wait
-#                     sleep(5)
-#                     queue_status = self.parent.queue_list_dict[str(category)].start
-#  
-
             complete_dictionary = {'error': error_message,
                     'final_path': result_dictionary['final_path'],
                     'final_size': result_dictionary['final_size'],
@@ -853,7 +842,7 @@ class Queue(QThread):
                         # write error_message in log file
                         error_message = 'Download failed - GID : '\
                                     + str(gid)\
-                                    + '/nMessage : '\
+                                    + '- Message : '\
                                     + error
 
                         logger.sendToLog(error_message, 'ERROR')
@@ -1815,7 +1804,7 @@ class MainWindow(MainWindow_Ui):
                                 # write error_message in log file
                                 error_message = 'Download failed - GID : '\
                                     + str(gid)\
-                                    + '/nMessage : '\
+                                    + '- Message : '\
                                     + error
 
                                 logger.sendToLog(error_message, 'ERROR')
@@ -2053,7 +2042,7 @@ class MainWindow(MainWindow_Ui):
                         # write error_message in log file
                         error_message = 'Download failed - GID : '\
                                 + str(gid)\
-                                + '/nMessage : '\
+                                + '- Message : '\
                                 + error
 
                         logger.sendToLog(error_message, 'ERROR')
