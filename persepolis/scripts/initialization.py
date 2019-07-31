@@ -53,7 +53,8 @@ with open(log_file) as f:
 # if number of lines in log_file is more than 300, then keep last 200 lines in log_file.
 if lines < 300:
     f = open(log_file, 'a')
-    f.writelines('Persepolis Download Manager, '\
+    f.writelines('===================================================\n'\
+            + 'Persepolis Download Manager, '\
             + current_time\
             +'\n')
     f.close()
@@ -153,8 +154,24 @@ persepolis_setting.endGroup()
 
 # Browser integration for Firefox and chromium and google chrome
 for browser in ['chrome', 'chromium', 'opera', 'vivaldi', 'firefox']:
-    browserIntegration(browser)
+    json_done, native_done = browserIntegration(browser)
 
+
+    log_message = browser
+
+    if json_done == True:
+        log_message = log_message + ': ' + 'Json file is created successfully.\n'
+
+    else:
+        log_message = log_message + ': ' + 'Json ERROR!\n'
+
+    if native_done == True:
+        log_message = log_message + 'persepolis executer file is created successfully.\n'
+
+    elif native_done == False:
+        log_message = log_message + ': ' + 'persepolis executer file ERROR!\n'
+
+    logger.sendToLog(log_message)
 
 # get locale and set ui direction
 locale = str(persepolis_setting.value('settings/locale'))

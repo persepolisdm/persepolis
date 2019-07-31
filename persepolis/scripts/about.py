@@ -15,7 +15,6 @@
 """
 
 from persepolis.gui.about_ui import AboutWindow_Ui
-from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtCore import QSize, QPoint
 from persepolis.gui import resources
 from PyQt5.QtWidgets import QWidget

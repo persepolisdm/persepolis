@@ -14,17 +14,16 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import QAbstractItemView, QTableWidget, QTableWidgetItem, QDateTimeEdit, QCheckBox, QVBoxLayout, QHBoxLayout, QFrame, QWidget, QLabel, QLineEdit, QTabWidget, QSpinBox, QPushButton, QDial, QComboBox, QFontComboBox, QSpacerItem, QSizePolicy
-from PyQt5.QtGui import QIcon
-import pkg_resources
 from PyQt5.QtCore import Qt, QTranslator, QCoreApplication, QLocale
 from persepolis.gui import resources 
+from PyQt5.QtGui import QIcon
+import pkg_resources
 
 class KeyCapturingWindow_Ui(QWidget):
     def __init__(self, persepolis_setting):
         super().__init__()
-        icon = QtGui.QIcon()
+        icon = QIcon()
 
         self.persepolis_setting = persepolis_setting
 
@@ -81,7 +80,7 @@ class KeyCapturingWindow_Ui(QWidget):
 class Setting_Ui(QWidget):
     def __init__(self, persepolis_setting):
         super().__init__()
-        icon = QtGui.QIcon()
+        icon = QIcon()
 
         self.persepolis_setting = persepolis_setting
 
@@ -449,24 +448,13 @@ class Setting_Ui(QWidget):
 
         video_finder_tab_verticalLayout = QVBoxLayout()
 
-        # Whether to enable video link capturing.
-        self.enable_video_finder_checkbox = QCheckBox(self.video_finder_tab)
-        video_finder_layout.addWidget(self.enable_video_finder_checkbox)
-
-        # If we should hide videos with no audio
-        self.hide_no_audio_checkbox = QCheckBox(self.video_finder_tab)
-        video_finder_tab_verticalLayout.addWidget(self.hide_no_audio_checkbox)
-
-        # If we should hide audios without video
-        self.hide_no_video_checkbox = QCheckBox(self.video_finder_tab)
-        video_finder_tab_verticalLayout.addWidget(self.hide_no_video_checkbox)
-
         max_links_horizontalLayout = QHBoxLayout()
 
         # max_links_label
         self.max_links_label = QLabel(self.video_finder_tab)
 
         max_links_horizontalLayout.addWidget(self.max_links_label)
+
         # max_links_spinBox
         self.max_links_spinBox = QSpinBox(self.video_finder_tab)
         self.max_links_spinBox.setMinimum(1)
@@ -678,11 +666,6 @@ class Setting_Ui(QWidget):
         self.setting_tabWidget.setTabText(self.setting_tabWidget.indexOf(
             self.video_finder_tab), QCoreApplication.translate("setting_ui_tr",  "Video Finder Options"))
 
-        self.enable_video_finder_checkbox.setText(QCoreApplication.translate("setting_ui_tr", 'Enable Video Finder'))
-
-        self.hide_no_audio_checkbox.setText(QCoreApplication.translate("setting_ui_tr", 'Hide videos with no audio'))
-
-        self.hide_no_video_checkbox.setText(QCoreApplication.translate("setting_ui_tr", 'Hide audios with no video'))
         self.max_links_label.setText(QCoreApplication.translate("setting_ui_tr", 'Maximum number of links to capture:<br/>'
                                      '<small>(If browser sends multiple video links at a time)</small>'))
 

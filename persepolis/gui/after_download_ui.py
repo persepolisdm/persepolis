@@ -15,7 +15,6 @@
 
 from PyQt5.QtWidgets import QCheckBox , QWidget , QVBoxLayout , QHBoxLayout , QPushButton , QLabel , QLineEdit  
 from PyQt5.QtCore import Qt, QTranslator, QCoreApplication,QLocale
-from PyQt5 import QtCore, QtWidgets , QtGui
 from persepolis.gui import resources 
 from PyQt5.QtGui import QIcon
 
@@ -114,10 +113,3 @@ class AfterDownloadWindow_Ui(QWidget):
         self.complete_label.setText(QCoreApplication.translate("after_download_ui_tr", "<b>Download Completed!</b>"))
         self.save_as_label.setText(QCoreApplication.translate("after_download_ui_tr", "<b>Save as</b>: "))
         self.link_label.setText(QCoreApplication.translate("after_download_ui_tr", "<b>Link</b>: " )) 
-
-
-    def changeIcon(self , icons ):
-        icons = ':/' + str(icons) + '/'
-        self.ok_pushButton.setIcon(QIcon(icons + 'ok'))
-        self.open_folder_pushButtun.setIcon(QIcon(icons + 'folder'))
-        self.open_pushButtun.setIcon(QIcon(icons + 'file'))

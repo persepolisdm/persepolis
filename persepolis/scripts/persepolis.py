@@ -189,20 +189,13 @@ parser.add_argument('--parent-window', action='store', nargs = 1, help='this swi
 parser.add_argument('--version', action='version', version='Persepolis Download Manager 3.1.0')
 
 
-parser.add_argument('args', nargs=argparse.REMAINDER)
-
-#args, unknown = parser.parse_known_args(['chromium','--link','--referer','--cookie','--agent','--headers','--name','--default','--clear','--tray','--parent-window','--version'])
-args  = parser.parse_args()
-
-# terminal arguments are send download information with terminal arguments(link , referer , cookie , agent , headers , name )
-# persepolis plugins (for chromium and chrome and opera and vivaldi and firefox) are use native message host system for 
-# sending download information to persepolis.
-# see this repo for more information:
-#   https://github.com/persepolisdm/Persepolis-WebExtension
+# Clears unwated args ( like args from Browers via NHM )
+# unkown arguments (may sent by browser) will save in unkownargs.
+args, unkownargs = parser.parse_known_args()
 
 # if --execute >> yes  >>> persepolis main window  will start. 
 # if --execute >> no >>> persepolis started before!
-
+browser_url = True
 
 add_link_dictionary = {}
 plugin_list = []
@@ -215,8 +208,9 @@ browser_plugin_dict ={'link': None,
             }
 
 
-#if args.chromium != 'no' or args.parent_window:
-if args.parent_window or args.args:
+# This dirty trick will show Persepolis version when there are unknown args
+# Unknown args are sent by Browsers for NHM
+if args.parent_window or unkownargs:
 
 # Platform specific configuration
     if os_type == "Windows":
@@ -240,29 +234,42 @@ if args.parent_window or args.args:
     text = sys.stdin.buffer.read(text_length).decode("utf-8")
     
     if text:
-        new_list = json.loads(text)
+        
+        new_dict = json.loads(text)
 
-        for item in new_list['url_links']:
-            copy_dict = deepcopy(browser_plugin_dict)
-            if 'url' in item.keys():
-                copy_dict['link'] = str(item['url'])
+        if 'url_links' in new_dict:
 
-                if 'header' in item.keys() and item['header'] != '':
-                    copy_dict['header'] = item['header']
 
-                if 'referrer' in item.keys() and item['referrer'] != '':
-                    copy_dict['referer'] = item['referrer']
+            # new_dict is sended by persepolis browser add-on.
+            # new_dict['url_links'] contains some lists.
+            # every list contains link information.
+            for item in new_dict['url_links']:
 
-                if 'filename' in item.keys() and item['filename'] != '':
-                    copy_dict['out'] = os.path.basename(str(item['filename']))
+                copy_dict = deepcopy(browser_plugin_dict)
+
+                if 'url' in item.keys():
+                    copy_dict['link'] = str(item['url'])
+
+                    if 'header' in item.keys() and item['header'] != '':
+                        copy_dict['header'] = item['header']
+
+                    if 'referrer' in item.keys() and item['referrer'] != '':
+                        copy_dict['referer'] = item['referrer']
+
+                    if 'filename' in item.keys() and item['filename'] != '':
+                        copy_dict['out'] = os.path.basename(str(item['filename']))
                 
-                if 'useragent' in item.keys() and item['useragent'] != '':
-                    copy_dict['user_agent'] = item['useragent']
+                    if 'useragent' in item.keys() and item['useragent'] != '':
+                        copy_dict['user_agent'] = item['useragent']
                 
-                if 'cookies' in item.keys() and item['cookies'] != '':
-                    copy_dict['load_cookies'] = item['cookies']
+                    if 'cookies' in item.keys() and item['cookies'] != '':
+                        copy_dict['load_cookies'] = item['cookies']
 
-                plugin_list.append(copy_dict)
+                    plugin_list.append(copy_dict)
+
+        else:
+            browser_url = False
+
 
 # persepolis --clear >> remove config_folder
 if args.clear:
@@ -349,6 +356,7 @@ if ('link' in add_link_dictionary.keys()):
     plugin_list.append(plugin_dict)
 
 if len(plugin_list) != 0:
+
     # import PluginsDB
     from persepolis.scripts.data_base import PluginsDB
     
@@ -369,10 +377,13 @@ if len(plugin_list) != 0:
     start_in_tray = True 
 
 
-
 def main():
     # if lock_file is existed , it means persepolis is still running!
-    if lock_file_validation:  
+    if lock_file_validation and not((args.parent_window or unkownargs) and browser_url == False):  
+
+        # set QT_AUTO_SCREEN_SCALE_FACTOR to 1 for "high DPI displays" 
+        os.environ['QT_AUTO_SCREEN_SCALE_FACTOR'] = '1'
+
         # run mainwindow
 
         # set color_scheme and style

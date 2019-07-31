@@ -31,15 +31,27 @@ def touch(file_path):
 
 def xdgOpen(file_path):
     if os_type == 'Linux' or os_type == 'FreeBSD' or os_type == 'OpenBSD':  # GNU/Linux systems
-        subprocess.Popen(['xdg-open', file_path], shell=False)
+        subprocess.Popen(['xdg-open', file_path],
+                stderr=subprocess.PIPE,
+                stdout=subprocess.PIPE,
+                stdin=subprocess.PIPE,
+                shell=False)
 
     elif os_type == 'Darwin':  # OS X systems
-        subprocess.Popen(['open', file_path], shell=False)
+        subprocess.Popen(['open', file_path],
+                stderr=subprocess.PIPE,
+                stdout=subprocess.PIPE,
+                stdin=subprocess.PIPE,
+                shell=False)
 
     elif os_type == 'Windows':
         CREATE_NO_WINDOW = 0x08000000
         subprocess.Popen(['cmd', '/C', 'start', file_path,  file_path],
-                         shell=False, creationflags=CREATE_NO_WINDOW)
+                stderr=subprocess.PIPE,
+                stdout=subprocess.PIPE,
+                stdin=subprocess.PIPE,
+                shell=False,
+                creationflags=CREATE_NO_WINDOW)
 
 
 def remove(file_path):  # remove file with path of file_path

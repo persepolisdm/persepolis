@@ -1,4 +1,3 @@
-
 # -*- coding: utf-8 -*-
 
 #    This program is free software: you can redistribute it and/or modify
@@ -16,7 +15,7 @@
 
 from PyQt5.QtCore import QSize, QPoint, QThread, QTranslator, QCoreApplication, QLocale
 from PyQt5.QtWidgets import QLineEdit, QWidget, QSizePolicy,  QInputDialog
-from persepolis.gui.progress_ui import ProgressWindow_Ui
+from persepolis.gui.video_finder_progress_ui import VideoFinderProgressWindow_Ui
 from persepolis.scripts.shutdown import shutDown
 from persepolis.scripts.bubble import notifySend
 from persepolis.scripts import download
@@ -29,23 +28,34 @@ os_type = platform.system()
 
 
 class ShutDownThread(QThread):
-    def __init__(self, parent, gid, password=None):
+    def __init__(self, parent, category, password=None):
         QThread.__init__(self)
-        self.gid = gid
+        self.category = category
         self.password = password
         self.parent = parent
 
     def run(self):
-        shutDown(self.parent, gid=self.gid, password=self.password)
+        shutDown(self.parent, category=self.category, password=self.password)
 
 
-class ProgressWindow(ProgressWindow_Ui):
-    def __init__(self, parent, gid, persepolis_setting):
+class VideoFinderProgressWindow(VideoFinderProgressWindow_Ui):
+    def __init__(self, parent, gid_list, persepolis_setting):
         super().__init__(persepolis_setting)
         self.persepolis_setting = persepolis_setting
         self.parent = parent
-        self.gid = gid
-        self.status = None
+
+        # first item in the gid_list is related to video's link and second item is related to audio's link.
+        self.gid_list = gid_list
+
+        # this variable can be changed by checkDownloadInfo method in mainwindow.py 
+        # self.gid defines that wich gid is downloaded. 
+        self.gid = gid_list[0]
+
+
+        # this variable used as category name in ShutDownThread
+        self.video_finder_plus_gid = 'video_finder_' + str(gid_list[0])
+
+        # connect signals and sluts 
         self.resume_pushButton.clicked.connect(self.resumePushButtonPressed)
         self.stop_pushButton.clicked.connect(self.stopPushButtonPressed)
         self.pause_pushButton.clicked.connect(self.pausePushButtonPressed)
@@ -60,15 +70,15 @@ class ProgressWindow(ProgressWindow_Ui):
 
         self.after_pushButton.clicked.connect(self.afterPushButtonPressed)
 
-# add support for other languages
+        # add support for other languages
         locale = str(self.persepolis_setting.value('settings/locale'))
         QLocale.setDefault(QLocale(locale))
         self.translator = QTranslator()
         if self.translator.load(':/translations/locales/ui_' + locale, 'ts'):
             QCoreApplication.installTranslator(self.translator)
 
-# check if limit speed actived by user or not
-        add_link_dictionary = self.parent.persepolis_db.searchGidInAddLinkTable(gid)
+        # check if limit speed actived by user or not
+        add_link_dictionary = self.parent.persepolis_db.searchGidInAddLinkTable(gid_list[0])
 
         limit = str(add_link_dictionary['limit_value'])
         if limit != '0':
@@ -87,7 +97,7 @@ class ProgressWindow(ProgressWindow_Ui):
 
         self.limit_spinBox.valueChanged.connect(self.limitComboBoxChanged)
 
-  # set window size and position
+        # set window size and position
         size = self.persepolis_setting.value(
             'ProgressWindow/size', QSize(595, 274))
         position = self.persepolis_setting.value(
@@ -96,6 +106,7 @@ class ProgressWindow(ProgressWindow_Ui):
         self.move(position)
 
     def closeEvent(self, event):
+
         # save window size and position
         self.persepolis_setting.setValue('ProgressWindow/size', self.size())
         self.persepolis_setting.setValue('ProgressWindow/position', self.pos())
@@ -104,10 +115,8 @@ class ProgressWindow(ProgressWindow_Ui):
         self.hide()
 
     def resumePushButtonPressed(self, button):
-
         if self.status == "paused":
             answer = download.downloadUnpause(self.gid)
-
             # if aria2 did not respond , then this function is checking for aria2
             # availability , and if aria2 disconnected then aria2Disconnected is
             # executed
@@ -120,6 +129,7 @@ class ProgressWindow(ProgressWindow_Ui):
                 else:
                     notifySend(QCoreApplication.translate("progress_src_ui_tr", "Aria2 did not respond!"), QCoreApplication.translate("progress_src_ui_tr", "Please try again."), 10000,
                                'warning', parent=self.parent)
+
 
     def pausePushButtonPressed(self, button):
 
@@ -142,10 +152,11 @@ class ProgressWindow(ProgressWindow_Ui):
 
     def stopPushButtonPressed(self, button):
         
-        dict = {'gid': self.gid,
+        # cancel shut down progress
+        dictionary = {'category': self.video_finder_plus_gid,
                 'shutdown': 'canceled'}
 
-        self.parent.temp_db.updateSingleTable(dict)
+        self.parent.temp_db.updateQueueTable(dictionary)
 
 
         answer = download.downloadStop(self.gid, self.parent)
@@ -172,43 +183,56 @@ class ProgressWindow(ProgressWindow_Ui):
             self.limit_frame.setEnabled(False)
 
             # check download status is "scheduled" or not!
-            if self.status != 'scheduled':
-                # tell aria2 for unlimiting speed
-                download.limitSpeed(self.gid, "0")
-            else:
-                # update limit value in data_base
-                add_link_dictionary = {'gid': self.gid, 'limit_value': '0'}
-                self.parent.persepolis_db.updateAddLinkTable([add_link_dictionary])
+            for i in [0, 1]:
+                gid = self.gid_list[i]
+                dictionary = self.parent.persepolis_db.searchGidInDownloadTable(gid) 
+                status = dictionary['status']
+
+                if status != 'scheduled':
+
+                    # tell aria2 for unlimiting speed
+                    download.limitSpeed(gid, "0")
+
+                else:
+                    # update limit value in data_base
+                    add_link_dictionary = {'gid': gid, 'limit_value': '0'}
+                    self.parent.persepolis_db.updateAddLinkTable([add_link_dictionary])
 
     def limitComboBoxChanged(self, connect):
+
         self.limit_pushButton.setEnabled(True)
 
     def afterComboBoxChanged(self, connect):
+
         self.after_pushButton.setEnabled(True)
 
     def afterCheckBoxToggled(self, checkBoxes):
+
         if self.after_checkBox.isChecked():
+
             self.after_frame.setEnabled(True)
         else:
+
             # so user canceled shutdown after download
             # write cancel value in data_base for this gid
-            self.after_frame.setEnabled(False)
+            dictionary = {'category': self.video_finder_plus_gid,
+                        'shutdown': 'canceled'}
 
-            dict = {'gid': self.gid,
-                    'shutdown': 'canceled'}
-
-            self.parent.temp_db.updateSingleTable(dict)
-
+            self.parent.temp_db.updateQueueTable(dictionary)
+    
     def afterPushButtonPressed(self, button):
+
         self.after_pushButton.setEnabled(False)
 
-        if os_type != 'Windows':  # For Linux and Mac OSX and FreeBSD and OpenBSD
+        # For Linux and Mac OSX and FreeBSD and OpenBSD
+        if os_type != 'Windows':  
 
             # get root password
             passwd, ok = QInputDialog.getText(
                 self, 'PassWord', 'Please enter root password:', QLineEdit.Password)
 
             if ok:
+
                 # check password is true or not!
                 pipe = subprocess.Popen(['sudo', '-S', 'echo', 'hello'],
                         stdout=subprocess.DEVNULL,
@@ -227,7 +251,7 @@ class ProgressWindow(ProgressWindow_Ui):
                         self, 'PassWord', 'Wrong Password!\nPlease try again.', QLineEdit.Password)
 
                     if ok:
-                        # checking password
+
                         pipe = subprocess.Popen(['sudo', '-S', 'echo', 'hello'],
                                 stdout=subprocess.DEVNULL,
                                 stdin=subprocess.PIPE,
@@ -244,14 +268,15 @@ class ProgressWindow(ProgressWindow_Ui):
 
                 if ok != False:
 
-                # if user selects shutdown option after download progress, 
-                # value of 'shutdown' will changed in temp_db for this gid
-                # and "wait" word will be written for this value.
-                # (see ShutDownThread and shutdown.py for more information)
-                # shutDown method will check that value in a loop .
-                # when "wait" changes to "shutdown" then shutdown.py script
-                # will shut down the system.
-                    shutdown_enable = ShutDownThread(self.parent, self.gid, passwd)
+                    # if user selects shutdown option after download progress, 
+                    # value of 'shutdown' will changed in temp_db for this progress
+                    # and "wait" word will be written for this value.
+                    # (see ShutDownThread and shutdown.py for more information)
+                    # shutDown method will check that value in a loop .
+                    # when "wait" changes to "shutdown" then shutdown.py script
+                    # will shut down the system.
+
+                    shutdown_enable = ShutDownThread(self.parent, self.video_finder_plus_gid, passwd)
                     self.parent.threadPool.append(shutdown_enable)
                     self.parent.threadPool[len(self.parent.threadPool) - 1].start()
 
@@ -260,27 +285,38 @@ class ProgressWindow(ProgressWindow_Ui):
             else:
                 self.after_checkBox.setChecked(False)
 
-        else:  # for Windows
-            shutdown_enable = ShutDownThread(self.parent, self.gid)
-            self.parent.threadPool.append(shutdown_enable)
-            self.parent.threadPool[len(self.parent.threadPool) - 1].start()
+        else:  
+            # for Windows
+            for gid in gid_list:
+                shutdown_enable = ShutDownThread(self.parent, self.video_finder_plus_gid)
+                self.parent.threadPool.append(shutdown_enable)
+                self.parent.threadPool[len(self.parent.threadPool) - 1].start()
 
     def limitPushButtonPressed(self, button):
+
         self.limit_pushButton.setEnabled(False)
+
         if self.limit_comboBox.currentText() == "KiB/s":
+
             limit_value = str(self.limit_spinBox.value()) + str("K")
         else:
             limit_value = str(self.limit_spinBox.value()) + str("M")
 
-    # if download was started before , send the limit_speed request to aria2 .
-    # else save the request in data_base
+        # if download was started before , send the limit_speed request to aria2 .
+        # else save the request in data_base
+        for i in [0, 1]:
 
-        if self.status != 'scheduled':
-            download.limitSpeed(self.gid, limit_value)
-        else:
-            # update limit value in data_base
-            add_link_dictionary = {'gid': self.gid, 'limit_value': limit_value}
-            self.parent.persepolis_db.updateAddLinkTable([add_link_dictionary])
+            gid = self.gid_list[i]
+            dictionary = self.parent.persepolis_db.searchGidInDownloadTable(gid)
+            status = dictionary['status']
+
+            if status != 'scheduled':
+
+                download.limitSpeed(self.gid, limit_value)
+            else:
+                # update limit value in data_base
+                add_link_dictionary = {'gid': gid, 'limit_value': limit_value}
+                self.parent.persepolis_db.updateAddLinkTable([add_link_dictionary])
 
     def changeIcon(self, icons):
         icons = ':/' + str(icons) + '/'

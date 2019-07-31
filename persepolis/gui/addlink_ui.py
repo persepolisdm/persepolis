@@ -87,14 +87,14 @@ class AddLinkWindow_Ui(QWidget):
         link_tab_verticalLayout.addWidget(self.link_frame)
 
         # add change_name field ->
-        change_name_horizontalLayout = QHBoxLayout()
+        self.change_name_horizontalLayout = QHBoxLayout()
         self.change_name_checkBox = QCheckBox(self.link_frame)
-        change_name_horizontalLayout.addWidget(self.change_name_checkBox)
+        self.change_name_horizontalLayout.addWidget(self.change_name_checkBox)
 
         self.change_name_lineEdit = QLineEdit(self.link_frame)
-        change_name_horizontalLayout.addWidget(self.change_name_lineEdit)
+        self.change_name_horizontalLayout.addWidget(self.change_name_lineEdit)
 
-        self.link_verticalLayout.addLayout(change_name_horizontalLayout)
+        self.link_verticalLayout.addLayout(self.change_name_horizontalLayout)
 
         # add_category ->
         queue_horizontalLayout = QHBoxLayout()
@@ -459,11 +459,3 @@ class AddLinkWindow_Ui(QWidget):
         self.load_cookies_label.setText(QCoreApplication.translate("addlink_ui_tr", 'Load cookies: '))
 
         self.user_agent_label.setText(QCoreApplication.translate("addlink_ui_tr", 'User agent: '))
-
-    def changeIcon(self, icons):
-        icons = ':/' + str(icons) + '/'
-
-        self.folder_pushButton.setIcon(QIcon(icons + 'folder'))
-        self.download_later_pushButton.setIcon(QIcon(icons + 'stop'))
-        self.cancel_pushButton.setIcon(QIcon(icons + 'remove'))
-        self.ok_pushButton.setIcon(QIcon(icons + 'ok'))
