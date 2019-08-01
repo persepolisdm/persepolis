@@ -449,7 +449,7 @@ def convertDownloadInformation(download_status):
 
         downloaded_str = humanReadbleSize(downloaded)
 
-    # find download percent from file_size and downloaded_size
+        # find download percent from file_size and downloaded_size
         file_size = file_size_back
         downloaded = downloaded_back
         percent = int(downloaded * 100 / file_size)
@@ -504,17 +504,20 @@ def convertDownloadInformation(download_status):
     except:
         status_str = None
 
-# rename active status to downloading
+    # rename active status to downloading
     if (status_str == "active"):
         status_str = "downloading"
 
-# rename removed status to stopped
+    # rename removed status to stopped
     if (status_str == "removed"):
         status_str = "stopped"
 
     if (status_str == "None"):
         status_str = None
 
+    # set 0 second for estimate_time_left_str if download is completed.
+    if status_str == 'complete':
+        estimate_time_left_str = '0s'
 
 # return information in dictionary format
     download_info = {
