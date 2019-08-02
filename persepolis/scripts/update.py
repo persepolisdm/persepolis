@@ -116,10 +116,14 @@ class checkupdate(QWidget):
 
                 if os_type == 'Windows':
                     self.winUpdatedl()  # this function download latest release
+
                     # find system architect
                     if platform.architecture()[0] == '64bit':
+
                         osCommands.xdgOpen(updatesource_dict['win64dlurl'])
+
                     elif platform.architecture()[0] == '32bit':
+                        
                         osCommands.xdgOpen(updatesource_dict['win32dlurl'])
 
                 elif os_type == 'Darwin':

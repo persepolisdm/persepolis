@@ -97,18 +97,18 @@ class AfterDownloadWindow(AfterDownloadWindow_Ui):
 
     def openFolder(self):
         # open download folder
-        file_path = self.add_link_dict['download_path'] 
+        download_path = self.add_link_dict['download_path'] 
 
-        file_name = os.path.basename(file_path)
+#         file_name = os.path.basename(file_path)
 
-        file_path_split = file_path.split(file_name)
+#         file_path_split = file_path.split(file_name)
 
-        del file_path_split[-1]
+#         del file_path_split[-1]
 
-        download_path = file_name.join(file_path_split)
+#         download_path = file_name.join(file_path_split)
 
-        if os.path.isdir(download_path):
-            osCommands.xdgOpen(download_path)
+        if os.path.isfile(download_path):
+            osCommands.xdgOpen(download_path, 'folder', 'file')
 
         # close window
         self.close()

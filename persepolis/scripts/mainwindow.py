@@ -3282,7 +3282,7 @@ class MainWindow(MainWindow_Ui):
         # check that if download folder is availabile or not
         if os.path.isdir(download_path):
             # open folder
-            osCommands.xdgOpen(download_path)
+            osCommands.xdgOpen(download_path, 'folder', 'folder')
         else:
             # show error message if folder didn't existed
             notifySend(str(download_path), QCoreApplication.translate("mainwindow_src_ui_tr", 'Not Found'), 5000,
@@ -3319,22 +3319,14 @@ class MainWindow(MainWindow_Ui):
 
                 # find download path
                 dictionary = self.persepolis_db.searchGidInAddLinkTable(gid)
-                file_path = dictionary['download_path']
-
-                file_name = os.path.basename(str(file_path))
-
-                file_path_split = file_path.split(file_name)
-
-                del file_path_split[-1]
-
-                download_path = file_name.join(file_path_split)
+                download_path = dictionary['download_path']
 
                 # check that if download_path existed
-                if os.path.isdir(download_path):
+                if os.path.isfile(download_path):
                     # open file
-                    osCommands.xdgOpen(download_path)
+                    osCommands.xdgOpen(download_path, 'folder', 'file')
                 else:
-                    # showing error message , if folder did't existed
+                    # showing error message , if folder didn't existed
                     notifySend(str(download_path), QCoreApplication.translate("mainwindow_src_ui_tr", 'Not Found'), 5000,
                                 'warning', parent=self)
 
