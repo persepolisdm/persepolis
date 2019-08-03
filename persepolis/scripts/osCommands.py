@@ -13,12 +13,64 @@
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+from persepolis.scripts.bubble import notifySend
+from PyQt5.QtCore import QCoreApplication, QThread
 import subprocess
 import platform
 import shutil
 import os
 
 os_type = platform.system()
+
+class MoveThread(QThread):
+    def __init__(self, parent, gid_list, new_folder_path):
+        QThread.__init__(self)
+        self.new_folder_path = new_folder_path
+        self.parent = parent
+        self.gid_list = gid_list
+        
+    def run(self):
+        add_link_dict_list = []
+        # move selected downloads
+        # find row number for specific gid
+        for gid in self.gid_list:
+            # find download path
+            dictionary = self.parent.persepolis_db.searchGidInAddLinkTable(gid)
+            self.old_file_path = dictionary['download_path']
+
+            # find file_name
+            self.file_name = os.path.basename(self.old_file_path) 
+
+            if os.path.isfile(self.old_file_path) and os.path.isdir(self.new_folder_path):
+                try:
+                    shutil.move(self.old_file_path, self.new_folder_path) 
+                    self.move = True
+
+                except:
+                    self.move = False 
+            else:
+                self.move = False
+
+
+            if not(self.move):
+                notifySend(str(self.file_name), QCoreApplication.translate("mainwindow_src_ui_tr", 'Operation was not successful!'),
+                            5000, 'warning', parent=self.parent)
+            else:
+                new_file_path = os.path.join(self.new_folder_path, self.file_name) 
+                add_link_dict = {'gid': gid,
+                                'download_path': new_file_path}
+
+                # add add_link_dict to add_link_dict_list
+                add_link_dict_list.append(add_link_dict)
+
+        # update data base 
+        self.parent.persepolis_db.updateAddLinkTable(add_link_dict_list)
+
+        # notify user that job is done!
+        notifySend(QCoreApplication.translate("mainwindow_src_ui_tr", "Moving is"), 
+                QCoreApplication.translate("mainwindow_src_ui_tr", 'finished!'),
+                5000, 'warning', parent=self.parent)
+
 
 # this method finds file manager in linux
 def findFileManager():
@@ -186,10 +238,14 @@ def removeDir(folder_path):  # removeDir removes folder : folder_path
 def makeDirs(folder_path):  # make new folders
     os.makedirs(folder_path, exist_ok=True)
 
+def moveSelectedFiles(parent, gid_list, new_folder_path):
+    move_thread = MoveThread(parent, gid_list, new_folder_path)
+    parent.threadPool.append(move_thread)
+    parent.threadPool[len(parent.threadPool) - 1].start()
+ 
 # move downloaded file to another destination.
 def moveFile(old_file_path, new_folder_path):
-    import traceback
-
+    
     if os.path.isfile(old_file_path) and os.path.isdir(new_folder_path):
         try:
             shutil.move(old_file_path, new_folder_path) 

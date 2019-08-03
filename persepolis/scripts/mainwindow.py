@@ -5543,8 +5543,6 @@ class MainWindow(MainWindow_Ui):
 
     def moveSelectedDownloads2(self, new_folder_path):
 
-
-
         gid_list = []
         # find selected rows!
         for row in self.userSelectedRows():
@@ -5569,42 +5567,9 @@ class MainWindow(MainWindow_Ui):
                 # show error message
                 notifySend(QCoreApplication.translate("mainwindow_src_ui_tr",
                                                       'Operation was not successful! Following download must be completed first: ') + file_name,
-                        5000, 'fail', parent=self)
+                                                      5000, 'fail', parent=self)
 
-        add_link_dict_list = []
-        # move selected downloads
-        # find row number for specific gid
-        for gid in gid_list:
-            for i in range(self.download_table.rowCount()):
-                row_gid = self.download_table.item(i, 8).text()
-                if gid == row_gid:
-                    row = i
-                    break
-
-            # find download path
-            dict = self.persepolis_db.searchGidInAddLinkTable(gid)
-            old_file_path = dict['download_path']
-
-            # find file_name
-            file_name = os.path.basename(old_file_path) 
-
-
-            move_answer = osCommands.moveFile(old_file_path, new_folder_path)
-
-
-            if not(move_answer):
-                notifySend(str(file_name), QCoreApplication.translate("mainwindow_src_ui_tr", 'Operation was not successful!'),
-                            5000, 'warning', parent=self)
-            else:
-                new_file_path = os.path.join(new_folder_path, file_name) 
-                add_link_dict = {'gid': gid,
-                                'download_path': new_file_path}
-
-                # add add_link_dict to add_link_dict_list
-                add_link_dict_list.append(add_link_dict)
-
-        # update data base 
-        self.persepolis_db.updateAddLinkTable(add_link_dict_list)
+        osCommands.moveSelectedFiles(self, gid_list, new_folder_path)
 
         # telling the CheckDownloadInfoThread that job is done!
         global checking_flag
