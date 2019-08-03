@@ -14,7 +14,7 @@
 #
 
 from persepolis.scripts.useful_tools import determineConfigFolder
-from persepolis.scripts import osCommands
+from persepolis.scripts.osCommands import touch 
 import logging
 import os
 
@@ -24,7 +24,7 @@ config_folder =  determineConfigFolder()
 # log file address
 log_file = os.path.join(str(config_folder), 'persepolisdm.log')
 if not(os.path.isfile(log_file)):
-    osCommands.touch(log_file)
+    touch(log_file)
 
 # define logging object
 logObj = logging.getLogger("Persepolis")

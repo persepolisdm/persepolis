@@ -46,6 +46,7 @@ import urllib.parse
 import subprocess
 import textwrap
 import random
+import shutil
 import time
 import sys
 import os
@@ -1086,8 +1087,6 @@ class WaitThread(QThread):
 # button_pressed_counter changed if user pressed move up and move down and ... actions
 # this thread is changing checking_flag to zero if button_pressed_counter
 # don't change for 2 seconds
-
-
 class ButtonPressedThread(QThread):
     def __init__(self):
         QThread.__init__(self)
@@ -1151,6 +1150,57 @@ class KeepAwakeThread(QThread):
 
                 old_cursor_array = new_cursor_array
 
+# This thread moves files to another destination.
+# see moveSelectedDownloads method for more information.
+class MoveThread(QThread):
+    def __init__(self, parent, gid_list, new_folder_path):
+        QThread.__init__(self)
+        self.new_folder_path = new_folder_path
+        self.parent = parent
+        self.gid_list = gid_list
+        
+    def run(self):
+        add_link_dict_list = []
+        # move selected downloads
+        # find row number for specific gid
+        for gid in self.gid_list:
+            # find download path
+            dictionary = self.parent.persepolis_db.searchGidInAddLinkTable(gid)
+            self.old_file_path = dictionary['download_path']
+
+            # find file_name
+            self.file_name = os.path.basename(self.old_file_path) 
+
+            if os.path.isfile(self.old_file_path) and os.path.isdir(self.new_folder_path):
+                try:
+                    shutil.move(self.old_file_path, self.new_folder_path) 
+                    self.move = True
+
+                except: 
+                    self.move = False 
+            else:
+                self.move = False
+
+
+            # if moving is not successful, notify user.
+            if not(self.move):
+                notifySend(str(self.file_name), QCoreApplication.translate("mainwindow_src_ui_tr", 'Operation was not successful!'),
+                            5000, 'warning', parent=self.parent)
+            else:
+                new_file_path = os.path.join(self.new_folder_path, self.file_name) 
+                add_link_dict = {'gid': gid,
+                                'download_path': new_file_path}
+
+                # add add_link_dict to add_link_dict_list
+                add_link_dict_list.append(add_link_dict)
+
+        # update data base 
+        self.parent.persepolis_db.updateAddLinkTable(add_link_dict_list)
+
+        # notify user that job is done!
+        notifySend(QCoreApplication.translate("mainwindow_src_ui_tr", "Moving is"), 
+                QCoreApplication.translate("mainwindow_src_ui_tr", 'finished!'),
+                5000, 'warning', parent=self.parent)
 
 
 class MainWindow(MainWindow_Ui):
@@ -5527,22 +5577,6 @@ class MainWindow(MainWindow_Ui):
             return
 
 
-        # if checking_flag is equal to 1, it means that user pressed remove or
-        # delete button or ... . so checking download information must be
-        # stopped until job is done!
-        if checking_flag != 2:
-            wait_check = WaitThread()
-            self.threadPool.append(wait_check)
-            self.threadPool[len(self.threadPool) - 1].start()
-            self.threadPool[len(self.threadPool) -
-                            1].QTABLEREADY.connect(partial(self.moveSelectedDownloads2, new_folder_path))
-        else:
-            self.moveSelectedDownloads2(new_folder_path)
-
-
-
-    def moveSelectedDownloads2(self, new_folder_path):
-
         gid_list = []
         # find selected rows!
         for row in self.userSelectedRows():
@@ -5569,12 +5603,11 @@ class MainWindow(MainWindow_Ui):
                                                       'Operation was not successful! Following download must be completed first: ') + file_name,
                                                       5000, 'fail', parent=self)
 
-        osCommands.moveSelectedFiles(self, gid_list, new_folder_path)
-
-        # telling the CheckDownloadInfoThread that job is done!
-        global checking_flag
-        checking_flag = 0
-
+        # move files with MoveThread
+        # MoveThread is createid to pervent UI freezing.
+        move_thread = MoveThread(self, gid_list, new_folder_path)
+        self.threadPool.append(move_thread)
+        self.threadPool[len(self.threadPool) - 1].start()
 
 
     # see browser_plugin_queue.py file
