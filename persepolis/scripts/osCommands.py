@@ -189,15 +189,38 @@ def makeDirs(folder_path):  # make new folders
 
 
 # move downloaded file to another destination.
-def moveFile(old_file_path, new_folder_path):
-    
-    if os.path.isfile(old_file_path) and os.path.isdir(new_folder_path):
-        try:
-            shutil.move(old_file_path, new_folder_path) 
-            return 1
-        except:
-            return 0
+def moveFile(old_file_path, new_path, new_path_type='folder'):
+
+    # new_path_type can be file or folder
+    # if it's folder so we have folder path    
+    # else we have new file path that includes file name
+    if os.path.isfile(old_file_path):
+
+        if new_path_type == 'folder':
+
+            # check availability of directory
+            check_path = os.path.isdir(new_path)
+
+        else:
+
+            check_path = True
+
+        if check_path:
+
+            try:
+                # move file to new_path
+                shutil.move(old_file_path, new_path) 
+                return True
+
+            except:
+
+                return False
+        else:
+
+            return False
+
     else:
-        return 0
+
+        return False
 
 

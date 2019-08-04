@@ -14,6 +14,7 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from persepolis.scripts.useful_tools import freeSpace, humanReadbleSize
+from persepolis.scripts.osCommands import moveFile
 from persepolis.scripts.bubble import notifySend
 from persepolis.scripts import logger
 from PyQt5.QtCore import QSettings
@@ -22,7 +23,6 @@ import urllib.parse
 import subprocess
 import traceback
 import platform
-import shutil
 import time
 import ast
 import sys
@@ -539,6 +539,7 @@ def convertDownloadInformation(download_status):
 # this method is returning file_path of file in the user's download folder
 # and move downloaded file after download completion.
 def downloadCompleteAction(parent, path, download_path, file_name, file_size):
+
     # remove query from name, If file_name contains query components. 
     # check if query existed.
     # query form is 1.mp3?foo=bar 2.mp3?blatz=pow 3.mp3?fizz=buzz
@@ -568,31 +569,33 @@ def downloadCompleteAction(parent, path, download_path, file_name, file_size):
     free_space = freeSpace(download_path)
 
     if free_space != None and file_size != None:
+
         # compare free disk space and file_size
         if free_space >= file_size:
-            # move the file to the download folder
-            try:
-                # use shutil.copy instead of the default copy2
-                shutil.move(str(path) ,str(file_path) ,shutil.copy )
 
-            except:
+            # move the file to the download folder
+            move_answer = moveFile(str(path), str(file_path), 'file')
+
+            if not(move_answer):
+                # write error message in log
                 logger.sendToLog('Persepolis can not move file', "ERROR")
                 file_path = path
+
         else:
             # notify user if we have insufficient disk space
             # and do not move file from temp download folder to download folder
             file_path = path
             logger.sendToLog('Insufficient disk space in download folder', "ERROR")
+
             # show notification
             notifySend("Insufficient disk space!", 'Please change download folder',
                     10000, 'fail', parent=parent)
 
     else:
         # move the file to the download folder
-        try:
-            shutil.move(str(path) ,str(file_path) ,shutil.copy )
+        move_answer = moveFile(str(path), str(file_path), 'file')
 
-        except:
+        if not(move_answer):
             logger.sendToLog('Persepolis can not move file', "ERROR")
             file_path = path
  

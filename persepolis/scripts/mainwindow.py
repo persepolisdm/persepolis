@@ -46,7 +46,6 @@ import urllib.parse
 import subprocess
 import textwrap
 import random
-import shutil
 import time
 import sys
 import os
@@ -1171,16 +1170,7 @@ class MoveThread(QThread):
             # find file_name
             self.file_name = os.path.basename(self.old_file_path) 
 
-            if os.path.isfile(self.old_file_path) and os.path.isdir(self.new_folder_path):
-                try:
-                    shutil.move(self.old_file_path, self.new_folder_path) 
-                    self.move = True
-
-                except: 
-                    self.move = False 
-            else:
-                self.move = False
-
+            self.move = osCommands.moveFile(self.old_file_path, self.new_folder_path)
 
             # if moving is not successful, notify user.
             if not(self.move):
