@@ -145,7 +145,7 @@ def xdgOpen(file_path, f_type='file', path='file'):
         CREATE_NO_WINDOW = 0x08000000
 
         if highlight:
-            subprocess.Popen(['cmd', '/C', 'explorer.exe', '/select',  file_path],
+            subprocess.Popen(['explorer.exe', '/select,',  file_path],
                 stderr=subprocess.PIPE,
                 stdout=subprocess.PIPE,
                 stdin=subprocess.PIPE,
