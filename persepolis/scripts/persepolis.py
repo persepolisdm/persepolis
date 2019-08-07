@@ -391,6 +391,10 @@ def main():
 
         persepolis_download_manager = PersepolisApplication(sys.argv)
 
+        # setQuitOnLastWindowClosed(False) is needed to prevent persepolis exiting,
+        # when it's minimized in system tray.
+        persepolis_download_manager.setQuitOnLastWindowClosed(False)
+
         # Enable High DPI display with PyQt5
         try:
             persepolis_download_manager.setAttribute(Qt.AA_EnableHighDpiScaling)
