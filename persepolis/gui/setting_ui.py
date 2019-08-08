@@ -369,6 +369,10 @@ class Setting_Ui(QWidget):
         self.setting_tabWidget.addTab(self.style_tab, "")
         window_verticalLayout.addWidget(self.setting_tabWidget)
 
+        # start persepolis in system tray if browser executed
+        self.start_persepolis_if_browser_executed_checkBox = QCheckBox(self.style_tab)
+        style_tab_verticalLayout.addWidget(self.start_persepolis_if_browser_executed_checkBox)
+
         # hide window if close button clicked
         self.hide_window_checkBox = QCheckBox(self.style_tab)
         style_tab_verticalLayout.addWidget(self.hide_window_checkBox)
@@ -622,7 +626,11 @@ class Setting_Ui(QWidget):
         self.hide_window_checkBox.setToolTip(
             QCoreApplication.translate("setting_ui_tr", "<html><head/><body><p>This feature may not work in your operating system.</p></body></html>"))
 
+        self.start_persepolis_if_browser_executed_checkBox.setText(
+                QCoreApplication.translate('setting_ui_tr', 'Start Persepolis in system tray, If browser is executed.'))
+
         self.enable_system_tray_checkBox.setText(QCoreApplication.translate("setting_ui_tr", "Enable system tray icon."))
+
         self.after_download_checkBox.setText(
             QCoreApplication.translate("setting_ui_tr", "Show download complete dialog when download has finished."))
 

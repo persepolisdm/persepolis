@@ -285,7 +285,6 @@ if args.clear:
     persepolis_db.closeConnections()
 
     # Reset persepolis_setting
-    persepolis_setting = QSettings('persepolis_download_manager', 'persepolis')
     persepolis_setting.clear()
     persepolis_setting.sync()
 
@@ -293,7 +292,6 @@ if args.clear:
 
 # persepolis --default >> remove persepolis setting.
 if args.default:
-    persepolis_setting = QSettings('persepolis_download_manager', 'persepolis')
     persepolis_setting.clear()
     persepolis_setting.sync()
     print ('Persepolis restored default')
@@ -377,9 +375,17 @@ if len(plugin_list) != 0:
     start_in_tray = True 
 
 
+# start persepolis in system tray if browser executed 
+# and if user select this option in preferences window.
+if str(persepolis_setting.value('settings/browser-persepolis')) == 'yes':
+    start_persepolis_if_browser_executed = True
+    start_in_tray = True
+else:
+    start_persepolis_if_browser_executed = False
+
 def main():
     # if lock_file is existed , it means persepolis is still running!
-    if lock_file_validation and not((args.parent_window or unkownargs) and browser_url == False):  
+    if lock_file_validation and (not((args.parent_window or unkownargs) and browser_url == False) or ((args.parent_window or unkownargs) and start_persepolis_if_browser_executed)) :  
 
         # set QT_AUTO_SCREEN_SCALE_FACTOR to 1 for "high DPI displays" 
         os.environ['QT_AUTO_SCREEN_SCALE_FACTOR'] = '1'

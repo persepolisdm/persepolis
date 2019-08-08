@@ -208,11 +208,19 @@ class PreferencesWindow(Setting_Ui):
         self.volume_dial.setNotchesVisible(True)
         self.volume_dial.valueChanged.connect(self.dialChanged)
 
+        # start_persepolis_if_browser_executed_checkBox 
+        if str(self.persepolis_setting.value('browser-persepolis')) == 'yes':
+            self.start_persepolis_if_browser_executed_checkBox.setChecked(True)
+        else:
+            self.start_persepolis_if_browser_executed_checkBox.setChecked(False)
+
+
         # hide window
         if str(self.persepolis_setting.value('hide-window')) == 'yes':
             self.hide_window_checkBox.setChecked(True)
         else:
             self.hide_window_checkBox.setChecked(False)
+
 
         # tray icon
         if str(self.persepolis_setting.value('tray-icon')) == 'yes':
@@ -681,8 +689,11 @@ class PreferencesWindow(Setting_Ui):
         # sound frame
         self.enable_notifications_checkBox.setChecked(True)
 
+        # start_persepolis_if_browser_executed_checkBox
+        self.start_persepolis_if_browser_executed_checkBox.setChecked(True)
+
         # hide window
-        self.hide_window_checkBox.setChecked(False)
+        self.hide_window_checkBox.setChecked(True)
 
         # tray icon
         self.enable_system_tray_checkBox.setChecked(True)
@@ -840,6 +851,12 @@ class PreferencesWindow(Setting_Ui):
         # if user select qt notification  >> enable_system_tray icon
         if self.persepolis_setting.value('notification') == 'QT notification':
             self.enable_system_tray_checkBox.setChecked(True)
+
+        # start_persepolis_if_browser_executed_checkBox
+        if self.start_persepolis_if_browser_executed_checkBox.isChecked():
+            self.persepolis_setting.setValue('browser-persepolis', 'yes')
+        else:
+            self.persepolis_setting.setValue('browser-persepolis', 'no')
 
         # hide_window_checkBox
         if self.hide_window_checkBox.isChecked():
