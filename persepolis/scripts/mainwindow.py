@@ -1231,6 +1231,7 @@ class MainWindow(MainWindow_Ui):
         # menu of system tray icon
         system_tray_menu = QMenu()
         system_tray_menu.addAction(self.addlinkAction)
+        system_tray_menu.addAction(self.videoFinderAddLinkAction)
         system_tray_menu.addAction(self.stopAllAction)
         system_tray_menu.addAction(self.minimizeAction)
         system_tray_menu.addAction(self.exitAction)
