@@ -1056,7 +1056,7 @@ class CheckingThread(QThread):
             # It means new browser plugin call is available!
             if os.path.isfile(plugin_ready):
 
-                # OK! We catch notification! remove plugin_ready file
+                # OK! We received notification! remove plugin_ready file
                 osCommands.remove(plugin_ready)
 
                 # When checkPluginCall method considered request , then
@@ -2614,9 +2614,6 @@ class MainWindow(MainWindow_Ui):
             # do nothing if user clicks NO
             if reply != QMessageBox.Yes:
                 return
-
-
-
 
         category = str(category)
         # aria2 identifies each download by the ID called GID. The GID must be

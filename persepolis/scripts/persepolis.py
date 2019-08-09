@@ -467,11 +467,11 @@ def main():
          
         sys.exit(persepolis_download_manager.exec_())
 
-    else:
+    elif not((args.parent_window or unkownargs)):
 
-    # this section warns user that program is still running and no need to run it again
-    # and creating a file to notify mainwindow for showing itself!
-    # (see CheckingThread in mainwindow.py for more information)
+        # this section warns user that program is still running and no need to run it again
+        # and creating a file to notify mainwindow for showing itself!
+        # (see CheckingThread in mainwindow.py for more information)
         if len(plugin_list) == 0:
 
             show_window_file = os.path.join(persepolis_tmp, 'show-window')
