@@ -377,7 +377,7 @@ if len(plugin_list) != 0:
 
 # start persepolis in system tray if browser executed 
 # and if user select this option in preferences window.
-if str(persepolis_setting.value('settings/browser-persepolis')) == 'yes':
+if str(persepolis_setting.value('settings/browser-persepolis')) == 'yes' and (args.parent_window or unkownargs):
     start_persepolis_if_browser_executed = True
     start_in_tray = True
 else:
