@@ -652,8 +652,8 @@ class MainWindow_Ui(QMainWindow):
         self.deleteSelectedAction.setEnabled(False)
 
         # moveSelectedDownloadsAction
-        self.moveSelectedDownloadsAction = QAction(QIcon(icons + 'folder'), QCoreApplication.translate("mainwindow_ui_tr", 'move selected download files to another destination'),
-                                            self, statusTip=QCoreApplication.translate("mainwindow_ui_tr", 'move selected download files to another destination'), triggered=self.moveSelectedDownloads)
+        self.moveSelectedDownloadsAction = QAction(QIcon(icons + 'folder'), QCoreApplication.translate("mainwindow_ui_tr", 'move selected download files to another folder'),
+                                            self, statusTip=QCoreApplication.translate("mainwindow_ui_tr", 'move selected download files to another folder'), triggered=self.moveSelectedDownloads)
 
         editMenu.addAction(self.moveSelectedDownloadsAction)
         self.moveSelectedDownloadsAction.setEnabled(False)
