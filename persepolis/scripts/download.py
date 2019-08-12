@@ -57,7 +57,7 @@ server = xmlrpc.client.ServerProxy(server_uri, allow_none=True)
 # start aria2 with RPC
 def startAria():
     # in Linux and BSD
-    if os_type == 'Linux' or os_type == 'FreeBSD' or os_type == 'OpenBSD':
+    if os_type in ['Linux', 'FreeBSD', 'OpenBSD']:
 
         subprocess.Popen(['aria2c', '--no-conf',
             '--enable-rpc', '--rpc-listen-port=' + str(port),
