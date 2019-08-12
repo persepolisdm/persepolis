@@ -3112,8 +3112,11 @@ class MainWindow(MainWindow_Ui):
         if str(self.persepolis_setting.value('settings/hide-window')) == 'yes':
 
             # set close event just for minimizing to tray
-            pass
+            self.minimizeAction.setText(QCoreApplication.translate("mainwindow_src_ui_tr", 'Show main Window'))
+            self.minimizeAction.setIcon(QIcon(icons + 'window'))
+
         else:
+
             # close window and exit application
             self.closeAction(event)
 
