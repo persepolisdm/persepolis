@@ -103,7 +103,7 @@ def startAria():
         NO_WINDOW = 0x08000000
 
         if not os.path.exists(aria2d):
-            logger.sendToLog("Aria2 is not exists in current path !", "ERROR")
+            logger.sendToLog("Aria2 does not exist in the current path!", "ERROR")
             return None
         # aria2 command in windows
         subprocess.Popen([aria2d, '--no-conf', '--enable-rpc', '--rpc-listen-port=' + str(port),
