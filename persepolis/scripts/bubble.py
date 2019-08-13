@@ -36,7 +36,7 @@ def notifySend(message1, message2, time, sound, parent=None):
 
     if os_type == 'Linux':
         notifications_path = '/usr/share/sounds/freedesktop/stereo/'
-    elif os_type == 'FreeBSD' or os_type == 'OpenBSD':
+    elif os_type in ['FreeBSD', 'OpenBSD']:
         notifications_path = '/usr/local/share/sounds/freedesktop/stereo/'
     else:
         notifications_path = ''
