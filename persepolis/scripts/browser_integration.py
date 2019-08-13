@@ -59,7 +59,7 @@ def browserIntegration(browser):
                                     '/.config/opera/NativeMessagingHosts'
 
     # for FreeBSD and OpenBSD
-    elif os_type == 'FreeBSD' or os_type == 'OpenBSD':
+    elif os_type in ['FreeBSD', 'OpenBSD']:
         # find Persepolis execution path
         # persepolis execution path
         exec_path = os.path.join(config_folder, 'persepolis_run_shell')
@@ -116,7 +116,7 @@ def browserIntegration(browser):
     # for MicroSoft Windows os (windows 7 , ...)
     elif os_type == 'Windows':
         # finding Persepolis execution path
-        cwd = sys.argv[0] 
+        cwd = sys.argv[0]
 
         current_directory = os.path.dirname(cwd)
 
@@ -134,7 +134,7 @@ def browserIntegration(browser):
         else:
             native_message_folder = os.path.join(
                 home_address, 'AppData\Local\persepolis_download_manager', 'firefox')
- 
+
 
     # WebExtension native hosts file prototype
     webextension_json_connector = {
@@ -168,7 +168,7 @@ def browserIntegration(browser):
 
     if os_type != 'Windows':
 
-        pipe_json = subprocess.Popen(['chmod', '+x', str(native_message_file)], 
+        pipe_json = subprocess.Popen(['chmod', '+x', str(native_message_file)],
                 stderr=subprocess.PIPE,
                 stdout=subprocess.PIPE,
                 stdin=subprocess.PIPE,
@@ -218,9 +218,9 @@ def browserIntegration(browser):
 
                 json_done = False
 
-                
-    # create persepolis_run_shell file for gnu/linux and BSD and Mac 
-    # firefox and chromium and ... call persepolis with Native Messaging system. 
+
+    # create persepolis_run_shell file for gnu/linux and BSD and Mac
+    # firefox and chromium and ... call persepolis with Native Messaging system.
     # json file calls persepolis_run_shell file.
     if os_type == 'Linux' or os_type == 'OpenBSD' or os_type == 'FreeBSD' or os_type == 'Darwin':
         # find available shell
@@ -232,10 +232,10 @@ def browserIntegration(browser):
                 shebang = '#!' + shell
                 break
 
-    
+
         if os_type == 'Darwin':
             # finding Persepolis execution path
-            cwd = sys.argv[0] 
+            cwd = sys.argv[0]
 
             current_directory = os.path.dirname(cwd)
 
@@ -247,14 +247,14 @@ def browserIntegration(browser):
         persepolis_run_shell_contents = shebang + '\n' + '"' + persepolis_path + '" "$@"'
 
 
-    
+
         f = open(exec_path, 'w')
         f.writelines(persepolis_run_shell_contents)
         f.close()
 
         # make persepolis_run_shell executable
 
-        pipe_native = subprocess.Popen(['chmod', '+x', exec_path], 
+        pipe_native = subprocess.Popen(['chmod', '+x', exec_path],
                 stderr=subprocess.PIPE,
                 stdout=subprocess.PIPE,
                 stdin=subprocess.PIPE,
