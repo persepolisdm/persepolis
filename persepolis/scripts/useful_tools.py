@@ -206,11 +206,9 @@ def returnDefaultSettings():
                     color_scheme = 'Persepolis Light Blue'
     
     elif os_type == 'Darwin':
-        style = 'Fusion'
-        color_scheme = 'Persepolis Light Blue'
+        style = 'macintosh'
+        color_scheme = 'System'
         icons = 'Breeze'
-
-
 
     elif os_type == 'Windows':
         style = 'Fusion'
