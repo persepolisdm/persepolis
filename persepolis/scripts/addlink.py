@@ -315,7 +315,7 @@ class AddLinkWindow(AddLinkWindow_Ui):
             self.change_name_lineEdit.setEnabled(False)
 
     def queueChanged(self, combo):
-        # if one of the queues selected by user , start time and end time must
+        # if one of the queues selected by user, start time and end time must
         # be deactivated
         if self.add_queue_comboBox.currentIndex() != 0:
             self.start_checkBox.setCheckState(Qt.Unchecked)
