@@ -15,7 +15,7 @@
 
 from persepolis.scripts.useful_tools import determineConfigFolder
 from persepolis.scripts.osCommands import remove, removeDir
-from persepolis.scripts.data_base import PersepolisDB 
+from persepolis.scripts.data_base import PersepolisDB
 from persepolis.scripts.newopen import readList
 import time
 import ast
@@ -53,7 +53,7 @@ single_downloads_list_file = os.path.join(category_folder, "Single Downloads")
 
 
 
-# this script for compatibility between Version 2 and 3 
+# this script for compatibility between Version 2 and 3
 
 def compatibility():
     if os.path.isfile(queues_list_file):
@@ -79,7 +79,7 @@ def compatibility():
         gid_list = []
 
         if category == 'All Downloads':
-            category_info_file = download_list_file 
+            category_info_file = download_list_file
         else:
             category_info_file = os.path.join(category_folder, category)
 
@@ -90,7 +90,7 @@ def compatibility():
         for item in category_info_file_list:
             gid = item.strip()
             gid_list.append(gid)
-        
+
         category_dict = {'category': category,
                     'start_time_enable': 'no',
                     'start_time': '0:0',
@@ -100,9 +100,9 @@ def compatibility():
                     'limit_enable': 'no',
                     'limit_value': '0K',
                     'after_download': 'no',
-                    'gid_list': str(gid_list) 
+                    'gid_list': str(gid_list)
                     }
-            
+
 
         # add category to data_base
         if category == 'All Downloads' or category == 'Single Downloads':
@@ -132,7 +132,7 @@ def compatibility():
                 'estimate_time_left': download_info_file_list[7],
                 'gid': download_info_file_list[8],
                 'link': add_link_dictionary['link'],
-                'first_try_date': download_info_file_list[10], 
+                'first_try_date': download_info_file_list[10],
                 'last_try_date': download_info_file_list[11],
                 'category': download_info_file_list[12]}
 
@@ -169,11 +169,11 @@ def compatibility():
                     'header',
                     'after_download']
 
-        for key in keys_list:  
-                # if a key is missed in dict, 
-                # then add this key to the dict and assign None value for the key. 
+        for key in keys_list:
+                # if a key is missed in dict,
+                # then add this key to the dict and assign None value for the key.
             if key not in add_link_dictionary.keys():
-                add_link_dictionary[key] = None 
+                add_link_dictionary[key] = None
 
 
         # write information in data_base
@@ -191,4 +191,4 @@ def compatibility():
         removeDir(folder)
 
 
- 
+
