@@ -467,7 +467,7 @@ def convertDownloadInformation(download_status):
 
     # convert download_speed to desired units.
     # and find estimate_time_left
-    if (downloaded != None and download_speed != 0):
+    if (downloaded is not None and download_speed != 0):
         estimate_time_left = int((file_size - downloaded)/download_speed)
 
         # converting file_size to KiB or MiB or GiB
@@ -568,7 +568,7 @@ def downloadCompleteAction(parent, path, download_path, file_name, file_size):
 
     free_space = freeSpace(download_path)
 
-    if free_space != None and file_size != None:
+    if free_space is not None and file_size is not None:
 
         # compare free disk space and file_size
         if free_space >= file_size:
