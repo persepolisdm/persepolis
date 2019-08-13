@@ -76,7 +76,7 @@ def notifySend(message1, message2, time, sound, parent=None):
     if enable_notification == 'QT notification':
         parent.system_tray_icon.showMessage(message1, message2, 0, 10000)
     else:
-        if os_type == 'Linux' or os_type == 'FreeBSD' or os_type == 'OpenBSD':
+        if os_type in ['Linux', 'FreeBSD', 'OpenBSD']:
             subprocess.Popen(['notify-send', '--icon', 'persepolis',
                 '--app-name', 'Persepolis Download Manager',
                 '--expire-time', time,
