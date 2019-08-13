@@ -34,7 +34,7 @@ def getProxy():
     logger.sendToLog(platform, "INFO")
 
     proxy = {}
-    if os_type == 'Linux' or os_type == 'FreeBSD' or os_type == 'OpenBSD':
+    if os_type in ['Linux', 'FreeBSD', 'OpenBSD']:
         if desktop is None:
             desktop_env_type = 'Desktop Environment not detected!'
         else:
@@ -136,7 +136,7 @@ def getProxy():
         # get socks proxy
         try:
             # if it is gnome or unity
-            if desktop == 'GNOME' or desktop == 'Unity:Unity7':
+            if desktop in ['GNOME', 'Unity:Unity7']:
                 socks_proxy = proxysource['all'].split(':')[1].replace('//', '')
             # if it is Mac OS
             elif os_type == 'Darwin':
