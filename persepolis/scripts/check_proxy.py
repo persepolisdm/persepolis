@@ -151,7 +151,7 @@ def getProxy():
                     if len(words) == 3 and words[0] in validKeys:
                         mac_tmp_proxies_list[words[0]] = words[2]
 
-                if mac_tmp_proxies_list['SOCKSEnable'] is '1':
+                if mac_tmp_proxies_list['SOCKSEnable'] == '1':
                     socks_proxy = True
                 else:
                     socks_proxy = False
