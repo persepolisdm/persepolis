@@ -24,7 +24,7 @@ import ast
 import os
 
 # download manager config folder .
-config_folder =  determineConfigFolder()
+config_folder = determineConfigFolder()
 
 # persepolis tmp folder path
 persepolis_tmp = os.path.join(config_folder, 'persepolis_tmp')
@@ -46,17 +46,17 @@ class TempDB():
         # create a lock for data base
         self.lock = False
 
-    # this method locks data base. 
+    # this method locks data base.
     # this is pervent accessing data base simoltaneously.
     def lockCursor(self):
         while self.lock:
             rand_float = random.uniform(0, 0.5)
             sleep(rand_float)
-        
+
         self.lock = True
 
 
-    # temp_db_table contains gid of active downloads. 
+    # temp_db_table contains gid of active downloads.
     def createTables(self):
         # lock data base
         self.lockCursor()
@@ -65,14 +65,14 @@ class TempDB():
                                                                                 gid TEXT PRIMARY KEY,
                                                                                 status TEXT,
                                                                                 shutdown TEXT
-                                                                                )""") 
+                                                                                )""")
 
         self.temp_db_cursor.execute("""CREATE TABLE IF NOT EXISTS queue_db_table(
                                                                                 ID INTEGER,
                                                                                 category TEXT PRIMARY KEY,
                                                                                 shutdown TEXT
-                                                                                )""") 
- 
+                                                                                )""")
+
         self.temp_db_connection.commit()
         self.lock = False
 
@@ -84,7 +84,7 @@ class TempDB():
                                                                 NULL,
                                                                 '{}',
                                                                 'active',
-                                                                NULL)""".format(gid)) 
+                                                                NULL)""".format(gid))
 
         self.temp_db_connection.commit()
         self.lock = False
@@ -97,7 +97,7 @@ class TempDB():
         self.temp_db_cursor.execute("""INSERT INTO queue_db_table VALUES(
                                                                 NULL,
                                                                 '{}',
-                                                                NULL)""".format(category)) 
+                                                                NULL)""".format(category))
 
         self.temp_db_connection.commit()
         self.lock = False
@@ -113,8 +113,8 @@ class TempDB():
                     ]
 
         for key in keys_list:
-            # if a key is missed in dict, 
-            # then add this key to the dict and assign None value for the key. 
+            # if a key is missed in dict,
+            # then add this key to the dict and assign None value for the key.
             if key not in dict.keys():
                 dict[key] = None
 
@@ -124,7 +124,7 @@ class TempDB():
                                                                 WHERE gid = :gid""", dict)
 
         self.temp_db_connection.commit()
-        
+
         self.lock = False
 
     # this method updates queue_db_table
@@ -135,8 +135,8 @@ class TempDB():
                     'shutdown']
 
         for key in keys_list:
-            # if a key is missed in dict, 
-            # then add this key to the dict and assign None value for the key. 
+            # if a key is missed in dict,
+            # then add this key to the dict and assign None value for the key.
             if key not in dict.keys():
                 dict[key] = None
 
@@ -145,7 +145,7 @@ class TempDB():
                                                                 WHERE category = :category""", dict)
 
         self.temp_db_connection.commit()
- 
+
 
         self.lock = False
 
@@ -155,7 +155,7 @@ class TempDB():
         self.lockCursor()
 
         self.temp_db_cursor.execute("""SELECT gid FROM single_db_table WHERE status = 'active'""")
-        
+
         list = self.temp_db_cursor.fetchall()
 
         self.lock = False
@@ -164,7 +164,7 @@ class TempDB():
         for tuple in list:
             gid = tuple[0]
             gid_list.append(gid)
-            
+
 
         return gid_list
 
@@ -173,7 +173,7 @@ class TempDB():
         # lock data base
         self.lockCursor()
         self.temp_db_cursor.execute("""SELECT shutdown, status FROM single_db_table WHERE gid = '{}'""".format(gid))
-        
+
         list = self.temp_db_cursor.fetchall()
 
         self.lock = False
@@ -184,14 +184,14 @@ class TempDB():
                 'status': tuple[1]}
 
         return dict
-            
+
 
     # This method returns values of columns for specific category
     def returnCategory(self, category):
         # lock data base
         self.lockCursor()
         self.temp_db_cursor.execute("""SELECT shutdown FROM queue_db_table WHERE category = '{}'""".format(category))
-        
+
         list = self.temp_db_cursor.fetchall()
 
         self.lock = False
@@ -226,7 +226,7 @@ class TempDB():
 
 
 # plugins.db is store links, when browser plugins are send new links.
-# This class is managing plugin.db   
+# This class is managing plugin.db
 class PluginsDB():
     def __init__(self):
         # plugins.db file path
@@ -241,17 +241,17 @@ class PluginsDB():
         # create a lock for data base
         self.lock = False
 
-    # this method locls data base. 
+    # this method locls data base.
     # this is pervent accessing data base simoltaneously.
     def lockCursor(self):
         while self.lock:
             rand_float = random.uniform(0, 0.5)
             sleep(rand_float)
-        
+
         self.lock = True
 
 
-    # plugins_db_table contains links that sends by browser plugins. 
+    # plugins_db_table contains links that sends by browser plugins.
     def createTables(self):
         # lock data base
         self.lockCursor()
@@ -265,7 +265,7 @@ class PluginsDB():
                                                                                 header TEXT,
                                                                                 out TEXT,
                                                                                 status TEXT
-                                                                                )""") 
+                                                                                )""")
         self.plugins_db_connection.commit()
 
         # release lock
@@ -359,10 +359,10 @@ class PluginsDB():
 
 
 # persepolis main data base contains downloads information
-# This class is managing persepolis.db 
+# This class is managing persepolis.db
 class PersepolisDB():
     def __init__(self):
-        # persepolis.db file path 
+        # persepolis.db file path
         persepolis_db_path = os.path.join(config_folder, 'persepolis.db')
 
         # persepolis_db_connection
@@ -377,7 +377,7 @@ class PersepolisDB():
         # Create a lock for data base
         self.lock = False
 
-    # this method locls data base. 
+    # this method locls data base.
     # this is pervent accessing data base simoltaneously.
     def lockCursor(self):
 
@@ -450,10 +450,10 @@ class PersepolisDB():
                                                                                 user_agent TEXT,
                                                                                 header TEXT,
                                                                                 after_download TEXT,
-                                                                                FOREIGN KEY(gid) REFERENCES download_db_table(gid) 
-                                                                                ON UPDATE CASCADE 
-                                                                                ON DELETE CASCADE 
-                                                                                    )""") 
+                                                                                FOREIGN KEY(gid) REFERENCES download_db_table(gid)
+                                                                                ON UPDATE CASCADE
+                                                                                ON DELETE CASCADE
+                                                                                    )""")
 
         # video_finder_db_table contains addlink window download information
         self.persepolis_db_cursor.execute("""CREATE TABLE IF NOT EXISTS video_finder_db_table(
@@ -469,15 +469,15 @@ class PersepolisDB():
                                                                                 ON DELETE CASCADE,
                                                                                 FOREIGN KEY(audio_gid) REFERENCES download_db_table(gid)
                                                                                 ON DELETE CASCADE
-                                                                                    )""") 
+                                                                                    )""")
 
 
         self.persepolis_db_connection.commit()
-            
+
         # job is done! open the lock
         self.lock = False
 
-        # add 'All Downloads' and 'Single Downloads' to the category_db_table if they wasn't added. 
+        # add 'All Downloads' and 'Single Downloads' to the category_db_table if they wasn't added.
         answer = self.searchCategoryInCategoryTable('All Downloads')
 
         if not(answer):
@@ -528,7 +528,7 @@ class PersepolisDB():
 
 
     # insert new category in category_db_table
-    def insertInCategoryTable(self, dict):    
+    def insertInCategoryTable(self, dict):
         # lock data base
         self.lockCursor()
 
@@ -545,7 +545,7 @@ class PersepolisDB():
                                                                             :gid_list
                                                                             )""", dict)
         self.persepolis_db_connection.commit()
- 
+
         # job is done! open the lock
         self.lock = False
 
@@ -597,10 +597,10 @@ class PersepolisDB():
             category_gid_list = category_dict['gid_list']
 
             all_downloads_gid_list = all_downloads_dict['gid_list']
-    
+
             for dict in list:
                 gid = dict['gid']
-         
+
                 # add gid of item to gid_list
                 category_gid_list.append(gid)
                 all_downloads_gid_list.append(gid)
@@ -611,7 +611,7 @@ class PersepolisDB():
             self.updateCategoryTable([category_dict])
 
 
-    # insert in addlink table in persepolis.db 
+    # insert in addlink table in persepolis.db
     def insertInAddLinkTable(self, list):
         # lock data base
         self.lockCursor()
@@ -639,9 +639,9 @@ class PersepolisDB():
                                                                                 :header,
                                                                                 NULL
                                                                                 )""", dict)
-        self.persepolis_db_connection.commit() 
-    
- 
+        self.persepolis_db_connection.commit()
+
+
         # job is done! open the lock
         self.lock = False
 
@@ -661,9 +661,9 @@ class PersepolisDB():
                                                                                 :checking,
                                                                                 :download_path
                                                                                 )""", dictionary)
-        self.persepolis_db_connection.commit() 
-    
- 
+        self.persepolis_db_connection.commit()
+
+
         # job is done! open the lock
         self.lock = False
 
@@ -731,7 +731,7 @@ class PersepolisDB():
         return dict
 
     # return all items in download_db_table
-    # '*' for category, cause that method returns all items. 
+    # '*' for category, cause that method returns all items.
     def returnItemsInDownloadTable(self, category=None):
         # lock data base
         self.lockCursor()
@@ -774,7 +774,7 @@ class PersepolisDB():
 
         return downloads_dict
 
-      
+
     # this method checks existance of a link in addlink_db_table
     def searchLinkInAddLinkTable(self, link):
         # lock data base
@@ -839,7 +839,7 @@ class PersepolisDB():
 
 
     # return items in addlink_db_table
-    # '*' for category, cause that method returns all items. 
+    # '*' for category, cause that method returns all items.
     def returnItemsInAddLinkTable(self, category=None):
         # lock data base
         self.lockCursor()
@@ -888,7 +888,7 @@ class PersepolisDB():
 
         return addlink_dict
 
- 
+
 
 # this method updates download_db_table
     def updateDownloadTable(self, list):
@@ -912,8 +912,8 @@ class PersepolisDB():
 
         for dict in list:
             for key in keys_list:
-                # if a key is missed in dict, 
-                # then add this key to the dict and assign None value for the key. 
+                # if a key is missed in dict,
+                # then add this key to the dict and assign None value for the key.
                 if key not in dict.keys():
                     dict[key] = None
 
@@ -965,8 +965,8 @@ class PersepolisDB():
                 dict['gid_list'] = str(dict['gid_list'])
 
             for key in keys_list:
-                # if a key is missed in dict, 
-                # then add this key to the dict and assign None value for the key. 
+                # if a key is missed in dict,
+                # then add this key to the dict and assign None value for the key.
                 if key not in dict.keys():
                     dict[key] = None
 
@@ -1021,11 +1021,11 @@ class PersepolisDB():
                     'after_download']
 
         for dict in list:
-            for key in keys_list:  
-                # if a key is missed in dict, 
-                # then add this key to the dict and assign None value for the key. 
+            for key in keys_list:
+                # if a key is missed in dict,
+                # then add this key to the dict and assign None value for the key.
                 if key not in dict.keys():
-                    dict[key] = None 
+                    dict[key] = None
 
             # update data base if value for the keys is not None
             self.persepolis_db_cursor.execute("""UPDATE addlink_db_table SET out = coalesce(:out, out),
@@ -1048,13 +1048,13 @@ class PersepolisDB():
                                                                                 after_download = coalesce(:after_download , after_download)
                                                                                 WHERE gid = :gid""", dict)
         # commit the changes!
-        self.persepolis_db_connection.commit() 
+        self.persepolis_db_connection.commit()
 
 
         # job is done! open the lock
         self.lock = False
 
-    
+
     def updateVideoFinderTable(self, list):
 
         # locak data base
@@ -1065,14 +1065,14 @@ class PersepolisDB():
                 'video_completed',
                 'audio_completed',
                 'muxing_status',
-                'checking'] 
+                'checking']
 
         for dictionary in list:
-            for key in keys_list:  
-                # if a key is missed in dict, 
-                # then add this key to the dict and assign None value for the key. 
+            for key in keys_list:
+                # if a key is missed in dict,
+                # then add this key to the dict and assign None value for the key.
                 if key not in dictionary.keys():
-                    dictionary[key] = None 
+                    dictionary[key] = None
 
 
             if dictionary['video_gid']:
@@ -1091,16 +1091,16 @@ class PersepolisDB():
                                                                                 checking = coalesce(:checking, checking),
                                                                                 download_path = coalesce(:download_path, download_path)
                                                                                 WHERE audio_gid = :audio_gid""", dictionary)
- 
+
         # commit the changes!
-        self.persepolis_db_connection.commit() 
+        self.persepolis_db_connection.commit()
 
 
         # job is done! open the lock
         self.lock = False
 
 
-    
+
     def setDefaultGidInAddlinkTable(self, gid, start_time=False, end_time=False, after_download=False):
         # lock data base
         self.lockCursor()
@@ -1115,7 +1115,7 @@ class PersepolisDB():
         if after_download:
             self.persepolis_db_cursor.execute("""UPDATE addlink_db_table SET after_download = NULL
                                                                         WHERE gid = '{}' """.format(gid))
- 
+
         self.persepolis_db_connection.commit()
 
 
@@ -1149,7 +1149,7 @@ class PersepolisDB():
 
 
         # convert string to list
-        gid_list = ast.literal_eval(tuple[9]) 
+        gid_list = ast.literal_eval(tuple[9])
 
 
         # create a dictionary from results
@@ -1162,19 +1162,19 @@ class PersepolisDB():
                 'limit_enable': tuple[6],
                 'limit_value': tuple[7],
                 'after_download': tuple[8],
-                'gid_list': gid_list 
+                'gid_list': gid_list
                 }
 
         # return dictionary
         return dict
 
-    # return categories name 
+    # return categories name
     def categoriesList(self):
         # lock data base
         self.lockCursor()
 
         self.persepolis_db_cursor.execute("""SELECT category FROM category_db_table ORDER BY ROWID""")
-        rows = self.persepolis_db_cursor.fetchall() 
+        rows = self.persepolis_db_cursor.fetchall()
 
         # create a list from categories name
         queues_list = []
@@ -1200,7 +1200,7 @@ class PersepolisDB():
                                         reverse = 'no', limit_enable = 'no', after_download = 'no'""")
 
         # change status of download to 'stopped' if status isn't 'complete' or 'error'
-        self.persepolis_db_cursor.execute("""UPDATE download_db_table SET status = 'stopped' 
+        self.persepolis_db_cursor.execute("""UPDATE download_db_table SET status = 'stopped'
                                         WHERE status NOT IN ('complete', 'error')""")
 
         # change start_time and end_time and
@@ -1212,7 +1212,7 @@ class PersepolisDB():
 
         # change checking value to no in video_finder_db_table
         self.persepolis_db_cursor.execute("""UPDATE video_finder_db_table SET checking = 'no'""")
-    
+
         self.persepolis_db_connection.commit()
 
 
@@ -1227,10 +1227,10 @@ class PersepolisDB():
 
         # find download items is download_db_table with status = "downloading" or "waiting" or paused or scheduled
         if category:
-            self.persepolis_db_cursor.execute("""SELECT gid FROM download_db_table WHERE (category = '{}') AND (status = 'downloading' OR status = 'waiting' 
+            self.persepolis_db_cursor.execute("""SELECT gid FROM download_db_table WHERE (category = '{}') AND (status = 'downloading' OR status = 'waiting'
                                             OR status = 'scheduled' OR status = 'paused')""".format(str(category)))
         else:
-            self.persepolis_db_cursor.execute("""SELECT gid FROM download_db_table WHERE (status = 'downloading' OR status = 'waiting' 
+            self.persepolis_db_cursor.execute("""SELECT gid FROM download_db_table WHERE (status = 'downloading' OR status = 'waiting'
                                             OR status = 'scheduled' OR status = 'paused')""")
 
 
@@ -1240,12 +1240,12 @@ class PersepolisDB():
 
         for result_tuple in result:
             gid_list.append(result_tuple[0])
-            
+
         # job is done! open the lock
         self.lock = False
 
 
-        return  gid_list 
+        return  gid_list
 
 # this method returns items with 'downloading' or 'waiting' status
     def returnDownloadingItems(self):
@@ -1262,12 +1262,12 @@ class PersepolisDB():
 
         for result_tuple in result:
             gid_list.append(result_tuple[0])
-            
+
         # job is done! open the lock
         self.lock = False
 
 
-        return  gid_list 
+        return  gid_list
 
 # this method returns items with 'paused' status.
     def returnPausedItems(self):
@@ -1284,18 +1284,18 @@ class PersepolisDB():
 
         for result_tuple in result:
             gid_list.append(result_tuple[0])
-            
+
         # job is done! open the lock
         self.lock = False
 
 
-        return  gid_list 
+        return  gid_list
 
     # return all video_gids and audio_gids in video_finder_db_table
     def returnVideoFinderGids(self):
         #lock data base
         self.lockCursor()
-    
+
         self.persepolis_db_cursor.execute("""SELECT video_gid, audio_gid FROM video_finder_db_table""")
 
         # create a list for result
@@ -1430,14 +1430,14 @@ class PersepolisDB():
             dict = {'old_unit': units[0],
                     'new_unit': units[1]}
 
-            self.persepolis_db_cursor.execute("""UPDATE download_db_table 
+            self.persepolis_db_cursor.execute("""UPDATE download_db_table
                     SET size = replace(size, :old_unit, :new_unit)""", dict)
-            self.persepolis_db_cursor.execute("""UPDATE download_db_table 
+            self.persepolis_db_cursor.execute("""UPDATE download_db_table
                     SET rate = replace(rate, :old_unit, :new_unit)""", dict)
-            self.persepolis_db_cursor.execute("""UPDATE download_db_table 
+            self.persepolis_db_cursor.execute("""UPDATE download_db_table
                     SET downloaded_size = replace(downloaded_size, :old_unit, :new_unit)""", dict)
 
-    
+
         self.persepolis_db_connection.commit()
 
 
