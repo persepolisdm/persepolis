@@ -222,7 +222,7 @@ def browserIntegration(browser):
     # create persepolis_run_shell file for gnu/linux and BSD and Mac
     # firefox and chromium and ... call persepolis with Native Messaging system.
     # json file calls persepolis_run_shell file.
-    if os_type == 'Linux' or os_type == 'OpenBSD' or os_type == 'FreeBSD' or os_type == 'Darwin':
+    if os_type in ['Linux', 'OpenBSD', 'FreeBSD', 'Darwin']:
         # find available shell
         shell_list = ['/bin/bash', '/usr/local/bin/bash', '/bin/sh', '/usr/local/bin/sh', '/bin/ksh', '/bin/tcsh']
 
