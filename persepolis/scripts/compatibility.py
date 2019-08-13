@@ -105,7 +105,7 @@ def compatibility():
 
 
         # add category to data_base
-        if category == 'All Downloads' or category == 'Single Downloads':
+        if category in ['All Downloads', 'Single Downloads']:
             persepolis_db.updateCategoryTable([category_dict])
         else:
             persepolis_db.insertInCategoryTable(category_dict)
