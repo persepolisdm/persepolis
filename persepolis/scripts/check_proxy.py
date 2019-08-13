@@ -27,7 +27,7 @@ def getProxy():
     socks_proxy = False
 
     # find os and desktop environment
-    os_type, desktop = osAndDesktopEnvironment() 
+    os_type, desktop = osAndDesktopEnvironment()
 
     # write in log
     platform = 'platform : ' + os_type
