@@ -440,7 +440,7 @@ def convertDownloadInformation(download_status):
         downloaded = None
 
     # convert file_size and downloaded_size to KiB and MiB and GiB
-    if (downloaded != None and file_size != None and file_size != 0):
+    if (downloaded is not None and file_size is not None and file_size != 0):
         file_size_back = file_size
 
         # converting file_size to KiB or MiB or GiB
