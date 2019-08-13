@@ -63,7 +63,7 @@ class AfterDownloadWindow(AfterDownloadWindow_Ui):
         window_title = str(self.dict['file_name'])
         file_name = QCoreApplication.translate("after_download_src_ui_tr", "<b>File name</b>: ") + \
                 window_title
- 
+
         self.setWindowTitle(window_title)
 
         self.file_name_label.setText(file_name)
@@ -86,7 +86,7 @@ class AfterDownloadWindow(AfterDownloadWindow_Ui):
 
     def openFile(self):
         # execute file
-        file_path = self.add_link_dict['download_path'] 
+        file_path = self.add_link_dict['download_path']
 
         if os.path.isfile(file_path):
             osCommands.xdgOpen(file_path)
@@ -97,7 +97,7 @@ class AfterDownloadWindow(AfterDownloadWindow_Ui):
 
     def openFolder(self):
         # open download folder
-        download_path = self.add_link_dict['download_path'] 
+        download_path = self.add_link_dict['download_path']
 
 #         file_name = os.path.basename(file_path)
 
@@ -118,7 +118,7 @@ class AfterDownloadWindow(AfterDownloadWindow_Ui):
         if self.dont_show_checkBox.isChecked():
             self.persepolis_setting.setValue('settings/after-dialog', 'no')
             self.persepolis_setting.sync()
-            
+
         # close window
         self.close()
 
@@ -132,7 +132,7 @@ class AfterDownloadWindow(AfterDownloadWindow_Ui):
         self.persepolis_setting.sync()
         event.accept()
 
-    def changeIcon(self , icons):
+    def changeIcon(self, icons):
         icons = ':/' + str(icons) + '/'
         self.ok_pushButton.setIcon(QIcon(icons + 'ok'))
         self.open_folder_pushButtun.setIcon(QIcon(icons + 'folder'))
