@@ -251,6 +251,8 @@
         <file>locales/ui_fa_IR.qm</file>
         <file>locales/ui_zh_CN.qm</file>
         <file>locales/ui_fr_FR.qm</file>
+        <file>locales/ui_pl_PL.qm</file>
+        <file>locales/ui_nl_NL.qm</file>
 
 	</qresource>	
 

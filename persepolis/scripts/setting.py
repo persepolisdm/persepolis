@@ -144,7 +144,7 @@ class PreferencesWindow(Setting_Ui):
             self.style_comboBox.setCurrentIndex(current_style_index)
 
         # available language
-        available_language = ['en_US', 'fa_IR', 'zh_CN', 'fr_FR']
+        available_language = ['en_US', 'fa_IR', 'zh_CN', 'fr_FR', 'pl_PL', 'nl_NL']
         for lang in available_language:
             self.lang_comboBox.addItem(str(QLocale(lang).nativeLanguageName()), lang)
 
