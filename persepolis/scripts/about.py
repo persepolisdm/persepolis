@@ -20,6 +20,7 @@ from persepolis.gui import resources
 from PyQt5.QtWidgets import QWidget
 from PyQt5.QtGui import QIcon
 
+
 class AboutWindow(AboutWindow_Ui):
     def __init__(self, persepolis_setting):
         super().__init__(persepolis_setting)

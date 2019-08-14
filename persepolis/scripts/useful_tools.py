@@ -35,7 +35,6 @@ os_type = platform.system()
 home_address = os.path.expanduser("~")
 
 
-
 # determine the config folder path base on the oprating system
 def determineConfigFolder():
     if os_type == 'Linux' or os_type == 'FreeBSD' or os_type == 'OpenBSD':
@@ -51,6 +50,8 @@ def determineConfigFolder():
     return config_folder
 
 # this function returns operating system and desktop environment(for linux and bsd).
+
+
 def osAndDesktopEnvironment():
     desktop_env = None
     if os_type == 'Linux' or os_type == 'FreeBSD' or os_type == 'OpenBSD':
@@ -61,7 +62,7 @@ def osAndDesktopEnvironment():
 
 
 # this function converts file_size to KiB or MiB or GiB
-def humanReadbleSize(size): 
+def humanReadbleSize(size):
     labels = ['KiB', 'MiB', 'GiB', 'TiB']
     i = -1
     if size < 1024:
@@ -72,9 +73,11 @@ def humanReadbleSize(size):
         size = size / 1024
 
     p = 2 if i > 1 else None
-    return str(round(size, p)) +' '+ labels[i]
-   
+    return str(round(size, p)) + ' ' + labels[i]
+
 # this function converts human readble size to byte
+
+
 def convertToByte(file_size):
 
     # if unit is not in Byte
@@ -92,8 +95,8 @@ def convertToByte(file_size):
     else:
         unit = None
         size_value = int(float(file_size[:-3]))
- 
-    # covert them in byte 
+
+    # covert them in byte
     if not(unit):
         in_byte_value = size_value
 
@@ -134,8 +137,9 @@ def freeSpace(dir):
 
         return None
 
+
 def returnDefaultSettings():
-    os_type, desktop_env = osAndDesktopEnvironment() 
+    os_type, desktop_env = osAndDesktopEnvironment()
 
     # persepolis temporary download folder
     if os_type != 'Windows':
@@ -144,9 +148,8 @@ def returnDefaultSettings():
         download_path_temp = os.path.join(
             str(home_address), 'AppData', 'Local', 'persepolis')
 
-    # user download folder path    
+    # user download folder path
     download_path = os.path.join(str(home_address), 'Downloads', 'Persepolis')
-
 
     # find available styles(It's depends on operating system and desktop environments).
     available_styles = QStyleFactory.keys()
@@ -163,10 +166,10 @@ def returnDefaultSettings():
                 color_scheme = 'Persepolis Light Blue'
 
         else:
-    # finout user prefers dark theme or light theme :)
-    # read this links for more information:
-    # https://wiki.archlinux.org/index.php/GTK%2B#Basic_theme_configuration
-    # https://wiki.archlinux.org/index.php/GTK%2B#Dark_theme_variant
+            # finout user prefers dark theme or light theme :)
+            # read this links for more information:
+            # https://wiki.archlinux.org/index.php/GTK%2B#Basic_theme_configuration
+            # https://wiki.archlinux.org/index.php/GTK%2B#Dark_theme_variant
 
             # find user gtk3 config file path.
             gtk3_confing_file_path = os.path.join(home_address, '.config', 'gtk-3.0', 'settings.ini')
@@ -175,7 +178,7 @@ def returnDefaultSettings():
                     gtk3_confing_file_path = '/etc/gtk-3.0/settings.ini'
                 else:
                     gtk3_confing_file_path = None
-    
+
             # read this for more information:
             dark_theme = False
             if gtk3_confing_file_path:
@@ -204,7 +207,7 @@ def returnDefaultSettings():
                 else:
                     style = 'Fusion'
                     color_scheme = 'Persepolis Light Blue'
-    
+
     elif os_type == 'Darwin':
         style = 'macintosh'
         color_scheme = 'System'
@@ -221,44 +224,43 @@ def returnDefaultSettings():
         icons = 'Breeze'
 
     # keyboard shortcuts
-    delete_shortcut = "Ctrl+D" 
-    remove_shortcut = "Ctrl+R" 
-    add_new_download_shortcut = "Ctrl+N" 
-    import_text_shortcut = "Ctrl+O" 
+    delete_shortcut = "Ctrl+D"
+    remove_shortcut = "Ctrl+R"
+    add_new_download_shortcut = "Ctrl+N"
+    import_text_shortcut = "Ctrl+O"
     video_finder_shortcut = "Ctrl+V"
     quit_shortcut = "Ctrl+Q"
     hide_window_shortcut = "Ctrl+W"
-    move_up_selection_shortcut = "Ctrl+Up" 
-    move_down_selection_shortcut = "Ctrl+Down" 
-
+    move_up_selection_shortcut = "Ctrl+Up"
+    move_down_selection_shortcut = "Ctrl+Down"
 
     # Persepolis default setting
     default_setting_dict = {'locale': 'en_US', 'toolbar_icon_size': 32, 'wait-queue': [0, 0], 'awake': 'no', 'custom-font': 'no', 'column0': 'yes',
-                        'column1': 'yes', 'column2': 'yes', 'column3': 'yes', 'column4': 'yes', 'column5': 'yes', 'column6': 'yes', 'column7': 'yes',
-                        'column10': 'yes', 'column11': 'yes', 'column12': 'yes', 'subfolder': 'yes', 'startup': 'no', 'show-progress': 'yes',
-                        'show-menubar': 'no', 'show-sidepanel': 'yes', 'rpc-port': 6801, 'notification': 'Native notification', 'after-dialog': 'yes',
-                        'tray-icon': 'yes', 'browser-persepolis': 'yes', 'hide-window': 'yes', 'max-tries': 5, 'retry-wait': 0, 'timeout': 60,
-                        'connections': 16, 'download_path_temp': download_path_temp, 'download_path': download_path, 'sound': 'yes', 'sound-volume': 100,
-                        'style': style, 'color-scheme': color_scheme, 'icons': icons, 'font': 'Ubuntu', 'font-size': 9, 'aria2_path': '',
-                        'video_finder/max_links': '3', 'shortcuts/delete_shortcut': delete_shortcut, 'shortcuts/remove_shortcut': remove_shortcut, 
-                        'shortcuts/add_new_download_shortcut': add_new_download_shortcut, 'shortcuts/import_text_shortcut': import_text_shortcut,
-                        'shortcuts/video_finder_shortcut': video_finder_shortcut, 'shortcuts/quit_shortcut': quit_shortcut,
-                        'shortcuts/hide_window_shortcut': hide_window_shortcut, 'shortcuts/move_up_selection_shortcut': move_up_selection_shortcut,
-                        'shortcuts/move_down_selection_shortcut': move_down_selection_shortcut}
+                            'column1': 'yes', 'column2': 'yes', 'column3': 'yes', 'column4': 'yes', 'column5': 'yes', 'column6': 'yes', 'column7': 'yes',
+                            'column10': 'yes', 'column11': 'yes', 'column12': 'yes', 'subfolder': 'yes', 'startup': 'no', 'show-progress': 'yes',
+                            'show-menubar': 'no', 'show-sidepanel': 'yes', 'rpc-port': 6801, 'notification': 'Native notification', 'after-dialog': 'yes',
+                            'tray-icon': 'yes', 'browser-persepolis': 'yes', 'hide-window': 'yes', 'max-tries': 5, 'retry-wait': 0, 'timeout': 60,
+                            'connections': 16, 'download_path_temp': download_path_temp, 'download_path': download_path, 'sound': 'yes', 'sound-volume': 100,
+                            'style': style, 'color-scheme': color_scheme, 'icons': icons, 'font': 'Ubuntu', 'font-size': 9, 'aria2_path': '',
+                            'video_finder/max_links': '3', 'shortcuts/delete_shortcut': delete_shortcut, 'shortcuts/remove_shortcut': remove_shortcut,
+                            'shortcuts/add_new_download_shortcut': add_new_download_shortcut, 'shortcuts/import_text_shortcut': import_text_shortcut,
+                            'shortcuts/video_finder_shortcut': video_finder_shortcut, 'shortcuts/quit_shortcut': quit_shortcut,
+                            'shortcuts/hide_window_shortcut': hide_window_shortcut, 'shortcuts/move_up_selection_shortcut': move_up_selection_shortcut,
+                            'shortcuts/move_down_selection_shortcut': move_down_selection_shortcut}
 
     return default_setting_dict
+
 
 def muxer(parent, video_finder_dictionary):
 
     result_dictionary = {'error': 'no_error',
-            'ffmpeg_error_message': None,
-            'final_path': None,
-            'final_size': None}
-
+                         'ffmpeg_error_message': None,
+                         'final_path': None,
+                         'final_size': None}
 
     # find file path
-    video_file_dictionary = parent.persepolis_db.searchGidInAddLinkTable(video_finder_dictionary['video_gid']) 
-    audio_file_dictionary = parent.persepolis_db.searchGidInAddLinkTable(video_finder_dictionary['audio_gid']) 
+    video_file_dictionary = parent.persepolis_db.searchGidInAddLinkTable(video_finder_dictionary['video_gid'])
+    audio_file_dictionary = parent.persepolis_db.searchGidInAddLinkTable(video_finder_dictionary['audio_gid'])
 
     # find inputs and output file path for ffmpeg
     video_file_path = video_file_dictionary['download_path']
@@ -284,26 +286,23 @@ def muxer(parent, video_finder_dictionary):
 
         else:
 
-            # find final file's name 
+            # find final file's name
             final_file_name = urllib.parse.unquote(os.path.basename(video_file_path))
 
             # if video's extension is 'mp4' then the final output file's extension is 'mp4'
             # if video's extension is 'webm' then the final output file's extension is 'mkv'
 
             file_name_split = final_file_name.split('.')
-            video_extension = file_name_split[-1] 
+            video_extension = file_name_split[-1]
 
             if video_extension == 'webm':
                 extension_length = len(file_name_split[-1]) + 1
 
-                final_file_name = final_file_name[0:-extension_length] + '.mkv' 
-
-
+                final_file_name = final_file_name[0:-extension_length] + '.mkv'
 
             if parent.persepolis_setting.value('settings/download_path') == final_path:
                 if parent.persepolis_setting.value('settings/subfolder') == 'yes':
                     final_path = os.path.join(final_path, 'Videos')
-
 
             # rename file if file already existed
             i = 1
@@ -322,43 +321,43 @@ def muxer(parent, video_finder_dictionary):
             # start muxing
             if os_type == 'Linux' or os_type == 'FreeBSD' or os_type == 'OpenBSD':
                 pipe = subprocess.Popen(['ffmpeg', '-i', video_file_path,
-                                    '-i', audio_file_path,
-                                    '-c', 'copy',
-                                    '-shortest',
-                                    '-map', '0:v:0',
-                                    '-map', '1:a:0',
-                                    '-loglevel', 'error',
-                                    '-strict', '-2',
-                                    final_path_pluse_name],
-                                    stderr=subprocess.PIPE, 
-                                    stdout=subprocess.PIPE,
-                                    stdin=subprocess.PIPE,
-                                    shell=False)
+                                         '-i', audio_file_path,
+                                         '-c', 'copy',
+                                         '-shortest',
+                                         '-map', '0:v:0',
+                                         '-map', '1:a:0',
+                                         '-loglevel', 'error',
+                                         '-strict', '-2',
+                                         final_path_pluse_name],
+                                        stderr=subprocess.PIPE,
+                                        stdout=subprocess.PIPE,
+                                        stdin=subprocess.PIPE,
+                                        shell=False)
 
             elif os_type == 'Darwin':
                 # ffmpeg path in mac
                 # ...path/Persepolis Download Manager.app/Contents/MacOS/ffmpeg
-                cwd = sys.argv[0] 
+                cwd = sys.argv[0]
                 current_directory = os.path.dirname(cwd)
                 ffmpeg_path = os.path.join(current_directory, 'ffmpeg')
 
                 pipe = subprocess.Popen([ffmpeg_path, '-i', video_file_path,
-                                    '-i', audio_file_path,
-                                    '-c', 'copy',
-                                    '-shortest',
-                                    '-map', '0:v:0',
-                                    '-map', '1:a:0',
-                                    '-loglevel', 'error',
-                                    '-strict', '-2',
-                                    final_path_pluse_name], 
-                                    stderr=subprocess.PIPE,
-                                    stdout=subprocess.PIPE,
-                                    stdin=subprocess.PIPE,
-                                    shell=False)
+                                         '-i', audio_file_path,
+                                         '-c', 'copy',
+                                         '-shortest',
+                                         '-map', '0:v:0',
+                                         '-map', '1:a:0',
+                                         '-loglevel', 'error',
+                                         '-strict', '-2',
+                                         final_path_pluse_name],
+                                        stderr=subprocess.PIPE,
+                                        stdout=subprocess.PIPE,
+                                        stdin=subprocess.PIPE,
+                                        shell=False)
 
             elif os_type == 'Windows':
                 # ffmpeg path in windows
-                cwd = sys.argv[0] 
+                cwd = sys.argv[0]
                 current_directory = os.path.dirname(cwd)
                 ffmpeg_path = os.path.join(current_directory, 'ffmpeg.exe')
 
@@ -366,19 +365,19 @@ def muxer(parent, video_finder_dictionary):
                 NO_WINDOW = 0x08000000
 
                 pipe = subprocess.Popen([ffmpeg_path, '-i', video_file_path,
-                                    '-i', audio_file_path,
-                                    '-c', 'copy',
-                                    '-shortest',
-                                    '-map', '0:v:0',
-                                    '-map', '1:a:0',
-                                    '-loglevel', 'error',
-                                    '-strict', '-2',
-                                    final_path_pluse_name],
-                                    stdout=subprocess.PIPE,
-                                    stdin=subprocess.PIPE,
-                                    stderr=subprocess.PIPE,
-                                    shell=False,
-                                    creationflags=NO_WINDOW)
+                                         '-i', audio_file_path,
+                                         '-c', 'copy',
+                                         '-shortest',
+                                         '-map', '0:v:0',
+                                         '-map', '1:a:0',
+                                         '-loglevel', 'error',
+                                         '-strict', '-2',
+                                         final_path_pluse_name],
+                                        stdout=subprocess.PIPE,
+                                        stdin=subprocess.PIPE,
+                                        stderr=subprocess.PIPE,
+                                        shell=False,
+                                        creationflags=NO_WINDOW)
 
             if pipe.wait() == 0:
                 # muxing was finished successfully.
@@ -392,5 +391,5 @@ def muxer(parent, video_finder_dictionary):
                 out, ffmpeg_error_message = pipe.communicate()
 
                 result_dictionary['ffmpeg_error_message'] = ffmpeg_error_message.decode('utf-8')
-            
-    return result_dictionary 
+
+    return result_dictionary

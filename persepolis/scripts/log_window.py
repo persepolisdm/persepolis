@@ -24,6 +24,7 @@ import os
 # config_folder
 config_folder = determineConfigFolder()
 
+
 class LogWindow(LogWindow_Ui):
     def __init__(self, persepolis_setting):
         super().__init__(persepolis_setting)
@@ -82,8 +83,6 @@ class LogWindow(LogWindow_Ui):
         self.text_edit.clear()
         self.text_edit.insertPlainText(self.text)
 
-
-
     def reportPushButtonPressed(self, button):
         osCommands.xdgOpen('https://github.com/persepolisdm/persepolis/issues')
 
@@ -97,8 +96,8 @@ class LogWindow(LogWindow_Ui):
             self.copy_log_pushButton.setEnabled(False)
 
     def copyPushButtonPressed(self, button):
-#         clipboard = QApplication.clipboard()
-#         clipboard.setText(self.text)
+        #         clipboard = QApplication.clipboard()
+        #         clipboard.setText(self.text)
         self.text_edit.copy()
 
 # this method is refresh log messages in text_edit
@@ -114,12 +113,11 @@ class LogWindow(LogWindow_Ui):
         self.text_edit.clear()
         self.text_edit.insertPlainText(self.text)
 
-
     def closeEvent(self, event):
         self.layout().setSizeConstraint(QtWidgets.QLayout.SetDefaultConstraint)
-        self.setMinimumSize(QSize(self.width() , self.minimum_height))
-        self.resize(QSize(self.width() , self.minimum_height))
- 
+        self.setMinimumSize(QSize(self.width(), self.minimum_height))
+        self.resize(QSize(self.width(), self.minimum_height))
+
         self.persepolis_setting.setValue('LogWindow/size', self.size())
         self.persepolis_setting.setValue('LogWindow/position', self.pos())
         self.persepolis_setting.sync()
@@ -132,4 +130,3 @@ class LogWindow(LogWindow_Ui):
         self.copy_log_pushButton.setIcon(QIcon(icons + 'clipboard'))
         self.report_pushButton.setIcon(QIcon(icons + 'about'))
         self.refresh_log_pushButton.setIcon(QIcon(icons + 'refresh'))
-

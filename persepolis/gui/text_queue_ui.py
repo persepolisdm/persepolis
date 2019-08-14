@@ -27,7 +27,7 @@ class TextQueue_Ui(QWidget):
         self.persepolis_setting = persepolis_setting
         icons = ':/' + \
             str(self.persepolis_setting.value('settings/icons')) + '/'
-            
+
         # add support for other languages
         locale = str(self.persepolis_setting.value('settings/locale'))
         QLocale.setDefault(QLocale(locale))
@@ -40,10 +40,9 @@ class TextQueue_Ui(QWidget):
 
         if ui_direction == 'rtl':
             self.setLayoutDirection(Qt.RightToLeft)
-        
+
         elif ui_direction in 'ltr':
             self.setLayoutDirection(Qt.LeftToRight)
-
 
         self.setWindowIcon(QIcon.fromTheme('persepolis', QIcon(':/persepolis.svg')))
         window_verticalLayout = QVBoxLayout()
@@ -74,7 +73,6 @@ class TextQueue_Ui(QWidget):
         self.links_table.horizontalHeader().setSectionResizeMode(0)
         self.links_table.horizontalHeader().setStretchLastSection(True)
 
-
         # add_queue
         add_queue_horizontalLayout = QHBoxLayout()
 
@@ -96,7 +94,6 @@ class TextQueue_Ui(QWidget):
 
         links_tab_verticalLayout.addStretch(1)
         self.queue_tabWidget.addTab(self.links_tab, "")
-
 
         # options_tab
         self.options_tab = QWidget()
@@ -195,7 +192,6 @@ class TextQueue_Ui(QWidget):
 
         self.queue_tabWidget.addTab(self.options_tab, '')
 
-
         # limit Speed
         limit_verticalLayout = QVBoxLayout()
 
@@ -222,7 +218,6 @@ class TextQueue_Ui(QWidget):
 
         limit_connections_horizontalLayout = QHBoxLayout()
         limit_connections_horizontalLayout.addLayout(limit_verticalLayout)
-
 
         # number of connections
         connections_horizontalLayout = QHBoxLayout()

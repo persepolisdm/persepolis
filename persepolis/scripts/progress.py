@@ -141,15 +141,14 @@ class ProgressWindow(ProgressWindow_Ui):
                                'critical', parent=self.parent)
 
     def stopPushButtonPressed(self, button):
-        
+
         dict = {'gid': self.gid,
                 'shutdown': 'canceled'}
 
         self.parent.temp_db.updateSingleTable(dict)
 
-
         answer = download.downloadStop(self.gid, self.parent)
-        
+
         # if aria2 did not respond , then this function is checking for aria2
         # availability , and if aria2 disconnected then aria2Disconnected is
         # executed
@@ -211,10 +210,10 @@ class ProgressWindow(ProgressWindow_Ui):
             if ok:
                 # check password is true or not!
                 pipe = subprocess.Popen(['sudo', '-S', 'echo', 'hello'],
-                        stdout=subprocess.DEVNULL,
-                        stdin=subprocess.PIPE,
-                        stderr=subprocess.DEVNULL,
-                        shell=False)
+                                        stdout=subprocess.DEVNULL,
+                                        stdin=subprocess.PIPE,
+                                        stderr=subprocess.DEVNULL,
+                                        shell=False)
 
                 pipe.communicate(passwd.encode())
 
@@ -229,10 +228,10 @@ class ProgressWindow(ProgressWindow_Ui):
                     if ok:
                         # checking password
                         pipe = subprocess.Popen(['sudo', '-S', 'echo', 'hello'],
-                                stdout=subprocess.DEVNULL,
-                                stdin=subprocess.PIPE,
-                                stderr=subprocess.DEVNULL,
-                                shell=False)
+                                                stdout=subprocess.DEVNULL,
+                                                stdin=subprocess.PIPE,
+                                                stderr=subprocess.DEVNULL,
+                                                shell=False)
 
                         pipe.communicate(passwd.encode())
 
@@ -244,13 +243,13 @@ class ProgressWindow(ProgressWindow_Ui):
 
                 if ok != False:
 
-                # if user selects shutdown option after download progress, 
-                # value of 'shutdown' will changed in temp_db for this gid
-                # and "wait" word will be written for this value.
-                # (see ShutDownThread and shutdown.py for more information)
-                # shutDown method will check that value in a loop .
-                # when "wait" changes to "shutdown" then shutdown.py script
-                # will shut down the system.
+                    # if user selects shutdown option after download progress,
+                    # value of 'shutdown' will changed in temp_db for this gid
+                    # and "wait" word will be written for this value.
+                    # (see ShutDownThread and shutdown.py for more information)
+                    # shutDown method will check that value in a loop .
+                    # when "wait" changes to "shutdown" then shutdown.py script
+                    # will shut down the system.
                     shutdown_enable = ShutDownThread(self.parent, self.gid, passwd)
                     self.parent.threadPool.append(shutdown_enable)
                     self.parent.threadPool[len(self.parent.threadPool) - 1].start()

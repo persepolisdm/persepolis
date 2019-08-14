@@ -19,12 +19,13 @@ from persepolis.gui.windows_notification_ui import Windows_Notification_UI
 from PyQt5.QtCore import QThread, pyqtSignal
 from time import sleep
 
+
 class TimerThread(QThread):
     TIMEISUP = pyqtSignal()
 
     def __init__(self, time):
         QThread.__init__(self)
-        self.time = float(int(time)/1000) 
+        self.time = float(int(time)/1000)
 
     def run(self):
         sleep(self.time)
@@ -34,18 +35,18 @@ class TimerThread(QThread):
 class Windows_Notification(Windows_Notification_UI):
     def __init__(self, parent, time, text1, text2, persepolis_setting):
         super().__init__(parent, persepolis_setting)
-        
+
         # run timer and close notification after time is up.
         timer = TimerThread(time)
         parent.threadPool.append(timer)
         parent.threadPool[len(parent.threadPool) - 1].start()
         parent.threadPool[len(parent.threadPool) - 1].TIMEISUP.connect(self.close)
- 
+
         # set text to the labels
         self.label1.setText(str(text1))
         self.label2.setText(str(text2))
 
-    def mousePressEvent(self,event):
+    def mousePressEvent(self, event):
         self.close()
 
     def closeEvent(self, event):

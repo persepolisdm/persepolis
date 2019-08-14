@@ -47,15 +47,14 @@ class VideoFinderProgressWindow(VideoFinderProgressWindow_Ui):
         # first item in the gid_list is related to video's link and second item is related to audio's link.
         self.gid_list = gid_list
 
-        # this variable can be changed by checkDownloadInfo method in mainwindow.py 
-        # self.gid defines that wich gid is downloaded. 
+        # this variable can be changed by checkDownloadInfo method in mainwindow.py
+        # self.gid defines that wich gid is downloaded.
         self.gid = gid_list[0]
-
 
         # this variable used as category name in ShutDownThread
         self.video_finder_plus_gid = 'video_finder_' + str(gid_list[0])
 
-        # connect signals and sluts 
+        # connect signals and sluts
         self.resume_pushButton.clicked.connect(self.resumePushButtonPressed)
         self.stop_pushButton.clicked.connect(self.stopPushButtonPressed)
         self.pause_pushButton.clicked.connect(self.pausePushButtonPressed)
@@ -130,7 +129,6 @@ class VideoFinderProgressWindow(VideoFinderProgressWindow_Ui):
                     notifySend(QCoreApplication.translate("progress_src_ui_tr", "Aria2 did not respond!"), QCoreApplication.translate("progress_src_ui_tr", "Please try again."), 10000,
                                'warning', parent=self.parent)
 
-
     def pausePushButtonPressed(self, button):
 
         if self.status == "downloading":
@@ -151,16 +149,15 @@ class VideoFinderProgressWindow(VideoFinderProgressWindow_Ui):
                                'critical', parent=self.parent)
 
     def stopPushButtonPressed(self, button):
-        
+
         # cancel shut down progress
         dictionary = {'category': self.video_finder_plus_gid,
-                'shutdown': 'canceled'}
+                      'shutdown': 'canceled'}
 
         self.parent.temp_db.updateQueueTable(dictionary)
 
-
         answer = download.downloadStop(self.gid, self.parent)
-        
+
         # if aria2 did not respond , then this function is checking for aria2
         # availability , and if aria2 disconnected then aria2Disconnected is
         # executed
@@ -185,7 +182,7 @@ class VideoFinderProgressWindow(VideoFinderProgressWindow_Ui):
             # check download status is "scheduled" or not!
             for i in [0, 1]:
                 gid = self.gid_list[i]
-                dictionary = self.parent.persepolis_db.searchGidInDownloadTable(gid) 
+                dictionary = self.parent.persepolis_db.searchGidInDownloadTable(gid)
                 status = dictionary['status']
 
                 if status != 'scheduled':
@@ -216,16 +213,16 @@ class VideoFinderProgressWindow(VideoFinderProgressWindow_Ui):
             # so user canceled shutdown after download
             # write cancel value in data_base for this gid
             dictionary = {'category': self.video_finder_plus_gid,
-                        'shutdown': 'canceled'}
+                          'shutdown': 'canceled'}
 
             self.parent.temp_db.updateQueueTable(dictionary)
-    
+
     def afterPushButtonPressed(self, button):
 
         self.after_pushButton.setEnabled(False)
 
         # For Linux and Mac OSX and FreeBSD and OpenBSD
-        if os_type != 'Windows':  
+        if os_type != 'Windows':
 
             # get root password
             passwd, ok = QInputDialog.getText(
@@ -235,10 +232,10 @@ class VideoFinderProgressWindow(VideoFinderProgressWindow_Ui):
 
                 # check password is true or not!
                 pipe = subprocess.Popen(['sudo', '-S', 'echo', 'hello'],
-                        stdout=subprocess.DEVNULL,
-                        stdin=subprocess.PIPE,
-                        stderr=subprocess.DEVNULL,
-                        shell=False)
+                                        stdout=subprocess.DEVNULL,
+                                        stdin=subprocess.PIPE,
+                                        stderr=subprocess.DEVNULL,
+                                        shell=False)
 
                 pipe.communicate(passwd.encode())
 
@@ -253,10 +250,10 @@ class VideoFinderProgressWindow(VideoFinderProgressWindow_Ui):
                     if ok:
 
                         pipe = subprocess.Popen(['sudo', '-S', 'echo', 'hello'],
-                                stdout=subprocess.DEVNULL,
-                                stdin=subprocess.PIPE,
-                                stderr=subprocess.DEVNULL,
-                                shell=False)
+                                                stdout=subprocess.DEVNULL,
+                                                stdin=subprocess.PIPE,
+                                                stderr=subprocess.DEVNULL,
+                                                shell=False)
 
                         pipe.communicate(passwd.encode())
 
@@ -268,7 +265,7 @@ class VideoFinderProgressWindow(VideoFinderProgressWindow_Ui):
 
                 if ok != False:
 
-                    # if user selects shutdown option after download progress, 
+                    # if user selects shutdown option after download progress,
                     # value of 'shutdown' will changed in temp_db for this progress
                     # and "wait" word will be written for this value.
                     # (see ShutDownThread and shutdown.py for more information)
@@ -285,7 +282,7 @@ class VideoFinderProgressWindow(VideoFinderProgressWindow_Ui):
             else:
                 self.after_checkBox.setChecked(False)
 
-        else:  
+        else:
             # for Windows
             for gid in gid_list:
                 shutdown_enable = ShutDownThread(self.parent, self.video_finder_plus_gid)

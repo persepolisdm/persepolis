@@ -14,12 +14,12 @@
 #
 
 from persepolis.scripts.useful_tools import determineConfigFolder
-from persepolis.scripts.osCommands import touch 
+from persepolis.scripts.osCommands import touch
 import logging
 import os
 
 # config_folder
-config_folder =  determineConfigFolder()
+config_folder = determineConfigFolder()
 
 # log file address
 log_file = os.path.join(str(config_folder), 'persepolisdm.log')
@@ -41,7 +41,6 @@ handler.setFormatter(formatter)
 
 # add the handlers to the logger
 logObj.addHandler(handler)
-
 
 
 def sendToLog(text="", type="INFO"):

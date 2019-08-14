@@ -16,9 +16,10 @@
 
 from PyQt5.QtWidgets import QAbstractItemView, QTableWidget, QTableWidgetItem, QDateTimeEdit, QCheckBox, QVBoxLayout, QHBoxLayout, QFrame, QWidget, QLabel, QLineEdit, QTabWidget, QSpinBox, QPushButton, QDial, QComboBox, QFontComboBox, QSpacerItem, QSizePolicy
 from PyQt5.QtCore import Qt, QTranslator, QCoreApplication, QLocale
-from persepolis.gui import resources 
+from persepolis.gui import resources
 from PyQt5.QtGui import QIcon
 import pkg_resources
+
 
 class KeyCapturingWindow_Ui(QWidget):
     def __init__(self, persepolis_setting):
@@ -42,7 +43,7 @@ class KeyCapturingWindow_Ui(QWidget):
 
         if ui_direction == 'rtl':
             self.setLayoutDirection(Qt.RightToLeft)
-        
+
         elif ui_direction in 'ltr':
             self.setLayoutDirection(Qt.LeftToRight)
 
@@ -99,16 +100,14 @@ class Setting_Ui(QWidget):
 
         if ui_direction == 'rtl':
             self.setLayoutDirection(Qt.RightToLeft)
-        
+
         elif ui_direction in 'ltr':
             self.setLayoutDirection(Qt.LeftToRight)
-
 
         global icons
         icons = ':/' + str(self.persepolis_setting.value('settings/icons')) + '/'
 
-
-        # main layout 
+        # main layout
         window_verticalLayout = QVBoxLayout(self)
 
         # setting_tabWidget
@@ -131,7 +130,7 @@ class Setting_Ui(QWidget):
         tries_horizontalLayout.addWidget(self.tries_spinBox)
         download_options_tab_verticalLayout.addLayout(tries_horizontalLayout)
 
-        #wait
+        # wait
         wait_horizontalLayout = QHBoxLayout()
 
         self.wait_label = QLabel(self.download_options_tab)
@@ -180,7 +179,7 @@ class Setting_Ui(QWidget):
             self.rpc_horizontalLayout)
 
         # wait_queue
-        wait_queue_horizontalLayout = QHBoxLayout() 
+        wait_queue_horizontalLayout = QHBoxLayout()
 
         self.wait_queue_label = QLabel(self.download_options_tab)
         wait_queue_horizontalLayout.addWidget(self.wait_queue_label)
@@ -188,9 +187,9 @@ class Setting_Ui(QWidget):
         self.wait_queue_time = QDateTimeEdit(self.download_options_tab)
         self.wait_queue_time.setDisplayFormat('H:mm')
         wait_queue_horizontalLayout.addWidget(self.wait_queue_time)
-        
+
         download_options_tab_verticalLayout.addLayout(
-            wait_queue_horizontalLayout) 
+            wait_queue_horizontalLayout)
 
         # change aria2 path
         aria2_path_verticalLayout = QVBoxLayout()
@@ -213,7 +212,6 @@ class Setting_Ui(QWidget):
         download_options_tab_verticalLayout.addStretch(1)
 
         self.setting_tabWidget.addTab(self.download_options_tab, "")
-
 
         # save_as_tab
         self.save_as_tab = QWidget()
@@ -255,7 +253,7 @@ class Setting_Ui(QWidget):
         save_as_tab_verticalLayout.addWidget(self.subfolder_checkBox)
 
         save_as_tab_verticalLayout.addStretch(1)
-        
+
         self.setting_tabWidget.addTab(self.save_as_tab, "")
 
         # notifications_tab
@@ -311,7 +309,7 @@ class Setting_Ui(QWidget):
         style_tab_verticalLayout.addLayout(style_horizontalLayout)
 
         # language
-        language_horizontalLayout = QHBoxLayout()        
+        language_horizontalLayout = QHBoxLayout()
 
         self.lang_label = QLabel(self.style_tab)
         language_horizontalLayout.addWidget(self.lang_label)
@@ -427,18 +425,18 @@ class Setting_Ui(QWidget):
         self.column11_checkBox = QCheckBox()
         self.column12_checkBox = QCheckBox()
 
-        columns_tab_verticalLayout.addWidget(self.show_column_label) 
-        columns_tab_verticalLayout.addWidget(self.column0_checkBox) 
-        columns_tab_verticalLayout.addWidget(self.column1_checkBox) 
-        columns_tab_verticalLayout.addWidget(self.column2_checkBox) 
-        columns_tab_verticalLayout.addWidget(self.column3_checkBox) 
-        columns_tab_verticalLayout.addWidget(self.column4_checkBox) 
-        columns_tab_verticalLayout.addWidget(self.column5_checkBox) 
-        columns_tab_verticalLayout.addWidget(self.column6_checkBox) 
-        columns_tab_verticalLayout.addWidget(self.column7_checkBox) 
-        columns_tab_verticalLayout.addWidget(self.column10_checkBox) 
-        columns_tab_verticalLayout.addWidget(self.column11_checkBox) 
-        columns_tab_verticalLayout.addWidget(self.column12_checkBox) 
+        columns_tab_verticalLayout.addWidget(self.show_column_label)
+        columns_tab_verticalLayout.addWidget(self.column0_checkBox)
+        columns_tab_verticalLayout.addWidget(self.column1_checkBox)
+        columns_tab_verticalLayout.addWidget(self.column2_checkBox)
+        columns_tab_verticalLayout.addWidget(self.column3_checkBox)
+        columns_tab_verticalLayout.addWidget(self.column4_checkBox)
+        columns_tab_verticalLayout.addWidget(self.column5_checkBox)
+        columns_tab_verticalLayout.addWidget(self.column6_checkBox)
+        columns_tab_verticalLayout.addWidget(self.column7_checkBox)
+        columns_tab_verticalLayout.addWidget(self.column10_checkBox)
+        columns_tab_verticalLayout.addWidget(self.column11_checkBox)
+        columns_tab_verticalLayout.addWidget(self.column12_checkBox)
 
         columns_tab_verticalLayout.addStretch(1)
 
@@ -491,12 +489,11 @@ class Setting_Ui(QWidget):
         self.shortcut_table.verticalHeader().hide()
 
         shortcut_table_header = [QCoreApplication.translate("setting_ui_tr", 'Action'),
-                QCoreApplication.translate("setting_ui_tr", 'Shortcut')] 
+                                 QCoreApplication.translate("setting_ui_tr", 'Shortcut')]
 
         self.shortcut_table.setHorizontalHeaderLabels(shortcut_table_header)
 
         shortcut_tab_verticalLayout.addWidget(self.shortcut_table)
-
 
         self.setting_tabWidget.addTab(self.shortcut_tab, QCoreApplication.translate("setting_ui_tr", "Shortcuts"))
 
@@ -525,7 +522,6 @@ class Setting_Ui(QWidget):
 
             j = j + 1
 
-
         self.shortcut_table.resizeColumnsToContents()
 
         # window buttons
@@ -547,7 +543,6 @@ class Setting_Ui(QWidget):
 
         # set style_tab for default
         self.setting_tabWidget.setCurrentIndex(3)
-
 
         # labels and translations
         self.setWindowTitle(QCoreApplication.translate("setting_ui_tr", "Preferences"))
@@ -580,11 +575,13 @@ class Setting_Ui(QWidget):
         self.rpc_port_spinbox.setToolTip(
             QCoreApplication.translate("setting_ui_tr", "<html><head/><body><p> Specify a port number for JSON-RPC/XML-RPC server to listen to. Possible Values: 1024 - 65535 Default: 6801 </p></body></html>"))
 
-        self.wait_queue_label.setText(QCoreApplication.translate("setting_ui_tr", 'Wait between every downloads in queue:'))
+        self.wait_queue_label.setText(QCoreApplication.translate(
+            "setting_ui_tr", 'Wait between every downloads in queue:'))
 
         self.aria2_path_checkBox.setText(QCoreApplication.translate("setting_ui_tr", 'Change Aria2 default path'))
         self.aria2_path_pushButton.setText(QCoreApplication.translate("setting_ui_tr", 'Change'))
-        aria2_path_tooltip =QCoreApplication.translate("setting_ui_tr", "<html><head/><body><p>Attention: Wrong path may have caused problem! Do it carefully or don't change default setting!</p></body></html>" )
+        aria2_path_tooltip = QCoreApplication.translate(
+            "setting_ui_tr", "<html><head/><body><p>Attention: Wrong path may have caused problem! Do it carefully or don't change default setting!</p></body></html>")
         self.aria2_path_checkBox.setToolTip(aria2_path_tooltip)
         self.aria2_path_lineEdit.setToolTip(aria2_path_tooltip)
         self.aria2_path_pushButton.setToolTip(aria2_path_tooltip)
@@ -598,7 +595,8 @@ class Setting_Ui(QWidget):
         self.temp_download_label.setText(QCoreApplication.translate("setting_ui_tr", "Temporary Download Folder: "))
         self.temp_download_pushButton.setText(QCoreApplication.translate("setting_ui_tr", "Change"))
 
-        self.subfolder_checkBox.setText(QCoreApplication.translate("setting_ui_tr", "Create subfolders for Music,Videos,... in default download folder"))
+        self.subfolder_checkBox.setText(QCoreApplication.translate(
+            "setting_ui_tr", "Create subfolders for Music,Videos,... in default download folder"))
 
         self.setting_tabWidget.setTabText(
             self.setting_tabWidget.indexOf(self.save_as_tab),  QCoreApplication.translate("setting_ui_tr", "Save as"))
@@ -622,14 +620,16 @@ class Setting_Ui(QWidget):
         self.font_checkBox.setText(QCoreApplication.translate("setting_ui_tr", "Font: "))
         self.font_size_label.setText(QCoreApplication.translate("setting_ui_tr", "Size: "))
 
-        self.hide_window_checkBox.setText(QCoreApplication.translate("setting_ui_tr", "Hide main window if close button clicked."))
+        self.hide_window_checkBox.setText(QCoreApplication.translate(
+            "setting_ui_tr", "Hide main window if close button clicked."))
         self.hide_window_checkBox.setToolTip(
             QCoreApplication.translate("setting_ui_tr", "<html><head/><body><p>This feature may not work in your operating system.</p></body></html>"))
 
         self.start_persepolis_if_browser_executed_checkBox.setText(
-                QCoreApplication.translate('setting_ui_tr', 'Start Persepolis in system tray, If browser is executed.'))
+            QCoreApplication.translate('setting_ui_tr', 'Start Persepolis in system tray, If browser is executed.'))
 
-        self.enable_system_tray_checkBox.setText(QCoreApplication.translate("setting_ui_tr", "Enable system tray icon."))
+        self.enable_system_tray_checkBox.setText(
+            QCoreApplication.translate("setting_ui_tr", "Enable system tray icon."))
 
         self.after_download_checkBox.setText(
             QCoreApplication.translate("setting_ui_tr", "Show download complete dialog when download has finished."))
@@ -645,10 +645,10 @@ class Setting_Ui(QWidget):
         self.keep_awake_checkBox.setToolTip(
             QCoreApplication.translate("setting_ui_tr", "<html><head/><body><p>This option is preventing system from going to sleep.\
             This is necessary if your power manager is suspending system automatically. </p></body></html>"))
- 
+
         self.wait_queue_time.setToolTip(
-                QCoreApplication.translate("setting_ui_tr", "<html><head/><body><p>Format HH:MM</p></body></html>"))
- 
+            QCoreApplication.translate("setting_ui_tr", "<html><head/><body><p>Format HH:MM</p></body></html>"))
+
         self.setting_tabWidget.setTabText(
             self.setting_tabWidget.indexOf(self.style_tab),  QCoreApplication.translate("setting_ui_tr", "Preferences"))
 
@@ -666,7 +666,6 @@ class Setting_Ui(QWidget):
         self.column11_checkBox.setText(QCoreApplication.translate("setting_ui_tr", 'Last try date'))
         self.column12_checkBox.setText(QCoreApplication.translate("setting_ui_tr", 'Category'))
 
-
         self.setting_tabWidget.setTabText(
             self.setting_tabWidget.indexOf(self.columns_tab), QCoreApplication.translate("setting_ui_tr", "Columns customization"))
 
@@ -675,7 +674,7 @@ class Setting_Ui(QWidget):
             self.video_finder_tab), QCoreApplication.translate("setting_ui_tr",  "Video Finder Options"))
 
         self.max_links_label.setText(QCoreApplication.translate("setting_ui_tr", 'Maximum number of links to capture:<br/>'
-                                     '<small>(If browser sends multiple video links at a time)</small>'))
+                                                                '<small>(If browser sends multiple video links at a time)</small>'))
 
 # window buttons
         self.defaults_pushButton.setText(QCoreApplication.translate("setting_ui_tr", "Defaults"))

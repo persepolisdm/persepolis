@@ -42,7 +42,7 @@ def spider(add_link_dictionary):
     referer = add_link_dictionary['referer']
 
     # defin a requests session
-    requests_session = requests.Session() 
+    requests_session = requests.Session()
     if ip:
         ip_port = 'http://' + str(ip) + ":" + str(port)
         if proxy_user:
@@ -55,7 +55,7 @@ def spider(add_link_dictionary):
         requests_session.auth(download_user, download_passwd)
 
     # set cookies
-    if raw_cookies:  
+    if raw_cookies:
         cookie = SimpleCookie()
         cookie.load(raw_cookies)
 
@@ -64,13 +64,13 @@ def spider(add_link_dictionary):
 
     # set referer
     if referer:
-        requests_session.headers.update({'referer': referer }) #setting referer to the session
+        requests_session.headers.update({'referer': referer})  # setting referer to the session
 
     # set user_agent
     if user_agent:
-        requests_session.headers.update({'user-agent':user_agent }) #setting user_agent to the session
-        
-    #find headers
+        requests_session.headers.update({'user-agent': user_agent})  # setting user_agent to the session
+
+    # find headers
     try:
         response = requests_session.head(link)
         header = response.headers
@@ -100,7 +100,7 @@ def spider(add_link_dictionary):
     if 'Content-Length' in header.keys():
         file_size = int(header['Content-Length'])
 
-        # converting file_size to KiB or MiB or GiB 
+        # converting file_size to KiB or MiB or GiB
         file_size = humanReadbleSize(file_size)
 
     # return results
@@ -195,10 +195,10 @@ def addLinkSpider(add_link_dictionary):
         header = {}
 
     # find file size
-    file_size = None 
+    file_size = None
     if 'Content-Length' in header.keys():  # checking if file_size is available
         file_size = int(header['Content-Length'])
-        
+
         # converting file_size to KiB or MiB or GiB
         file_size = str(humanReadbleSize(file_size))
 
@@ -212,5 +212,4 @@ def addLinkSpider(add_link_dictionary):
             # getting file name in desired format
             file_name = str(filename_splited[1:-1])
 
- 
     return file_name, file_size  # If no Content-Length ? fixed it.

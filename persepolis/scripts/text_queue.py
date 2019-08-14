@@ -21,9 +21,11 @@ from persepolis.scripts import logger
 from persepolis.scripts import spider
 from PyQt5.QtGui import QIcon
 from functools import partial
-import os 
+import os
 
 # This thread finds filename
+
+
 class QueueSpiderThread(QThread):
     QUEUESPIDERRETURNEDFILENAME = pyqtSignal(str)
 
@@ -46,8 +48,6 @@ class QueueSpiderThread(QThread):
                 "Spider couldn't find download information", exc_info=True)
             logger.logObj.error(
                 str(e), exc_info=True)
-
-
 
 
 class TextQueue(TextQueue_Ui):
@@ -108,7 +108,7 @@ class TextQueue(TextQueue_Ui):
 
         # get categories name and add them to add_queue_comboBox
         categories_list = self.parent.persepolis_db.categoriesList()
- 
+
         for queue in categories_list:
             if queue != 'All Downloads':
                 self.add_queue_comboBox.addItem(queue)
@@ -125,7 +125,6 @@ class TextQueue(TextQueue_Ui):
         global download_path
         download_path = str(
             self.persepolis_setting.value('settings/download_path'))
-
 
         self.connections_spinBox.setValue(connections)
         self.download_folder_lineEdit.setText(download_path)
@@ -149,13 +148,11 @@ class TextQueue(TextQueue_Ui):
 
         self.port_spinBox.setValue(int(int(settings_port)))
 
-
         # download UserName initialization
         settings_download_user = self.persepolis_setting.value(
             'add_link_initialization/download_user', None)
         if settings_download_user:
             self.download_user_lineEdit.setText(str(settings_download_user))
-
 
         # connect folder_pushButton
         self.folder_pushButton.clicked.connect(self.changeFolder)
@@ -168,7 +165,6 @@ class TextQueue(TextQueue_Ui):
         self.select_all_pushButton.clicked.connect(self.selectAll)
 
         self.deselect_all_pushButton.clicked.connect(self.deselectAll)
-
 
         #frames and checkBoxes
         self.proxy_frame.setEnabled(False)
@@ -331,15 +327,13 @@ class TextQueue(TextQueue_Ui):
                 'download_passwd': download_passwd,
                 'connections': connections,
                 'limit_value': limit,
-                'download_path' : download_path,
+                'download_path': download_path,
                 'referer': None,
                 'load_cookies': None,
                 'user_agent': None,
                 'header': None,
                 'after_download': None
                 }
-
-
 
         # find checked links in links_table
         self.add_link_dictionary_list = []

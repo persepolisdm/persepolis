@@ -13,7 +13,7 @@
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from PyQt5.QtCore import Qt, QEvent, QTime, QSize, QPoint, QDir , QTranslator, QCoreApplication, QLocale
+from PyQt5.QtCore import Qt, QEvent, QTime, QSize, QPoint, QDir, QTranslator, QCoreApplication, QLocale
 from PyQt5.QtWidgets import QFileDialog, QStyleFactory, QMessageBox, QTableWidgetItem
 from persepolis.gui.setting_ui import Setting_Ui, KeyCapturingWindow_Ui
 from persepolis.scripts.useful_tools import returnDefaultSettings
@@ -27,6 +27,7 @@ import os
 
 home_address = os.path.expanduser("~")
 os_type = platform.system()
+
 
 class KeyCapturingWindow(KeyCapturingWindow_Ui):
     def __init__(self, callback, persepolis_setting):
@@ -43,10 +44,9 @@ class KeyCapturingWindow(KeyCapturingWindow_Ui):
         if event.type() == QEvent.KeyPress:
             if event.key():
                 # show new keys in window
-                self.capturedKeyLabel.setText(str(QKeySequence(event.modifiers()|event.key()).toString()))
+                self.capturedKeyLabel.setText(str(QKeySequence(event.modifiers() | event.key()).toString()))
         return super(KeyCapturingWindow, self).eventFilter(source, event)
 
-    
     def okPushButtonPressed(self, button):
         # return new keys
         self.callback(self.capturedKeyLabel.text())
@@ -54,6 +54,7 @@ class KeyCapturingWindow(KeyCapturingWindow_Ui):
 
     def closeEvent(self, event):
         event.accept()
+
 
 class PreferencesWindow(Setting_Ui):
     def __init__(self, parent, persepolis_setting):
@@ -82,7 +83,7 @@ class PreferencesWindow(Setting_Ui):
         self.translator = QTranslator()
         if self.translator.load(':/translations/locales/ui_' + locale, 'ts'):
             QCoreApplication.installTranslator(self.translator)
-            
+
         # wait_queue
         wait_queue_list = self.persepolis_setting.value('wait-queue')
         q_time = QTime(int(wait_queue_list[0]), int(wait_queue_list[1]))
@@ -126,7 +127,6 @@ class PreferencesWindow(Setting_Ui):
         # if style_comboBox is changed, self.styleComboBoxChanged is called.
         self.style_comboBox.currentIndexChanged.connect(self.styleComboBoxChanged)
 
-
         # find available styles(It's depends on operating system and desktop environments).
         available_styles = QStyleFactory.keys()
         for style in available_styles:
@@ -153,7 +153,7 @@ class PreferencesWindow(Setting_Ui):
         self.lang_comboBox.setCurrentIndex(current_locale)
         self.lang_comboBox.currentIndexChanged.connect(self.styleComboBoxChanged)
         self.styleComboBoxChanged()
- 
+
         current_color_index = self.color_comboBox.findText(
             str(self.persepolis_setting.value('color-scheme')))
         self.color_comboBox.setCurrentIndex(current_color_index)
@@ -171,7 +171,7 @@ class PreferencesWindow(Setting_Ui):
         self.icons_size_comboBox.currentIndexChanged.connect(self.iconSizeComboBoxCanged)
 
         self.iconSizeComboBoxCanged(1)
-        
+
         # set notification
         notifications = ['Native notification', 'QT notification']
         self.notification_comboBox.addItems(notifications)
@@ -203,24 +203,21 @@ class PreferencesWindow(Setting_Ui):
         self.temp_download_pushButton.clicked.connect(
             self.tempDownloadPushButtonClicked)
 
-
         # dial
         self.volume_dial.setNotchesVisible(True)
         self.volume_dial.valueChanged.connect(self.dialChanged)
 
-        # start_persepolis_if_browser_executed_checkBox 
+        # start_persepolis_if_browser_executed_checkBox
         if str(self.persepolis_setting.value('browser-persepolis')) == 'yes':
             self.start_persepolis_if_browser_executed_checkBox.setChecked(True)
         else:
             self.start_persepolis_if_browser_executed_checkBox.setChecked(False)
-
 
         # hide window
         if str(self.persepolis_setting.value('hide-window')) == 'yes':
             self.hide_window_checkBox.setChecked(True)
         else:
             self.hide_window_checkBox.setChecked(False)
-
 
         # tray icon
         if str(self.persepolis_setting.value('tray-icon')) == 'yes':
@@ -267,7 +264,7 @@ class PreferencesWindow(Setting_Ui):
             self.font_checkBox.setChecked(True)
         else:
             self.font_checkBox.setChecked(False)
-        
+
         self.fontCheckBoxState(self.font_checkBox)
 
         # keep_awake_checkBox
@@ -340,25 +337,24 @@ class PreferencesWindow(Setting_Ui):
 
         # shortcuts
         self.qshortcuts_list = [self.parent.exitAction_shortcut,
-                        self.parent.minimizeAction_shortcut,
-                        self.parent.removeSelectedAction_shortcut,
-                        self.parent.deleteSelectedAction_shortcut,
-                        self.parent.moveUpSelectedAction_shortcut,
-                        self.parent.moveDownSelectedAction_shortcut,
-                        self.parent.addlinkAction_shortcut,
-                        self.parent.videoFinderAddLinkAction_shortcut,
-                        self.parent.addtextfileAction_shortcut]
-
+                                self.parent.minimizeAction_shortcut,
+                                self.parent.removeSelectedAction_shortcut,
+                                self.parent.deleteSelectedAction_shortcut,
+                                self.parent.moveUpSelectedAction_shortcut,
+                                self.parent.moveDownSelectedAction_shortcut,
+                                self.parent.addlinkAction_shortcut,
+                                self.parent.videoFinderAddLinkAction_shortcut,
+                                self.parent.addtextfileAction_shortcut]
 
         self.shortcuts_list = [self.parent.exitAction_shortcut.key().toString(),
-                        self.parent.minimizeAction_shortcut.key().toString(),
-                        self.parent.removeSelectedAction_shortcut.key().toString(),
-                        self.parent.deleteSelectedAction_shortcut.key().toString(),
-                        self.parent.moveUpSelectedAction_shortcut.key().toString(),
-                        self.parent.moveDownSelectedAction_shortcut.key().toString(),
-                        self.parent.addlinkAction_shortcut.key().toString(),
-                        self.parent.videoFinderAddLinkAction_shortcut.key().toString(),
-                        self.parent.addtextfileAction_shortcut.key().toString()]
+                               self.parent.minimizeAction_shortcut.key().toString(),
+                               self.parent.removeSelectedAction_shortcut.key().toString(),
+                               self.parent.deleteSelectedAction_shortcut.key().toString(),
+                               self.parent.moveUpSelectedAction_shortcut.key().toString(),
+                               self.parent.moveDownSelectedAction_shortcut.key().toString(),
+                               self.parent.addlinkAction_shortcut.key().toString(),
+                               self.parent.videoFinderAddLinkAction_shortcut.key().toString(),
+                               self.parent.addtextfileAction_shortcut.key().toString()]
 
         # add shortcuts to the shortcut_table
         j = 0
@@ -376,7 +372,6 @@ class PreferencesWindow(Setting_Ui):
         # If user doubleclicks on a row, then run showCaptureKeyboardWindow method
         self.shortcut_table.itemDoubleClicked.connect(self.showCaptureKeyboardWindow)
 
-
         # ok cancel default button
         self.cancel_pushButton.clicked.connect(self.close)
         self.defaults_pushButton.clicked.connect(
@@ -387,12 +382,11 @@ class PreferencesWindow(Setting_Ui):
         self.font_checkBox.stateChanged.connect(self.fontCheckBoxState)
 
         # saving initial value of self.persepolis_setting in self.first_key_value_dict
-        # at the end! in the okPushButtonPressed method, first_key_value_dict will compared with second_key_value_dict. 
+        # at the end! in the okPushButtonPressed method, first_key_value_dict will compared with second_key_value_dict.
         # if any thing changed , then a message box notify user about "some changes take effect after restarting persepolis".
         self.first_key_value_dict = {}
         for member in self.persepolis_setting.allKeys():
-            self.first_key_value_dict[member] = str(self.persepolis_setting.value(member)) 
-
+            self.first_key_value_dict[member] = str(self.persepolis_setting.value(member))
 
         self.persepolis_setting.endGroup()
 
@@ -410,8 +404,9 @@ class PreferencesWindow(Setting_Ui):
         self.icon_comboBox.clear()
         selected_size = int(self.icons_size_comboBox.currentText())
         if selected_size < 48:
-            # add Papirus-light and Papirus-Dark icons to the list 
-            icons = ['Archdroid-Red', 'Archdroid-Blue', 'Breeze', 'Breeze-Dark', 'Papirus', 'Papirus-Dark', 'Papirus-Light']
+            # add Papirus-light and Papirus-Dark icons to the list
+            icons = ['Archdroid-Red', 'Archdroid-Blue', 'Breeze',
+                     'Breeze-Dark', 'Papirus', 'Papirus-Dark', 'Papirus-Light']
             self.icon_comboBox.addItems(icons)
 
             current_icons_index = self.icon_comboBox.findText(
@@ -440,7 +435,7 @@ class PreferencesWindow(Setting_Ui):
 
         self.parent.capturekeywindows_list.append(keyboard_capture_window)
         self.parent.capturekeywindows_list[len(self.parent.capturekeywindows_list) - 1].show()
-    
+
     def callBack(self, keys):
         # do nothing if keys is empty
         if not(keys):
@@ -469,8 +464,6 @@ class PreferencesWindow(Setting_Ui):
             # set keys in shortcuts_list
             self.shortcuts_list[selected_row] = keys
 
-
- 
     # active color_comboBox only when user is select "Fusion" style.
     def styleComboBoxChanged(self, index=None):
 
@@ -486,7 +479,7 @@ class PreferencesWindow(Setting_Ui):
 
             # add item
             self.color_comboBox.addItems(color_scheme)
- 
+
             # set 'System' for color_scheme
             current_color_index = self.color_comboBox.findText('System')
             self.color_comboBox.setCurrentIndex(current_color_index)
@@ -503,7 +496,7 @@ class PreferencesWindow(Setting_Ui):
             # some color schemes wouldn't work properly with Persian language.
             if selected_language == 'فارسی':
                 # color_comboBox items
-                color_scheme = ['Persepolis Light Blue', 'Persepolis Dark Blue'] 
+                color_scheme = ['Persepolis Light Blue', 'Persepolis Dark Blue']
 
                 # add items
                 self.color_comboBox.addItems(color_scheme)
@@ -514,11 +507,11 @@ class PreferencesWindow(Setting_Ui):
 
             else:
                 # color_comboBox items
-                color_scheme = ['System', 'Persepolis Light Blue', 'Persepolis Dark Blue', 
-                        'Persepolis ArcDark Blue', 'Persepolis ArcDark Red',
-                        'Persepolis Old Dark Red', 'Persepolis Old Light Red', 
-                        'Persepolis Old Dark Blue', 'Persepolis Old Light Blue']
- 
+                color_scheme = ['System', 'Persepolis Light Blue', 'Persepolis Dark Blue',
+                                'Persepolis ArcDark Blue', 'Persepolis ArcDark Red',
+                                'Persepolis Old Dark Red', 'Persepolis Old Light Red',
+                                'Persepolis Old Dark Blue', 'Persepolis Old Light Blue']
+
                 # add items
                 self.color_comboBox.addItems(color_scheme)
 
@@ -526,8 +519,7 @@ class PreferencesWindow(Setting_Ui):
                 current_color_index = self.color_comboBox.findText('Persepolis Light Blue')
                 self.color_comboBox.setCurrentIndex(current_color_index)
 
-
-    def fontCheckBoxState(self,checkBox):
+    def fontCheckBoxState(self, checkBox):
 
         # deactive fontComboBox and font_size_spinBox if font_checkBox not checked!
         if self.font_checkBox.isChecked():
@@ -536,8 +528,6 @@ class PreferencesWindow(Setting_Ui):
         else:
             self.fontComboBox.setEnabled(False)
             self.font_size_spinBox.setEnabled(False)
- 
-
 
     def closeEvent(self, event):
 
@@ -580,7 +570,6 @@ class PreferencesWindow(Setting_Ui):
         else:
             self.aria2_path_checkBox.setChecked(False)
 
-
     def downloadFolderPushButtonClicked(self, button):
 
         download_path = str(
@@ -596,7 +585,6 @@ class PreferencesWindow(Setting_Ui):
             self.download_folder_lineEdit.setText(fname)
             self.persepolis_setting.setValue(
                 'settings/download_path', str(fname))
-
 
     def tempDownloadPushButtonClicked(self, button):
 
@@ -737,14 +725,14 @@ class PreferencesWindow(Setting_Ui):
 
         # shortcuts
         self.shortcuts_list = [self.setting_dict['shortcuts/quit_shortcut'],
-                        self.setting_dict['shortcuts/hide_window_shortcut'],
-                        self.setting_dict['shortcuts/remove_shortcut'],
-                        self.setting_dict['shortcuts/delete_shortcut'],
-                        self.setting_dict['shortcuts/move_up_selection_shortcut'],
-                        self.setting_dict['shortcuts/move_down_selection_shortcut'],
-                        self.setting_dict['shortcuts/add_new_download_shortcut'],
-                        self.setting_dict['shortcuts/video_finder_shortcut'],
-                        self.setting_dict['shortcuts/import_text_shortcut']]
+                               self.setting_dict['shortcuts/hide_window_shortcut'],
+                               self.setting_dict['shortcuts/remove_shortcut'],
+                               self.setting_dict['shortcuts/delete_shortcut'],
+                               self.setting_dict['shortcuts/move_up_selection_shortcut'],
+                               self.setting_dict['shortcuts/move_down_selection_shortcut'],
+                               self.setting_dict['shortcuts/add_new_download_shortcut'],
+                               self.setting_dict['shortcuts/video_finder_shortcut'],
+                               self.setting_dict['shortcuts/import_text_shortcut']]
 
         # add shortcuts to the shortcut_table
         j = 0
@@ -758,9 +746,6 @@ class PreferencesWindow(Setting_Ui):
             self.shortcut_table.setItem(j, 1, item)
 
             j = j + 1
-
- 
-
 
         self.persepolis_setting.endGroup()
 
@@ -791,7 +776,7 @@ class PreferencesWindow(Setting_Ui):
 
         # change aria2_path
         if self.aria2_path_checkBox.isChecked():
-            self.persepolis_setting.setValue('settings/aria2_path', str(self.aria2_path_lineEdit.text())) 
+            self.persepolis_setting.setValue('settings/aria2_path', str(self.aria2_path_lineEdit.text()))
 
         # changing icons
 
@@ -800,9 +785,9 @@ class PreferencesWindow(Setting_Ui):
 
         if icons != self.current_icon:  # it means icons changed
             for windows_list in [self.parent.logwindow_list, self.parent.about_window_list,
-                    self.parent.addlinkwindows_list, self.parent.propertieswindows_list,
-                    self.parent.afterdownload_list, self.parent.text_queue_window_list,
-                    self.parent.progress_window_list, self.parent.plugin_queue_window_list]:
+                                 self.parent.addlinkwindows_list, self.parent.propertieswindows_list,
+                                 self.parent.afterdownload_list, self.parent.text_queue_window_list,
+                                 self.parent.progress_window_list, self.parent.plugin_queue_window_list]:
 
                 for window in windows_list:
                     window.changeIcon(icons)
@@ -816,7 +801,6 @@ class PreferencesWindow(Setting_Ui):
         icons_size = int(icons_size)
         self.parent.toolBar.setIconSize(QSize(icons_size, icons_size))
         self.parent.toolBar2.setIconSize(QSize(icons_size, icons_size))
-
 
         # style
         style = str(self.style_comboBox.currentText())
@@ -844,7 +828,6 @@ class PreferencesWindow(Setting_Ui):
             custom_font = 'yes'
         else:
             custom_font = 'no'
-           
 
         self.persepolis_setting.setValue('custom-font', custom_font)
 
@@ -922,7 +905,6 @@ class PreferencesWindow(Setting_Ui):
 
                 startup.removestartup()  # removing Persepolis from system's startup
 
-
         # keep_awake_checkBox
         if self.keep_awake_checkBox.isChecked():
             self.persepolis_setting.setValue('awake', 'yes')
@@ -933,7 +915,6 @@ class PreferencesWindow(Setting_Ui):
 
         # this section  creates temporary download folder and download folder and
         # download sub folders if they did not existed.
-
 
         download_path_temp = self.persepolis_setting.value(
             'download_path_temp')
@@ -962,7 +943,7 @@ class PreferencesWindow(Setting_Ui):
         if self.column0_checkBox.isChecked():
             self.persepolis_setting.setValue('column0', 'yes')
             self.parent.download_table.setColumnHidden(0, False)
-            
+
             if self.parent.download_table.isColumnHidden(0):
                 self.parent.download_table.setColumnWidth(0, 100)
 
@@ -970,11 +951,10 @@ class PreferencesWindow(Setting_Ui):
             self.persepolis_setting.setValue('column0', 'no')
             self.parent.download_table.setColumnHidden(0, True)
 
-
         if self.column1_checkBox.isChecked():
             self.persepolis_setting.setValue('column1', 'yes')
             self.parent.download_table.setColumnHidden(1, False)
-            
+
             if self.parent.download_table.isColumnHidden(1):
                 self.parent.download_table.setColumnWidth(1, 100)
 
@@ -982,11 +962,10 @@ class PreferencesWindow(Setting_Ui):
             self.persepolis_setting.setValue('column1', 'no')
             self.parent.download_table.setColumnHidden(1, True)
 
-
         if self.column2_checkBox.isChecked():
             self.persepolis_setting.setValue('column2', 'yes')
             self.parent.download_table.setColumnHidden(2, False)
-            
+
             if self.parent.download_table.isColumnHidden(2):
                 self.parent.download_table.setColumnWidth(2, 100)
 
@@ -994,11 +973,10 @@ class PreferencesWindow(Setting_Ui):
             self.persepolis_setting.setValue('column2', 'no')
             self.parent.download_table.setColumnHidden(2, True)
 
-
         if self.column3_checkBox.isChecked():
             self.persepolis_setting.setValue('column3', 'yes')
             self.parent.download_table.setColumnHidden(3, False)
-            
+
             if self.parent.download_table.isColumnHidden(3):
                 self.parent.download_table.setColumnWidth(3, 100)
 
@@ -1006,11 +984,10 @@ class PreferencesWindow(Setting_Ui):
             self.persepolis_setting.setValue('column3', 'no')
             self.parent.download_table.setColumnHidden(3, True)
 
-
         if self.column4_checkBox.isChecked():
             self.persepolis_setting.setValue('column4', 'yes')
             self.parent.download_table.setColumnHidden(4, False)
-            
+
             if self.parent.download_table.isColumnHidden(4):
                 self.parent.download_table.setColumnWidth(4, 100)
 
@@ -1018,11 +995,10 @@ class PreferencesWindow(Setting_Ui):
             self.persepolis_setting.setValue('column4', 'no')
             self.parent.download_table.setColumnHidden(4, True)
 
-
         if self.column5_checkBox.isChecked():
             self.persepolis_setting.setValue('column5', 'yes')
             self.parent.download_table.setColumnHidden(5, False)
-            
+
             if self.parent.download_table.isColumnHidden(5):
                 self.parent.download_table.setColumnWidth(5, 100)
 
@@ -1030,11 +1006,10 @@ class PreferencesWindow(Setting_Ui):
             self.persepolis_setting.setValue('column5', 'no')
             self.parent.download_table.setColumnHidden(5, True)
 
-
         if self.column6_checkBox.isChecked():
             self.persepolis_setting.setValue('column6', 'yes')
             self.parent.download_table.setColumnHidden(6, False)
-            
+
             if self.parent.download_table.isColumnHidden(6):
                 self.parent.download_table.setColumnWidth(6, 100)
 
@@ -1042,11 +1017,10 @@ class PreferencesWindow(Setting_Ui):
             self.persepolis_setting.setValue('column6', 'no')
             self.parent.download_table.setColumnHidden(6, True)
 
-
         if self.column7_checkBox.isChecked():
             self.persepolis_setting.setValue('column7', 'yes')
             self.parent.download_table.setColumnHidden(7, False)
-            
+
             if self.parent.download_table.isColumnHidden(7):
                 self.parent.download_table.setColumnWidth(7, 100)
 
@@ -1054,11 +1028,10 @@ class PreferencesWindow(Setting_Ui):
             self.persepolis_setting.setValue('column7', 'no')
             self.parent.download_table.setColumnHidden(7, True)
 
-
         if self.column10_checkBox.isChecked():
             self.persepolis_setting.setValue('column10', 'yes')
             self.parent.download_table.setColumnHidden(10, False)
-            
+
             if self.parent.download_table.isColumnHidden(10):
                 self.parent.download_table.setColumnWidth(10, 100)
 
@@ -1066,11 +1039,10 @@ class PreferencesWindow(Setting_Ui):
             self.persepolis_setting.setValue('column10', 'no')
             self.parent.download_table.setColumnHidden(10, True)
 
-
         if self.column11_checkBox.isChecked():
             self.persepolis_setting.setValue('column11', 'yes')
             self.parent.download_table.setColumnHidden(11, False)
-            
+
             if self.parent.download_table.isColumnHidden(11):
                 self.parent.download_table.setColumnWidth(11, 100)
 
@@ -1078,11 +1050,10 @@ class PreferencesWindow(Setting_Ui):
             self.persepolis_setting.setValue('column11', 'no')
             self.parent.download_table.setColumnHidden(11, True)
 
-
         if self.column12_checkBox.isChecked():
             self.persepolis_setting.setValue('column12', 'yes')
             self.parent.download_table.setColumnHidden(12, False)
-            
+
             if self.parent.download_table.isColumnHidden(12):
                 self.parent.download_table.setColumnWidth(12, 100)
 
@@ -1105,7 +1076,7 @@ class PreferencesWindow(Setting_Ui):
         # saving value of persepolis_setting in second_key_value_dict.
         self.second_key_value_dict = {}
         for member in self.persepolis_setting.allKeys():
-            self.second_key_value_dict[member] = str(self.persepolis_setting.value(member)) 
+            self.second_key_value_dict[member] = str(self.persepolis_setting.value(member))
 
         # comparing first_key_value_dict with second_key_value_dict
         show_message_box = False
@@ -1116,14 +1087,14 @@ class PreferencesWindow(Setting_Ui):
 
         # if any thing changed that needs restarting, then notify user about "Some changes take effect after restarting persepolis"
         if show_message_box:
-            restart_messageBox = QMessageBox()                
-            restart_messageBox.setText(QCoreApplication.translate("setting_src_ui_tr", '<b><center>Restart Persepolis Please!</center></b><br><center>Some changes take effect after restarting Persepolis</center>'))
+            restart_messageBox = QMessageBox()
+            restart_messageBox.setText(QCoreApplication.translate(
+                "setting_src_ui_tr", '<b><center>Restart Persepolis Please!</center></b><br><center>Some changes take effect after restarting Persepolis</center>'))
             restart_messageBox.setWindowTitle(QCoreApplication.translate("setting_src_ui_tr", 'Restart Persepolis!'))
             restart_messageBox.exec_()
 
         # applying changes
         self.persepolis_setting.endGroup()
         self.persepolis_setting.sync()
-
 
         self.close()

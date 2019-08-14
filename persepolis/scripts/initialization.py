@@ -16,6 +16,8 @@
 
 # THIS FILE CONTAINING SOME VARIABLES , ... THAT USING FOR INITIALIZING PERSEPOLIS
 
+from persepolis.scripts.data_base import PersepolisDB, PluginsDB
+from persepolis.scripts import logger
 from persepolis.scripts.useful_tools import determineConfigFolder, returnDefaultSettings
 from persepolis.scripts.browser_integration import browserIntegration
 from persepolis.scripts import osCommands
@@ -38,7 +40,6 @@ for folder in [config_folder, persepolis_tmp]:
     osCommands.makeDirs(folder)
 
 # persepolisdm.log file contains persepolis log.
-from persepolis.scripts import logger
 
 # refresh logs!
 log_file = os.path.join(str(config_folder), 'persepolisdm.log')
@@ -46,20 +47,20 @@ log_file = os.path.join(str(config_folder), 'persepolisdm.log')
 # get current time
 current_time = time.strftime('%Y/%m/%d %H:%M:%S')
 
-# find number of lines in log_file. 
+# find number of lines in log_file.
 with open(log_file) as f:
     lines = sum(1 for _ in f)
 
 # if number of lines in log_file is more than 300, then keep last 200 lines in log_file.
 if lines < 300:
     f = open(log_file, 'a')
-    f.writelines('===================================================\n'\
-            + 'Persepolis Download Manager, '\
-            + current_time\
-            +'\n')
+    f.writelines('===================================================\n'
+                 + 'Persepolis Download Manager, '
+                 + current_time
+                 + '\n')
     f.close()
 else:
-# keep last 200 lines
+    # keep last 200 lines
     line_num = lines - 200
     f = open(log_file, 'r')
     f_lines = f.readlines()
@@ -75,13 +76,11 @@ else:
     f.close()
 
     f = open(log_file, 'a')
-    f.writelines('Persepolis Download Manager, '\
-            + current_time\
-            +'\n')
+    f.writelines('Persepolis Download Manager, '
+                 + current_time
+                 + '\n')
     f.close()
 
-
-from persepolis.scripts.data_base import PersepolisDB, PluginsDB
 
 # create an object for PersepolisDB
 persepolis_db = PersepolisDB()
@@ -156,7 +155,6 @@ persepolis_setting.endGroup()
 for browser in ['chrome', 'chromium', 'opera', 'vivaldi', 'firefox']:
     json_done, native_done = browserIntegration(browser)
 
-
     log_message = browser
 
     if json_done == True:
@@ -208,8 +206,7 @@ if persepolis_version < 2.6:
         logger.sendToLog(
             "compatibility ERROR!", "ERROR")
         logger.sendToLog(
-                str(e), "ERROR")
-
+            str(e), "ERROR")
 
     persepolis_version = 2.6
 
@@ -222,7 +219,6 @@ if persepolis_version < 3.0:
         persepolis_setting.setValue(key, setting_value)
 
     persepolis_setting.endGroup()
-
 
     persepolis_setting.setValue('version/version', 3.0)
 
@@ -240,4 +236,3 @@ persepolis_setting.setValue('version/version', 3.1)
 
 
 persepolis_setting.sync()
-
