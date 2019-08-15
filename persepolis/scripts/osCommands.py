@@ -33,9 +33,9 @@ def findFileManager():
 
 
 def touch(file_path):
-    if not(os.path.isfile(file_path)):
-        f = open(file_path, 'w')
-        f.close()
+    if not os.path.isfile(file_path):
+        with open(file_path, 'w'):
+            pass
 
 # xdgOpen opens files or folders
 
