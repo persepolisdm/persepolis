@@ -62,7 +62,7 @@ def osAndDesktopEnvironment():
 
 
 # this function converts file_size to KiB or MiB or GiB
-def humanReadbleSize(size):
+def humanReadbleSize(size, input_type='file_size'): 
     labels = ['KiB', 'MiB', 'GiB', 'TiB']
     i = -1
     if size < 1024:
@@ -71,9 +71,16 @@ def humanReadbleSize(size):
     while size >= 1024:
         i += 1
         size = size / 1024
+        
+    if input_type == 'speed':
+        j = 0
+    else:
+        j = 1
 
-    p = 2 if i > 1 else None
-    return str(round(size, p)) + ' ' + labels[i]
+    if i > j:
+        return str(round(size, 2)) + ' ' + labels[i]
+    else:
+        return str(round(size, None)) + ' ' + labels[i]
 
 # this function converts human readble size to byte
 
