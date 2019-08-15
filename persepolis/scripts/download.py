@@ -471,7 +471,7 @@ def convertDownloadInformation(download_status):
         estimate_time_left = int((file_size - downloaded)/download_speed)
         
         # converting file_size to KiB or MiB or GiB
-        download_speed_str = humanReadbleSize(download_speed) + '/s'
+        download_speed_str = humanReadbleSize(download_speed, 'speed') + '/s'
 
         eta = ""
         if estimate_time_left >= 3600:
