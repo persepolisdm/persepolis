@@ -29,12 +29,12 @@ import re
 import os
 
 # write youtube_dl version in log
-logger.sendToLog('youtube_dl version: '\
-        + str(youtube_dl.version.__version__),
-        'INFO')
+logger.sendToLog('youtube_dl version: '
+                 + str(youtube_dl.version.__version__),
+                 'INFO')
 
 # download manager config folder .
-config_folder =  determineConfigFolder()
+config_folder = determineConfigFolder()
 
 # persepolis tmp folder path
 persepolis_tmp = os.path.join(config_folder, 'persepolis_tmp')
@@ -49,7 +49,6 @@ class MediaListFetcherThread(QThread):
         self.RESULT.connect(receiver_slot)
         self.video_dict = video_dict
 
-
         self.cookie_path = os.path.join(persepolis_tmp, '.{}{}'.format(time(), random()))
 
         # youtube options must be added to youtube_dl_options_dict in dictionary format
@@ -60,7 +59,7 @@ class MediaListFetcherThread(QThread):
                                         }
 
         # cookies
-        self.youtube_dl_options_dict['cookies']=str(self.cookie_path)
+        self.youtube_dl_options_dict['cookies'] = str(self.cookie_path)
 
         # referer
         if 'referer' in video_dict.keys() and video_dict['referer']:
@@ -75,7 +74,7 @@ class MediaListFetcherThread(QThread):
             # We need to convert raw cookies to http cookie file to use with youtube-dl.
             self.cookies = self.makeHttpCookie(video_dict['load_cookies'])
 
-        # Proxy  
+        # Proxy
         if 'ip' in video_dict.keys() and video_dict['ip']:
             try:
                 # ip + port
@@ -109,10 +108,9 @@ class MediaListFetcherThread(QThread):
             ydl = youtube_dl.YoutubeDL(self.youtube_dl_options_dict)
             with ydl:
                 result = ydl.extract_info(
-                self.youtube_link,
-                download=False
+                    self.youtube_link,
+                    download=False
                 )
-
 
             error = "error"  # Or comment out this line to show full stderr.
             if result:
@@ -146,6 +144,7 @@ class MediaListFetcherThread(QThread):
 
         return cookies
 
+
 class FileSizeFetcherThread(QThread):
     FOUND = pyqtSignal(dict)
 
@@ -157,9 +156,7 @@ class FileSizeFetcherThread(QThread):
     def run(self):
         spider_file_size = spider(self.dictionary)[1]
         self.FOUND.emit({'thread_key': self.key,
-            'file_size': spider_file_size})
-
-
+                         'file_size': spider_file_size})
 
 
 class VideoFinderAddLink(AddLinkWindow):
@@ -173,9 +170,9 @@ class VideoFinderAddLink(AddLinkWindow):
 
         # empty lists for no_audio and no_video and video_audio files
         self.no_audio_list = []
-        self.no_video_list= []
+        self.no_video_list = []
         self.video_audio_list = []
-		
+
         self.media_title = ''
 
         # add support for other languages
@@ -236,10 +233,10 @@ class VideoFinderAddLink(AddLinkWindow):
         self.audio_format_selection_label = QLabel(self.advanced_format_selection_frame)
         self.audio_format_selection_comboBox = QComboBox(self.advanced_format_selection_frame)
 
-        for widget in [self.video_format_selection_label, 
-                self.video_format_selection_comboBox,
-                self.audio_format_selection_label,
-                self.audio_format_selection_comboBox]:
+        for widget in [self.video_format_selection_label,
+                       self.video_format_selection_comboBox,
+                       self.audio_format_selection_label,
+                       self.audio_format_selection_comboBox]:
             advanced_format_selection_horizontalLayout.addWidget(widget)
 
         # Set Texts
@@ -249,7 +246,8 @@ class VideoFinderAddLink(AddLinkWindow):
         self.video_format_selection_label.setText(QCoreApplication.translate("ytaddlink_src_ui_tr", 'Video format:'))
         self.audio_format_selection_label.setText(QCoreApplication.translate("ytaddlink_src_ui_tr", 'Audio format:'))
 
-        self.advanced_format_selection_checkBox.setText(QCoreApplication.translate("ytaddlink_src_ui_tr", 'Advanced options'))
+        self.advanced_format_selection_checkBox.setText(
+            QCoreApplication.translate("ytaddlink_src_ui_tr", 'Advanced options'))
 
         # Add Slot Connections
         self.url_submit_pushButtontton.setEnabled(False)
@@ -261,17 +259,16 @@ class VideoFinderAddLink(AddLinkWindow):
         self.advanced_format_selection_frame.setEnabled(False)
         self.advanced_format_selection_checkBox.toggled.connect(self.advancedFormatFrame)
 
-
         self.url_submit_pushButtontton.clicked.connect(self.submitClicked)
 
         self.media_comboBox.activated.connect(
-                partial(self.mediaSelectionChanged, 'video_audio'))
+            partial(self.mediaSelectionChanged, 'video_audio'))
 
         self.video_format_selection_comboBox.activated.connect(
-                partial(self.mediaSelectionChanged, 'video'))
+            partial(self.mediaSelectionChanged, 'video'))
 
         self.audio_format_selection_comboBox.activated.connect(
-                partial(self.mediaSelectionChanged, 'audio'))
+            partial(self.mediaSelectionChanged, 'audio'))
 
         self.link_lineEdit.textChanged.disconnect(super().linkLineChanged)  # Should be disconnected.
         self.link_lineEdit.textChanged.connect(self.linkLineChangedHere)
@@ -306,13 +303,12 @@ class VideoFinderAddLink(AddLinkWindow):
             self.advanced_format_selection_frame.setEnabled(False)
             self.format_selection_frame.setEnabled(True)
             self.mediaSelectionChanged('video_audio', int(self.media_comboBox.currentIndex()))
-            
+
     def getReadableSize(self, size):
         try:
             return '{:1.2f} MB'.format(int(size) / 1048576)
         except:
             return str(size)
-
 
     def getReadableDuration(self, seconds):
         try:
@@ -325,12 +321,13 @@ class VideoFinderAddLink(AddLinkWindow):
         except:
             return str(seconds)
 
-
     # Define native slots
+
     def urlChanged(self, value):
         if ' ' in value or value == '':
             self.url_submit_pushButtontton.setEnabled(False)
-            self.url_submit_pushButtontton.setToolTip(QCoreApplication.translate("ytaddlink_src_ui_tr", 'Please enter a valid video link'))
+            self.url_submit_pushButtontton.setToolTip(QCoreApplication.translate(
+                "ytaddlink_src_ui_tr", 'Please enter a valid video link'))
         else:
             self.url_submit_pushButtontton.setEnabled(True)
             self.url_submit_pushButtontton.setToolTip('')
@@ -365,7 +362,7 @@ class VideoFinderAddLink(AddLinkWindow):
         fetcher_thread = MediaListFetcherThread(self.fetchedResult, dictionary_to_send, self)
         self.parent.threadPool.append(fetcher_thread)
         self.parent.threadPool[len(self.parent.threadPool) - 1].start()
- 
+
     def fileNameChanged(self, value):
         if value.strip() == '':
             self.ok_pushButton.setEnabled(False)
@@ -376,7 +373,7 @@ class VideoFinderAddLink(AddLinkWindow):
                 if self.media_comboBox.currentText() == 'Best quality':
                     self.change_name_lineEdit.setText(self.media_title)
                     self.extension_label.setText('.' + self.no_audio_list[-1]['ext'])
- 
+
                 else:
                     self.change_name_lineEdit.setText(self.media_title)
                     self.extension_label.setText('.' + self.video_audio_list[index]['ext'])
@@ -394,31 +391,30 @@ class VideoFinderAddLink(AddLinkWindow):
                     if self.audio_format_selection_comboBox.currentText() != 'No audio':
                         self.change_name_lineEdit.setText(self.media_title)
                         self.extension_label.setText('.' +
-                                                  self.no_video_list[int(self.audio_format_selection_comboBox.currentIndex()) - 1]['ext'])
+                                                     self.no_video_list[int(self.audio_format_selection_comboBox.currentIndex()) - 1]['ext'])
 
                         self.change_name_checkBox.setChecked(True)
                     else:
                         self.change_name_lineEdit.setChecked(False)
- 
+
             elif combobox == 'audio':
                 if self.audio_format_selection_comboBox.currentText() != 'No audio' and self.video_format_selection_comboBox.currentText() == 'No video':
                     self.change_name_lineEdit.setText(self.media_title)
                     self.extension_label.setText('.' +
-                                              self.no_video_list[index - 1]['ext'])
+                                                 self.no_video_list[index - 1]['ext'])
 
                     self.change_name_checkBox.setChecked(True)
 
                 elif (self.audio_format_selection_comboBox.currentText() == 'No audio' and self.video_format_selection_comboBox.currentText() != 'No video') or (self.audio_format_selection_comboBox.currentText() != 'No audio' and self.video_format_selection_comboBox.currentText() != 'No video'):
                     self.change_name_lineEdit.setText(self.media_title)
                     self.extension_label.setText('.' +
-                                              self.no_audio_list[int(self.video_format_selection_comboBox.currentIndex()) - 1]['ext'])
+                                                 self.no_audio_list[int(self.video_format_selection_comboBox.currentIndex()) - 1]['ext'])
 
                     self.change_name_checkBox.setChecked(True)
 
-                elif self.audio_format_selection_comboBox.currentText() == 'No audio' and self.video_format_selection_comboBox.currentText() == 'No video': 
+                elif self.audio_format_selection_comboBox.currentText() == 'No audio' and self.video_format_selection_comboBox.currentText() == 'No video':
                     self.change_name_checkBox.setChecked(False)
 
- 
         except Exception as ex:
             logger.sendToLog(ex, "ERROR")
 
@@ -459,22 +455,20 @@ class VideoFinderAddLink(AddLinkWindow):
                             text = text + ' ' + '{}p'.format(f['height'])
 
                     if 'vcodec' in f.keys():
-#                         if f['vcodec'] == 'none' and f['acodec'] != 'none':
-#                             continue
+                        #                         if f['vcodec'] == 'none' and f['acodec'] != 'none':
+                        #                             continue
 
                         # No video, show audio bit rate
-                        if f['vcodec'] == 'none':  
+                        if f['vcodec'] == 'none':
                             text = text + '{}kbps'.format(f['abr'])
                             no_video = True
 
-                    
                     if 'ext' in f.keys():
                         text = text + ' ' + '.{}'.format(f['ext'])
 
                     if 'filesize' in f.keys() and f['filesize']:
                         # Youtube api does not supply file size for some formats, so check it.
                         text = text + ' ' + '{}'.format(self.getReadableSize(f['filesize']))
-
 
                     else:  # Start spider to find file size
                         input_dict = deepcopy(self.plugin_add_link_dictionary)
@@ -490,8 +484,7 @@ class VideoFinderAddLink(AddLinkWindow):
                         self.parent.threadPool.append(size_fetcher)
                         self.parent.threadPool[len(self.parent.threadPool) - 1].start()
                         self.parent.threadPool[len(self.parent.threadPool) -
-                            1].FOUND.connect(self.findFileSize)
-
+                                               1].FOUND.connect(self.findFileSize)
 
                     # Add current format to the related comboboxes
                     if no_audio:
@@ -509,7 +502,7 @@ class VideoFinderAddLink(AddLinkWindow):
                     i = i + 1
 
                 self.status_box_textEdit.hide()
-    
+
                 if 'duration' in media_dict.keys():
                     self.duration_label.setText('Duration ' + self.getReadableDuration(media_dict['duration']))
 
@@ -530,10 +523,10 @@ class VideoFinderAddLink(AddLinkWindow):
                     self.media_comboBox.setCurrentIndex(len(self.video_audio_list))
                 elif len(self.video_audio_list) != 0:
                     self.media_comboBox.setCurrentIndex(len(self.video_audio_list) - 1)
-    
+
                 if len(self.no_audio_list) != 0:
                     self.video_format_selection_comboBox.setCurrentIndex(len(self.no_audio_list))
-                
+
                 if len(self.no_video_list) != 0:
                     self.audio_format_selection_comboBox.setCurrentIndex(len(self.no_video_list))
 
@@ -541,8 +534,6 @@ class VideoFinderAddLink(AddLinkWindow):
 
             except Exception as ex:
                 logger.sendToLog(ex, "ERROR")
-
-            
 
     def findFileSize(self, result):
         try:
@@ -582,10 +573,10 @@ class VideoFinderAddLink(AddLinkWindow):
     # user commited information by pressing ok_pushButton, so get information
     # from VideoFinderAddLink window and return them to the mainwindow with callback!
     def okButtonPressed(self, button, download_later):
-        
+
         link_list = []
-        # seperate audio format and video format is selected.  
-        if self.advanced_format_selection_checkBox.isChecked(): 
+        # seperate audio format and video format is selected.
+        if self.advanced_format_selection_checkBox.isChecked():
 
             if self.video_format_selection_comboBox.currentText() == 'No video' and self.audio_format_selection_comboBox.currentText() != 'No audio':
 
@@ -620,7 +611,6 @@ class VideoFinderAddLink(AddLinkWindow):
             else:
                 audio_and_video_link = self.video_audio_list[self.media_comboBox.currentIndex()]['url']
                 link_list.append(audio_and_video_link)
-
 
         # write user's new inputs in persepolis_setting for next time :)
         self.persepolis_setting.setValue(
@@ -704,8 +694,9 @@ class VideoFinderAddLink(AddLinkWindow):
         # did user select seperate audio and video?
         if len(link_list) == 2:
             video_name = name + extension
-            audio_name = name + '.' + str(self.no_video_list[self.audio_format_selection_comboBox.currentIndex() - 1]['ext'])
- 
+            audio_name = name + '.' + \
+                str(self.no_video_list[self.audio_format_selection_comboBox.currentIndex() - 1]['ext'])
+
             name_list = [video_name, audio_name]
         else:
             name_list = [name + extension]
@@ -724,48 +715,47 @@ class VideoFinderAddLink(AddLinkWindow):
 
         # header
         if self.header_lineEdit.text() != '':
-            header = self.header_lineEdit.text() 
+            header = self.header_lineEdit.text()
         else:
             header = None
 
         # user_agent
-        if self.user_agent_lineEdit.text() != '': 
+        if self.user_agent_lineEdit.text() != '':
             user_agent = self.user_agent_lineEdit.text()
         else:
             user_agent = None
 
         # load_cookies
-        if self.load_cookies_lineEdit.text() != '': 
+        if self.load_cookies_lineEdit.text() != '':
             load_cookies = self.load_cookies_lineEdit.text()
         else:
             load_cookies = None
 
         add_link_dictionary_list = []
-        if len(link_list) == 1: 
+        if len(link_list) == 1:
             # save information in a dictionary(add_link_dictionary).
             add_link_dictionary = {'referer': referer, 'header': header, 'user_agent': user_agent, 'load_cookies': load_cookies,
-                                    'out': name_list[0], 'start_time': start_time, 'end_time': end_time, 'link': link_list[0], 'ip': ip,
-                                    'port': port, 'proxy_user': proxy_user, 'proxy_passwd': proxy_passwd, 
-                                    'download_user': download_user, 'download_passwd': download_passwd,
-                                    'connections': connections, 'limit_value': limit, 'download_path': download_path}
+                                   'out': name_list[0], 'start_time': start_time, 'end_time': end_time, 'link': link_list[0], 'ip': ip,
+                                   'port': port, 'proxy_user': proxy_user, 'proxy_passwd': proxy_passwd,
+                                   'download_user': download_user, 'download_passwd': download_passwd,
+                                   'connections': connections, 'limit_value': limit, 'download_path': download_path}
 
             add_link_dictionary_list.append(add_link_dictionary)
 
         else:
             video_add_link_dictionary = {'referer': referer, 'header': header, 'user_agent': user_agent, 'load_cookies': load_cookies,
-                                    'out': name_list[0], 'start_time': start_time, 'end_time': end_time, 'link': link_list[0], 'ip': ip,
-                                    'port': port, 'proxy_user': proxy_user, 'proxy_passwd': proxy_passwd, 
-                                    'download_user': download_user, 'download_passwd': download_passwd,
-                                    'connections': connections, 'limit_value': limit, 'download_path': download_path}
- 
+                                         'out': name_list[0], 'start_time': start_time, 'end_time': end_time, 'link': link_list[0], 'ip': ip,
+                                         'port': port, 'proxy_user': proxy_user, 'proxy_passwd': proxy_passwd,
+                                         'download_user': download_user, 'download_passwd': download_passwd,
+                                         'connections': connections, 'limit_value': limit, 'download_path': download_path}
+
             audio_add_link_dictionary = {'referer': referer, 'header': header, 'user_agent': user_agent, 'load_cookies': load_cookies,
-                                    'out': name_list[1], 'start_time': None, 'end_time': end_time, 'link': link_list[1], 'ip': ip,
-                                    'port': port, 'proxy_user': proxy_user, 'proxy_passwd': proxy_passwd, 
-                                    'download_user': download_user, 'download_passwd': download_passwd,
-                                    'connections': connections, 'limit_value': limit, 'download_path': download_path}
+                                         'out': name_list[1], 'start_time': None, 'end_time': end_time, 'link': link_list[1], 'ip': ip,
+                                         'port': port, 'proxy_user': proxy_user, 'proxy_passwd': proxy_passwd,
+                                         'download_user': download_user, 'download_passwd': download_passwd,
+                                         'connections': connections, 'limit_value': limit, 'download_path': download_path}
 
             add_link_dictionary_list = [video_add_link_dictionary, audio_add_link_dictionary]
-
 
         # get category of download
         category = str(self.add_queue_comboBox.currentText())
@@ -774,6 +764,6 @@ class VideoFinderAddLink(AddLinkWindow):
 
         # return information to mainwindow
         self.callback(add_link_dictionary_list, download_later, category)
-        
+
         # close window
         self.close()

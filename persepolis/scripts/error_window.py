@@ -17,7 +17,7 @@ from PyQt5.QtWidgets import QWidget, QTextEdit, QVBoxLayout, QHBoxLayout, QPushB
 from persepolis.scripts.data_base import PersepolisDB
 from persepolis.scripts import osCommands
 from PyQt5.QtCore import QSize, QSettings
-from persepolis.gui import resources 
+from persepolis.gui import resources
 from PyQt5.QtGui import QIcon
 
 

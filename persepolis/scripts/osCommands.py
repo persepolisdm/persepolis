@@ -25,11 +25,12 @@ os_type = platform.system()
 def findFileManager():
     pipe = subprocess.check_output(['xdg-mime',
                                     'query',
-                                  'default',
-                                  'inode/directory'])
+                                    'default',
+                                    'inode/directory'])
     file_manager = pipe.decode('utf-8').strip().lower()
 
     return file_manager
+
 
 def touch(file_path):
     if not(os.path.isfile(file_path)):
@@ -55,25 +56,25 @@ def xdgOpen(file_path, f_type='file', path='file'):
         # some file managers wouldn't support highlighting.
         if highlight:
 
-            # dolphin is kde plasma's file manager 
+            # dolphin is kde plasma's file manager
             if 'dolphin' in file_manager:
 
-                subprocess.Popen(['dolphin', 
-                    '--select', file_path],
-                    stderr=subprocess.PIPE,
-                    stdout=subprocess.PIPE,
-                    stdin=subprocess.PIPE,
-                    shell=False)
+                subprocess.Popen(['dolphin',
+                                  '--select', file_path],
+                                 stderr=subprocess.PIPE,
+                                 stdout=subprocess.PIPE,
+                                 stdin=subprocess.PIPE,
+                                 shell=False)
 
             # dde-file-manager is deepin's file manager
             elif 'dde-file-manager' in file_manager:
 
-                subprocess.Popen(['dde-file-manager', 
-                    '--show-item', file_path],
-                    stderr=subprocess.PIPE,
-                    stdout=subprocess.PIPE,
-                    stdin=subprocess.PIPE,
-                    shell=False)
+                subprocess.Popen(['dde-file-manager',
+                                  '--show-item', file_path],
+                                 stderr=subprocess.PIPE,
+                                 stdout=subprocess.PIPE,
+                                 stdin=subprocess.PIPE,
+                                 shell=False)
 
             # if file manager is nautilus or nemo or pantheon-file-manager
             elif file_manager in ['org.gnome.nautilus.desktop', 'nemo.desktop', 'io.elementary.files.desktop']:
@@ -90,12 +91,12 @@ def xdgOpen(file_path, f_type='file', path='file'):
                 elif 'nemo' in file_manager:
                     file_manager = 'nemo'
 
-                subprocess.Popen([file_manager, 
-                    file_path],
-                    stderr=subprocess.PIPE,
-                    stdout=subprocess.PIPE,
-                    stdin=subprocess.PIPE,
-                    shell=False)
+                subprocess.Popen([file_manager,
+                                  file_path],
+                                 stderr=subprocess.PIPE,
+                                 stdout=subprocess.PIPE,
+                                 stdin=subprocess.PIPE,
+                                 shell=False)
 
             else:
                 # find folder path
@@ -107,38 +108,37 @@ def xdgOpen(file_path, f_type='file', path='file'):
 
                 folder_path = file_name.join(file_path_split)
 
-
                 subprocess.Popen(['xdg-open', folder_path],
-                    stderr=subprocess.PIPE,
-                    stdout=subprocess.PIPE,
-                    stdin=subprocess.PIPE,
-                    shell=False)
+                                 stderr=subprocess.PIPE,
+                                 stdout=subprocess.PIPE,
+                                 stdin=subprocess.PIPE,
+                                 shell=False)
 
         else:
 
             subprocess.Popen(['xdg-open', file_path],
-                stderr=subprocess.PIPE,
-                stdout=subprocess.PIPE,
-                stdin=subprocess.PIPE,
-                shell=False)
- 
+                             stderr=subprocess.PIPE,
+                             stdout=subprocess.PIPE,
+                             stdin=subprocess.PIPE,
+                             shell=False)
+
     # for Mac OS X
     elif os_type == 'Darwin':
         if highlight:
 
-           subprocess.Popen(['open', '-R', file_path],
-                stderr=subprocess.PIPE,
-                stdout=subprocess.PIPE,
-                stdin=subprocess.PIPE,
-                shell=False)
+            subprocess.Popen(['open', '-R', file_path],
+                             stderr=subprocess.PIPE,
+                             stdout=subprocess.PIPE,
+                             stdin=subprocess.PIPE,
+                             shell=False)
 
         else:
 
             subprocess.Popen(['open', file_path],
-                stderr=subprocess.PIPE,
-                stdout=subprocess.PIPE,
-                stdin=subprocess.PIPE,
-                shell=False)
+                             stderr=subprocess.PIPE,
+                             stdout=subprocess.PIPE,
+                             stdin=subprocess.PIPE,
+                             shell=False)
 
     # for MS Windows
     elif os_type == 'Windows':
@@ -146,20 +146,20 @@ def xdgOpen(file_path, f_type='file', path='file'):
 
         if highlight:
             subprocess.Popen(['explorer.exe', '/select,',  file_path],
-                stderr=subprocess.PIPE,
-                stdout=subprocess.PIPE,
-                stdin=subprocess.PIPE,
-                shell=False,
-                creationflags=CREATE_NO_WINDOW)
+                             stderr=subprocess.PIPE,
+                             stdout=subprocess.PIPE,
+                             stdin=subprocess.PIPE,
+                             shell=False,
+                             creationflags=CREATE_NO_WINDOW)
 
         else:
 
             subprocess.Popen(['cmd', '/C', 'start', file_path,  file_path],
-                stderr=subprocess.PIPE,
-                stdout=subprocess.PIPE,
-                stdin=subprocess.PIPE,
-                shell=False,
-                creationflags=CREATE_NO_WINDOW)
+                             stderr=subprocess.PIPE,
+                             stdout=subprocess.PIPE,
+                             stdin=subprocess.PIPE,
+                             shell=False,
+                             creationflags=CREATE_NO_WINDOW)
 
 
 def remove(file_path):  # remove file with path of file_path
@@ -192,7 +192,7 @@ def makeDirs(folder_path):  # make new folders
 def moveFile(old_file_path, new_path, new_path_type='folder'):
 
     # new_path_type can be file or folder
-    # if it's folder so we have folder path    
+    # if it's folder so we have folder path
     # else we have new file path that includes file name
     if os.path.isfile(old_file_path):
 
@@ -209,7 +209,7 @@ def moveFile(old_file_path, new_path, new_path_type='folder'):
 
             try:
                 # move file to new_path
-                shutil.move(old_file_path, new_path) 
+                shutil.move(old_file_path, new_path)
                 return True
 
             except:
@@ -222,5 +222,3 @@ def moveFile(old_file_path, new_path, new_path_type='folder'):
     else:
 
         return False
-
-

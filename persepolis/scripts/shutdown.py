@@ -39,7 +39,7 @@ def shutDown(parent, gid=None, category=None, password=None):
 
         # update data base
         parent.temp_db.updateSingleTable(dict)
-    
+
     shutdown_status = "wait"
 
     while shutdown_status == "wait":
@@ -52,7 +52,7 @@ def shutDown(parent, gid=None, category=None, password=None):
             dict = parent.temp_db.returnGid(gid)
 
         shutdown_status = dict['shutdown']
- 
+
     if shutdown_status == "shutdown":
 
         logger.sendToLog("Shutting down in 20 seconds", "INFO")
@@ -61,20 +61,20 @@ def shutDown(parent, gid=None, category=None, password=None):
         if os_type == 'Linux':
 
             pipe = subprocess.Popen(['sudo', '-S', 'poweroff'],
-                    stdout=subprocess.DEVNULL,
-                    stdin=subprocess.PIPE,
-                    stderr=subprocess.DEVNULL,
-                    shell=False)
+                                    stdout=subprocess.DEVNULL,
+                                    stdin=subprocess.PIPE,
+                                    stderr=subprocess.DEVNULL,
+                                    shell=False)
 
             pipe.communicate(password.encode())
 
         elif os_type == 'Darwin':
 
             pipe = subprocess.Popen(['sudo', '-S', 'shutdown', '-h', 'now'],
-                    stdout=subprocess.DEVNULL,
-                    stdin=subprocess.PIPE,
-                    stderr=subprocess.DEVNULL,
-                    shell=False)
+                                    stdout=subprocess.DEVNULL,
+                                    stdin=subprocess.PIPE,
+                                    stderr=subprocess.DEVNULL,
+                                    shell=False)
 
             pipe.communicate(password.encode())
 
@@ -82,20 +82,18 @@ def shutDown(parent, gid=None, category=None, password=None):
 
             CREATE_NO_WINDOW = 0x08000000
             subprocess.Popen(['shutdown', '-S'],
-                    stderr=subprocess.PIPE,
-                    stdout=subprocess.PIPE,
-                    stdin=subprocess.PIPE,
-                    shell=False,
-                    creationflags=CREATE_NO_WINDOW)
+                             stderr=subprocess.PIPE,
+                             stdout=subprocess.PIPE,
+                             stdin=subprocess.PIPE,
+                             shell=False,
+                             creationflags=CREATE_NO_WINDOW)
 
         elif os_type == 'FreeBSD' or os_type == 'OpenBSD':
 
             pipe = subprocess.Popen(['sudo', '-S', 'shutdown', '-p', 'now'],
-                    stdout=subprocess.DEVNULL,
-                    stdin=subprocess.PIPE,
-                    stderr=subprocess.DEVNULL,
-                    shell=False)
+                                    stdout=subprocess.DEVNULL,
+                                    stdin=subprocess.PIPE,
+                                    stderr=subprocess.DEVNULL,
+                                    shell=False)
 
             pipe.communicate(password.encode())
-
-

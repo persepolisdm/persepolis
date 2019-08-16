@@ -14,16 +14,21 @@
 #
 
 from persepolis.scripts.useful_tools import determineConfigFolder
-from persepolis.scripts.osCommands import touch 
+from persepolis.scripts.osCommands import touch
 import logging
 import os
 
 # config_folder
-config_folder =  determineConfigFolder()
+config_folder = determineConfigFolder()
+
+# create a directory if it does not exist
+if not os.path.exists(config_folder):
+    os.makedirs(config_folder)
 
 # log file address
 log_file = os.path.join(str(config_folder), 'persepolisdm.log')
-if not(os.path.isfile(log_file)):
+
+if not os.path.isfile(log_file):
     touch(log_file)
 
 # define logging object
@@ -41,7 +46,6 @@ handler.setFormatter(formatter)
 
 # add the handlers to the logger
 logObj.addHandler(handler)
-
 
 
 def sendToLog(text="", type="INFO"):

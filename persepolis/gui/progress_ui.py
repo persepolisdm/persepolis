@@ -20,6 +20,7 @@ from PyQt5.QtCore import Qt, QTranslator, QCoreApplication, QLocale, QSize
 from persepolis.gui import resources
 from PyQt5.QtGui import QIcon
 
+
 class ProgressWindow_Ui(QWidget):
     def __init__(self, persepolis_setting):
         super().__init__()
@@ -32,13 +33,13 @@ class ProgressWindow_Ui(QWidget):
         self.translator = QTranslator()
         if self.translator.load(':/translations/locales/ui_' + locale, 'ts'):
             QCoreApplication.installTranslator(self.translator)
-            
+
         # set ui direction
         ui_direction = self.persepolis_setting.value('ui_direction')
 
         if ui_direction == 'rtl':
             self.setLayoutDirection(Qt.RightToLeft)
-        
+
         elif ui_direction in 'ltr':
             self.setLayoutDirection(Qt.LeftToRight)
 
@@ -93,7 +94,7 @@ class ProgressWindow_Ui(QWidget):
         options_tab_horizontalLayout = QHBoxLayout()
 #         options_tab_horizontalLayout.setContentsMargins(11, 11, 11, 11)
 
-        
+
 # limit_checkBox
         self.limit_checkBox = QCheckBox(self.options_tab)
 
@@ -122,14 +123,13 @@ class ProgressWindow_Ui(QWidget):
 
 # limit_pushButton
         self.limit_pushButton = QPushButton(self.options_tab)
-        
+
         limit_frame_verticalLayout.addLayout(limit_frame_horizontalLayout)
         limit_frame_verticalLayout.addWidget(self.limit_pushButton)
 
         limit_verticalLayout.addWidget(self.limit_frame)
 
         limit_verticalLayout.setContentsMargins(11, 11, 11, 11)
-
 
         options_tab_horizontalLayout.addLayout(limit_verticalLayout)
 
@@ -148,7 +148,6 @@ class ProgressWindow_Ui(QWidget):
         self.after_frame.setFrameShadow(QFrame.Raised)
 
         after_frame_verticalLayout = QVBoxLayout(self.after_frame)
-
 
 
 # after_comboBox
@@ -193,7 +192,6 @@ class ProgressWindow_Ui(QWidget):
         self.stop_pushButton = QPushButton(self)
         self.stop_pushButton.setIcon(QIcon(icons + 'stop'))
         button_horizontalLayout.addWidget(self.stop_pushButton)
-
 
         verticalLayout.addLayout(button_horizontalLayout)
 

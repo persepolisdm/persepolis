@@ -50,7 +50,6 @@ class QueueSpiderThread(QThread):
                 str(e), exc_info=True)
 
 
-
 class BrowserPluginQueue(TextQueue_Ui):
     def __init__(self, parent, list_of_links, callback, persepolis_setting):
         super().__init__(persepolis_setting)
@@ -80,7 +79,7 @@ class BrowserPluginQueue(TextQueue_Ui):
                 file_name = '***'
 
             if file_name == '***':
-            # spider finds file name
+                # spider finds file name
                 new_spider = QueueSpiderThread(dict)
                 self.parent.threadPool.append(new_spider)
                 self.parent.threadPool[len(self.parent.threadPool) - 1].start()
@@ -106,7 +105,7 @@ class BrowserPluginQueue(TextQueue_Ui):
 
 # get categories name and add them to add_queue_comboBox
         categories_list = self.parent.persepolis_db.categoriesList()
- 
+
         for queue in categories_list:
             if queue != 'All Downloads':
                 self.add_queue_comboBox.addItem(queue)
@@ -265,7 +264,6 @@ class BrowserPluginQueue(TextQueue_Ui):
         if os.path.isdir(fname):
             self.download_folder_lineEdit.setText(fname)
 
-
     def okButtonPressed(self, button):
         # write user's input data to init file
         self.persepolis_setting.setValue(
@@ -332,7 +330,7 @@ class BrowserPluginQueue(TextQueue_Ui):
                 'download_passwd': download_passwd,
                 'connections': connections,
                 'limit_value': limit,
-                'download_path' : download_path,
+                'download_path': download_path,
                 'referer': None,
                 'load_cookies': None,
                 'user_agent': None,
@@ -372,17 +370,14 @@ class BrowserPluginQueue(TextQueue_Ui):
 
                 i = i + 1
 
-
         # reverse list
         self.add_link_dictionary_list.reverse()
-
 
         # Create callback for mainwindow
         self.callback(self.add_link_dictionary_list, category)
 
         # close window
         self.close()
-
 
     def closeEvent(self, event):
         self.persepolis_setting.setValue('TextQueue/size', self.size())

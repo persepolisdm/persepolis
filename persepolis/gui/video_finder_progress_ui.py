@@ -19,7 +19,6 @@ from PyQt5.QtWidgets import QWidget, QHBoxLayout, QVBoxLayout, QLabel
 from PyQt5.QtCore import QCoreApplication
 
 
-
 class VideoFinderProgressWindow_Ui(ProgressWindow_Ui):
     def __init__(self, persepolis_setting):
         super().__init__(persepolis_setting)
@@ -45,13 +44,14 @@ class VideoFinderProgressWindow_Ui(ProgressWindow_Ui):
         # set status_tab as default tab
         self.progress_tabWidget.setCurrentIndex(2)
 
+        # labels
 
-        #labels
-
-        self.video_status_label.setText(QCoreApplication.translate("video_finder_progress_ui_tr", "<b>Video file status: </b>"))
-        self.audio_status_label.setText(QCoreApplication.translate("video_finder_progress_ui_tr", "<b>Audio file status: </b>"))
-        self.muxing_status_label.setText(QCoreApplication.translate("video_finder_progress_ui_tr", "<b>Muxing status: </b>"))
+        self.video_status_label.setText(QCoreApplication.translate(
+            "video_finder_progress_ui_tr", "<b>Video file status: </b>"))
+        self.audio_status_label.setText(QCoreApplication.translate(
+            "video_finder_progress_ui_tr", "<b>Audio file status: </b>"))
+        self.muxing_status_label.setText(QCoreApplication.translate(
+            "video_finder_progress_ui_tr", "<b>Muxing status: </b>"))
 
         self.progress_tabWidget.setTabText(self.progress_tabWidget.indexOf(
             self.status_tab),  QCoreApplication.translate("video_finder_progress_ui_tr", "Status"))
-

@@ -26,6 +26,8 @@ from functools import partial
 import os
 
 # find file name and file size
+
+
 class AddLinkSpiderThread(QThread):
     ADDLINKSPIDERSIGNAL = pyqtSignal(dict)
 
@@ -34,12 +36,12 @@ class AddLinkSpiderThread(QThread):
         self.add_link_dictionary = add_link_dictionary
 
     def run(self):
-        try :
+        try:
             # get file name and file size
             file_name, file_size = spider.addLinkSpider(self.add_link_dictionary)
 
             spider_dict = {'file_size': file_size, 'file_name': file_name}
-            
+
             # emit results
             self.ADDLINKSPIDERSIGNAL.emit(spider_dict)
 
@@ -57,8 +59,6 @@ class AddLinkSpiderThread(QThread):
                 str(e), "ERROR")
 
 
-
-
 class AddLinkWindow(AddLinkWindow_Ui):
     def __init__(self, parent, callback, persepolis_setting, plugin_add_link_dictionary={}):
         super().__init__(persepolis_setting)
@@ -67,7 +67,7 @@ class AddLinkWindow(AddLinkWindow_Ui):
         self.persepolis_setting = persepolis_setting
         self.parent = parent
 
-        # entry initialization 
+        # entry initialization
         # read values from persepolis_setting
         # connections
         connections = int(
@@ -95,7 +95,7 @@ class AddLinkWindow(AddLinkWindow_Ui):
             # "link" key-value must be checked
             self.link_lineEdit.setText(
                 str(self.plugin_add_link_dictionary['link']))
- 
+
         else:
             # check clipboard
             clipboard = QApplication.clipboard()
@@ -103,9 +103,9 @@ class AddLinkWindow(AddLinkWindow_Ui):
             if (("tp:/" in text[2:6]) or ("tps:/" in text[2:7])):
                 self.link_lineEdit.setText(str(text))
 
-        # detect_proxy_pushButton 
+        # detect_proxy_pushButton
         self.detect_proxy_pushButton.clicked.connect(
-                self.detectProxy)
+            self.detectProxy)
 
         # ip_lineEdit initialization ->
         settings_ip = self.persepolis_setting.value(
@@ -189,7 +189,7 @@ class AddLinkWindow(AddLinkWindow_Ui):
 
         if ('header' in self.plugin_add_link_dictionary):
             if str(self.plugin_add_link_dictionary['header']) != 'None':
-                self.header_lineEdit.setText(str(self.plugin_add_link_dictionary['header'])) 
+                self.header_lineEdit.setText(str(self.plugin_add_link_dictionary['header']))
 
         if ('user_agent' in self.plugin_add_link_dictionary):
             self.user_agent_lineEdit.setText(str(self.plugin_add_link_dictionary['user_agent']))
@@ -197,7 +197,6 @@ class AddLinkWindow(AddLinkWindow_Ui):
         if ('load_cookies' in self.plugin_add_link_dictionary):
             self.load_cookies_lineEdit.setText((self.plugin_add_link_dictionary['load_cookies']))
 
- 
 
 # set window size and position
         size = self.persepolis_setting.value(
@@ -208,8 +207,9 @@ class AddLinkWindow(AddLinkWindow_Ui):
         self.move(position)
 
 
-
 # detect system proxy setting, and set ip_lineEdit and port_spinBox
+
+
     def detectProxy(self, button):
         # get system proxy information
         system_proxy_dict = getProxy()
@@ -293,7 +293,7 @@ class AddLinkWindow(AddLinkWindow_Ui):
         if str(self.link_lineEdit.text()) == '':
             self.ok_pushButton.setEnabled(False)
             self.download_later_pushButton.setEnabled(False)
-        else: # find file size
+        else:  # find file size
 
             dict = {'link': str(self.link_lineEdit.text())}
 
@@ -303,11 +303,11 @@ class AddLinkWindow(AddLinkWindow_Ui):
             self.parent.threadPool[len(self.parent.threadPool) - 1].start()
             self.parent.threadPool[len(self.parent.threadPool) - 1].ADDLINKSPIDERSIGNAL.connect(
                 partial(self.parent.addLinkSpiderCallBack, child=self))
- 
+
             self.ok_pushButton.setEnabled(True)
             self.download_later_pushButton.setEnabled(True)
 
-# enable change_name_lineEdit if change_name_checkBox is checked. 
+# enable change_name_lineEdit if change_name_checkBox is checked.
     def changeName(self, checkBoxes):
         if self.change_name_checkBox.isChecked() == True:
             self.change_name_lineEdit.setEnabled(True)
@@ -329,8 +329,8 @@ class AddLinkWindow(AddLinkWindow_Ui):
             self.end_checkBox.setEnabled(True)
 
     def okButtonPressed(self, button, download_later):
-    # user commited information by pressing ok_pushButton, so get information
-    # from AddLinkWindow and return them to the mainwindow with callback!
+        # user commited information by pressing ok_pushButton, so get information
+        # from AddLinkWindow and return them to the mainwindow with callback!
 
         # write user's new inputs in persepolis_setting for next time :)
         self.persepolis_setting.setValue(
@@ -419,28 +419,27 @@ class AddLinkWindow(AddLinkWindow_Ui):
 
         # header
         if self.header_lineEdit.text() != '':
-            header = self.header_lineEdit.text() 
+            header = self.header_lineEdit.text()
         else:
             header = None
 
         # user_agent
-        if self.user_agent_lineEdit.text() != '': 
+        if self.user_agent_lineEdit.text() != '':
             user_agent = self.user_agent_lineEdit.text()
         else:
             user_agent = None
 
         # load_cookies
-        if self.load_cookies_lineEdit.text() != '': 
+        if self.load_cookies_lineEdit.text() != '':
             load_cookies = self.load_cookies_lineEdit.text()
         else:
             load_cookies = None
         # save information in a dictionary(add_link_dictionary).
         self.add_link_dictionary = {'referer': referer, 'header': header, 'user_agent': user_agent, 'load_cookies': load_cookies,
                                     'out': out, 'start_time': start_time, 'end_time': end_time, 'link': link, 'ip': ip,
-                                    'port': port, 'proxy_user': proxy_user, 'proxy_passwd': proxy_passwd, 
+                                    'port': port, 'proxy_user': proxy_user, 'proxy_passwd': proxy_passwd,
                                     'download_user': download_user, 'download_passwd': download_passwd,
                                     'connections': connections, 'limit_value': limit, 'download_path': download_path}
-
 
         # get category of download
         category = str(self.add_queue_comboBox.currentText())
@@ -449,12 +448,14 @@ class AddLinkWindow(AddLinkWindow_Ui):
 
         # return information to mainwindow
         self.callback(self.add_link_dictionary, download_later, category)
-        
+
         # close window
         self.close()
 
 
 # save size and position of window, when user closes the window.
+
+
     def closeEvent(self, event):
         self.persepolis_setting.setValue('AddLinkWindow/size', self.size())
         self.persepolis_setting.setValue('AddLinkWindow/position', self.pos())

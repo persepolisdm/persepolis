@@ -156,13 +156,13 @@ class ArcDarkBluePallete(QPalette):
 class LightRedPallete(QPalette):
     def __init__(self):
         super().__init__()
-        #light gray
+        # light gray
         self.setColor(QPalette.Window, QColor(237, 239, 243))
-        #0 0 0 is black
+        # 0 0 0 is black
         self.setColor(QPalette.WindowText, Qt.black)
-        #255 255 255 is white
+        # 255 255 255 is white
         self.setColor(QPalette.Base, Qt.white)
-        #gray
+        # gray
         self.setColor(QPalette.AlternateBase, QColor(237, 239, 243))
         self.setColor(QPalette.ToolTipBase, Qt.white)
         self.setColor(QPalette.ToolTipText, Qt.white)
@@ -189,6 +189,7 @@ class LightRedPallete(QPalette):
         self.setColor(QPalette.Disabled, QPalette.WindowText,
                       QColor(122, 118, 113))
         self.setColor(QPalette.Disabled, QPalette.Base, QColor(237, 239, 243))
+
 
 class LightBluePallete(QPalette):
     def __init__(self):
@@ -219,7 +220,6 @@ class LightBluePallete(QPalette):
         self.setColor(QPalette.HighlightedText, Qt.white)
 
         self.setColor(QPalette.Disabled, QPalette.Window, QColor(237, 239, 243))
-
 
         self.setColor(QPalette.Disabled, QPalette.ButtonText, QColor(51, 51, 51))
 

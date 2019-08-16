@@ -32,6 +32,8 @@ elif os_type == 'Windows':
 # notifySend use notify-send program in user's system for sending notifications
 # and use playNotification function in play.py file for playing sound
 # notifications
+
+
 def notifySend(message1, message2, time, sound, parent=None):
 
     if os_type == 'Linux':
@@ -40,7 +42,6 @@ def notifySend(message1, message2, time, sound, parent=None):
         notifications_path = '/usr/local/share/sounds/freedesktop/stereo/'
     else:
         notifications_path = ''
-
 
     if sound == 'ok':
         file = os.path.join(notifications_path, 'complete.oga')
@@ -62,7 +63,6 @@ def notifySend(message1, message2, time, sound, parent=None):
         file = os.path.join(notifications_path, 'dialog-information.oga')
         playNotification(str(file))
 
-
     # load settings
     persepolis_setting = QSettings('persepolis_download_manager', 'persepolis')
 
@@ -78,17 +78,18 @@ def notifySend(message1, message2, time, sound, parent=None):
     else:
         if os_type == 'Linux' or os_type == 'FreeBSD' or os_type == 'OpenBSD':
             subprocess.Popen(['notify-send', '--icon', 'persepolis',
-                '--app-name', 'Persepolis Download Manager',
-                '--expire-time', time,
-                message1, message2],
-                stderr=subprocess.PIPE,
-                stdout=subprocess.PIPE,
-                stdin=subprocess.PIPE,
-                shell=False)
+                              '--app-name', 'Persepolis Download Manager',
+                              '--expire-time', time,
+                              message1, message2],
+                             stderr=subprocess.PIPE,
+                             stdout=subprocess.PIPE,
+                             stdin=subprocess.PIPE,
+                             shell=False)
 
         elif os_type == 'Darwin':
             notifyMac("Persepolis Download Manager", message1, message2)
 
         elif os_type == 'Windows':
-            message = Windows_Notification(parent=parent, time=time, text1=message1, text2=message2, persepolis_setting=persepolis_setting)
+            message = Windows_Notification(parent=parent, time=time, text1=message1,
+                                           text2=message2, persepolis_setting=persepolis_setting)
             message.show()
