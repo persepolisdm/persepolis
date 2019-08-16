@@ -14,7 +14,6 @@
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from persepolis import __main__
 import sys
 import os
 import platform
@@ -37,3 +36,5 @@ print('persepolis is running from test folder')
 parent_dir = os.path.dirname(run_dir)
 
 sys.path.insert(0, parent_dir)
+
+from persepolis import __main__
