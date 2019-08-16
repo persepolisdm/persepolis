@@ -33,13 +33,11 @@ def findFileManager():
 
 
 def touch(file_path):
-    if not os.path.isfile(file_path):
-        with open(file_path, 'w'):
-            pass
+    if not(os.path.isfile(file_path)):
+        f = open(file_path, 'w')
+        f.close()
 
 # xdgOpen opens files or folders
-
-
 def xdgOpen(file_path, f_type='file', path='file'):
 
     # we have a file path and we want to open it's directory.
