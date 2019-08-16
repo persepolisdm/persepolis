@@ -16,8 +16,6 @@
 
 # THIS FILE CONTAINING SOME VARIABLES , ... THAT USING FOR INITIALIZING PERSEPOLIS
 
-from persepolis.scripts.data_base import PersepolisDB, PluginsDB
-from persepolis.scripts import logger
 from persepolis.scripts.useful_tools import determineConfigFolder, returnDefaultSettings
 from persepolis.scripts.browser_integration import browserIntegration
 from persepolis.scripts import osCommands
@@ -40,6 +38,7 @@ for folder in [config_folder, persepolis_tmp]:
     osCommands.makeDirs(folder)
 
 # persepolisdm.log file contains persepolis log.
+from persepolis.scripts import logger
 
 # refresh logs!
 log_file = os.path.join(str(config_folder), 'persepolisdm.log')
@@ -81,6 +80,7 @@ else:
                  + '\n')
     f.close()
 
+from persepolis.scripts.data_base import PersepolisDB, PluginsDB
 
 # create an object for PersepolisDB
 persepolis_db = PersepolisDB()
