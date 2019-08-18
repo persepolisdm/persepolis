@@ -161,7 +161,7 @@ def returnDefaultSettings():
     # find available styles(It's depends on operating system and desktop environments).
     available_styles = QStyleFactory.keys()
     style = 'Fusion'
-    color_scheme = 'Persepolis Light Blue'
+    color_scheme = 'System'
     icons = 'Breeze'
     if os_type == 'Linux' or os_type == 'FreeBSD' or 'os_type' == 'OpenBSD':
         if desktop_env == 'KDE':
@@ -222,12 +222,12 @@ def returnDefaultSettings():
 
     elif os_type == 'Windows':
         style = 'Fusion'
-        color_scheme = 'Persepolis Old Light Blue'
+        color_scheme = 'System'
         icons = 'Breeze'
 
     else:
         style = 'Fusion'
-        color_scheme = 'Persepolis Light Blue'
+        color_scheme = 'System'
         icons = 'Breeze'
 
     # keyboard shortcuts

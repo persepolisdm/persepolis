@@ -493,31 +493,18 @@ class PreferencesWindow(Setting_Ui):
             # get current language
             selected_language = self.lang_comboBox.currentText()
 
-            # some color schemes wouldn't work properly with Persian language.
-            if selected_language == 'فارسی':
-                # color_comboBox items
-                color_scheme = ['Persepolis Light Blue', 'Persepolis Dark Blue']
+            # color_comboBox items
+            color_scheme = ['System', 
+                            'Persepolis ArcDark Blue', 'Persepolis ArcDark Red',
+                            'Persepolis Old Dark Red', 'Persepolis Old Light Red',
+                            'Persepolis Old Dark Blue', 'Persepolis Old Light Blue']
 
-                # add items
-                self.color_comboBox.addItems(color_scheme)
+            # add items
+            self.color_comboBox.addItems(color_scheme)
 
-                # set 'Persepolis Light Blue' for color_scheme
-                current_color_index = self.color_comboBox.findText('Persepolis Light Blue')
-                self.color_comboBox.setCurrentIndex(current_color_index)
-
-            else:
-                # color_comboBox items
-                color_scheme = ['System', 'Persepolis Light Blue', 'Persepolis Dark Blue',
-                                'Persepolis ArcDark Blue', 'Persepolis ArcDark Red',
-                                'Persepolis Old Dark Red', 'Persepolis Old Light Red',
-                                'Persepolis Old Dark Blue', 'Persepolis Old Light Blue']
-
-                # add items
-                self.color_comboBox.addItems(color_scheme)
-
-                # set 'Persepolis Light Blue' for color_scheme
-                current_color_index = self.color_comboBox.findText('Persepolis Light Blue')
-                self.color_comboBox.setCurrentIndex(current_color_index)
+            # set 'Persepolis Light Blue' for color_scheme
+            current_color_index = self.color_comboBox.findText('System')
+            self.color_comboBox.setCurrentIndex(current_color_index)
 
     def fontCheckBoxState(self, checkBox):
 
