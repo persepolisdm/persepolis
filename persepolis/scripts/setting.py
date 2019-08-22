@@ -494,7 +494,7 @@ class PreferencesWindow(Setting_Ui):
             selected_language = self.lang_comboBox.currentText()
 
             # color_comboBox items
-            color_scheme = ['System', 
+            color_scheme = ['System', 'Dark Fusion', 
                             'Persepolis ArcDark Blue', 'Persepolis ArcDark Red',
                             'Persepolis Old Dark Red', 'Persepolis Old Light Red',
                             'Persepolis Old Dark Blue', 'Persepolis Old Light Blue']

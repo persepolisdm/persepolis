@@ -1301,12 +1301,12 @@ Ehsan Titish</source>
 <context>
     <name>setting_src_ui_tr</name>
     <message>
-        <location filename="../../persepolis/scripts/setting.py" line="1091"/>
+        <location filename="../../persepolis/scripts/setting.py" line="1078"/>
         <source>&lt;b&gt;&lt;center&gt;Restart Persepolis Please!&lt;/center&gt;&lt;/b&gt;&lt;br&gt;&lt;center&gt;Some changes take effect after restarting Persepolis&lt;/center&gt;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../persepolis/scripts/setting.py" line="1093"/>
+        <location filename="../../persepolis/scripts/setting.py" line="1080"/>
         <source>Restart Persepolis!</source>
         <translation type="unfinished"></translation>
     </message>

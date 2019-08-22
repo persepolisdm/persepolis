@@ -243,6 +243,23 @@
         <file>Papirus-Light/refresh.svg</file>
         <file>Papirus-Light/video_finder.svg</file>
 
+        <file>dark_style.qss</file>
+        <file>dark fusion/down_arrow_disabled.svg</file>
+        <file>dark fusion/down_arrow.svg</file>
+        <file>dark fusion/down_arrow_hover.svg</file>
+        <file>dark fusion/up_arrow_disabled.svg</file>
+        <file>dark fusion/up_arrow.svg</file>
+        <file>dark fusion/up_arrow_hover.svg</file>
+ 
+        <file>dark fusion/checkbox_checked_disabled.svg</file>
+        <file>dark fusion/checkbox_checked.svg</file>
+        <file>dark fusion/checkbox_indeterminate_disabled.svg</file>
+        <file>dark fusion/checkbox_indeterminate.svg</file>
+        <file>dark fusion/checkbox_unchecked_disabled.svg</file>
+        <file>dark fusion/checkbox_unchecked.svg</file>
+ 
+
+
 		
 
 	</qresource>

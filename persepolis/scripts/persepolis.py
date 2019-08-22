@@ -18,7 +18,7 @@ from PyQt5.QtGui import QFont
 from PyQt5.QtWidgets import QApplication, QStyleFactory
 import traceback
 from persepolis.scripts.error_window import ErrorWindow
-from persepolis.gui.palettes import DarkRedPallete, DarkBluePallete, ArcDarkRedPallete, ArcDarkBluePallete, LightRedPallete, LightBluePallete
+from persepolis.gui.palettes import DarkRedPallete, DarkBluePallete, ArcDarkRedPallete, ArcDarkBluePallete, LightRedPallete, LightBluePallete, DarkFusionPalette
 from PyQt5.QtCore import QFile, QTextStream, QCoreApplication, QSettings, Qt
 import json
 import struct
@@ -159,18 +159,13 @@ class PersepolisApplication(QApplication):
             self.setStyleSheet(
                 "QMenu::item:selected { background-color : #2a82da ;color : white } QToolTip { color: #ffffff; background-color: #353535; border: 1px solid white; }")
 
-        elif color_scheme == 'Persepolis Dark Blue':
+        elif color_scheme == 'Dark Fusion':
+            dark_fusion = DarkFusionPalette()
+            self.setPalette(dark_fusion)
             file = QFile(":/dark_style.qss")
             file.open(QFile.ReadOnly | QFile.Text)
             stream = QTextStream(file)
             self.setStyleSheet(stream.readAll())
-
-        elif color_scheme == 'Persepolis Light Blue':
-            file = QFile(":/light_style.qss")
-            file.open(QFile.ReadOnly | QFile.Text)
-            stream = QTextStream(file)
-            self.setStyleSheet(stream.readAll())
-
 
 # create  terminal arguments
 parser = argparse.ArgumentParser(description='Persepolis Download Manager')
