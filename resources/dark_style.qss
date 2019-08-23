@@ -1,23 +1,23 @@
 /*
 *   
-*    This program is free software: you can redistribute it and/or modify
-*    it under the terms of the GNU General Public License as published by
-*    the Free Software Foundation, either version 3 of the License, or
-*    (at your option) any later version.
+*   This program is free software: you can redistribute it and/or modify
+*   it under the terms of the GNU General Public License as published by
+*   the Free Software Foundation, either version 3 of the License, or
+*   (at your option) any later version.
 *
-*    This program is distributed in the hope that it will be useful,
-*    but WITHOUT ANY WARRANTY; without even the implied warranty of
-*    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-*    GNU General Public License for more details.
+*   This program is distributed in the hope that it will be useful,
+*   but WITHOUT ANY WARRANTY; without even the implied warranty of
+*   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+*   GNU General Public License for more details.
 *
-*    You should have received a copy of the GNU General Public License
-*    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*   You should have received a copy of the GNU General Public License
+*   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *
 *------------------------------------------------------------------------
-*   This projects help me for writing this file:
-*    https://github.com/Alexhuszagh/BreezeStyleSheets
-*    https://github.com/u8sand/Baka-MPlayer
-*    https://doc.qt.io/qt-5/stylesheet-examples.html
+*   useful projects help me for writing this file:
+*   https://github.com/Alexhuszagh/BreezeStyleSheets
+*   https://github.com/u8sand/Baka-MPlayer
+*   https://doc.qt.io/qt-5/stylesheet-examples.html
 *
 *
 */
@@ -355,3 +355,24 @@ QGroupBox::indicator:unchecked:disabled
 {
     border-image: url(:/dark fusion/checkbox_unchecked_disabled.svg);
 }
+
+QProgressBar
+{
+    background-color: #2b2b2b;
+    border: 1px solid gray;
+    border-radius: 0.3ex;
+    height: 2px;
+    text-align: right;
+    margin-right: 5ex;
+    margin-top: 1ex;
+    margin-bottom: 1ex;
+    padding: 0px;
+}
+
+QProgressBar::chunk
+{
+    background-color: #008098;
+    border: 0px transparent;
+    border-radius: 0.3ex;
+}
+
