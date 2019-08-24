@@ -55,6 +55,7 @@ class MenuWidget(QPushButton):
         self.menubar = QMenu(self)
         self.setMenu(self.menubar)
         self.setIcon(QIcon(icons + 'menu'))
+        self.setStyleSheet("""QPushButton{border: none; background-color: transparent; padding: 0px}""")
 
         fileMenu = self.menubar.addMenu(QCoreApplication.translate("mainwindow_ui_tr", 'File'))
         editMenu = self.menubar.addMenu(QCoreApplication.translate("mainwindow_ui_tr", 'Edit'))

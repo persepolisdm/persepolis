@@ -173,6 +173,7 @@ class ProgressWindow_Ui(QWidget):
 # download_progressBar
         self.download_progressBar = QProgressBar(self)
         verticalLayout.addWidget(self.download_progressBar)
+        self.download_progressBar.setTextVisible(False)
 
 # buttons
         button_horizontalLayout = QHBoxLayout()

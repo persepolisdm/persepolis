@@ -21,7 +21,6 @@
 *
 *
 */
-
 QMenu::item:selected
 { 
     background-color : #008098;
@@ -78,7 +77,8 @@ QPushButton, QComboBox
     border-radius: 2px;
     min-width: 76px;
     min-height: 17px;
-    padding: 4px 6px;} 
+    padding: 4px 6px;
+} 
 
 QPushButton:enabled, QComboBox:enabled
 {
@@ -362,8 +362,7 @@ QProgressBar
     border: 1px solid gray;
     border-radius: 0.3ex;
     height: 2px;
-    text-align: right;
-    margin-right: 5ex;
+    text-align: center;
     margin-top: 1ex;
     margin-bottom: 1ex;
     padding: 0px;
