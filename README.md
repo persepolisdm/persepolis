@@ -12,12 +12,14 @@
 > - [Credits](https://github.com/persepolisdm/persepolis#credits)  
 
 ### **About**
-Persepolis is a download manager & a GUI For [Aria2](https://github.com/aria2/aria2). It's written in Python. Persepolis is a sample of free and open source softwares. It's developed For GNU/Linux distributions, BSDs, MacOS and Microsoft Windows.  
-- Multi segment downloading
+Persepolis is a download manager & a GUI for [Aria2](https://github.com/aria2/aria2). It's written in Python. Persepolis is a sample of free and open source software. It's developed for GNU/Linux distributions, BSDs, MacOS, and Microsoft Windows.  
+
+### **Features**
+- Multi-segment downloading
 - Scheduling downloads
 - Download queuing
 - Finding and downloading video from Youtube, Vimeo, DailyMotion, etc.  
-- and much more...
+- and many more!
 
 ### **FAQ**
 > **Where does the name come from?**
