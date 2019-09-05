@@ -405,8 +405,8 @@ class PreferencesWindow(Setting_Ui):
         selected_size = int(self.icons_size_comboBox.currentText())
         if selected_size < 48:
             # add Papirus-light and Papirus-Dark icons to the list
-            icons = ['Archdroid-Red', 'Archdroid-Blue', 'Breeze',
-                     'Breeze-Dark', 'Papirus', 'Papirus-Dark', 'Papirus-Light']
+            icons = ['Breeze', 'Breeze-Dark', 'Papirus',
+                    'Papirus-Dark', 'Papirus-Light']
             self.icon_comboBox.addItems(icons)
 
             current_icons_index = self.icon_comboBox.findText(
@@ -414,14 +414,14 @@ class PreferencesWindow(Setting_Ui):
 
         else:
             # eliminate Papirus-light and Papirus-Dark from list
-            icons = ['Archdroid-Red', 'Archdroid-Blue', 'Breeze', 'Breeze-Dark', 'Papirus']
+            icons = ['Breeze', 'Breeze-Dark', 'Papirus']
             self.icon_comboBox.addItems(icons)
 
             # current_icons_index is -1, if findText couldn't find icon index.
             current_icons_index = self.icon_comboBox.findText(
                 str(self.persepolis_setting.value('icons', self.current_icon)))
 
-            # set 'Archdroid-Blue' if current_icons_index is -1
+            # set 'Breeze' if current_icons_index is -1
             if current_icons_index == -1:
                 current_icons_index = 1
 
@@ -494,10 +494,7 @@ class PreferencesWindow(Setting_Ui):
             selected_language = self.lang_comboBox.currentText()
 
             # color_comboBox items
-            color_scheme = ['System', 'Dark Fusion', 
-                            'Persepolis ArcDark Blue', 'Persepolis ArcDark Red',
-                            'Persepolis Old Dark Red', 'Persepolis Old Light Red',
-                            'Persepolis Old Dark Blue', 'Persepolis Old Light Blue']
+            color_scheme = ['System', 'Dark Fusion'] 
 
             # add items
             self.color_comboBox.addItems(color_scheme)

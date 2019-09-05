@@ -18,7 +18,7 @@ from PyQt5.QtGui import QFont
 from PyQt5.QtWidgets import QApplication, QStyleFactory
 import traceback
 from persepolis.scripts.error_window import ErrorWindow
-from persepolis.gui.palettes import DarkRedPallete, DarkBluePallete, ArcDarkRedPallete, ArcDarkBluePallete, LightRedPallete, LightBluePallete, DarkFusionPalette
+from persepolis.gui.palettes import DarkFusionPalette
 from PyQt5.QtCore import QFile, QTextStream, QCoreApplication, QSettings, Qt
 import json
 import struct
@@ -126,40 +126,7 @@ class PersepolisApplication(QApplication):
 
     def setPersepolisColorScheme(self, color_scheme):
         self.persepolis_color_scheme = color_scheme
-        if color_scheme == 'Persepolis Old Dark Red':
-            persepolis_dark_red = DarkRedPallete()
-            self.setPalette(persepolis_dark_red)
-            self.setStyleSheet(
-                "QMenu::item:selected {background-color : #d64937 ;color : white} QToolTip { color: #ffffff; background-color: #353535; border: 1px solid white; }")
-        elif color_scheme == 'Persepolis  Old Dark Blue':
-            persepolis_dark_blue = DarkBluePallete()
-            self.setPalette(persepolis_dark_blue)
-            self.setStyleSheet(
-                "QMenu::item:selected { background-color : #2a82da ;color : white } QToolTip { color: #ffffff; background-color: #353535; border: 1px solid white; }")
-        elif color_scheme == 'Persepolis ArcDark Red':
-            persepolis_arcdark_red = ArcDarkRedPallete()
-            self.setPalette(persepolis_arcdark_red)
-            self.setStyleSheet(
-                "QMenu::item:selected {background-color : #bf474d ; color : white} QToolTip { color: #ffffff; background-color: #353945; border: 1px solid white; } QPushButton {background-color: #353945  } QTabWidget {background-color : #353945;} QMenu {background-color: #353945 }")
-
-        elif color_scheme == 'Persepolis ArcDark Blue':
-            persepolis_arcdark_blue = ArcDarkBluePallete()
-            self.setPalette(persepolis_arcdark_blue)
-            self.setStyleSheet(
-                "QMenu::item:selected {background-color : #5294e2 ; color : white } QToolTip { color: #ffffff; background-color: #353945; border: 1px solid white; } QPushButton {background-color: #353945  } QTabWidget {background-color : #353945;} QMenu {background-color: #353945 }")
-        elif color_scheme == 'Persepolis Old Light Red':
-            persepolis_light_red = LightRedPallete()
-            self.setPalette(persepolis_light_red)
-            self.setStyleSheet(
-                "QMenu::item:selected {background-color : #d64937 ;color : white} QToolTip { color: #ffffff; background-color: #353535; border: 1px solid white; }")
-
-        elif color_scheme == 'Persepolis Old Light Blue':
-            persepolis_light_blue = LightBluePallete()
-            self.setPalette(persepolis_light_blue)
-            self.setStyleSheet(
-                "QMenu::item:selected { background-color : #2a82da ;color : white } QToolTip { color: #ffffff; background-color: #353535; border: 1px solid white; }")
-
-        elif color_scheme == 'Dark Fusion':
+        if color_scheme == 'Dark Fusion':
             dark_fusion = DarkFusionPalette()
             self.setPalette(dark_fusion)
             file = QFile(":/dark_style.qss")
