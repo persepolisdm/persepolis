@@ -18,7 +18,7 @@ from PyQt5.QtGui import QFont
 from PyQt5.QtWidgets import QApplication, QStyleFactory
 import traceback
 from persepolis.scripts.error_window import ErrorWindow
-from persepolis.gui.palettes import DarkFusionPalette
+from persepolis.gui.palettes import DarkFusionPalette, LightFusionPalette
 from PyQt5.QtCore import QFile, QTextStream, QCoreApplication, QSettings, Qt
 import json
 import struct
@@ -133,6 +133,15 @@ class PersepolisApplication(QApplication):
             file.open(QFile.ReadOnly | QFile.Text)
             stream = QTextStream(file)
             self.setStyleSheet(stream.readAll())
+
+        elif color_scheme == 'Light Fusion':
+            dark_fusion = LightFusionPalette()
+            self.setPalette(dark_fusion)
+            file = QFile(":/light_style.qss")
+            file.open(QFile.ReadOnly | QFile.Text)
+            stream = QTextStream(file)
+            self.setStyleSheet(stream.readAll())
+
 
 # create  terminal arguments
 parser = argparse.ArgumentParser(description='Persepolis Download Manager')

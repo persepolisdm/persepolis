@@ -36,7 +36,6 @@
         <file>Breeze/refresh.svg</file>
         <file>Breeze/video_finder.svg</file>
 
-
 		<file>Breeze-Dark/about.svg</file>		
 		<file>Breeze-Dark/add.svg</file>		
 		<file>Breeze-Dark/exit.svg</file>		
@@ -187,6 +186,20 @@
         <file>dark fusion/checkbox_unchecked.svg</file>
  
 
+        <file>light_style.qss</file>
+        <file>light fusion/down_arrow_disabled.svg</file>
+        <file>light fusion/down_arrow.svg</file>
+        <file>light fusion/down_arrow_hover.svg</file>
+        <file>light fusion/up_arrow_disabled.svg</file>
+        <file>light fusion/up_arrow.svg</file>
+        <file>light fusion/up_arrow_hover.svg</file>
+ 
+        <file>light fusion/checkbox_checked_disabled.svg</file>
+        <file>light fusion/checkbox_checked.svg</file>
+        <file>light fusion/checkbox_indeterminate_disabled.svg</file>
+        <file>light fusion/checkbox_indeterminate.svg</file>
+        <file>light fusion/checkbox_unchecked_disabled.svg</file>
+        <file>light fusion/checkbox_unchecked.svg</file>
 
 		
 
