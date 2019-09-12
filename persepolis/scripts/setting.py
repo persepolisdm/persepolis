@@ -153,9 +153,11 @@ class PreferencesWindow(Setting_Ui):
 
         # icon size
         size = ['128', '64', '48', '32', '24', '16']
+
         self.icons_size_comboBox.addItems(size)
         current_icons_size_index = self.icons_size_comboBox.findText(
             str(self.persepolis_setting.value('toolbar_icon_size')))
+
         self.icons_size_comboBox.setCurrentIndex(current_icons_size_index)
 
         # call setDarkLightIcon if index is changed
@@ -383,13 +385,7 @@ class PreferencesWindow(Setting_Ui):
 
         self.styleComboBoxChanged()
 
-        current_color_index = self.color_comboBox.findText(
-            str(self.persepolis_setting.value('color-scheme')))
-
-        self.color_comboBox.setCurrentIndex(current_color_index)
-
         self.color_comboBox.currentIndexChanged.connect(self.setDarkLightIcon)
-
 
         self.persepolis_setting.endGroup()
 
@@ -471,7 +467,13 @@ class PreferencesWindow(Setting_Ui):
             # add items
             self.color_comboBox.addItems(color_scheme)
 
-            current_color_index = self.color_comboBox.findText('Dark Fusion')
+            current_color_index = self.color_comboBox.findText(
+                str(self.persepolis_setting.value('color-scheme')))
+
+            # it means user's prefered color_scheme is not valid in color_comboBox.
+            if current_color_index == -1:
+                current_color_index = 0
+
             self.color_comboBox.setCurrentIndex(current_color_index)
 
         self.setDarkLightIcon()
@@ -480,7 +482,7 @@ class PreferencesWindow(Setting_Ui):
     # and light icons for light color schemes.
     def setDarkLightIcon(self, index=None):
 
-        dark_theme=None
+        dark_theme = None
 
         # find selected style
         selected_style = self.style_comboBox.currentText()
