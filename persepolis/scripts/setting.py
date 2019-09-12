@@ -124,9 +124,6 @@ class PreferencesWindow(Setting_Ui):
             int(self.persepolis_setting.value('sound-volume')))
 
         # set style
-        # if style_comboBox is changed, self.styleComboBoxChanged is called.
-        self.style_comboBox.currentIndexChanged.connect(self.styleComboBoxChanged)
-
         # find available styles(It's depends on operating system and desktop environments).
         available_styles = QStyleFactory.keys()
         for style in available_styles:
@@ -151,12 +148,6 @@ class PreferencesWindow(Setting_Ui):
         current_locale = self.lang_comboBox.findData(
             str(self.persepolis_setting.value('locale')))
         self.lang_comboBox.setCurrentIndex(current_locale)
-        self.lang_comboBox.currentIndexChanged.connect(self.styleComboBoxChanged)
-        self.styleComboBoxChanged()
-
-        current_color_index = self.color_comboBox.findText(
-            str(self.persepolis_setting.value('color-scheme')))
-        self.color_comboBox.setCurrentIndex(current_color_index)
 
         self.current_icon = self.persepolis_setting.value('icons')
 
@@ -167,10 +158,8 @@ class PreferencesWindow(Setting_Ui):
             str(self.persepolis_setting.value('toolbar_icon_size')))
         self.icons_size_comboBox.setCurrentIndex(current_icons_size_index)
 
-        # call iconSizeComboBoxCanged if index is changed
-        self.icons_size_comboBox.currentIndexChanged.connect(self.iconSizeComboBoxCanged)
-
-        self.iconSizeComboBoxCanged(1)
+        # call setDarkLightIcon if index is changed
+        self.icons_size_comboBox.currentIndexChanged.connect(self.setDarkLightIcon)
 
         # set notification
         notifications = ['Native notification', 'QT notification']
@@ -388,6 +377,20 @@ class PreferencesWindow(Setting_Ui):
         for member in self.persepolis_setting.allKeys():
             self.first_key_value_dict[member] = str(self.persepolis_setting.value(member))
 
+
+        # if style_comboBox is changed, self.styleComboBoxChanged is called.
+        self.style_comboBox.currentIndexChanged.connect(self.styleComboBoxChanged)
+
+        self.styleComboBoxChanged()
+
+        current_color_index = self.color_comboBox.findText(
+            str(self.persepolis_setting.value('color-scheme')))
+
+        self.color_comboBox.setCurrentIndex(current_color_index)
+
+        self.color_comboBox.currentIndexChanged.connect(self.setDarkLightIcon)
+
+
         self.persepolis_setting.endGroup()
 
         # setting window size and position
@@ -399,33 +402,6 @@ class PreferencesWindow(Setting_Ui):
         self.resize(size)
         self.move(position)
 
-    # Papirus icons can be used with small sizes(smaller than 48)
-    def iconSizeComboBoxCanged(self, index):
-        self.icon_comboBox.clear()
-        selected_size = int(self.icons_size_comboBox.currentText())
-        if selected_size < 48:
-            # add Papirus-light and Papirus-Dark icons to the list
-            icons = ['Breeze', 'Breeze-Dark', 'Papirus',
-                    'Papirus-Dark', 'Papirus-Light']
-            self.icon_comboBox.addItems(icons)
-
-            current_icons_index = self.icon_comboBox.findText(
-                str(self.persepolis_setting.value('icons', self.current_icon)))
-
-        else:
-            # eliminate Papirus-light and Papirus-Dark from list
-            icons = ['Breeze', 'Breeze-Dark', 'Papirus']
-            self.icon_comboBox.addItems(icons)
-
-            # current_icons_index is -1, if findText couldn't find icon index.
-            current_icons_index = self.icon_comboBox.findText(
-                str(self.persepolis_setting.value('icons', self.current_icon)))
-
-            # set 'Breeze' if current_icons_index is -1
-            if current_icons_index == -1:
-                current_icons_index = 1
-
-        self.icon_comboBox.setCurrentIndex(current_icons_index)
 
     # run this method if user doubleclicks on an item in shortcut_table
     def showCaptureKeyboardWindow(self):
@@ -466,7 +442,6 @@ class PreferencesWindow(Setting_Ui):
 
     # active color_comboBox only when user is select "Fusion" style.
     def styleComboBoxChanged(self, index=None):
-
         # clear color_comboBox
         self.color_comboBox.clear()
 
@@ -490,18 +465,102 @@ class PreferencesWindow(Setting_Ui):
             # enable color_comboBox
             self.color_comboBox.setEnabled(True)
 
-            # get current language
-            selected_language = self.lang_comboBox.currentText()
-
             # color_comboBox items
-            color_scheme = ['System', 'Dark Fusion', 'Light Fusion'] 
+            color_scheme = ['Dark Fusion', 'Light Fusion'] 
 
             # add items
             self.color_comboBox.addItems(color_scheme)
 
-            # set 'Persepolis Light Blue' for color_scheme
-            current_color_index = self.color_comboBox.findText('System')
+            current_color_index = self.color_comboBox.findText('Dark Fusion')
             self.color_comboBox.setCurrentIndex(current_color_index)
+
+        self.setDarkLightIcon()
+            
+    # this method sets dark icons for dark color schemes
+    # and light icons for light color schemes.
+    def setDarkLightIcon(self, index=None):
+
+        dark_theme=None
+
+        # find selected style
+        selected_style = self.style_comboBox.currentText()
+
+        # clear icon_comboBox
+        self.icon_comboBox.clear()
+
+        # Papirus icons can be used with small sizes(smaller than 48)
+        # get user's selected icons size
+        selected_size = int(self.icons_size_comboBox.currentText())
+
+        if selected_style == 'Fusion':
+            if self.color_comboBox.currentText() == 'Dark Fusion':
+                dark_theme = True
+            else:
+                dark_theme = False
+
+        elif selected_style == 'Adwaita-Dark':
+            dark_theme = True
+
+        elif selected_style == 'Adwaita' or selected_style == 'macintosh':
+            dark_theme = False
+
+        if dark_theme == True:
+            self.icon_comboBox.clear()
+
+            if selected_size < 48:
+                icons = ['Breeze-Dark', 'Papirus-Dark']
+            else:
+                icons = ['Breeze-Dark']
+ 
+            self.icon_comboBox.addItems(icons)
+
+            # current_icons_index is -1, if findText couldn't find icon index.
+            current_icons_index = self.icon_comboBox.findText(
+                str(self.persepolis_setting.value('icons', self.current_icon)))
+
+            if current_icons_index == -1:
+                current_icons_index = 0
+
+            self.icon_comboBox.setCurrentIndex(current_icons_index)
+
+        elif dark_theme == False:
+
+            if selected_size < 48:
+                icons = ['Breeze', 'Papirus', 'Papirus-Light']
+            else:
+                icons = ['Breeze', 'Papirus']
+
+
+            self.icon_comboBox.addItems(icons)
+
+            # current_icons_index is -1, if findText couldn't find icon index.
+            current_icons_index = self.icon_comboBox.findText(
+                str(self.persepolis_setting.value('icons', self.current_icon)))
+
+            if current_icons_index == -1:
+                current_icons_index = 0
+
+            self.icon_comboBox.setCurrentIndex(current_icons_index)
+
+
+        else:
+            if selected_size < 48:
+                icons = ['Breeze', 'Breeze-Dark', 'Papirus',
+                        'Papirus-Dark', 'Papirus-Light']
+            else:
+                icons = ['Breeze', 'Breeze-Dark', 'Papirus']
+ 
+            self.icon_comboBox.addItems(icons)
+
+            # current_icons_index is -1, if findText couldn't find icon index.
+            current_icons_index = self.icon_comboBox.findText(
+                str(self.persepolis_setting.value('icons', self.current_icon)))
+
+            if current_icons_index == -1:
+                current_icons_index = 0
+
+            self.icon_comboBox.setCurrentIndex(current_icons_index)
+
 
     def fontCheckBoxState(self, checkBox):
 

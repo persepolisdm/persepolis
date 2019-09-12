@@ -161,17 +161,13 @@ def returnDefaultSettings():
     # find available styles(It's depends on operating system and desktop environments).
     available_styles = QStyleFactory.keys()
     style = 'Fusion'
-    color_scheme = 'System'
-    icons = 'Breeze'
+    color_scheme = 'Dark Fusion'
+    icons = 'Breeze-Dark'
     if os_type == 'Linux' or os_type == 'FreeBSD' or 'os_type' == 'OpenBSD':
         if desktop_env == 'KDE':
             if 'Breeze' in available_styles:
                 style = 'Breeze'
                 color_scheme = 'System'
-            else:
-                style = 'Fusion'
-                color_scheme = 'Persepolis Light Blue'
-
         else:
             # finout user prefers dark theme or light theme :)
             # read this links for more information:
@@ -202,9 +198,6 @@ def returnDefaultSettings():
                 if 'Adwaita-Dark' in available_styles:
                     style = 'Adwaita-Dark'
                     color_scheme = 'System'
-                else:
-                    style = 'Fusion'
-                    color_scheme = 'Persepolis Dark Blue'
 
             else:
                 icons = 'Breeze'
@@ -213,22 +206,23 @@ def returnDefaultSettings():
                     color_scheme = 'System'
                 else:
                     style = 'Fusion'
-                    color_scheme = 'Persepolis Light Blue'
+                    color_scheme = 'Light Fusion'
 
     elif os_type == 'Darwin':
-        style = 'macintosh'
-        color_scheme = 'System'
-        icons = 'Breeze'
+        if 'macintosh' in available_styles:
+            style = 'macintosh'
+            color_scheme = 'System'
+            icons = 'Breeze'
 
     elif os_type == 'Windows':
         style = 'Fusion'
-        color_scheme = 'System'
-        icons = 'Breeze'
+        color_scheme = 'Dark Fusion'
+        icons = 'Breeze-Dark'
 
     else:
         style = 'Fusion'
-        color_scheme = 'System'
-        icons = 'Breeze'
+        color_scheme = 'Dark Fusion'
+        icons = 'Breeze-Dark'
 
     # keyboard shortcuts
     delete_shortcut = "Ctrl+D"
