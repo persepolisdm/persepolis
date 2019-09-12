@@ -213,6 +213,7 @@
         <file>locales/ui_nl_NL.qm</file>
         <file>locales/ui_es_ES.qm</file>
         <file>locales/ui_pt_BR.qm</file>
+        <file>locales/ui_ar.qm</file>
 
 	</qresource>	
 

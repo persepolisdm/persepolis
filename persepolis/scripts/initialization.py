@@ -175,7 +175,7 @@ for browser in ['chrome', 'chromium', 'opera', 'vivaldi', 'firefox']:
 locale = str(persepolis_setting.value('settings/locale'))
 
 # right to left languages
-rtl_locale_list = ['fa_IR']
+rtl_locale_list = ['fa_IR', 'ar']
 
 # left to right languages
 ltr_locale_list = ['en_US', 'zh_CN', 'fr_FR', 'pl_PL', 'nl_NL', 'pt_BR', 'es_ES']
