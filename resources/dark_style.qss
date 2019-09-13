@@ -238,7 +238,7 @@ QToolButton:hover
 QToolBar
 {
     border: 0.1ex transparent #393838;
-    background: 0.1ex solid #EFF0F1;
+    background: 0.1ex solid #383838;
     font-weight: bold;
 }
 
