@@ -369,6 +369,18 @@ def main():
         # set color_scheme and style
         # see palettes.py and setting.py
 
+        # this line is added fot fixing persepolis view in HighDpi displays
+        # more information at: https://doc.qt.io/qt-5/highdpi.html
+        try:
+            QApplication.setAttribute(Qt.AA_EnableHighDpiScaling)
+        except:
+            from persepolis.scripts import logger
+
+            # write error_message in log file.
+            logger.sendToLog('Qt.AA_EnableHighDpiScaling is not available!', "ERROR")
+
+
+        # create QApplication
         persepolis_download_manager = PersepolisApplication(sys.argv)
 
         # setQuitOnLastWindowClosed(False) is needed to prevent persepolis exiting,
@@ -377,7 +389,6 @@ def main():
 
         # Enable High DPI display with PyQt5
         try:
-            persepolis_download_manager.setAttribute(Qt.AA_EnableHighDpiScaling)
             if hasattr(QStyleFactory, 'AA_UseHighDpiPixmaps'):
                 persepolis_download_manager.setAttribute(Qt.AA_UseHighDpiPixmaps)
         except:
