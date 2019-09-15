@@ -1773,65 +1773,63 @@ class MainWindow(MainWindow_Ui):
             else:
                 video_finder_link = False
 
-            if status == 'complete' or status == 'error' or status == 'stopped':
+            if status == 'error':
+                # check free space in temp_download_folder!
+                # perhaps insufficient space in hard disk caused this error!
+                # find free space in KiB
+                free_space = freeSpace(temp_download_folder)
 
-                if status == 'error':
-                    # check free space in temp_download_folder!
-                    # perhaps insufficient space in hard disk caused this error!
-                    # find free space in KiB
-                    free_space = freeSpace(temp_download_folder)
+                # find file size
+                file_size = dict['size']
 
-                    # find file size
-                    file_size = dict['size']
-
-                    if file_size != None:
-                        if file_size[-2:] != ' B':
-                            unit = file_size[-3:]
-                            try:
-                                if unit == 'TiB' or unit == 'GiB':
-                                    size_value = float(file_size[:-4])
-                                else:
-                                    size_value = int(file_size[:-4])
-                            except:
-                                size_value = None
-                        else:
-                            unit = None
-
-                            try:
-                                size_value = int(file_size)
-                            except:
-                                size_value = None
-
-                        if free_space != None and size_value != None:
-                            if unit == 'TiB':
-                                free_space = free_space/(1073741824*1024)
-                                free_space = round(free_space, 2)
-                            elif unit == 'GiB':
-                                free_space = free_space/1073741824
-                                free_space = round(free_space, 2)
-                            elif unit == 'MiB':
-                                free_space = int(free_space/1048576)
-                            elif unit == 'KiB':
-                                free_space = int(free_space/1024)
+                if file_size != None:
+                    if file_size[-2:] != ' B':
+                        unit = file_size[-3:]
+                        try:
+                            if unit == 'TiB' or unit == 'GiB':
+                                size_value = float(file_size[:-4])
                             else:
-                                free_space = int(free_space)
+                                size_value = int(file_size[:-4])
+                        except:
+                            size_value = None
+                    else:
+                        unit = None
 
-                            if free_space < size_value:
-                                error = 'Insufficient disk space!'
+                        try:
+                            size_value = int(file_size)
+                        except:
+                            size_value = None
 
-                                # write error_message in log file
-                                error_message = 'Download failed - GID : '\
-                                    + str(gid)\
-                                    + '- Message : '\
-                                    + error
+                    if free_space != None and size_value != None:
+                        if unit == 'TiB':
+                            free_space = free_space/(1073741824*1024)
+                            free_space = round(free_space, 2)
+                        elif unit == 'GiB':
+                            free_space = free_space/1073741824
+                            free_space = round(free_space, 2)
+                        elif unit == 'MiB':
+                            free_space = int(free_space/1048576)
+                        elif unit == 'KiB':
+                            free_space = int(free_space/1024)
+                        else:
+                            free_space = int(free_space)
 
-                                logger.sendToLog(error_message, 'ERROR')
+                        if free_space < size_value:
+                            error = 'Insufficient disk space!'
 
-                                # show notification
-                                notifySend(QCoreApplication.translate("mainwindow_src_ui_tr", "Error: ") + error,
-                                           QCoreApplication.translate("mainwindow_src_ui_tr",
-                                                                      'Please change the temporary download folder'),
-                                           10000, 'fail', parent=self)
+                            # write error_message in log file
+                            error_message = 'Download failed - GID : '\
+                                + str(gid)\
+                                + '- Message : '\
+                                + error
+
+                            logger.sendToLog(error_message, 'ERROR')
+
+                            # show notification
+                            notifySend(QCoreApplication.translate("mainwindow_src_ui_tr", "Error: ") + error,
+                                       QCoreApplication.translate("mainwindow_src_ui_tr",
+                                                                  'Please change the temporary download folder'),
+                                       10000, 'fail', parent=self)
 
             # find row of this gid in download_table!
             row = None
@@ -2020,9 +2018,7 @@ class MainWindow(MainWindow_Ui):
                     else:
                         progress_window.close()
 
-                        # eliminate window information! in progress_window_list
-                        # and progress_window_list_dict
-                        del self.progress_window_list[member_number]
+                        # eliminate window information from progress_window_list_dict
                         del self.progress_window_list_dict[gid]
 
                     # if download stopped:
