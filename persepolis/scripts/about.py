@@ -14,8 +14,8 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 
+from PyQt5.QtCore import QSize, QPoint, QFile, QIODevice, QTextStream
 from persepolis.gui.about_ui import AboutWindow_Ui
-from PyQt5.QtCore import QSize, QPoint
 from persepolis.gui import resources
 from PyQt5.QtWidgets import QWidget
 from PyQt5.QtGui import QIcon
@@ -27,11 +27,23 @@ class AboutWindow(AboutWindow_Ui):
 
         self.persepolis_setting = persepolis_setting
 
-# setting window size and position
+        # setting window size and position
         size = self.persepolis_setting.value(
             'AboutWindow/size', QSize(545, 375))
         position = self.persepolis_setting.value(
             'AboutWindow/position', QPoint(300, 300))
+
+        # read translators.txt files.
+        # this file contains all translators.
+        f = QFile(':/translators.txt')
+
+        f.open(QIODevice.ReadOnly | QFile.Text)
+        f_text = QTextStream(f).readAll()
+        f.close()
+
+        self.translators_textEdit.insertPlainText(f_text)
+
+
 
         self.resize(size)
         self.move(position)

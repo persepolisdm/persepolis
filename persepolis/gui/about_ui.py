@@ -14,10 +14,10 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 
-from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import QWidget, QTabWidget, QHBoxLayout, QVBoxLayout, QLabel, QTextEdit, QPushButton
-from PyQt5.QtGui import QIcon, QFont
 from PyQt5.QtCore import Qt, QSize, QPoint, QTranslator, QCoreApplication, QLocale
+from PyQt5 import QtCore, QtGui, QtWidgets
+from PyQt5.QtGui import QIcon, QFont
 from persepolis.gui import resources
 
 try:
@@ -157,26 +157,9 @@ class AboutWindow_Ui(QWidget):
         translators_tab_verticalLayout = QVBoxLayout(self.translators_tab)
 
         # translators
-        self.translators_label = QLabel(self.translators_tab)
-        self.translators_label.setTextFormat(Qt.RichText)
-        self.translators_label.setAlignment(Qt.AlignCenter)
-        self.translators_label.setOpenExternalLinks(True)
-        self.translators_label.setTextInteractionFlags(
-            Qt.TextBrowserInteraction)
-
-        translators_tab_verticalLayout.addWidget(self.translators_label)
-
-        self.help_translate_label = QLabel(self.translators_tab)
-        self.help_translate_label.setTextFormat(Qt.RichText)
-        self.help_translate_label.setAlignment(Qt.AlignCenter)
-        self.help_translate_label.setOpenExternalLinks(True)
-        self.help_translate_label.setTextInteractionFlags(
-            Qt.TextBrowserInteraction)
-
-        translators_tab_verticalLayout.addWidget(self.help_translate_label)
-
-
-        translators_tab_verticalLayout.addStretch(1)
+        self.translators_textEdit = QTextEdit(self.translators_tab)
+        self.translators_textEdit.setReadOnly(True)
+        translators_tab_verticalLayout.addWidget(self.translators_textEdit)
 
         # License tab
         self.license_tab = QWidget(self)
@@ -228,14 +211,6 @@ class AboutWindow_Ui(QWidget):
         self.contributors_thank_label.setText(QCoreApplication.translate('about_ui_tr', 'Special thanks to:'))
         self.contributors_link_label.setText(
             "<a href=https://github.com/persepolisdm/persepolis/graphs/contributors>our contributors</a>")
-
-        # translators_tab
-        self.translators_label.setText(QCoreApplication.translate("about_ui_tr",
-                                                              "<a href=https://www.transifex.com/persepolis/teams>Persepolis translation team on transifex.com</a>"))
-
-        self.help_translate_label.setText(QCoreApplication.translate("about_ui_tr",
-                                                              "<a href=https://github.com/persepolisdm/persepolis/wiki/translators-guide>Help translate</a>"))
-
 
         # License
         self.license_text.setPlainText("""

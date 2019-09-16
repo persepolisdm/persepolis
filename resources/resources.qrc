@@ -1,6 +1,7 @@
 <!DOCTYPE RCC><RCC version="1.0">
 	<qresource prefix="/">
 
+        <file>translators.txt</file>
         <file>persepolis.svg</file>
         <file>persepolis-tray.svg</file>
 		<file>Breeze/about.svg</file>		
