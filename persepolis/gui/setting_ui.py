@@ -14,8 +14,9 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-from PyQt5.QtWidgets import QAbstractItemView, QTableWidget, QTableWidgetItem, QDateTimeEdit, QCheckBox, QVBoxLayout, QHBoxLayout, QFrame, QWidget, QLabel, QLineEdit, QTabWidget, QSpinBox, QPushButton, QDial, QComboBox, QFontComboBox, QSpacerItem, QSizePolicy
+from PyQt5.QtWidgets import QAbstractItemView, QTableWidget, QTableWidgetItem, QCheckBox, QVBoxLayout, QHBoxLayout, QFrame, QWidget, QLabel, QLineEdit, QTabWidget, QSpinBox, QPushButton, QDial, QComboBox, QFontComboBox, QSpacerItem, QSizePolicy
 from PyQt5.QtCore import Qt, QTranslator, QCoreApplication, QLocale
+from persepolis.gui.customized_widgets import MyQDateTimeEdit
 from persepolis.gui import resources
 from PyQt5.QtGui import QIcon
 import pkg_resources
@@ -184,7 +185,7 @@ class Setting_Ui(QWidget):
         self.wait_queue_label = QLabel(self.download_options_tab)
         wait_queue_horizontalLayout.addWidget(self.wait_queue_label)
 
-        self.wait_queue_time = QDateTimeEdit(self.download_options_tab)
+        self.wait_queue_time = MyQDateTimeEdit(self.download_options_tab)
         self.wait_queue_time.setDisplayFormat('H:mm')
         wait_queue_horizontalLayout.addWidget(self.wait_queue_time)
 

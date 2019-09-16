@@ -15,8 +15,9 @@
 """
 
 
-from PyQt5.QtWidgets import QTabWidget, QDateTimeEdit, QDoubleSpinBox, QPushButton, QComboBox, QSpinBox, QVBoxLayout, QHBoxLayout, QLabel, QApplication, QWidget, QFileDialog, QMessageBox, QSizePolicy, QGridLayout, QCheckBox, QFrame, QLineEdit, QPushButton
+from PyQt5.QtWidgets import QTabWidget, QDoubleSpinBox, QPushButton, QComboBox, QSpinBox, QVBoxLayout, QHBoxLayout, QLabel, QApplication, QWidget, QFileDialog, QMessageBox, QSizePolicy, QGridLayout, QCheckBox, QFrame, QLineEdit, QPushButton
 from PyQt5.QtCore import Qt, QTranslator, QCoreApplication, QLocale
+from persepolis.gui.customized_widgets import MyQDateTimeEdit
 from PyQt5 import QtCore, QtGui, QtWidgets
 from persepolis.gui import resources
 from PyQt5.QtGui import QIcon
@@ -247,7 +248,7 @@ class AddLinkWindow_Ui(QWidget):
 
         horizontalLayout_5 = QHBoxLayout(self.start_frame)
 
-        self.start_time_qDataTimeEdit = QDateTimeEdit(self.start_frame)
+        self.start_time_qDataTimeEdit = MyQDateTimeEdit(self.start_frame)
         self.start_time_qDataTimeEdit.setDisplayFormat('H:mm')
         horizontalLayout_5.addWidget(self.start_time_qDataTimeEdit)
 
@@ -266,7 +267,7 @@ class AddLinkWindow_Ui(QWidget):
 
         horizontalLayout_6 = QHBoxLayout(self.end_frame)
 
-        self.end_time_qDateTimeEdit = QDateTimeEdit(self.end_frame)
+        self.end_time_qDateTimeEdit = MyQDateTimeEdit(self.end_frame)
         self.end_time_qDateTimeEdit.setDisplayFormat('H:mm')
         horizontalLayout_6.addWidget(self.end_time_qDateTimeEdit)
 

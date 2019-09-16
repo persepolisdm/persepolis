@@ -13,9 +13,10 @@
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from PyQt5.QtWidgets import QShortcut, QDateTimeEdit, QDoubleSpinBox, QPushButton, QComboBox,  QMenu, QTreeView, QSplitter, QSizePolicy, QGridLayout, QHBoxLayout, QVBoxLayout, QMenu, QTableWidgetItem, QAbstractItemView, QApplication, QToolBar, QMenuBar, QStatusBar, QTableWidget, QAction, QMainWindow, QWidget, QFrame, QAbstractItemView, QCheckBox, QSpinBox, QLabel
+from PyQt5.QtWidgets import QShortcut, QDoubleSpinBox, QPushButton, QComboBox,  QMenu, QTreeView, QSplitter, QSizePolicy, QGridLayout, QHBoxLayout, QVBoxLayout, QMenu, QTableWidgetItem, QAbstractItemView, QApplication, QToolBar, QMenuBar, QStatusBar, QTableWidget, QAction, QMainWindow, QWidget, QFrame, QAbstractItemView, QCheckBox, QSpinBox, QLabel
 from PyQt5.QtGui import QCursor, QKeySequence, QIcon, QStandardItemModel, QStandardItem
 from PyQt5.QtCore import QCoreApplication, QRect, QSize, Qt, QTranslator, QLocale
+from persepolis.gui.customized_widgets import MyQDateTimeEdit
 from persepolis.gui import resources
 
 
@@ -284,7 +285,7 @@ class MainWindow_Ui(QMainWindow):
 
         start_frame_verticalLayout = QVBoxLayout(self.start_frame)
 
-        self.start_time_qDataTimeEdit = QDateTimeEdit(self.start_frame)
+        self.start_time_qDataTimeEdit = MyQDateTimeEdit(self.start_frame)
         self.start_time_qDataTimeEdit.setDisplayFormat('H:mm')
         start_frame_verticalLayout.addWidget(self.start_time_qDataTimeEdit)
 
@@ -300,7 +301,7 @@ class MainWindow_Ui(QMainWindow):
 
         end_frame_verticalLayout = QVBoxLayout(self.end_frame)
 
-        self.end_time_qDateTimeEdit = QDateTimeEdit(self.end_frame)
+        self.end_time_qDateTimeEdit = MyQDateTimeEdit(self.end_frame)
         self.end_time_qDateTimeEdit.setDisplayFormat('H:mm')
         end_frame_verticalLayout.addWidget(self.end_time_qDateTimeEdit)
 
