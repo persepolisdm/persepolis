@@ -216,7 +216,7 @@ class AboutWindow_Ui(QWidget):
 
         # about_tab
         self.title_label.setText(QCoreApplication.translate("about_ui_tr", "Persepolis Download Manager"))
-        self.version_label.setText(QCoreApplication.translate("about_ui_tr", "Version 3.1.0"))
+        self.version_label.setText(QCoreApplication.translate("about_ui_tr", "Version 3.2.0"))
         self.site2_label.setText(QCoreApplication.translate("about_ui_tr",
                                                             "<a href=https://persepolisdm.github.io>https://persepolisdm.github.io</a>",
                                                             "TRANSLATORS NOTE: YOU REALLY DON'T NEED TO TRANSLATE THIS PART!"))

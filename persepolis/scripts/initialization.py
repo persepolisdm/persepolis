@@ -210,19 +210,7 @@ if persepolis_version < 2.6:
 
     persepolis_version = 2.6
 
-if persepolis_version < 3.0:
-    persepolis_setting.beginGroup('settings')
-
-    for key in default_setting_dict.keys():
-
-        setting_value = default_setting_dict[key]
-        persepolis_setting.setValue(key, setting_value)
-
-    persepolis_setting.endGroup()
-
-    persepolis_setting.setValue('version/version', 3.0)
-
-if persepolis_version != 3.1:
+if persepolis_version < 3.1:
     # create an object for PersepolisDB
     persepolis_db = PersepolisDB()
 
@@ -232,7 +220,18 @@ if persepolis_version != 3.1:
     # close connections
     persepolis_db.closeConnections()
 
-persepolis_setting.setValue('version/version', 3.1)
+    persepolis_version = 3.1
 
+if persepolis_version < 3.2:
+    persepolis_setting.beginGroup('settings')
+
+    for key in default_setting_dict.keys():
+
+        setting_value = default_setting_dict[key]
+        persepolis_setting.setValue(key, setting_value)
+
+    persepolis_setting.endGroup()
+
+    persepolis_setting.setValue('version/version', 3.2)
 
 persepolis_setting.sync()

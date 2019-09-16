@@ -160,7 +160,7 @@ parser.add_argument('--tray', action='store_true',
                     help="Persepolis is starting in tray icon. It's useful when you want to put persepolis in system's startup.")
 parser.add_argument('--parent-window', action='store', nargs=1,
                     help='this switch is used for chrome native messaging in Windows')
-parser.add_argument('--version', action='version', version='Persepolis Download Manager 3.1.0')
+parser.add_argument('--version', action='version', version='Persepolis Download Manager 3.2.0')
 
 
 # Clears unwated args ( like args from Browers via NHM )
