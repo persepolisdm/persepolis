@@ -54,4 +54,4 @@ class VideoFinderProgressWindow_Ui(ProgressWindow_Ui):
             "video_finder_progress_ui_tr", "<b>Muxing status: </b>"))
 
         self.progress_tabWidget.setTabText(self.progress_tabWidget.indexOf(
-            self.status_tab),  QCoreApplication.translate("video_finder_progress_ui_tr", "Status"))
+            self.status_tab),  QCoreApplication.translate("setting_ui_tr", "Status"))
