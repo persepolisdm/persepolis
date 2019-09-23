@@ -216,6 +216,8 @@
         <file>locales/ui_pt_BR.qm</file>
         <file>locales/ui_ar.qm</file>
         <file>locales/ui_hu.qm</file>
+        <file>locales/ui_tr.qm</file>
+        <file>locales/ui_tr_TR.qm</file>
 
 	</qresource>	
 
