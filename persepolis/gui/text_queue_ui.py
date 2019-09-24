@@ -184,6 +184,9 @@ class TextQueue_Ui(QWidget):
         folder_gridLayout.addWidget(self.folder_pushButton, 3, 0, 1, 1)
         self.folder_pushButton.setIcon(QIcon(icons + 'folder'))
 
+        self.folder_checkBox = QCheckBox(self.folder_frame)
+        folder_gridLayout.addWidget(self.folder_checkBox)
+
         self.folder_label = QLabel(self.folder_frame)
         self.folder_label.setAlignment(Qt.AlignCenter)
         folder_gridLayout.addWidget(self.folder_label, 1, 0, 1, 1)
@@ -283,6 +286,7 @@ class TextQueue_Ui(QWidget):
         self.download_pass_label.setText(QCoreApplication.translate("text_ui_tr", "Download PassWord: "))
 
         self.folder_pushButton.setText(QCoreApplication.translate("text_ui_tr", "Change Download Folder"))
+        self.folder_checkBox.setText(QCoreApplication.translate("addlink_ui_tr", "Remember this path"))
         self.folder_label.setText(QCoreApplication.translate("text_ui_tr", "Download Folder: "))
 
         self.limit_checkBox.setText(QCoreApplication.translate("text_ui_tr", "Limit Speed"))
