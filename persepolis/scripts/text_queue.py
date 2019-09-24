@@ -272,6 +272,11 @@ class TextQueue(TextQueue_Ui):
         self.persepolis_setting.setValue(
             'add_link_initialization/download_user', self.download_user_lineEdit.text())
 
+        # Check 'Remember path' and change default path if needed
+        if self.folder_checkBox.isChecked() == True:
+            self.persepolis_setting.setValue(
+                'settings/download_path', self.download_folder_lineEdit.text())
+
         if not(self.proxy_checkBox.isChecked()):
             ip = None
             port = None
