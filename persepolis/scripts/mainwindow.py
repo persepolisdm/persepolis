@@ -3055,6 +3055,12 @@ class MainWindow(MainWindow_Ui):
             # hide progress window
             self.progress_window_list[member_number].hide()
 
+    # close window with ESC key
+    def keyPressEvent(self, event):
+        if event.key() == Qt.Key_Escape:
+            self.close()
+
+
     # close event
     # when user closes application then this method is called
     def closeEvent(self, event=None):

@@ -13,7 +13,7 @@
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from PyQt5.QtCore import QSize, QPoint, QTranslator, QCoreApplication, QLocale
+from PyQt5.QtCore import Qt, QSize, QPoint, QTranslator, QCoreApplication, QLocale
 from persepolis.gui.after_download_ui import AfterDownloadWindow_Ui
 from persepolis.scripts.play import playNotification
 from persepolis.scripts import osCommands
@@ -118,6 +118,12 @@ class AfterDownloadWindow(AfterDownloadWindow_Ui):
 
         # close window
         self.close()
+
+    # close window with ESC key
+    def keyPressEvent(self, event):
+        if event.key() == Qt.Key_Escape:
+            self.close()
+
 
     def closeEvent(self, event):
         # saving window size and position

@@ -574,6 +574,12 @@ class PreferencesWindow(Setting_Ui):
             self.fontComboBox.setEnabled(False)
             self.font_size_spinBox.setEnabled(False)
 
+    # close window with ESC key
+    def keyPressEvent(self, event):
+        if event.key() == Qt.Key_Escape:
+            self.close()
+
+
     def closeEvent(self, event):
 
         # saving window size and position

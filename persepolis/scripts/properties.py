@@ -509,6 +509,12 @@ class PropertiesWindow(AddLinkWindow_Ui):
         # close window
         self.close()
 
+    # close window with ESC key
+    def keyPressEvent(self, event):
+        if event.key() == Qt.Key_Escape:
+            self.close()
+
+
     def closeEvent(self, event):
         # save window size and position
         self.persepolis_setting.setValue('PropertiesWindow/size', self.size())

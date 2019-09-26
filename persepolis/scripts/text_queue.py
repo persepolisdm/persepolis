@@ -365,6 +365,12 @@ class TextQueue(TextQueue_Ui):
         # close window
         self.close()
 
+    # close window with ESC key
+    def keyPressEvent(self, event):
+        if event.key() == Qt.Key_Escape:
+            self.close()
+
+
     def closeEvent(self, event):
         self.persepolis_setting.setValue('TextQueue/size', self.size())
         self.persepolis_setting.setValue('TextQueue/position', self.pos())

@@ -14,7 +14,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 
-from PyQt5.QtCore import QSize, QPoint, QFile, QIODevice, QTextStream
+from PyQt5.QtCore import Qt, QSize, QPoint, QFile, QIODevice, QTextStream
 from persepolis.gui.about_ui import AboutWindow_Ui
 from persepolis.gui import resources
 from PyQt5.QtWidgets import QWidget
@@ -47,6 +47,11 @@ class AboutWindow(AboutWindow_Ui):
 
         self.resize(size)
         self.move(position)
+
+
+    def keyPressEvent(self, event):
+        if event.key() == Qt.Key_Escape:
+            self.close()
 
     def changeIcon(self, icons):
         icons = ':/' + str(icons) + '/'

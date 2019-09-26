@@ -15,7 +15,7 @@
 """
 
 from PyQt5.QtWidgets import QCheckBox, QPushButton, QTextEdit, QFrame, QLabel, QComboBox, QHBoxLayout, QApplication
-from PyQt5.QtCore import QThread, pyqtSignal, QCoreApplication, QTranslator, QLocale
+from PyQt5.QtCore import Qt, QThread, pyqtSignal, QCoreApplication, QTranslator, QLocale
 from persepolis.scripts.useful_tools import determineConfigFolder
 from persepolis.scripts.addlink import AddLinkWindow
 from persepolis.scripts import logger, osCommands

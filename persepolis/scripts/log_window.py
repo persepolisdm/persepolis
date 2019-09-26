@@ -16,7 +16,7 @@
 from persepolis.scripts.useful_tools import determineConfigFolder
 from persepolis.gui.log_window_ui import LogWindow_Ui
 from persepolis.scripts import osCommands
-from PyQt5.QtCore import QPoint, QSize
+from PyQt5.QtCore import Qt, QPoint, QSize
 from PyQt5.QtGui import QIcon
 from PyQt5 import QtWidgets
 import os
@@ -112,6 +112,12 @@ class LogWindow(LogWindow_Ui):
 
         self.text_edit.clear()
         self.text_edit.insertPlainText(self.text)
+
+    # close window with ESC key
+    def keyPressEvent(self, event):
+        if event.key() == Qt.Key_Escape:
+            self.close()
+
 
     def closeEvent(self, event):
         self.layout().setSizeConstraint(QtWidgets.QLayout.SetDefaultConstraint)

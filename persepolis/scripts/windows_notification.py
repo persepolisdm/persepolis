@@ -16,7 +16,7 @@
 """
 
 from persepolis.gui.windows_notification_ui import Windows_Notification_UI
-from PyQt5.QtCore import QThread, pyqtSignal
+from PyQt5.QtCore import Qt, QThread, pyqtSignal
 from time import sleep
 
 
@@ -48,6 +48,12 @@ class Windows_Notification(Windows_Notification_UI):
 
     def mousePressEvent(self, event):
         self.close()
+
+    # close window with ESC key
+    def keyPressEvent(self, event):
+        if event.key() == Qt.Key_Escape:
+            self.close()
+
 
     def closeEvent(self, event):
         event.accept()

@@ -14,7 +14,7 @@
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from PyQt5.QtCore import QSize, QPoint, QThread, QTranslator, QCoreApplication, QLocale
+from PyQt5.QtCore import Qt, QSize, QPoint, QThread, QTranslator, QCoreApplication, QLocale
 from PyQt5.QtWidgets import QLineEdit, QWidget, QSizePolicy,  QInputDialog
 from persepolis.gui.progress_ui import ProgressWindow_Ui
 from persepolis.scripts.shutdown import shutDown
@@ -94,6 +94,12 @@ class ProgressWindow(ProgressWindow_Ui):
             'ProgressWindow/position', QPoint(300, 300))
         self.resize(size)
         self.move(position)
+
+    # close window with ESC key
+    def keyPressEvent(self, event):
+        if event.key() == Qt.Key_Escape:
+            self.close()
+
 
     def closeEvent(self, event):
         # save window size and position
