@@ -28,8 +28,8 @@ script:
  - persepolis --version
 
 after_success:
- - pip install transifex-client==0.13.6
- - sudo apt-get install  -y pyqt5-dev-tools	
+ - pip install transifex-client==0.12.5
+ - sudo apt-get install -y pyqt5-dev-tools	
  - pylupdate5 -translate-function ui_tr resources/translation_files.pro
  - sudo echo $'[https://www.transifex.com]\napi_hostname = https://api.transifex.com\nhostname = https://www.transifex.com\nusername = '"$TRANSIFEX_USER"$'\npassword = '"$TRANSIFEX_PASSWORD"$'\n' > ~/.transifexrc
  - tx push -s
