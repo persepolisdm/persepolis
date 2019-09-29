@@ -26,6 +26,7 @@ import requests
 
 # spider function finds name of file and file size from header
 def spider(add_link_dictionary):
+
     # get user's download request from add_link_dictionary
     link = add_link_dictionary['link']
     ip = add_link_dictionary['ip']
@@ -41,7 +42,7 @@ def spider(add_link_dictionary):
     referer = add_link_dictionary['referer']
 
     # defin a requests session
-    requests_session = requests.Session() 
+    requests_session = requests.Session()
     if ip:
         ip_port = 'http://' + str(ip) + ":" + str(port)
         if proxy_user:
@@ -54,7 +55,7 @@ def spider(add_link_dictionary):
         requests_session.auth(download_user, download_passwd)
 
     # set cookies
-    if raw_cookies:  
+    if raw_cookies:
         cookie = SimpleCookie()
         cookie.load(raw_cookies)
 
@@ -63,13 +64,13 @@ def spider(add_link_dictionary):
 
     # set referer
     if referer:
-        requests_session.headers.update({'referer': referer }) #setting referer to the session
+        requests_session.headers.update({'referer': referer})  # setting referer to the session
 
     # set user_agent
     if user_agent:
-        requests_session.headers.update({'user-agent':user_agent }) #setting user_agent to the session
-        
-    #find headers
+        requests_session.headers.update({'user-agent': user_agent})  # setting user_agent to the session
+
+    # find headers
     try:
         response = requests_session.head(link)
         header = response.headers
@@ -77,7 +78,7 @@ def spider(add_link_dictionary):
         header = {}
 
     filename = None
-    filesize = None
+    file_size = None
     if 'Content-Disposition' in header.keys():  # checking if filename is available
         content_disposition = header['Content-Disposition']
         if content_disposition.find('filename') != -1:
@@ -99,11 +100,11 @@ def spider(add_link_dictionary):
     if 'Content-Length' in header.keys():
         file_size = int(header['Content-Length'])
 
-        # converting file_size to KiB or MiB or GiB 
+        # converting file_size to KiB or MiB or GiB
         file_size = humanReadbleSize(file_size)
 
     # return results
-    return filename, filesize
+    return filename, file_size
 
 
 # this function finds and returns file name for links.
@@ -193,11 +194,22 @@ def addLinkSpider(add_link_dictionary):
     except:
         header = {}
 
-    file_size = None 
+    # find file size
+    file_size = None
     if 'Content-Length' in header.keys():  # checking if file_size is available
         file_size = int(header['Content-Length'])
-        
-        # converting file_size to KiB or MiB or GiB
-        file_size = humanReadbleSize(file_size)
 
-    return file_size  # If no Content-Length ? fixed it.
+        # converting file_size to KiB or MiB or GiB
+        file_size = str(humanReadbleSize(file_size))
+
+    # find file name
+    file_name = None
+    if 'Content-Disposition' in header.keys():  # checking if filename is available
+        content_disposition = header['Content-Disposition']
+        if content_disposition.find('filename') != -1:
+            filename_splited = content_disposition.split('filename=')
+            filename_splited = filename_splited[-1]
+            # getting file name in desired format
+            file_name = str(filename_splited[1:-1])
+
+    return file_name, file_size  # If no Content-Length ? fixed it.

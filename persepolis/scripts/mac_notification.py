@@ -31,4 +31,4 @@ def notifyMac(title, subtitle, info_text, delay=0):
     notification.setDeliveryDate_(Foundation.NSDate.dateWithTimeInterval_sinceDate_(
         delay, Foundation.NSDate.date()))
     NSUserNotificationCenter.defaultUserNotificationCenter(
-        ).scheduleNotification_(notification)
+    ).scheduleNotification_(notification)

@@ -14,16 +14,16 @@
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from PyQt5.QtCore import QSize, QPoint, QThread, QTranslator, QCoreApplication, QLocale
-from PyQt5.QtWidgets import QWidget, QSizePolicy,  QInputDialog
+from PyQt5.QtCore import Qt, QSize, QPoint, QThread, QTranslator, QCoreApplication, QLocale
+from PyQt5.QtWidgets import QLineEdit, QWidget, QSizePolicy,  QInputDialog
 from persepolis.gui.progress_ui import ProgressWindow_Ui
 from persepolis.scripts.shutdown import shutDown
 from persepolis.scripts.bubble import notifySend
-from PyQt5 import QtCore, QtGui, QtWidgets
 from persepolis.scripts import download
+from PyQt5.QtGui import QIcon
+import subprocess
 import platform
 import time
-import os
 
 os_type = platform.system()
 
@@ -95,6 +95,12 @@ class ProgressWindow(ProgressWindow_Ui):
         self.resize(size)
         self.move(position)
 
+    # close window with ESC key
+    def keyPressEvent(self, event):
+        if event.key() == Qt.Key_Escape:
+            self.close()
+
+
     def closeEvent(self, event):
         # save window size and position
         self.persepolis_setting.setValue('ProgressWindow/size', self.size())
@@ -104,11 +110,13 @@ class ProgressWindow(ProgressWindow_Ui):
         self.hide()
 
     def resumePushButtonPressed(self, button):
+
         if self.status == "paused":
             answer = download.downloadUnpause(self.gid)
-# if aria2 did not respond , then this function is checking for aria2
-# availability , and if aria2 disconnected then aria2Disconnected is
-# executed
+
+            # if aria2 did not respond , then this function is checking for aria2
+            # availability , and if aria2 disconnected then aria2Disconnected is
+            # executed
             if not(answer):
                 version_answer = download.aria2Version()
                 if version_answer == 'did not respond':
@@ -120,11 +128,13 @@ class ProgressWindow(ProgressWindow_Ui):
                                'warning', parent=self.parent)
 
     def pausePushButtonPressed(self, button):
+
         if self.status == "downloading":
             answer = download.downloadPause(self.gid)
-# if aria2 did not respond , then this function is checking for aria2
-# availability , and if aria2 disconnected then aria2Disconnected is
-# executed
+
+            # if aria2 did not respond , then this function is checking for aria2
+            # availability , and if aria2 disconnected then aria2Disconnected is
+            # executed
             if not(answer):
                 version_answer = download.aria2Version()
                 if version_answer == 'did not respond':
@@ -133,20 +143,21 @@ class ProgressWindow(ProgressWindow_Ui):
                     notifySend("Aria2 disconnected!", "Persepolis is trying to connect! be patient!",
                                10000, 'warning', parent=self.parent)
                 else:
-                    notifySend(QCoreApplication.translate("progress_src_ui_tr", "Aria2 did not respond!"), QCoreApplication.translate("progress_src_ui_tr", "Try agian!"), 10000,
+                    notifySend(QCoreApplication.translate("progress_src_ui_tr", "Aria2 did not respond!"), QCoreApplication.translate("progress_src_ui_tr", "Try again!"), 10000,
                                'critical', parent=self.parent)
 
     def stopPushButtonPressed(self, button):
+
         dict = {'gid': self.gid,
                 'shutdown': 'canceled'}
 
         self.parent.temp_db.updateSingleTable(dict)
 
-
         answer = download.downloadStop(self.gid, self.parent)
-# if aria2 did not respond , then this function is checking for aria2
-# availability , and if aria2 disconnected then aria2Disconnected is
-# executed
+
+        # if aria2 did not respond , then this function is checking for aria2
+        # availability , and if aria2 disconnected then aria2Disconnected is
+        # executed
         if answer == 'None':
             version_answer = download.aria2Version()
             if version_answer == 'did not respond':
@@ -197,33 +208,54 @@ class ProgressWindow(ProgressWindow_Ui):
         self.after_pushButton.setEnabled(False)
 
         if os_type != 'Windows':  # For Linux and Mac OSX and FreeBSD and OpenBSD
+
             # get root password
             passwd, ok = QInputDialog.getText(
-                self, 'PassWord', 'Please enter root password:', QtWidgets.QLineEdit.Password)
+                self, 'PassWord', 'Please enter root password:', QLineEdit.Password)
+
             if ok:
                 # check password is true or not!
-                answer = os.system("echo '" + passwd +
-                                   "' |sudo -S echo 'checking passwd'  ")
+                pipe = subprocess.Popen(['sudo', '-S', 'echo', 'hello'],
+                                        stdout=subprocess.DEVNULL,
+                                        stdin=subprocess.PIPE,
+                                        stderr=subprocess.DEVNULL,
+                                        shell=False)
+
+                pipe.communicate(passwd.encode())
+
+                answer = pipe.wait()
+
                 # Wrong password
                 while answer != 0:
+
                     passwd, ok = QInputDialog.getText(
-                        self, 'PassWord', 'Wrong Password!\nPlease try again.', QtWidgets.QLineEdit.Password)
+                        self, 'PassWord', 'Wrong Password!\nPlease try again.', QLineEdit.Password)
+
                     if ok:
-                        answer = os.system(
-                            "echo '" + passwd + "' |sudo -S echo 'checking passwd'  ")
+                        # checking password
+                        pipe = subprocess.Popen(['sudo', '-S', 'echo', 'hello'],
+                                                stdout=subprocess.DEVNULL,
+                                                stdin=subprocess.PIPE,
+                                                stderr=subprocess.DEVNULL,
+                                                shell=False)
+
+                        pipe.communicate(passwd.encode())
+
+                        answer = pipe.wait()
+
                     else:
                         ok = False
                         break
 
                 if ok != False:
 
-                # if user selects shutdown option after download progress, 
-                # value of 'shutdown' will changed in temp_db for this gid
-                # and "wait" word will be written for this value.
-                # (see ShutDownThread and shutdown.py for more information)
-                # shutDown method will check that value in a loop .
-                # when "wait" changes to "shutdown" then shutdown.py script
-                # will shut down the system.
+                    # if user selects shutdown option after download progress,
+                    # value of 'shutdown' will changed in temp_db for this gid
+                    # and "wait" word will be written for this value.
+                    # (see ShutDownThread and shutdown.py for more information)
+                    # shutDown method will check that value in a loop .
+                    # when "wait" changes to "shutdown" then shutdown.py script
+                    # will shut down the system.
                     shutdown_enable = ShutDownThread(self.parent, self.gid, passwd)
                     self.parent.threadPool.append(shutdown_enable)
                     self.parent.threadPool[len(self.parent.threadPool) - 1].start()
@@ -244,8 +276,9 @@ class ProgressWindow(ProgressWindow_Ui):
             limit_value = str(self.limit_spinBox.value()) + str("K")
         else:
             limit_value = str(self.limit_spinBox.value()) + str("M")
-# if download was started before , send the limit_speed request to aria2 .
-# else save the request in data_base
+
+    # if download was started before , send the limit_speed request to aria2 .
+    # else save the request in data_base
 
         if self.status != 'scheduled':
             download.limitSpeed(self.gid, limit_value)
@@ -254,4 +287,9 @@ class ProgressWindow(ProgressWindow_Ui):
             add_link_dictionary = {'gid': self.gid, 'limit_value': limit_value}
             self.parent.persepolis_db.updateAddLinkTable([add_link_dictionary])
 
+    def changeIcon(self, icons):
+        icons = ':/' + str(icons) + '/'
 
+        self.resume_pushButton.setIcon(QIcon(icons + 'play'))
+        self.pause_pushButton.setIcon(QIcon(icons + 'pause'))
+        self.stop_pushButton.setIcon(QIcon(icons + 'stop'))

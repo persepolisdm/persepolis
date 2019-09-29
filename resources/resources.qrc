@@ -1,79 +1,9 @@
 <!DOCTYPE RCC><RCC version="1.0">
 	<qresource prefix="/">
 
+        <file>translators.txt</file>
         <file>persepolis.svg</file>
         <file>persepolis-tray.svg</file>
-
-		<file>Archdroid-Blue/about.svg</file>		
-		<file>Archdroid-Blue/add.svg</file>		
-		<file>Archdroid-Blue/exit.svg</file>		
-		<file>Archdroid-Blue/folder.svg</file>		
-		<file>Archdroid-Blue/minimize.svg</file>		
-		<file>Archdroid-Blue/ok.svg</file>		
-		<file>Archdroid-Blue/pause.svg</file>		
-		<file>Archdroid-Blue/play.svg</file>		
-		<file>Archdroid-Blue/preferences.svg</file>		
-		<file>Archdroid-Blue/remove.svg</file>		
-		<file>Archdroid-Blue/setting.svg</file>		
-		<file>Archdroid-Blue/stop.svg</file>		
-		<file>Archdroid-Blue/stop_all.svg</file>		
-		<file>Archdroid-Blue/trash.svg</file>		
-		<file>Archdroid-Blue/window.svg</file>		
-		<file>Archdroid-Blue/file.svg</file>		
-        <file>Archdroid-Blue/multi_remove.svg</file>	
-        <file>Archdroid-Blue/multi_trash.svg</file>	
-        <file>Archdroid-Blue/select_all.svg</file>	
-        <file>Archdroid-Blue/add_queue.svg</file>	
-        <file>Archdroid-Blue/start_queue.svg</file>	
-        <file>Archdroid-Blue/stop_queue.svg</file>	
-        <file>Archdroid-Blue/pause_queue.svg</file>	
-        <file>Archdroid-Blue/remove_queue.svg</file>	
-        <file>Archdroid-Blue/menu.svg</file>	
-        <file>Archdroid-Blue/up.svg</file>	
-        <file>Archdroid-Blue/down.svg</file>	
-        <file>Archdroid-Blue/multi_up.svg</file>	
-        <file>Archdroid-Blue/multi_down.svg</file>	
-        <file>Archdroid-Blue/clipboard.svg</file>	
-        <file>Archdroid-Blue/refresh.svg</file>
-        <file>Archdroid-Blue/video_finder.svg</file>
-		
-
-
-
-		<file>Archdroid-Red/about.svg</file>		
-		<file>Archdroid-Red/add.svg</file>		
-		<file>Archdroid-Red/exit.svg</file>		
-		<file>Archdroid-Red/folder.svg</file>		
-		<file>Archdroid-Red/minimize.svg</file>		
-		<file>Archdroid-Red/ok.svg</file>		
-		<file>Archdroid-Red/pause.svg</file>		
-		<file>Archdroid-Red/play.svg</file>		
-		<file>Archdroid-Red/preferences.svg</file>		
-		<file>Archdroid-Red/remove.svg</file>		
-		<file>Archdroid-Red/setting.svg</file>		
-		<file>Archdroid-Red/stop.svg</file>		
-		<file>Archdroid-Red/stop_all.svg</file>		
-		<file>Archdroid-Red/trash.svg</file>		
-		<file>Archdroid-Red/window.svg</file>		
-		<file>Archdroid-Red/file.svg</file>		
-        <file>Archdroid-Red/multi_remove.svg</file>	
-        <file>Archdroid-Red/multi_trash.svg</file>	
-        <file>Archdroid-Red/select_all.svg</file>	
-        <file>Archdroid-Red/add_queue.svg</file>	
-        <file>Archdroid-Red/start_queue.svg</file>	
-        <file>Archdroid-Red/stop_queue.svg</file>	
-        <file>Archdroid-Red/pause_queue.svg</file>	
-        <file>Archdroid-Red/remove_queue.svg</file>	
-        <file>Archdroid-Red/menu.svg</file>	
-        <file>Archdroid-Red/up.svg</file>	
-        <file>Archdroid-Red/down.svg</file>	
-        <file>Archdroid-Red/multi_up.svg</file>	
-        <file>Archdroid-Red/multi_down.svg</file>	
-        <file>Archdroid-Red/clipboard.svg</file>	
-        <file>Archdroid-Red/refresh.svg</file>
-        <file>Archdroid-Red/video_finder.svg</file>
-
-
 		<file>Breeze/about.svg</file>		
 		<file>Breeze/add.svg</file>		
 		<file>Breeze/exit.svg</file>		
@@ -106,8 +36,6 @@
         <file>Breeze/clipboard.svg</file>	
         <file>Breeze/refresh.svg</file>
         <file>Breeze/video_finder.svg</file>
-
-
 
 		<file>Breeze-Dark/about.svg</file>		
 		<file>Breeze-Dark/add.svg</file>		
@@ -243,6 +171,37 @@
         <file>Papirus-Light/refresh.svg</file>
         <file>Papirus-Light/video_finder.svg</file>
 
+        <file>dark_style.qss</file>
+        <file>dark fusion/down_arrow_disabled.svg</file>
+        <file>dark fusion/down_arrow.svg</file>
+        <file>dark fusion/down_arrow_hover.svg</file>
+        <file>dark fusion/up_arrow_disabled.svg</file>
+        <file>dark fusion/up_arrow.svg</file>
+        <file>dark fusion/up_arrow_hover.svg</file>
+ 
+        <file>dark fusion/checkbox_checked_disabled.svg</file>
+        <file>dark fusion/checkbox_checked.svg</file>
+        <file>dark fusion/checkbox_indeterminate_disabled.svg</file>
+        <file>dark fusion/checkbox_indeterminate.svg</file>
+        <file>dark fusion/checkbox_unchecked_disabled.svg</file>
+        <file>dark fusion/checkbox_unchecked.svg</file>
+ 
+
+        <file>light_style.qss</file>
+        <file>light fusion/down_arrow_disabled.svg</file>
+        <file>light fusion/down_arrow.svg</file>
+        <file>light fusion/down_arrow_hover.svg</file>
+        <file>light fusion/up_arrow_disabled.svg</file>
+        <file>light fusion/up_arrow.svg</file>
+        <file>light fusion/up_arrow_hover.svg</file>
+ 
+        <file>light fusion/checkbox_checked_disabled.svg</file>
+        <file>light fusion/checkbox_checked.svg</file>
+        <file>light fusion/checkbox_indeterminate_disabled.svg</file>
+        <file>light fusion/checkbox_indeterminate.svg</file>
+        <file>light fusion/checkbox_unchecked_disabled.svg</file>
+        <file>light fusion/checkbox_unchecked.svg</file>
+
 		
 
 	</qresource>
@@ -251,93 +210,16 @@
         <file>locales/ui_fa_IR.qm</file>
         <file>locales/ui_zh_CN.qm</file>
         <file>locales/ui_fr_FR.qm</file>
+        <file>locales/ui_pl_PL.qm</file>
+        <file>locales/ui_nl_NL.qm</file>
+        <file>locales/ui_es_ES.qm</file>
+        <file>locales/ui_pt_BR.qm</file>
+        <file>locales/ui_ar.qm</file>
+        <file>locales/ui_hu.qm</file>
+        <file>locales/ui_tr.qm</file>
+        <file>locales/ui_tr_TR.qm</file>
 
 	</qresource>	
 
-
-    <qresource>
-
-        <file>light-style/hmovetoolbar.svg</file>
-        <file>light-style/vmovetoolbar.svg</file>
-        <file>light-style/hsepartoolbar.svg</file>
-        <file>light-style/vsepartoolbars.svg</file>
-        <file>light-style/stylesheet-branch-end.svg</file>
-        <file>light-style/stylesheet-vline.svg</file>
-        <file>light-style/stylesheet-branch-more.svg</file>
-        <file>light-style/branch_closed.svg</file>
-        <file>light-style/branch_closed-on.svg</file>
-        <file>light-style/branch_open.svg</file>
-        <file>light-style/branch_open-on.svg</file>
-        <file>light-style/down_arrow.svg</file>
-        <file>light-style/down_arrow_disabled.svg</file>
-        <file>light-style/down_arrow-hover.svg</file>
-        <file>light-style/left_arrow.svg</file>
-        <file>light-style/left_arrow_disabled.svg</file>
-        <file>light-style/right_arrow.svg</file>
-        <file>light-style/right_arrow_disabled.svg</file>
-        <file>light-style/up_arrow.svg</file>
-        <file>light-style/up_arrow_disabled.svg</file>
-        <file>light-style/up_arrow-hover.svg</file>
-        <file>light-style/sizegrip.svg</file>
-        <file>light-style/transparent.svg</file>
-        <file>light-style/close.svg</file>
-        <file>light-style/close-hover.svg</file>
-        <file>light-style/close-pressed.svg</file>
-        <file>light-style/undock.svg</file>
-        <file>light-style/undock-hover.svg</file>
-        <file>light-style/checkbox_checked-hover.svg</file>
-        <file>light-style/checkbox_checked.svg</file>
-        <file>light-style/checkbox_checked_disabled.svg</file>
-        <file>light-style/checkbox_indeterminate.svg</file>
-        <file>light-style/checkbox_indeterminate-hover.svg</file>
-        <file>light-style/checkbox_indeterminate_disabled.svg</file>
-        <file>light-style/checkbox_unchecked-hover.svg</file>
-        <file>light-style/checkbox_unchecked_disabled.svg</file>
-        <file>light-style/radio_checked-hover.svg</file>
-        <file>light-style/radio_checked.svg</file>
-        <file>light-style/radio_checked_disabled.svg</file>
-        <file>light-style/radio_unchecked-hover.svg</file>
-        <file>light-style/radio_unchecked_disabled.svg</file>
-        <file>dark-style/hmovetoolbar.svg</file>
-        <file>dark-style/vmovetoolbar.svg</file>
-        <file>dark-style/hsepartoolbar.svg</file>
-        <file>dark-style/vsepartoolbars.svg</file>
-        <file>dark-style/stylesheet-branch-end.svg</file>
-        <file>dark-style/stylesheet-vline.svg</file>
-        <file>dark-style/stylesheet-branch-more.svg</file>
-        <file>dark-style/branch_closed.svg</file>
-        <file>dark-style/branch_closed-on.svg</file>
-        <file>dark-style/branch_open.svg</file>
-        <file>dark-style/branch_open-on.svg</file>
-        <file>dark-style/down_arrow.svg</file>
-        <file>dark-style/down_arrow_disabled.svg</file>
-        <file>dark-style/down_arrow-hover.svg</file>
-        <file>dark-style/left_arrow.svg</file>
-        <file>dark-style/left_arrow_disabled.svg</file>
-        <file>dark-style/right_arrow.svg</file>
-        <file>dark-style/right_arrow_disabled.svg</file>
-        <file>dark-style/up_arrow.svg</file>
-        <file>dark-style/up_arrow_disabled.svg</file>
-        <file>dark-style/up_arrow-hover.svg</file>
-        <file>dark-style/sizegrip.svg</file>
-        <file>dark-style/transparent.svg</file>
-        <file>dark-style/close.svg</file>
-        <file>dark-style/close-hover.svg</file>
-        <file>dark-style/close-pressed.svg</file>
-        <file>dark-style/undock.svg</file>
-        <file>dark-style/undock-hover.svg</file>
-        <file>dark-style/checkbox_checked.svg</file>
-        <file>dark-style/checkbox_checked_disabled.svg</file>
-        <file>dark-style/checkbox_indeterminate.svg</file>
-        <file>dark-style/checkbox_indeterminate_disabled.svg</file>
-        <file>dark-style/checkbox_unchecked.svg</file>
-        <file>dark-style/checkbox_unchecked_disabled.svg</file>
-        <file>dark-style/radio_checked.svg</file>
-        <file>dark-style/radio_checked_disabled.svg</file>
-        <file>dark-style/radio_unchecked.svg</file>
-        <file>dark-style/radio_unchecked_disabled.svg</file>
-        <file>light_style.qss</file>
-        <file>dark_style.qss</file>
-    </qresource>
 
 </RCC>

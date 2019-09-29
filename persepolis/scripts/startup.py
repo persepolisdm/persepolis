@@ -66,11 +66,13 @@ def checkstartup():
             return False
 
 # add startup file
+
+
 def addstartup():
     # check if it is linux
     if os_type == 'Linux' or os_type == 'FreeBSD' or os_type == 'OpenBSD':
         entry = \
-'''[Desktop Entry]
+            '''[Desktop Entry]
 Name=Persepolis Download Manager
 Name[fa]=پرسپولیس
 Comment=Download Manager

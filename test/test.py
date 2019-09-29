@@ -22,21 +22,19 @@ import platform
 os_type = platform.system()
 
 # Don't run persepolis as root!
-if os_type == 'Linux' or os_type == 'FreeBSD'  or os_type == 'OpenBSD' or os_type == 'Darwin':
+if os_type == 'Linux' or os_type == 'FreeBSD' or os_type == 'OpenBSD' or os_type == 'Darwin':
     uid = os.getuid()
     if uid == 0:
         print('Do not run persepolis as root.')
         sys.exit(1)
 
 
-
 cwd = os.path.abspath(__file__)
 run_dir = os.path.dirname(cwd)
 # if persepolis run in test folder
 print('persepolis is running from test folder')
-parent_dir = os.path.dirname(run_dir) 
+parent_dir = os.path.dirname(run_dir)
 
 sys.path.insert(0, parent_dir)
-
 
 from persepolis import __main__

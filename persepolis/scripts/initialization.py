@@ -16,31 +16,22 @@
 
 # THIS FILE CONTAINING SOME VARIABLES , ... THAT USING FOR INITIALIZING PERSEPOLIS
 
+from persepolis.scripts.useful_tools import determineConfigFolder, returnDefaultSettings
 from persepolis.scripts.browser_integration import browserIntegration
-from persepolis.scripts.useful_tools import determineConfigFolder
 from persepolis.scripts import osCommands
 from PyQt5.QtCore import QSettings
 import subprocess
-import platform
 import shutil
 import time
 import os
 
 # initialization
 
-# user home address
-home_address = os.path.expanduser("~")
-
-# os_type >> Linux or Darwin(Mac osx) or Windows(Microsoft Windows) or
-# FreeBSD or OpenBSD
-os_type = platform.system()
-
 # download manager config folder .
-config_folder = determineConfigFolder(os_type, home_address)
+config_folder = determineConfigFolder()
 
 # persepolis tmp folder path
 persepolis_tmp = os.path.join(config_folder, 'persepolis_tmp')
-
 
 # create folders
 for folder in [config_folder, persepolis_tmp]:
@@ -55,19 +46,20 @@ log_file = os.path.join(str(config_folder), 'persepolisdm.log')
 # get current time
 current_time = time.strftime('%Y/%m/%d %H:%M:%S')
 
-# find number of lines in log_file. 
+# find number of lines in log_file.
 with open(log_file) as f:
     lines = sum(1 for _ in f)
 
 # if number of lines in log_file is more than 300, then keep last 200 lines in log_file.
 if lines < 300:
     f = open(log_file, 'a')
-    f.writelines('Persepolis Download Manager, '\
-            + current_time\
-            +'\n')
+    f.writelines('===================================================\n'
+                 + 'Persepolis Download Manager, '
+                 + current_time
+                 + '\n')
     f.close()
 else:
-# keep last 200 lines
+    # keep last 200 lines
     line_num = lines - 200
     f = open(log_file, 'r')
     f_lines = f.readlines()
@@ -83,11 +75,10 @@ else:
     f.close()
 
     f = open(log_file, 'a')
-    f.writelines('Persepolis Download Manager, '\
-            + current_time\
-            +'\n')
+    f.writelines('Persepolis Download Manager, '
+                 + current_time
+                 + '\n')
     f.close()
-
 
 from persepolis.scripts.data_base import PersepolisDB, PluginsDB
 
@@ -121,24 +112,7 @@ persepolis_setting = QSettings('persepolis_download_manager', 'persepolis')
 
 persepolis_setting.beginGroup('settings')
 
-# download files is downloading in temporary folder(download_path_temp) and then they will be moved to user download folder(download_path) after completion.
-# persepolis temporary download folder
-if os_type != 'Windows':
-    download_path_temp = str(home_address) + '/.persepolis'
-else:
-    download_path_temp = os.path.join(
-        str(home_address), 'AppData', 'Local', 'persepolis')
-
-# user download folder path    
-download_path = os.path.join(str(home_address), 'Downloads', 'Persepolis')
-
-# Persepolis default setting
-default_setting_dict = {'locale': 'en_US', 'toolbar_icon_size': 32, 'wait-queue': [0, 0], 'awake': 'no', 'custom-font': 'no', 'column0': 'yes', 'column1': 'yes', 'column2': 'yes', 'column3': 'yes', 'column4': 'yes', 'column5': 'yes', 'column6': 'yes', 'column7': 'yes', 'column10': 'yes', 'column11': 'yes', 'column12': 'yes',
-                             'subfolder': 'yes', 'startup': 'no', 'show-progress': 'yes', 'show-menubar': 'no', 'show-sidepanel': 'yes', 'rpc-port': 6801, 'notification': 'Native notification', 'after-dialog': 'yes', 'tray-icon': 'yes',
-                             'max-tries': 5, 'retry-wait': 0, 'timeout': 60, 'connections': 16, 'download_path_temp': download_path_temp, 'download_path': download_path, 'sound': 'yes', 'sound-volume': 100, 'style': 'Fusion',
-                             'color-scheme': 'Persepolis Light Blue', 'icons': 'Breeze', 'font': 'Ubuntu', 'font-size': 9, 'aria2_path': '', 
-                             'video_finder/enable': 'yes', 'video_finder/hide_no_audio': 'yes', 'video_finder/hide_no_video': 'yes', 'video_finder/max_links': '3'}
-
+default_setting_dict = returnDefaultSettings()
 # this loop is checking values in persepolis_setting . if value is not
 # valid then value replaced by default_setting_dict value
 for key in default_setting_dict.keys():
@@ -146,6 +120,7 @@ for key in default_setting_dict.keys():
     setting_value = persepolis_setting.value(key, default_setting_dict[key])
     persepolis_setting.setValue(key, setting_value)
 
+# download files is downloading in temporary folder(download_path_temp) and then they will be moved to user download folder(download_path) after completion.
 # Check that mount point is available of not!
 if not(os.path.exists(persepolis_setting.value('download_path_temp'))):
     persepolis_setting.setValue('download_path_temp', default_setting_dict['download_path_temp'])
@@ -178,17 +153,32 @@ persepolis_setting.endGroup()
 
 # Browser integration for Firefox and chromium and google chrome
 for browser in ['chrome', 'chromium', 'opera', 'vivaldi', 'firefox']:
-    browserIntegration(browser)
+    json_done, native_done = browserIntegration(browser)
 
+    log_message = browser
+
+    if json_done == True:
+        log_message = log_message + ': ' + 'Json file is created successfully.\n'
+
+    else:
+        log_message = log_message + ': ' + 'Json ERROR!\n'
+
+    if native_done == True:
+        log_message = log_message + 'persepolis executer file is created successfully.\n'
+
+    elif native_done == False:
+        log_message = log_message + ': ' + 'persepolis executer file ERROR!\n'
+
+    logger.sendToLog(log_message)
 
 # get locale and set ui direction
 locale = str(persepolis_setting.value('settings/locale'))
 
 # right to left languages
-rtl_locale_list = ['fa_IR']
+rtl_locale_list = ['fa_IR', 'ar']
 
 # left to right languages
-ltr_locale_list = ['en_US', 'zh_CN', 'fr_FR']
+ltr_locale_list = ['en_US', 'zh_CN', 'fr_FR', 'pl_PL', 'nl_NL', 'pt_BR', 'es_ES', 'hu', 'tr', 'tr_TR']
 
 if locale in rtl_locale_list:
     persepolis_setting.setValue('ui_direction', 'rtl')
@@ -216,25 +206,11 @@ if persepolis_version < 2.6:
         logger.sendToLog(
             "compatibility ERROR!", "ERROR")
         logger.sendToLog(
-                str(e), "ERROR")
-
+            str(e), "ERROR")
 
     persepolis_version = 2.6
 
-if persepolis_version < 3.0:
-    persepolis_setting.beginGroup('settings')
-
-    for key in default_setting_dict.keys():
-
-        setting_value = default_setting_dict[key]
-        persepolis_setting.setValue(key, setting_value)
-
-    persepolis_setting.endGroup()
-
-
-    persepolis_setting.setValue('version/version', 3.0)
-
-if persepolis_version != 3.1:
+if persepolis_version < 3.1:
     # create an object for PersepolisDB
     persepolis_db = PersepolisDB()
 
@@ -244,8 +220,18 @@ if persepolis_version != 3.1:
     # close connections
     persepolis_db.closeConnections()
 
-persepolis_setting.setValue('version/version', 3.1)
+    persepolis_version = 3.1
 
+if persepolis_version < 3.2:
+    persepolis_setting.beginGroup('settings')
+
+    for key in default_setting_dict.keys():
+
+        setting_value = default_setting_dict[key]
+        persepolis_setting.setValue(key, setting_value)
+
+    persepolis_setting.endGroup()
+
+    persepolis_setting.setValue('version/version', 3.2)
 
 persepolis_setting.sync()
-

@@ -16,215 +16,83 @@
 from PyQt5.QtGui import QPalette, QColor
 from PyQt5.QtCore import Qt
 
-
-class DarkRedPallete(QPalette):
+class DarkFusionPalette(QPalette):
     def __init__(self):
         super().__init__()
-        # 53 53 53 is gray
-        self.setColor(QPalette.Window, QColor(53, 53, 53))
-        # light gray
-        self.setColor(QPalette.WindowText, QColor(174, 167, 159))
-        # gray
-        self.setColor(QPalette.Base, QColor(63, 63, 63))
-        # gray
-        self.setColor(QPalette.AlternateBase, QColor(53, 53, 53))
+        self.setColor(QPalette.Window, QColor(56, 56, 56))
+
+        self.setColor(QPalette.WindowText, Qt.white)
+
+        self.setColor(QPalette.Base, QColor(56, 56, 56))
+
+        self.setColor(QPalette.AlternateBase, QColor(63, 63, 63))
         self.setColor(QPalette.ToolTipBase, Qt.white)
         self.setColor(QPalette.ToolTipText, Qt.white)
-        # light gray
-        self.setColor(QPalette.Text, QColor(174, 167, 159))
 
-        # gray
-        self.setColor(QPalette.Button, QColor(53, 53, 53))
-        # light gray
-        self.setColor(QPalette.ButtonText, QColor(174, 167, 159))
-        # numix red
-        self.setColor(QPalette.BrightText, QColor(214, 73, 55))
-        # blue
+        self.setColor(QPalette.Text, Qt.white)
+
+        self.setColor(QPalette.Button, QColor(56, 56, 56))
+
+        self.setColor(QPalette.ButtonText, Qt.white)
+
+        self.setColor(QPalette.BrightText, QColor(0, 128, 152))
+
         self.setColor(QPalette.Link, QColor(42, 130, 218))
-        # numix red
-        self.setColor(QPalette.Highlight, QColor(214, 73, 55))
+
+        self.setColor(QPalette.Highlight, QColor(0, 128, 152))
+
         self.setColor(QPalette.HighlightedText, Qt.white)
 
         self.setColor(QPalette.Disabled, QPalette.Window, QColor(51, 51, 51))
+
         self.setColor(QPalette.Disabled, QPalette.ButtonText,
-                      QColor(51, 51, 51))
+                      QColor(111, 111, 111))
+
         self.setColor(QPalette.Disabled, QPalette.Text, QColor(122, 118, 113))
+
         self.setColor(QPalette.Disabled, QPalette.WindowText,
                       QColor(122, 118, 113))
+
         self.setColor(QPalette.Disabled, QPalette.Base, QColor(32, 32, 32))
 
 
-class DarkBluePallete(QPalette):
+class LightFusionPalette(QPalette):
     def __init__(self):
         super().__init__()
-        self.setColor(QPalette.Window, QColor(53, 53, 53))
-        self.setColor(QPalette.WindowText, QColor(174, 167, 159))
-        self.setColor(QPalette.Base, QColor(63, 63, 63))
-        self.setColor(QPalette.AlternateBase, QColor(53, 53, 53))
-        self.setColor(QPalette.ToolTipBase, Qt.white)
-        self.setColor(QPalette.ToolTipText, Qt.white)
-        self.setColor(QPalette.Text, QColor(174, 167, 159))
-        self.setColor(QPalette.Button, QColor(53, 53, 53))
-        self.setColor(QPalette.ButtonText, QColor(174, 167, 159))
-        # blue
-        self.setColor(QPalette.BrightText, QColor(42, 130, 218))
+        # EFF0F1 
+        self.setColor(QPalette.Window, QColor(239, 240, 241))
+
+        self.setColor(QPalette.WindowText, QColor(49, 54, 59))
+
+        self.setColor(QPalette.Base, QColor(239, 240, 241))
+
+        self.setColor(QPalette.AlternateBase, QColor(63, 63, 63))
+        self.setColor(QPalette.ToolTipBase, QColor(49, 54, 59))
+        self.setColor(QPalette.ToolTipText, QColor(49, 54, 59))
+
+        self.setColor(QPalette.Text, QColor(49, 54, 59))
+
+        self.setColor(QPalette.Button, QColor(239, 240, 241))
+
+        self.setColor(QPalette.ButtonText, QColor(49, 54, 59))
+
+        self.setColor(QPalette.BrightText, QColor(110, 197, 244))
+
         self.setColor(QPalette.Link, QColor(42, 130, 218))
-        self.setColor(QPalette.Highlight, QColor(42, 130, 218))
-        self.setColor(QPalette.HighlightedText, Qt.white)
 
-        self.setColor(QPalette.Disabled, QPalette.Window, QColor(51, 51, 51))
-        self.setColor(QPalette.Disabled, QPalette.ButtonText,
-                      QColor(51, 51, 51))
-        self.setColor(QPalette.Disabled, QPalette.Text, QColor(122, 118, 113))
-        self.setColor(QPalette.Disabled, QPalette.WindowText,
-                      QColor(122, 118, 113))
-        self.setColor(QPalette.Disabled, QPalette.Base, QColor(32, 32, 32))
+        self.setColor(QPalette.Highlight, QColor(110, 197, 244))
 
+        self.setColor(QPalette.HighlightedText, QColor(49, 54, 59))
 
-class ArcDarkRedPallete(QPalette):
-    def __init__(self):
-        super().__init__()
-        # gray
-        self.setColor(QPalette.Window, QColor(53, 57, 69))
-        # light gray
-        self.setColor(QPalette.WindowText, QColor(174, 167, 159))
-        # gray
-        self.setColor(QPalette.Base, QColor(64, 69, 82))
-        # gray
-        self.setColor(QPalette.AlternateBase, QColor(56, 60, 74))
-        self.setColor(QPalette.ToolTipBase, Qt.white)
-        self.setColor(QPalette.ToolTipText, Qt.white)
-        # light gray
-        self.setColor(QPalette.Text, QColor(174, 167, 159))
-        # gray
-        self.setColor(QPalette.Button, QColor(64, 69, 82))
-        # light gray
-        self.setColor(QPalette.ButtonText, QColor(174, 167, 159))
-        # Arck red
-        self.setColor(QPalette.BrightText, QColor(191, 71, 77))
-        # blue
-        self.setColor(QPalette.Link, QColor(42, 130, 218))
-        # Arc red
-        self.setColor(QPalette.Highlight, QColor(191, 71, 77))
-        self.setColor(QPalette.HighlightedText, Qt.white)
-
-        self.setColor(QPalette.Disabled, QPalette.Window, QColor(51, 51, 51))
-        self.setColor(QPalette.Disabled, QPalette.ButtonText,
-                      QColor(51, 51, 51))
-        self.setColor(QPalette.Disabled, QPalette.Text, QColor(120, 133, 148))
-        self.setColor(QPalette.Disabled, QPalette.WindowText,
-                      QColor(120, 133, 148))
-        self.setColor(QPalette.Disabled, QPalette.Base, QColor(32, 32, 32))
-
-
-class ArcDarkBluePallete(QPalette):
-    def __init__(self):
-        super().__init__()
-        # gray
-        self.setColor(QPalette.Window, QColor(53, 57, 69))
-        # light gray
-        self.setColor(QPalette.WindowText, QColor(174, 167, 159))
-        # gray
-        self.setColor(QPalette.Base, QColor(64, 69, 82))
-        # gray
-        self.setColor(QPalette.AlternateBase, QColor(56, 60, 74))
-        self.setColor(QPalette.ToolTipBase, Qt.white)
-        self.setColor(QPalette.ToolTipText, Qt.white)
-        # light gray
-        self.setColor(QPalette.Text, QColor(174, 167, 159))
-        # gray
-        self.setColor(QPalette.Button, QColor(64, 69, 82))
-        # light gray
-        self.setColor(QPalette.ButtonText, QColor(174, 167, 159))
-        # Arck red
-        self.setColor(QPalette.BrightText, QColor(191, 71, 77))
-        # blue
-        self.setColor(QPalette.Link, QColor(42, 130, 218))
-        # Arc Blue
-        self.setColor(QPalette.Highlight, QColor(82, 148, 226))
-        self.setColor(QPalette.HighlightedText, Qt.white)
-
-        self.setColor(QPalette.Disabled, QPalette.Window, QColor(51, 51, 51))
-        self.setColor(QPalette.Disabled, QPalette.ButtonText,
-                      QColor(51, 51, 51))
-        self.setColor(QPalette.Disabled, QPalette.Text, QColor(120, 133, 148))
-        self.setColor(QPalette.Disabled, QPalette.WindowText,
-                      QColor(120, 133, 148))
-        self.setColor(QPalette.Disabled, QPalette.Base, QColor(32, 32, 32))
-
-
-class LightRedPallete(QPalette):
-    def __init__(self):
-        super().__init__()
-        #light gray
-        self.setColor(QPalette.Window, QColor(237, 239, 243))
-        #0 0 0 is black
-        self.setColor(QPalette.WindowText, Qt.black)
-        #255 255 255 is white
-        self.setColor(QPalette.Base, Qt.white)
-        #gray
-        self.setColor(QPalette.AlternateBase, QColor(237, 239, 243))
-        self.setColor(QPalette.ToolTipBase, Qt.white)
-        self.setColor(QPalette.ToolTipText, Qt.white)
-        # light gray
-        self.setColor(QPalette.Text, Qt.black)
-
-        # gray
-        self.setColor(QPalette.Button, QColor(237, 239, 243))
-        # light gray
-        self.setColor(QPalette.ButtonText, Qt.black)
-        # numix red
-        self.setColor(QPalette.BrightText, QColor(214, 73, 55))
-        # blue
-        self.setColor(QPalette.Link, QColor(42, 130, 218))
-        # numix red
-        self.setColor(QPalette.Highlight, QColor(214, 73, 55))
-        self.setColor(QPalette.HighlightedText, Qt.white)
-
-        self.setColor(QPalette.Disabled, QPalette.Window, QColor(237, 239, 243))
+        self.setColor(QPalette.Disabled, QPalette.Window, QColor(227, 227, 227))
 
         self.setColor(QPalette.Disabled, QPalette.ButtonText,
-                      QColor(51, 51, 51))
-        self.setColor(QPalette.Disabled, QPalette.Text, QColor(122, 118, 113))
+                      QColor(111, 111, 111))
+
+        self.setColor(QPalette.Disabled, QPalette.Text, QColor(111, 111, 111))
+
         self.setColor(QPalette.Disabled, QPalette.WindowText,
-                      QColor(122, 118, 113))
-        self.setColor(QPalette.Disabled, QPalette.Base, QColor(237, 239, 243))
+                      QColor(111, 111, 111))
 
-class LightBluePallete(QPalette):
-    def __init__(self):
-        super().__init__()
-        # light gray
-        self.setColor(QPalette.Window, QColor(237, 239, 243))
-        # 0 0 0 is black
-        self.setColor(QPalette.WindowText, Qt.black)
-        # 255 255 255 is white
-        self.setColor(QPalette.Base, Qt.white)
-        # gray
-        self.setColor(QPalette.AlternateBase, QColor(237, 239, 243))
-        self.setColor(QPalette.ToolTipBase, Qt.white)
-        self.setColor(QPalette.ToolTipText, Qt.white)
-        # light gray
-        self.setColor(QPalette.Text, Qt.black)
+        self.setColor(QPalette.Disabled, QPalette.Base, QColor(227, 227, 227))
 
-        # gray
-        self.setColor(QPalette.Button, QColor(237, 239, 243))
-        # light gray
-        self.setColor(QPalette.ButtonText, Qt.black)
-        # numix blue
-        self.setColor(QPalette.BrightText, QColor(42, 130, 218))
-        # blue
-        self.setColor(QPalette.Link, QColor(42, 130, 218))
-        # numix blue
-        self.setColor(QPalette.Highlight, QColor(42, 130, 218))
-        self.setColor(QPalette.HighlightedText, Qt.white)
-
-        self.setColor(QPalette.Disabled, QPalette.Window, QColor(237, 239, 243))
-
-
-        self.setColor(QPalette.Disabled, QPalette.ButtonText, QColor(51, 51, 51))
-
-        self.setColor(QPalette.Disabled, QPalette.Text, QColor(122, 118, 113))
-
-        self.setColor(QPalette.Disabled, QPalette.WindowText, QColor(122, 118, 113))
-
-        self.setColor(QPalette.Disabled, QPalette.Base, QColor(237, 239, 243))

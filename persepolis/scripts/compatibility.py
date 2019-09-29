@@ -15,21 +15,14 @@
 
 from persepolis.scripts.useful_tools import determineConfigFolder
 from persepolis.scripts.osCommands import remove, removeDir
-from persepolis.scripts.data_base import PersepolisDB 
+from persepolis.scripts.data_base import PersepolisDB
 from persepolis.scripts.newopen import readList
-import platform
 import time
 import ast
 import os
 
-home_address = os.path.expanduser("~")
-
-# finding os platform
-os_type = platform.system()
-
-
 # config_folder
-config_folder = determineConfigFolder(os_type, home_address)
+config_folder = determineConfigFolder()
 
 download_info_folder = os.path.join(config_folder, "download_info")
 
@@ -56,11 +49,7 @@ queue_info_folder = os.path.join(config_folder, "queue_info")
 single_downloads_list_file = os.path.join(category_folder, "Single Downloads")
 
 
-
-
-
-
-# this script for compatibility between Version 2 and 3 
+# this script for compatibility between Version 2 and 3
 
 def compatibility():
     if os.path.isfile(queues_list_file):
@@ -81,12 +70,11 @@ def compatibility():
         queue_name = line.strip()
         category_list.append(queue_name)
 
-
     for category in category_list:
         gid_list = []
 
         if category == 'All Downloads':
-            category_info_file = download_list_file 
+            category_info_file = download_list_file
         else:
             category_info_file = os.path.join(category_folder, category)
 
@@ -97,19 +85,18 @@ def compatibility():
         for item in category_info_file_list:
             gid = item.strip()
             gid_list.append(gid)
-        
+
         category_dict = {'category': category,
-                    'start_time_enable': 'no',
-                    'start_time': '0:0',
-                    'end_time_enable': 'no',
-                    'end_time': '0:0',
-                    'reverse': 'no',
-                    'limit_enable': 'no',
-                    'limit_value': '0K',
-                    'after_download': 'no',
-                    'gid_list': str(gid_list) 
-                    }
-            
+                         'start_time_enable': 'no',
+                         'start_time': '0:0',
+                         'end_time_enable': 'no',
+                         'end_time': '0:0',
+                         'reverse': 'no',
+                         'limit_enable': 'no',
+                         'limit_value': '0K',
+                         'after_download': 'no',
+                         'gid_list': str(gid_list)
+                         }
 
         # add category to data_base
         if category == 'All Downloads' or category == 'Single Downloads':
@@ -139,7 +126,7 @@ def compatibility():
                 'estimate_time_left': download_info_file_list[7],
                 'gid': download_info_file_list[8],
                 'link': add_link_dictionary['link'],
-                'first_try_date': download_info_file_list[10], 
+                'first_try_date': download_info_file_list[10],
                 'last_try_date': download_info_file_list[11],
                 'category': download_info_file_list[12]}
 
@@ -148,40 +135,36 @@ def compatibility():
         if 'user-agent' in add_link_dictionary.keys():
             add_link_dictionary['user_agent'] = add_link_dictionary.pop('user-agent')
 
-
         if 'load-cookies' in add_link_dictionary.keys():
             add_link_dictionary['load_cookies'] = add_link_dictionary.pop('load-cookies')
 
         add_link_dictionary['limit_value'] = 0
 
-
-
         keys_list = ['gid',
-                    'out',
-                    'start_time',
-                    'end_time',
-                    'link',
-                    'ip',
-                    'port',
-                    'proxy_user',
-                    'proxy_passwd',
-                    'download_user',
-                    'download_passwd',
-                    'connections',
-                    'limit_value',
-                    'download_path',
-                    'referer',
-                    'load_cookies',
-                    'user_agent',
-                    'header',
-                    'after_download']
+                     'out',
+                     'start_time',
+                     'end_time',
+                     'link',
+                     'ip',
+                     'port',
+                     'proxy_user',
+                     'proxy_passwd',
+                     'download_user',
+                     'download_passwd',
+                     'connections',
+                     'limit_value',
+                     'download_path',
+                     'referer',
+                     'load_cookies',
+                     'user_agent',
+                     'header',
+                     'after_download']
 
-        for key in keys_list:  
-                # if a key is missed in dict, 
-                # then add this key to the dict and assign None value for the key. 
+        for key in keys_list:
+                # if a key is missed in dict,
+                # then add this key to the dict and assign None value for the key.
             if key not in add_link_dictionary.keys():
-                add_link_dictionary[key] = None 
-
+                add_link_dictionary[key] = None
 
         # write information in data_base
         persepolis_db.insertInDownloadTable([dict])
@@ -196,6 +179,3 @@ def compatibility():
 
     for folder in [category_folder, queue_info_folder]:
         removeDir(folder)
-
-
- 

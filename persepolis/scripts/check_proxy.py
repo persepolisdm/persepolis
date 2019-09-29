@@ -14,26 +14,26 @@
 #
 
 
-
+from persepolis.scripts.useful_tools import osAndDesktopEnvironment
 from persepolis.scripts import logger
 import subprocess
-import platform
 import requests
 import urllib
 import os
 
-# finding platform
-os_type = platform.system()
-platform = 'platform : ' + os_type
-logger.sendToLog(platform, "INFO")
-
-
 # get proxy function
+
+
 def getProxy():
     socks_proxy = False
 
-    # finding desktop environment
-    desktop = os.environ.get('XDG_CURRENT_DESKTOP')
+    # find os and desktop environment
+    os_type, desktop = osAndDesktopEnvironment()
+
+    # write in log
+    platform = 'platform : ' + os_type
+    logger.sendToLog(platform, "INFO")
+
     proxy = {}
     if os_type == 'Linux' or os_type == 'FreeBSD' or os_type == 'OpenBSD':
         if desktop is None:
@@ -89,7 +89,8 @@ def getProxy():
 
                 # get https proxy
                 try:
-                    proxy['https_proxy_port'] = proxysource['httpsProxy'].split(' ')[1].replace("/", "").replace("\n", "")
+                    proxy['https_proxy_port'] = proxysource['httpsProxy'].split(
+                        ' ')[1].replace("/", "").replace("\n", "")
                     proxy['https_proxy_ip'] = proxysource['httpsProxy'].split(' ')[0].split('//')[1]
                 except:
                     logger.sendToLog('no manuall https proxy detected', 'INFO')
@@ -115,21 +116,21 @@ def getProxy():
         proxysource = urllib.request.getproxies()
         # get http proxy
         try:
-            proxy['http_proxy_ip'] = proxysource['http'].split(':')[1].replace('//','')
+            proxy['http_proxy_ip'] = proxysource['http'].split(':')[1].replace('//', '')
             proxy['http_proxy_port'] = proxysource['http'].split(':')[2].replace("/", "").replace("\n", "")
         except:
             logger.sendToLog('no http proxy detected', 'INFO')
 
         # get https proxy
         try:
-            proxy['https_proxy_ip'] = proxysource['https'].split(':')[1].replace('//','')
+            proxy['https_proxy_ip'] = proxysource['https'].split(':')[1].replace('//', '')
             proxy['https_proxy_port'] = proxysource['https'].split(':')[2].replace("/", "").replace("\n", "")
         except:
             logger.sendToLog('no https proxy detected', 'INFO')
 
         # get ftp proxy
         try:
-            proxy['ftp_proxy_ip'] = proxysource['ftp'].split(':')[1].replace('//','')
+            proxy['ftp_proxy_ip'] = proxysource['ftp'].split(':')[1].replace('//', '')
             proxy['ftp_proxy_port'] = proxysource['ftp'].split(':')[2].replace("/", "").replace("\n", "")
         except:
             logger.sendToLog('no ftp proxy detected', 'INFO')

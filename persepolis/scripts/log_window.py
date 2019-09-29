@@ -16,17 +16,14 @@
 from persepolis.scripts.useful_tools import determineConfigFolder
 from persepolis.gui.log_window_ui import LogWindow_Ui
 from persepolis.scripts import osCommands
-from PyQt5.QtCore import QPoint, QSize
-from PyQt5 import QtCore, QtWidgets
-import platform
+from PyQt5.QtCore import Qt, QPoint, QSize
+from PyQt5.QtGui import QIcon
+from PyQt5 import QtWidgets
 import os
 
-os_type = platform.system()
-
-home_address = os.path.expanduser("~")
-
 # config_folder
-config_folder = determineConfigFolder(os_type, home_address)
+config_folder = determineConfigFolder()
+
 
 class LogWindow(LogWindow_Ui):
     def __init__(self, persepolis_setting):
@@ -86,8 +83,6 @@ class LogWindow(LogWindow_Ui):
         self.text_edit.clear()
         self.text_edit.insertPlainText(self.text)
 
-
-
     def reportPushButtonPressed(self, button):
         osCommands.xdgOpen('https://github.com/persepolisdm/persepolis/issues')
 
@@ -101,8 +96,8 @@ class LogWindow(LogWindow_Ui):
             self.copy_log_pushButton.setEnabled(False)
 
     def copyPushButtonPressed(self, button):
-#         clipboard = QApplication.clipboard()
-#         clipboard.setText(self.text)
+        #         clipboard = QApplication.clipboard()
+        #         clipboard.setText(self.text)
         self.text_edit.copy()
 
 # this method is refresh log messages in text_edit
@@ -118,13 +113,26 @@ class LogWindow(LogWindow_Ui):
         self.text_edit.clear()
         self.text_edit.insertPlainText(self.text)
 
+    # close window with ESC key
+    def keyPressEvent(self, event):
+        if event.key() == Qt.Key_Escape:
+            self.close()
+
 
     def closeEvent(self, event):
         self.layout().setSizeConstraint(QtWidgets.QLayout.SetDefaultConstraint)
-        self.setMinimumSize(QSize(self.width() , self.minimum_height))
-        self.resize(QSize(self.width() , self.minimum_height))
- 
+        self.setMinimumSize(QSize(self.width(), self.minimum_height))
+        self.resize(QSize(self.width(), self.minimum_height))
+
         self.persepolis_setting.setValue('LogWindow/size', self.size())
         self.persepolis_setting.setValue('LogWindow/position', self.pos())
         self.persepolis_setting.sync()
-        self.destroy()
+        event.accept()
+
+    def changeIcon(self, icons):
+        icons = ':/' + str(icons) + '/'
+
+        self.close_pushButton.setIcon(QIcon(icons + 'remove'))
+        self.copy_log_pushButton.setIcon(QIcon(icons + 'clipboard'))
+        self.report_pushButton.setIcon(QIcon(icons + 'about'))
+        self.refresh_log_pushButton.setIcon(QIcon(icons + 'refresh'))

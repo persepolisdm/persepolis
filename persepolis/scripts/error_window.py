@@ -15,10 +15,9 @@
 
 from PyQt5.QtWidgets import QWidget, QTextEdit, QVBoxLayout, QHBoxLayout, QPushButton, QLabel
 from persepolis.scripts.data_base import PersepolisDB
-from PyQt5 import QtGui, QtWidgets, QtCore
 from persepolis.scripts import osCommands
-from persepolis.gui import resources 
-from PyQt5.QtCore import QSettings
+from PyQt5.QtCore import Qt, QSize, QSettings
+from persepolis.gui import resources
 from PyQt5.QtGui import QIcon
 
 
@@ -26,7 +25,7 @@ class ErrorWindow(QWidget):
     def __init__(self, text):
         super().__init__()
 # finding windows_size
-        self.setMinimumSize(QtCore.QSize(363, 300))
+        self.setMinimumSize(QSize(363, 300))
         self.setWindowIcon(QIcon.fromTheme('persepolis', QIcon(':/persepolis.svg')))
         self.setWindowTitle('Persepolis Download Manager')
 
@@ -65,6 +64,12 @@ class ErrorWindow(QWidget):
 
     def reportPushButtonPressed(self, button):
         osCommands.xdgOpen('https://github.com/persepolisdm/persepolis/issues')
+
+    # close window with ESC key
+    def keyPressEvent(self, event):
+        if event.key() == Qt.Key_Escape:
+            self.close()
+
 
     def closePushButtonPressed(self, button):
         self.close()

@@ -15,7 +15,6 @@
 #
 
 
-
 import os
 import warnings
 import sys
@@ -36,7 +35,7 @@ else:
 cwd = os.path.abspath(__file__)
 setup_dir = os.path.dirname(cwd)
 
-#clearing __pycache__
+# clearing __pycache__
 src_pycache = os.path.join(setup_dir, 'persepolis', '__pycache__')
 gui_pycache = os.path.join(setup_dir, 'persepolis', 'gui', '__pycache__')
 scripts_pycache = os.path.join(setup_dir, 'persepolis', 'scripts', '__pycache__')
@@ -45,7 +44,7 @@ for folder in [src_pycache, gui_pycache, scripts_pycache]:
     if os.path.isdir(folder):
         shutil.rmtree(folder)
         print(str(folder)
-            + ' is removed!')
+              + ' is removed!')
 
 
 uid = os.getuid()
@@ -59,7 +58,7 @@ if uid != 0:
 cwd = os.path.abspath(__file__)
 setup_dir = os.path.dirname(cwd)
 
-#clearing __pycache__
+# clearing __pycache__
 src_pycache = os.path.join(setup_dir, 'persepolis', '__pycache__')
 gui_pycache = os.path.join(setup_dir, 'persepolis', 'gui', '__pycache__')
 scripts_pycache = os.path.join(setup_dir, 'persepolis', 'scripts', '__pycache__')
@@ -68,16 +67,15 @@ for folder in [src_pycache, gui_pycache, scripts_pycache]:
     if os.path.isdir(folder):
         shutil.rmtree(folder)
         print(str(folder)
-            + ' is removed!')
+              + ' is removed!')
 
 # clear unwanted files!
-for folder in  [ 'build', 'dist', 'root', 'persepolis.egg-info']:
+for folder in ['build', 'dist', 'root', 'persepolis.egg-info']:
     if os.path.isdir(folder):
         shutil.rmtree(folder)
         print(str(folder)
-            + ' is removed!')
+              + ' is removed!')
 
 man_page = 'man/persepolis.1.gz'
 if os.path.isfile(man_page):
     os.remove('man/persepolis.1.gz')
-

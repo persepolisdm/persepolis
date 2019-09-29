@@ -18,7 +18,6 @@ import shutil
 import ast
 
 
-
 # This function is writting a list in file_path in dictionary format
 def writeList(file_path, list):
     dictionary = {'list': list}

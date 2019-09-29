@@ -15,6 +15,7 @@
 
 from persepolis.scripts.useful_tools import determineConfigFolder
 from persepolis.scripts import osCommands
+import subprocess
 import platform
 import sys
 import os
@@ -24,9 +25,10 @@ os_type = platform.system()
 home_address = str(os.path.expanduser("~"))
 
 # download manager config folder .
-config_folder = determineConfigFolder(os_type, home_address)
+config_folder = determineConfigFolder()
 
 # browser can be firefox or chromium or chrome
+
 
 def browserIntegration(browser):
     # for GNU/Linux
@@ -35,27 +37,25 @@ def browserIntegration(browser):
         # persepolis execution path
         exec_path = os.path.join(config_folder, 'persepolis_run_shell')
 
-
-
         # Native Messaging Hosts folder path for every browser
         if browser == 'chromium':
             native_message_folder = home_address + '/.config/chromium/NativeMessagingHosts'
 
         elif browser == 'chrome':
             native_message_folder = home_address + \
-                                    '/.config/google-chrome/NativeMessagingHosts'
+                '/.config/google-chrome/NativeMessagingHosts'
 
         elif browser == 'firefox':
             native_message_folder = home_address + \
-                                    '/.mozilla/native-messaging-hosts'
+                '/.mozilla/native-messaging-hosts'
 
         elif browser == 'vivaldi':
             native_message_folder = home_address + \
-                                    '/.config/vivaldi/NativeMessagingHosts'
+                '/.config/vivaldi/NativeMessagingHosts'
 
         elif browser == 'opera':
             native_message_folder = home_address + \
-                                    '/.config/opera/NativeMessagingHosts'
+                '/.config/opera/NativeMessagingHosts'
 
     # for FreeBSD and OpenBSD
     elif os_type == 'FreeBSD' or os_type == 'OpenBSD':
@@ -69,20 +69,18 @@ def browserIntegration(browser):
 
         elif browser == 'chrome':
             native_message_folder = home_address + \
-                                    '/.config/google-chrome/NativeMessagingHosts'
+                '/.config/google-chrome/NativeMessagingHosts'
 
         elif browser == 'firefox':
             native_message_folder = home_address + \
-                                    '/.mozilla/native-messaging-hosts'
+                '/.mozilla/native-messaging-hosts'
         elif browser == 'vivaldi':
             native_message_folder = home_address + \
-                                    '/.config/vivaldi/NativeMessagingHosts'
+                '/.config/vivaldi/NativeMessagingHosts'
 
         elif browser == 'opera':
             native_message_folder = home_address + \
-                                    '/.config/opera/NativeMessagingHosts'
-
-
+                '/.config/opera/NativeMessagingHosts'
 
     # for Mac OSX
     elif os_type == 'Darwin':
@@ -90,50 +88,48 @@ def browserIntegration(browser):
         # persepolis execution path
         exec_path = os.path.join(config_folder, 'persepolis_run_shell')
 
-
         # Native Messaging Hosts folder path for every browser
         if browser == 'chromium':
             native_message_folder = home_address + \
-                                    '/Library/Application Support/Chromium/NativeMessagingHosts'
+                '/Library/Application Support/Chromium/NativeMessagingHosts'
 
         elif browser == 'chrome':
             native_message_folder = home_address + \
-                                    '/Library/Application Support/Google/Chrome/NativeMessagingHosts'
+                '/Library/Application Support/Google/Chrome/NativeMessagingHosts'
 
         elif browser == 'firefox':
             native_message_folder = home_address + \
-                                    '/Library/Application Support/Mozilla/NativeMessagingHosts'
+                '/Library/Application Support/Mozilla/NativeMessagingHosts'
 
         elif browser == 'vivaldi':
             native_message_folder = home_address + \
-                                    '/Library/Application Support/Vivaldi/NativeMessagingHosts'
+                '/Library/Application Support/Vivaldi/NativeMessagingHosts'
 
         elif browser == 'opera':
             native_message_folder = home_address + \
-                                    '/Library/Application Support/Opera/NativeMessagingHosts/'
+                '/Library/Application Support/Opera/NativeMessagingHosts/'
 
     # for MicroSoft Windows os (windows 7 , ...)
     elif os_type == 'Windows':
         # finding Persepolis execution path
-        cwd = sys.argv[0] 
+        cwd = sys.argv[0]
 
         current_directory = os.path.dirname(cwd)
 
         exec_path = os.path.join(
             current_directory, 'Persepolis Download Manager.exe')
 
-        # the execution path in jason file for Windows must in form of
+        # the execution path in json file for Windows must in form of
         # c:\\Users\\...\\Persepolis Download Manager.exe , so we need 2
         # "\" in address
         exec_path = exec_path.replace('\\', r'\\')
 
-        if browser in ['chrome','chromium','opera','vivaldi']:
+        if browser in ['chrome', 'chromium', 'opera', 'vivaldi']:
             native_message_folder = os.path.join(
                 home_address, 'AppData\Local\persepolis_download_manager', 'chrome')
         else:
             native_message_folder = os.path.join(
                 home_address, 'AppData\Local\persepolis_download_manager', 'firefox')
- 
 
     # WebExtension native hosts file prototype
     webextension_json_connector = {
@@ -144,8 +140,8 @@ def browserIntegration(browser):
     }
 
     # Add chrom* keys
-    if browser in ['chrome','chromium','opera','vivaldi']:
-        webextension_json_connector["allowed_origins"] = [ "chrome-extension://legimlagjjoghkoedakdjhocbeomojao/" ]
+    if browser in ['chrome', 'chromium', 'opera', 'vivaldi']:
+        webextension_json_connector["allowed_origins"] = ["chrome-extension://legimlagjjoghkoedakdjhocbeomojao/"]
 
     # Add firefox keys
     elif browser == 'firefox':
@@ -166,41 +162,62 @@ def browserIntegration(browser):
     f.close()
 
     if os_type != 'Windows':
-        os.system('chmod +x \"' + str(native_message_file) + '\"')
+
+        pipe_json = subprocess.Popen(['chmod', '+x', str(native_message_file)],
+                                     stderr=subprocess.PIPE,
+                                     stdout=subprocess.PIPE,
+                                     stdin=subprocess.PIPE,
+                                     shell=False)
+
+        if pipe_json.wait() == 0:
+            json_done = True
+        else:
+            json_done = False
 
     else:
+        native_done = None
         import winreg
         # add the key to the windows registry
-        if browser in ['chrome','chromium','opera','vivaldi']:
+        if browser in ['chrome', 'chromium', 'opera', 'vivaldi']:
             try:
                 # create pdmchromewrapper key under NativeMessagingHosts
-                winreg.CreateKey(winreg.HKEY_CURRENT_USER, "SOFTWARE\\Google\\Chrome\\NativeMessagingHosts\\com.persepolis.pdmchromewrapper")
+                winreg.CreateKey(winreg.HKEY_CURRENT_USER,
+                                 "SOFTWARE\\Google\\Chrome\\NativeMessagingHosts\\com.persepolis.pdmchromewrapper")
                 # open a connection to pdmchromewrapper key
-                gintKey = winreg.OpenKey(winreg.HKEY_CURRENT_USER, "SOFTWARE\\Google\\Chrome\\NativeMessagingHosts\\com.persepolis.pdmchromewrapper", 0, winreg.KEY_ALL_ACCESS)
+                gintKey = winreg.OpenKey(
+                    winreg.HKEY_CURRENT_USER, "SOFTWARE\\Google\\Chrome\\NativeMessagingHosts\\com.persepolis.pdmchromewrapper", 0, winreg.KEY_ALL_ACCESS)
                 # set native_message_file as key value
-                winreg.SetValueEx(gintKey, '', 0,winreg.REG_SZ, native_message_file)
+                winreg.SetValueEx(gintKey, '', 0, winreg.REG_SZ, native_message_file)
                 # close connection to pdmchromewrapper
                 winreg.CloseKey(gintKey)
-                return True
+
+                json_done = True
+
             except WindowsError:
-                return False
+
+                json_done = False
+
         elif browser == 'firefox':
             try:
                 # create pdmchromewrapper key under NativeMessagingHosts for firefox
-                winreg.CreateKey(winreg.HKEY_CURRENT_USER, "SOFTWARE\\Mozilla\\NativeMessagingHosts\\com.persepolis.pdmchromewrapper")
+                winreg.CreateKey(winreg.HKEY_CURRENT_USER,
+                                 "SOFTWARE\\Mozilla\\NativeMessagingHosts\\com.persepolis.pdmchromewrapper")
                 # open a connection to pdmchromewrapper key for firefox
-                fintKey = winreg.OpenKey(winreg.HKEY_CURRENT_USER, "SOFTWARE\\Mozilla\\NativeMessagingHosts\\com.persepolis.pdmchromewrapper", 0, winreg.KEY_ALL_ACCESS)
+                fintKey = winreg.OpenKey(
+                    winreg.HKEY_CURRENT_USER, "SOFTWARE\\Mozilla\\NativeMessagingHosts\\com.persepolis.pdmchromewrapper", 0, winreg.KEY_ALL_ACCESS)
                 # set native_message_file as key value
-                winreg.SetValueEx(fintKey, '', 0,winreg.REG_SZ, native_message_file)
+                winreg.SetValueEx(fintKey, '', 0, winreg.REG_SZ, native_message_file)
                 # close connection to pdmchromewrapper
                 winreg.CloseKey(fintKey)
-                return True
-            except WindowsError:
-                return False
 
-                 
-    # create persepolis_run_shell file for gnu/linux and BSD and Mac 
-    # firefox and chromium and ... call persepolis with Native Messaging system. 
+                json_done = True
+
+            except WindowsError:
+
+                json_done = False
+
+    # create persepolis_run_shell file for gnu/linux and BSD and Mac
+    # firefox and chromium and ... call persepolis with Native Messaging system.
     # json file calls persepolis_run_shell file.
     if os_type == 'Linux' or os_type == 'OpenBSD' or os_type == 'FreeBSD' or os_type == 'Darwin':
         # find available shell
@@ -212,10 +229,9 @@ def browserIntegration(browser):
                 shebang = '#!' + shell
                 break
 
-    
         if os_type == 'Darwin':
             # finding Persepolis execution path
-            cwd = sys.argv[0] 
+            cwd = sys.argv[0]
 
             current_directory = os.path.dirname(cwd)
 
@@ -226,14 +242,21 @@ def browserIntegration(browser):
 
         persepolis_run_shell_contents = shebang + '\n' + '"' + persepolis_path + '" "$@"'
 
-
-    
         f = open(exec_path, 'w')
         f.writelines(persepolis_run_shell_contents)
         f.close()
 
         # make persepolis_run_shell executable
 
+        pipe_native = subprocess.Popen(['chmod', '+x', exec_path],
+                                       stderr=subprocess.PIPE,
+                                       stdout=subprocess.PIPE,
+                                       stdin=subprocess.PIPE,
+                                       shell=False)
 
- 
-        os.system('chmod +x \"' + exec_path + '\"')
+        if pipe_native.wait() == 0:
+            native_done = True
+        else:
+            native_done = False
+
+    return json_done, native_done

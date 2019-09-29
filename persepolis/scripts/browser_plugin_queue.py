@@ -14,10 +14,9 @@
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from PyQt5.QtCore import QPoint, QSize, QThread, pyqtSignal, QDir
+from PyQt5.QtCore import Qt, QPoint, QSize, QThread, pyqtSignal, QDir
 from PyQt5.QtWidgets import QTableWidgetItem, QFileDialog
 from persepolis.gui.text_queue_ui import TextQueue_Ui
-from PyQt5 import QtWidgets, QtCore, QtGui
 from persepolis.scripts import logger
 from persepolis.scripts import spider
 from functools import partial
@@ -51,7 +50,6 @@ class QueueSpiderThread(QThread):
                 str(e), exc_info=True)
 
 
-
 class BrowserPluginQueue(TextQueue_Ui):
     def __init__(self, parent, list_of_links, callback, persepolis_setting):
         super().__init__(persepolis_setting)
@@ -81,7 +79,7 @@ class BrowserPluginQueue(TextQueue_Ui):
                 file_name = '***'
 
             if file_name == '***':
-            # spider finds file name
+                # spider finds file name
                 new_spider = QueueSpiderThread(dict)
                 self.parent.threadPool.append(new_spider)
                 self.parent.threadPool[len(self.parent.threadPool) - 1].start()
@@ -91,9 +89,9 @@ class BrowserPluginQueue(TextQueue_Ui):
 
             item = QTableWidgetItem(file_name)
             # add checkbox to the item
-            item.setFlags(QtCore.Qt.ItemIsUserCheckable |
-                          QtCore.Qt.ItemIsEnabled)
-            item.setCheckState(QtCore.Qt.Checked)
+            item.setFlags(Qt.ItemIsUserCheckable |
+                          Qt.ItemIsEnabled)
+            item.setCheckState(Qt.Checked)
 
             # insert file_name
             self.links_table.setItem(0, 0, item)
@@ -107,7 +105,7 @@ class BrowserPluginQueue(TextQueue_Ui):
 
 # get categories name and add them to add_queue_comboBox
         categories_list = self.parent.persepolis_db.categoriesList()
- 
+
         for queue in categories_list:
             if queue != 'All Downloads':
                 self.add_queue_comboBox.addItem(queue)
@@ -197,13 +195,13 @@ class BrowserPluginQueue(TextQueue_Ui):
     def selectAll(self, button):
         for i in range(self.links_table.rowCount()):
             item = self.links_table.item(i, 0)
-            item.setCheckState(QtCore.Qt.Checked)
+            item.setCheckState(Qt.Checked)
 
 # this method uncheckes all check boxes
     def deselectAll(self, button):
         for i in range(self.links_table.rowCount()):
             item = self.links_table.item(i, 0)
-            item.setCheckState(QtCore.Qt.Unchecked)
+            item.setCheckState(Qt.Unchecked)
 
 # this method is called, when user changes add_queue_comboBox
     def queueChanged(self, combo):
@@ -265,7 +263,6 @@ class BrowserPluginQueue(TextQueue_Ui):
 
         if os.path.isdir(fname):
             self.download_folder_lineEdit.setText(fname)
-
 
     def okButtonPressed(self, button):
         # write user's input data to init file
@@ -333,7 +330,7 @@ class BrowserPluginQueue(TextQueue_Ui):
                 'download_passwd': download_passwd,
                 'connections': connections,
                 'limit_value': limit,
-                'download_path' : download_path,
+                'download_path': download_path,
                 'referer': None,
                 'load_cookies': None,
                 'user_agent': None,
@@ -373,10 +370,8 @@ class BrowserPluginQueue(TextQueue_Ui):
 
                 i = i + 1
 
-
         # reverse list
         self.add_link_dictionary_list.reverse()
-
 
         # Create callback for mainwindow
         self.callback(self.add_link_dictionary_list, category)
@@ -384,10 +379,22 @@ class BrowserPluginQueue(TextQueue_Ui):
         # close window
         self.close()
 
+    # close window with ESC key
+    def keyPressEvent(self, event):
+        if event.key() == Qt.Key_Escape:
+            self.close()
+
 
     def closeEvent(self, event):
         self.persepolis_setting.setValue('TextQueue/size', self.size())
         self.persepolis_setting.setValue('TextQueue/position', self.pos())
         self.persepolis_setting.sync()
 
-        self.destroy()
+        event.accept()
+
+    def changeIcon(self, icons):
+        icons = ':/' + str(icons) + '/'
+
+        self.folder_pushButton.setIcon(QIcon(icons + 'folder'))
+        self.ok_pushButton.setIcon(QIcon(icons + 'ok'))
+        self.cancel_pushButton.setIcon(QIcon(icons + 'remove'))

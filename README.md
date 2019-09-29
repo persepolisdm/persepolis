@@ -1,96 +1,74 @@
-# Persepolis Download Manager 
+<p align="center">
+  <img src="https://persepolisdm.github.io/img/screen/persepolisـreadme.png" width="128px"/>
+</p>
+<h1 align="center">Persepolis Download Manager</h1>
 
 [![Latest stable release](https://img.shields.io/github/release/persepolisdm/persepolis.svg?maxAge=3600)](https://github.com/persepolisdm/persepolis/releases) [![Total downloads](https://img.shields.io/github/downloads/persepolisdm/persepolis/total.svg)](https://github.com/persepolisdm/persepolis) [![GitHub license](https://img.shields.io/github/license/persepolisdm/persepolis.svg)](https://github.com/persepolisdm/persepolis/blob/master/LICENSE) [![Build Status](https://travis-ci.org/persepolisdm/persepolis.svg?branch=master)](https://travis-ci.org/persepolisdm/persepolis) [![GitHub last commit](https://img.shields.io/github/last-commit/persepolisdm/persepolis.svg)](https://github.com/persepolisdm/persepolis/commits/master) [![GitHub contributors](https://img.shields.io/github/contributors/persepolisdm/persepolis.svg)](https://github.com/persepolisdm/persepolis/graphs/contributors) [![GitHub commit activity the past week, 4 weeks, year](https://img.shields.io/github/commit-activity/y/persepolisdm/persepolis.svg)](https://github.com/persepolisdm/persepolis/commits/master) [![AUR](https://img.shields.io/aur/version/persepolis.svg)](https://aur.archlinux.org/packages/persepolis) [![Twitter Follow](https://img.shields.io/twitter/follow/persepolisdm.svg?style=social&label=Follow)](https://twitter.com/persepolisdm)
 
+> **Content**  
+> - [About](https://github.com/persepolisdm/persepolis#about)  
+> - [FAQ](https://github.com/persepolisdm/persepolis#faq)  
+> - [Screenshots](https://github.com/persepolisdm/persepolis#screenshots)  
+> - [Credits](https://github.com/persepolisdm/persepolis#credits)  
 
-Persepolis Download Manager is a GUI for aria2. 
- 
-+ Version : 3.0.1 
-+ Written in PYQT5.
-+ For GNU/Linux, FreeBSD, PC-BSD, OpenBSD, Mac OS X and Windows.
+### **About**
+Persepolis is a download manager & a GUI for [Aria2](https://github.com/aria2/aria2). It's written in Python. Persepolis is a sample of free and open source software. It's developed for GNU/Linux distributions, BSDs, MacOS, and Microsoft Windows.  
 
-#### GNU/Linux
-![ScreenShot](https://persepolisdm.github.io/img/screen/persepolis.png)
+### **Features**
+- Multi-segment downloading
+- Scheduling downloads
+- Download queuing
+- Finding and downloading video from Youtube, Vimeo, DailyMotion, etc.  
+- and many more!
 
-#### Mac OSX
-![ScreenShot](https://persepolisdm.github.io/img/screen/mac.png)
+### **FAQ**
+> **Where does the name come from?**
 
-#### Microsoft Windows
-![ScreenShot](https://persepolisdm.github.io/img/screen/windows.png)
-
-### Persepolis Website
-
-Visit our website for installation instructions
-
-[Persepolis Website](https://persepolisdm.github.io)
-
-
-
-
-### Persepolis Wiki
-
-How to install Persepolis?
-
-Read [Our Wiki For More Information Including Installers and Development and FAQ](https://github.com/persepolisdm/persepolis/wiki)
-
-
-
-
-### How to report issues or how to ask a question
-
-If you have any question or if you want to report a bug or suggest a new feature feel free to [create an issue here](https://github.com/persepolisdm/persepolis/issues)
-
-
-## Contact us
-
-Persepolis lead developer and manager : **Alireza Amirsamimi**
-https://github.com/alireza-amirsamimi
-alireza.amirsamimi@ubuntu.ir
-
-Arch Linux and BSD support : **Mohammadreza Abdollahzadeh**
-https://github.com/morealaz
-morealaz@gmail.com
-
-Ubuntu and Debian and Windows support : **Mostafa Asadi**
-https://github.com/mostafaasadi
-mostafaasadi73@gmail.com
-
-Mac OSX support : **MohammadAmin Vahedinia**
-https://github.com/Mr0Null
-persepolisdm@vahedinia.me
-
-Persepolis website support : **Sadegh Alirezaie**
-https://github.com/Alirezaies
-sadegh@webgo.ir
-
-Chrome/Chromium and Firefox addons support: **Jafar Akhondali**
-https://github.com/JafarAkhondali
-jafar.akhondali@yahoo.com
-
-Fedora and OpenSuse support and  UI translation: ***H Rostami***
-https://github.com/hayyan71
-hayyan71@yahoo.com
-
-Persepolis website :
-https://persepolisdm.github.io/
-
-Persepolis persian website:
-http://amirsamimi.ir/persepolis2
-
-Persepolis Twitter
-https://twitter.com/persepolisdm
-
-PersepolisDM Telegram Channel:
-https://telegram.me/persepolisdm
-
-### Where does the name come from?
-Persepolis (Greek: Περσέπολις Persépolis; "the Persian city") or Parsa (Old Persian: 𐎱𐎠𐎼𐎿 Pārsa; "Persia"), 
+> > [From Wikipedia:](https://en.wikipedia.org/wiki/Persepolis) Persepolis (Greek: Περσέπολις Persépolis; "the Persian city") or Parsa (Old Persian: 𐎱𐎠𐎼𐎿 Pārsa; "Persia"), 
 also known as Takht-e-Jamshid (Persian: تخت جمشيد‎‎ Taxt e Jamšid; "Throne of Jamshid"),
 was the ceremonial capital of the Achaemenid Empire (ca. 550–330 BC).
-
-Persepolis is situated 60 km northeast of the city of Shiraz in Fars Province, Iran. The earliest remains of 
-Persepolis date back to 515 BC. 
+Persepolis is situated 60 km northeast of the city of Shiraz in Fars Province, Iran. The earliest remains of Persepolis date back to 515 BC. 
 It exemplifies the Achaemenid style of architecture. UNESCO declared the ruins of Persepolis a World Heritage Site in 1979.
 
-#### Read more about Persepolis, The Ceremonial Capital
-https://en.wikipedia.org/wiki/Persepolis
+> **How can I install Persepolis?**
+
+> > Read [our wiki](https://github.com/persepolisdm/persepolis/wiki) or check [Persepolis website](https://persepolisdm.github.io) for more information.
+
+
+### **Screenshots**
+
+|GNU/Linux|Mac OSX|Windows|  
+|:---:|:---:|:---:|  
+|![](https://persepolisdm.github.io/img/screen/persepolis.png)|![](https://persepolisdm.github.io/img/screen/mac.png)|![](https://persepolisdm.github.io/img/screen/windows.png)|
+
+### Credits
+
+**Alireza Amirsamimi:** Persepolis lead developer and manager  
+[GitHub](https://github.com/alireza-amirsamimi) | [E-mail](mailto:alireza.amirsamimi@ubuntu.ir)
+
+**Mohammadreza Abdollahzadeh:** Arch Linux and BSD support  
+[GitHub](https://github.com/morealaz) | [E-mail](mailto:morealaz@gmail.com)
+
+**Mostafa Asadi:** Ubuntu, Debian and Windows support  
+[GitHub](https://github.com/mostafaasadi) | [E-mail](mailto:mostafaasadi73@gmail.com)
+
+**MohammadAmin Vahedinia:** Mac OSX support  
+[GitHub](https://github.com/Mr0Null) | [E-mail](mailto:persepolisdm@vahedinia.me)
+
+**Sadegh Alirezaie:** Persepolis website support  
+[GitHub](https://github.com/Alirezaies) | [E-mail](mailto:alirezaie@sadegh.io)
+
+**Jafar Akhondali:** Browsers add-ons support  
+[GitHub](https://github.com/JafarAkhondali) | [E-mail](mailto:jafar.akhondali@yahoo.com)
+
+**H Rostami:** UI translation, Fedora & OpenSuse support  
+[GitHub](https://github.com/hayyan71) | [E-mail](mailto:hayyan71@yahoo.com)
+
+**Ehsan Titish:** Mac OSX support  
+[GitHub](https://github.com/Maders) | [E-mail](me@maders.ir)
+
+
+[Persepolis website (En)](https://persepolisdm.github.io/) | [Persepolis website (Fa)](https://persepolisdm.github.io/fa) | [Twitter](https://twitter.com/persepolisdm) | [Telegram Channel](https://telegram.me/persepolisdm)
+
+---
+_Is there any mistake in README.md? Report it in [issue tracker](https://github.com/persepolisdm/persepolis/issues) or correct it by yourself._

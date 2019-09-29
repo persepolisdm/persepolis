@@ -15,40 +15,48 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 
-from PyQt5.QtWidgets import QHBoxLayout,  QApplication,  QFileDialog,  QCheckBox, QLineEdit, QPushButton
-from PyQt5.QtCore import QPoint, QSize, QDir, QThread, pyqtSignal
+from PyQt5.QtWidgets import QHBoxLayout, QApplication, QFileDialog, QCheckBox, QLineEdit, QPushButton
+from PyQt5.QtCore import Qt, QPoint, QSize, QDir, QThread, pyqtSignal
 from persepolis.gui.addlink_ui import AddLinkWindow_Ui
 from persepolis.scripts.check_proxy import getProxy
 from persepolis.scripts import spider
 from persepolis.scripts import logger
-from PyQt5 import QtWidgets, QtCore
 from PyQt5.QtGui import QIcon
 from functools import partial
 import os
 
+# find file name and file size
+
 
 class AddLinkSpiderThread(QThread):
-    ADDLINKSPIDERSIGNAL = pyqtSignal(str)
+    ADDLINKSPIDERSIGNAL = pyqtSignal(dict)
 
     def __init__(self, add_link_dictionary):
         QThread.__init__(self)
         self.add_link_dictionary = add_link_dictionary
 
     def run(self):
-        try :
-            filesize = spider.addLinkSpider(self.add_link_dictionary)
-            if filesize:
-                self.ADDLINKSPIDERSIGNAL.emit(filesize)
-            else:
+        try:
+            # get file name and file size
+            file_name, file_size = spider.addLinkSpider(self.add_link_dictionary)
+
+            spider_dict = {'file_size': file_size, 'file_name': file_name}
+
+            # emit results
+            self.ADDLINKSPIDERSIGNAL.emit(spider_dict)
+
+            # write an ERROR in log, If spider couldn't find file_name or file_size.
+            if not(file_name):
                 logger.sendToLog(
-                    "Spider couldn't find download information", "ERROR")
+                    "Spider couldn't find file name", "ERROR")
+            if not(file_size):
+                logger.sendToLog(
+                    "Spider couldn't find file size", "ERROR")
         except Exception as e:
             logger.sendToLog(
                 "Spider couldn't find download information", "ERROR")
             logger.sendToLog(
                 str(e), "ERROR")
-
-
 
 
 class AddLinkWindow(AddLinkWindow_Ui):
@@ -59,7 +67,7 @@ class AddLinkWindow(AddLinkWindow_Ui):
         self.persepolis_setting = persepolis_setting
         self.parent = parent
 
-        # entry initialization 
+        # entry initialization
         # read values from persepolis_setting
         # connections
         connections = int(
@@ -87,7 +95,7 @@ class AddLinkWindow(AddLinkWindow_Ui):
             # "link" key-value must be checked
             self.link_lineEdit.setText(
                 str(self.plugin_add_link_dictionary['link']))
- 
+
         else:
             # check clipboard
             clipboard = QApplication.clipboard()
@@ -95,9 +103,9 @@ class AddLinkWindow(AddLinkWindow_Ui):
             if (("tp:/" in text[2:6]) or ("tps:/" in text[2:7])):
                 self.link_lineEdit.setText(str(text))
 
-        # detect_proxy_pushButton 
+        # detect_proxy_pushButton
         self.detect_proxy_pushButton.clicked.connect(
-                self.detectProxy)
+            self.detectProxy)
 
         # ip_lineEdit initialization ->
         settings_ip = self.persepolis_setting.value(
@@ -181,7 +189,7 @@ class AddLinkWindow(AddLinkWindow_Ui):
 
         if ('header' in self.plugin_add_link_dictionary):
             if str(self.plugin_add_link_dictionary['header']) != 'None':
-                self.header_lineEdit.setText(str(self.plugin_add_link_dictionary['header'])) 
+                self.header_lineEdit.setText(str(self.plugin_add_link_dictionary['header']))
 
         if ('user_agent' in self.plugin_add_link_dictionary):
             self.user_agent_lineEdit.setText(str(self.plugin_add_link_dictionary['user_agent']))
@@ -189,7 +197,6 @@ class AddLinkWindow(AddLinkWindow_Ui):
         if ('load_cookies' in self.plugin_add_link_dictionary):
             self.load_cookies_lineEdit.setText((self.plugin_add_link_dictionary['load_cookies']))
 
- 
 
 # set window size and position
         size = self.persepolis_setting.value(
@@ -200,8 +207,9 @@ class AddLinkWindow(AddLinkWindow_Ui):
         self.move(position)
 
 
-
 # detect system proxy setting, and set ip_lineEdit and port_spinBox
+
+
     def detectProxy(self, button):
         # get system proxy information
         system_proxy_dict = getProxy()
@@ -285,7 +293,7 @@ class AddLinkWindow(AddLinkWindow_Ui):
         if str(self.link_lineEdit.text()) == '':
             self.ok_pushButton.setEnabled(False)
             self.download_later_pushButton.setEnabled(False)
-        else: # find file size
+        else:  # find file size
 
             dict = {'link': str(self.link_lineEdit.text())}
 
@@ -295,11 +303,11 @@ class AddLinkWindow(AddLinkWindow_Ui):
             self.parent.threadPool[len(self.parent.threadPool) - 1].start()
             self.parent.threadPool[len(self.parent.threadPool) - 1].ADDLINKSPIDERSIGNAL.connect(
                 partial(self.parent.addLinkSpiderCallBack, child=self))
- 
+
             self.ok_pushButton.setEnabled(True)
             self.download_later_pushButton.setEnabled(True)
 
-# enable change_name_lineEdit if change_name_checkBox is checked. 
+# enable change_name_lineEdit if change_name_checkBox is checked.
     def changeName(self, checkBoxes):
         if self.change_name_checkBox.isChecked() == True:
             self.change_name_lineEdit.setEnabled(True)
@@ -310,10 +318,10 @@ class AddLinkWindow(AddLinkWindow_Ui):
         # if one of the queues selected by user , start time and end time must
         # be deactivated
         if self.add_queue_comboBox.currentIndex() != 0:
-            self.start_checkBox.setCheckState(QtCore.Qt.Unchecked)
+            self.start_checkBox.setCheckState(Qt.Unchecked)
             self.start_checkBox.setEnabled(False)
 
-            self.end_checkBox.setCheckState(QtCore.Qt.Unchecked)
+            self.end_checkBox.setCheckState(Qt.Unchecked)
             self.end_checkBox.setEnabled(False)
 
         else:
@@ -321,8 +329,8 @@ class AddLinkWindow(AddLinkWindow_Ui):
             self.end_checkBox.setEnabled(True)
 
     def okButtonPressed(self, button, download_later):
-    # user commited information by pressing ok_pushButton, so get information
-    # from AddLinkWindow and return them to the mainwindow with callback!
+        # user commited information by pressing ok_pushButton, so get information
+        # from AddLinkWindow and return them to the mainwindow with callback!
 
         # write user's new inputs in persepolis_setting for next time :)
         self.persepolis_setting.setValue(
@@ -411,28 +419,27 @@ class AddLinkWindow(AddLinkWindow_Ui):
 
         # header
         if self.header_lineEdit.text() != '':
-            header = self.header_lineEdit.text() 
+            header = self.header_lineEdit.text()
         else:
             header = None
 
         # user_agent
-        if self.user_agent_lineEdit.text() != '': 
+        if self.user_agent_lineEdit.text() != '':
             user_agent = self.user_agent_lineEdit.text()
         else:
             user_agent = None
 
         # load_cookies
-        if self.load_cookies_lineEdit.text() != '': 
+        if self.load_cookies_lineEdit.text() != '':
             load_cookies = self.load_cookies_lineEdit.text()
         else:
             load_cookies = None
         # save information in a dictionary(add_link_dictionary).
         self.add_link_dictionary = {'referer': referer, 'header': header, 'user_agent': user_agent, 'load_cookies': load_cookies,
                                     'out': out, 'start_time': start_time, 'end_time': end_time, 'link': link, 'ip': ip,
-                                    'port': port, 'proxy_user': proxy_user, 'proxy_passwd': proxy_passwd, 
+                                    'port': port, 'proxy_user': proxy_user, 'proxy_passwd': proxy_passwd,
                                     'download_user': download_user, 'download_passwd': download_passwd,
                                     'connections': connections, 'limit_value': limit, 'download_path': download_path}
-
 
         # get category of download
         category = str(self.add_queue_comboBox.currentText())
@@ -441,14 +448,27 @@ class AddLinkWindow(AddLinkWindow_Ui):
 
         # return information to mainwindow
         self.callback(self.add_link_dictionary, download_later, category)
-        
+
         # close window
         self.close()
 
+    # close window with ESC key
+    def keyPressEvent(self, event):
+        if event.key() == Qt.Key_Escape:
+            self.close()
 
-# save size and position of window, when user closes the window.
+
+    # save size and position of window, when user closes the window.
     def closeEvent(self, event):
         self.persepolis_setting.setValue('AddLinkWindow/size', self.size())
         self.persepolis_setting.setValue('AddLinkWindow/position', self.pos())
         self.persepolis_setting.sync()
-        self.destroy()
+        event.accept()
+
+    def changeIcon(self, icons):
+        icons = ':/' + str(icons) + '/'
+
+        self.folder_pushButton.setIcon(QIcon(icons + 'folder'))
+        self.download_later_pushButton.setIcon(QIcon(icons + 'stop'))
+        self.cancel_pushButton.setIcon(QIcon(icons + 'remove'))
+        self.ok_pushButton.setIcon(QIcon(icons + 'ok'))

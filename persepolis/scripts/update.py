@@ -14,7 +14,7 @@
 #
 
 from PyQt5.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QLabel, QPushButton
-from PyQt5.QtCore import QSize, QPoint, QTranslator, QCoreApplication, QLocale
+from PyQt5.QtCore import Qt, QSize, QPoint, QTranslator, QCoreApplication, QLocale
 from persepolis.scripts import osCommands
 from PyQt5 import QtWidgets, QtCore
 from PyQt5.QtGui import QIcon
@@ -47,19 +47,22 @@ class checkupdate(QWidget):
         self.setWindowTitle(QCoreApplication.translate("update_src_ui_tr", 'Checking for newer version'))
 
         # installed version
-        self.client_version = '3.01'
+        self.client_version = '3.20'
 
         # first line text
-        self.update_label = QLabel(QCoreApplication.translate("update_src_ui_tr", "The newest is the best , We recommend to update Persepolis"))
+        self.update_label = QLabel(QCoreApplication.translate(
+            "update_src_ui_tr", "The newest is the best , We recommend to update Persepolis"))
         self.update_label.setTextFormat(QtCore.Qt.RichText)
         self.update_label.setAlignment(QtCore.Qt.AlignCenter)
 
         # second line text
-        self.version_label = QLabel(QCoreApplication.translate("update_src_ui_tr", 'This is Persepolis Download Manager version 3.0.1'))
+        self.version_label = QLabel(QCoreApplication.translate(
+            "update_src_ui_tr", 'This is Persepolis Download Manager version 3.2.0'))
         self.version_label.setAlignment(QtCore.Qt.AlignCenter)
 
         # release link
-        self.link_label = QLabel('<a href=https://github.com/persepolisdm/persepolis/releases>https://github.com/persepolisdm/persepolis/releases</a>')
+        self.link_label = QLabel(
+            '<a href=https://github.com/persepolisdm/persepolis/releases>https://github.com/persepolisdm/persepolis/releases</a>')
         self.link_label.setAlignment(QtCore.Qt.AlignCenter)
         self.link_label.setOpenExternalLinks(True)
 
@@ -112,29 +115,42 @@ class checkupdate(QWidget):
 
             # Comparison
             if float(server_version) > float(self.client_version):
-                self.status_label.setText(QCoreApplication.translate("update_src_ui_tr", 'A newer Persepolis release is available'))
+                self.status_label.setText(QCoreApplication.translate(
+                    "update_src_ui_tr", 'A newer Persepolis release is available'))
 
                 if os_type == 'Windows':
                     self.winUpdatedl()  # this function download latest release
+
                     # find system architect
                     if platform.architecture()[0] == '64bit':
+
                         osCommands.xdgOpen(updatesource_dict['win64dlurl'])
+
                     elif platform.architecture()[0] == '32bit':
+
                         osCommands.xdgOpen(updatesource_dict['win32dlurl'])
 
                 elif os_type == 'Darwin':
                     osCommands.xdgOpen(updatesource_dict['macdlurl'])  # it will download latest release for mac
 
             elif float(server_version) == float(self.client_version):
-                self.status_label.setText(QCoreApplication.translate("update_src_ui_tr", 'Latest version is installed :)'))
+                self.status_label.setText(QCoreApplication.translate(
+                    "update_src_ui_tr", 'Latest version is installed :)'))
 
             elif float(server_version) < float(self.client_version):
                 self.status_label.setText(QCoreApplication.translate("update_src_ui_tr", 'You are using beta version'))
 
         except Exception as e:
-            self.status_label.setText(QCoreApplication.translate("update_src_ui_tr", 'An error occured while checking for updates.'))
+            self.status_label.setText(QCoreApplication.translate(
+                "update_src_ui_tr", 'An error occured while checking for updates.'))
 
         self.check_button.setText(QCoreApplication.translate("update_src_ui_tr", 'Check for new update'))
+
+    # close window with ESC key
+    def keyPressEvent(self, event):
+        if event.key() == Qt.Key_Escape:
+            self.close()
+
 
     def closeEvent(self, event):
         # saving window size and position
@@ -143,4 +159,4 @@ class checkupdate(QWidget):
         self.persepolis_setting.setValue(
             'checkupdate/position', self.pos())
         self.persepolis_setting.sync()
-        self.destroy()
+        event.accept()

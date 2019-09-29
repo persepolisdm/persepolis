@@ -13,13 +13,12 @@
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from PyQt5.QtCore import QSize, QPoint, QTranslator, QCoreApplication, QLocale
+from PyQt5.QtCore import Qt, QSize, QPoint, QTranslator, QCoreApplication, QLocale
 from persepolis.gui.after_download_ui import AfterDownloadWindow_Ui
 from persepolis.scripts.play import playNotification
 from persepolis.scripts import osCommands
-from PyQt5 import QtCore
+from PyQt5.QtGui import QIcon
 import os
-
 
 
 class AfterDownloadWindow(AfterDownloadWindow_Ui):
@@ -62,8 +61,8 @@ class AfterDownloadWindow(AfterDownloadWindow_Ui):
 
         window_title = str(self.dict['file_name'])
         file_name = QCoreApplication.translate("after_download_src_ui_tr", "<b>File name</b>: ") + \
-                window_title
- 
+            window_title
+
         self.setWindowTitle(window_title)
 
         self.file_name_label.setText(file_name)
@@ -76,7 +75,7 @@ class AfterDownloadWindow(AfterDownloadWindow_Ui):
         self.link_lineEdit.setEnabled(False)
         self.save_as_lineEdit.setEnabled(False)
 
-         # set window size and position
+        # set window size and position
         size = self.persepolis_setting.value(
             'AfterDownloadWindow/size', QSize(570, 290))
         position = self.persepolis_setting.value(
@@ -86,7 +85,7 @@ class AfterDownloadWindow(AfterDownloadWindow_Ui):
 
     def openFile(self):
         # execute file
-        file_path = self.add_link_dict['download_path'] 
+        file_path = self.add_link_dict['download_path']
 
         if os.path.isfile(file_path):
             osCommands.xdgOpen(file_path)
@@ -94,33 +93,36 @@ class AfterDownloadWindow(AfterDownloadWindow_Ui):
         # close window
         self.close()
 
-
     def openFolder(self):
         # open download folder
-        file_path = self.add_link_dict['download_path'] 
+        download_path = self.add_link_dict['download_path']
 
-        file_name = os.path.basename(file_path)
+#         file_name = os.path.basename(file_path)
 
-        file_path_split = file_path.split(file_name)
+#         file_path_split = file_path.split(file_name)
 
-        del file_path_split[-1]
+#         del file_path_split[-1]
 
-        download_path = file_name.join(file_path_split)
+#         download_path = file_name.join(file_path_split)
 
-        if os.path.isdir(download_path):
-            osCommands.xdgOpen(download_path)
+        if os.path.isfile(download_path):
+            osCommands.xdgOpen(download_path, 'folder', 'file')
 
         # close window
         self.close()
-
 
     def okButtonPressed(self):
         if self.dont_show_checkBox.isChecked():
             self.persepolis_setting.setValue('settings/after-dialog', 'no')
             self.persepolis_setting.sync()
-            
+
         # close window
         self.close()
+
+    # close window with ESC key
+    def keyPressEvent(self, event):
+        if event.key() == Qt.Key_Escape:
+            self.close()
 
 
     def closeEvent(self, event):
@@ -130,5 +132,10 @@ class AfterDownloadWindow(AfterDownloadWindow_Ui):
         self.persepolis_setting.setValue(
             'AfterDownloadWindow/position', self.pos())
         self.persepolis_setting.sync()
+        event.accept()
 
-        self.destroy()
+    def changeIcon(self, icons):
+        icons = ':/' + str(icons) + '/'
+        self.ok_pushButton.setIcon(QIcon(icons + 'ok'))
+        self.open_folder_pushButtun.setIcon(QIcon(icons + 'folder'))
+        self.open_pushButtun.setIcon(QIcon(icons + 'file'))

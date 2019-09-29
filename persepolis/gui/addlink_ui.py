@@ -15,19 +15,19 @@
 """
 
 
-from PyQt5 import QtCore, QtGui, QtWidgets
-from PyQt5.QtWidgets import QTabWidget, QDateTimeEdit, QDoubleSpinBox, QPushButton, QComboBox, QSpinBox, QVBoxLayout, QHBoxLayout, QLabel, QApplication, QWidget, QFileDialog, QMessageBox, QSizePolicy, QGridLayout, QCheckBox, QFrame, QLineEdit, QPushButton
-from PyQt5.QtGui import QIcon
-from persepolis.gui import resources 
+from PyQt5.QtWidgets import QTabWidget, QDoubleSpinBox, QPushButton, QComboBox, QSpinBox, QVBoxLayout, QHBoxLayout, QLabel, QApplication, QWidget, QFileDialog, QMessageBox, QSizePolicy, QGridLayout, QCheckBox, QFrame, QLineEdit, QPushButton
 from PyQt5.QtCore import Qt, QTranslator, QCoreApplication, QLocale
-
+from persepolis.gui.customized_widgets import MyQDateTimeEdit
+from PyQt5 import QtCore, QtGui, QtWidgets
+from persepolis.gui import resources
+from PyQt5.QtGui import QIcon
 
 
 class AddLinkWindow_Ui(QWidget):
     def __init__(self, persepolis_setting):
         super().__init__()
         self.persepolis_setting = persepolis_setting
-        
+
         # add support for other languages
         locale = str(self.persepolis_setting.value('settings/locale'))
         QLocale.setDefault(QLocale(locale))
@@ -40,10 +40,9 @@ class AddLinkWindow_Ui(QWidget):
 
         if ui_direction == 'rtl':
             self.setLayoutDirection(Qt.RightToLeft)
-        
+
         elif ui_direction in 'ltr':
             self.setLayoutDirection(Qt.LeftToRight)
-
 
         # get icons name
         icons = ':/' + \
@@ -52,6 +51,7 @@ class AddLinkWindow_Ui(QWidget):
         self.setMinimumSize(QtCore.QSize(520, 425))
         self.setWindowIcon(QIcon.fromTheme('persepolis', QIcon(':/persepolis.svg')))
 
+        # main layout
         window_verticalLayout = QVBoxLayout()
 
         # add link tab widget
@@ -86,14 +86,14 @@ class AddLinkWindow_Ui(QWidget):
         link_tab_verticalLayout.addWidget(self.link_frame)
 
         # add change_name field ->
-        change_name_horizontalLayout = QHBoxLayout()
+        self.change_name_horizontalLayout = QHBoxLayout()
         self.change_name_checkBox = QCheckBox(self.link_frame)
-        change_name_horizontalLayout.addWidget(self.change_name_checkBox)
+        self.change_name_horizontalLayout.addWidget(self.change_name_checkBox)
 
         self.change_name_lineEdit = QLineEdit(self.link_frame)
-        change_name_horizontalLayout.addWidget(self.change_name_lineEdit)
+        self.change_name_horizontalLayout.addWidget(self.change_name_lineEdit)
 
-        self.link_verticalLayout.addLayout(change_name_horizontalLayout)
+        self.link_verticalLayout.addLayout(self.change_name_horizontalLayout)
 
         # add_category ->
         queue_horizontalLayout = QHBoxLayout()
@@ -118,8 +118,9 @@ class AddLinkWindow_Ui(QWidget):
 
         link_tab_verticalLayout.addLayout(queue_horizontalLayout)
 
-        self.add_link_tabWidget.addTab(self.link_tab, '')
+        link_tab_verticalLayout.addStretch(1)
 
+        self.add_link_tabWidget.addTab(self.link_tab, '')
 
         # proxy tab
         self.proxy_tab = QWidget(self)
@@ -148,7 +149,6 @@ class AddLinkWindow_Ui(QWidget):
         self.ip_label = QLabel(self.proxy_frame)
         gridLayout.addWidget(self.ip_label, 0, 0, 1, 1)
 
-
         self.ip_lineEdit = QLineEdit(self.proxy_frame)
         self.ip_lineEdit.setInputMethodHints(QtCore.Qt.ImhNone)
         gridLayout.addWidget(self.ip_lineEdit, 0, 1, 1, 1)
@@ -160,14 +160,13 @@ class AddLinkWindow_Ui(QWidget):
         self.port_spinBox.setMaximum(65535)
         self.port_spinBox.setSingleStep(1)
         gridLayout.addWidget(self.port_spinBox, 0, 3, 1, 1)
- 
+
         self.proxy_user_label = QLabel(self.proxy_frame)
         gridLayout.addWidget(self.proxy_user_label, 2, 0, 1, 1)
 
         self.proxy_user_lineEdit = QLineEdit(self.proxy_frame)
         gridLayout.addWidget(self.proxy_user_lineEdit, 2, 1, 1, 1)
 
- 
         self.proxy_pass_label = QLabel(self.proxy_frame)
         gridLayout.addWidget(self.proxy_pass_label, 2, 2, 1, 1)
 
@@ -177,11 +176,13 @@ class AddLinkWindow_Ui(QWidget):
 
         proxy_verticalLayout.addWidget(self.proxy_frame)
 
+        proxy_verticalLayout.addStretch(1)
+
         self.add_link_tabWidget.addTab(self.proxy_tab, '')
 
         # more options tab
         self.more_options_tab = QWidget(self)
-        
+
         more_options_tab_verticalLayout = QVBoxLayout(self.more_options_tab)
 
         # download UserName & Password ->
@@ -247,10 +248,10 @@ class AddLinkWindow_Ui(QWidget):
 
         horizontalLayout_5 = QHBoxLayout(self.start_frame)
 
-        self.start_time_qDataTimeEdit = QDateTimeEdit(self.start_frame)
+        self.start_time_qDataTimeEdit = MyQDateTimeEdit(self.start_frame)
         self.start_time_qDataTimeEdit.setDisplayFormat('H:mm')
         horizontalLayout_5.addWidget(self.start_time_qDataTimeEdit)
-        
+
         start_verticalLayout.addWidget(self.start_frame)
         time_limit_horizontalLayout.addLayout(start_verticalLayout)
 
@@ -266,10 +267,10 @@ class AddLinkWindow_Ui(QWidget):
 
         horizontalLayout_6 = QHBoxLayout(self.end_frame)
 
-        self.end_time_qDateTimeEdit = QDateTimeEdit(self.end_frame)
+        self.end_time_qDateTimeEdit = MyQDateTimeEdit(self.end_frame)
         self.end_time_qDateTimeEdit.setDisplayFormat('H:mm')
         horizontalLayout_6.addWidget(self.end_time_qDateTimeEdit)
- 
+
         end_verticalLayout.addWidget(self.end_frame)
         time_limit_horizontalLayout.addLayout(end_verticalLayout)
 
@@ -320,7 +321,9 @@ class AddLinkWindow_Ui(QWidget):
 
         more_options_tab_verticalLayout.addLayout(connections_horizontalLayout)
 
-        self.add_link_tabWidget.addTab(self.more_options_tab, '') 
+        more_options_tab_verticalLayout.addStretch(1)
+
+        self.add_link_tabWidget.addTab(self.more_options_tab, '')
 
         # advance options
         self.advance_options_tab = QWidget(self)
@@ -371,7 +374,9 @@ class AddLinkWindow_Ui(QWidget):
 
         advance_options_tab_verticalLayout.addLayout(load_cookies_horizontalLayout)
 
-        self.add_link_tabWidget.addTab(self.advance_options_tab, '') 
+        advance_options_tab_verticalLayout.addStretch(1)
+
+        self.add_link_tabWidget.addTab(self.advance_options_tab, '')
 
         # ok cancel download_later buttons ->
         buttons_horizontalLayout = QHBoxLayout()
@@ -391,7 +396,7 @@ class AddLinkWindow_Ui(QWidget):
         buttons_horizontalLayout.addWidget(self.ok_pushButton)
 
         window_verticalLayout.addLayout(buttons_horizontalLayout)
-        
+
         self.setLayout(window_verticalLayout)
 
         # labels ->
@@ -432,7 +437,7 @@ class AddLinkWindow_Ui(QWidget):
         self.download_later_pushButton.setText(QCoreApplication.translate("addlink_ui_tr", "Download later"))
 
         self.add_link_tabWidget.setTabText(self.add_link_tabWidget.indexOf(
-            self.link_tab), QCoreApplication.translate("addlink_ui_tr","Link"))
+            self.link_tab), QCoreApplication.translate("addlink_ui_tr", "Link"))
 
         self.add_link_tabWidget.setTabText(self.add_link_tabWidget.indexOf(
             self.proxy_tab), QCoreApplication.translate("addlink_ui_tr", "Proxy"))
@@ -450,11 +455,3 @@ class AddLinkWindow_Ui(QWidget):
         self.load_cookies_label.setText(QCoreApplication.translate("addlink_ui_tr", 'Load cookies: '))
 
         self.user_agent_label.setText(QCoreApplication.translate("addlink_ui_tr", 'User agent: '))
-
-    def changeIcon(self, icons):
-        icons = ':/' + str(icons) + '/'
-
-        self.folder_pushButton.setIcon(QIcon(icons + 'folder'))
-        self.download_later_pushButton.setIcon(QIcon(icons + 'stop'))
-        self.cancel_pushButton.setIcon(QIcon(icons + 'remove'))
-        self.ok_pushButton.setIcon(QIcon(icons + 'ok'))
