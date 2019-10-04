@@ -2501,7 +2501,8 @@ class MainWindow(MainWindow_Ui):
             'youtube.com/watch',
             'aparat.com/v/',
             'vimeo.com/',
-            'dailymotion.com/video'
+            'dailymotion.com/video',
+            'https://soundcloud.com/'
         ]
 
         for link in list_of_links:

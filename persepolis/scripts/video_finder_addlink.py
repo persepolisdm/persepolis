@@ -199,8 +199,8 @@ class VideoFinderAddLink(AddLinkWindow):
         select_format_horizontalLayout = QHBoxLayout()
 
         # Selection Label
-        select_format_label = QLabel(self.link_frame)
-        select_format_horizontalLayout.addWidget(select_format_label)
+        self.select_format_label = QLabel(self.link_frame)
+        select_format_horizontalLayout.addWidget(self.select_format_label)
 
         # Selection combobox
         self.media_comboBox = QComboBox(self.link_frame)
@@ -241,7 +241,7 @@ class VideoFinderAddLink(AddLinkWindow):
 
         # Set Texts
         self.url_submit_pushButtontton.setText(QCoreApplication.translate("ytaddlink_src_ui_tr", 'Fetch Media List'))
-        select_format_label.setText(QCoreApplication.translate("ytaddlink_src_ui_tr", 'Select a format'))
+        self.select_format_label.setText(QCoreApplication.translate("ytaddlink_src_ui_tr", 'Select a format'))
 
         self.video_format_selection_label.setText(QCoreApplication.translate("ytaddlink_src_ui_tr", 'Video format:'))
         self.audio_format_selection_label.setText(QCoreApplication.translate("ytaddlink_src_ui_tr", 'Audio format:'))
@@ -521,6 +521,7 @@ class VideoFinderAddLink(AddLinkWindow):
                 if len(self.no_audio_list) != 0 and len(self.no_video_list) != 0:
                     self.media_comboBox.addItem('Best quality')
                     self.media_comboBox.setCurrentIndex(len(self.video_audio_list))
+
                 elif len(self.video_audio_list) != 0:
                     self.media_comboBox.setCurrentIndex(len(self.video_audio_list) - 1)
 
@@ -530,7 +531,26 @@ class VideoFinderAddLink(AddLinkWindow):
                 if len(self.no_video_list) != 0:
                     self.audio_format_selection_comboBox.setCurrentIndex(len(self.no_video_list))
 
-                self.mediaSelectionChanged('video_audio', int(self.media_comboBox.currentIndex()))
+                # if we have only audio or we have only video then hide media_comboBox
+                if len(self.video_audio_list) == 0:
+                    self.media_comboBox.hide()
+                    self.select_format_label.hide()
+
+                    # only video
+                    if len(self.no_video_list) != 0 and len(self.no_audio_list) == 0:
+                        self.mediaSelectionChanged('video', int(self.video_format_selection_comboBox.currentIndex()))
+                        self.advanced_format_selection_checkBox.setChecked(True)
+                        self.advanced_format_selection_checkBox.hide()
+
+                    # only audio
+                    elif len(self.no_video_list) == 0 and len(self.no_audio_list) != 0:
+                        self.mediaSelectionChanged('audio', int(self.audio_format_selection_comboBox.currentIndex()))
+                        self.advanced_format_selection_checkBox.setChecked(True)
+                        self.advanced_format_selection_checkBox.hide()
+
+                    # audio and video
+                    else:
+                        self.mediaSelectionChanged('video_audio', int(self.media_comboBox.currentIndex()))
 
             except Exception as ex:
                 logger.sendToLog(ex, "ERROR")
@@ -605,12 +625,15 @@ class VideoFinderAddLink(AddLinkWindow):
             if self.media_comboBox.currentText() == 'Best quality':
 
                 # the last item in no_video_list and no_audio_list are the best.
-                audio_link = self.no_video_list[-1]['url']
                 video_link = self.no_audio_list[-1]['url']
+                audio_link = self.no_video_list[-1]['url']
+
                 link_list = [video_link, audio_link]
+
             else:
                 audio_and_video_link = self.video_audio_list[self.media_comboBox.currentIndex()]['url']
                 link_list.append(audio_and_video_link)
+
 
         # write user's new inputs in persepolis_setting for next time :)
         self.persepolis_setting.setValue(
