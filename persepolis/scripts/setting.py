@@ -127,8 +127,11 @@ class PreferencesWindow(Setting_Ui):
         # find available styles(It's depends on operating system and desktop environments).
         available_styles = QStyleFactory.keys()
         for style in available_styles:
-            # 'GTK' or 'gtk' styles may cause to crashing! Eliminate them!
-            if 'gtk' not in str(style) and 'GTK' not in str(style):
+
+            # 'bb10dark', 'GTK', 'gtk' styles may cause to crashing! Eliminate them!
+            style_black_list = ['bb10dark', 'bb10bright', 'GTK', 'gtk', 'gtk2']
+
+            if style not in style_black_list:
                 self.style_comboBox.addItem(style)
 
         # System >> for system default style
