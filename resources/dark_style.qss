@@ -21,6 +21,7 @@
 *
 *
 */
+
 QMenu::item:selected
 { 
     background-color : #008098;
@@ -39,7 +40,6 @@ QTabWidget::pane
     background: #383838;
     border: 1px solid gray;
     border-radius: 2px;
-    border-top: none;
 }
 
 QTabBar::tab {
@@ -52,24 +52,42 @@ QTabBar::tab {
 }
 
 QTabBar::tab:selected {
-    border-top: 1px solid gray;
-    border-right: 1px solid gray;
-    border-left: 1px solid gray;
-    border-bottom: #383838;
+    border-bottom: 2px solid #008098;
+    padding-bottom: 5px;
 	font-weight: bold;
 }
 QTabBar::tab:!selected {
 	font-weight: normal;
 	margin-bottom: 1px;
-    border-bottom: 1px solid gray;
 }
 
 QTabBar::tab:hover {
-    border-top: 1px solid #008098;
-    border-right: 1px solid #008098;
-    border-left: 1px solid #008098;
+    border-bottom: 1px solid #008098;
 }
 
+QTabBar QToolButton::right-arrow
+{
+    image: url(:/dark fusion/right_arrow.svg);
+    background: #383838;
+}
+
+QTabBar QToolButton::left-arrow
+{
+    image: url(:/dark fusion/left_arrow.svg);
+    background: #383838;
+}
+
+QTabBar QToolButton::right-arrow:disabled
+{
+    image: url(:/dark fusion/right_arrow_disabled.svg);
+    background: #383838;
+}
+
+QTabBar QToolButton::left-arrow:disabled
+{
+    image: url(:/dark fusion/left_arrow_disabled.svg);
+    background: #383838;
+}
 
 QPushButton, QComboBox
 {

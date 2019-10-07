@@ -47,7 +47,6 @@ QTabWidget::pane
     background: #EFF0F1;
     border: 1px solid #E3E3E3;
     border-radius: 2px;
-    border-top: none;
 }
 
 QTabBar::tab {
@@ -60,23 +59,44 @@ QTabBar::tab {
 }
 
 QTabBar::tab:selected {
-    border-top: 1px solid #E3E3E3;
-    border-right: 1px solid #E3E3E3;
-    border-left: 1px solid #E3E3E3;
-    border-bottom: #EFF0F1;
+    border-bottom: 2px solid #6EC5F4;
+    padding-bottom: 5px;
 	font-weight: bold;
 }
 QTabBar::tab:!selected {
 	font-weight: normal;
 	margin-bottom: 1px;
-    border-bottom: 1px solid #E3E3E3;
 }
 
 QTabBar::tab:hover {
-    border-top: 1px solid #6EC5F4;
-    border-right: 1px solid #6EC5F4;
-    border-left: 1px solid #6EC5F4;
+    border-bottom: 1px solid #6EC5F4;
 }
+
+
+QTabBar QToolButton::right-arrow
+{
+    image: url(:/light fusion/right_arrow.svg);
+    background: #EFF0F1;
+}
+
+QTabBar QToolButton::left-arrow
+{
+    image: url(:/light fusion/left_arrow.svg);
+    background: #EFF0F1;
+}
+
+QTabBar QToolButton::right-arrow:disabled
+{
+    image: url(:/light fusion/right_arrow_disabled.svg);
+    background: #EFF0F1;
+}
+
+QTabBar QToolButton::left-arrow:disabled
+{
+    image: url(:/light fusion/left_arrow_disabled.svg);
+    background: #EFF0F1;
+}
+
 
 
 QPushButton, QComboBox

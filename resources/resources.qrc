@@ -178,6 +178,10 @@
         <file>dark fusion/up_arrow_disabled.svg</file>
         <file>dark fusion/up_arrow.svg</file>
         <file>dark fusion/up_arrow_hover.svg</file>
+        <file>dark fusion/left_arrow.svg</file>
+        <file>dark fusion/left_arrow_disabled.svg</file>
+        <file>dark fusion/right_arrow.svg</file>
+        <file>dark fusion/right_arrow_disabled.svg</file>
  
         <file>dark fusion/checkbox_checked_disabled.svg</file>
         <file>dark fusion/checkbox_checked.svg</file>
@@ -194,6 +198,10 @@
         <file>light fusion/up_arrow_disabled.svg</file>
         <file>light fusion/up_arrow.svg</file>
         <file>light fusion/up_arrow_hover.svg</file>
+        <file>light fusion/left_arrow.svg</file>
+        <file>light fusion/left_arrow_disabled.svg</file>
+        <file>light fusion/right_arrow.svg</file>
+        <file>light fusion/right_arrow_disabled.svg</file>
  
         <file>light fusion/checkbox_checked_disabled.svg</file>
         <file>light fusion/checkbox_checked.svg</file>
