@@ -63,7 +63,7 @@ def osAndDesktopEnvironment():
 
 
 # this function converts file_size to KiB or MiB or GiB
-def humanReadbleSize(size, input_type='file_size'): 
+def humanReadableSize(size, input_type='file_size'): 
     labels = ['KiB', 'MiB', 'GiB', 'TiB']
     i = -1
     if size < 1024:
@@ -308,16 +308,16 @@ def muxer(parent, video_finder_dictionary):
 
             # rename file if file already existed
             i = 1
-            final_path_pluse_name = os.path.join(final_path, final_file_name)
+            final_path_plus_name = os.path.join(final_path, final_file_name)
 
-            while os.path.isfile(final_path_pluse_name):
+            while os.path.isfile(final_path_plus_name):
 
                 extension_length = len(file_name_split[-1]) + 1
 
                 new_name = final_file_name[0:-extension_length] + \
                     '_' + str(i) + final_file_name[-extension_length:]
 
-                final_path_pluse_name = os.path.join(final_path, new_name)
+                final_path_plus_name = os.path.join(final_path, new_name)
                 i = i + 1
 
             # start muxing
@@ -330,7 +330,7 @@ def muxer(parent, video_finder_dictionary):
                                          '-map', '1:a:0',
                                          '-loglevel', 'error',
                                          '-strict', '-2',
-                                         final_path_pluse_name],
+                                         final_path_plus_name],
                                         stderr=subprocess.PIPE,
                                         stdout=subprocess.PIPE,
                                         stdin=subprocess.PIPE,
@@ -351,7 +351,7 @@ def muxer(parent, video_finder_dictionary):
                                          '-map', '1:a:0',
                                          '-loglevel', 'error',
                                          '-strict', '-2',
-                                         final_path_pluse_name],
+                                         final_path_plus_name],
                                         stderr=subprocess.PIPE,
                                         stdout=subprocess.PIPE,
                                         stdin=subprocess.PIPE,
@@ -374,7 +374,7 @@ def muxer(parent, video_finder_dictionary):
                                          '-map', '1:a:0',
                                          '-loglevel', 'error',
                                          '-strict', '-2',
-                                         final_path_pluse_name],
+                                         final_path_plus_name],
                                         stdout=subprocess.PIPE,
                                         stdin=subprocess.PIPE,
                                         stderr=subprocess.PIPE,
@@ -385,8 +385,8 @@ def muxer(parent, video_finder_dictionary):
                 # muxing was finished successfully.
                 result_dictionary['error'] = 'no error'
 
-                result_dictionary['final_path'] = final_path_pluse_name
-                result_dictionary['final_size'] = humanReadbleSize(final_file_size)
+                result_dictionary['final_path'] = final_path_plus_name
+                result_dictionary['final_size'] = humanReadableSize(final_file_size)
 
             else:
                 result_dictionary['error'] = 'ffmpeg error'

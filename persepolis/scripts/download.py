@@ -13,8 +13,8 @@
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from persepolis.scripts.osCommands import moveFile, makeTempDownloadDir 
-from persepolis.scripts.useful_tools import freeSpace, humanReadbleSize
+from persepolis.scripts.osCommands import moveFile, makeTempDownloadDir
+from persepolis.scripts.useful_tools import freeSpace, humanReadableSize
 from persepolis.scripts.bubble import notifySend
 from persepolis.scripts import logger
 from persepolis.constants import OS
@@ -470,10 +470,10 @@ def convertDownloadInformation(download_status):
         file_size_back = file_size
 
         # converting file_size to KiB or MiB or GiB
-        size_str = humanReadbleSize(file_size)
+        size_str = humanReadableSize(file_size)
         downloaded_back = downloaded
 
-        downloaded_str = humanReadbleSize(downloaded)
+        downloaded_str = humanReadableSize(downloaded)
 
         # find download percent from file_size and downloaded_size
         file_size = file_size_back
@@ -497,7 +497,7 @@ def convertDownloadInformation(download_status):
         estimate_time_left = int((file_size - downloaded)/download_speed)
 
         # converting file_size to KiB or MiB or GiB
-        download_speed_str = humanReadbleSize(download_speed, 'speed') + '/s'
+        download_speed_str = humanReadableSize(download_speed, 'speed') + '/s'
 
         eta = ""
         if estimate_time_left >= 3600:

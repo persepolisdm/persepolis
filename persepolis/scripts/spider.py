@@ -13,7 +13,7 @@
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from persepolis.scripts.useful_tools import humanReadbleSize
+from persepolis.scripts.useful_tools import humanReadableSize
 from requests.cookies import cookiejar_from_dict
 from http.cookies import SimpleCookie
 from requests import Session
@@ -101,7 +101,7 @@ def spider(add_link_dictionary):
         file_size = int(header['Content-Length'])
 
         # converting file_size to KiB or MiB or GiB
-        file_size = humanReadbleSize(file_size)
+        file_size = humanReadableSize(file_size)
 
     # return results
     return filename, file_size
@@ -200,7 +200,7 @@ def addLinkSpider(add_link_dictionary):
         file_size = int(header['Content-Length'])
 
         # converting file_size to KiB or MiB or GiB
-        file_size = str(humanReadbleSize(file_size))
+        file_size = str(humanReadableSize(file_size))
 
     # find file name
     file_name = None
