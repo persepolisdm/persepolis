@@ -145,7 +145,7 @@ class AddLinkWindow(AddLinkWindow_Ui):
         # connect folder_pushButton
         self.folder_pushButton.clicked.connect(self.changeFolder)
 
-        # connect OK and canel download_later button ->
+        # connect OK and cancel download_later button ->
         self.cancel_pushButton.clicked.connect(self.close)
         self.ok_pushButton.clicked.connect(partial(
             self.okButtonPressed, download_later=False))
@@ -329,7 +329,7 @@ class AddLinkWindow(AddLinkWindow_Ui):
             self.end_checkBox.setEnabled(True)
 
     def okButtonPressed(self, button, download_later):
-        # user commited information by pressing ok_pushButton, so get information
+        # user committed information by pressing ok_pushButton, so get information
         # from AddLinkWindow and return them to the mainwindow with callback!
 
         # write user's new inputs in persepolis_setting for next time :)

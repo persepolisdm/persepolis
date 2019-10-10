@@ -183,7 +183,7 @@ class CategoryTreeView(QTreeView):
         # creating context menu
         self.category_tree_menu = QMenu(self)
 
-        # connecting actication  event
+        # connecting activation  event
         self.activated.connect(parent.categoryTreeSelected)
         self.pressed.connect(parent.categoryTreeSelected)
 
@@ -394,7 +394,7 @@ class MainWindow_Ui(QMainWindow):
         self.download_table.setEditTriggers(QAbstractItemView.NoEditTriggers)
         self.download_table.verticalHeader().hide()
 
-        # hide gid and download dictioanry section
+        # hide gid and download directory section
         self.download_table.setColumnHidden(8, True)
         self.download_table.setColumnHidden(9, True)
 

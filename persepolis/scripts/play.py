@@ -24,7 +24,7 @@ def playNotification(file):
     # getting user setting from persepolis_setting
     persepolis_setting = QSettings('persepolis_download_manager', 'persepolis')
 
-    # enbling or disabling notification sound in persepolis_setting
+    # enabling or disabling notification sound in persepolis_setting
     enable_notification = str(persepolis_setting.value('settings/sound'))
 
     # volume of notification in persepolis_setting(an integer between 0 to 100)

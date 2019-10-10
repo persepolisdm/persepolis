@@ -68,7 +68,7 @@ class PropertiesWindow(AddLinkWindow_Ui):
         self.ok_pushButton.setEnabled(False)
         self.link_lineEdit.textChanged.connect(self.linkLineChanged)
 
-# connect OK and canel button
+# connect OK and cancel button
 
         self.cancel_pushButton.clicked.connect(self.close)
         self.ok_pushButton.clicked.connect(self.okButtonPressed)

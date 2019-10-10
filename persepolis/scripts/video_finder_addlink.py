@@ -512,7 +512,7 @@ class VideoFinderAddLink(AddLinkWindow):
                 self.ok_pushButton.setEnabled(True)
                 self.download_later_pushButton.setEnabled(True)
 
-                # if we have no options for seperate audio and video, then hide advanced_format_selection...
+                # if we have no options for separate audio and video, then hide advanced_format_selection...
                 if len(self.no_audio_list) == 0 and len(self.no_video_list) == 0:
                     self.advanced_format_selection_checkBox.hide()
                     self.advanced_format_selection_frame.hide()
@@ -590,12 +590,12 @@ class VideoFinderAddLink(AddLinkWindow):
                 options[i] = None
         return options
 
-    # user commited information by pressing ok_pushButton, so get information
+    # user committed information by pressing ok_pushButton, so get information
     # from VideoFinderAddLink window and return them to the mainwindow with callback!
     def okButtonPressed(self, button, download_later):
 
         link_list = []
-        # seperate audio format and video format is selected.
+        # separate audio format and video format is selected.
         if self.advanced_format_selection_checkBox.isChecked():
 
             if self.video_format_selection_comboBox.currentText() == 'No video' and self.audio_format_selection_comboBox.currentText() != 'No audio':
@@ -619,7 +619,7 @@ class VideoFinderAddLink(AddLinkWindow):
 
             elif self.video_format_selection_comboBox.currentText() == 'No video' and self.audio_format_selection_comboBox.currentText() == 'No audio':
 
-                # no video and no video selected! REALY?!. user is DRUNK! close the window! :))
+                # no video or audio is selected! REALLY?!. user is DRUNK! close the window! :))
                 self.close()
         else:
             if self.media_comboBox.currentText() == 'Best quality':
@@ -714,7 +714,7 @@ class VideoFinderAddLink(AddLinkWindow):
         else:
             extension = str(self.extension_label.text())
 
-        # did user select seperate audio and video?
+        # did user select separate audio and video?
         if len(link_list) == 2:
             video_name = name + extension
             audio_name = name + '.' + \

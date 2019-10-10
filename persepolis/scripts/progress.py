@@ -67,7 +67,7 @@ class ProgressWindow(ProgressWindow_Ui):
         if self.translator.load(':/translations/locales/ui_' + locale, 'ts'):
             QCoreApplication.installTranslator(self.translator)
 
-# check if limit speed actived by user or not
+# check if limit speed activated by user or not
         add_link_dictionary = self.parent.persepolis_db.searchGidInAddLinkTable(gid)
 
         limit = str(add_link_dictionary['limit_value'])
@@ -178,7 +178,7 @@ class ProgressWindow(ProgressWindow_Ui):
 
             # check download status is "scheduled" or not!
             if self.status != 'scheduled':
-                # tell aria2 for unlimiting speed
+                # tell aria2 for unlimited speed
                 download.limitSpeed(self.gid, "0")
             else:
                 # update limit value in data_base

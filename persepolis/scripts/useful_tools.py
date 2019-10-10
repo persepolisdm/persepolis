@@ -35,7 +35,7 @@ os_type = platform.system()
 home_address = os.path.expanduser("~")
 
 
-# determine the config folder path base on the oprating system
+# determine the config folder path based on the operating system
 def determineConfigFolder():
     if os_type == 'Linux' or os_type == 'FreeBSD' or os_type == 'OpenBSD':
         config_folder = os.path.join(
@@ -82,7 +82,7 @@ def humanReadbleSize(size, input_type='file_size'):
     else:
         return str(round(size, None)) + ' ' + labels[i]
 
-# this function converts human readble size to byte
+# this function converts human readable size to byte
 
 
 def convertToByte(file_size):
@@ -268,7 +268,7 @@ def muxer(parent, video_finder_dictionary):
     audio_file_path = audio_file_dictionary['download_path']
     final_path = video_finder_dictionary['download_path']
 
-    # caculate final file's size
+    # calculate final file's size
     video_file_size = parent.persepolis_db.searchGidInDownloadTable(video_finder_dictionary['video_gid'])['size']
     audio_file_size = parent.persepolis_db.searchGidInDownloadTable(video_finder_dictionary['audio_gid'])['size']
 
