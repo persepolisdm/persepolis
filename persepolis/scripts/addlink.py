@@ -329,7 +329,7 @@ class AddLinkWindow(AddLinkWindow_Ui):
             self.end_checkBox.setEnabled(True)
 
     def okButtonPressed(self, button, download_later):
-        # user committed information by pressing ok_pushButton, so get information
+        # user submitted information by pressing ok_pushButton, so get information
         # from AddLinkWindow and return them to the mainwindow with callback!
 
         # write user's new inputs in persepolis_setting for next time :)
