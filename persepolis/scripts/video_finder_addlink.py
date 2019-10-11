@@ -590,7 +590,7 @@ class VideoFinderAddLink(AddLinkWindow):
                 options[i] = None
         return options
 
-    # user committed information by pressing ok_pushButton, so get information
+    # user submitted information by pressing ok_pushButton, so get information
     # from VideoFinderAddLink window and return them to the mainwindow with callback!
     def okButtonPressed(self, button, download_later):
 
