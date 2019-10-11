@@ -171,7 +171,7 @@ def getProxy():
             key_is_available = True
 
     if not key_is_available and socks_proxy:
-        # all print just for debugung
+        # all print just for debugging
         socks_message = "persepolis and aria2 don't support socks\n\
         you must convert socks proxy to http proxy.\n\
         Please read this for more help:\n\

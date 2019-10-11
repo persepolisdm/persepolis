@@ -157,7 +157,7 @@ class BrowserPluginQueue(TextQueue_Ui):
 # connect folder_pushButton
         self.folder_pushButton.clicked.connect(self.changeFolder)
 
-# connect OK and canel button
+# connect OK and cancel button
 
         self.cancel_pushButton.clicked.connect(self.close)
         self.ok_pushButton.clicked.connect(self.okButtonPressed)
@@ -197,7 +197,7 @@ class BrowserPluginQueue(TextQueue_Ui):
             item = self.links_table.item(i, 0)
             item.setCheckState(Qt.Checked)
 
-# this method uncheckes all check boxes
+# this method unchecks all check boxes
     def deselectAll(self, button):
         for i in range(self.links_table.rowCount()):
             item = self.links_table.item(i, 0)

@@ -473,14 +473,14 @@ class PreferencesWindow(Setting_Ui):
             current_color_index = self.color_comboBox.findText(
                 str(self.persepolis_setting.value('color-scheme')))
 
-            # it means user's prefered color_scheme is not valid in color_comboBox.
+            # it means user's preferred color_scheme is not valid in color_comboBox.
             if current_color_index == -1:
                 current_color_index = 0
 
             self.color_comboBox.setCurrentIndex(current_color_index)
 
         self.setDarkLightIcon()
-            
+
     # this method sets dark icons for dark color schemes
     # and light icons for light color schemes.
     def setDarkLightIcon(self, index=None):
@@ -569,7 +569,7 @@ class PreferencesWindow(Setting_Ui):
 
     def fontCheckBoxState(self, checkBox):
 
-        # deactive fontComboBox and font_size_spinBox if font_checkBox not checked!
+        # deactivate fontComboBox and font_size_spinBox if font_checkBox not checked!
         if self.font_checkBox.isChecked():
             self.fontComboBox.setEnabled(True)
             self.font_size_spinBox.setEnabled(True)
@@ -949,13 +949,13 @@ class PreferencesWindow(Setting_Ui):
         if self.startup_checkbox.isChecked():
             self.persepolis_setting.setValue('startup', 'yes')
 
-            if not(startup.checkstartup()):  # checking existance of Persepolis in  system's startup
+            if not(startup.checkstartup()):  # checking existence of Persepolis in  system's startup
 
                 startup.addstartup()  # adding Persepolis to system's startup
         else:
             self.persepolis_setting.setValue('startup', 'no')
 
-            if startup.checkstartup():  # checking existance of Persepolis in  system's startup
+            if startup.checkstartup():  # checking existence of Persepolis in  system's startup
 
                 startup.removestartup()  # removing Persepolis from system's startup
 

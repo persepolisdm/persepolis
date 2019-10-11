@@ -124,7 +124,7 @@ def startAria():
     return answer
 
 # check aria2 release version . Persepolis uses this function to
-# check that aria2 RPC conection is available or not.
+# check that aria2 RPC connection is available or not.
 
 
 def aria2Version():
@@ -351,7 +351,7 @@ def tellStatus(gid, parent):
     if (converted_info_dict['status'] == "complete"):
         file_name = converted_info_dict['file_name']
 
-        # find user prefered download_path from addlink_db_table in data_base
+        # find user preferred download_path from addlink_db_table in data_base
         add_link_dictionary = parent.persepolis_db.searchGidInAddLinkTable(gid)
 
         persepolis_setting.sync()
@@ -391,7 +391,7 @@ def tellStatus(gid, parent):
         add_link_dictionary['download_path'] = file_path
         parent.persepolis_db.updateAddLinkTable([add_link_dictionary])
 
-# if an error occured!
+# if an error occurred!
     if (converted_info_dict['status'] == "error"):
         # add errorMessage to converted_info_dict
         converted_info_dict['error'] = str(download_status['errorMessage'])
@@ -689,8 +689,8 @@ def downloadStop(gid, parent):
     # if status in not "scheduled" so stop request must be sended to aria2.
     if status != 'scheduled':
         try:
-            # send remove download request to aira2.
-            # see aria2 documentation for more informations.
+            # send remove download request to aria2.
+            # see aria2 documentation for more information.
             answer = server.aria2.remove(gid)
             if status == 'downloading':
                 server.aria2.removeDownloadResult(gid)
@@ -721,7 +721,7 @@ def downloadStop(gid, parent):
 def downloadPause(gid):
     # see aria2 documentation for more information
 
-    # send pause request to aira2 .
+    # send pause request to aria2 .
     try:
         answer = server.aria2.pause(gid)
     except:
@@ -825,7 +825,7 @@ def startTime(start_time, gid, parent):
 
     status = 'scheduled'
 
-  # this loop is countinuing until download time arrival!
+  # this loop is continuing until download time arrival!
     while sigma_start != sigma_now:
         time.sleep(2.1)
         sigma_now = nowTime()
@@ -835,7 +835,7 @@ def startTime(start_time, gid, parent):
         data_base_download_status = dict['status']
 
         # if data_base_download_status = stopped >> it means that user
-        # canceled download , and loop must be breaked!
+        # canceled download and loop must break!
         if data_base_download_status == 'stopped':
             status = 'stopped'
             break

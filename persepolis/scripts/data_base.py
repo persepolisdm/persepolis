@@ -46,7 +46,7 @@ class TempDB():
         self.lock = False
 
     # this method locks data base.
-    # this is pervent accessing data base simoltaneously.
+    # this is pervent accessing data base simultaneously.
     def lockCursor(self):
         while self.lock:
             rand_float = random.uniform(0, 0.5)
@@ -236,8 +236,8 @@ class PluginsDB():
         # create a lock for data base
         self.lock = False
 
-    # this method locls data base.
-    # this is pervent accessing data base simoltaneously.
+    # this method locks data base.
+    # this is pervent accessing data base simultaneously.
     def lockCursor(self):
         while self.lock:
             rand_float = random.uniform(0, 0.5)
@@ -371,8 +371,8 @@ class PersepolisDB():
         # Create a lock for data base
         self.lock = False
 
-    # this method locls data base.
-    # this is pervent accessing data base simoltaneously.
+    # this method locks data base.
+    # this is pervent accessing data base simultaneously.
     def lockCursor(self):
 
         while self.lock:
@@ -589,7 +589,7 @@ class PersepolisDB():
                 category_gid_list.append(gid)
                 all_downloads_gid_list.append(gid)
 
-            # updata category_db_table
+            # update category_db_table
             self.updateCategoryTable([all_downloads_dict])
             self.updateCategoryTable([category_dict])
 
@@ -749,7 +749,7 @@ class PersepolisDB():
 
         return downloads_dict
 
-    # this method checks existance of a link in addlink_db_table
+    # this method checks existence of a link in addlink_db_table
 
     def searchLinkInAddLinkTable(self, link):
         # lock data base
@@ -1014,7 +1014,7 @@ class PersepolisDB():
 
     def updateVideoFinderTable(self, list):
 
-        # locak data base
+        # lock data base
         self.lockCursor()
 
         keys_list = ['video_gid',

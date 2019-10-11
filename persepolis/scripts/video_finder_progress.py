@@ -48,7 +48,7 @@ class VideoFinderProgressWindow(VideoFinderProgressWindow_Ui):
         self.gid_list = gid_list
 
         # this variable can be changed by checkDownloadInfo method in mainwindow.py
-        # self.gid defines that wich gid is downloaded.
+        # self.gid defines that which gid is downloaded.
         self.gid = gid_list[0]
 
         # this variable used as category name in ShutDownThread
@@ -76,7 +76,7 @@ class VideoFinderProgressWindow(VideoFinderProgressWindow_Ui):
         if self.translator.load(':/translations/locales/ui_' + locale, 'ts'):
             QCoreApplication.installTranslator(self.translator)
 
-        # check if limit speed actived by user or not
+        # check if limit speed is activated by user or not
         add_link_dictionary = self.parent.persepolis_db.searchGidInAddLinkTable(gid_list[0])
 
         limit = str(add_link_dictionary['limit_value'])
@@ -193,7 +193,7 @@ class VideoFinderProgressWindow(VideoFinderProgressWindow_Ui):
 
                 if status != 'scheduled':
 
-                    # tell aria2 for unlimiting speed
+                    # tell aria2 for unlimited speed
                     download.limitSpeed(gid, "0")
 
                 else:
@@ -290,6 +290,7 @@ class VideoFinderProgressWindow(VideoFinderProgressWindow_Ui):
 
         else:
             # for Windows
+            # TODO: gid_list -> self.gid_list
             for gid in gid_list:
                 shutdown_enable = ShutDownThread(self.parent, self.video_finder_plus_gid)
                 self.parent.threadPool.append(shutdown_enable)

@@ -166,7 +166,7 @@ def remove(file_path):  # remove file with path of file_path
     if os.path.isfile(file_path):
         try:
             os.remove(file_path)
-            return 'ok'  # function returns  this , if opertation was successful
+            return 'ok'  # function returns  this , if operation was successful
         except:
             return 'cant'  # function returns this , if operation was not successful
     else:
@@ -174,7 +174,7 @@ def remove(file_path):  # remove file with path of file_path
 
 
 def removeDir(folder_path):  # removeDir removes folder : folder_path
-    if os.path.isdir(folder_path):  # check folder_path existance
+    if os.path.isdir(folder_path):  # check folder_path existence
         try:
             shutil.rmtree(folder_path)  # remove folder
             return 'ok'

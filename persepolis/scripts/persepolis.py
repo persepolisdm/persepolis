@@ -52,8 +52,8 @@ config_folder = determineConfigFolder()
 persepolis_tmp = os.path.join(config_folder, 'persepolis_tmp')
 
 
-# if lock_file_validation == True >> not another instanse running,
-# else >> another instanse of persepolis is running now.
+# if lock_file_validation == True >> not another instance running,
+# else >> another instance of persepolis is running now.
 global lock_file_validation
 
 if os_type != 'Windows':
@@ -163,8 +163,8 @@ parser.add_argument('--parent-window', action='store', nargs=1,
 parser.add_argument('--version', action='version', version='Persepolis Download Manager 3.2.0')
 
 
-# Clears unwated args ( like args from Browers via NHM )
-# unkown arguments (may sent by browser) will save in unkownargs.
+# Clears unwanted args ( like args from Browers via NHM )
+# unknown arguments (may sent by browser) will save in unknownargs.
 args, unkownargs = parser.parse_known_args()
 
 # if --execute >> yes  >>> persepolis main window  will start.
@@ -309,10 +309,10 @@ else:
 
 
 # when browsers plugin calls persepolis or user runs persepolis by terminal arguments,
-# then persepolis creats a request file in persepolis_tmp folder and link information added to
+# then persepolis creates a request file in persepolis_tmp folder and link information added to
 # plugins_db.db file(see data_base.py for more information).
 # persepolis mainwindow checks persepolis_tmp for plugins request file every 2 seconds (see CheckingThread class in mainwindow.py)
-# when requset received in CheckingThread, a popup window (AddLinkWindow) comes up and window gets additional download information
+# when request received in CheckingThread, a popup window (AddLinkWindow) comes up and window gets additional download information
 # from user (port , proxy , ...) and download starts and request file deleted
 
 if ('link' in add_link_dictionary.keys()):
@@ -397,7 +397,7 @@ def main():
             # write error_message in log file.
             logger.sendToLog('Qt.AA_UseHighDpiPixmaps is not available!', "ERROR")
 
-        # set organization name and domain and apllication name
+        # set organization name and domain and application name
         QCoreApplication.setOrganizationName('persepolis_download_manager')
         QCoreApplication.setApplicationName('persepolis')
 

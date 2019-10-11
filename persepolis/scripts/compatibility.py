@@ -45,7 +45,7 @@ category_folder = os.path.join(config_folder, 'category_folder')
 # time,limit speed , ...)
 queue_info_folder = os.path.join(config_folder, "queue_info")
 
-# single_downloads_list_file contains gid of non categorised downloads
+# single_downloads_list_file contains gid of non categorized downloads
 single_downloads_list_file = os.path.join(category_folder, "Single Downloads")
 
 

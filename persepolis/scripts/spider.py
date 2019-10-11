@@ -41,7 +41,7 @@ def spider(add_link_dictionary):
     raw_cookies = add_link_dictionary['load_cookies']
     referer = add_link_dictionary['referer']
 
-    # defin a requests session
+    # define a requests session
     requests_session = requests.Session()
     if ip:
         ip_port = 'http://' + str(ip) + ":" + str(port)

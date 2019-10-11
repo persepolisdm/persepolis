@@ -88,7 +88,7 @@ Icon=persepolis
 StartupWMClass=persepolis-download-Manager
 '''
 
-        # check if the autostart directry exists & create entry
+        # check if the autostart directory exists & create entry
         if not os.path.exists(home_address + "/.config/autostart"):
             os.makedirs(home_address + "/.config/autostart", 0o755)
         startupfile = open(

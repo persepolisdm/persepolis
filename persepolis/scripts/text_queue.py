@@ -157,7 +157,7 @@ class TextQueue(TextQueue_Ui):
         # connect folder_pushButton
         self.folder_pushButton.clicked.connect(self.changeFolder)
 
-        # connect OK and canel button
+        # connect OK and cancel button
         self.cancel_pushButton.clicked.connect(self.close)
         self.ok_pushButton.clicked.connect(self.okButtonPressed)
 
@@ -189,7 +189,7 @@ class TextQueue(TextQueue_Ui):
         self.resize(size)
         self.move(position)
 
-    # this method checkes all check boxes
+    # this method checks all check boxes
     def selectAll(self, button):
         for i in range(self.links_table.rowCount()):
             item = self.links_table.item(i, 0)
