@@ -394,7 +394,7 @@ class MainWindow_Ui(QMainWindow):
         self.download_table.setEditTriggers(QAbstractItemView.NoEditTriggers)
         self.download_table.verticalHeader().hide()
 
-        # hide gid and download directory section
+        # hide gid and link column
         self.download_table.setColumnHidden(8, True)
         self.download_table.setColumnHidden(9, True)
 
