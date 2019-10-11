@@ -52,7 +52,7 @@ def spider(add_link_dictionary):
 
     if download_user:
         # set download user pass to the session
-        requests_session.auth(download_user, download_passwd)
+        requests_session.auth = (download_user, download_passwd)
 
     # set cookies
     if raw_cookies:

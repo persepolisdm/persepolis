@@ -478,6 +478,7 @@ class PropertiesWindow(AddLinkWindow_Ui):
 
         # if link changed, then update download_db_table in data base
         if self.add_link_dictionary_1['link'] != self.add_link_dictionary_1_backup['link']:
+            #TODO: link is not defined before.
             dictionary = {'gid': self.gid_1, 'link': link}
             self.parent.persepolis_db.updateDownloadTable([dictionary])
 
@@ -494,6 +495,7 @@ class PropertiesWindow(AddLinkWindow_Ui):
 
             # if link changed, then update download_db_table in data base
             if self.add_link_dictionary_2['link'] != self.add_link_dictionary_2_backup['link']:
+                #TODO: link is not defined before
                 dictionary = {'gid': self.gid_2, 'link': link}
                 self.parent.persepolis_db.updateDownloadTable([dictionary])
 
