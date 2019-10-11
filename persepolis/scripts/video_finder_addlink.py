@@ -619,7 +619,7 @@ class VideoFinderAddLink(AddLinkWindow):
 
             elif self.video_format_selection_comboBox.currentText() == 'No video' and self.audio_format_selection_comboBox.currentText() == 'No audio':
 
-                # no video or audio is selected! REALLY?!. user is DRUNK! close the window! :))
+                # no video and audio is selected! REALLY?!. user is DRUNK! close the window! :))
                 self.close()
         else:
             if self.media_comboBox.currentText() == 'Best quality':
