@@ -2939,7 +2939,7 @@ class MainWindow(MainWindow_Ui):
             self.threadPool[len(self.threadPool) - 1].QTABLEREADY.connect(
                 partial(self.propertiesCallback2, add_link_dictionary, gid, category, video_finder_dictionary))
         else:
-            self.propertiesCallback2(self, add_link_dictionary, gid, category, video_finder_dictionary)
+            self.propertiesCallback2(add_link_dictionary, gid, category, video_finder_dictionary)
 
     def propertiesCallback2(self, add_link_dictionary, gid, category, video_finder_dictionary=None):
         # current_category_tree_text is current category that highlighted by user
@@ -5489,9 +5489,10 @@ class MainWindow(MainWindow_Ui):
                 file_name = self.download_table.item(row, 0).text()
 
                 # show error message
+                #TODO: no value for message2
                 notifySend(QCoreApplication.translate("mainwindow_src_ui_tr",
-                                                      'Operation was not successful! Following download must be completed first: ') + file_name,
-                           5000, 'fail', parent=self)
+                                                      message1='Operation was not successful! Following download must be completed first: '),
+                           message2=file_name, time=5000, sound='fail', parent=self)
 
         # move files with MoveThread
         # MoveThread is created to pervent UI freezing.
@@ -5574,7 +5575,7 @@ class MainWindow(MainWindow_Ui):
         else:
             self.clearDownloadList2()
 
-    def clearDownloadList(self):
+    def clearDownloadList2(self):
         # all Downloads must be stopped by user
         gid_list = self.persepolis_db.findActiveDownloads()
 

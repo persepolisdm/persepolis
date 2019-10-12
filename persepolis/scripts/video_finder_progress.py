@@ -290,8 +290,7 @@ class VideoFinderProgressWindow(VideoFinderProgressWindow_Ui):
 
         else:
             # for Windows
-            # TODO: gid_list -> self.gid_list
-            for gid in gid_list:
+            for gid in self.gid_list:
                 shutdown_enable = ShutDownThread(self.parent, self.video_finder_plus_gid)
                 self.parent.threadPool.append(shutdown_enable)
                 self.parent.threadPool[len(self.parent.threadPool) - 1].start()
