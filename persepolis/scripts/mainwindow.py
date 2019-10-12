@@ -5491,8 +5491,8 @@ class MainWindow(MainWindow_Ui):
                 # show error message
                 #TODO: no value for message2
                 notifySend(QCoreApplication.translate("mainwindow_src_ui_tr",
-                                                      'Operation was not successful! Following download must be completed first: ') + file_name,
-                           5000, 'fail', parent=self, message2="?")
+                                                      message1='Operation was not successful! Following download must be completed first: '),
+                           message2=file_name, time=5000, sound='fail', parent=self)
 
         # move files with MoveThread
         # MoveThread is created to pervent UI freezing.
