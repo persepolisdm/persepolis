@@ -478,7 +478,8 @@ class PropertiesWindow(AddLinkWindow_Ui):
 
         # if link changed, then update download_db_table in data base
         if self.add_link_dictionary_1['link'] != self.add_link_dictionary_1_backup['link']:
-            dictionary = {'gid': self.gid_1, 'link': link}
+            
+            dictionary = {'gid': self.gid_1, 'link': self.add_link_dictionary_1['link']}
             self.parent.persepolis_db.updateDownloadTable([dictionary])
 
         # if any thing in add_link_dictionary_2 is changed,then update data base!
@@ -494,7 +495,8 @@ class PropertiesWindow(AddLinkWindow_Ui):
 
             # if link changed, then update download_db_table in data base
             if self.add_link_dictionary_2['link'] != self.add_link_dictionary_2_backup['link']:
-                dictionary = {'gid': self.gid_2, 'link': link}
+                
+                dictionary = {'gid': self.gid_2, 'link': self.add_link_dictionary_2['link']}
                 self.parent.persepolis_db.updateDownloadTable([dictionary])
 
             # if download_path was changed, then update video_finder_db_table in data base
