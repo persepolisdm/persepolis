@@ -186,19 +186,21 @@ browser_plugin_dict = {'link': None,
 # This dirty trick will show Persepolis version when there are unknown args
 # Unknown args are sent by Browsers for NHM
 if args.parent_window or unkownargs:
-
+   
     # Platform specific configuration
     if os_type == OS.WINDOWS:
         # Set the default I/O mode to O_BINARY in windows
         import msvcrt
         msvcrt.setmode(sys.stdin.fileno(), os.O_BINARY)
         msvcrt.setmode(sys.stdout.fileno(), os.O_BINARY)
-
-    # Send message to browsers plugin
-    message = '{"enable": true, "version": "1.85"}'.encode('utf-8')
-    sys.stdout.buffer.write((struct.pack('i', len(message))))
-    sys.stdout.buffer.write(message)
-    sys.stdout.flush()
+    else:
+        # TODO: fix windows error
+        # This section causes an "OSError: [Errno 22] Invalid argument" in windows, skip for now.
+        # Send message to browsers plugin
+        message = '{"enable": true, "version": "1.85"}'.encode('utf-8')
+        sys.stdout.buffer.write((struct.pack('i', len(message))))
+        sys.stdout.buffer.write(message)
+        sys.stdout.flush()
 
     text_length_bytes = sys.stdin.buffer.read(4)
 

@@ -130,9 +130,12 @@ def browserIntegration(browser):
 
         current_directory = os.path.dirname(cwd)
 
-        exec_path = os.path.join(
-            current_directory, 'Persepolis Download Manager.exe')
+        ## for working on editable windows installation use 'msghost.bat' instead
+        exec_path = os.path.join(current_directory, 'msghost.exe')
+        # exec_path = os.path.join(current_directory, 'msghost.bat')
 
+        # to working in editable windows installation, we need absolute path
+        exec_path = os.path.abspath(exec_path)
         # the execution path in json file for Windows must in form of
         # c:\\Users\\...\\Persepolis Download Manager.exe , so we need 2
         # "\" in address
@@ -140,10 +143,10 @@ def browserIntegration(browser):
 
         if browser in BROWSER.CHROME_FAMILY:
             native_message_folder = os.path.join(
-                home_address, 'AppData\Local\persepolis_download_manager', 'chrome')
+                home_address, r'AppData\Local\persepolis_download_manager', 'chrome')
         else:
             native_message_folder = os.path.join(
-                home_address, 'AppData\Local\persepolis_download_manager', 'firefox')
+                home_address, r'AppData\Local\persepolis_download_manager', 'firefox')
 
     # WebExtension native hosts file prototype
     webextension_json_connector = {
