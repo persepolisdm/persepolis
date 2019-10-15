@@ -207,7 +207,7 @@ class ProgressWindow(ProgressWindow_Ui):
     def afterPushButtonPressed(self, button):
         self.after_pushButton.setEnabled(False)
 
-        if os_type != 'Windows':  # For Linux and Mac OSX and FreeBSD and OpenBSD
+        if os_type != OS.WINDOWS:  # For Linux and Mac OSX and FreeBSD and OpenBSD
 
             # get root password
             passwd, ok = QInputDialog.getText(

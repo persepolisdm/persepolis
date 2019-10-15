@@ -14,12 +14,13 @@
 #
 
 
-from persepolis.scripts.useful_tools import osAndDesktopEnvironment
-from persepolis.scripts import logger
 import subprocess
 import requests
 import urllib
 import os
+from persepolis.scripts.useful_tools import osAndDesktopEnvironment
+from persepolis.scripts import logger
+from persepolis.constants import OS
 
 # get proxy function
 
@@ -35,7 +36,7 @@ def getProxy():
     logger.sendToLog(platform, "INFO")
 
     proxy = {}
-    if os_type == 'Linux' or os_type == 'FreeBSD' or os_type == 'OpenBSD':
+    if os_type in OS.UNIX_LIKE:
         if desktop is None:
             desktop_env_type = 'Desktop Environment not detected!'
         else:
@@ -141,7 +142,7 @@ def getProxy():
             if desktop == 'GNOME' or desktop == 'Unity:Unity7':
                 socks_proxy = proxysource['all'].split(':')[1].replace('//', '')
             # if it is Mac OS
-            elif os_type == 'Darwin':
+            elif os_type == OS.OSX:
 
                 validKeys = ['SOCKSEnable']
 

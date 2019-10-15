@@ -20,11 +20,12 @@ import warnings
 import sys
 import platform
 import shutil
+from persepolis.constants import OS
 
 # finding os platform
 os_type = platform.system()
 
-if os_type == 'Linux' or os_type == 'FreeBSD' or os_type == 'OpenBSD':
+if os_type in OS.UNIX_LIKE:
     print(os_type + " detected!")
 else:
     print('This script is only work for GNU/Linux or BSD!')

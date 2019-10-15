@@ -20,11 +20,11 @@ import warnings
 import sys
 import platform
 import shutil
-
+from persepolis.constants import OS
 # finding os platform
 os_type = platform.system()
 
-if os_type == 'Linux' or os_type == 'FreeBSD' or os_type == 'OpenBSD':
+if os_type in OS.UNIX_LIKE:
     from setuptools import setup, Command, find_packages
     setuptools_available = True
     print(os_type + " detected!")
@@ -100,9 +100,9 @@ else:
     print('paplay is found!')
 
 # sound-theme-freedesktop
-if os_type == 'Linux':
+if os_type == OS.LINUX:
     notifications_path = '/usr/share/sounds/freedesktop/stereo/'
-elif os_type == 'FreeBSD' or os_type == 'OpenBSD':
+elif os_type in OS.BSD_FAMILY:
     notifications_path = '/usr/local/share/sounds/freedesktop/stereo/'
 
 if os.path.isdir(notifications_path):
@@ -139,7 +139,7 @@ if sys.argv[1] == "test":
 
 DESCRIPTION = 'Persepolis Download Manager'
 
-if os_type == 'Linux':
+if os_type == OS.LINUX:
     DATA_FILES = [
         ('/usr/share/man/man1/', ['man/persepolis.1.gz']),
         ('/usr/share/applications/', ['xdg/com.github.persepolisdm.persepolis.desktop']),
@@ -147,7 +147,7 @@ if os_type == 'Linux':
         ('/usr/share/pixmaps/', ['resources/persepolis.svg']),
         ('/usr/share/pixmaps/', ['resources/persepolis-tray.svg'])
     ]
-elif os_type == 'FreeBSD' or os_type == 'OpenBSD':
+elif os_type in OS.BSD_FAMILY:
     DATA_FILES = [
         ('/usr/local/share/man/man1/', ['man/persepolis.1.gz']),
         ('/usr/local/share/applications/', ['xdg/com.github.persepolisdm.persepolis.desktop']),

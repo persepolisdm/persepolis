@@ -17,6 +17,7 @@ import subprocess
 import platform
 import shutil
 import os
+from persepolis.constants import OS
 
 os_type = platform.system()
 
@@ -49,7 +50,7 @@ def xdgOpen(file_path, f_type='file', path='file'):
         highlight = False
 
     # for linux and bsd
-    if os_type == 'Linux' or os_type == 'FreeBSD' or os_type == 'OpenBSD':
+    if os_type in OS.UNIX_LIKE:
 
         file_manager = findFileManager()
         # check default file manager.
@@ -123,7 +124,7 @@ def xdgOpen(file_path, f_type='file', path='file'):
                              shell=False)
 
     # for Mac OS X
-    elif os_type == 'Darwin':
+    elif os_type == OS.OSX:
         if highlight:
 
             subprocess.Popen(['open', '-R', file_path],
@@ -141,7 +142,7 @@ def xdgOpen(file_path, f_type='file', path='file'):
                              shell=False)
 
     # for MS Windows
-    elif os_type == 'Windows':
+    elif os_type == OS.WINDOWS:
         CREATE_NO_WINDOW = 0x08000000
 
         if highlight:
