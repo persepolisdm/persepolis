@@ -14,7 +14,7 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from PyQt5.QtWidgets import QStyleFactory
-from persepolis.constants import OS
+from persepolis.constants.Os import OS
 import urllib.parse
 import subprocess
 import platform
