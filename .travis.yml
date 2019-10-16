@@ -5,29 +5,34 @@ python:
   - "3.6"
 virtualenv:
   system_site_packages: true
+
+addons:
+  apt:
+    update: true
+    packages:
+      python3
+      aria2
+      sound-theme-freedesktop
+      libnotify-bin
+      libqt5svg5
+      python3-pyqt5.qtsvg
+      python3-setuptools
+      python3-pip
+      python3-pyqt5
+      pulseaudio
+      python3-psutil
+      ffmpeg
+
 before_install:
-  - sudo apt-get -qq update
-  - sudo apt-get install -y python3
-  - sudo apt-get install -y aria2
-  - sudo apt-get install -y sound-theme-freedesktop     
-  - sudo apt-get install -y libnotify-bin
-  - sudo apt-get install -y libqt5svg5
-  - sudo apt-get install -y python3-pyqt5.qtsvg
-  - sudo apt-get install -y python3-setuptools
-  - sudo apt-get install -y python3-pip
-  - sudo apt-get install -y python3-pyqt5
-  - sudo apt-get install -y pulseaudio
-  - sudo apt-get install -y python3-psutil
-  - sudo apt-get install -y ffmpeg
-  - sudo pip3 install youtube-dl  
-  - sudo pip3 install requests
-  - sudo pip3 install setproctitle
+  - sudo pip3 install youtube-dl requests setproctitle
+
+install: true
 
 script:
  - sudo python3 setup.py install
  - persepolis --version
 
 after_success:
- - pip install transifex-client==0.12.5
+ - pip3 install transifex-client==0.12.5
  - sudo echo $'[https://www.transifex.com]\napi_hostname = https://api.transifex.com\nhostname = https://www.transifex.com\nusername = '"$TRANSIFEX_USER"$'\npassword = '"$TRANSIFEX_PASSWORD"$'\n' > ~/.transifexrc
  - tx push -s
