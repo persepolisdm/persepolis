@@ -16,3 +16,6 @@
 
 # import sys
 # sys.path.insert(1, '.')
+
+from .Os import OS
+from .Browser import BROWSER
