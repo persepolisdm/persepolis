@@ -15,6 +15,8 @@
 
 from PyQt5.QtCore import Qt, QSize, QPoint, QThread, QTranslator, QCoreApplication, QLocale
 from PyQt5.QtWidgets import QLineEdit, QWidget, QSizePolicy,  QInputDialog
+
+from persepolis.constants import OS
 from persepolis.gui.video_finder_progress_ui import VideoFinderProgressWindow_Ui
 from persepolis.scripts.shutdown import shutDown
 from persepolis.scripts.bubble import notifySend
@@ -228,7 +230,7 @@ class VideoFinderProgressWindow(VideoFinderProgressWindow_Ui):
         self.after_pushButton.setEnabled(False)
 
         # For Linux and Mac OSX and FreeBSD and OpenBSD
-        if os_type != 'Windows':
+        if os_type != OS.WINDOWS:
 
             # get root password
             passwd, ok = QInputDialog.getText(

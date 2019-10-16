@@ -15,6 +15,8 @@
 
 from PyQt5.QtCore import Qt, QEvent, QTime, QSize, QPoint, QDir, QTranslator, QCoreApplication, QLocale
 from PyQt5.QtWidgets import QFileDialog, QStyleFactory, QMessageBox, QTableWidgetItem
+
+from persepolis.constants import OS
 from persepolis.gui.setting_ui import Setting_Ui, KeyCapturingWindow_Ui
 from persepolis.scripts.useful_tools import returnDefaultSettings
 from PyQt5.QtGui import QFont, QKeySequence
@@ -101,7 +103,7 @@ class PreferencesWindow(Setting_Ui):
 
         self.ariaCheckBoxToggled('aria2')
 
-        if os_type == 'Linux' or os_type == 'FreeBSD' or os_type == 'OpenBSD':
+        if os_type in OS.UNIX_LIKE:
             for widget in self.aria2_path_checkBox, self.aria2_path_lineEdit, self.aria2_path_pushButton:
                 widget.hide()
 

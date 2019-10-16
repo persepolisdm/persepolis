@@ -14,6 +14,7 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from persepolis.scripts import logger
+from persepolis.constants import OS
 from time import sleep
 import subprocess
 import platform
@@ -58,7 +59,7 @@ def shutDown(parent, gid=None, category=None, password=None):
         logger.sendToLog("Shutting down in 20 seconds", "INFO")
         sleep(20)
 
-        if os_type == 'Linux':
+        if os_type == OS.LINUX:
 
             pipe = subprocess.Popen(['sudo', '-S', 'poweroff'],
                                     stdout=subprocess.DEVNULL,
@@ -68,7 +69,7 @@ def shutDown(parent, gid=None, category=None, password=None):
 
             pipe.communicate(password.encode())
 
-        elif os_type == 'Darwin':
+        elif os_type == OS.DARWIN:
 
             pipe = subprocess.Popen(['sudo', '-S', 'shutdown', '-h', 'now'],
                                     stdout=subprocess.DEVNULL,
@@ -78,7 +79,7 @@ def shutDown(parent, gid=None, category=None, password=None):
 
             pipe.communicate(password.encode())
 
-        elif os_type == 'Windows':
+        elif os_type == OS.WINDOWS:
 
             CREATE_NO_WINDOW = 0x08000000
             subprocess.Popen(['shutdown', '-S'],
@@ -88,7 +89,7 @@ def shutDown(parent, gid=None, category=None, password=None):
                              shell=False,
                              creationflags=CREATE_NO_WINDOW)
 
-        elif os_type == 'FreeBSD' or os_type == 'OpenBSD':
+        elif os_type in OS.BSD_FAMILY:
 
             pipe = subprocess.Popen(['sudo', '-S', 'shutdown', '-p', 'now'],
                                     stdout=subprocess.DEVNULL,

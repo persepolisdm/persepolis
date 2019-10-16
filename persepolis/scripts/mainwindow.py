@@ -39,6 +39,7 @@ from PyQt5.Qt import PYQT_VERSION_STR
 from persepolis.scripts import logger
 from persepolis.scripts import spider
 from persepolis.gui import resources
+from persepolis.constants import OS
 from functools import partial
 from copy import deepcopy
 from time import sleep
@@ -132,23 +133,23 @@ class CheckVersionsThread(QThread):
     def run(self):
         global ffmpeg_is_installed
 
-        if os_type == 'Linux' or os_type == 'FreeBSD' or os_type == 'OpenBSD':
+        if os_type in OS.UNIX_LIKE:
             ffmpeg_path = 'ffmpeg'
 
-        elif os_type == 'Darwin':
+        elif os_type == OS.OSX:
 
             cwd = sys.argv[0]
             current_directory = os.path.dirname(cwd)
             ffmpeg_path = os.path.join(current_directory, 'ffmpeg')
 
-        elif os_type == 'Windows':
+        elif os_type == OS.WINDOWS:
 
             cwd = sys.argv[0]
             current_directory = os.path.dirname(cwd)
             ffmpeg_path = os.path.join(current_directory, 'ffmpeg.exe')
 
         try:
-            if os_type == 'Windows':
+            if os_type == OS.WINDOWS:
 
                 # NO_WINDOW option avoids opening additional CMD in MS Windows.
                 NO_WINDOW = 0x08000000
@@ -978,7 +979,7 @@ class Queue(QThread):
                 answer = download.shutDown()
 
                 # KILL aria2c if didn't respond. R.I.P :))
-                if not(answer) and (os_type != 'Windows'):
+                if not(answer) and (os_type != OS.WINDOWS):
 
                     subprocess.Popen(['killall', 'aria2c'],
                                      stderr=subprocess.PIPE,
@@ -1263,7 +1264,7 @@ class MainWindow(MainWindow_Ui):
             self.showMenuBarAction.setChecked(False)
             self.toolBar2.show()
 
-        if os_type == 'Darwin':
+        if os_type == OS.OSX:
             self.showMenuBarAction.setEnabled(False)
 
         # check user preferences for showing or hiding sidepanel.
@@ -2078,7 +2079,7 @@ class MainWindow(MainWindow_Ui):
                         answer = download.shutDown()
 
                         # KILL aria2c in Unix like systems, if didn't respond. R.I.P :))
-                        if not(answer) and (os_type != 'Windows'):
+                        if not(answer) and (os_type != OS.WINDOWS):
 
                             subprocess.Popen(['killall', 'aria2c'],
                                              stderr=subprocess.PIPE,
@@ -5023,7 +5024,7 @@ class MainWindow(MainWindow_Ui):
 
         self.after_pushButton.setEnabled(False)
 
-        if os_type != 'Windows':  # For Linux and Mac OSX
+        if os_type != OS.WINDOWS:  # For Linux and Mac OSX
 
             # get root password from user
             passwd, ok = QInputDialog.getText(

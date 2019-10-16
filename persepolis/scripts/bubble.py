@@ -14,6 +14,7 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from persepolis.scripts.play import playNotification
+from persepolis.constants import OS
 from PyQt5.QtCore import QSettings
 import subprocess
 import platform
@@ -23,10 +24,10 @@ import os
 # platform
 os_type = platform.system()
 
-if os_type == 'Darwin':
+if os_type == OS.DARWIN:
     from persepolis.scripts.mac_notification import notifyMac
 
-elif os_type == 'Windows':
+elif os_type == OS.WINDOWS:
     from persepolis.scripts.windows_notification import Windows_Notification
 
 # notifySend use notify-send program in user's system for sending notifications
@@ -36,9 +37,9 @@ elif os_type == 'Windows':
 
 def notifySend(message1, message2, time, sound, parent=None):
 
-    if os_type == 'Linux':
+    if os_type == OS.LINUX:
         notifications_path = '/usr/share/sounds/freedesktop/stereo/'
-    elif os_type == 'FreeBSD' or os_type == 'OpenBSD':
+    elif os_type in OS.BSD_FAMILY:
         notifications_path = '/usr/local/share/sounds/freedesktop/stereo/'
     else:
         notifications_path = ''
@@ -76,7 +77,7 @@ def notifySend(message1, message2, time, sound, parent=None):
     if enable_notification == 'QT notification':
         parent.system_tray_icon.showMessage(message1, message2, 0, 10000)
     else:
-        if os_type == 'Linux' or os_type == 'FreeBSD' or os_type == 'OpenBSD':
+        if os_type in OS.UNIX_LIKE:
             subprocess.Popen(['notify-send', '--icon', 'persepolis',
                               '--app-name', 'Persepolis Download Manager',
                               '--expire-time', time,
@@ -86,10 +87,10 @@ def notifySend(message1, message2, time, sound, parent=None):
                              stdin=subprocess.PIPE,
                              shell=False)
 
-        elif os_type == 'Darwin':
+        elif os_type == OS.OSX:
             notifyMac("Persepolis Download Manager", message1, message2)
 
-        elif os_type == 'Windows':
+        elif os_type == OS.WINDOWS:
             message = Windows_Notification(parent=parent, time=time, text1=message1,
                                            text2=message2, persepolis_setting=persepolis_setting)
             message.show()

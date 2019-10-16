@@ -12,7 +12,7 @@
 #
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
+from persepolis.constants import OS
 from persepolis.scripts.useful_tools import freeSpace, humanReadbleSize
 from persepolis.scripts.osCommands import moveFile
 from persepolis.scripts.bubble import notifySend
@@ -59,7 +59,7 @@ server = xmlrpc.client.ServerProxy(server_uri, allow_none=True)
 
 def startAria():
     # in Linux and BSD
-    if os_type == 'Linux' or os_type == 'FreeBSD' or os_type == 'OpenBSD':
+    if os_type in OS.UNIX_LIKE:
 
         subprocess.Popen(['aria2c', '--no-conf',
                           '--enable-rpc', '--rpc-listen-port=' + str(port),
@@ -71,7 +71,7 @@ def startAria():
                          shell=False)
 
     # in macintosh
-    elif os_type == 'Darwin':
+    elif os_type == OS.OSX:
         if aria2_path == "" or aria2_path == None or os.path.isfile(str(aria2_path)) == False:
 
             cwd = sys.argv[0]
@@ -91,7 +91,7 @@ def startAria():
                          shell=False)
 
     # in Windows
-    elif os_type == 'Windows':
+    elif os_type == OS.WINDOWS:
         if aria2_path == "" or aria2_path == None or os.path.isfile(str(aria2_path)) == False:
             cwd = sys.argv[0]
             current_directory = os.path.dirname(cwd)
@@ -891,7 +891,7 @@ def endTime(end_time, gid, parent):
             i = i + 1
 
         # If aria2c not respond, so kill it. R.I.P :))
-        if (answer == 'None') and (os_type != 'Windows'):
+        if (answer == 'None') and (os_type != OS.WINDOWS):
 
             subprocess.Popen(['killall', 'aria2c'],
                              stderr=subprocess.PIPE,

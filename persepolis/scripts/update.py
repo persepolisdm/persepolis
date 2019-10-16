@@ -15,6 +15,8 @@
 
 from PyQt5.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QLabel, QPushButton
 from PyQt5.QtCore import Qt, QSize, QPoint, QTranslator, QCoreApplication, QLocale
+
+from persepolis.constants import OS
 from persepolis.scripts import osCommands
 from PyQt5 import QtWidgets, QtCore
 from PyQt5.QtGui import QIcon
@@ -118,7 +120,7 @@ class checkupdate(QWidget):
                 self.status_label.setText(QCoreApplication.translate(
                     "update_src_ui_tr", 'A newer Persepolis release is available'))
 
-                if os_type == 'Windows':
+                if os_type == OS.WINDOWS:
                     self.winUpdatedl()  # this function download latest release
 
                     # find system architect
@@ -130,7 +132,7 @@ class checkupdate(QWidget):
 
                         osCommands.xdgOpen(updatesource_dict['win32dlurl'])
 
-                elif os_type == 'Darwin':
+                elif os_type == OS.OSX:
                     osCommands.xdgOpen(updatesource_dict['macdlurl'])  # it will download latest release for mac
 
             elif float(server_version) == float(self.client_version):

@@ -12,7 +12,9 @@
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+
 from persepolis.scripts import logger
+from persepolis.constants import OS
 from PyQt5.QtCore import QSettings
 import subprocess
 import platform
@@ -34,7 +36,7 @@ def playNotification(file):
     volume = int((65536 * volume_percent)/100)
 
     if enable_notification == 'yes':
-        if os_type == 'Linux' or os_type == 'FreeBSD' or os_type == 'OpenBSD':
+        if os_type in OS.UNIX_LIKE:
 
             pipe = subprocess.Popen(['paplay', '--volume=' + str(volume),
                                      str(file)],
@@ -49,7 +51,7 @@ def playNotification(file):
                 logger.sendToLog(
                     "paplay not installed!Install it for playing sound notification", "WARNING")
 
-        elif os_type == 'Darwin':
+        elif os_type == OS.OSX:
 
             pipe = subprocess.Popen(['osascript', '-e',
                                      'set', 'volume', 'alert',
@@ -66,7 +68,7 @@ def playNotification(file):
                                     stdin=subprocess.PIPE,
                                     shell=False)
 
-        elif os_type == 'Windows':
+        elif os_type == OS.WINDOWS:
 
             CREATE_NO_WINDOW = 0x08000000
             subprocess.Popen(['rundll32', 'user32.dll,MessageBeep'],

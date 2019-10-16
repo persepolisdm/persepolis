@@ -25,6 +25,7 @@ import struct
 import argparse
 from persepolis.scripts import osCommands
 from persepolis.scripts.useful_tools import osAndDesktopEnvironment, determineConfigFolder
+from persepolis.constants import OS
 from copy import deepcopy
 import sys
 import os
@@ -33,7 +34,7 @@ import os
 os_type, desktop_env = osAndDesktopEnvironment()
 
 # Don't run persepolis as root!
-if os_type == 'Linux' or os_type == 'FreeBSD' or os_type == 'OpenBSD' or os_type == 'Darwin':
+if os_type in (OS.UNIX_LIKE + [OS.OSX]):
     uid = os.getuid()
     if uid == 0:
         print('Do not run persepolis as root.')
@@ -56,7 +57,7 @@ persepolis_tmp = os.path.join(config_folder, 'persepolis_tmp')
 # else >> another instance of persepolis is running now.
 global lock_file_validation
 
-if os_type != 'Windows':
+if os_type != OS.WINDOWS:
     import fcntl
     user_name_split = home_address.split('/')
     user_name = user_name_split[2]
@@ -93,7 +94,7 @@ if lock_file_validation:
     from persepolis.scripts.mainwindow import MainWindow
 
 # set "persepolis" name for this process in linux and bsd
-    if os_type == 'Linux' or os_type == 'FreeBSD' or os_type == 'OpenBSD':
+    if os_type in OS.UNIX_LIKE:
         try:
             from setproctitle import setproctitle
             setproctitle("persepolis")
@@ -187,7 +188,7 @@ browser_plugin_dict = {'link': None,
 if args.parent_window or unkownargs:
 
     # Platform specific configuration
-    if os_type == "Windows":
+    if os_type == OS.WINDOWS:
         # Set the default I/O mode to O_BINARY in windows
         import msvcrt
         msvcrt.setmode(sys.stdin.fileno(), os.O_BINARY)

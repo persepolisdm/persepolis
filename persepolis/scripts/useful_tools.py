@@ -14,6 +14,7 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from PyQt5.QtWidgets import QStyleFactory
+from persepolis.constants.Os import OS
 import urllib.parse
 import subprocess
 import platform
@@ -37,13 +38,13 @@ home_address = os.path.expanduser("~")
 
 # determine the config folder path based on the operating system
 def determineConfigFolder():
-    if os_type == 'Linux' or os_type == 'FreeBSD' or os_type == 'OpenBSD':
+    if os_type in OS.UNIX_LIKE:
         config_folder = os.path.join(
             str(home_address), ".config/persepolis_download_manager")
-    elif os_type == 'Darwin':
+    elif os_type == OS.OSX:
         config_folder = os.path.join(
             str(home_address), "Library/Application Support/persepolis_download_manager")
-    elif os_type == 'Windows':
+    elif os_type == OS.WINDOWS:
         config_folder = os.path.join(
             str(home_address), 'AppData', 'Local', 'persepolis_download_manager')
 
@@ -54,7 +55,7 @@ def determineConfigFolder():
 
 def osAndDesktopEnvironment():
     desktop_env = None
-    if os_type == 'Linux' or os_type == 'FreeBSD' or os_type == 'OpenBSD':
+    if os_type in OS.UNIX_LIKE:
         # find desktop environment('KDE', 'GNOME', ...)
         desktop_env = os.environ.get('XDG_CURRENT_DESKTOP')
 
@@ -149,7 +150,7 @@ def returnDefaultSettings():
     os_type, desktop_env = osAndDesktopEnvironment()
 
     # persepolis temporary download folder
-    if os_type != 'Windows':
+    if os_type != OS.WINDOWS:
         download_path_temp = str(home_address) + '/.persepolis'
     else:
         download_path_temp = os.path.join(
@@ -163,7 +164,7 @@ def returnDefaultSettings():
     style = 'Fusion'
     color_scheme = 'Dark Fusion'
     icons = 'Breeze-Dark'
-    if os_type == 'Linux' or os_type == 'FreeBSD' or 'os_type' == 'OpenBSD':
+    if os_type in OS.UNIX_LIKE:
         if desktop_env == 'KDE':
             if 'Breeze' in available_styles:
                 style = 'Breeze'
@@ -208,13 +209,13 @@ def returnDefaultSettings():
                     style = 'Fusion'
                     color_scheme = 'Light Fusion'
 
-    elif os_type == 'Darwin':
+    elif os_type == OS.OSX:
         if 'macintosh' in available_styles:
             style = 'macintosh'
             color_scheme = 'System'
             icons = 'Breeze'
 
-    elif os_type == 'Windows':
+    elif os_type == OS.WINDOWS:
         style = 'Fusion'
         color_scheme = 'Dark Fusion'
         icons = 'Breeze-Dark'
@@ -320,7 +321,7 @@ def muxer(parent, video_finder_dictionary):
                 i = i + 1
 
             # start muxing
-            if os_type == 'Linux' or os_type == 'FreeBSD' or os_type == 'OpenBSD':
+            if os_type in OS.UNIX_LIKE:
                 pipe = subprocess.Popen(['ffmpeg', '-i', video_file_path,
                                          '-i', audio_file_path,
                                          '-c', 'copy',
@@ -335,7 +336,7 @@ def muxer(parent, video_finder_dictionary):
                                         stdin=subprocess.PIPE,
                                         shell=False)
 
-            elif os_type == 'Darwin':
+            elif os_type == OS.DARWIN:
                 # ffmpeg path in mac
                 # ...path/Persepolis Download Manager.app/Contents/MacOS/ffmpeg
                 cwd = sys.argv[0]
@@ -356,7 +357,7 @@ def muxer(parent, video_finder_dictionary):
                                         stdin=subprocess.PIPE,
                                         shell=False)
 
-            elif os_type == 'Windows':
+            elif os_type == OS.WINDOWS:
                 # ffmpeg path in windows
                 cwd = sys.argv[0]
                 current_directory = os.path.dirname(cwd)

@@ -165,8 +165,9 @@ setup_dir = os.path.dirname(cwd)
 src_pycache = os.path.join(setup_dir, 'persepolis', '__pycache__')
 gui_pycache = os.path.join(setup_dir, 'persepolis', 'gui', '__pycache__')
 scripts_pycache = os.path.join(setup_dir, 'persepolis', 'scripts', '__pycache__')
+constants_pycache = os.path.join(setup_dir, 'persepolis', 'constants', '__pycache__')
 
-for folder in [src_pycache, gui_pycache, scripts_pycache]:
+for folder in [src_pycache, gui_pycache, scripts_pycache, constants_pycache]:
     if os.path.isdir(folder):
         shutil.rmtree(folder)
         print(str(folder)
@@ -193,7 +194,7 @@ setup(
     maintainer='AliReza AmirSamimi',
     maintainer_email='alireza.amirsamimi@gmail.com',
     packages=(
-        'persepolis',
+        'persepolis', 'persepolis.constants',
         'persepolis.scripts', 'persepolis.gui',
     ),
     data_files=DATA_FILES,
