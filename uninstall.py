@@ -20,11 +20,10 @@ import glob
 import os
 import shutil
 import sys
-from persepolis.constants import OS
 
 os_type = platform.system()
 
-if os_type == OS.LINUX:
+if os_type == 'Linux':
     path_list = ['/usr/share/man/man1/persepolis.1.gz',
                  '/usr/share/pixmaps/persepolis.svg',
                  '/usr/share/pixmaps/persepolis-tray.svg',
@@ -37,7 +36,7 @@ if os_type == OS.LINUX:
     for folder in glob.glob(pattern):
         path_list.append(folder)
 
-elif os_type in OS.BSD_FAMILY:
+elif os_type == 'FreeBSD' or os_type == 'OpenBSD':
     path_list = ['/usr/local/share/man/man1/persepolis.1.gz',
                  '/usr/local/share/pixmaps/persepolis.svg',
                  '/usr/local/share/pixmaps/persepolis-tray.svg',
