@@ -1,6 +1,6 @@
 # Windows message host middle man. 
 # Use pyinstaller to create a single-file executable from this file.
-# Then place it at installation root directory.
+# Then place it in installation root directory (usually C:\Program Files\Persepolis Download Manager\)
 
 import os
 import sys
@@ -14,7 +14,7 @@ from subprocess import (
 )
 
 
-
+# windows flags to create a detached and independent child process that lives after its parent dies.
 creationflags = CREATE_BREAKAWAY_FROM_JOB | DETACHED_PROCESS | CREATE_NEW_PROCESS_GROUP
 
 cwd = sys.argv[0]
