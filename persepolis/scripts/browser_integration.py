@@ -58,6 +58,10 @@ def browserIntegration(browser):
             native_message_folder = home_address + \
                 '/.config/opera/NativeMessagingHosts'
 
+        elif browser == BROWSER.BRAVE:
+            native_message_folder = home_address + \
+                '/.config/BraveSoftware/Brave-Browser/NativeMessagingHosts'
+
     # for FreeBSD and OpenBSD
     elif os_type in OS.BSD_FAMILY:
         # find Persepolis execution path
@@ -82,6 +86,11 @@ def browserIntegration(browser):
         elif browser == BROWSER.OPERA:
             native_message_folder = home_address + \
                 '/.config/opera/NativeMessagingHosts'
+
+        elif browser == BROWSER.BRAVE:
+            native_message_folder = home_address + \
+                '/.config/BraveSoftware/Brave-Browser/NativeMessagingHosts'
+
 
     # for Mac OSX
     elif os_type == OS.OSX:
@@ -109,6 +118,10 @@ def browserIntegration(browser):
         elif browser == BROWSER.OPERA:
             native_message_folder = home_address + \
                 '/Library/Application Support/Opera/NativeMessagingHosts/'
+
+        elif browser == BROWSER.BRAVE:
+            native_message_folder = home_address + \
+                '/Library/Application Support/BraveSoftware/Brave-Browser/NativeMessagingHosts/'
 
     # for MicroSoft Windows os (windows 7 , ...)
     elif os_type == OS.WINDOWS:
