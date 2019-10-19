@@ -148,7 +148,6 @@ if persepolis_setting.value('subfolder') == 'yes':
 for folder in folder_list:
     osCommands.makeDirs(folder)
 
-
 persepolis_setting.endGroup()
 
 # Browser integration for Firefox and chromium and google chrome
