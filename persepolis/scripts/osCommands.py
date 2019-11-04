@@ -13,13 +13,15 @@
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+
+from persepolis.constants import OS
 import subprocess
 import platform
 import shutil
 import os
-from persepolis.constants import OS
 
 os_type = platform.system()
+home_address = os.path.expanduser("~")
 
 
 # this method finds file manager in linux
@@ -162,32 +164,106 @@ def xdgOpen(file_path, f_type='file', path='file'):
                              shell=False,
                              creationflags=CREATE_NO_WINDOW)
 
-
-def remove(file_path):  # remove file with path of file_path
+# remove file with path of file_path
+def remove(file_path): 
     if os.path.isfile(file_path):
         try:
+            # function returns  ok, if operation was successful
             os.remove(file_path)
-            return 'ok'  # function returns  this , if operation was successful
-        except:
-            return 'cant'  # function returns this , if operation was not successful
-    else:
-        return 'no'  # function returns this , if file is not existed
-
-
-def removeDir(folder_path):  # removeDir removes folder : folder_path
-    if os.path.isdir(folder_path):  # check folder_path existence
-        try:
-            shutil.rmtree(folder_path)  # remove folder
             return 'ok'
+
         except:
-            return 'cant'  # return 'cant' if removing was not successful
+            # function returns this, if operation was not successful
+            return 'cant'
+
     else:
-        return 'no'  # return 'no' if file didn't existed
+        # function returns this , if file is not existed
+        return 'no'
+
+# removeDir removes folder : folder_path
+def removeDir(folder_path):
+
+    # check folder_path existence
+    if os.path.isdir(folder_path):
+        try:
+            # remove folder
+            shutil.rmtree(folder_path)
+            return 'ok'
+
+        except:
+            # return 'cant' if removing was not successful
+            return 'cant'
+    else:
+        # return 'no' if file didn't existed
+        return 'no'
+
+# make directory 
+def makeDirs(folder_path, hidden=False):
+
+    if hidden:
+
+        # create hidden attribute directory.
+        if os_type == OS.WINDOWS:
+
+            os.makedirs(folder_path, exist_ok=True)
+
+            # in MS Windows "attrib +h" command hidden directory.
+            CREATE_NO_WINDOW = 0x08000000
+            subprocess.Popen(['attrib', '+h', folder_path],
+                             stderr=subprocess.PIPE,
+                             stdout=subprocess.PIPE,
+                             stdin=subprocess.PIPE,
+                             shell=False,
+                             creationflags=CREATE_NO_WINDOW)
+        else:
+
+            # In linux and bsd a dot character must be added in the start of the directory's name
+            dir_name = os.path.basename(folder_path)
+            dir_name = '.' + dir_name 
+            folder_path = os.path.join(os.path.dirname(folder_path), dir_name)
+
+            os.makedirs(folder_path, exist_ok=True)
+
+    else:
+        os.makedirs(folder_path, exist_ok=True)
+
+    return folder_path
+    
+# this function returns mount point
+def findMountPoint(path):
+
+    while not os.path.ismount(path):
+        path = os.path.dirname(path)
+
+    return path
+
+# this function creates temporary download folder in mount point of given path
+def makeTempDownloadDir(path):
+
+    # if path and home_address are in the same partition,
+    # create temp folder in default settings address.
+    if os.lstat(path).st_dev == os.lstat(home_address):
+
+        if os_type != OS.WINDOWS:
+            download_path_temp = os.path.join(home_address, '.persepolis')
+        else:
+            download_path_temp = os.path.join(
+                home_address, 'AppData', 'Local', 'persepolis')
+
+        # create directory
+        download_path_temp = makeDirs(download_path_temp)
+
+    else:
+        # Find mount point and create temp folder there!
+        mount_point = findMountPoint(path)
+        download_path_temp = os.path.join(mount_point, 'persepolis')
+
+        # Create folder and give new temp address from makeDirs function.
+        # Please checkout osCommands.py for more information.
+        download_path_temp = makeDirs(download_path_temp, hidden=True)
 
 
-def makeDirs(folder_path):  # make new folders
-    os.makedirs(folder_path, exist_ok=True)
-
+    return download_path_temp
 
 # move downloaded file to another destination.
 def moveFile(old_file_path, new_path, new_path_type='folder'):

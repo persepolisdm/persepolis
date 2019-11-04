@@ -12,11 +12,12 @@
 #
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-from persepolis.constants import OS
+
+from persepolis.scripts.osCommands import moveFile, makeTempDownloadDir 
 from persepolis.scripts.useful_tools import freeSpace, humanReadbleSize
-from persepolis.scripts.osCommands import moveFile
 from persepolis.scripts.bubble import notifySend
 from persepolis.scripts import logger
+from persepolis.constants import OS
 from PyQt5.QtCore import QSettings
 import xmlrpc.client
 import urllib.parse
@@ -239,12 +240,33 @@ def downloadAria(gid, parent):
             limit = str(limit_number) + limit_unit
 
 
-# set start_time value to None in data_base!
+        # set start_time value to None in data_base!
         parent.persepolis_db.setDefaultGidInAddlinkTable(gid, start_time=True)
 
-# find download_path_temp from persepolis_setting
+    # Find download_path_temp from persepolis_setting
+    # if download_path_temp and download_path aren't in same partition on hard disk,
+    # then create new temp folder in that partition.
+    # Why? when download is completed, file must be moved to download_path from temp folder.
+    # It helps moving speed :)
     persepolis_setting.sync()
+
+    # Find default download_path_temp
     download_path_temp = persepolis_setting.value('settings/download_path_temp')
+
+    # Find user's selected download_path
+    download_path = add_link_dictionary['download_path'] 
+
+    # check is download_path is existed
+    if os.path.isdir(download_path):
+
+        if os.lstat(download_path).st_dev != os.lstat(download_path_temp).st_dev:
+
+            # Create folder and give new temp address from makeTempDownloadDir function.
+            # Please checkout osCommands.py for more information.
+            download_path_temp = makeTempDownloadDir(download_path) 
+    else:
+        # write an error in logger
+        logger.sendToLog("download_path is not found!", "ERROR")
 
     if start_time_status != 'stopped':
         # send download request to aria2

@@ -40,13 +40,13 @@ home_address = os.path.expanduser("~")
 def determineConfigFolder():
     if os_type in OS.UNIX_LIKE:
         config_folder = os.path.join(
-            str(home_address), ".config/persepolis_download_manager")
+            home_address, ".config/persepolis_download_manager")
     elif os_type == OS.OSX:
         config_folder = os.path.join(
-            str(home_address), "Library/Application Support/persepolis_download_manager")
+            home_address, "Library/Application Support/persepolis_download_manager")
     elif os_type == OS.WINDOWS:
         config_folder = os.path.join(
-            str(home_address), 'AppData', 'Local', 'persepolis_download_manager')
+            home_address, 'AppData', 'Local', 'persepolis_download_manager')
 
     return config_folder
 
@@ -151,13 +151,13 @@ def returnDefaultSettings():
 
     # persepolis temporary download folder
     if os_type != OS.WINDOWS:
-        download_path_temp = str(home_address) + '/.persepolis'
+        download_path_temp = home_address + '/.persepolis'
     else:
         download_path_temp = os.path.join(
-            str(home_address), 'AppData', 'Local', 'persepolis')
+            home_address, 'AppData', 'Local', 'persepolis')
 
     # user download folder path
-    download_path = os.path.join(str(home_address), 'Downloads', 'Persepolis')
+    download_path = os.path.join(home_address, 'Downloads', 'Persepolis')
 
     # find available styles(It's depends on operating system and desktop environments).
     available_styles = QStyleFactory.keys()
