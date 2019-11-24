@@ -475,7 +475,7 @@ class DownloadLink(QThread):
         # if request is not successful then persepolis is checking rpc
         # connection with download.aria2Version() function
         answer = download.downloadAria(self.gid, self.parent)
-        if not(answer):
+        if answer == False:
             version_answer = download.aria2Version()
 
             if version_answer == 'did not respond':

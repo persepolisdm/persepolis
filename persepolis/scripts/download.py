@@ -320,15 +320,13 @@ def downloadAria(gid, parent):
             error_message = str(traceback.format_exc())
             logger.sendToLog(error_message, "ERROR")
 
-            # return None!
-            return None
+            # return False!
+            return False
     else:
         # if start_time_status is "stopped" it means download Canceled by user
         logger.sendToLog("Download Canceled", "INFO")
 
 # this function returns list of download information
-
-
 def tellActive():
     # get download information from aria2
     try:
