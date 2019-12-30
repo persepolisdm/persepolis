@@ -392,6 +392,6 @@ def muxer(parent, video_finder_dictionary):
                 result_dictionary['error'] = 'ffmpeg error'
                 out, ffmpeg_error_message = pipe.communicate()
 
-                result_dictionary['ffmpeg_error_message'] = ffmpeg_error_message.decode('utf-8')
+                result_dictionary['ffmpeg_error_message'] = ffmpeg_error_message.decode('utf-8', 'ignore')
 
     return result_dictionary
