@@ -37,7 +37,7 @@ def getProxy():
 
     proxy = {}
     if os_type in OS.UNIX_LIKE:
-        if desktop is None:
+        if desktop == None:
             desktop_env_type = 'Desktop Environment not detected!'
         else:
             desktop_env_type = 'Desktop environment: ' + str(desktop)
@@ -154,7 +154,7 @@ def getProxy():
                     if len(words) == 3 and words[0] in validKeys:
                         mac_tmp_proxies_list[words[0]] = words[2]
 
-                if mac_tmp_proxies_list['SOCKSEnable'] is '1':
+                if mac_tmp_proxies_list['SOCKSEnable'] == '1':
                     socks_proxy = True
                 else:
                     socks_proxy = False
