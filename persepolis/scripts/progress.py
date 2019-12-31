@@ -20,13 +20,13 @@ from persepolis.gui.progress_ui import ProgressWindow_Ui
 from persepolis.scripts.shutdown import shutDown
 from persepolis.scripts.bubble import notifySend
 from persepolis.scripts import download
+from persepolis.constants import OS
 from PyQt5.QtGui import QIcon
 import subprocess
 import platform
 import time
 
 os_type = platform.system()
-
 
 class ShutDownThread(QThread):
     def __init__(self, parent, gid, password=None):

@@ -19,9 +19,7 @@ from time import sleep
 import subprocess
 import platform
 
-# find os platform
 os_type = platform.system()
-
 
 def shutDown(parent, gid=None, category=None, password=None):
     # for queue >> gid = None

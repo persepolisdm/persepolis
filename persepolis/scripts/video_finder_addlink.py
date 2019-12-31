@@ -518,10 +518,15 @@ class VideoFinderAddLink(AddLinkWindow):
                     self.advanced_format_selection_frame.hide()
 
                 # set index of comboboxes on best available quality.
+                # we have both audio and video
                 if len(self.no_audio_list) != 0 and len(self.no_video_list) != 0:
                     self.media_comboBox.addItem('Best quality')
                     self.media_comboBox.setCurrentIndex(len(self.video_audio_list))
+                    self.change_name_lineEdit.setText(self.media_title)
+                    self.extension_label.setText('.' + self.no_audio_list[-1]['ext'])
+                    self.change_name_checkBox.setChecked(True)
 
+                # video and audio are not separate
                 elif len(self.video_audio_list) != 0:
                     self.media_comboBox.setCurrentIndex(len(self.video_audio_list) - 1)
 

@@ -64,9 +64,11 @@ It exemplifies the Achaemenid style of architecture. UNESCO declared the ruins o
 **H Rostami:** UI translation, Fedora & OpenSuse support  
 [GitHub](https://github.com/hayyan71) | [E-mail](mailto:hayyan71@yahoo.com)
 
-**Ehsan Titish:** Mac OSX support  
-[GitHub](https://github.com/Maders) | [E-mail](me@maders.ir)
+**Ehsan Titish:** Mac OSX support   
+[GitHub](https://github.com/Maders) | [E-mail](mailto:me@maders.ir)
 
+**Charles K Barcza:** blackPanther OS support  
+[GitHub](https://github.com/blackPantherOS/persepolis) | [E-mail](mailto:info@blackpantheros.eu)
 
 [Persepolis website (En)](https://persepolisdm.github.io/) | [Persepolis website (Fa)](https://persepolisdm.github.io/fa) | [Twitter](https://twitter.com/persepolisdm) | [Telegram Channel](https://telegram.me/persepolisdm)
 

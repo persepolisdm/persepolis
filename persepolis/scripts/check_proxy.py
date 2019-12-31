@@ -37,7 +37,7 @@ def getProxy():
 
     proxy = {}
     if os_type in OS.UNIX_LIKE:
-        if desktop is None:
+        if desktop == None:
             desktop_env_type = 'Desktop Environment not detected!'
         else:
             desktop_env_type = 'Desktop environment: ' + str(desktop)
@@ -79,14 +79,14 @@ def getProxy():
                     proxy['ftp_proxy_port'] = proxysource['ftpProxy'].split(' ')[1].replace("/", "").replace("\n", "")
                     proxy['ftp_proxy_ip'] = proxysource['ftpProxy'].split(' ')[0].split('//')[1]
                 except:
-                    logger.sendToLog('no manuall ftp proxy detected', 'INFO')
+                    logger.sendToLog('no manual ftp proxy detected', 'INFO')
 
                 # get http proxy
                 try:
                     proxy['http_proxy_port'] = proxysource['httpProxy'].split(' ')[1].replace("/", "").replace("\n", "")
                     proxy['http_proxy_ip'] = proxysource['httpProxy'].split(' ')[0].split('//')[1]
                 except:
-                    logger.sendToLog('no manuall http proxy detected', 'INFO')
+                    logger.sendToLog('no manual http proxy detected', 'INFO')
 
                 # get https proxy
                 try:
@@ -94,7 +94,7 @@ def getProxy():
                         ' ')[1].replace("/", "").replace("\n", "")
                     proxy['https_proxy_ip'] = proxysource['httpsProxy'].split(' ')[0].split('//')[1]
                 except:
-                    logger.sendToLog('no manuall https proxy detected', 'INFO')
+                    logger.sendToLog('no manual https proxy detected', 'INFO')
 
                 # get socks proxy
                 try:
@@ -105,7 +105,7 @@ def getProxy():
 
             # proxy disabled
             else:
-                logger.sendToLog('no manuall proxy detected', 'INFO')
+                logger.sendToLog('no manual proxy detected', 'INFO')
 
         # proxy file not exists
         else:
@@ -154,7 +154,7 @@ def getProxy():
                     if len(words) == 3 and words[0] in validKeys:
                         mac_tmp_proxies_list[words[0]] = words[2]
 
-                if mac_tmp_proxies_list['SOCKSEnable'] is '1':
+                if mac_tmp_proxies_list['SOCKSEnable'] == '1':
                     socks_proxy = True
                 else:
                     socks_proxy = False
