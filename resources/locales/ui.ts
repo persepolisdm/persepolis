@@ -1665,7 +1665,7 @@ Ehsan Titish</source>
     </message>
     <message>
         <location filename="../../persepolis/gui/setting_ui.py" line="508"/>
-        <source>Add new Video link</source>
+        <source>Add new video link</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -1685,7 +1685,7 @@ Ehsan Titish</source>
     </message>
     <message>
         <location filename="../../persepolis/gui/setting_ui.py" line="628"/>
-        <source>Start Persepolis in system tray, If browser is executed.</source>
+        <source>Start Persepolis in system tray, if browser is executed.</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -1801,7 +1801,7 @@ Ehsan Titish</source>
     </message>
     <message>
         <location filename="../../persepolis/scripts/update.py" line="53"/>
-        <source>The newest is the best , We recommend to update Persepolis</source>
+        <source>The newest is the best, we recommend to update Persepolis.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
