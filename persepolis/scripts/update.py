@@ -144,7 +144,7 @@ class checkupdate(QWidget):
 
         except Exception as e:
             self.status_label.setText(QCoreApplication.translate(
-                "update_src_ui_tr", 'An error occured while checking for updates.'))
+                "update_src_ui_tr", 'An error occurred while checking for updates.'))
 
         self.check_button.setText(QCoreApplication.translate("update_src_ui_tr", 'Check for new update'))
 
