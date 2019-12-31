@@ -166,7 +166,7 @@ parser.add_argument('--version', action='version', version='Persepolis Download 
 
 # Clears unwanted args ( like args from Browers via NHM )
 # unknown arguments (may sent by browser) will save in unknownargs.
-args, unkownargs = parser.parse_known_args()
+args, unknownargs = parser.parse_known_args()
 
 # if --execute >> yes  >>> persepolis main window  will start.
 # if --execute >> no >>> persepolis started before!
@@ -185,7 +185,7 @@ browser_plugin_dict = {'link': None,
 
 # This dirty trick will show Persepolis version when there are unknown args
 # Unknown args are sent by Browsers for NHM
-if args.parent_window or unkownargs:
+if args.parent_window or unknownargs:
 
     # Platform specific configuration
     if os_type == OS.WINDOWS:
@@ -351,7 +351,7 @@ if len(plugin_list) != 0:
 
 # start persepolis in system tray if browser executed
 # and if user select this option in preferences window.
-if str(persepolis_setting.value('settings/browser-persepolis')) == 'yes' and (args.parent_window or unkownargs):
+if str(persepolis_setting.value('settings/browser-persepolis')) == 'yes' and (args.parent_window or unknownargs):
     start_persepolis_if_browser_executed = True
     start_in_tray = True
 else:
@@ -360,7 +360,7 @@ else:
 
 def main():
     # if lock_file is existed , it means persepolis is still running!
-    if lock_file_validation and (not((args.parent_window or unkownargs) and browser_url == False) or ((args.parent_window or unkownargs) and start_persepolis_if_browser_executed)):
+    if lock_file_validation and (not((args.parent_window or unknownargs) and browser_url == False) or ((args.parent_window or unknownargs) and start_persepolis_if_browser_executed)):
 
         # set QT_AUTO_SCREEN_SCALE_FACTOR to 1 for "high DPI displays"
         os.environ['QT_AUTO_SCREEN_SCALE_FACTOR'] = '1'
@@ -450,7 +450,7 @@ def main():
 
         sys.exit(persepolis_download_manager.exec_())
 
-    elif not((args.parent_window or unkownargs)):
+    elif not((args.parent_window or unknownargs)):
 
         # this section warns user that program is still running and no need to run it again
         # and creating a file to notify mainwindow for showing itself!

@@ -1860,7 +1860,7 @@ class MainWindow(MainWindow_Ui):
                         self.download_table.setItem(row, i, item)
                     except Exception as problem:
                         logger.sendToLog(
-                            "Error occured while updating download table", "INFO")
+                            "Error occurred while updating download table", "INFO")
                         logger.sendToLog(problem, "ERROR")
 
                 # update download_table (refreshing!)
@@ -2025,7 +2025,7 @@ class MainWindow(MainWindow_Ui):
                     # if download stopped:
                     if progress_window.status == "stopped":
                         # write message in log
-                        stop_message = 'Download stoped - GID : '\
+                        stop_message = 'Download stopped - GID : '\
                             + str(gid)
 
                         logger.sendToLog(stop_message, 'INFO')
@@ -2143,11 +2143,11 @@ class MainWindow(MainWindow_Ui):
             droplink.ignore()
 
     def dropEvent(self, droplink):
-        link_clipborad = QApplication.clipboard()
-        link_clipborad.clear(mode=link_clipborad.Clipboard)
+        link_clipboard = QApplication.clipboard()
+        link_clipboard.clear(mode=link_clipboard.Clipboard)
         link_string = droplink.mimeData().text()
-        link_clipborad.setText(str(link_string), mode=link_clipborad.Clipboard)
-        self.addLinkButtonPressed(button=link_clipborad)
+        link_clipboard.setText(str(link_string), mode=link_clipboard.Clipboard)
+        self.addLinkButtonPressed(button=link_clipboard)
 
     # aria2 identifies each download by the ID called GID.
     # The GID must be hex string of 16 characters,
@@ -5558,7 +5558,7 @@ class MainWindow(MainWindow_Ui):
                     self.download_table.setItem(row, i, item)
                 except Exception as problem:
                     logger.sendToLog(
-                        "Error occured while updating download table", "INFO")
+                        "Error occurred while updating download table", "INFO")
                     logger.sendToLog(problem, "ERROR")
 
     # this method deletes all items in data base
@@ -5927,7 +5927,7 @@ class MainWindow(MainWindow_Ui):
 
         elif error_message == 'ffmpeg error':
             # show error message
-            notifySend(QCoreApplication.translate("mainwindow_src_ui_tr", "an error occured"),
+            notifySend(QCoreApplication.translate("mainwindow_src_ui_tr", "an error occurred"),
                        QCoreApplication.translate("mainwindow_src_ui_tr", "muxing error"),
                        10000, 'fail', parent=self)
 
