@@ -803,7 +803,7 @@ class Queue(QThread):
                         sigma_hour = sigma_hour - 24
 
                     # setting sigma_hour and sigma_minute for download's start time!
-                    add_link_dict['start_time'] = str(sigma_hour + ':' + sigma_minute)
+                    add_link_dict['start_time'] = str(sigma_hour) + ':' + str(sigma_minute)
 
                 # write changes in data base
                 self.parent.persepolis_db.updateAddLinkTable([add_link_dict])
