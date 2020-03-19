@@ -141,7 +141,7 @@ class TextQueue_Ui(QWidget):
         proxy_verticalLayout.addWidget(self.proxy_frame)
         options_tab_verticalLayout.addLayout(proxy_verticalLayout)
 
-        # download UserName & Password
+        # download Username & Password
         download_horizontalLayout = QHBoxLayout()
         download_horizontalLayout.setContentsMargins(-1, 10, -1, -1)
 
@@ -265,7 +265,7 @@ class TextQueue_Ui(QWidget):
         self.queue_tabWidget.setTabText(
             self.queue_tabWidget.indexOf(self.links_tab), QCoreApplication.translate("text_ui_tr", 'Links'))
         self.queue_tabWidget.setTabText(
-            self.queue_tabWidget.indexOf(self.options_tab), QCoreApplication.translate("text_ui_tr", 'Download options'))
+            self.queue_tabWidget.indexOf(self.options_tab), QCoreApplication.translate("text_ui_tr", 'Download Options'))
 
         self.select_all_pushButton.setText(QCoreApplication.translate("text_ui_tr", 'Select All'))
         self.deselect_all_pushButton.setText(QCoreApplication.translate("text_ui_tr", 'Deselect All'))
@@ -273,21 +273,21 @@ class TextQueue_Ui(QWidget):
         self.add_queue_label.setText(QCoreApplication.translate("text_ui_tr", 'Add to queue: '))
 
         self.proxy_checkBox.setText(QCoreApplication.translate("text_ui_tr", 'Proxy'))
-        self.proxy_pass_label.setText(QCoreApplication.translate("text_ui_tr", "Proxy PassWord: "))
+        self.proxy_pass_label.setText(QCoreApplication.translate("text_ui_tr", "Proxy password: "))
         self.ip_label.setText(QCoreApplication.translate("text_ui_tr", "IP:"))
-        self.proxy_user_label.setText(QCoreApplication.translate("text_ui_tr", "Proxy UserName: "))
+        self.proxy_user_label.setText(QCoreApplication.translate("text_ui_tr", "Proxy username: "))
         self.port_label.setText(QCoreApplication.translate("text_ui_tr", "Port:"))
 
-        self.download_checkBox.setText(QCoreApplication.translate("text_ui_tr", "Download UserName and PassWord"))
-        self.download_user_label.setText(QCoreApplication.translate("text_ui_tr", "Download UserName: "))
-        self.download_pass_label.setText(QCoreApplication.translate("text_ui_tr", "Download PassWord: "))
+        self.download_checkBox.setText(QCoreApplication.translate("text_ui_tr", "Download username and password"))
+        self.download_user_label.setText(QCoreApplication.translate("text_ui_tr", "Download username: "))
+        self.download_pass_label.setText(QCoreApplication.translate("text_ui_tr", "Download password: "))
 
         self.folder_pushButton.setText(QCoreApplication.translate("text_ui_tr", "Change Download Folder"))
-        self.folder_label.setText(QCoreApplication.translate("text_ui_tr", "Download Folder: "))
+        self.folder_label.setText(QCoreApplication.translate("text_ui_tr", "Download folder: "))
 
-        self.limit_checkBox.setText(QCoreApplication.translate("text_ui_tr", "Limit Speed"))
+        self.limit_checkBox.setText(QCoreApplication.translate("text_ui_tr", "Limit speed"))
 
-        self.connections_label.setText(QCoreApplication.translate("text_ui_tr", "Number Of Connections:"))
+        self.connections_label.setText(QCoreApplication.translate("text_ui_tr", "Number of connections:"))
 
         self.ok_pushButton.setText(QCoreApplication.translate("text_ui_tr", 'OK'))
         self.cancel_pushButton.setText(QCoreApplication.translate("text_ui_tr", 'Cancel'))

@@ -185,7 +185,7 @@ class AddLinkWindow_Ui(QWidget):
 
         more_options_tab_verticalLayout = QVBoxLayout(self.more_options_tab)
 
-        # download UserName & Password ->
+        # download Username & Password ->
         download_horizontalLayout = QHBoxLayout()
         download_horizontalLayout.setContentsMargins(-1, 10, -1, -1)
 
@@ -400,41 +400,41 @@ class AddLinkWindow_Ui(QWidget):
         self.setLayout(window_verticalLayout)
 
         # labels ->
-        self.setWindowTitle(QCoreApplication.translate("addlink_ui_tr", "Enter Your Link"))
+        self.setWindowTitle(QCoreApplication.translate("addlink_ui_tr", "Add Download Link"))
 
-        self.link_label.setText(QCoreApplication.translate("addlink_ui_tr", "Download Link: "))
+        self.link_label.setText(QCoreApplication.translate("addlink_ui_tr", "Download link: "))
 
         self.add_queue_label.setText(QCoreApplication.translate("addlink_ui_tr", "Add to category: "))
 
-        self.change_name_checkBox.setText(QCoreApplication.translate("addlink_ui_tr", "Change File Name: "))
+        self.change_name_checkBox.setText(QCoreApplication.translate("addlink_ui_tr", "Change file name: "))
 
-        self.detect_proxy_pushButton.setText(QCoreApplication.translate("addlink_ui_tr", "Detect system proxy setting"))
+        self.detect_proxy_pushButton.setText(QCoreApplication.translate("addlink_ui_tr", "Detect System Proxy Settings"))
         self.proxy_checkBox.setText(QCoreApplication.translate("addlink_ui_tr", "Proxy"))
-        self.proxy_pass_label.setText(QCoreApplication.translate("addlink_ui_tr", "Proxy PassWord: "))
+        self.proxy_pass_label.setText(QCoreApplication.translate("addlink_ui_tr", "Proxy password: "))
         self.ip_label.setText(QCoreApplication.translate("addlink_ui_tr", "IP: "))
-        self.proxy_user_label.setText(QCoreApplication.translate("addlink_ui_tr", "Proxy UserName: "))
+        self.proxy_user_label.setText(QCoreApplication.translate("addlink_ui_tr", "Proxy username: "))
         self.port_label.setText(QCoreApplication.translate("addlink_ui_tr", "Port:"))
 
-        self.download_checkBox.setText(QCoreApplication.translate("addlink_ui_tr", "Download UserName and PassWord"))
-        self.download_user_label.setText(QCoreApplication.translate("addlink_ui_tr", "Download UserName: "))
-        self.download_pass_label.setText(QCoreApplication.translate("addlink_ui_tr", "Download PassWord: "))
+        self.download_checkBox.setText(QCoreApplication.translate("addlink_ui_tr", "Download username and password"))
+        self.download_user_label.setText(QCoreApplication.translate("addlink_ui_tr", "Download username: "))
+        self.download_pass_label.setText(QCoreApplication.translate("addlink_ui_tr", "Download password: "))
 
         self.folder_pushButton.setText(QCoreApplication.translate("addlink_ui_tr", "Change Download Folder"))
         self.folder_label.setText(QCoreApplication.translate("addlink_ui_tr", "Download Folder: "))
 
-        self.start_checkBox.setText(QCoreApplication.translate("addlink_ui_tr", "Start Time"))
-        self.end_checkBox.setText(QCoreApplication.translate("addlink_ui_tr", "End Time"))
+        self.start_checkBox.setText(QCoreApplication.translate("addlink_ui_tr", "Start time"))
+        self.end_checkBox.setText(QCoreApplication.translate("addlink_ui_tr", "End time"))
 
-        self.limit_checkBox.setText(QCoreApplication.translate("addlink_ui_tr", "Limit Speed"))
+        self.limit_checkBox.setText(QCoreApplication.translate("addlink_ui_tr", "Limit speed"))
         self.limit_comboBox.setItemText(0, "KiB/s")
         self.limit_comboBox.setItemText(1, "MiB/s")
 
-        self.connections_label.setText(QCoreApplication.translate("addlink_ui_tr", "Number Of Connections:"))
+        self.connections_label.setText(QCoreApplication.translate("addlink_ui_tr", "Number of connections:"))
 
         self.cancel_pushButton.setText(QCoreApplication.translate("addlink_ui_tr", "Cancel"))
         self.ok_pushButton.setText(QCoreApplication.translate("addlink_ui_tr", "OK"))
 
-        self.download_later_pushButton.setText(QCoreApplication.translate("addlink_ui_tr", "Download later"))
+        self.download_later_pushButton.setText(QCoreApplication.translate("addlink_ui_tr", "Download Later"))
 
         self.add_link_tabWidget.setTabText(self.add_link_tabWidget.indexOf(
             self.link_tab), QCoreApplication.translate("addlink_ui_tr", "Link"))
