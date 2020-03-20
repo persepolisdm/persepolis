@@ -631,7 +631,7 @@ class Setting_Ui(QWidget):
             QCoreApplication.translate("setting_ui_tr", "<html><head/><body><p>This feature may not work in your operating system.</p></body></html>"))
 
         self.start_persepolis_if_browser_executed_checkBox.setText(
-            QCoreApplication.translate('setting_ui_tr', 'If executed by browser, start Persepolis in system tray'))
+            QCoreApplication.translate('setting_ui_tr', 'If browser is opened, start Persepolis in system tray'))
 
         self.enable_system_tray_checkBox.setText(
             QCoreApplication.translate("setting_ui_tr", "Enable system tray icon"))
