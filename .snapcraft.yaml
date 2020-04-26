@@ -24,7 +24,6 @@ apps:
       - removable-media
       - wayland
       - unity7
-    desktop: usr/share/applications/com.github.persepolisdm.persepolis.desktop
 
 parts:
   desktop-qt5:
@@ -73,6 +72,3 @@ parts:
       - python3-setproctitle
       - python3-psutil
       - sound-theme-freedesktop
-    override-build: |
-      snapcraftctl build
-      sed -i 's|Icon=persepolis|Icon=${SNAP}/meta/gui/icon.svg|g' ${SNAP}/lib/python3.6/site-packages/usr/share/applications/com.github.persepolisdm.persepolis.desktop
