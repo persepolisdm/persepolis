@@ -13,6 +13,7 @@ apps:
   persepolis:
     command: bin/persepolis
     command-chain: [bin/desktop-launch]
+    desktop: lib/python3.6/site-packages/usr/share/applications/com.github.persepolisdm.persepolis.desktop
     plugs:
       - audio-playback
       - desktop
@@ -73,3 +74,6 @@ parts:
       - python3-setproctitle
       - python3-psutil
       - sound-theme-freedesktop
+     # Point icon to the correct location
+      sed -i.bak -e 's|Icon=persepolis|Icon=/usr/share/icons/hicolor/scalable/apps/persepolis.svg|g' data/com.github.persepolisdm.persepolis.desktop.in
+    ...
