@@ -74,7 +74,3 @@ parts:
       - python3-setproctitle
       - python3-psutil
       - sound-theme-freedesktop
-    override-pull: |
-      snapcraftctl pull
-      # Point icon to the correct location
-      sed -i.bak -e 's|Icon=persepolis|Icon=/usr/share/icons/hicolor/scalable/apps/persepolis.svg|g' data/com.github.persepolisdm.persepolis.desktop.in
