@@ -77,4 +77,4 @@ parts:
     override-pull: |
         snapcraftctl pull
         # Point icon to the correct location
-        sed -i.bak -e 's|Icon=icon|Icon=meta/gui/icon.svg|g' data/persepolis.desktop.in
+        sed -i.bak -e 's|Icon=persepolis|Icon=/usr/share/icons/hicolor/scalable/apps/persepolis.svg|g' data/persepolis.desktop.in
