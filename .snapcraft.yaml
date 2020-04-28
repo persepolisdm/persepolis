@@ -13,7 +13,7 @@ apps:
   persepolis:
     command: bin/persepolis
     command-chain: [bin/desktop-launch]
-    desktop: lib/python3.6/site-packages/usr/share/applications/com.github.persepolisdm.persepolis.desktop
+    desktop: meta/gui/persepolis.desktop
     plugs:
       - audio-playback
       - desktop
@@ -74,3 +74,7 @@ parts:
       - python3-setproctitle
       - python3-psutil
       - sound-theme-freedesktop
+    override-pull: |
+        snapcraftctl pull
+        # Point icon to the correct location
+        sed -i.bak -e 's|Icon=icon|Icon=meta/gui/icon.svg|g' data/persepolis.desktop.in
