@@ -13,7 +13,6 @@ apps:
   persepolis:
     command: bin/persepolis
     command-chain: [bin/desktop-launch]
-    desktop: meta/gui/persepolis.desktop
     plugs:
       - audio-playback
       - desktop
