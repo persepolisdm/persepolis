@@ -13,6 +13,8 @@ apps:
   persepolis:
     command: bin/persepolis
     command-chain: [bin/desktop-launch]
+    desktop: lib/python3.6/site-packages/usr/share/applications/com.github.persepolisdm.persepolis.desktop
+
     plugs:
       - audio-playback
       - desktop
