@@ -51,7 +51,7 @@ parts:
       - try: [appmenu-qt5] # not available on core18
       - locales-all
     prime:
-      - usr/bin/xdg-open
+      - -usr/bin/xdg-open
 
   persepolis:
     build-snaps: &snaps
