@@ -11,10 +11,19 @@ confinement: strict
 
 apps:
   persepolis:
-    command: bin/persepolis
+    command: bin/persepolis --no-sandbox
     command-chain: [bin/desktop-launch]
     desktop: lib/python3.6/site-packages/usr/share/applications/com.github.persepolisdm.persepolis.desktop
-
+    environment:
+      # Correct the TMPDIR path for Chromium Framework/Electron to
+      # ensure libappindicator has readable resources
+      TMPDIR: $XDG_RUNTIME_DIR
+      # Coerce XDG_CURRENT_DESKTOP to Unity so that App Indicators
+      # are used and do not fall back to Notification Area applets
+      # or disappear completely.
+      XDG_CURRENT_DESKTOP: Unity
+      # Fallback to XWayland if running in a Wayland session.
+      DISABLE_WAYLAND: 1
     plugs:
       - audio-playback
       - desktop
@@ -47,10 +56,11 @@ parts:
       - libqt5gui5
       - libgdk-pixbuf2.0-0
       - libgtk2.0-0
-      - xdg-user-dirs
       - libqt5svg5 # for loading icon themes which are svg
       - try: [appmenu-qt5] # not available on core18
       - locales-all
+    prime:
+      - -usr/bin/xdg-open
 
   persepolis:
     build-snaps: &snaps
@@ -76,6 +86,7 @@ parts:
       - python3-setproctitle
       - python3-psutil
       - sound-theme-freedesktop
+      - xdg-utils
     override-pull: |
         snapcraftctl pull
         # Point icon to the correct location
