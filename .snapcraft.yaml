@@ -11,19 +11,10 @@ confinement: strict
 
 apps:
   persepolis:
-    command: bin/persepolis --no-sandbox
+    command: bin/persepolis
     command-chain: [bin/desktop-launch]
     desktop: lib/python3.6/site-packages/usr/share/applications/com.github.persepolisdm.persepolis.desktop
-    environment:
-      # Correct the TMPDIR path for Chromium Framework/Electron to
-      # ensure libappindicator has readable resources
-      TMPDIR: $XDG_RUNTIME_DIR
-      # Coerce XDG_CURRENT_DESKTOP to Unity so that App Indicators
-      # are used and do not fall back to Notification Area applets
-      # or disappear completely.
-      XDG_CURRENT_DESKTOP: Unity
-      # Fallback to XWayland if running in a Wayland session.
-      DISABLE_WAYLAND: 1
+
     plugs:
       - audio-playback
       - desktop
@@ -87,6 +78,8 @@ parts:
       - python3-psutil
       - sound-theme-freedesktop
       - xdg-utils
+      - xdg-user-dirs
+      - shared-mime-info
     override-pull: |
         snapcraftctl pull
         # Point icon to the correct location
