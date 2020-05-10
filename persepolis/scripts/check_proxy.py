@@ -13,7 +13,7 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-
+import re
 import subprocess
 import requests
 import urllib
@@ -30,6 +30,11 @@ def getProxy():
 
     # find os and desktop environment
     os_type, desktop = osAndDesktopEnvironment()
+
+    # destop == 'ubuntu:GNOME' to destop == 'GNOME'
+    tmp = re.search(r'.*:(.*)', desktop)
+    if tmp is not None:
+        desktop = tmp.group(1)
 
     # write in log
     platform = 'platform : ' + os_type
@@ -111,6 +116,45 @@ def getProxy():
         else:
             logger.sendToLog('no proxy file detected', 'INFO')
 
+    # Detect proxy from GNOME Desktop        
+    elif desktop == 'GNOME':
+        process = subprocess.run(['gsettings', 'get', 'org.gnome.system.proxy', 'mode'], stdout=subprocess.PIPE)
+        mode = re.search(r'manual' , process.stdout.decode('utf-8'))
+        if mode is not None:    
+            try:
+                process = subprocess.run(['gsettings', 'get', 'org.gnome.system.proxy.http', 'host'], stdout=subprocess.PIPE)
+                proxy['http_proxy_ip'] = re.search(r"\'([\w0-9\.]+)\'" , process.stdout.decode('utf-8')).group(1)
+                process = subprocess.run(['gsettings', 'get', 'org.gnome.system.proxy.http', 'port'], stdout=subprocess.PIPE)
+                proxy['http_proxy_port'] = process.stdout.decode('utf-8')
+            except:
+                logger.sendToLog('no http proxy detected', 'INFO')
+
+            try:
+                process = subprocess.run(['gsettings', 'get', 'org.gnome.system.proxy.https', 'host'], stdout=subprocess.PIPE)
+                proxy['https_proxy_ip'] = re.search(r"\'([\w0-9\.]+)\'" , process.stdout.decode('utf-8')).group(1)
+                process = subprocess.run(['gsettings', 'get', 'org.gnome.system.proxy.https', 'port'], stdout=subprocess.PIPE)
+                proxy['https_proxy_port'] = process.stdout.decode('utf-8')
+            except:
+                logger.sendToLog('no https proxy detected', 'INFO')
+
+            try:
+                process = subprocess.run(['gsettings', 'get', 'org.gnome.system.proxy.ftp', 'host'], stdout=subprocess.PIPE)
+                proxy['ftp_proxy_ip'] = re.search(r"\'([\w0-9\.]+)\'" , process.stdout.decode('utf-8')).group(1)
+                process = subprocess.run(['gsettings', 'get', 'org.gnome.system.proxy.ftp', 'port'], stdout=subprocess.PIPE)
+                proxy['ftp_proxy_port'] = process.stdout.decode('utf-8')
+            except:
+                logger.sendToLog('no ftp proxy detected', 'INFO')
+            
+            try:
+                process = subprocess.run(['gsettings', 'get', 'org.gnome.system.proxy.socks', 'host'], stdout=subprocess.PIPE)
+                value = re.search(r"\'([\w0-9\.]+)\'" , process.stdout.decode('utf-8')).group(1)
+                socks_proxy = True
+            except:
+                socks_proxy = False
+        
+        else:
+            logger.sendToLog('no manual proxy detected', 'INFO')
+
     # if it is windows,mac and other linux desktop
     else:
         # get proxies
@@ -138,8 +182,8 @@ def getProxy():
 
         # get socks proxy
         try:
-            # if it is gnome or unity
-            if desktop == 'GNOME' or desktop == 'Unity:Unity7':
+            # if it is unity
+            if desktop == 'Unity7':
                 socks_proxy = proxysource['all'].split(':')[1].replace('//', '')
             # if it is Mac OS
             elif os_type == OS.OSX:
