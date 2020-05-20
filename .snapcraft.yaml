@@ -84,4 +84,4 @@ parts:
         snapcraftctl pull
         # Point icon to the correct location
         sed -i.bak -e 's|Icon=persepolis|Icon=lib/python3.6/site-packages/usr/share/pixmaps/persepolis.svg|g' xdg/com.github.persepolisdm.persepolis.desktop
-        sed -i.bak -e 's|'persepolis = persepolis.__main__'|'persepolis = persepolis.scripts.persepolis:main'|g' setup.py
+        sed -i.bak -e 's|persepolis = persepolis.__main__|persepolis = persepolis.scripts.persepolis:main|g' setup.py
