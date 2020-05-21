@@ -13,8 +13,6 @@ apps:
   persepolis:
     command: bin/persepolis
     command-chain: [bin/desktop-launch]
-    desktop: lib/python3.6/site-packages/usr/share/applications/com.github.persepolisdm.persepolis.desktop
-
     plugs:
       - audio-playback
       - desktop
@@ -25,7 +23,7 @@ apps:
       - opengl
       - removable-media
       - wayland
-      - unity7
+      - x11
 
 parts:
   desktop-qt5:
@@ -46,12 +44,9 @@ parts:
       - shared-mime-info
       - libqt5gui5
       - libgdk-pixbuf2.0-0
-      - libgtk2.0-0
       - libqt5svg5 # for loading icon themes which are svg
       - try: [appmenu-qt5] # not available on core18
       - locales-all
-    prime:
-      - -usr/bin/xdg-open
 
   persepolis:
     build-snaps: &snaps
@@ -76,12 +71,4 @@ parts:
       - python3-requests
       - python3-setproctitle
       - python3-psutil
-      - sound-theme-freedesktop
-      - xdg-utils
-      - xdg-user-dirs
-      - shared-mime-info
-    override-pull: |
-        snapcraftctl pull
-        # Point icon to the correct location
-        sed -i.bak -e 's|Icon=persepolis|Icon=lib/python3.6/site-packages/usr/share/pixmaps/persepolis.svg|g' xdg/com.github.persepolisdm.persepolis.desktop
-        sed -i.bak -e 's|persepolis = persepolis.__main__|persepolis = persepolis.scripts.persepolis:main|g' setup.py
+      - sound-theme-freedesktop 
