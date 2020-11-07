@@ -41,7 +41,7 @@ try:
     print('python3-pyqt5 is found')
 except:
     print('Error : python3-pyqt5 is not installed!')
-    not_installed = not_installed + 'PyQt5, '
+    not_installed += 'PyQt5, '
 
 # python3-requests
 try:
@@ -49,7 +49,7 @@ try:
     print('python3-requests is found!')
 except:
     print('Error : requests is not installed!')
-    not_installed = not_installed + 'python3-requests, '
+    not_installed += 'python3-requests, '
 
 # python3-setproctitle
 try:
@@ -57,7 +57,7 @@ try:
     print('python3-setproctitle is found!')
 except:
     print("Warning: setproctitle is not installed!")
-    not_installed = not_installed + 'python3-setproctitle, '
+    not_installed += 'python3-setproctitle, '
 
 # psutil
 try:
@@ -65,7 +65,7 @@ try:
     print('python3-psutil is found!')
 except:
     print("Warning: python3-psutil is not installed!")
-    not_installed = not_installed + 'psutil, '
+    not_installed += 'psutil, '
 
 # youtube_dl
 try:
@@ -73,13 +73,13 @@ try:
     print('youtube-dl is found')
 except:
     print('Warning: youtube-dl is not installed!')
-    not_installed = not_installed + 'youtube-dl, '
+    not_installed += 'youtube-dl, '
 
 # aria2
 answer = os.system('aria2c --version 1>/dev/null')
 if answer != 0:
     print("Error aria2 not installed!")
-    not_installed = not_installed + 'aria2c, '
+    not_installed += 'aria2c, '
 else:
     print('aria2 is found!')
 
@@ -87,7 +87,7 @@ else:
 answer = os.system('notify-send --version 1>/dev/null')
 if answer != 0:
     print("Error libnotify-bin is not installed!")
-    not_installed = not_installed + 'libnotify-bin, '
+    not_installed += 'libnotify-bin, '
 else:
     print('libnotify-bin is found!')
 
@@ -95,7 +95,7 @@ else:
 answer = os.system('paplay --version 1>/dev/null')
 if answer != 0:
     print("Warning: paplay not installed!You need pulseaudio for sound notifications!")
-    not_installed = not_installed + 'paplay, '
+    not_installed += 'paplay, '
 else:
     print('paplay is found!')
 
@@ -109,13 +109,13 @@ if os.path.isdir(notifications_path):
     print('sound-theme-freedesktop is found!')
 else:
     print('Warning: sound-theme-freedesktop is not installed! you need this package for sound notifications!')
-    not_installed = not_installed + 'sound-theme-freedesktop'
+    not_installed += 'sound-theme-freedesktop'
 
 # ffmpeg
 answer = os.system('ffmpeg -version 1>/dev/null')
 if answer != 0:
     print("Warning: ffmpeg not installed!")
-    not_installed = not_installed + 'ffmpeg, '
+    not_installed += 'ffmpeg, '
 else:
     print('ffmpeg is found!')
 
