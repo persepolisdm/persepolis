@@ -14,12 +14,11 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 
-from PyQt5.QtCore import Qt, QSize, QPoint, QFile, QIODevice, QTextStream
-from persepolis.gui.about_ui import AboutWindow_Ui
-from persepolis.gui import resources
+from PyQt5.QtCore import (Qt, QSize, QPoint, QFile, QIODevice, QTextStream)
 from PyQt5.QtWidgets import QWidget
 from PyQt5.QtGui import QIcon
-
+from persepolis.gui.about_ui import AboutWindow_Ui
+from persepolis.gui import resources
 
 class AboutWindow(AboutWindow_Ui):
     def __init__(self, persepolis_setting):
@@ -42,8 +41,6 @@ class AboutWindow(AboutWindow_Ui):
         f.close()
 
         self.translators_textEdit.insertPlainText(f_text)
-
-
 
         self.resize(size)
         self.move(position)

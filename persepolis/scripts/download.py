@@ -13,26 +13,25 @@
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import sys
+import os
+import time
+import ast
+import subprocess
+import traceback
+import platform
+import xmlrpc.client
+import urllib.parse
 from persepolis.scripts.osCommands import moveFile, makeTempDownloadDir
 from persepolis.scripts.useful_tools import freeSpace, humanReadableSize
 from persepolis.scripts.bubble import notifySend
 from persepolis.scripts import logger
 from persepolis.constants import OS
 from PyQt5.QtCore import QSettings
-import xmlrpc.client
-import urllib.parse
-import subprocess
-import traceback
-import platform
-import time
-import ast
-import sys
-import os
 
 # Before reading this file, please read this link!
 # this link helps you to understand this codes:
 # https://aria2.github.io/manual/en/html/aria2c.html#rpc-interface
-
 
 home_address = os.path.expanduser("~")
 
@@ -51,12 +50,10 @@ port = int(persepolis_setting.value('settings/rpc-port'))
 aria2_path = persepolis_setting.value('settings/aria2_path')
 
 # xml rpc
-SERVER_URI_FORMAT = 'http://{}:{:d}/rpc'
-server_uri = SERVER_URI_FORMAT.format(host, port)
+server_uri = 'http://{}:{:d}/rpc'.format(host, port)
 server = xmlrpc.client.ServerProxy(server_uri, allow_none=True)
 
 # start aria2 with RPC
-
 
 def startAria():
     # in Linux and BSD
@@ -73,11 +70,8 @@ def startAria():
 
     # in macintosh
     elif os_type == OS.OSX:
-        if aria2_path == "" or aria2_path == None or os.path.isfile(str(aria2_path)) == False:
-
-            cwd = sys.argv[0]
-            current_directory = os.path.dirname(cwd)
-            aria2d = os.path.join(current_directory, 'aria2c')
+        if (aria2_path == "" or aria2_path == None) or (os.path.isfile(str(aria2_path)) == False):
+            aria2d = os.path.join(os.path.dirname(sys.argv[0]), 'aria2c')
 
         else:
             aria2d = aria2_path
@@ -94,10 +88,8 @@ def startAria():
     # in Windows
     elif os_type == OS.WINDOWS:
         if aria2_path == "" or aria2_path == None or os.path.isfile(str(aria2_path)) == False:
-            cwd = sys.argv[0]
-            current_directory = os.path.dirname(cwd)
+            aria2d = os.path.join(os.path.dirname(sys.argv[0]), "aria2c.exe")  # aria2c.exe path
 
-            aria2d = os.path.join(current_directory, "aria2c.exe")  # aria2c.exe path
         else:
             aria2d = aria2_path
 
@@ -107,6 +99,7 @@ def startAria():
         if not os.path.exists(aria2d):
             logger.sendToLog("Aria2 does not exist in the current path!", "ERROR")
             return None
+
         # aria2 command in windows
         subprocess.Popen([aria2d, '--no-conf', '--enable-rpc', '--rpc-listen-port=' + str(port),
                           '--rpc-max-request-size=2M', '--rpc-listen-all', '--quiet=true'],
@@ -174,11 +167,14 @@ def downloadAria(gid, parent):
         limit_number = limit[:-1]
         limit_number = float(limit_number)
         limit_unit = limit[-1]
+
         if limit_unit == 'K':
             limit_number = round(limit_number)
+
         else:
             limit_number = round(1024*limit_number)
             limit_unit = 'K'
+
         limit = str(limit_number) + limit_unit
 
 # create header list
@@ -196,6 +192,7 @@ def downloadAria(gid, parent):
 # update status and last_try_date in data_base
     if start_time:
         status = "scheduled"
+        
     else:
         status = "waiting"
 

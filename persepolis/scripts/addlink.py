@@ -15,19 +15,17 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 
+import os
+from functools import partial
 from PyQt5.QtWidgets import QHBoxLayout, QApplication, QFileDialog, QCheckBox, QLineEdit, QPushButton
 from PyQt5.QtCore import Qt, QPoint, QSize, QDir, QThread, pyqtSignal
+from PyQt5.QtGui import QIcon
 from persepolis.gui.addlink_ui import AddLinkWindow_Ui
 from persepolis.scripts.check_proxy import getProxy
 from persepolis.scripts import spider
 from persepolis.scripts import logger
-from PyQt5.QtGui import QIcon
-from functools import partial
-import os
 
 # find file name and file size
-
-
 class AddLinkSpiderThread(QThread):
     ADDLINKSPIDERSIGNAL = pyqtSignal(dict)
 
@@ -177,6 +175,7 @@ class AddLinkWindow(AddLinkWindow_Ui):
         # check plugin_add_link_dictionary for finding file name
         # perhaps plugin sended file name in plugin_add_link_dictionary
         # for finding file name "out" key must be checked
+
         if ('out' in self.plugin_add_link_dictionary.keys()):
             if self.plugin_add_link_dictionary['out']:
                 self.change_name_lineEdit.setText(
@@ -230,6 +229,7 @@ class AddLinkWindow(AddLinkWindow_Ui):
         if enable_proxy_frame:
             self.proxy_checkBox.setChecked(True)
             self.detect_proxy_label.setText('')
+
         else:
             self.proxy_checkBox.setChecked(False)
             self.detect_proxy_label.setText('No proxy detected!')
@@ -237,35 +237,30 @@ class AddLinkWindow(AddLinkWindow_Ui):
 
 # active frames if checkBoxes are checked
     def proxyFrame(self, checkBox):
-
         if self.proxy_checkBox.isChecked() == True:
             self.proxy_frame.setEnabled(True)
         else:
             self.proxy_frame.setEnabled(False)
 
     def downloadFrame(self, checkBox):
-
         if self.download_checkBox.isChecked() == True:
             self.download_frame.setEnabled(True)
         else:
             self.download_frame.setEnabled(False)
 
     def limitFrame(self, checkBox):
-
         if self.limit_checkBox.isChecked() == True:
             self.limit_frame.setEnabled(True)
         else:
             self.limit_frame.setEnabled(False)
 
     def startFrame(self, checkBox):
-
         if self.start_checkBox.isChecked() == True:
             self.start_frame.setEnabled(True)
         else:
             self.start_frame.setEnabled(False)
 
     def endFrame(self, checkBox):
-
         if self.end_checkBox.isChecked() == True:
             self.end_frame.setEnabled(True)
         else:
@@ -434,6 +429,7 @@ class AddLinkWindow(AddLinkWindow_Ui):
             load_cookies = self.load_cookies_lineEdit.text()
         else:
             load_cookies = None
+
         # save information in a dictionary(add_link_dictionary).
         self.add_link_dictionary = {'referer': referer, 'header': header, 'user_agent': user_agent, 'load_cookies': load_cookies,
                                     'out': out, 'start_time': start_time, 'end_time': end_time, 'link': link, 'ip': ip,

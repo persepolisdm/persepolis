@@ -13,13 +13,12 @@
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import os
+import subprocess
+import platform
 from persepolis.scripts.play import playNotification
 from persepolis.constants import OS
 from PyQt5.QtCore import QSettings
-import subprocess
-import platform
-import os
-
 
 # platform
 os_type = platform.system()
@@ -34,13 +33,14 @@ elif os_type == OS.WINDOWS:
 # and use playNotification function in play.py file for playing sound
 # notifications
 
-
 def notifySend(message1, message2, time, sound, parent=None):
 
     if os_type == OS.LINUX:
         notifications_path = '/usr/share/sounds/freedesktop/stereo/'
+
     elif os_type in OS.BSD_FAMILY:
         notifications_path = '/usr/local/share/sounds/freedesktop/stereo/'
+        
     else:
         notifications_path = ''
 

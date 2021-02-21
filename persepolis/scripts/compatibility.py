@@ -13,13 +13,13 @@
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import os
+import time
+import ast
 from persepolis.scripts.useful_tools import determineConfigFolder
 from persepolis.scripts.osCommands import remove, removeDir
 from persepolis.scripts.data_base import PersepolisDB
 from persepolis.scripts.newopen import readList
-import time
-import ast
-import os
 
 # config_folder
 config_folder = determineConfigFolder()

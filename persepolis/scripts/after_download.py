@@ -13,14 +13,12 @@
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import os
 from PyQt5.QtCore import Qt, QSize, QPoint, QTranslator, QCoreApplication, QLocale
 from persepolis.gui.after_download_ui import AfterDownloadWindow_Ui
 from persepolis.scripts.play import playNotification
 from persepolis.scripts import osCommands
 from PyQt5.QtGui import QIcon
-import os
-
-
 class AfterDownloadWindow(AfterDownloadWindow_Ui):
     def __init__(self, parent, dict, persepolis_setting):
         super().__init__(persepolis_setting)
@@ -80,6 +78,7 @@ class AfterDownloadWindow(AfterDownloadWindow_Ui):
             'AfterDownloadWindow/size', QSize(570, 290))
         position = self.persepolis_setting.value(
             'AfterDownloadWindow/position', QPoint(300, 300))
+
         self.resize(size)
         self.move(position)
 

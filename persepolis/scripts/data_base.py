@@ -108,8 +108,7 @@ class TempDB():
         self.lockCursor()
         keys_list = ['gid',
                      'shutdown',
-                     'status'
-                     ]
+                     'status']
 
         for key in keys_list:
             # if a key is missed in dict,
@@ -318,8 +317,7 @@ class PluginsDB():
                     'load_cookies': tuple[2],
                     'user_agent': tuple[3],
                     'header': tuple[4],
-                    'out': tuple[5]
-                    }
+                    'out': tuple[5]}
 
             new_list.append(dict)
 
@@ -481,8 +479,7 @@ class PersepolisDB():
                                   'limit_enable': 'no',
                                   'limit_value': '0K',
                                   'after_download': 'no',
-                                  'gid_list': '[]'
-                                  }
+                                  'gid_list': '[]'}
 
             single_downloads_dict = {'category': 'Single Downloads',
                                      'start_time_enable': 'no',
@@ -493,8 +490,7 @@ class PersepolisDB():
                                      'limit_enable': 'no',
                                      'limit_value': '0K',
                                      'after_download': 'no',
-                                     'gid_list': '[]'
-                                     }
+                                     'gid_list': '[]'}
 
             self.insertInCategoryTable(all_downloads_dict)
             self.insertInCategoryTable(single_downloads_dict)
@@ -511,8 +507,7 @@ class PersepolisDB():
                                         'limit_enable': 'no',
                                         'limit_value': '0K',
                                         'after_download': 'no',
-                                        'gid_list': '[]'
-                                        }
+                                        'gid_list': '[]'}
             self.insertInCategoryTable(scheduled_downloads_dict)
 
     # insert new category in category_db_table
