@@ -13,10 +13,10 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
+import os
+import logging
 from persepolis.scripts.useful_tools import determineConfigFolder
 from persepolis.scripts.osCommands import touch
-import logging
-import os
 
 # config_folder
 config_folder = determineConfigFolder()
