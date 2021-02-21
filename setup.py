@@ -20,6 +20,7 @@ import warnings
 import sys
 import platform
 import shutil
+import pkg_resources
 
 # finding os platform
 os_type = platform.system()
@@ -34,71 +35,31 @@ else:
 
 # Checking dependencies!
 not_installed = ''
+packages = ['pyqt5', 'requests', 'setproctitle', 'psutil', 'youtube-dl']
 
-# PyQt5
-try:
-    import PyQt5
-    print('python3-pyqt5 is found')
-except:
-    print('Error : python3-pyqt5 is not installed!')
-    not_installed = not_installed + 'PyQt5, '
+for package in packages:
+    if package in pkg_resources.working_set.by_key:
+        print('python3-{} is found!'.format(package))
+    
+    else:
+        print('Error : python3-pyqt5 is not installed!')
+        not_installed += 'python3-{}, '.format(package)
 
-# python3-requests
-try:
-    import requests
-    print('python3-requests is found!')
-except:
-    print('Error : requests is not installed!')
-    not_installed = not_installed + 'python3-requests, '
+all_binary = []
+binaries = ['aria2c', 'notify-send', 'paplay', 'ffmpeg']
+paths= os.environ['PATH'].split(os.pathsep)
 
-# python3-setproctitle
-try:
-    import setproctitle
-    print('python3-setproctitle is found!')
-except:
-    print("Warning: setproctitle is not installed!")
-    not_installed = not_installed + 'python3-setproctitle, '
+for i in paths:
+    all_binary += os.listdir(i)
 
-# psutil
-try:
-    import psutil
-    print('python3-psutil is found!')
-except:
-    print("Warning: python3-psutil is not installed!")
-    not_installed = not_installed + 'psutil, '
+for binary in binaries:
+    if binary in all_binary:
+        print('{} is found!'.format(binary))
 
-# youtube_dl
-try:
-    import youtube_dl
-    print('youtube-dl is found')
-except:
-    print('Warning: youtube-dl is not installed!')
-    not_installed = not_installed + 'youtube-dl, '
-
-# aria2
-answer = os.system('aria2c --version 1>/dev/null')
-if answer != 0:
-    print("Error aria2 not installed!")
-    not_installed = not_installed + 'aria2c, '
-else:
-    print('aria2 is found!')
-
-# libnotify-bin
-answer = os.system('notify-send --version 1>/dev/null')
-if answer != 0:
-    print("Error libnotify-bin is not installed!")
-    not_installed = not_installed + 'libnotify-bin, '
-else:
-    print('libnotify-bin is found!')
-
-# paplay
-answer = os.system('paplay --version 1>/dev/null')
-if answer != 0:
-    print("Warning: paplay not installed!You need pulseaudio for sound notifications!")
-    not_installed = not_installed + 'paplay, '
-else:
-    print('paplay is found!')
-
+    else:
+        print("Error aria2 not installed!")
+        not_installed += '{}, '.format(binary)
+ 
 # sound-theme-freedesktop
 if os_type == 'Linux':
     notifications_path = '/usr/share/sounds/freedesktop/stereo/'
@@ -110,15 +71,6 @@ if os.path.isdir(notifications_path):
 else:
     print('Warning: sound-theme-freedesktop is not installed! you need this package for sound notifications!')
     not_installed = not_installed + 'sound-theme-freedesktop'
-
-# ffmpeg
-answer = os.system('ffmpeg -version 1>/dev/null')
-if answer != 0:
-    print("Warning: ffmpeg not installed!")
-    not_installed = not_installed + 'ffmpeg, '
-else:
-    print('ffmpeg is found!')
-
 
 # show warning , if dependencies not installed!
 if not_installed != '':
@@ -133,7 +85,7 @@ if not_installed != '':
     if answer not in ['y', 'Y', 'yes']:
         sys.exit(1)
 
-if sys.argv[1] == "test":
+if len(sys.argv)>=2 and sys.argv[1] == "test":
     print('We have not unit test :)')
     sys.exit('0')
 
@@ -179,7 +131,7 @@ persepolis_man_page = os.path.join(setup_dir, 'man', 'persepolis.1')
 os.system('gzip -f -k -9 "'
           + persepolis_man_page
           + '"')
-print('man page file is generated!')
+print('man page file is generated!\n---------------------------\n')
 
 setup(
     name='persepolis',
