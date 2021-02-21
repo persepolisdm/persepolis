@@ -49,6 +49,7 @@ import textwrap
 import random
 import time
 import sys
+import psutil
 import os
 
 global youtube_dl_is_installed
@@ -980,12 +981,9 @@ class Queue(QThread):
 
                 # KILL aria2c if didn't respond. R.I.P :))
                 if not(answer) and (os_type != OS.WINDOWS):
-
-                    subprocess.Popen(['killall', 'aria2c'],
-                                     stderr=subprocess.PIPE,
-                                     stdout=subprocess.PIPE,
-                                     stdin=subprocess.PIPE,
-                                     shell=False)
+                    for proc in psutil.process_iter(attrs=['pid', 'name']):
+...                     if 'aria2c' in proc.info['name']:
+...                         proc.kill()
 
                 # write 'shutdown' value for this category in temp_db
                 shutdown_dict = {'category': self.category, 'shutdown': 'shutdown'}
