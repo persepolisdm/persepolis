@@ -30,6 +30,7 @@ def findFileManager():
                                     'query',
                                     'default',
                                     'inode/directory'])
+
     file_manager = pipe.decode('utf-8').strip().lower()
 
     return file_manager
