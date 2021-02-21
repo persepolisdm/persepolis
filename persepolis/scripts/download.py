@@ -26,6 +26,7 @@ from persepolis.scripts.osCommands import moveFile, makeTempDownloadDir
 from persepolis.scripts.useful_tools import freeSpace, humanReadableSize
 from persepolis.scripts.bubble import notifySend
 from persepolis.scripts import logger
+from persepolis.scripts.formats import Formats
 from persepolis.constants import OS
 from PyQt5.QtCore import QSettings
 
@@ -192,7 +193,7 @@ def downloadAria(gid, parent):
 # update status and last_try_date in data_base
     if start_time:
         status = "scheduled"
-        
+
     else:
         status = "waiting"
 
@@ -229,11 +230,14 @@ def downloadAria(gid, parent):
             limit_number = limit[:-1]
             limit_number = float(limit_number)
             limit_unit = limit[-1]
+
             if limit_unit == 'K':
                 limit_number = round(limit_number)
+
             else:
                 limit_number = round(1024*limit_number)
                 limit_unit = 'K'
+
             limit = str(limit_number) + limit_unit
 
 
@@ -488,7 +492,7 @@ def convertDownloadInformation(download_status):
 
     # convert download_speed to desired units.
     # and find estimate_time_left
-    if (downloaded != None and download_speed != 0):
+    if downloaded != None and download_speed != 0:
         estimate_time_left = int((file_size - downloaded)/download_speed)
 
         # converting file_size to KiB or MiB or GiB
@@ -501,12 +505,15 @@ def convertDownloadInformation(download_status):
             eta = eta + str(int(estimate_time_left/60)) + "m"
             estimate_time_left = estimate_time_left % 60
             eta = eta + str(estimate_time_left) + "s"
+
         elif estimate_time_left >= 60:
             eta = eta + str(int(estimate_time_left/60)) + "m"
             estimate_time_left = estimate_time_left % 60
             eta = eta + str(estimate_time_left) + "s"
+
         else:
             eta = eta + str(estimate_time_left) + "s"
+
         estimate_time_left_str = eta
 
     else:
@@ -551,8 +558,7 @@ def convertDownloadInformation(download_status):
         'connections': connections_str,
         'rate': download_speed_str,
         'estimate_time_left': estimate_time_left_str,
-        'link': link
-    }
+        'link': link}
 
     return download_info
 
@@ -639,40 +645,19 @@ def findDownloadPath(file_name, download_path, subfolder):
     if '?' in file_extension:
         file_extension = file_extension.split('?')[0]
 
-    # audio formats
-    audio = ['act', 'aiff', 'aac', 'amr', 'ape', 'au', 'awb', 'dct', 'dss', 'dvf', 'flac', 'gsm', 'iklax', 'ivs', 'm4a',
-             'm4p', 'mmf', 'mp3', 'mpc', 'msv', 'ogg', 'oga', 'opus', 'ra', 'raw', 'sln', 'tta', 'vox', 'wav', 'wma', 'wv']
-
-    # video formats
-    video = ['3g2', '3gp', 'asf', 'avi', 'drc', 'flv', 'm4v', 'mkv', 'mng', 'mov', 'qt', 'mp4', 'm4p', 'mpg', 'mp2',
-             'mpeg', 'mpe', 'mpv', 'm2v', 'mxf', 'nsv', 'ogv', 'rmvb', 'roq', 'svi', 'vob', 'webm', 'wmv', 'yuv', 'rm']
-
-    # document formats
-    document = ['doc', 'docx', 'html', 'htm', 'fb2', 'odt', 'sxw', 'pdf', 'ps', 'rtf', 'tex', 'txt', 'epub', 'pub'
-                'mobi', 'azw', 'azw3', 'azw4', 'kf8', 'chm', 'cbt', 'cbr', 'cbz', 'cb7', 'cba', 'ibooks', 'djvu', 'md']
-
-    # compressed formats
-    compressed = ['a', 'ar', 'cpio', 'shar', 'LBR', 'iso', 'lbr', 'mar', 'tar', 'bz2', 'F', 'gz', 'lz', 'lzma', 'lzo',
-                  'rz', 'sfark', 'sz', 'xz', 'Z', 'z', 'infl', '7z', 's7z', 'ace', 'afa', 'alz', 'apk', 'arc', 'arj', 'b1',
-                  'ba', 'bh', 'cab', 'cfs', 'cpt', 'dar', 'dd', 'dgc', 'dmg', 'ear', 'gca', 'ha', 'hki', 'ice', 'jar', 'kgb',
-                  'lzh', 'lha', 'lzx', 'pac', 'partimg', 'paq6', 'paq7', 'paq8', 'pea', 'pim', 'pit', 'qda', 'rar', 'rk', 'sda',
-                  'sea', 'sen', 'sfx', 'sit', 'sitx', 'sqx', 'tar.gz', 'tgz', 'tar.Z', 'tar.bz2', 'tbz2', 'tar.lzma', 'tlz', 'uc',
-                  'uc0', 'uc2', 'ucn', 'ur2', 'ue2', 'uca', 'uha', 'war', 'wim', 'xar', 'xp3', 'yz1', 'zip', 'zipx', 'zoo', 'zpaq',
-                  'zz', 'ecc', 'par', 'par2']
-
     # return download_path
     if str(subfolder) == 'yes':
-        if file_extension in audio:
+        if file_extension in Formats.AUDIO:
             return os.path.join(download_path, 'Audios')
 
         # aria2c downloads youtube links file_name with 'videoplayback' name?!
-        elif (file_extension in video) or (file_name == 'videoplayback'):
+        elif (file_extension in Formats.VIDEO) or (file_name == 'videoplayback'):
             return os.path.join(download_path, 'Videos')
 
-        elif file_extension in document:
+        elif file_extension in Formats.DOCUMENT:
             return os.path.join(download_path, 'Documents')
 
-        elif file_extension in compressed:
+        elif file_extension in Formats.COMPRESSED:
             return os.path.join(download_path, 'Compressed')
 
         else:
