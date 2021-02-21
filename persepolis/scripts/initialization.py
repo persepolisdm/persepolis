@@ -151,7 +151,7 @@ for folder in folder_list:
 persepolis_setting.endGroup()
 
 # Browser integration for Firefox and chromium and google chrome
-for browser in ['chrome', 'chromium', 'opera', 'vivaldi', 'firefox']:
+for browser in ['chrome', 'chromium', 'opera', 'vivaldi', 'firefox', 'brave', 'qutebrowser']:
     json_done, native_done = browserIntegration(browser)
 
     log_message = browser
