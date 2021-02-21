@@ -26,7 +26,7 @@ from persepolis.scripts.osCommands import moveFile, makeTempDownloadDir
 from persepolis.scripts.useful_tools import freeSpace, humanReadableSize
 from persepolis.scripts.bubble import notifySend
 from persepolis.scripts import logger
-from persepolis.scripts.formats import Formats
+from persepolis.constants.formats import Formats
 from persepolis.constants import OS
 from PyQt5.QtCore import QSettings
 
