@@ -197,6 +197,7 @@ setup(
         'persepolis', 'persepolis.constants',
         'persepolis.scripts', 'persepolis.gui',
     ),
+    install_requires=['setuptools'],
     data_files=DATA_FILES,
     entry_points={
         'console_scripts': [
