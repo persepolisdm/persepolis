@@ -14,14 +14,14 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 
-from PyQt5.QtWidgets import QWidget, QTabWidget, QHBoxLayout, QVBoxLayout, QLabel, QTextEdit, QPushButton
-from PyQt5.QtCore import Qt, QSize, QPoint, QTranslator, QCoreApplication, QLocale
-from PyQt5 import QtCore, QtGui, QtWidgets
-from PyQt5.QtGui import QIcon, QFont
+from PyQt6.QtWidgets import QWidget, QTabWidget, QHBoxLayout, QVBoxLayout, QLabel, QTextEdit, QPushButton
+from PyQt6.QtCore import Qt, QSize, QPoint, QTranslator, QCoreApplication, QLocale
+from PyQt6 import QtCore, QtGui, QtWidgets
+from PyQt6.QtGui import QIcon, QFont
 from persepolis.gui import resources
 
 try:
-    from PyQt5 import QtSvg
+    from PyQt6 import QtSvg
     qtsvg_available = True
 except:
     qtsvg_available = False
