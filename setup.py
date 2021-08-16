@@ -37,11 +37,11 @@ not_installed = ''
 
 # PyQt5
 try:
-    import PyQt5
-    print('python3-pyqt5 is found')
+    import PySide6
+    print('python3-pyside6 is found')
 except:
-    print('Error : python3-pyqt5 is not installed!')
-    not_installed = not_installed + 'PyQt5, '
+    print('Error : python3-pyside6 is not installed!')
+    not_installed = not_installed + 'PySide6, '
 
 # python3-requests
 try:

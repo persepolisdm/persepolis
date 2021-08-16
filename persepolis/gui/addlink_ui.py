@@ -15,12 +15,12 @@
 """
 
 
-from PyQt5.QtWidgets import QTabWidget, QDoubleSpinBox, QPushButton, QComboBox, QSpinBox, QVBoxLayout, QHBoxLayout, QLabel, QApplication, QWidget, QFileDialog, QMessageBox, QSizePolicy, QGridLayout, QCheckBox, QFrame, QLineEdit, QPushButton
-from PyQt5.QtCore import Qt, QTranslator, QCoreApplication, QLocale
+from PySide6.QtWidgets import QTabWidget, QDoubleSpinBox, QPushButton, QComboBox, QSpinBox, QVBoxLayout, QHBoxLayout, QLabel, QApplication, QWidget, QFileDialog, QMessageBox, QSizePolicy, QGridLayout, QCheckBox, QFrame, QLineEdit, QPushButton
+from PySide6.QtCore import Qt, QTranslator, QCoreApplication, QLocale
 from persepolis.gui.customized_widgets import MyQDateTimeEdit
-from PyQt5 import QtCore, QtGui, QtWidgets
+from PySide6 import QtCore, QtGui, QtWidgets
 from persepolis.gui import resources
-from PyQt5.QtGui import QIcon
+from PySide6.QtGui import QIcon
 
 
 class AddLinkWindow_Ui(QWidget):

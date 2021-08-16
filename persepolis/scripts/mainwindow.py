@@ -13,15 +13,15 @@
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from PyQt5.QtWidgets import QCheckBox, QLineEdit, QAbstractItemView, QAction, QFileDialog, QSystemTrayIcon, QMenu, QApplication, QInputDialog, QMessageBox
-from PyQt5.QtCore import QDir, QTime, QCoreApplication, QRect, QSize, QPoint, QThread, pyqtSignal, Qt, QTranslator, QLocale, QT_VERSION_STR
+from PySide6.QtWidgets import QCheckBox, QLineEdit, QAbstractItemView, QFileDialog, QSystemTrayIcon, QMenu, QApplication, QInputDialog, QMessageBox
+from PySide6.QtCore import QDir, QTime, QCoreApplication, QRect, QSize, QPoint, QThread, Signal, Qt, QTranslator, QLocale, __version__
 from persepolis.scripts.useful_tools import muxer, freeSpace, determineConfigFolder, osAndDesktopEnvironment
 from persepolis.scripts.video_finder_progress import VideoFinderProgressWindow
 from persepolis.gui.mainwindow_ui import MainWindow_Ui, QTableWidgetItem
 from persepolis.scripts.data_base import PluginsDB, PersepolisDB, TempDB
 from persepolis.scripts.browser_plugin_queue import BrowserPluginQueue
 from persepolis.scripts.after_download import AfterDownloadWindow
-from PyQt5.QtGui import QFont, QIcon, QStandardItem, QCursor
+from PySide6.QtGui import QFont, QIcon, QStandardItem, QCursor, QAction
 from persepolis.scripts.properties import PropertiesWindow
 from persepolis.scripts.setting import PreferencesWindow
 from persepolis.scripts.progress import ProgressWindow
@@ -35,7 +35,7 @@ from persepolis.scripts.about import AboutWindow
 from persepolis.scripts.bubble import notifySend
 from persepolis.scripts import osCommands
 from persepolis.scripts import download
-from PyQt5.Qt import PYQT_VERSION_STR
+from PySide6 import __version__ as PYQT_VERSION_STR
 from persepolis.scripts import logger
 from persepolis.scripts import spider
 from persepolis.gui import resources
@@ -196,7 +196,7 @@ class CheckVersionsThread(QThread):
 
         # log qt version
         logger.sendToLog('QT version: '
-                         + str(QT_VERSION_STR))
+                         + str(__version__))
         # log pyqt version
         logger.sendToLog('PyQt version: '
                          + str(PYQT_VERSION_STR))
@@ -214,7 +214,7 @@ class CheckVersionsThread(QThread):
 
 
 class StartAria2Thread(QThread):
-    ARIA2RESPONDSIGNAL = pyqtSignal(str)
+    ARIA2RESPONDSIGNAL = Signal(str)
 
     def __init__(self):
         QThread.__init__(self)
@@ -272,7 +272,7 @@ class StartAria2Thread(QThread):
 
 # This thread checking that which row in download_table highlighted by user
 class CheckSelectedRowThread(QThread):
-    CHECKSELECTEDROWSIGNAL = pyqtSignal()
+    CHECKSELECTEDROWSIGNAL = Signal()
 
     def __init__(self):
         QThread.__init__(self)
@@ -289,8 +289,8 @@ class CheckSelectedRowThread(QThread):
 # this class is checking aria2 rpc connection! if aria rpc is not
 # available , this class restarts aria!
 class CheckDownloadInfoThread(QThread):
-    DOWNLOAD_INFO_SIGNAL = pyqtSignal(list)
-    RECONNECTARIASIGNAL = pyqtSignal(str)
+    DOWNLOAD_INFO_SIGNAL = Signal(list)
+    RECONNECTARIASIGNAL = Signal(str)
 
     def __init__(self, parent):
         QThread.__init__(self)
@@ -426,7 +426,7 @@ class CheckDownloadInfoThread(QThread):
 # spider finds file size and file name of download file .
 # spider works similar to spider in wget.
 class SpiderThread(QThread):
-    SPIDERSIGNAL = pyqtSignal(dict)
+    SPIDERSIGNAL = Signal(dict)
 
     def __init__(self, add_link_dictionary, parent):
         QThread.__init__(self)
@@ -454,7 +454,7 @@ class SpiderThread(QThread):
 
 
 class DownloadLink(QThread):
-    ARIA2NOTRESPOND = pyqtSignal()
+    ARIA2NOTRESPOND = Signal()
 
     def __init__(self, gid, parent):
         QThread.__init__(self)
@@ -494,7 +494,7 @@ class DownloadLink(QThread):
 
 
 class VideoFinder(QThread):
-    VIDEOFINDERCOMPLETED = pyqtSignal(dict)
+    VIDEOFINDERCOMPLETED = Signal(dict)
 
     def __init__(self, video_finder_dictionary, parent):
         QThread.__init__(self)
@@ -657,7 +657,7 @@ class VideoFinder(QThread):
 # this thread is managing queue and sending download request to aria2
 class Queue(QThread):
     # this signal emitted when download status of queue changes to stop
-    REFRESHTOOLBARSIGNAL = pyqtSignal(str)
+    REFRESHTOOLBARSIGNAL = Signal(str)
 
     def __init__(self, category, start_time, end_time, parent):
         QThread.__init__(self)
@@ -1018,8 +1018,8 @@ class Queue(QThread):
 # 2-assume that user executed program before .
 # if user is clicking on persepolis icon in menu this tread emits SHOWMAINWINDOWSIGNAL
 class CheckingThread(QThread):
-    CHECKPLUGINDBSIGNAL = pyqtSignal()
-    SHOWMAINWINDOWSIGNAL = pyqtSignal()
+    CHECKPLUGINDBSIGNAL = Signal()
+    SHOWMAINWINDOWSIGNAL = Signal()
 
     def __init__(self):
         QThread.__init__(self)
@@ -1064,7 +1064,7 @@ class CheckingThread(QThread):
 # this thread checks checking_flag and when checking_flag changes to 2
 # QTABLEREADY signal is emitted
 class WaitThread(QThread):
-    QTABLEREADY = pyqtSignal()
+    QTABLEREADY = Signal()
 
     def __init__(self):
         QThread.__init__(self)
@@ -1112,7 +1112,7 @@ class ShutDownThread(QThread):
 #
 class KeepAwakeThread(QThread):
 
-    KEEPSYSTEMAWAKESIGNAL = pyqtSignal(bool)
+    KEEPSYSTEMAWAKESIGNAL = Signal(bool)
 
     def __init__(self):
         QThread.__init__(self)
@@ -3139,7 +3139,7 @@ class MainWindow(MainWindow_Ui):
 
     # showTray method shows/hides persepolis's icon in system tray icon
 
-    def showTray(self, menu):
+    def showTray(self, menu=None):
         # check if user checked trayAction in menu or not
         if self.trayAction.isChecked():
             # show system_tray_icon
@@ -3165,7 +3165,7 @@ class MainWindow(MainWindow_Ui):
     # this method shows/hides menubar and
     # it's called when user toggles showMenuBarAction in view menu
 
-    def showMenuBar(self, menu):
+    def showMenuBar(self, menu=None):
         # persepolis has 2 menu bar
         # 1. menubar in main window
         # 2. qmenu(see mainwindow_ui.py file for more information)
@@ -3191,7 +3191,7 @@ class MainWindow(MainWindow_Ui):
     # this method shows/hides left side panel
     # this method is called if user toggles showSidePanelAction in view menu
 
-    def showSidePanel(self, menu):
+    def showSidePanel(self, menu=None):
         if self.showSidePanelAction.isChecked():
             self.category_tree_qwidget.show()
             show_sidepanel = 'yes'
@@ -3255,7 +3255,7 @@ class MainWindow(MainWindow_Ui):
 
     # this method creates Preferences window
 
-    def openPreferences(self, menu):
+    def openPreferences(self, menu=None):
         self.preferenceswindow = PreferencesWindow(
             self, self.persepolis_setting)
 
@@ -3264,14 +3264,14 @@ class MainWindow(MainWindow_Ui):
 
     # this method is creating AboutWindow
 
-    def openAbout(self, menu):
+    def openAbout(self, menu=None):
         about_window = AboutWindow(self.persepolis_setting)
         self.about_window_list.append(about_window)
         self.about_window_list[len(self.about_window_list) - 1].show()
 
     # This method opens user's default download folder
 
-    def openDefaultDownloadFolder(self, menu):
+    def openDefaultDownloadFolder(self, menu=None):
         # find user's default download folder from persepolis_setting
         self.persepolis_setting.sync()
         download_path = self.persepolis_setting.value('settings/download_path')
@@ -3286,7 +3286,7 @@ class MainWindow(MainWindow_Ui):
                        'warning', parent=self)
 
     # this method opens download folder , if download was finished
-    def openDownloadFolder(self, menu):
+    def openDownloadFolder(self, menu=None):
 
         # find user's selected row
         selected_row_return = self.selectedRow()
@@ -3328,7 +3328,7 @@ class MainWindow(MainWindow_Ui):
 
     # this method executes(opens) download file if download's progress was finished
 
-    def openFile(self, menu):
+    def openFile(self, menu=None):
         # find user's selected row
         selected_row_return = self.selectedRow()
 
@@ -3696,7 +3696,7 @@ class MainWindow(MainWindow_Ui):
         checking_flag = 0
 
     # this method sorts download table by name
-    def sortByName(self, menu_item):
+    def sortByName(self, menu=None):
 
         # if checking_flag is equal to 1, it means that user pressed remove or
         # delete button or ... . so checking download information must be
@@ -3781,7 +3781,7 @@ class MainWindow(MainWindow_Ui):
         checking_flag = 0
 
     # this method sorts items in download_table by size
-    def sortBySize(self, menu_item):
+    def sortBySize(self, menu=None):
 
         # if checking_flag is equal to 1, it means that user pressed remove or
         # delete button or ... . so checking download information must be
@@ -3886,7 +3886,7 @@ class MainWindow(MainWindow_Ui):
         checking_flag = 0
 
     # this method sorts download_table items with status
-    def sortByStatus(self, item):
+    def sortByStatus(self, menu=None):
 
         # if checking_flag is equal to 1, it means that user pressed remove or
         # delete button or ... . so checking download information must be
@@ -3987,7 +3987,7 @@ class MainWindow(MainWindow_Ui):
         checking_flag = 0
 
     # this method sorts download table with date added information
-    def sortByFirstTry(self, item):
+    def sortByFirstTry(self, menu=None):
 
         # if checking_flag is equal to 1, it means that user pressed remove or
         # delete button or ... . so checking download information must be
@@ -4088,7 +4088,7 @@ class MainWindow(MainWindow_Ui):
 
     # this method sorts download_table with order of last modify date
 
-    def sortByLastTry(self, item):
+    def sortByLastTry(self, menu=None):
         # if checking_flag is equal to 1, it means that user pressed remove or
         # delete button or ... . so checking download information must be
         # stopped until job is done!
@@ -4192,7 +4192,7 @@ class MainWindow(MainWindow_Ui):
     # this method called , when user clicks on 'create new queue' button in
     # main window.
 
-    def createQueue(self, item):
+    def createQueue(self, menu=None):
         text, ok = QInputDialog.getText(
             self, 'Queue', 'Enter queue name:', text='queue')
 
@@ -4271,7 +4271,7 @@ class MainWindow(MainWindow_Ui):
 
     # this method is importing a text file for creating queue .
     # text file must contain links . 1 link per line!
-    def importText(self, item=None):
+    def importText(self, menu=None):
 
         # get file path
         f_path, filters = QFileDialog.getOpenFileName(
@@ -4690,7 +4690,7 @@ class MainWindow(MainWindow_Ui):
 
     # this method removes the queue that is selected in category_tree
 
-    def removeQueue(self, menu):
+    def removeQueue(self, menu=None):
         # show Warning message to user.
         # checks persepolis_setting first!
         # perhaps user was checking "do not show this message again"
@@ -4747,7 +4747,7 @@ class MainWindow(MainWindow_Ui):
 
     # this method starts the queue that is selected in category_tree
 
-    def startQueue(self, menu):
+    def startQueue(self, menu=None):
         self.startQueueAction.setEnabled(False)
 
         # current_category_tree_text is the name of queue that is selected by user
@@ -4804,7 +4804,7 @@ class MainWindow(MainWindow_Ui):
 
     # this method stops the queue that is selected
     # by user in the left side panel
-    def stopQueue(self, menu):
+    def stopQueue(self, menu=None):
         self.stopQueueAction.setEnabled(False)
 
         # current_category_tree_text is the name of queue that is selected by user
@@ -4819,7 +4819,7 @@ class MainWindow(MainWindow_Ui):
     # this method is called , when user want to add a download to a queue with
     # context menu. see also toolBarAndContextMenuItems() method
 
-    def addToQueue(self, data, menu):
+    def addToQueue(self, data, menu=None):
         # if checking_flag is equal to 1, it means that user pressed remove or
         # delete button or ... . so checking download information must be
         # stopped until job is done!
@@ -5224,16 +5224,16 @@ class MainWindow(MainWindow_Ui):
         self.endFrame(category)
 
     # this method opens issues page in github
-    def reportIssue(self, menu):
+    def reportIssue(self, menu=None):
         osCommands.xdgOpen('https://github.com/persepolisdm/persepolis/issues')
 
     # this method opens persepolis wiki page in github
-    def persepolisHelp(self, menu):
+    def persepolisHelp(self, menu=None):
         osCommands.xdgOpen('https://github.com/persepolisdm/persepolis/wiki')
 
     # this method opens update menu
 
-    def newUpdate(self, menu):
+    def newUpdate(self, menu=None):
         checkupdatewindow = checkupdate(
             self.persepolis_setting)
         self.checkupdatewindow_list.append(checkupdatewindow)
@@ -5242,7 +5242,7 @@ class MainWindow(MainWindow_Ui):
 
     # this method opens LogWindow
 
-    def showLog(self, menu):
+    def showLog(self, menu=None):
         logwindow = LogWindow(
             self.persepolis_setting)
         self.logwindow_list.append(logwindow)

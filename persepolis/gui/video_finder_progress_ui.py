@@ -15,8 +15,8 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from persepolis.gui.progress_ui import ProgressWindow_Ui
-from PyQt5.QtWidgets import QWidget, QHBoxLayout, QVBoxLayout, QLabel
-from PyQt5.QtCore import QCoreApplication
+from PySide6.QtWidgets import QWidget, QHBoxLayout, QVBoxLayout, QLabel
+from PySide6.QtCore import QCoreApplication
 
 
 class VideoFinderProgressWindow_Ui(ProgressWindow_Ui):

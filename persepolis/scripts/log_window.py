@@ -16,9 +16,9 @@
 from persepolis.scripts.useful_tools import determineConfigFolder
 from persepolis.gui.log_window_ui import LogWindow_Ui
 from persepolis.scripts import osCommands
-from PyQt5.QtCore import Qt, QPoint, QSize
-from PyQt5.QtGui import QIcon
-from PyQt5 import QtWidgets
+from PySide6.QtCore import Qt, QPoint, QSize
+from PySide6.QtGui import QIcon
+from PySide6 import QtWidgets
 import os
 
 # config_folder

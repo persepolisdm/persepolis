@@ -13,12 +13,12 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-from PyQt5.QtWidgets import QWidget, QTextEdit, QVBoxLayout, QHBoxLayout, QPushButton, QLabel
+from PySide6.QtWidgets import QWidget, QTextEdit, QVBoxLayout, QHBoxLayout, QPushButton, QLabel
 from persepolis.scripts.data_base import PersepolisDB
 from persepolis.scripts import osCommands
-from PyQt5.QtCore import Qt, QSize, QSettings
+from PySide6.QtCore import Qt, QSize, QSettings
 from persepolis.gui import resources
-from PyQt5.QtGui import QIcon
+from PySide6.QtGui import QIcon
 
 
 class ErrorWindow(QWidget):

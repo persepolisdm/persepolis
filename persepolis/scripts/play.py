@@ -15,7 +15,7 @@
 
 from persepolis.scripts import logger
 from persepolis.constants import OS
-from PyQt5.QtCore import QSettings
+from PySide6.QtCore import QSettings
 import subprocess
 import platform
 

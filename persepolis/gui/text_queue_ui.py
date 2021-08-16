@@ -14,10 +14,10 @@
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from PyQt5.QtWidgets import QPushButton, QApplication, QWidget, QTabWidget, QVBoxLayout, QTableWidget, QAbstractItemView, QLabel, QLineEdit, QHBoxLayout, QSpinBox, QComboBox, QFrame, QCheckBox, QGridLayout
-from PyQt5.QtCore import Qt, QTranslator, QCoreApplication, QLocale
+from PySide6.QtWidgets import QHeaderView, QPushButton, QApplication, QWidget, QTabWidget, QVBoxLayout, QTableWidget, QAbstractItemView, QLabel, QLineEdit, QHBoxLayout, QSpinBox, QComboBox, QFrame, QCheckBox, QGridLayout
+from PySide6.QtCore import Qt, QTranslator, QCoreApplication, QLocale
 from persepolis.gui import resources
-from PyQt5.QtGui import QIcon
+from PySide6.QtGui import QIcon
 
 
 class TextQueue_Ui(QWidget):
@@ -70,7 +70,7 @@ class TextQueue_Ui(QWidget):
         self.links_table.setHorizontalHeaderLabels(links_table_header_labels)
         self.links_table.setColumnHidden(2, True)
 
-        self.links_table.horizontalHeader().setSectionResizeMode(0)
+        self.links_table.horizontalHeader().setSectionResizeMode(QHeaderView.ResizeMode.Interactive)
         self.links_table.horizontalHeader().setStretchLastSection(True)
 
         # add_queue

@@ -19,7 +19,7 @@
 from persepolis.scripts.useful_tools import determineConfigFolder, returnDefaultSettings
 from persepolis.scripts.browser_integration import browserIntegration
 from persepolis.scripts import osCommands
-from PyQt5.QtCore import QSettings
+from PySide6.QtCore import QSettings
 import subprocess
 import shutil
 import time

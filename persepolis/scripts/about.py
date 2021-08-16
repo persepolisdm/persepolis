@@ -14,11 +14,11 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 
-from PyQt5.QtCore import Qt, QSize, QPoint, QFile, QIODevice, QTextStream
+from PySide6.QtCore import Qt, QSize, QPoint, QFile, QIODevice, QTextStream
 from persepolis.gui.about_ui import AboutWindow_Ui
 from persepolis.gui import resources
-from PyQt5.QtWidgets import QWidget
-from PyQt5.QtGui import QIcon
+from PySide6.QtWidgets import QWidget
+from PySide6.QtGui import QIcon
 
 
 class AboutWindow(AboutWindow_Ui):

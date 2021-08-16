@@ -13,11 +13,11 @@
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from PyQt5.QtCore import Qt, QSize, QPoint, QTranslator, QCoreApplication, QLocale
+from PySide6.QtCore import Qt, QSize, QPoint, QTranslator, QCoreApplication, QLocale
 from persepolis.gui.after_download_ui import AfterDownloadWindow_Ui
 from persepolis.scripts.play import playNotification
 from persepolis.scripts import osCommands
-from PyQt5.QtGui import QIcon
+from PySide6.QtGui import QIcon
 import os
 
 
