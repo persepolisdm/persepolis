@@ -597,7 +597,7 @@ class VideoFinderAddLink(AddLinkWindow):
 
     # user submitted information by pressing ok_pushButton, so get information
     # from VideoFinderAddLink window and return them to the mainwindow with callback!
-    def okButtonPressed(self, button, download_later):
+    def okButtonPressed(self, download_later, button=None):
 
         link_list = []
         # separate audio format and video format is selected.

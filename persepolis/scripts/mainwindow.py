@@ -14,7 +14,7 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from PySide6.QtWidgets import QCheckBox, QLineEdit, QAbstractItemView, QFileDialog, QSystemTrayIcon, QMenu, QApplication, QInputDialog, QMessageBox
-from PySide6.QtCore import QDir, QTime, QCoreApplication, QRect, QSize, QPoint, QThread, Signal, Qt, QTranslator, QLocale, __version__
+from PySide6.QtCore import QDir, QTime, QCoreApplication, QRect, QSize, QPoint, QThread, Signal, Qt, QTranslator, QLocale
 from persepolis.scripts.useful_tools import muxer, freeSpace, determineConfigFolder, osAndDesktopEnvironment
 from persepolis.scripts.video_finder_progress import VideoFinderProgressWindow
 from persepolis.gui.mainwindow_ui import MainWindow_Ui, QTableWidgetItem
@@ -36,6 +36,7 @@ from persepolis.scripts.bubble import notifySend
 from persepolis.scripts import osCommands
 from persepolis.scripts import download
 from PySide6 import __version__ as PYQT_VERSION_STR
+from PySide6.QtCore import __version__ as QT_VERSION_STR 
 from persepolis.scripts import logger
 from persepolis.scripts import spider
 from persepolis.gui import resources
@@ -196,9 +197,9 @@ class CheckVersionsThread(QThread):
 
         # log qt version
         logger.sendToLog('QT version: '
-                         + str(__version__))
+                         + str(QT_VERSION_STR))
         # log pyqt version
-        logger.sendToLog('PyQt version: '
+        logger.sendToLog('PySide version: '
                          + str(PYQT_VERSION_STR))
 
         # log os and desktop env.

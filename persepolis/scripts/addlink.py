@@ -328,7 +328,7 @@ class AddLinkWindow(AddLinkWindow_Ui):
             self.start_checkBox.setEnabled(True)
             self.end_checkBox.setEnabled(True)
 
-    def okButtonPressed(self, button, download_later):
+    def okButtonPressed(self, download_later, button=None):
         # user submitted information by pressing ok_pushButton, so get information
         # from AddLinkWindow and return them to the mainwindow with callback!
 
