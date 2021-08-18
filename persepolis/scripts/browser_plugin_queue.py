@@ -14,20 +14,20 @@
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from PyQt5.QtCore import Qt, QPoint, QSize, QThread, pyqtSignal, QDir
-from PyQt5.QtWidgets import QTableWidgetItem, QFileDialog
+from PySide6.QtCore import Qt, QPoint, QSize, QThread, Signal, QDir
+from PySide6.QtWidgets import QTableWidgetItem, QFileDialog
 from persepolis.gui.text_queue_ui import TextQueue_Ui
 from persepolis.scripts import logger
 from persepolis.scripts import spider
 from functools import partial
-from PyQt5.QtGui import QIcon
+from PySide6.QtGui import QIcon
 from copy import deepcopy
 import os
 
 
 # This thread finds filename
 class QueueSpiderThread(QThread):
-    QUEUESPIDERRETURNEDFILENAME = pyqtSignal(str)
+    QUEUESPIDERRETURNEDFILENAME = Signal(str)
 
     def __init__(self, dict):
         QThread.__init__(self)

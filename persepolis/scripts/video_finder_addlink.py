@@ -14,8 +14,8 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 
-from PyQt5.QtWidgets import QCheckBox, QPushButton, QTextEdit, QFrame, QLabel, QComboBox, QHBoxLayout, QApplication
-from PyQt5.QtCore import Qt, QThread, pyqtSignal, QCoreApplication, QTranslator, QLocale
+from PySide6.QtWidgets import QCheckBox, QPushButton, QTextEdit, QFrame, QLabel, QComboBox, QHBoxLayout, QApplication
+from PySide6.QtCore import Qt, QThread, Signal, QCoreApplication, QTranslator, QLocale
 from persepolis.scripts.useful_tools import determineConfigFolder
 from persepolis.scripts.addlink import AddLinkWindow
 from persepolis.scripts import logger, osCommands
@@ -41,7 +41,7 @@ persepolis_tmp = os.path.join(config_folder, 'persepolis_tmp')
 
 
 class MediaListFetcherThread(QThread):
-    RESULT = pyqtSignal(dict)
+    RESULT = Signal(dict)
     cookies = '# HTTP cookie file.\n'  # We shall write it in a file when thread starts.
 
     def __init__(self, receiver_slot, video_dict, parent):
@@ -146,7 +146,7 @@ class MediaListFetcherThread(QThread):
 
 
 class FileSizeFetcherThread(QThread):
-    FOUND = pyqtSignal(dict)
+    FOUND = Signal(dict)
 
     def __init__(self, dictionary, thread_key):
         super().__init__()
@@ -597,7 +597,7 @@ class VideoFinderAddLink(AddLinkWindow):
 
     # user submitted information by pressing ok_pushButton, so get information
     # from VideoFinderAddLink window and return them to the mainwindow with callback!
-    def okButtonPressed(self, button, download_later):
+    def okButtonPressed(self, download_later, button=None):
 
         link_list = []
         # separate audio format and video format is selected.

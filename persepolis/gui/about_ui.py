@@ -14,14 +14,14 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 
-from PyQt5.QtWidgets import QWidget, QTabWidget, QHBoxLayout, QVBoxLayout, QLabel, QTextEdit, QPushButton
-from PyQt5.QtCore import Qt, QSize, QPoint, QTranslator, QCoreApplication, QLocale
-from PyQt5 import QtCore, QtGui, QtWidgets
-from PyQt5.QtGui import QIcon, QFont
+from PySide6.QtWidgets import QWidget, QTabWidget, QHBoxLayout, QVBoxLayout, QLabel, QTextEdit, QPushButton
+from PySide6.QtCore import Qt, QSize, QPoint, QTranslator, QCoreApplication, QLocale
+from PySide6 import QtCore, QtGui, QtWidgets
+from PySide6.QtGui import QIcon, QFont
 from persepolis.gui import resources
 
 try:
-    from PyQt5 import QtSvg
+    from PySide6 import QtSvgWidget
     qtsvg_available = True
 except:
     qtsvg_available = False
@@ -69,7 +69,7 @@ class AboutWindow_Ui(QWidget):
         # persepolis icon
         if qtsvg_available:
             persepolis_icon_verticalLayout = QVBoxLayout()
-            self.persepolis_icon = QtSvg.QSvgWidget(':/persepolis.svg')
+            self.persepolis_icon = QtSvgWidget.QSvgWidget(':/persepolis.svg')
             self.persepolis_icon.setFixedSize(QSize(64, 64))
 
             persepolis_icon_verticalLayout.addWidget(self.persepolis_icon)
@@ -80,7 +80,7 @@ class AboutWindow_Ui(QWidget):
         self.title_label = QLabel(self.about_tab)
         font = QFont()
         font.setBold(True)
-        font.setWeight(75)
+        font.setWeight(QFont.Weight.Bold)
         self.title_label.setFont(font)
         self.title_label.setAlignment(Qt.AlignCenter)
         about_tab_verticalLayout.addWidget(self.title_label)
@@ -125,7 +125,7 @@ class AboutWindow_Ui(QWidget):
 
         self.developers_title_label = QLabel(self.developers_tab)
         font.setBold(True)
-        font.setWeight(75)
+        font.setWeight(QFont.Weight.Bold)
         self.developers_title_label.setFont(font)
         self.developers_title_label.setAlignment(Qt.AlignCenter)
         developers_verticalLayout.addWidget(self.developers_title_label)

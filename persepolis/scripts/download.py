@@ -18,7 +18,7 @@ from persepolis.scripts.useful_tools import freeSpace, humanReadableSize
 from persepolis.scripts.bubble import notifySend
 from persepolis.scripts import logger
 from persepolis.constants import OS
-from PyQt5.QtCore import QSettings
+from PySide6.QtCore import QSettings
 import xmlrpc.client
 import urllib.parse
 import subprocess

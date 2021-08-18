@@ -13,13 +13,13 @@
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from PyQt5.QtCore import Qt, QEvent, QTime, QSize, QPoint, QDir, QTranslator, QCoreApplication, QLocale
-from PyQt5.QtWidgets import QFileDialog, QStyleFactory, QMessageBox, QTableWidgetItem
+from PySide6.QtCore import Qt, QEvent, QTime, QSize, QPoint, QDir, QTranslator, QCoreApplication, QLocale
+from PySide6.QtWidgets import QFileDialog, QStyleFactory, QMessageBox, QTableWidgetItem
 
 from persepolis.constants import OS
 from persepolis.gui.setting_ui import Setting_Ui, KeyCapturingWindow_Ui
 from persepolis.scripts.useful_tools import returnDefaultSettings
-from PyQt5.QtGui import QFont, QKeySequence
+from PySide6.QtGui import QFont, QKeySequence
 from persepolis.scripts import osCommands
 from persepolis.scripts import startup
 import platform

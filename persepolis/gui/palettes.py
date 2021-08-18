@@ -13,8 +13,8 @@
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from PyQt5.QtGui import QPalette, QColor
-from PyQt5.QtCore import Qt
+from PySide6.QtGui import QPalette, QColor
+from PySide6.QtCore import Qt
 
 class DarkFusionPalette(QPalette):
     def __init__(self):

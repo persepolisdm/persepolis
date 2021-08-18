@@ -31,11 +31,6 @@ if os_type == 'Linux':
                  '/usr/share/metainfo/com.github.persepolisdm.persepolis.appdata.xml',
                  '/usr/bin/persepolis']
 
-    # finding persepolis directories in /usr/lib/python3.6/site-packages/
-    pattern = os.path.join('/usr/lib/python3.6/site-packages/', 'persepolis*')
-    for folder in glob.glob(pattern):
-        path_list.append(folder)
-
 elif os_type == 'FreeBSD' or os_type == 'OpenBSD':
     path_list = ['/usr/local/share/man/man1/persepolis.1.gz',
                  '/usr/local/share/pixmaps/persepolis.svg',
@@ -44,19 +39,29 @@ elif os_type == 'FreeBSD' or os_type == 'OpenBSD':
                  '/usr/local/share/metainfo/com.github.persepolisdm.persepolis.appdata.xml',
                  '/usr/local/bin/persepolis']
 
-    # finding persepolis directories in /usr/lib/python3.6/site-packages/
-    pattern = os.path.join('/usr/local/lib/python3.6/site-packages/', 'persepolis*')
-    for folder in glob.glob(pattern):
-        path_list.append(folder)
-
-    # finding persepolis directories in /usr/lib/python3.6/site-packages/
-    pattern = os.path.join('/usr/local/lib/python3.5/site-packages/', 'persepolis*')
-    for folder in glob.glob(pattern):
-        path_list.append(folder)
 
 else:
     print('This script is for Linux and BSD')
     sys.exit(1)
+
+
+# finding persepolis directories in /usr/lib/python3.6/site-packages/
+python_version_list = ['python3.5','python3.6', 'python3.7', 'python3.8', 'python3.9']
+
+for python_version in python_version_list:
+    # for BSD
+    if os_type == 'Linux':
+
+        pattern = '/usr/lib/' + python_version + '/site-packages/persepolis*'
+
+    elif os_type == 'FreeBSD' or os_type == 'OpenBSD':
+
+        pattern = '/usr/local/lib/' + python_version + '/site-packages/persepolis*'
+
+    for folder in glob.glob(pattern):
+        path_list.append(folder)
+
+print(path_list)
 
 uid = os.getuid()
 if uid != 0:

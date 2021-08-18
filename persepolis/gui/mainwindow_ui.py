@@ -13,9 +13,9 @@
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from PyQt5.QtWidgets import QShortcut, QDoubleSpinBox, QPushButton, QComboBox,  QMenu, QTreeView, QSplitter, QSizePolicy, QGridLayout, QHBoxLayout, QVBoxLayout, QMenu, QTableWidgetItem, QAbstractItemView, QApplication, QToolBar, QMenuBar, QStatusBar, QTableWidget, QAction, QMainWindow, QWidget, QFrame, QAbstractItemView, QCheckBox, QSpinBox, QLabel
-from PyQt5.QtGui import QCursor, QKeySequence, QIcon, QStandardItemModel, QStandardItem
-from PyQt5.QtCore import QCoreApplication, QRect, QSize, Qt, QTranslator, QLocale
+from PySide6.QtWidgets import QHeaderView, QDoubleSpinBox, QPushButton, QComboBox,  QMenu, QTreeView, QSplitter, QSizePolicy, QGridLayout, QHBoxLayout, QVBoxLayout, QMenu, QTableWidgetItem, QAbstractItemView, QApplication, QToolBar, QMenuBar, QStatusBar, QTableWidget, QMainWindow, QWidget, QFrame, QAbstractItemView, QCheckBox, QSpinBox, QLabel
+from PySide6.QtGui import QShortcut, QAction, QCursor, QKeySequence, QIcon, QStandardItemModel, QStandardItem
+from PySide6.QtCore import QCoreApplication, QRect, QSize, Qt, QTranslator, QLocale
 from persepolis.gui.customized_widgets import MyQDateTimeEdit
 from persepolis.gui import resources
 
@@ -404,7 +404,7 @@ class MainWindow_Ui(QMainWindow):
         self.download_table.setHorizontalHeaderLabels(download_table_header)
 
         # fixing the size of download_table when window is Maximized!
-        self.download_table.horizontalHeader().setSectionResizeMode(0)
+        self.download_table.horizontalHeader().setSectionResizeMode(QHeaderView.ResizeMode.Interactive)
         self.download_table.horizontalHeader().setStretchLastSection(True)
 
         horizontal_splitter.setStretchFactor(0, 3)  # category_tree width
@@ -695,12 +695,12 @@ class MainWindow_Ui(QMainWindow):
 
         # preferencesAction
         self.preferencesAction = QAction(QIcon(icons + 'preferences'), QCoreApplication.translate("mainwindow_ui_tr", 'Preferences'),
-                                         self, statusTip=QCoreApplication.translate("mainwindow_ui_tr", 'Preferences'), triggered=self.openPreferences, menuRole=5)
+                                         self, statusTip=QCoreApplication.translate("mainwindow_ui_tr", 'Preferences'), triggered=self.openPreferences, menuRole=QAction.MenuRole.PreferencesRole)
         editMenu.addAction(self.preferencesAction)
 
         # aboutAction
         self.aboutAction = QAction(QIcon(
-            icons + 'about'), QCoreApplication.translate("mainwindow_ui_tr", 'About'), self, statusTip=QCoreApplication.translate("mainwindow_ui_tr", 'About'), triggered=self.openAbout, menuRole=4)
+            icons + 'about'), QCoreApplication.translate("mainwindow_ui_tr", 'About'), self, statusTip=QCoreApplication.translate("mainwindow_ui_tr", 'About'), triggered=self.openAbout, menuRole=QAction.MenuRole.AboutRole)
         helpMenu.addAction(self.aboutAction)
 
         # issueAction

@@ -15,13 +15,13 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 
-from PyQt5.QtWidgets import QHBoxLayout, QApplication, QFileDialog, QCheckBox, QLineEdit, QPushButton
-from PyQt5.QtCore import Qt, QPoint, QSize, QDir, QThread, pyqtSignal
+from PySide6.QtWidgets import QHBoxLayout, QApplication, QFileDialog, QCheckBox, QLineEdit, QPushButton
+from PySide6.QtCore import Qt, QPoint, QSize, QDir, QThread, Signal
 from persepolis.gui.addlink_ui import AddLinkWindow_Ui
 from persepolis.scripts.check_proxy import getProxy
 from persepolis.scripts import spider
 from persepolis.scripts import logger
-from PyQt5.QtGui import QIcon
+from PySide6.QtGui import QIcon
 from functools import partial
 import os
 
@@ -29,7 +29,7 @@ import os
 
 
 class AddLinkSpiderThread(QThread):
-    ADDLINKSPIDERSIGNAL = pyqtSignal(dict)
+    ADDLINKSPIDERSIGNAL = Signal(dict)
 
     def __init__(self, add_link_dictionary):
         QThread.__init__(self)
@@ -328,7 +328,7 @@ class AddLinkWindow(AddLinkWindow_Ui):
             self.start_checkBox.setEnabled(True)
             self.end_checkBox.setEnabled(True)
 
-    def okButtonPressed(self, button, download_later):
+    def okButtonPressed(self, download_later, button=None):
         # user submitted information by pressing ok_pushButton, so get information
         # from AddLinkWindow and return them to the mainwindow with callback!
 

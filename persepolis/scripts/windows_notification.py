@@ -16,12 +16,12 @@
 """
 
 from persepolis.gui.windows_notification_ui import Windows_Notification_UI
-from PyQt5.QtCore import Qt, QThread, pyqtSignal
+from PySide6.QtCore import Qt, QThread, Signal
 from time import sleep
 
 
 class TimerThread(QThread):
-    TIMEISUP = pyqtSignal()
+    TIMEISUP = Signal()
 
     def __init__(self, time):
         QThread.__init__(self)

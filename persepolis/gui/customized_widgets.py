@@ -14,8 +14,8 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 
-from PyQt5.QtWidgets import QDateTimeEdit
-from PyQt5.QtCore import QSettings, Qt
+from PySide6.QtWidgets import QDateTimeEdit
+from PySide6.QtCore import QSettings, Qt
 
 
 # import persepolis_setting

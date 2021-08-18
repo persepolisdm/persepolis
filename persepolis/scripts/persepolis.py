@@ -14,12 +14,12 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from persepolis.gui import resources
-from PyQt5.QtGui import QFont
-from PyQt5.QtWidgets import QApplication, QStyleFactory
+from PySide6.QtGui import QFont
+from PySide6.QtWidgets import QApplication, QStyleFactory
 import traceback
 from persepolis.scripts.error_window import ErrorWindow
 from persepolis.gui.palettes import DarkFusionPalette, LightFusionPalette
-from PyQt5.QtCore import QFile, QTextStream, QCoreApplication, QSettings, Qt
+from PySide6.QtCore import QFile, QTextStream, QCoreApplication, QSettings, Qt
 import json
 import struct
 import argparse
@@ -388,7 +388,7 @@ def main():
         # when it's minimized in system tray.
         persepolis_download_manager.setQuitOnLastWindowClosed(False)
 
-        # Enable High DPI display with PyQt5
+        # Enable High DPI display with PySide6
         try:
             if hasattr(QStyleFactory, 'AA_UseHighDpiPixmaps'):
                 persepolis_download_manager.setAttribute(Qt.AA_UseHighDpiPixmaps)

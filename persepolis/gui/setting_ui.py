@@ -14,11 +14,11 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-from PyQt5.QtWidgets import QAbstractItemView, QTableWidget, QTableWidgetItem, QCheckBox, QVBoxLayout, QHBoxLayout, QFrame, QWidget, QLabel, QLineEdit, QTabWidget, QSpinBox, QPushButton, QDial, QComboBox, QFontComboBox, QSpacerItem, QSizePolicy
-from PyQt5.QtCore import Qt, QTranslator, QCoreApplication, QLocale
+from PySide6.QtWidgets import QAbstractItemView, QTableWidget, QTableWidgetItem, QCheckBox, QVBoxLayout, QHBoxLayout, QFrame, QWidget, QLabel, QLineEdit, QTabWidget, QSpinBox, QPushButton, QDial, QComboBox, QFontComboBox, QSpacerItem, QSizePolicy
+from PySide6.QtCore import Qt, QTranslator, QCoreApplication, QLocale
 from persepolis.gui.customized_widgets import MyQDateTimeEdit
 from persepolis.gui import resources
-from PyQt5.QtGui import QIcon
+from PySide6.QtGui import QIcon
 import pkg_resources
 
 

@@ -35,10 +35,12 @@ if not os.path.isfile(log_file):
 logObj = logging.getLogger("Persepolis")
 logObj.setLevel(logging.INFO)
 
+# don't show log in console
+logObj.propagate = False
+
 # create a file handler
 handler = logging.FileHandler(log_file)
 handler.setLevel(logging.INFO)
-
 # create a logging format
 formatter = logging.Formatter(
     '%(asctime)s - %(name)s - %(levelname)s - %(message)s')
