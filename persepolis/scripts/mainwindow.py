@@ -13,15 +13,29 @@
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from PySide6.QtWidgets import QCheckBox, QLineEdit, QAbstractItemView, QFileDialog, QSystemTrayIcon, QMenu, QApplication, QInputDialog, QMessageBox
-from PySide6.QtCore import QDir, QTime, QCoreApplication, QRect, QSize, QPoint, QThread, Signal, Qt, QTranslator, QLocale
+global pyside6_is_installed
+
+try:
+    from PySide6.QtWidgets import QCheckBox, QLineEdit, QAbstractItemView, QFileDialog, QSystemTrayIcon, QMenu, QApplication, QInputDialog, QMessageBox
+    from PySide6.QtCore import QDir, QTime, QCoreApplication, QRect, QSize, QPoint, QThread, Signal, Qt, QTranslator, QLocale
+    from PySide6.QtGui import QFont, QIcon, QStandardItem, QCursor, QAction
+    from PySide6 import __version__ as PYQT_VERSION_STR
+    from PySide6.QtCore import __version__ as QT_VERSION_STR 
+    pyside6_is_installed = True
+except:
+    from PyQt5.QtWidgets import QCheckBox, QLineEdit, QAbstractItemView, QAction, QFileDialog, QSystemTrayIcon, QMenu, QApplication, QInputDialog, QMessageBox
+    from PyQt5.QtCore import QDir, QTime, QCoreApplication, QRect, QSize, QPoint, QThread, Qt, QTranslator, QLocale, QT_VERSION_STR
+    from PyQt5.QtGui import QFont, QIcon, QStandardItem, QCursor
+    from PyQt5.Qt import PYQT_VERSION_STR
+    from PyQt5.QtCore import pyqtSignal as Signal
+    pyside6_is_installed = False
+
 from persepolis.scripts.useful_tools import muxer, freeSpace, determineConfigFolder, osAndDesktopEnvironment
 from persepolis.scripts.video_finder_progress import VideoFinderProgressWindow
 from persepolis.gui.mainwindow_ui import MainWindow_Ui, QTableWidgetItem
 from persepolis.scripts.data_base import PluginsDB, PersepolisDB, TempDB
 from persepolis.scripts.browser_plugin_queue import BrowserPluginQueue
 from persepolis.scripts.after_download import AfterDownloadWindow
-from PySide6.QtGui import QFont, QIcon, QStandardItem, QCursor, QAction
 from persepolis.scripts.properties import PropertiesWindow
 from persepolis.scripts.setting import PreferencesWindow
 from persepolis.scripts.progress import ProgressWindow
@@ -35,8 +49,6 @@ from persepolis.scripts.about import AboutWindow
 from persepolis.scripts.bubble import notifySend
 from persepolis.scripts import osCommands
 from persepolis.scripts import download
-from PySide6 import __version__ as PYQT_VERSION_STR
-from PySide6.QtCore import __version__ as QT_VERSION_STR 
 from persepolis.scripts import logger
 from persepolis.scripts import spider
 from persepolis.gui import resources
@@ -199,7 +211,12 @@ class CheckVersionsThread(QThread):
         logger.sendToLog('QT version: '
                          + str(QT_VERSION_STR))
         # log pyqt version
-        logger.sendToLog('PySide version: '
+        if pyside6_is_installed:
+            madule_str = 'PySide version: '
+        else:
+            madule_str = 'PyQt version: '
+
+        logger.sendToLog(madule_str
                          + str(PYQT_VERSION_STR))
 
         # log os and desktop env.

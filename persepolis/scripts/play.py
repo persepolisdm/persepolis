@@ -12,10 +12,13 @@
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+try:
+    from PySide6.QtCore import QSettings
+except:
+    from PyQt5.QtCore import QSettings
 
 from persepolis.scripts import logger
 from persepolis.constants import OS
-from PySide6.QtCore import QSettings
 import subprocess
 import platform
 

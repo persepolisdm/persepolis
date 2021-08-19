@@ -13,18 +13,34 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
+try:
+    from PySide6.QtWidgets import QWidget, QTabWidget, QHBoxLayout, QVBoxLayout, QLabel, QTextEdit, QPushButton
+    from PySide6.QtCore import Qt, QSize, QPoint, QTranslator, QCoreApplication, QLocale
+    from PySide6 import QtCore, QtGui, QtWidgets
+    from PySide6.QtGui import QIcon, QFont
+    pyside6_is_installed = True
+except:
+    from PyQt5.QtWidgets import QWidget, QTabWidget, QHBoxLayout, QVBoxLayout, QLabel, QTextEdit, QPushButton
+    from PyQt5.QtCore import Qt, QSize, QPoint, QTranslator, QCoreApplication, QLocale
+    from PyQt5 import QtCore, QtGui, QtWidgets
+    from PyQt5.QtGui import QIcon, QFont
+    pyside6_is_installed = False
 
-from PySide6.QtWidgets import QWidget, QTabWidget, QHBoxLayout, QVBoxLayout, QLabel, QTextEdit, QPushButton
-from PySide6.QtCore import Qt, QSize, QPoint, QTranslator, QCoreApplication, QLocale
-from PySide6 import QtCore, QtGui, QtWidgets
-from PySide6.QtGui import QIcon, QFont
 from persepolis.gui import resources
 
-try:
-    from PySide6 import QtSvgWidget
-    qtsvg_available = True
-except:
-    qtsvg_available = False
+if pyside6_is_installed == True:
+    try:
+        from PySide6 import QtSvgWidget
+        qtsvg_available = True
+    except:
+        qtsvg_available = False
+else:
+    try:
+        from PyQt5 import QtSvg as QtSvgWidget
+        qtsvg_available = True
+    except:
+        qtsvg_available = False
+        
 
 
 class AboutWindow_Ui(QWidget):

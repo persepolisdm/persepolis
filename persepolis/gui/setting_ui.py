@@ -13,14 +13,18 @@
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+try:
+    from PySide6.QtWidgets import QAbstractItemView, QTableWidget, QTableWidgetItem, QCheckBox, QVBoxLayout, QHBoxLayout, QFrame, QWidget, QLabel, QLineEdit, QTabWidget, QSpinBox, QPushButton, QDial, QComboBox, QFontComboBox, QSpacerItem, QSizePolicy
+    from PySide6.QtCore import Qt, QTranslator, QCoreApplication, QLocale
+    from PySide6.QtGui import QIcon
+except:
+    from PyQt5.QtWidgets import QAbstractItemView, QTableWidget, QTableWidgetItem, QCheckBox, QVBoxLayout, QHBoxLayout, QFrame, QWidget, QLabel, QLineEdit, QTabWidget, QSpinBox, QPushButton, QDial, QComboBox, QFontComboBox, QSpacerItem, QSizePolicy
+    from PyQt5.QtCore import Qt, QTranslator, QCoreApplication, QLocale
+    from PyQt5.QtGui import QIcon
 
-from PySide6.QtWidgets import QAbstractItemView, QTableWidget, QTableWidgetItem, QCheckBox, QVBoxLayout, QHBoxLayout, QFrame, QWidget, QLabel, QLineEdit, QTabWidget, QSpinBox, QPushButton, QDial, QComboBox, QFontComboBox, QSpacerItem, QSizePolicy
-from PySide6.QtCore import Qt, QTranslator, QCoreApplication, QLocale
 from persepolis.gui.customized_widgets import MyQDateTimeEdit
 from persepolis.gui import resources
-from PySide6.QtGui import QIcon
 import pkg_resources
-
 
 class KeyCapturingWindow_Ui(QWidget):
     def __init__(self, persepolis_setting):

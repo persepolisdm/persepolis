@@ -15,11 +15,14 @@
 
 from persepolis.scripts.play import playNotification
 from persepolis.constants import OS
-from PySide6.QtCore import QSettings
 import subprocess
 import platform
 import os
 
+try:
+    from PySide6.QtCore import QSettings
+except:
+    from PyQt5.QtCore import QSettings
 
 # platform
 os_type = platform.system()

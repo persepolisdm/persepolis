@@ -13,10 +13,12 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
-
-from PySide6.QtWidgets import QDateTimeEdit
-from PySide6.QtCore import QSettings, Qt
-
+try:
+    from PySide6.QtWidgets import QDateTimeEdit
+    from PySide6.QtCore import QSettings, Qt
+except:
+    from PyQt5.QtWidgets import QDateTimeEdit
+    from PyQt5.QtCore import QSettings, Qt
 
 # import persepolis_setting
 persepolis_setting = QSettings('persepolis_download_manager', 'persepolis')

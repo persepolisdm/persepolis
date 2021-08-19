@@ -14,14 +14,19 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 
+try:
+    from PySide6.QtWidgets import QTabWidget, QDoubleSpinBox, QPushButton, QComboBox, QSpinBox, QVBoxLayout, QHBoxLayout, QLabel, QApplication, QWidget, QFileDialog, QMessageBox, QSizePolicy, QGridLayout, QCheckBox, QFrame, QLineEdit, QPushButton
+    from PySide6.QtCore import Qt, QTranslator, QCoreApplication, QLocale
+    from PySide6 import QtCore, QtGui, QtWidgets
+    from PySide6.QtGui import QIcon
+except:
+    from PyQt5.QtWidgets import QTabWidget, QDoubleSpinBox, QPushButton, QComboBox, QSpinBox, QVBoxLayout, QHBoxLayout, QLabel, QApplication, QWidget, QFileDialog, QMessageBox, QSizePolicy, QGridLayout, QCheckBox, QFrame, QLineEdit, QPushButton
+    from PyQt5.QtCore import Qt, QTranslator, QCoreApplication, QLocale
+    from PyQt5 import QtCore, QtGui, QtWidgets
+    from PyQt5.QtGui import QIcon
 
-from PySide6.QtWidgets import QTabWidget, QDoubleSpinBox, QPushButton, QComboBox, QSpinBox, QVBoxLayout, QHBoxLayout, QLabel, QApplication, QWidget, QFileDialog, QMessageBox, QSizePolicy, QGridLayout, QCheckBox, QFrame, QLineEdit, QPushButton
-from PySide6.QtCore import Qt, QTranslator, QCoreApplication, QLocale
-from persepolis.gui.customized_widgets import MyQDateTimeEdit
-from PySide6 import QtCore, QtGui, QtWidgets
 from persepolis.gui import resources
-from PySide6.QtGui import QIcon
-
+from persepolis.gui.customized_widgets import MyQDateTimeEdit
 
 class AddLinkWindow_Ui(QWidget):
     def __init__(self, persepolis_setting):

@@ -18,7 +18,6 @@ from persepolis.scripts.useful_tools import freeSpace, humanReadableSize
 from persepolis.scripts.bubble import notifySend
 from persepolis.scripts import logger
 from persepolis.constants import OS
-from PySide6.QtCore import QSettings
 import xmlrpc.client
 import urllib.parse
 import subprocess
@@ -28,6 +27,11 @@ import time
 import ast
 import sys
 import os
+
+try:
+    from PySide6.QtCore import QSettings
+except:
+    from PyQt5.QtCore import QSettings
 
 # Before reading this file, please read this link!
 # this link helps you to understand this codes:

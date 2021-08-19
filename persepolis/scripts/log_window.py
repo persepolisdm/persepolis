@@ -12,14 +12,19 @@
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
-
 from persepolis.scripts.useful_tools import determineConfigFolder
 from persepolis.gui.log_window_ui import LogWindow_Ui
 from persepolis.scripts import osCommands
-from PySide6.QtCore import Qt, QPoint, QSize
-from PySide6.QtGui import QIcon
-from PySide6 import QtWidgets
 import os
+
+try:
+    from PySide6.QtCore import Qt, QPoint, QSize
+    from PySide6.QtGui import QIcon
+    from PySide6 import QtWidgets
+except:
+    from PyQt5.QtCore import Qt, QPoint, QSize
+    from PyQt5.QtGui import QIcon
+    from PyQt5 import QtWidgets
 
 # config_folder
 config_folder = determineConfigFolder()

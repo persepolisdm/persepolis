@@ -12,8 +12,11 @@
 #
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+try:
+    from PySide6.QtWidgets import QStyleFactory
+except:
+    from PyQt5.QtWidgets import QStyleFactory
 
-from PySide6.QtWidgets import QStyleFactory
 from persepolis.constants.Os import OS
 import urllib.parse
 import subprocess

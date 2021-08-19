@@ -2,11 +2,14 @@
 
 # Resource object code
 #
-# Created by: The Resource Compiler for PySide6 (Qt v5.13.1)
+# Created by: The Resource Compiler for PyQt5 (Qt v5.13.1)
 #
 # WARNING! All changes made in this file will be lost!
 
-from PySide6 import QtCore
+try:
+    from PySide6 import QtCore
+except:
+    from PyQt5 import QtCore
 
 qt_resource_data = b"\
 \x00\x00\x08\x18\

@@ -14,14 +14,20 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
+try:
+    from PySide6.QtWidgets import QHBoxLayout, QApplication, QFileDialog, QCheckBox, QLineEdit, QPushButton
+    from PySide6.QtCore import Qt, QPoint, QSize, QDir, QThread, Signal
+    from PySide6.QtGui import QIcon
+except:
+    from PyQt5.QtWidgets import QHBoxLayout, QApplication, QFileDialog, QCheckBox, QLineEdit, QPushButton
+    from PyQt5.QtCore import Qt, QPoint, QSize, QDir, QThread
+    from PyQt5.QtGui import QIcon
+    from PyQt5.QtCore import pyqtSignal as Signal
 
-from PySide6.QtWidgets import QHBoxLayout, QApplication, QFileDialog, QCheckBox, QLineEdit, QPushButton
-from PySide6.QtCore import Qt, QPoint, QSize, QDir, QThread, Signal
 from persepolis.gui.addlink_ui import AddLinkWindow_Ui
 from persepolis.scripts.check_proxy import getProxy
 from persepolis.scripts import spider
 from persepolis.scripts import logger
-from PySide6.QtGui import QIcon
 from functools import partial
 import os
 

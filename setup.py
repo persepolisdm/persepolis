@@ -35,13 +35,21 @@ else:
 # Checking dependencies!
 not_installed = ''
 
-# PyQt5
+# PyQt5 or PySide6
 try:
     import PySide6
     print('python3-pyside6 is found')
+    pyside6_is_installed = True
 except:
-    print('Error : python3-pyside6 is not installed!')
-    not_installed = not_installed + 'PySide6, '
+    pyside6_is_installed = False
+
+if not(pyside6_is_installed):
+    try:
+        import PyQt5
+        print('python3-pyqt5 is found')
+    except:
+        print('Error : python3-pyqt5 or pyside6 must be installed!')
+        not_installed = not_installed + '(PyQt5 or PySide6) '
 
 # python3-requests
 try:

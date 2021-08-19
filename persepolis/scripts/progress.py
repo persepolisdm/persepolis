@@ -14,14 +14,20 @@
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from PySide6.QtCore import Qt, QSize, QPoint, QThread, QTranslator, QCoreApplication, QLocale
-from PySide6.QtWidgets import QLineEdit, QWidget, QSizePolicy,  QInputDialog
+try:
+    from PySide6.QtCore import Qt, QSize, QPoint, QThread, QTranslator, QCoreApplication, QLocale
+    from PySide6.QtWidgets import QLineEdit, QWidget, QSizePolicy,  QInputDialog
+    from PySide6.QtGui import QIcon
+except:
+    from PyQt5.QtCore import Qt, QSize, QPoint, QThread, QTranslator, QCoreApplication, QLocale
+    from PyQt5.QtWidgets import QLineEdit, QWidget, QSizePolicy,  QInputDialog
+    from PyQt5.QtGui import QIcon
+
 from persepolis.gui.progress_ui import ProgressWindow_Ui
 from persepolis.scripts.shutdown import shutDown
 from persepolis.scripts.bubble import notifySend
 from persepolis.scripts import download
 from persepolis.constants import OS
-from PySide6.QtGui import QIcon
 import subprocess
 import platform
 import time

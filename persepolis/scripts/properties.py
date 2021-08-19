@@ -14,11 +14,17 @@
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from PySide6.QtCore import Qt, QSize, QPoint, QDir, QTime, QCoreApplication
-from PySide6.QtWidgets import QLabel, QLineEdit, QFileDialog
+try:
+    from PySide6.QtCore import Qt, QSize, QPoint, QDir, QTime, QCoreApplication
+    from PySide6.QtWidgets import QLabel, QLineEdit, QFileDialog
+    from PySide6.QtGui import QIcon
+except:
+    from PyQt5.QtCore import Qt, QSize, QPoint, QDir, QTime, QCoreApplication
+    from PyQt5.QtWidgets import QLabel, QLineEdit, QFileDialog
+    from PyQt5.QtGui import QIcon
+
 from persepolis.gui.addlink_ui import AddLinkWindow_Ui
 from persepolis.scripts.check_proxy import getProxy
-from PySide6.QtGui import QIcon
 import os
 
 

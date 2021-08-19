@@ -13,11 +13,16 @@
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from PySide6.QtWidgets import QCheckBox, QWidget, QVBoxLayout, QHBoxLayout, QPushButton, QLabel, QLineEdit
-from PySide6.QtCore import Qt, QTranslator, QCoreApplication, QLocale
-from persepolis.gui import resources
-from PySide6.QtGui import QIcon
+try:
+    from PySide6.QtWidgets import QCheckBox, QWidget, QVBoxLayout, QHBoxLayout, QPushButton, QLabel, QLineEdit
+    from PySide6.QtCore import Qt, QTranslator, QCoreApplication, QLocale
+    from PySide6.QtGui import QIcon
+except:
+    from PyQt5.QtWidgets import QCheckBox, QWidget, QVBoxLayout, QHBoxLayout, QPushButton, QLabel, QLineEdit
+    from PyQt5.QtCore import Qt, QTranslator, QCoreApplication, QLocale
+    from PyQt5.QtGui import QIcon
 
+from persepolis.gui import resources
 
 class AfterDownloadWindow_Ui(QWidget):
     def __init__(self, persepolis_setting):

@@ -12,10 +12,15 @@
 #
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-from PySide6 import QtSvg
-from PySide6.QtWidgets import QDesktopWidget, QHBoxLayout, QVBoxLayout, QLabel, QWidget
-from PySide6.QtCore import Qt, QSize, QRect, QPoint
 
+try:
+    from PySide6 import QtSvg
+    from PySide6.QtWidgets import QDesktopWidget, QHBoxLayout, QVBoxLayout, QLabel, QWidget
+    from PySide6.QtCore import Qt, QSize, QRect, QPoint
+except:
+    from PyQt5 import QtSvg
+    from PyQt5.QtWidgets import QDesktopWidget, QHBoxLayout, QVBoxLayout, QLabel, QWidget
+    from PyQt5.QtCore import Qt, QSize, QRect, QPoint
 
 class Windows_Notification_UI(QWidget):
     def __init__(self, parent, persepolis_setting):

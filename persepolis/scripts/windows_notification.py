@@ -14,9 +14,13 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
+try:
+    from PySide6.QtCore import Qt, QThread, Signal
+except:
+    from PyQt5.QtCore import Qt, QThread
+    from PyQt5.QtCore import pyqtSignal as Signal
 
 from persepolis.gui.windows_notification_ui import Windows_Notification_UI
-from PySide6.QtCore import Qt, QThread, Signal
 from time import sleep
 
 

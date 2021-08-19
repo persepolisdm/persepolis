@@ -14,13 +14,20 @@
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from PySide6.QtCore import Qt, QPoint, QSize, QThread, Signal, QDir
-from PySide6.QtWidgets import QTableWidgetItem, QFileDialog
+try:
+    from PySide6.QtCore import Qt, QPoint, QSize, QThread, Signal, QDir
+    from PySide6.QtWidgets import QTableWidgetItem, QFileDialog
+    from PySide6.QtGui import QIcon
+except:
+    from PyQt5.QtCore import Qt, QPoint, QSize, QThread, QDir
+    from PyQt5.QtWidgets import QTableWidgetItem, QFileDialog
+    from PyQt5.QtCore import pyqtSignal as Signal
+    from PyQt5.QtGui import QIcon
+
 from persepolis.gui.text_queue_ui import TextQueue_Ui
 from persepolis.scripts import logger
 from persepolis.scripts import spider
 from functools import partial
-from PySide6.QtGui import QIcon
 from copy import deepcopy
 import os
 
