@@ -633,7 +633,7 @@ class MainWindow_Ui(QMainWindow):
 
         # removeSelectedAction
         self.removeSelectedAction = QAction(QIcon(icons + 'remove'), QCoreApplication.translate("mainwindow_ui_tr", 'Remove Selected Downloads from List'),
-                                            self, statusTip=QCoreApplication.translate("mainwindow_ui_tr", 'Remove Selected Downloads from List), triggered=self.removeSelected)
+                                            self, statusTip=QCoreApplication.translate("mainwindow_ui_tr", 'Remove Selected Downloads from List'), triggered=self.removeSelected)
 
         self.removeSelectedAction_shortcut = QShortcut(
             self.persepolis_setting.value('remove_shortcut'), self, self.removeSelected)
