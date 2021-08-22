@@ -203,7 +203,7 @@ class ProgressWindow_Ui(QWidget):
 
         self.progress_tabWidget.setCurrentIndex(0)
 # labels
-        self.link_label.setText(QCoreApplication.translate("progress_ui_tr", "Link:"))
+        self.link_label.setText(QCoreApplication.translate("progress_ui_tr", "Link: "))
         self.status_label.setText(QCoreApplication.translate("progress_ui_tr", "Status: "))
         self.downloaded_label.setText(QCoreApplication.translate("progress_ui_tr", "Downloaded:"))
         self.rate_label.setText(QCoreApplication.translate("progress_ui_tr", "Transfer rate: "))
@@ -211,7 +211,7 @@ class ProgressWindow_Ui(QWidget):
         self.connections_label.setText(QCoreApplication.translate("progress_ui_tr", "Number of connections: "))
         self.progress_tabWidget.setTabText(self.progress_tabWidget.indexOf(
             self.information_tab),  QCoreApplication.translate("progress_ui_tr", "Download Information"))
-        self.limit_checkBox.setText(QCoreApplication.translate("progress_ui_tr", "Limit Speed"))
+        self.limit_checkBox.setText(QCoreApplication.translate("progress_ui_tr", "Limit speed"))
         self.after_checkBox.setText(QCoreApplication.translate("progress_ui_tr", "After download"))
         self.limit_comboBox.setItemText(0, "KiB/s")
         self.limit_comboBox.setItemText(1, "MiB/s")

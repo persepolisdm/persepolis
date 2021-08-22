@@ -95,8 +95,8 @@ class LogWindow_Ui(QWidget):
 # set labels
 
         self.setWindowTitle(QCoreApplication.translate("log_window_ui_tr", 'Persepolis Log'))
-        self.close_pushButton.setText(QCoreApplication.translate("log_window_ui_tr", 'close'))
-        self.copy_log_pushButton.setText(QCoreApplication.translate("log_window_ui_tr", 'Copy selected to clipboard'))
+        self.close_pushButton.setText(QCoreApplication.translate("log_window_ui_tr", 'Close'))
+        self.copy_log_pushButton.setText(QCoreApplication.translate("log_window_ui_tr", 'Copy Selected to Clipboard'))
         self.report_pushButton.setText(QCoreApplication.translate("log_window_ui_tr", "Report Issue"))
-        self.refresh_log_pushButton.setText(QCoreApplication.translate("log_window_ui_tr", 'Refresh log messages'))
-        self.clear_log_pushButton.setText(QCoreApplication.translate("log_window_ui_tr", 'Clear log messages'))
+        self.refresh_log_pushButton.setText(QCoreApplication.translate("log_window_ui_tr", 'Refresh Log Messages'))
+        self.clear_log_pushButton.setText(QCoreApplication.translate("log_window_ui_tr", 'Clear Log Messages'))
