@@ -233,6 +233,9 @@ class AddLinkWindow_Ui(QWidget):
         gridLayout_3.addWidget(self.folder_pushButton, 3, 0, 1, 1)
         self.folder_pushButton.setIcon(QIcon(icons + 'folder'))
 
+        self.folder_checkBox = QCheckBox(self.folder_frame)
+        gridLayout_3.addWidget(self.folder_checkBox)
+
         self.folder_label = QLabel(self.folder_frame)
         self.folder_label.setAlignment(QtCore.Qt.AlignCenter)
         gridLayout_3.addWidget(self.folder_label, 1, 0, 1, 1)
@@ -425,6 +428,7 @@ class AddLinkWindow_Ui(QWidget):
         self.download_pass_label.setText(QCoreApplication.translate("addlink_ui_tr", "Download PassWord: "))
 
         self.folder_pushButton.setText(QCoreApplication.translate("addlink_ui_tr", "Change Download Folder"))
+        self.folder_checkBox.setText(QCoreApplication.translate("addlink_ui_tr", "Remember this path"))
         self.folder_label.setText(QCoreApplication.translate("addlink_ui_tr", "Download Folder: "))
 
         self.start_checkBox.setText(QCoreApplication.translate("addlink_ui_tr", "Start Time"))
