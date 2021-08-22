@@ -347,6 +347,11 @@ class PropertiesWindow(AddLinkWindow_Ui):
             self.end_checkBox.setEnabled(True)
 
     def okButtonPressed(self, button):
+        # write user's new inputs in persepolis_setting for next time if needed
+        if self.folder_checkBox.isChecked() == True:
+            self.persepolis_setting.setValue(
+                'settings/download_path', self.download_folder_lineEdit.text())
+
         if not(self.proxy_checkBox.isChecked()):
             ip = None
             port = None
