@@ -142,8 +142,8 @@ class PersepolisApplication(QApplication):
             self.setStyleSheet(stream.readAll())
 
         elif color_scheme == 'Light Fusion':
-            dark_fusion = LightFusionPalette()
-            self.setPalette(dark_fusion)
+            light_fusion = LightFusionPalette()
+            self.setPalette(light_fusion)
             file = QFile(":/light_style.qss")
             file.open(QFile.ReadOnly | QFile.Text)
             stream = QTextStream(file)
