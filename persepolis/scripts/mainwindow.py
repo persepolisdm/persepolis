@@ -4262,7 +4262,7 @@ class MainWindow(MainWindow_Ui):
                 if category_tree_item_text == queue_name:
                     category_index = i
                     break
-            # highliting
+            # highlighting
             category_tree_model_index = self.category_tree_model.index(
                 category_index, 0)
             self.category_tree.setCurrentIndex(category_tree_model_index)
