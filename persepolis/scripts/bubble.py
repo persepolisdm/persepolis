@@ -14,6 +14,7 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from persepolis.scripts.play import playNotification
+from persepolis.gui import resources
 from persepolis.constants import OS
 import subprocess
 import platform
@@ -21,8 +22,10 @@ import os
 
 try:
     from PySide6.QtCore import QSettings
+    from PySide6.QtGui import QIcon
 except:
     from PyQt5.QtCore import QSettings
+    from PyQt5.QtGui import QIcon
 
 # platform
 os_type = platform.system()
@@ -78,7 +81,7 @@ def notifySend(message1, message2, time, sound, parent=None):
 
     # using Qt notification or Native system notification
     if enable_notification == 'QT notification':
-        parent.system_tray_icon.showMessage(message1, message2, 0, 10000)
+        parent.system_tray_icon.showMessage(message1, message2, QIcon.fromTheme('persepolis-tray', QIcon(':/persepolis-tray.svg')), 10000)
     else:
         if os_type in OS.UNIX_LIKE:
             subprocess.Popen(['notify-send', '--icon', 'persepolis',

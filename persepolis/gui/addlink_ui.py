@@ -54,7 +54,7 @@ class AddLinkWindow_Ui(QWidget):
             str(self.persepolis_setting.value('settings/icons')) + '/'
 
         self.setMinimumSize(QtCore.QSize(520, 425))
-        self.setWindowIcon(QIcon.fromTheme('persepolis', QIcon(':/persepolis.svg')))
+        self.setWindowIcon(QIcon.fromTheme('persepolis-tray', QIcon(':/persepolis-tray.svg')))
 
         # main layout
         window_verticalLayout = QVBoxLayout()
