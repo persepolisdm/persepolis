@@ -152,8 +152,8 @@ if os_type == 'Linux':
         ('/usr/share/man/man1/', ['man/persepolis.1.gz']),
         ('/usr/share/applications/', ['xdg/com.github.persepolisdm.persepolis.desktop']),
         ('/usr/share/metainfo/', ['xdg/com.github.persepolisdm.persepolis.appdata.xml']),
-        ('/usr/share/pixmaps/', ['resources/persepolis.svg']),
-        ('/usr/share/pixmaps/', ['resources/persepolis-tray.svg'])
+        ('/usr/share/icons/hicolor/scalable/apps/', ['resources/persepolis.svg']),
+        ('/usr/share/icons/hicolor/scalable/apps/', ['resources/persepolis-tray.svg'])
     ]
 elif os_type == 'FreeBSD' or os_type == 'OpenBSD':
     DATA_FILES = [
