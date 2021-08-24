@@ -165,6 +165,9 @@ class DownloadTableWidget(QTableWidget):
         # creating context menu
         self.tablewidget_menu = QMenu(self)
         self.sendMenu = self.tablewidget_menu.addMenu('')
+        
+        # don't wrap items 
+        self.setWordWrap(False)
 
     def contextMenuEvent(self, event):
         self.tablewidget_menu.popup(QCursor.pos())
