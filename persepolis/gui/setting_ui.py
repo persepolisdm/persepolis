@@ -196,6 +196,10 @@ class Setting_Ui(QWidget):
         download_options_tab_verticalLayout.addLayout(
             wait_queue_horizontalLayout)
 
+        # don't check certificate checkBox
+        self.dont_check_certificate_checkBox = QCheckBox(self.download_options_tab)
+        download_options_tab_verticalLayout.addWidget(self.dont_check_certificate_checkBox)
+
         # change aria2 path
         aria2_path_verticalLayout = QVBoxLayout()
 
@@ -582,6 +586,10 @@ class Setting_Ui(QWidget):
 
         self.wait_queue_label.setText(QCoreApplication.translate(
             "setting_ui_tr", 'Wait period between each download in queue:'))
+
+        self.dont_check_certificate_checkBox.setText(QCoreApplication.translate("setting_ui_tr", "Don't use certificate to verify the peers"))
+        self.dont_check_certificate_checkBox.setToolTip(
+                QCoreApplication.translate("setting_ui_tr", "<html><head/><body><p>This option avoids SSL/TLS handshake failure. But use it at your own risk!</p></body></html>"))
 
         self.aria2_path_checkBox.setText(QCoreApplication.translate("setting_ui_tr", 'Change Aria2 default path'))
         self.aria2_path_pushButton.setText(QCoreApplication.translate("setting_ui_tr", 'Change'))

@@ -296,6 +296,9 @@ def downloadAria(gid, parent):
             'dir': str(download_path_temp)
         }
 
+        if str(persepolis_setting.value('settings/dont-check-certificate')) == 'yes':
+            aria_dict['check-certificate'] = 'false'
+
         if not link.startswith("https"):
             aria_dict['http-user'] = str(download_user)
             aria_dict['http-passwd'] = str(download_passwd)

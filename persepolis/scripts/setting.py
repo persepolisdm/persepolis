@@ -84,6 +84,12 @@ class PreferencesWindow(Setting_Ui):
         self.rpc_port_spinbox.setValue(
             int(self.persepolis_setting.value('rpc-port')))
 
+        if str(self.persepolis_setting.value('dont-check-certificate')) == 'yes':
+            self.dont_check_certificate_checkBox.setChecked(True)
+        else:
+            self.dont_check_certificate_checkBox.setChecked(False)
+
+
         # add support for other languages
         locale = str(self.persepolis_setting.value('settings/locale'))
         QLocale.setDefault(QLocale(locale))
@@ -688,6 +694,9 @@ class PreferencesWindow(Setting_Ui):
         q_time = QTime(wait_queue_list[0], wait_queue_list[1])
         self.wait_queue_time.setTime(q_time)
 
+        # dont_check_certificate_checkBox
+        self.dont_check_certificate_checkBox.setChecked(False)
+
         # save_as_tab
         self.download_folder_lineEdit.setText(
             str(self.setting_dict['download_path']))
@@ -842,6 +851,14 @@ class PreferencesWindow(Setting_Ui):
         # change aria2_path
         if self.aria2_path_checkBox.isChecked():
             self.persepolis_setting.setValue('settings/aria2_path', str(self.aria2_path_lineEdit.text()))
+
+        # don't check certificate
+        if self.dont_check_certificate_checkBox.isChecked():
+            self.persepolis_setting.setValue('dont-check-certificate', 'yes')
+        else:
+            self.persepolis_setting.setValue('dont-check-certificate', 'no')
+
+
 
         # changing icons
 
