@@ -75,7 +75,7 @@ class TextQueue_Ui(QWidget):
         self.links_table.setHorizontalHeaderLabels(links_table_header_labels)
         self.links_table.setColumnHidden(2, True)
 
-        self.links_table.horizontalHeader().setSectionResizeMode(QHeaderView.ResizeMode.Interactive)
+        self.links_table.horizontalHeader().setSectionResizeMode(QHeaderView.ResizeMode.Stretch)
         self.links_table.horizontalHeader().setStretchLastSection(True)
 
         # add_queue
