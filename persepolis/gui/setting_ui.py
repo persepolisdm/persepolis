@@ -24,7 +24,6 @@ except:
 
 from persepolis.gui.customized_widgets import MyQDateTimeEdit
 from persepolis.gui import resources
-import pkg_resources
 
 class KeyCapturingWindow_Ui(QWidget):
     def __init__(self, persepolis_setting):
