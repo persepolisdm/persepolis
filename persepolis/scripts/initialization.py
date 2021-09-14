@@ -145,7 +145,7 @@ folder_list = [download_path_temp, download_path]
 
 # add subfolders to folder_list if user checked subfolders check box in setting window.
 if persepolis_setting.value('subfolder') == 'yes':
-    for folder in ['Audios', 'Videos', 'Others', 'Documents', 'Compressed']:
+    for folder in ['Audios', 'Videos', 'Others', 'Documents', 'Compressed', 'Programs']:
         folder_list.append(os.path.join(download_path, folder))
 
 # create folders in folder_list
