@@ -650,8 +650,9 @@ def findDownloadPath(file_name, download_path, subfolder):
         file_extension = file_extension.split('?')[0]
 
     # audio formats
-    audio = ['act', 'aiff', 'aac', 'amr', 'ape', 'au', 'awb', 'dct', 'dss', 'dvf', 'flac', 'gsm', 'iklax', 'ivs', 'm4a',
-             'm4p', 'mmf', 'mp3', 'mpc', 'msv', 'ogg', 'oga', 'opus', 'ra', 'raw', 'sln', 'tta', 'vox', 'wav', 'wma', 'wv']
+    audio = ['act', 'aiff', 'aac', 'amr', 'ape', 'au', 'awb', 'dct', 'dss', 'dvf', 'flac', 'gsm', 'iklax', 'ivs', 'it',
+             'm4a', 'm4p', 'mid', 'mmf', 'mp3', 'mpc', 'msv', 'ogg', 'oga', 'opus', 'ra', 'raw', 'sln', 'tta', 'vox',
+             'wav', 'wma', 'wv', 'xm']
 
     # video formats
     video = ['3g2', '3gp', 'asf', 'avi', 'drc', 'flv', 'm4v', 'mkv', 'mng', 'mov', 'qt', 'mp4', 'm4p', 'mpg', 'mp2',
@@ -669,6 +670,10 @@ def findDownloadPath(file_name, download_path, subfolder):
                   'sea', 'sen', 'sfx', 'sit', 'sitx', 'sqx', 'tar.gz', 'tgz', 'tar.Z', 'tar.bz2', 'tbz2', 'tar.lzma', 'tlz', 'uc',
                   'uc0', 'uc2', 'ucn', 'ur2', 'ue2', 'uca', 'uha', 'war', 'wim', 'xar', 'xp3', 'yz1', 'zip', 'zipx', 'zoo', 'zpaq',
                   'zz', 'ecc', 'par', 'par2']
+    
+    # program formats
+    program = ['air', 'apk', 'apks', 'apkm', 'app', 'AppImage', 'appx', 'aur', 'deb', 'dmg', 'exe', 'flatpak', 'nexe', 'jar', 'msi',
+                'msix', 'msu', 'nupkg', 'pkg', 'run', 'rpm', 'snap', 'xap', 'xapk']
 
     # return download_path
     if str(subfolder) == 'yes':
@@ -684,6 +689,9 @@ def findDownloadPath(file_name, download_path, subfolder):
 
         elif file_extension in compressed:
             return os.path.join(download_path, 'Compressed')
+
+        elif file_extension in program:
+            return os.path.join(download_path, 'Programs')
 
         else:
             return os.path.join(download_path, 'Others')
