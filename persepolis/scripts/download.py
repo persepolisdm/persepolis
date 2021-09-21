@@ -672,8 +672,8 @@ def findDownloadPath(file_name, download_path, subfolder):
                   'zz', 'ecc', 'par', 'par2']
     
     # program formats
-    program = ['air', 'apk', 'apks', 'apkm', 'app', 'AppImage', 'appx', 'aur', 'deb', 'dmg', 'exe', 'flatpak', 'nexe', 'jar', 'msi',
-                'msix', 'msu', 'nupkg', 'pkg', 'run', 'rpm', 'snap', 'xap', 'xapk']
+    program = ['air', 'apk', 'apks', 'apkm', 'app', 'AppImage', 'AppxBundle', 'appx', 'aur', 'deb', 'dmg', 'exe', 'flatpak', 'nexe', 'jar',
+               'msc', 'msi', 'msix'， 'msixbundle', 'msu', 'nupkg', 'pacman', 'pkg', 'run', 'rpm', 'snap', 'xap', 'xapk']
 
     # return download_path
     if str(subfolder) == 'yes':
