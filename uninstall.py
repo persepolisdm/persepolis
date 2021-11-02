@@ -31,7 +31,7 @@ if os_type == 'Linux':
                  '/usr/share/metainfo/com.github.persepolisdm.persepolis.appdata.xml',
                  '/usr/bin/persepolis']
 
-elif os_type == 'FreeBSD' or os_type == 'OpenBSD':
+elif os_type in ('FreeBSD', 'OpenBSD'):
     path_list = ['/usr/local/share/man/man1/persepolis.1.gz',
                  '/usr/local/share/pixmaps/persepolis.svg',
                  '/usr/local/share/pixmaps/persepolis-tray.svg',
