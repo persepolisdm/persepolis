@@ -572,9 +572,8 @@ class VideoFinder(QThread):
                 # start video downloading
                 new_download = DownloadLink(video_gid, self.parent)
                 self.parent.threadPool.append(new_download)
-                self.parent.threadPool[len(self.parent.threadPool) - 1].start()
-                self.parent.threadPool[len(self.parent.threadPool) -
-                                       1].ARIA2NOTRESPOND.connect(self.parent.aria2NotRespond)
+                self.parent.threadPool[-1].start()
+                self.parent.threadPool[-1].ARIA2NOTRESPOND.connect(self.parent.aria2NotRespond)
 
             # check the download status
             # continue loop and check the download status
@@ -601,9 +600,8 @@ class VideoFinder(QThread):
                 if category == "Single Downloads":
                     new_download = DownloadLink(audio_gid, self.parent)
                     self.parent.threadPool.append(new_download)
-                    self.parent.threadPool[len(self.parent.threadPool) - 1].start()
-                    self.parent.threadPool[len(self.parent.threadPool) -
-                                           1].ARIA2NOTRESPOND.connect(self.parent.aria2NotRespond)
+                    self.parent.threadPool[-1].start()
+                    self.parent.threadPool[-1].ARIA2NOTRESPOND.connect(self.parent.aria2NotRespond)
 
                 # check the download status
                 # continue loop and check the download status
@@ -759,9 +757,8 @@ class Queue(QThread):
 
                         new_video_finder = VideoFinder(video_finder_dictionary, self.parent)
                         self.parent.threadPool.append(new_video_finder)
-                        self.parent.threadPool[len(self.parent.threadPool) - 1].start()
-                        self.parent.threadPool[len(self.parent.threadPool) -
-                                               1].VIDEOFINDERCOMPLETED.connect(self.parent.videoFinderCompleted)
+                        self.parent.threadPool[-1].start()
+                        self.parent.threadPool[-1].VIDEOFINDERCOMPLETED.connect(self.parent.videoFinderCompleted)
 
                         # add thread to video_finder_threads_dict
                         self.parent.video_finder_threads_dict[video_finder_dictionary['video_gid']] = new_video_finder
@@ -832,9 +829,8 @@ class Queue(QThread):
                 # start new thread for download
                 new_download = DownloadLink(gid, self.parent)
                 self.parent.threadPool.append(new_download)
-                self.parent.threadPool[len(self.parent.threadPool) - 1].start()
-                self.parent.threadPool[len(
-                    self.parent.threadPool) - 1].ARIA2NOTRESPOND.connect(self.parent.aria2NotRespond)
+                self.parent.threadPool[-1].start()
+                self.parent.threadPool[-1].ARIA2NOTRESPOND.connect(self.parent.aria2NotRespond)
                 sleep(3)
 
                 # limit download speed if user limited speed for previous download
@@ -1422,13 +1418,13 @@ class MainWindow(MainWindow_Ui):
         self.ongoing_downloads = 0
         keep_awake = KeepAwakeThread()
         self.threadPool.append(keep_awake)
-        self.threadPool[len(self.threadPool) - 1].start()
-        self.threadPool[len(self.threadPool) - 1].KEEPSYSTEMAWAKESIGNAL.connect(self.keepAwake)
+        self.threadPool[-1].start()
+        self.threadPool[-1].KEEPSYSTEMAWAKESIGNAL.connect(self.keepAwake)
 
         # check if ffmpeg is installed
         check_ffmpeg_is_installed = CheckVersionsThread()
         self.threadPool.append(check_ffmpeg_is_installed)
-        self.threadPool[len(self.threadPool) - 1].start()
+        self.threadPool[-1].start()
 
         # finding number or row that user selected!
         self.download_table.itemSelectionChanged.connect(self.selectedRow)
@@ -1665,9 +1661,8 @@ class MainWindow(MainWindow_Ui):
             for gid in downloading_gid_list:
                 new_download = DownloadLink(gid, self)
                 self.threadPool.append(new_download)
-                self.threadPool[len(self.threadPool) - 1].start()
-                self.threadPool[len(
-                    self.threadPool) - 1].ARIA2NOTRESPOND.connect(self.aria2NotRespond)
+                self.threadPool[-1].start()
+                self.threadPool[-1].ARIA2NOTRESPOND.connect(self.aria2NotRespond)
 
             # get download items with 'paused' status and stop them.
             paused_gid_list = self.persepolis_db.returnPausedItems()
@@ -2137,14 +2132,11 @@ class MainWindow(MainWindow_Ui):
 
                             self.afterdownload_list.append(afterdownloadwindow)
 
-                            self.afterdownload_list[len(
-                                self.afterdownload_list) - 1].show()
+                            self.afterdownload_list[-1].show()
 
                             # bringing AfterDownloadWindow on top
-                            self.afterdownload_list[len(
-                                self.afterdownload_list) - 1].raise_()
-                            self.afterdownload_list[len(
-                                self.afterdownload_list) - 1].activateWindow()
+                            self.afterdownload_list[-1].raise_()
+                            self.afterdownload_list[-1].activateWindow()
 
         # set tooltip for system_tray_icon
         self.system_tray_icon.setToolTip(systemtray_tooltip_text)
@@ -2564,18 +2556,18 @@ class MainWindow(MainWindow_Ui):
         addlinkwindow = AddLinkWindow(
             self, self.callBack, self.persepolis_setting, add_link_dictionary)
         self.addlinkwindows_list.append(addlinkwindow)
-        self.addlinkwindows_list[len(self.addlinkwindows_list) - 1].show()
+        self.addlinkwindows_list[-1].show()
 
         # bring addlinkwindow on top
-        self.addlinkwindows_list[len(self.addlinkwindows_list) - 1].raise_()
-        self.addlinkwindows_list[len(self.addlinkwindows_list) - 1].activateWindow()
+        self.addlinkwindows_list[-1].raise_()
+        self.addlinkwindows_list[-1].activateWindow()
 
     # This method creates addlinkwindow when user presses plus button in MainWindow
 
     def addLinkButtonPressed(self, button=None):
         addlinkwindow = AddLinkWindow(self, self.callBack, self.persepolis_setting)
         self.addlinkwindows_list.append(addlinkwindow)
-        self.addlinkwindows_list[len(self.addlinkwindows_list) - 1].show()
+        self.addlinkwindows_list[-1].show()
 
     # callback of AddLinkWindow
     def callBack(self, add_link_dictionary, download_later, category):
@@ -2680,9 +2672,8 @@ class MainWindow(MainWindow_Ui):
         if not(download_later):
             new_download = DownloadLink(gid, self)
             self.threadPool.append(new_download)
-            self.threadPool[len(self.threadPool) - 1].start()
-            self.threadPool[len(self.threadPool) -
-                            1].ARIA2NOTRESPOND.connect(self.aria2NotRespond)
+            self.threadPool[-1].start()
+            self.threadPool[-1].ARIA2NOTRESPOND.connect(self.aria2NotRespond)
 
             # open progress window for download.
             self.progressBarOpen(gid)
@@ -2694,16 +2685,16 @@ class MainWindow(MainWindow_Ui):
             else:
                 new_spider = SpiderThread(add_link_dictionary, self)
                 self.threadPool.append(new_spider)
-                self.threadPool[len(self.threadPool) - 1].start()
-                self.threadPool[len(self.threadPool) - 1].SPIDERSIGNAL.connect(self.spiderUpdate)
+                self.threadPool[-1].start()
+                self.threadPool[-1].SPIDERSIGNAL.connect(self.spiderUpdate)
                 message = QCoreApplication.translate("mainwindow_src_ui_tr", "Download Scheduled")
             notifySend(message, '', 10000, 'no', parent=self)
 
         else:
             new_spider = SpiderThread(add_link_dictionary, self)
             self.threadPool.append(new_spider)
-            self.threadPool[len(self.threadPool) - 1].start()
-            self.threadPool[len(self.threadPool) - 1].SPIDERSIGNAL.connect(self.spiderUpdate)
+            self.threadPool[-1].start()
+            self.threadPool[-1].SPIDERSIGNAL.connect(self.spiderUpdate)
 
     # when user presses resume button this method is called
     def resumeButtonPressed(self, button=None):
@@ -2766,9 +2757,8 @@ class MainWindow(MainWindow_Ui):
                         # see VideoFinder thread for more information
                         new_download = VideoFinder(result_dictionary, self)
                         self.threadPool.append(new_download)
-                        self.threadPool[len(self.threadPool) - 1].start()
-                        self.threadPool[len(self.threadPool) -
-                                        1].VIDEOFINDERCOMPLETED.connect(self.videoFinderCompleted)
+                        self.threadPool[-1].start()
+                        self.threadPool[-1].VIDEOFINDERCOMPLETED.connect(self.videoFinderCompleted)
 
                         # add thread to video_finder_threads_dict
                         self.video_finder_threads_dict[result_dictionary['video_gid']] = new_download
@@ -2794,8 +2784,8 @@ class MainWindow(MainWindow_Ui):
                     # create new download thread
                     new_download = DownloadLink(gid, self)
                     self.threadPool.append(new_download)
-                    self.threadPool[len(self.threadPool) - 1].start()
-                    self.threadPool[len(self.threadPool) - 1].ARIA2NOTRESPOND.connect(self.aria2NotRespond)
+                    self.threadPool[-1].start()
+                    self.threadPool[-1].ARIA2NOTRESPOND.connect(self.aria2NotRespond)
 
                 # create new progress_window
                 self.progressBarOpen(gid)
@@ -2942,8 +2932,7 @@ class MainWindow(MainWindow_Ui):
             propertieswindow = PropertiesWindow(
                 self, self.propertiesCallback, gid, self.persepolis_setting, result_dictionary)
             self.propertieswindows_list.append(propertieswindow)
-            self.propertieswindows_list[len(
-                self.propertieswindows_list) - 1].show()
+            self.propertieswindows_list[-1].show()
 
     # callBack of PropertiesWindow
     def propertiesCallback(self, add_link_dictionary, gid, category, video_finder_dictionary=None):
@@ -2954,8 +2943,8 @@ class MainWindow(MainWindow_Ui):
         if checking_flag != 2:
             wait_check = WaitThread()
             self.threadPool.append(wait_check)
-            self.threadPool[len(self.threadPool) - 1].start()
-            self.threadPool[len(self.threadPool) - 1].QTABLEREADY.connect(
+            self.threadPool[-1].start()
+            self.threadPool[-1].QTABLEREADY.connect(
                 partial(self.propertiesCallback2, add_link_dictionary, gid, category, video_finder_dictionary))
         else:
             self.propertiesCallback2(add_link_dictionary, gid, category, video_finder_dictionary)
@@ -3285,7 +3274,7 @@ class MainWindow(MainWindow_Ui):
     def openAbout(self, menu=None):
         about_window = AboutWindow(self.persepolis_setting)
         self.about_window_list.append(about_window)
-        self.about_window_list[len(self.about_window_list) - 1].show()
+        self.about_window_list[-1].show()
 
     # This method opens user's default download folder
 
@@ -3415,9 +3404,8 @@ class MainWindow(MainWindow_Ui):
         if checking_flag != 2:
             wait_check = WaitThread()
             self.threadPool.append(wait_check)
-            self.threadPool[len(self.threadPool) - 1].start()
-            self.threadPool[len(self.threadPool) -
-                            1].QTABLEREADY.connect(self.removeSelected2)
+            self.threadPool[-1].start()
+            self.threadPool[-1].QTABLEREADY.connect(self.removeSelected2)
         else:
             self.removeSelected2()
 
@@ -3573,9 +3561,8 @@ class MainWindow(MainWindow_Ui):
         if checking_flag != 2:
             wait_check = WaitThread()
             self.threadPool.append(wait_check)
-            self.threadPool[len(self.threadPool) - 1].start()
-            self.threadPool[len(self.threadPool) -
-                            1].QTABLEREADY.connect(self.deleteSelected2)
+            self.threadPool[-1].start()
+            self.threadPool[-1].QTABLEREADY.connect(self.deleteSelected2)
         else:
             self.deleteSelected2()
 
@@ -3722,9 +3709,8 @@ class MainWindow(MainWindow_Ui):
         if checking_flag != 2:
             wait_check = WaitThread()
             self.threadPool.append(wait_check)
-            self.threadPool[len(self.threadPool) - 1].start()
-            self.threadPool[len(self.threadPool) -
-                            1].QTABLEREADY.connect(self.sortByName2)
+            self.threadPool[-1].start()
+            self.threadPool[-1].QTABLEREADY.connect(self.sortByName2)
         else:
             self.sortByName2()
 
@@ -3807,9 +3793,8 @@ class MainWindow(MainWindow_Ui):
         if checking_flag != 2:
             wait_check = WaitThread()
             self.threadPool.append(wait_check)
-            self.threadPool[len(self.threadPool) - 1].start()
-            self.threadPool[len(self.threadPool) -
-                            1].QTABLEREADY.connect(self.sortBySize2)
+            self.threadPool[-1].start()
+            self.threadPool[-1].QTABLEREADY.connect(self.sortBySize2)
         else:
             self.sortBySize2()
 
@@ -3912,9 +3897,8 @@ class MainWindow(MainWindow_Ui):
         if checking_flag != 2:
             wait_check = WaitThread()
             self.threadPool.append(wait_check)
-            self.threadPool[len(self.threadPool) - 1].start()
-            self.threadPool[len(self.threadPool) -
-                            1].QTABLEREADY.connect(self.sortByStatus2)
+            self.threadPool[-1].start()
+            self.threadPool[-1].QTABLEREADY.connect(self.sortByStatus2)
         else:
             self.sortByStatus2()
 
@@ -4013,9 +3997,8 @@ class MainWindow(MainWindow_Ui):
         if checking_flag != 2:
             wait_check = WaitThread()
             self.threadPool.append(wait_check)
-            self.threadPool[len(self.threadPool) - 1].start()
-            self.threadPool[len(self.threadPool) -
-                            1].QTABLEREADY.connect(self.sortByFirstTry2)
+            self.threadPool[-1].start()
+            self.threadPool[-1].QTABLEREADY.connect(self.sortByFirstTry2)
         else:
             self.sortByFirstTry2()
 
@@ -4113,9 +4096,8 @@ class MainWindow(MainWindow_Ui):
         if checking_flag != 2:
             wait_check = WaitThread()
             self.threadPool.append(wait_check)
-            self.threadPool[len(self.threadPool) - 1].start()
-            self.threadPool[len(self.threadPool) -
-                            1].QTABLEREADY.connect(self.sortByLastTry2)
+            self.threadPool[-1].start()
+            self.threadPool[-1].QTABLEREADY.connect(self.sortByLastTry2)
         else:
             self.sortByLastTry2()
 
@@ -4278,14 +4260,11 @@ class MainWindow(MainWindow_Ui):
         plugin_queue_window = BrowserPluginQueue(
             self, list_of_links, self.queueCallback, self.persepolis_setting)
         self.plugin_queue_window_list.append(plugin_queue_window)
-        self.plugin_queue_window_list[len(
-            self.plugin_queue_window_list) - 1].show()
+        self.plugin_queue_window_list[-1].show()
 
         # bring plugin_queue_window on top
-        self.plugin_queue_window_list[len(
-            self.plugin_queue_window_list) - 1].raise_()
-        self.plugin_queue_window_list[len(
-            self.plugin_queue_window_list) - 1].activateWindow()
+        self.plugin_queue_window_list[-1].raise_()
+        self.plugin_queue_window_list[-1].activateWindow()
 
     # this method is importing a text file for creating queue .
     # text file must contain links . 1 link per line!
@@ -4302,8 +4281,7 @@ class MainWindow(MainWindow_Ui):
                 self, f_path, self.queueCallback, self.persepolis_setting)
 
             self.text_queue_window_list.append(text_queue_window)
-            self.text_queue_window_list[len(
-                self.text_queue_window_list) - 1].show()
+            self.text_queue_window_list[-1].show()
 
     # callback of text_queue_window and plugin_queue_window.AboutWindow
     # See importText and pluginQueue method for more information.
@@ -4388,8 +4366,8 @@ class MainWindow(MainWindow_Ui):
             # spider is finding file size and file name
             new_spider = SpiderThread(add_link_dictionary, self)
             self.threadPool.append(new_spider)
-            self.threadPool[len(self.threadPool) - 1].start()
-            self.threadPool[len(self.threadPool) - 1].SPIDERSIGNAL.connect(self.spiderUpdate)
+            self.threadPool[-1].start()
+            self.threadPool[-1].SPIDERSIGNAL.connect(self.spiderUpdate)
 
         # write information in data_base
         self.persepolis_db.insertInDownloadTable(download_table_dict_list)
@@ -4408,8 +4386,8 @@ class MainWindow(MainWindow_Ui):
 
                 wait_check = WaitThread()
                 self.threadPool.append(wait_check)
-                self.threadPool[len(self.threadPool) - 1].start()
-                self.threadPool[len(self.threadPool) - 1].QTABLEREADY.connect(
+                self.threadPool[-1].start()
+                self.threadPool[-1].QTABLEREADY.connect(
                     partial(self.categoryTreeSelected2, new_selection))
             else:
                 self.categoryTreeSelected2(new_selection)
@@ -4845,9 +4823,8 @@ class MainWindow(MainWindow_Ui):
         if checking_flag != 2:
             wait_check = WaitThread()
             self.threadPool.append(wait_check)
-            self.threadPool[len(self.threadPool) - 1].start()
-            self.threadPool[len(
-                self.threadPool) - 1].QTABLEREADY.connect(partial(self.addToQueue2, data))
+            self.threadPool[-1].start()
+            self.threadPool[-1].QTABLEREADY.connect(partial(self.addToQueue2, data))
         else:
             self.addToQueue2(data)
 
@@ -5087,7 +5064,7 @@ class MainWindow(MainWindow_Ui):
                     shutdown_enable = ShutDownThread(
                         self, current_category_tree_text, passwd)
                     self.threadPool.append(shutdown_enable)
-                    self.threadPool[len(self.threadPool) - 1].start()
+                    self.threadPool[-1].start()
 
                 else:
                     self.after_checkBox.setChecked(False)
@@ -5101,7 +5078,7 @@ class MainWindow(MainWindow_Ui):
 
             shutdown_enable = ShutDownThread(self, current_category_tree_text)
             self.threadPool.append(shutdown_enable)
-            self.threadPool[len(self.threadPool) - 1].start()
+            self.threadPool[-1].start()
 
     # this method activates or deactivates after_frame according to
     # after_checkBox situation
@@ -5255,8 +5232,7 @@ class MainWindow(MainWindow_Ui):
         checkupdatewindow = checkupdate(
             self.persepolis_setting)
         self.checkupdatewindow_list.append(checkupdatewindow)
-        self.checkupdatewindow_list[len(
-            self.checkupdatewindow_list) - 1].show()
+        self.checkupdatewindow_list[-1].show()
 
     # this method opens LogWindow
 
@@ -5264,8 +5240,7 @@ class MainWindow(MainWindow_Ui):
         logwindow = LogWindow(
             self.persepolis_setting)
         self.logwindow_list.append(logwindow)
-        self.logwindow_list[len(
-            self.logwindow_list) - 1].show()
+        self.logwindow_list[-1].show()
 
     # this method is called when user pressed moveUpSelectedAction
     # this method subtituts selected  items with upper one
@@ -5281,13 +5256,12 @@ class MainWindow(MainWindow_Ui):
         if checking_flag != 2:
             button_pressed_thread = ButtonPressedThread()
             self.threadPool.append(button_pressed_thread)
-            self.threadPool[len(self.threadPool) - 1].start()
+            self.threadPool[-1].start()
 
             wait_check = WaitThread()
             self.threadPool.append(wait_check)
-            self.threadPool[len(self.threadPool) - 1].start()
-            self.threadPool[len(self.threadPool) -
-                            1].QTABLEREADY.connect(self.moveUpSelected2)
+            self.threadPool[-1].start()
+            self.threadPool[-1].QTABLEREADY.connect(self.moveUpSelected2)
         else:
             self.moveUpSelected2()
 
@@ -5372,13 +5346,12 @@ class MainWindow(MainWindow_Ui):
         if checking_flag != 2:
             button_pressed_thread = ButtonPressedThread()
             self.threadPool.append(button_pressed_thread)
-            self.threadPool[len(self.threadPool) - 1].start()
+            self.threadPool[-1].start()
 
             wait_check = WaitThread()
             self.threadPool.append(wait_check)
-            self.threadPool[len(self.threadPool) - 1].start()
-            self.threadPool[len(self.threadPool) -
-                            1].QTABLEREADY.connect(self.moveDownSelected2)
+            self.threadPool[-1].start()
+            self.threadPool[-1].QTABLEREADY.connect(self.moveDownSelected2)
         else:
             self.moveDownSelected2()
 
@@ -5517,7 +5490,7 @@ class MainWindow(MainWindow_Ui):
         # MoveThread is created to pervent UI freezing.
         move_thread = MoveThread(self, gid_list, new_folder_path)
         self.threadPool.append(move_thread)
-        self.threadPool[len(self.threadPool) - 1].start()
+        self.threadPool[-1].start()
 
     # see browser_plugin_queue.py file
 
@@ -5588,9 +5561,8 @@ class MainWindow(MainWindow_Ui):
         if checking_flag != 2:
             wait_check = WaitThread()
             self.threadPool.append(wait_check)
-            self.threadPool[len(self.threadPool) - 1].start()
-            self.threadPool[len(self.threadPool) -
-                            1].QTABLEREADY.connect(self.clearDownloadList2)
+            self.threadPool[-1].start()
+            self.threadPool[-1].QTABLEREADY.connect(self.clearDownloadList2)
         else:
             self.clearDownloadList2()
 
@@ -5770,8 +5742,8 @@ class MainWindow(MainWindow_Ui):
         if not(download_later):
             new_download = VideoFinder(dictionary, self)
             self.threadPool.append(new_download)
-            self.threadPool[len(self.threadPool) - 1].start()
-            self.threadPool[len(self.threadPool) - 1].VIDEOFINDERCOMPLETED.connect(self.videoFinderCompleted)
+            self.threadPool[-1].start()
+            self.threadPool[-1].VIDEOFINDERCOMPLETED.connect(self.videoFinderCompleted)
 
             # add thread to video_finder_threads_dict
             self.video_finder_threads_dict[dictionary['video_gid']] = new_download
@@ -5787,16 +5759,16 @@ class MainWindow(MainWindow_Ui):
                 for add_link_dictionary in add_link_dictionary_list:
                     new_spider = SpiderThread(add_link_dictionary, self)
                     self.threadPool.append(new_spider)
-                    self.threadPool[len(self.threadPool) - 1].start()
-                    self.threadPool[len(self.threadPool) - 1].SPIDERSIGNAL.connect(self.spiderUpdate)
+                    self.threadPool[-1].start()
+                    self.threadPool[-1].SPIDERSIGNAL.connect(self.spiderUpdate)
 
         else:
                 # write name and size of download files in download's table
             for add_link_dictionary in add_link_dictionary_list:
                 new_spider = SpiderThread(add_link_dictionary, self)
                 self.threadPool.append(new_spider)
-                self.threadPool[len(self.threadPool) - 1].start()
-                self.threadPool[len(self.threadPool) - 1].SPIDERSIGNAL.connect(self.spiderUpdate)
+                self.threadPool[-1].start()
+                self.threadPool[-1].SPIDERSIGNAL.connect(self.spiderUpdate)
 
     # this method is called by VideoFinder thread
     # this method handles error_message
@@ -5809,9 +5781,8 @@ class MainWindow(MainWindow_Ui):
         if checking_flag != 2:
             wait_check = WaitThread()
             self.threadPool.append(wait_check)
-            self.threadPool[len(self.threadPool) - 1].start()
-            self.threadPool[len(self.threadPool) -
-                            1].QTABLEREADY.connect(
+            self.threadPool[-1].start()
+            self.threadPool[-1].QTABLEREADY.connect(
                 partial(self.videoFinderCompleted2, complete_dictionary))
         else:
             self.videoFinderCompleted2(complete_dictionary)
@@ -5927,15 +5898,12 @@ class MainWindow(MainWindow_Ui):
 
                 self.afterdownload_list.append(afterdownloadwindow)
 
-                self.afterdownload_list[len(
-                    self.afterdownload_list) - 1].show()
+                self.afterdownload_list[-1].show()
 
                 # bringing AfterDownloadWindow on top
-                self.afterdownload_list[len(
-                    self.afterdownload_list) - 1].raise_()
+                self.afterdownload_list[-1].raise_()
 
-                self.afterdownload_list[len(
-                    self.afterdownload_list) - 1].activateWindow()
+                self.afterdownload_list[-1].activateWindow()
 
         elif error_message == 'not enough free space':
             # show error message
@@ -5985,8 +5953,8 @@ class MainWindow(MainWindow_Ui):
             # see VideoFinder thread for more information
             new_download = VideoFinder(result_dictionary, self)
             self.threadPool.append(new_download)
-            self.threadPool[len(self.threadPool) - 1].start()
-            self.threadPool[len(self.threadPool) - 1].VIDEOFINDERCOMPLETED.connect(self.videoFinderCompleted)
+            self.threadPool[-1].start()
+            self.threadPool[-1].VIDEOFINDERCOMPLETED.connect(self.videoFinderCompleted)
 
             # add thread to video_finder_threads_dict
             self.video_finder_threads_dict[result_dictionary['video_gid']] = new_download

@@ -306,8 +306,8 @@ class AddLinkWindow(AddLinkWindow_Ui):
             # spider is finding file size
             new_spider = AddLinkSpiderThread(dict)
             self.parent.threadPool.append(new_spider)
-            self.parent.threadPool[len(self.parent.threadPool) - 1].start()
-            self.parent.threadPool[len(self.parent.threadPool) - 1].ADDLINKSPIDERSIGNAL.connect(
+            self.parent.threadPool[-1].start()
+            self.parent.threadPool[-1].ADDLINKSPIDERSIGNAL.connect(
                 partial(self.parent.addLinkSpiderCallBack, child=self))
 
             self.ok_pushButton.setEnabled(True)

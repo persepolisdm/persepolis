@@ -426,7 +426,7 @@ class PreferencesWindow(Setting_Ui):
         keyboard_capture_window = KeyCapturingWindow(self.callBack, self.persepolis_setting)
 
         self.parent.capturekeywindows_list.append(keyboard_capture_window)
-        self.parent.capturekeywindows_list[len(self.parent.capturekeywindows_list) - 1].show()
+        self.parent.capturekeywindows_list[-1].show()
 
     def callBack(self, keys):
         # do nothing if keys is empty

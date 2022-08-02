@@ -43,8 +43,8 @@ class Windows_Notification(Windows_Notification_UI):
         # run timer and close notification after time is up.
         timer = TimerThread(time)
         parent.threadPool.append(timer)
-        parent.threadPool[len(parent.threadPool) - 1].start()
-        parent.threadPool[len(parent.threadPool) - 1].TIMEISUP.connect(self.close)
+        parent.threadPool[-1].start()
+        parent.threadPool[-1].TIMEISUP.connect(self.close)
 
         # set text to the labels
         self.label1.setText(str(text1))
