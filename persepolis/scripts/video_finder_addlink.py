@@ -366,7 +366,7 @@ class VideoFinderAddLink(AddLinkWindow):
 
         fetcher_thread = MediaListFetcherThread(self.fetchedResult, dictionary_to_send, self)
         self.parent.threadPool.append(fetcher_thread)
-        self.parent.threadPool[len(self.parent.threadPool) - 1].start()
+        self.parent.threadPool[-1].start()
 
     def fileNameChanged(self, value):
         if value.strip() == '':
@@ -487,9 +487,8 @@ class VideoFinderAddLink(AddLinkWindow):
                         size_fetcher = FileSizeFetcherThread(input_dict, i)
                         self.threadPool[str(i)] = {'thread': size_fetcher, 'item_id': i}
                         self.parent.threadPool.append(size_fetcher)
-                        self.parent.threadPool[len(self.parent.threadPool) - 1].start()
-                        self.parent.threadPool[len(self.parent.threadPool) -
-                                               1].FOUND.connect(self.findFileSize)
+                        self.parent.threadPool[-1].start()
+                        self.parent.threadPool[-1].FOUND.connect(self.findFileSize)
 
                     # Add current format to the related comboboxes
                     if no_audio:

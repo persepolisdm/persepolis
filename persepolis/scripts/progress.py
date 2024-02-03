@@ -264,7 +264,7 @@ class ProgressWindow(ProgressWindow_Ui):
                     # will shut down the system.
                     shutdown_enable = ShutDownThread(self.parent, self.gid, passwd)
                     self.parent.threadPool.append(shutdown_enable)
-                    self.parent.threadPool[len(self.parent.threadPool) - 1].start()
+                    self.parent.threadPool[-1].start()
 
                 else:
                     self.after_checkBox.setChecked(False)
@@ -274,7 +274,7 @@ class ProgressWindow(ProgressWindow_Ui):
         else:  # for Windows
             shutdown_enable = ShutDownThread(self.parent, self.gid)
             self.parent.threadPool.append(shutdown_enable)
-            self.parent.threadPool[len(self.parent.threadPool) - 1].start()
+            self.parent.threadPool[-1].start()
 
     def limitPushButtonPressed(self, button):
         self.limit_pushButton.setEnabled(False)

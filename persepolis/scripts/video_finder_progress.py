@@ -288,7 +288,7 @@ class VideoFinderProgressWindow(VideoFinderProgressWindow_Ui):
 
                     shutdown_enable = ShutDownThread(self.parent, self.video_finder_plus_gid, passwd)
                     self.parent.threadPool.append(shutdown_enable)
-                    self.parent.threadPool[len(self.parent.threadPool) - 1].start()
+                    self.parent.threadPool[-1].start()
 
                 else:
                     self.after_checkBox.setChecked(False)
@@ -300,7 +300,7 @@ class VideoFinderProgressWindow(VideoFinderProgressWindow_Ui):
             for gid in self.gid_list:
                 shutdown_enable = ShutDownThread(self.parent, self.video_finder_plus_gid)
                 self.parent.threadPool.append(shutdown_enable)
-                self.parent.threadPool[len(self.parent.threadPool) - 1].start()
+                self.parent.threadPool[-1].start()
 
     def limitPushButtonPressed(self, button):
 

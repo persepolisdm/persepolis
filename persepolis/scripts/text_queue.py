@@ -93,8 +93,8 @@ class TextQueue(TextQueue_Ui):
             # spider finds file name
             new_spider = QueueSpiderThread(dict)
             self.parent.threadPool.append(new_spider)
-            self.parent.threadPool[len(self.parent.threadPool) - 1].start()
-            self.parent.threadPool[len(self.parent.threadPool) - 1].QUEUESPIDERRETURNEDFILENAME.connect(
+            self.parent.threadPool[-1].start()
+            self.parent.threadPool[-1].QUEUESPIDERRETURNEDFILENAME.connect(
                 partial(self.parent.queueSpiderCallBack, child=self, row_number=len(link_list) - k))
             k = k + 1
 
