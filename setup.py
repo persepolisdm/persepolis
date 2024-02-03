@@ -77,7 +77,7 @@ except:
 
 # youtube_dl
 try:
-    import youtube_dl
+    import yt_dlp as youtube_dl
     print('youtube-dl is found')
 except:
     print('Warning: youtube-dl is not installed!')

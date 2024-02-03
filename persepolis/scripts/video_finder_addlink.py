@@ -29,7 +29,7 @@ from time import time, sleep
 from functools import partial
 from random import random
 from copy import deepcopy
-import youtube_dl
+import yt_dlp as youtube_dl
 import re
 import os
 
