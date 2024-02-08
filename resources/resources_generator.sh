@@ -30,9 +30,21 @@ fi
 if [ "$resources" == "1" ];then
 
     # generate resource.py file
-    pyrcc5 resources.qrc -o "$parent_dir/persepolis/gui/resources.py"
+    # for pyqt5
+#     pyrcc5 resources.qrc -o "$parent_dir/persepolis/gui/resources.py"
+
+    # for pysside6
+     rcc -g python -o "$parent_dir/persepolis/gui/resources.py" resources.qrc
+     
+    #add some line to file
+    sed -i '6i try:' "$parent_dir/persepolis/gui/resources.py"
+    sed -i '7i\  from PySide6 import QtCore' "$parent_dir/persepolis/gui/resources.py"
+    sed -i '8i except:' "$parent_dir/persepolis/gui/resources.py"
+    sed -i '9i\  from PyQt5 import QtCore' "$parent_dir/persepolis/gui/resources.py"
+    sed -i '/PySide2/d' "$parent_dir/persepolis/gui/resources.py"
 
     echo  "$parent_dir/persepolis/gui/resource.py is generated!"
+
 fi
 
 if [ "$create_qm_files" == "1" ];then

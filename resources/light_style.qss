@@ -31,8 +31,8 @@ QMenu
 
 QMenu::item:selected
 { 
-    background-color : #6EC5F4;
-    color : #31363b
+    background-color : #e91e63;
+    color : #ffffff
 }
 
 QToolTip
@@ -59,7 +59,7 @@ QTabBar::tab {
 }
 
 QTabBar::tab:selected {
-    border-bottom: 2px solid #6EC5F4;
+    border-bottom: 2px solid #e91e63;
     padding-bottom: 5px;
 	font-weight: bold;
 }
@@ -69,7 +69,7 @@ QTabBar::tab:!selected {
 }
 
 QTabBar::tab:hover {
-    border-bottom: 1px solid #6EC5F4;
+    border-bottom: 1px solid #e91e63;
 }
 
 
@@ -115,15 +115,15 @@ QPushButton:enabled, QComboBox:enabled
 
 QPushButton:hover, QComboBox:hover
 {
-    border: 1px solid #6EC5F4;
+    border: 1px solid #e91e63;
 }
 QComboBox
 {
     background: #FCFCFC;
-    selection-background-color: #6EC5F4;
+    selection-background-color: #e91e63;
 }
 QComboBox:focus {
-	border: 1px solid #6EC5F4;
+	border: 1px solid #e91e63;
 }
 
 QComboBox::drop-down {
@@ -159,7 +159,7 @@ QSpinBox::hover,
 QDoubleSpinBox::hover,
 QDateTimeEdit::hover
 {
-    border: 1px solid #6EC5F4;
+    border: 1px solid #e91e63;
 
 }
 
@@ -257,7 +257,7 @@ QToolButton
 QToolButton:hover
 {
     background-color: transparent;
-    border: 0.1ex solid #6EC5F4;
+    border: 0.1ex solid #e91e63;
     border-radius: 0.2ex;
     margin: 0.3ex;
     padding: 0.5ex;
@@ -289,7 +289,7 @@ QTableView:hover,
 QTreeView:hover,
 QLineEdit:hover
 {
-    border: 1px solid #6EC5F4;
+    border: 1px solid #e91e63;
 }
 
 QHeaderView
@@ -405,7 +405,7 @@ QProgressBar
 
 QProgressBar::chunk
 {
-    background-color: #6EC5F4;
+    background-color: #e91e63;
     border: 0px transparent;
     border-radius: 0.3ex;
 }

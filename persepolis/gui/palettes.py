@@ -39,11 +39,11 @@ class DarkFusionPalette(QPalette):
 
         self.setColor(QPalette.ButtonText, Qt.white)
 
-        self.setColor(QPalette.BrightText, QColor(0, 128, 152))
+        self.setColor(QPalette.BrightText, QColor(192, 24, 91))
 
         self.setColor(QPalette.Link, QColor(42, 130, 218))
 
-        self.setColor(QPalette.Highlight, QColor(0, 128, 152))
+        self.setColor(QPalette.Highlight, QColor(192, 24, 91))
 
         self.setColor(QPalette.HighlightedText, Qt.white)
 
@@ -80,13 +80,13 @@ class LightFusionPalette(QPalette):
 
         self.setColor(QPalette.ButtonText, QColor(49, 54, 59))
 
-        self.setColor(QPalette.BrightText, QColor(110, 197, 244))
+        self.setColor(QPalette.BrightText, QColor(233, 30, 99))
 
         self.setColor(QPalette.Link, QColor(42, 130, 218))
 
-        self.setColor(QPalette.Highlight, QColor(110, 197, 244))
+        self.setColor(QPalette.Highlight, QColor(233, 30, 99))
 
-        self.setColor(QPalette.HighlightedText, QColor(49, 54, 59))
+        self.setColor(QPalette.HighlightedText, Qt.white)
 
         self.setColor(QPalette.Disabled, QPalette.Window, QColor(227, 227, 227))
 
