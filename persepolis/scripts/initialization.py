@@ -225,7 +225,7 @@ if persepolis_version < 3.1:
 
     persepolis_version = 3.1
 
-if persepolis_version < 3.2:
+if persepolis_version < 4.0:
     persepolis_setting.beginGroup('settings')
 
     for key in default_setting_dict.keys():
@@ -235,6 +235,6 @@ if persepolis_version < 3.2:
 
     persepolis_setting.endGroup()
 
-    persepolis_setting.setValue('version/version', 3.2)
+    persepolis_setting.setValue('version/version', 4.0)
 
 persepolis_setting.sync()

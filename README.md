@@ -18,6 +18,7 @@ Persepolis is a download manager & a GUI for [Aria2](https://github.com/aria2/ar
 - Multi-segment downloading
 - Scheduling downloads
 - Download queuing
+- Download video from youtube and ...
 - and many more!
 
 ### **FAQ**

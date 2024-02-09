@@ -80,7 +80,7 @@ try:
     import yt_dlp as youtube_dl
     print('youtube-dl is found')
 except:
-    print('Warning: youtube-dl is not installed!')
+    print('Warning: yt-dlp is not installed!')
     not_installed = not_installed + 'youtube-dl, '
 
 # aria2
@@ -191,7 +191,7 @@ print('man page file is generated!')
 
 setup(
     name='persepolis',
-    version='3.2.0',
+    version='4.0.0',
     license='GPL3',
     description=DESCRIPTION,
     long_description=DESCRIPTION,

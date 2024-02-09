@@ -12,10 +12,6 @@
 #
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-try:
-    from PySide6.QtWidgets import QStyleFactory
-except:
-    from PyQt5.QtWidgets import QStyleFactory
 
 from persepolis.constants.Os import OS
 import urllib.parse
@@ -162,71 +158,11 @@ def returnDefaultSettings():
     # user download folder path
     download_path = os.path.join(home_address, 'Downloads', 'Persepolis')
 
-    # find available styles(It's depends on operating system and desktop environments).
-    available_styles = QStyleFactory.keys()
+    # set dark fusion for default style settings. 
     style = 'Fusion'
     color_scheme = 'Dark Fusion'
     icons = 'Breeze-Dark'
-    if os_type in OS.UNIX_LIKE:
-        if desktop_env == 'KDE':
-            if 'Breeze' in available_styles:
-                style = 'Breeze'
-                color_scheme = 'System'
-        else:
-            # finout user prefers dark theme or light theme :)
-            # read this links for more information:
-            # https://wiki.archlinux.org/index.php/GTK%2B#Basic_theme_configuration
-            # https://wiki.archlinux.org/index.php/GTK%2B#Dark_theme_variant
-
-            # find user gtk3 config file path.
-            gtk3_confing_file_path = os.path.join(home_address, '.config', 'gtk-3.0', 'settings.ini')
-            if not(os.path.isfile(gtk3_confing_file_path)):
-                if os.path.isfile('/etc/gtk-3.0/settings.ini'):
-                    gtk3_confing_file_path = '/etc/gtk-3.0/settings.ini'
-                else:
-                    gtk3_confing_file_path = None
-
-            # read this for more information:
-            dark_theme = False
-            if gtk3_confing_file_path:
-                with open(gtk3_confing_file_path) as f:
-                    for line in f:
-                        if "gtk-application-prefer-dark-theme" in line:
-                            if 'true' in line:
-                                dark_theme = True
-                            else:
-                                dark_theme = False
-
-            if dark_theme:
-                icons = 'Breeze-Dark'
-                if 'Adwaita-Dark' in available_styles:
-                    style = 'Adwaita-Dark'
-                    color_scheme = 'System'
-
-            else:
-                icons = 'Breeze'
-                if 'Adwaita' in available_styles:
-                    style = 'Adwaita'
-                    color_scheme = 'System'
-                else:
-                    style = 'Fusion'
-                    color_scheme = 'Light Fusion'
-
-    elif os_type == OS.OSX:
-        if 'macintosh' in available_styles:
-            style = 'macintosh'
-            color_scheme = 'System'
-            icons = 'Breeze'
-
-    elif os_type == OS.WINDOWS:
-        style = 'Fusion'
-        color_scheme = 'Dark Fusion'
-        icons = 'Breeze-Dark'
-
-    else:
-        style = 'Fusion'
-        color_scheme = 'Dark Fusion'
-        icons = 'Breeze-Dark'
+    style = 'Fusion'
 
     # keyboard shortcuts
     delete_shortcut = "Ctrl+D"
