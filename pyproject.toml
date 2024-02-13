@@ -1,0 +1,43 @@
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+py-modules = ["persepolis"]
+
+[project]
+name = "persepolis"
+version = "4.0.0"
+dependencies = [
+  "pyside6",
+  "requests",
+  "setproctitle",
+  "psutil",
+  "setuptools",
+  "yt-dlp"
+]
+requires-python = ">=3.5"
+authors = [
+  {name = "AliReza AmirSamimi", email = "alireza.amirsamimi@gmail.com"}
+]
+maintainers = [
+  {name = "AliReza AmirSamimi", email = "alireza.amirsamimi@gmail.com"}
+]
+description = "Qt front-end for aria2 download manager"
+readme = "README.md"
+license = {file = "LICENSE"}
+keywords = ["persepolis", "download manager", "aria2", "yt-dlp", "pyside6"]
+classifiers = [
+  "Development Status :: 5 - Production/Stable",
+  "Programming Language :: Python"
+]
+
+
+[project.gui-scripts]
+spam-gui = "persepolis.scripts.persepolis:main"
+
+[project.urls]
+Homepage = "https://persepolisdm.github.io/"
+Documentation = "https://github.com/persepolisdm/persepolis/wiki"
+Repository = "https://github.com/persepolisdm/persepolis/"
+Issues = "https://github.com/persepolisdm/persepolis/issues"
