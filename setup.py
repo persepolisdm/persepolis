@@ -143,7 +143,7 @@ if not_installed != '':
 
 if sys.argv[1] == "test":
     print('We have not unit test :)')
-    sys.exit('0')
+    sys.exit(0)
 
 DESCRIPTION = 'Persepolis Download Manager'
 
