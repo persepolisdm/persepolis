@@ -1,6 +1,6 @@
 [build-system]
-requires = ["setuptools"]
-build-backend = "setuptools.build_meta"
+requires = ["mesonpy"]
+build-backend = "meson-python"
 
 [tool.setuptools]
 py-modules = ["persepolis"]
@@ -34,7 +34,7 @@ classifiers = [
 
 
 [project.gui-scripts]
-spam-gui = "persepolis.scripts.persepolis:main"
+persepolis-gui = "persepolis.scripts.persepolis:main"
 
 [project.urls]
 Homepage = "https://persepolisdm.github.io/"

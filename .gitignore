@@ -4,6 +4,7 @@ __pycache__/
 *.orig
 root/
 build/
+builddir/
 persepolis.egg-info/
 man/persepolis.1.gz
 .idea/
