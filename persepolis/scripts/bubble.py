@@ -27,15 +27,14 @@ except:
     from PyQt5.QtCore import QSettings
     from PyQt5.QtGui import QIcon
 
+
+
 # platform
 os_type = platform.system()
 
 if os_type == OS.DARWIN:
     from persepolis.scripts.mac_notification import notifyMac
-
-elif os_type == OS.WINDOWS:
-    from persepolis.scripts.windows_notification import Windows_Notification
-
+    
 # notifySend use notify-send program in user's system for sending notifications
 # and use playNotification function in play.py file for playing sound
 # notifications
@@ -82,6 +81,8 @@ def notifySend(message1, message2, time, sound, parent=None):
     # using Qt notification or Native system notification
     if enable_notification == 'QT notification':
         parent.system_tray_icon.showMessage(message1, message2, QIcon.fromTheme('persepolis-tray', QIcon(':/persepolis-tray.svg')), 10000)
+
+
     else:
         if os_type in OS.UNIX_LIKE:
             subprocess.Popen(['notify-send', '--icon', 'persepolis',
@@ -97,6 +98,4 @@ def notifySend(message1, message2, time, sound, parent=None):
             notifyMac("Persepolis Download Manager", message1, message2)
 
         elif os_type == OS.WINDOWS:
-            message = Windows_Notification(parent=parent, time=time, text1=message1,
-                                           text2=message2, persepolis_setting=persepolis_setting)
-            message.show()
+            parent.system_tray_icon.showMessage(message1, message2, QIcon.fromTheme('persepolis-tray', QIcon(':/persepolis-tray.svg')), 10000)
