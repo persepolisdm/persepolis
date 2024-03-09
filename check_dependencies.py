@@ -78,34 +78,6 @@ if answer != 0:
 else:
     print('aria2 is found!')
 
-# libnotify-bin
-answer = os.system('notify-send --version 1>/dev/null')
-if answer != 0:
-    print("Error libnotify-bin is not installed!")
-    not_installed = not_installed + 'libnotify-bin, '
-else:
-    print('libnotify-bin is found!')
-
-# paplay
-answer = os.system('paplay --version 1>/dev/null')
-if answer != 0:
-    print("Warning: paplay not installed!You need pulseaudio for sound notifications!")
-    not_installed = not_installed + 'paplay, '
-else:
-    print('paplay is found!')
-
-# sound-theme-freedesktop
-if os_type == 'Linux':
-    notifications_path = '/usr/share/sounds/freedesktop/stereo/'
-elif os_type == 'FreeBSD' or os_type == 'OpenBSD':
-    notifications_path = '/usr/local/share/sounds/freedesktop/stereo/'
-
-if os.path.isdir(notifications_path):
-    print('sound-theme-freedesktop is found!')
-else:
-    print('Warning: sound-theme-freedesktop is not installed! you need this package for sound notifications!')
-    not_installed = not_installed + 'sound-theme-freedesktop'
-
 # ffmpeg
 answer = os.system('ffmpeg -version 1>/dev/null')
 if answer != 0:
@@ -113,6 +85,39 @@ if answer != 0:
     not_installed = not_installed + 'ffmpeg, '
 else:
     print('ffmpeg is found!')
+
+
+# sound-theme-freedesktop
+if os_type == 'Linux':
+    notifications_path = '/usr/share/sounds/freedesktop/stereo/'
+elif os_type == 'FreeBSD' or os_type == 'OpenBSD':
+    notifications_path = '/usr/local/share/sounds/freedesktop/stereo/'
+
+if os_type == 'Linux' or os_type == 'FreeBSD' or os_type == 'OpenBSD':
+
+    if os.path.isdir(notifications_path):
+        print('sound-theme-freedesktop is found!')
+    else:
+        print('Warning: sound-theme-freedesktop is not installed! you need this package for sound notifications!')
+        not_installed = not_installed + 'sound-theme-freedesktop'
+
+
+        # libnotify-bin
+        answer = os.system('notify-send --version 1>/dev/null')
+        if answer != 0:
+            print("Error libnotify-bin is not installed!")
+            not_installed = not_installed + 'libnotify-bin, '
+        else:
+            print('libnotify-bin is found!')
+
+        # paplay
+        answer = os.system('paplay --version 1>/dev/null')
+        if answer != 0:
+            print("Warning: paplay not installed!You need pulseaudio for sound notifications!")
+            not_installed = not_installed + 'paplay, '
+        else:
+            print('paplay is found!')
+
 
 
 # show warning , if dependencies not installed!
