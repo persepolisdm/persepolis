@@ -102,21 +102,21 @@ if os_type == 'Linux' or os_type == 'FreeBSD' or os_type == 'OpenBSD':
         not_installed = not_installed + 'sound-theme-freedesktop'
 
 
-        # libnotify-bin
-        answer = os.system('notify-send --version 1>/dev/null')
-        if answer != 0:
-            print("Error libnotify-bin is not installed!")
-            not_installed = not_installed + 'libnotify-bin, '
-        else:
-            print('libnotify-bin is found!')
+    # libnotify-bin
+    answer = os.system('notify-send --version 1>/dev/null')
+    if answer != 0:
+        print("Error libnotify-bin is not installed!")
+        not_installed = not_installed + 'libnotify-bin, '
+    else:
+        print('libnotify-bin is found!')
 
-        # paplay
-        answer = os.system('paplay --version 1>/dev/null')
-        if answer != 0:
-            print("Warning: paplay not installed!You need pulseaudio for sound notifications!")
-            not_installed = not_installed + 'paplay, '
-        else:
-            print('paplay is found!')
+    # paplay
+    answer = os.system('paplay --version 1>/dev/null')
+    if answer != 0:
+        print("Warning: paplay not installed!You need pulseaudio for sound notifications!")
+        not_installed = not_installed + 'paplay, '
+    else:
+        print('paplay is found!')
 
 
 
