@@ -1132,15 +1132,15 @@ class KeepAwakeThread(QThread):
         QThread.__init__(self)
 
     def run(self):
-        while True:
+        while shutdown_notification == 0:
 
-            while shutdown_notification == 0 and aria_startup_answer != 'ready':
+            while aria_startup_answer != 'ready':
                 sleep(1)
 
             old_cursor_array = [0, 0]
             add = True
 
-            while shutdown_notification != 1:
+            while shutdown_notification == 0:
                 sleep(20)
 
                 # finding cursor position
@@ -3139,6 +3139,11 @@ class MainWindow(MainWindow_Ui):
         # close data bases connections
         for db in self.persepolis_db, self.plugins_db, self.temp_db:
             db.closeConnections()
+
+        # ask threads to quit
+        for i in self.threadPool:
+            i.quit()
+            i.wait()
 
         QCoreApplication.instance().quit
         logger.sendToLog("Persepolis closed!", "INFO")
