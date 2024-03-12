@@ -190,6 +190,10 @@ class PreferencesWindow(Setting_Ui):
             str(self.persepolis_setting.value('notification')))
         self.notification_comboBox.setCurrentIndex(current_notification_index)
 
+        if os_type not in OS.UNIX_LIKE:
+            self.notification_comboBox.hide()
+            self.notification_label.hide()
+
         # set font
         font_setting = QFont()
         font_setting.setFamily(str(self.persepolis_setting.value('font')))

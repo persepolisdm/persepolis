@@ -95,7 +95,7 @@ def notifySend(message1, message2, time, sound, parent=None):
                              shell=False)
 
         elif os_type == OS.OSX:
-            notifyMac("Persepolis Download Manager", message1, message2)
+            parent.system_tray_icon.showMessage(message1, message2, QIcon.fromTheme('persepolis-tray', QIcon(':/persepolis-tray.svg')), 10000)
 
         elif os_type == OS.WINDOWS:
             parent.system_tray_icon.showMessage(message1, message2, QIcon.fromTheme('persepolis-tray', QIcon(':/persepolis-tray.svg')), 10000)
