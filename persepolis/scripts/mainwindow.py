@@ -3220,7 +3220,7 @@ class MainWindow(MainWindow_Ui):
     # this method is called
 
     def systemTrayPressed(self, click):
-        if click == 3:
+        if click == QSystemTrayIcon.Trigger:
             self.minMaxTray(click)
 
     # when minMaxTray method called ,this method shows/hides main window
