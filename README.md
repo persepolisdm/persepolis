@@ -52,14 +52,14 @@ It exemplifies the Achaemenid style of architecture. UNESCO declared the ruins o
 **Mostafa Asadi:** Ubuntu, Debian and Windows support  
 [GitHub](https://github.com/mostafaasadi) | [E-mail](mailto:mostafaasadi73@gmail.com)
 
-**MohammadAmin Vahedinia:** Mac OSX support  
-[GitHub](https://github.com/Mr0Null) | [E-mail](mailto:persepolisdm@vahedinia.me)
-
 **Sadegh Alirezaie:** Persepolis website support  
 [GitHub](https://github.com/Alirezaies) | [E-mail](mailto:alirezaie@sadegh.io)
 
 **Jafar Akhondali:** Browsers add-ons support  
 [GitHub](https://github.com/JafarAkhondali) | [E-mail](mailto:jafar.akhondali@yahoo.com)
+
+**Kia Hamedi:** Mac OSX support  
+[GitHub](https://github.com/Kiahamedi) | [E-mail](mailto:me@kiahamedi.com)
 
 **H Rostami:** UI translation, Fedora & OpenSuse support  
 [GitHub](https://github.com/hayyan71) | [E-mail](mailto:hayyan71@yahoo.com)
@@ -67,8 +67,9 @@ It exemplifies the Achaemenid style of architecture. UNESCO declared the ruins o
 **Ehsan Titish:** Mac OSX support   
 [GitHub](https://github.com/Maders) | [E-mail](mailto:me@maders.ir)
 
-**Charles K Barcza:** blackPanther OS support  
-[GitHub](https://github.com/blackPantherOS/persepolis) | [E-mail](mailto:info@blackpantheros.eu)
+**MohammadAmin Vahedinia:** Mac OSX support  
+[GitHub](https://github.com/Mr0Null) | [E-mail](mailto:persepolisdm@vahedinia.me)
+
 
 [Persepolis website (En)](https://persepolisdm.github.io/) | [Persepolis website (Fa)](https://persepolisdm.github.io/fa) | [Twitter](https://twitter.com/persepolisdm) | [Telegram Channel](https://telegram.me/persepolisdm)
 

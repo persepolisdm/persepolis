@@ -62,22 +62,23 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="../../persepolis/gui/about_ui.py" line="207"/>
+        <source>Version 4.0.1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <location filename="../../persepolis/gui/about_ui.py" line="223"/>
         <source>
 AliReza AmirSamimi
 Mohammadreza Abdollahzadeh
 Sadegh Alirezaie
 Mostafa Asadi
-MohammadAmin Vahedinia
 Jafar Akhondali
+Kia Hamedi
 H.Rostami
-Ehsan Titish</source>
+Ehsan Titish
+MohammadAmin Vahedinia</source>
         <comment>TRANSLATORS NOTE: YOU REALLY DON&apos;T NEED TO TRANSLATE THIS PART!</comment>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../persepolis/gui/about_ui.py" line="207"/>
-        <source>Version 4.0.0</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -1843,13 +1844,13 @@ Ehsan Titish</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../persepolis/scripts/update.py" line="67"/>
-        <source>This is Persepolis Download Manager version 4.0.0</source>
+        <location filename="../../persepolis/scripts/update.py" line="152"/>
+        <source>An error occurred while checking for updates.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../persepolis/scripts/update.py" line="152"/>
-        <source>An error occurred while checking for updates.</source>
+        <location filename="../../persepolis/scripts/update.py" line="67"/>
+        <source>This is Persepolis Download Manager version 4.0.1</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

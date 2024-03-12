@@ -55,7 +55,7 @@ class checkupdate(QWidget):
         self.setWindowTitle(QCoreApplication.translate("update_src_ui_tr", 'Checking for newer version'))
 
         # installed version
-        self.client_version = '4.00'
+        self.client_version = '4.01'
 
         # first line text
         self.update_label = QLabel(QCoreApplication.translate(
@@ -65,7 +65,7 @@ class checkupdate(QWidget):
 
         # second line text
         self.version_label = QLabel(QCoreApplication.translate(
-            "update_src_ui_tr", 'This is Persepolis Download Manager version 4.0.0'))
+            "update_src_ui_tr", 'This is Persepolis Download Manager version 4.0.1'))
         self.version_label.setAlignment(QtCore.Qt.AlignCenter)
 
         # release link
