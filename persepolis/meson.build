@@ -26,7 +26,6 @@ scripts_sources = [
   'scripts/about.py',
   'scripts/bubble.py',
   'scripts/error_window.py',
-  'scripts/mac_notification.py',
   'scripts/play.py',
   'scripts/shutdown.py',
   'scripts/useful_tools.py',
