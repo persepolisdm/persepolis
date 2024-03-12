@@ -1141,7 +1141,13 @@ class KeepAwakeThread(QThread):
             add = True
 
             while shutdown_notification == 0:
-                sleep(20)
+
+                # sleep 20 if persepolis not exited.
+                for i in range(1, 20):
+                    if shutdown_notification == 0:
+                        sleep(1)
+                    else:
+                        break
 
                 # finding cursor position
                 cursor_position = QCursor.pos()
