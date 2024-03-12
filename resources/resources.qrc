@@ -215,18 +215,23 @@
 	</qresource>
 	<qresource prefix="/translations">
 
-        <file>locales/ui_fa_IR.qm</file>
-        <file>locales/ui_zh_CN.qm</file>
-        <file>locales/ui_fr_FR.qm</file>
-        <file>locales/ui_pl_PL.qm</file>
-        <file>locales/ui_nl_NL.qm</file>
-        <file>locales/ui_es_ES.qm</file>
-        <file>locales/ui_pt_BR.qm</file>
         <file>locales/ui_ar.qm</file>
-        <file>locales/ui_hu.qm</file>
+        <file>locales/ui_es_ES.qm</file>
+        <file>locales/ui_fr_FR.qm</file>
+        <file>locales/ui_ko.qm</file>
+        <file>locales/ui_pl_PL.qm</file>
+        <file>locales/ui_pt.qm</file>
+        <file>locales/ui_ru.qm</file>
         <file>locales/ui_tr.qm</file>
+        <file>locales/ui_zh_CN.qm</file>
+        <file>locales/ui_de.qm</file>
+        <file>locales/ui_fa_IR.qm</file>
+        <file>locales/ui_hu.qm</file>
+        <file>locales/ui_nl_NL.qm</file>
+        <file>locales/ui_pt_BR.qm</file>
+        <file>locales/ui_sv.qm</file>
         <file>locales/ui_tr_TR.qm</file>
-
+        <file>locales/ui_zh_TW.qm</file>
 	</qresource>	
 
 

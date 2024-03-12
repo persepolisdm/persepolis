@@ -1,6 +1,6 @@
 #!/bin/bash
 
-while getopts "trh" arg;do
+while getopts "trqh" arg;do
     case $arg in
         t)
             translate="1";;
@@ -49,6 +49,8 @@ fi
 
 if [ "$create_qm_files" == "1" ];then
 
-    # generate qm files from ts files
-    lrelease "$dir/locales/*.ts"
+    for file in $dir/locales/* ;do
+        # generate qm files from ts files
+        lrelease "$file"
+    done
 fi

@@ -1,15 +1,15 @@
-<?xml version="1.0" ?><!DOCTYPE TS><TS version="2.1" language="tr_TR">
+<?xml version="1.0" ?><!DOCTYPE TS><TS version="2.1" language="ru">
 <context>
     <name>about_ui_tr</name>
     <message>
         <location filename="../../persepolis/gui/about_ui.py" line="248"/>
         <source>About Persepolis</source>
-        <translation>Persepolis Hakkında</translation>
+        <translation>О Persepolis</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/about_ui.py" line="206"/>
         <source>Persepolis Download Manager</source>
-        <translation>Persepolis İndirme Yöneticisi</translation>
+        <translation>Диспетчер загрузок Персеполиса</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/about_ui.py" line="208"/>
@@ -32,32 +32,32 @@
     <message>
         <location filename="../../persepolis/gui/about_ui.py" line="221"/>
         <source>Developers:</source>
-        <translation>Geliştiriciler:</translation>
+        <translation>Разработчики:</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/about_ui.py" line="249"/>
         <source>Developers</source>
-        <translation>Geliştiriciler</translation>
+        <translation>Разработчики</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/about_ui.py" line="250"/>
         <source>Translators</source>
-        <translation>Çevirmenler</translation>
+        <translation>Переводчики</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/about_ui.py" line="251"/>
         <source>License</source>
-        <translation>Lisans</translation>
+        <translation>Лицензия</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/about_ui.py" line="254"/>
         <source>OK</source>
-        <translation>Tamam</translation>
+        <translation>OK</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/about_ui.py" line="227"/>
         <source>Special thanks to:</source>
-        <translation>Özel Teşekkürü hakedenler:</translation>
+        <translation>Особая благодарность:</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/about_ui.py" line="223"/>
@@ -84,12 +84,12 @@ Ehsan Titish</source>
     <message>
         <location filename="../../persepolis/gui/addlink_ui.py" line="415"/>
         <source>Add to category: </source>
-        <translation>Kategoriye ekle: </translation>
+        <translation>Добавить в категорию:</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/addlink_ui.py" line="451"/>
         <source>Proxy</source>
-        <translation>Aracı sunucu</translation>
+        <translation>Прокси</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/addlink_ui.py" line="422"/>
@@ -99,62 +99,62 @@ Ehsan Titish</source>
     <message>
         <location filename="../../persepolis/gui/addlink_ui.py" line="424"/>
         <source>Port:</source>
-        <translation>Bağlantı noktası:</translation>
+        <translation>Порт:</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/addlink_ui.py" line="430"/>
         <source>Change Download Folder</source>
-        <translation>İndirme Dizinini Değiştir</translation>
+        <translation>Изменить папку для загрузки</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/addlink_ui.py" line="432"/>
         <source>Download Folder: </source>
-        <translation>İndirme Dizini: </translation>
+        <translation>Папка для Закачек</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/addlink_ui.py" line="443"/>
         <source>Cancel</source>
-        <translation>İptal</translation>
+        <translation>Отменить</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/addlink_ui.py" line="444"/>
         <source>OK</source>
-        <translation>Tamam</translation>
+        <translation>OK</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/addlink_ui.py" line="448"/>
         <source>Link</source>
-        <translation>Bağlantı</translation>
+        <translation>Ссылка</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/addlink_ui.py" line="454"/>
         <source>More Options</source>
-        <translation>Daha Fazla Seçenek</translation>
+        <translation>Больше настроек</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/addlink_ui.py" line="457"/>
         <source>Advanced Options</source>
-        <translation>Gelişmiş Seçenekler</translation>
+        <translation>Расширенные опции</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/addlink_ui.py" line="460"/>
         <source>Referrer: </source>
-        <translation>Öneren: </translation>
+        <translation>Referrer: </translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/addlink_ui.py" line="462"/>
         <source>Header: </source>
-        <translation>Başlık: </translation>
+        <translation>Header: </translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/addlink_ui.py" line="464"/>
         <source>Load cookies: </source>
-        <translation>Çerezleri yükle: </translation>
+        <translation>Загрузить cookies:</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/addlink_ui.py" line="466"/>
         <source>User agent: </source>
-        <translation>Kullanıcı temsilcisi: </translation>
+        <translation>User agent: </translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/addlink_ui.py" line="411"/>
@@ -237,12 +237,12 @@ Ehsan Titish</source>
     <message>
         <location filename="../../persepolis/scripts/after_download.py" line="69"/>
         <source>&lt;b&gt;File name&lt;/b&gt;: </source>
-        <translation>&lt;b&gt;Dosya adı&lt;/b&gt;: </translation>
+        <translation>&lt;b&gt;Имя файла&lt;/b&gt;: </translation>
     </message>
     <message>
         <location filename="../../persepolis/scripts/after_download.py" line="77"/>
         <source>&lt;b&gt;Size&lt;/b&gt;: </source>
-        <translation>&lt;b&gt;Boyut&lt;/b&gt;: </translation>
+        <translation>&lt;b&gt;Размер&lt;/b&gt;: </translation>
     </message>
 </context>
 <context>
@@ -250,42 +250,42 @@ Ehsan Titish</source>
     <message>
         <location filename="../../persepolis/gui/after_download_ui.py" line="52"/>
         <source>Persepolis Download Manager</source>
-        <translation>Persepolis İndirme Yöneticisi</translation>
+        <translation>Менеджер Закачек Persepolis</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/after_download_ui.py" line="112"/>
         <source>  Open File  </source>
-        <translation>  Dosya Aç  </translation>
+        <translation>Открыть файл</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/after_download_ui.py" line="113"/>
         <source>Open Download Folder</source>
-        <translation>İndirme Dizinini Aç</translation>
+        <translation>Открыть папку с закачками</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/after_download_ui.py" line="114"/>
         <source>   OK   </source>
-        <translation>   Tamam   </translation>
+        <translation>   OK   </translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/after_download_ui.py" line="115"/>
         <source>Don&apos;t show this message again.</source>
-        <translation>Bu iletiyi tekrar gösterme.</translation>
+        <translation>Не показывать это сообщение еще раз.</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/after_download_ui.py" line="117"/>
         <source>&lt;b&gt;Download Completed!&lt;/b&gt;</source>
-        <translation>&lt;b&gt;İndirme Tamamlandı!&lt;/b&gt;</translation>
+        <translation>&lt;b&gt;Закачка Завершена!&lt;/b&gt;</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/after_download_ui.py" line="118"/>
         <source>&lt;b&gt;Save as&lt;/b&gt;: </source>
-        <translation>&lt;b&gt;Farklı kaydet&lt;/b&gt;: </translation>
+        <translation>&lt;b&gt;Сохранить как&lt;/b&gt;: </translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/after_download_ui.py" line="119"/>
         <source>&lt;b&gt;Link&lt;/b&gt;: </source>
-        <translation>&lt;b&gt;Bağlantı&lt;/b&gt;: </translation>
+        <translation>&lt;b&gt;Ссылка&lt;/b&gt;: </translation>
     </message>
 </context>
 <context>
@@ -293,12 +293,12 @@ Ehsan Titish</source>
     <message>
         <location filename="../../persepolis/gui/log_window_ui.py" line="97"/>
         <source>Persepolis Log</source>
-        <translation>Persepolis Günlüğü</translation>
+        <translation>Логи Persepolis</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/log_window_ui.py" line="100"/>
         <source>Report Issue</source>
-        <translation>Sorun Bildir</translation>
+        <translation>Сообщить о проблеме</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/log_window_ui.py" line="98"/>
@@ -331,337 +331,337 @@ Ehsan Titish</source>
     <message>
         <location filename="../../persepolis/scripts/mainwindow.py" line="973"/>
         <source>Queue Stopped!</source>
-        <translation>Kuyruk Durdu!</translation>
+        <translation>Очередь остановлена!</translation>
     </message>
     <message>
         <location filename="../../persepolis/scripts/mainwindow.py" line="2110"/>
         <source>Persepolis is shutting down</source>
-        <translation>Persepolis kapanıyor</translation>
+        <translation>Persepolis выключается</translation>
     </message>
     <message>
         <location filename="../../persepolis/scripts/mainwindow.py" line="2110"/>
         <source>your system in 20 seconds</source>
-        <translation>sisteminiz 20 saniye içinde</translation>
+        <translation>ваша система через 20 секунд</translation>
     </message>
     <message>
         <location filename="../../persepolis/scripts/mainwindow.py" line="1014"/>
         <source>Queue completed!</source>
-        <translation>Kuyruk tamamlandı!</translation>
+        <translation>Очередь завершена!</translation>
     </message>
     <message>
         <location filename="../../persepolis/scripts/mainwindow.py" line="3237"/>
         <source>Show main Window</source>
-        <translation>Ana Pencereyi göster</translation>
+        <translation>Показать главное окно</translation>
     </message>
     <message>
         <location filename="../../persepolis/scripts/mainwindow.py" line="1299"/>
         <source>Please Wait...</source>
-        <translation>Lütfen Bekleyiniz...</translation>
+        <translation>Пожалуйста подождите</translation>
     </message>
     <message>
         <location filename="../../persepolis/scripts/mainwindow.py" line="1625"/>
         <source>Ready...</source>
-        <translation>Hazır...</translation>
+        <translation>Готово...</translation>
     </message>
     <message>
         <location filename="../../persepolis/scripts/mainwindow.py" line="1631"/>
         <source>Aria2 didn&apos;t respond! be patient! Persepolis tries again in 2 seconds!</source>
-        <translation>Aria2 yanıt vermedi! sabırlı olun! Persepolis 2 saniye içinde tekrar dener!</translation>
+        <translation>Aria2 не ответил! Будьте терпелевы! Persepolis снова пытается через 2 секунды!</translation>
     </message>
     <message>
         <location filename="../../persepolis/scripts/mainwindow.py" line="1654"/>
         <source>Error...</source>
-        <translation>Hata...</translation>
+        <translation>Ошибка...</translation>
     </message>
     <message>
         <location filename="../../persepolis/scripts/mainwindow.py" line="1655"/>
         <source>Persepolis can not connect to Aria2</source>
-        <translation>Persepolis Aria2&apos;ye bağlanamıyor</translation>
+        <translation>Persepolis не может подключиться к Aria2</translation>
     </message>
     <message>
         <location filename="../../persepolis/scripts/mainwindow.py" line="1639"/>
         <source>Check your network &amp; Restart Persepolis</source>
-        <translation>Ağınızı denetleyin ve Persepolis&apos;i yeniden başlatın</translation>
+        <translation>Проверьте ваше подключение и перезапустите Persepolis</translation>
     </message>
     <message>
         <location filename="../../persepolis/scripts/mainwindow.py" line="1655"/>
         <source>Restart Persepolis</source>
-        <translation>Persepolis&apos;i Yeniden başlat</translation>
+        <translation>Перезапустить Persepolis</translation>
     </message>
     <message>
         <location filename="../../persepolis/scripts/mainwindow.py" line="1661"/>
         <source>Reconnecting Aria2...</source>
-        <translation>Aria2 yeniden bağlanıyor...</translation>
+        <translation>Переподключение к Aria2 ...</translation>
     </message>
     <message>
         <location filename="../../persepolis/scripts/mainwindow.py" line="1679"/>
         <source>Persepolis reconnected aria2 successfully</source>
-        <translation>Persepolis aria2 &apos;yi başarıyla yeniden bağladı</translation>
+        <translation>Persepolis успешно восстановил подключение к aria2</translation>
     </message>
     <message>
         <location filename="../../persepolis/scripts/mainwindow.py" line="1849"/>
         <source>Error: </source>
-        <translation>Hata: </translation>
+        <translation>Ошибка:</translation>
     </message>
     <message>
         <location filename="../../persepolis/scripts/mainwindow.py" line="1849"/>
         <source>Please change the temporary download folder</source>
-        <translation>Lütfen geçici indirme dizinini değiştirin</translation>
+        <translation>Пожалуйста, измените папку временного скачивания</translation>
     </message>
     <message>
         <location filename="../../persepolis/scripts/mainwindow.py" line="1946"/>
         <source>&lt;b&gt;Link&lt;/b&gt;: </source>
-        <translation>&lt;b&gt;Bağlantı&lt;/b&gt;: </translation>
+        <translation>&lt;b&gt;Ссылка&lt;/b&gt;: </translation>
     </message>
     <message>
         <location filename="../../persepolis/scripts/mainwindow.py" line="1960"/>
         <source>&lt;b&gt;Downloaded&lt;/b&gt;: </source>
-        <translation>&lt;b&gt;İndirildi&lt;/b&gt;: </translation>
+        <translation>&lt;b&gt;Закачено&lt;/b&gt;: </translation>
     </message>
     <message>
         <location filename="../../persepolis/scripts/mainwindow.py" line="1968"/>
         <source>&lt;b&gt;Transfer rate&lt;/b&gt;: </source>
-        <translation>&lt;b&gt;Aktarım hızı&lt;/b&gt;: </translation>
+        <translation>&lt;b&gt;Скорость передачи&lt;/b&gt;: </translation>
     </message>
     <message>
         <location filename="../../persepolis/scripts/mainwindow.py" line="1974"/>
         <source>&lt;b&gt;Estimated time left&lt;/b&gt;: </source>
-        <translation>&lt;b&gt;Tahmini kalan süre&lt;/b&gt;: </translation>
+        <translation>&lt;b&gt;Ожидаемое время&lt;/b&gt;: </translation>
     </message>
     <message>
         <location filename="../../persepolis/scripts/mainwindow.py" line="1980"/>
         <source>&lt;b&gt;Connections&lt;/b&gt;: </source>
-        <translation>&lt;b&gt;Bağlantılar&lt;/b&gt;: </translation>
+        <translation>&lt;b&gt;Соеддинения&lt;/b&gt;: </translation>
     </message>
     <message>
         <location filename="../../persepolis/scripts/mainwindow.py" line="2000"/>
         <source>&lt;b&gt;Status&lt;/b&gt;: </source>
-        <translation>&lt;b&gt;Durum&lt;/b&gt;: </translation>
+        <translation>&lt;b&gt;Статус&lt;/b&gt;: </translation>
     </message>
     <message>
         <location filename="../../persepolis/scripts/mainwindow.py" line="2053"/>
         <source>Download Stopped</source>
-        <translation>İndrime Durduruldu</translation>
+        <translation>Закачка остановлена</translation>
     </message>
     <message>
         <location filename="../../persepolis/scripts/mainwindow.py" line="2074"/>
         <source>Error - </source>
-        <translation>Hata - </translation>
+        <translation>Ошибка -</translation>
     </message>
     <message>
         <location filename="../../persepolis/scripts/mainwindow.py" line="2129"/>
         <source>Download Complete</source>
-        <translation>İndirme Tamamlandı</translation>
+        <translation>Закачка завершена</translation>
     </message>
     <message>
         <location filename="../../persepolis/scripts/mainwindow.py" line="2584"/>
         <source>&lt;b&gt;&lt;center&gt;This link has been added before!                    Are you sure you want to add it again?&lt;/center&gt;&lt;/b&gt;</source>
-        <translation>&lt;b&gt;&lt;center&gt;Bu bağlantı daha önce eklenmiştir!                    Tekrar eklemek istediğinizden emin misiniz?&lt;/center&gt;&lt;/b&gt;</translation>
+        <translation>&lt;b&gt;&lt;center&gt;Эта ссылка была добавлена раньше! Вы уверены, что хотите добавить её еще раз?&lt;/center&gt;&lt;/b&gt;</translation>
     </message>
     <message>
         <location filename="../../persepolis/scripts/mainwindow.py" line="5767"/>
         <source>Download Starts</source>
-        <translation>İndirme Başladı</translation>
+        <translation>Закачка началась</translation>
     </message>
     <message>
         <location filename="../../persepolis/scripts/mainwindow.py" line="2696"/>
         <source>Download Scheduled</source>
-        <translation>Zamanlanmış İndirme</translation>
+        <translation>Закачка запланирована</translation>
     </message>
     <message>
         <location filename="../../persepolis/scripts/mainwindow.py" line="5949"/>
         <source>Operation was not successful.</source>
-        <translation>İşleyiş başarılı değildi.</translation>
+        <translation>Операция не была успешной.</translation>
     </message>
     <message>
         <location filename="../../persepolis/scripts/mainwindow.py" line="5949"/>
         <source>Please resume the following category: </source>
-        <translation>Lütfen sıradaki kategoriyi devam ettirin: </translation>
+        <translation>Пожалуйста, возобновите следующую категорию:</translation>
     </message>
     <message>
         <location filename="../../persepolis/scripts/mainwindow.py" line="2895"/>
         <source>Aria2 disconnected!</source>
-        <translation>Aria2 bağlantısı kesildi!</translation>
+        <translation>Потеряна связь с Aria2!</translation>
     </message>
     <message>
         <location filename="../../persepolis/scripts/mainwindow.py" line="2856"/>
         <source>Persepolis is trying to connect!be patient!</source>
-        <translation>Persepolis bağlanmayı deniyor! sabırlı olun!</translation>
+        <translation>Persepolis пытается соединиться! Будьте терпеливы!</translation>
     </message>
     <message>
         <location filename="../../persepolis/scripts/mainwindow.py" line="2900"/>
         <source>Aria2 did not respond!</source>
-        <translation>Aria2 yanıt vermedi!</translation>
+        <translation>Aria2 не ответил!</translation>
     </message>
     <message>
         <location filename="../../persepolis/scripts/mainwindow.py" line="2750"/>
         <source>Try again!</source>
-        <translation>Tekrar deneyin!</translation>
+        <translation>Повторите заново!</translation>
     </message>
     <message>
         <location filename="../../persepolis/scripts/mainwindow.py" line="2803"/>
         <source>Aria2 did not respond</source>
-        <translation>Aria2 yanıt vermedi</translation>
+        <translation>Aria2 не ответил</translation>
     </message>
     <message>
         <location filename="../../persepolis/scripts/mainwindow.py" line="2803"/>
         <source>Try again</source>
-        <translation>Tekrar deneyin</translation>
+        <translation>Повторите заново</translation>
     </message>
     <message>
         <location filename="../../persepolis/scripts/mainwindow.py" line="2875"/>
         <source>Please stop the following category: </source>
-        <translation>Lütfen sıradaki kategoriyi durdurun: </translation>
+        <translation>Пожалуйста, остановите следующую категорию:</translation>
     </message>
     <message>
         <location filename="../../persepolis/scripts/mainwindow.py" line="2895"/>
         <source>Persepolis is trying to connect! be patient!</source>
-        <translation>Persepolis bağlanmayı deniyor! sabırlı olun!</translation>
+        <translation>Persepolis пытается соединиться! Будьте терпеливы!</translation>
     </message>
     <message>
         <location filename="../../persepolis/scripts/mainwindow.py" line="2900"/>
         <source>Please try again.</source>
-        <translation>Lütfen tekrar deneyin.</translation>
+        <translation>Пожалуйста повторите заново.</translation>
     </message>
     <message>
         <location filename="../../persepolis/scripts/mainwindow.py" line="3248"/>
         <source>Minimize to system tray</source>
-        <translation>Görev çubuğuna küçült</translation>
+        <translation>Спрятать в системный трей</translation>
     </message>
     <message>
         <location filename="../../persepolis/scripts/mainwindow.py" line="3701"/>
         <source>Not Found</source>
-        <translation>Bulunamadı</translation>
+        <translation>Не Найдено</translation>
     </message>
     <message>
         <location filename="../../persepolis/scripts/mainwindow.py" line="3650"/>
         <source>Operation was not successful!</source>
-        <translation>İşleyiş başarılı değildi!</translation>
+        <translation>Операция не была успешной!</translation>
     </message>
     <message>
         <location filename="../../persepolis/scripts/mainwindow.py" line="3444"/>
         <source>Operation was not successful! Please stop the following category first: </source>
-        <translation>İşleyiş başarılı değildi! Lütfen önce sıradaki kategoriyi durdurun: </translation>
+        <translation>Операция не была успешной! Пожалуйста, остановите следующую категорию:</translation>
     </message>
     <message>
         <location filename="../../persepolis/scripts/mainwindow.py" line="3495"/>
         <source>Please stop the following download first: </source>
-        <translation>Lütfen önce sıradaki indirmeyi durdurun: </translation>
+        <translation>Сначала остановите следующую загрузку:</translation>
     </message>
     <message>
         <location filename="../../persepolis/scripts/mainwindow.py" line="3550"/>
         <source>&lt;b&gt;&lt;center&gt;This operation will delete                     downloaded files from your hard disk&lt;br&gt;PERMANENTLY!&lt;/center&gt;&lt;/b&gt;</source>
-        <translation>&lt;b&gt;&lt;center&gt;Bu işlem, indirilen dosyaları sabit diskinizden siler&lt;br&gt;KALICI OLARAK!&lt;/center&gt;&lt;/b&gt;</translation>
+        <translation>&lt;b&gt;&lt;center&gt;Эта операция удалит загруженные файлы с вашего жесткого диска&lt;br&gt;БЕЗВОЗВРАТНО!&lt;/center&gt;&lt;/b&gt;</translation>
     </message>
     <message>
         <location filename="../../persepolis/scripts/mainwindow.py" line="4712"/>
         <source>&lt;center&gt;Do you want to continue?&lt;/center&gt;</source>
-        <translation>&lt;center&gt;Devam etmesini ister misin?&lt;/center&gt;</translation>
+        <translation>&lt;center&gt;Вы хотите продолжить?&lt;/center&gt;</translation>
     </message>
     <message>
         <location filename="../../persepolis/scripts/mainwindow.py" line="3600"/>
         <source>Please stop the following category first: </source>
-        <translation>Lütfen önce sıradaki kategoriyi durdurun: </translation>
+        <translation>Сначала остановите следующую категорию:</translation>
     </message>
     <message>
         <location filename="../../persepolis/scripts/mainwindow.py" line="4221"/>
         <source>&lt;/b&gt;&quot; already exists!</source>
-        <translation>&lt;/b&gt;&quot; zaten var!</translation>
+        <translation>&lt;/b&gt;&quot; уже существует!</translation>
     </message>
     <message>
         <location filename="../../persepolis/scripts/mainwindow.py" line="4548"/>
         <source>Send selected downloads to</source>
-        <translation>Seçilen indirmeleri gönder</translation>
+        <translation>Отправить выбранные загрузки в</translation>
     </message>
     <message>
         <location filename="../../persepolis/scripts/mainwindow.py" line="4551"/>
         <source>Send to</source>
-        <translation>Gönder</translation>
+        <translation>Отправить</translation>
     </message>
     <message>
         <location filename="../../persepolis/scripts/mainwindow.py" line="4686"/>
         <source>Sort by</source>
-        <translation>Göre sırala</translation>
+        <translation>Отсортировать по</translation>
     </message>
     <message>
         <location filename="../../persepolis/scripts/mainwindow.py" line="4709"/>
         <source>&lt;b&gt;&lt;center&gt;This operation will remove                     all download items in this queue&lt;br&gt;from &quot;All Downloads&quot; list!&lt;/center&gt;&lt;/b&gt;</source>
-        <translation>&lt;b&gt;&lt;center&gt;Bu işlem, bu kuyruktaki tüm indirme öğelerini  kaldıracak&lt;br&gt;&quot;Tüm İndirmeler&quot; listesinden!&lt;/center&gt;&lt;/b&gt;</translation>
+        <translation>&lt;b&gt;&lt;center&gt;Эта операция удалит все элементы загрузки в этой очереди&lt;br&gt;из списка «Все загрузки»!&lt;/center&gt;&lt;/b&gt;</translation>
     </message>
     <message>
         <location filename="../../persepolis/scripts/mainwindow.py" line="4734"/>
         <source>&lt;b&gt;Sorry! You can&apos;t remove default queue!&lt;/b&gt;</source>
-        <translation>&lt;b&gt;Üzgünüm! Varsayılan kuyruğu kaldıramazsınız!&lt;/b&gt;</translation>
+        <translation>&lt;b&gt;Извините! Вы не можете удалить очередь по умолчанию!&lt;/b&gt;</translation>
     </message>
     <message>
         <location filename="../../persepolis/scripts/mainwindow.py" line="4955"/>
         <source>Some items didn&apos;t transferred successfully!</source>
-        <translation>Bazı öğeler başarıyla aktarılamadı!</translation>
+        <translation>Некоторые элементы не были успешно перенесены!</translation>
     </message>
     <message>
         <location filename="../../persepolis/scripts/mainwindow.py" line="4955"/>
         <source>Please stop download progress first.</source>
-        <translation>Lütfen önce indirme ilerleyişini durdurun.</translation>
+        <translation>Сначала остановите следующую загрузку.</translation>
     </message>
     <message>
         <location filename="../../persepolis/scripts/mainwindow.py" line="4985"/>
         <source>Hide options</source>
-        <translation>Seçenekleri gizle</translation>
+        <translation>Спрятать настройки</translation>
     </message>
     <message>
         <location filename="../../persepolis/scripts/mainwindow.py" line="4989"/>
         <source>Show options</source>
-        <translation>Seçenekleri göster</translation>
+        <translation>Показать настройки</translation>
     </message>
     <message>
         <location filename="../../persepolis/scripts/mainwindow.py" line="5586"/>
         <source>Stop all downloads first!</source>
-        <translation>Önce tüm indirmeleri durdurun!</translation>
+        <translation>Сначала остановите все загрузки!</translation>
     </message>
     <message>
         <location filename="../../persepolis/scripts/mainwindow.py" line="1208"/>
         <source>Moving is</source>
-        <translation>Taşınmakta</translation>
+        <translation>Перемещение</translation>
     </message>
     <message>
         <location filename="../../persepolis/scripts/mainwindow.py" line="1208"/>
         <source>finished!</source>
-        <translation>bitti!</translation>
+        <translation>завершено</translation>
     </message>
     <message>
         <location filename="../../persepolis/scripts/mainwindow.py" line="3622"/>
         <source>Download is in progress by video finder!</source>
-        <translation>Video bulucu ile indirme devam ediyor!</translation>
+        <translation>Выполняется загрузка с помощью средства поиска видео!</translation>
     </message>
     <message>
         <location filename="../../persepolis/scripts/mainwindow.py" line="3622"/>
         <source>be patient!</source>
-        <translation>sabırlı olun!</translation>
+        <translation>подождите!</translation>
     </message>
     <message>
         <location filename="../../persepolis/scripts/mainwindow.py" line="3650"/>
         <source>Stop the following download first: </source>
-        <translation>Önce sıradaki indirmeyi durdurun:</translation>
+        <translation>Сначала остановите следующую загрузку:</translation>
     </message>
     <message>
         <location filename="../../persepolis/scripts/mainwindow.py" line="5625"/>
         <source>youtube-dl is not installed!</source>
-        <translation>youtube-dl yüklü değil!</translation>
+        <translation>youtube-dl не установлен!</translation>
     </message>
     <message>
         <location filename="../../persepolis/scripts/mainwindow.py" line="5630"/>
         <source>ffmpeg is not installed!</source>
-        <translation>ffmpeg yüklü değil!</translation>
+        <translation>ffmpeg не установлен!</translation>
     </message>
     <message>
         <location filename="../../persepolis/scripts/mainwindow.py" line="5921"/>
         <source>Not enough free space in:</source>
-        <translation>Yeterli boş alan yok</translation>
+        <translation>Недостаточно свободного места в:</translation>
     </message>
     <message>
         <location filename="../../persepolis/scripts/mainwindow.py" line="5927"/>
         <source>muxing error</source>
-        <translation>Çoğullama hatası</translation>
+        <translation>ошибка мультиплексирования</translation>
     </message>
     <message>
         <location filename="../../persepolis/scripts/mainwindow.py" line="5927"/>
@@ -674,319 +674,319 @@ Ehsan Titish</source>
     <message>
         <location filename="../../persepolis/gui/mainwindow_ui.py" line="65"/>
         <source>File</source>
-        <translation>Dosya</translation>
+        <translation>Файл</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/mainwindow_ui.py" line="66"/>
         <source>Edit</source>
-        <translation>Düzenle</translation>
+        <translation>Редактировать</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/mainwindow_ui.py" line="67"/>
         <source>View</source>
-        <translation>Görünüm</translation>
+        <translation>Вид</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/mainwindow_ui.py" line="68"/>
         <source>Download</source>
-        <translation>İndir</translation>
+        <translation>Скачать</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/mainwindow_ui.py" line="69"/>
         <source>Queue</source>
-        <translation>Kuyruk</translation>
+        <translation>Очередь</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/mainwindow_ui.py" line="70"/>
         <source>Video Finder</source>
-        <translation>Video Bulucu</translation>
+        <translation>Video Finder</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/mainwindow_ui.py" line="729"/>
         <source>Help</source>
-        <translation>Yardım</translation>
+        <translation>Помощь</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/mainwindow_ui.py" line="472"/>
         <source>Sort by</source>
-        <translation>Göre sırala</translation>
+        <translation>Отсортировать по</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/mainwindow_ui.py" line="477"/>
         <source>Persepolis Download Manager</source>
-        <translation>Persepolis İndirme Yöneticisi</translation>
+        <translation>Менеджер Закачек Persepolis</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/mainwindow_ui.py" line="409"/>
         <source>Category</source>
-        <translation>Kategori</translation>
+        <translation>Категории</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/mainwindow_ui.py" line="510"/>
         <source>File Name</source>
-        <translation>Dosya Adı</translation>
+        <translation>Имя файла</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/mainwindow_ui.py" line="408"/>
         <source>Status</source>
-        <translation>Durum</translation>
+        <translation>Статус</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/mainwindow_ui.py" line="408"/>
         <source>Size</source>
-        <translation>Boyut</translation>
+        <translation>Размер</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/mainwindow_ui.py" line="408"/>
         <source>Downloaded</source>
-        <translation>İndirildi</translation>
+        <translation>Закачено</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/mainwindow_ui.py" line="408"/>
         <source>Percentage</source>
-        <translation>Yüzdesi</translation>
+        <translation>Процент</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/mainwindow_ui.py" line="408"/>
         <source>Connections</source>
-        <translation>Bağlantılar</translation>
+        <translation>Соединений</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/mainwindow_ui.py" line="409"/>
         <source>Link</source>
-        <translation>Bağlantı</translation>
+        <translation>Ссылка</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/mainwindow_ui.py" line="463"/>
         <source>&amp;File</source>
-        <translation>&amp;Dosya</translation>
+        <translation>&amp;Файл</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/mainwindow_ui.py" line="464"/>
         <source>&amp;Edit</source>
-        <translation>&amp;Düzenle</translation>
+        <translation>&amp;Редактировать</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/mainwindow_ui.py" line="465"/>
         <source>&amp;View</source>
-        <translation>&amp;Görünüm</translation>
+        <translation>&amp;Вид</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/mainwindow_ui.py" line="466"/>
         <source>&amp;Download</source>
-        <translation>&amp;İndir</translation>
+        <translation>&amp;Закачка</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/mainwindow_ui.py" line="467"/>
         <source>&amp;Queue</source>
-        <translation>&amp;Kuyruk</translation>
+        <translation>&amp;Очередь</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/mainwindow_ui.py" line="469"/>
         <source>&amp;Help</source>
-        <translation>&amp;Yardım</translation>
+        <translation>&amp;Помощь</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/mainwindow_ui.py" line="482"/>
         <source>Menu</source>
-        <translation>Menü</translation>
+        <translation>Меню</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/mainwindow_ui.py" line="488"/>
         <source>Toolbar</source>
-        <translation>Araç çubuğu</translation>
+        <translation>Панель инструментов</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/mainwindow_ui.py" line="535"/>
         <source>Show/Hide system tray icon</source>
-        <translation>Görev çubuğu simgesini Göster/Gizle</translation>
+        <translation>Показать / спрятать значок в системном трее</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/mainwindow_ui.py" line="561"/>
         <source>Add New Download Link</source>
-        <translation>Yeni İndirme Bağlantısı Ekle</translation>
+        <translation>Добавить новую ссылку для скачивания</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/mainwindow_ui.py" line="578"/>
         <source>Resume Download</source>
-        <translation>İndirmeye Kaldığı Yerden Devam Et</translation>
+        <translation>Продолжить Закачку</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/mainwindow_ui.py" line="584"/>
         <source>Pause Download</source>
-        <translation>İndirmeye Ara Ver</translation>
+        <translation>Пауза для Закачки</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/mainwindow_ui.py" line="590"/>
         <source>Stop Download</source>
-        <translation>İndirmeyi Durdur</translation>
+        <translation>Остановить Закачку</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/mainwindow_ui.py" line="590"/>
         <source>Stop/Cancel Download</source>
-        <translation>İndirmeyi Durdur/İptal et</translation>
+        <translation>Остановить / Отменить Закачку</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/mainwindow_ui.py" line="596"/>
         <source>Properties</source>
-        <translation>Özellikler</translation>
+        <translation>Свойства</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/mainwindow_ui.py" line="602"/>
         <source>Progress</source>
-        <translation>İlerleyiş</translation>
+        <translation>Прогресс</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/mainwindow_ui.py" line="625"/>
         <source>Exit</source>
-        <translation>Çıkış</translation>
+        <translation>Закрыть программу</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/mainwindow_ui.py" line="633"/>
         <source>Clear all items in download list</source>
-        <translation>İndirme listesindeki tüm öğeleri temizle</translation>
+        <translation>Очистить все элементы в списке закачки</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/mainwindow_ui.py" line="665"/>
         <source>Create new download queue</source>
-        <translation>Yeni indirme kuyruğu oluştur</translation>
+        <translation>Создать новую очередь закачек</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/mainwindow_ui.py" line="670"/>
         <source>Remove this queue</source>
-        <translation>Bu kuyruğu kaldır</translation>
+        <translation>Удалить эту очередь</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/mainwindow_ui.py" line="675"/>
         <source>Start this queue</source>
-        <translation>Bu kuyruğu başlat</translation>
+        <translation>Запустить эту очередь</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/mainwindow_ui.py" line="681"/>
         <source>Stop this queue</source>
-        <translation>Bu kuyruğu durdur</translation>
+        <translation>Остановить эту очередь</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/mainwindow_ui.py" line="687"/>
         <source>Move currently selected items up by one row</source>
-        <translation>Şu an seçili öğeleri bir satır yukarı kaydır</translation>
+        <translation>Переместить выбранные элементы вверх на одну строку</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/mainwindow_ui.py" line="696"/>
         <source>Move currently selected items down by one row</source>
-        <translation>Şu an seçili öğeleri bir satır aşağı kaydır</translation>
+        <translation>Переместить выбранные элементы вниз на одну строку</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/mainwindow_ui.py" line="704"/>
         <source>Preferences</source>
-        <translation>Tercihler</translation>
+        <translation>Предпочтения</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/mainwindow_ui.py" line="709"/>
         <source>About</source>
-        <translation>Hakkında</translation>
+        <translation>О программе</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/mainwindow_ui.py" line="714"/>
         <source>Report an issue</source>
-        <translation>Bir sorun bildir</translation>
+        <translation>Сообщить о ошибке</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/mainwindow_ui.py" line="719"/>
         <source>Check for newer release</source>
-        <translation>Daha yeni sürüm için denetle</translation>
+        <translation>Проверить выпуск новой версии</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/mainwindow_ui.py" line="742"/>
         <source>Start Time</source>
-        <translation>Başlama Zamanı</translation>
+        <translation>Время начала</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/mainwindow_ui.py" line="744"/>
         <source>End Time</source>
-        <translation>Bitiş Zamanı</translation>
+        <translation>Время окончания</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/mainwindow_ui.py" line="746"/>
         <source>Download bottom of
  the list first</source>
-        <translation>İlk önce listenin
-altındakini indir</translation>
+        <translation>Сначала загрузите
+ нижнюю часть списка</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/mainwindow_ui.py" line="749"/>
         <source>Limit Speed</source>
-        <translation>Hız Sınırı</translation>
+        <translation>Ограничить скорость</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/mainwindow_ui.py" line="762"/>
         <source>Apply</source>
-        <translation>Uygula</translation>
+        <translation>Принять</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/mainwindow_ui.py" line="754"/>
         <source>After download</source>
-        <translation>İndirdikten sonra</translation>
+        <translation>После закачки</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/mainwindow_ui.py" line="755"/>
         <source>Shut Down</source>
-        <translation>Kapat</translation>
+        <translation>Выключить</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/mainwindow_ui.py" line="468"/>
         <source>V&amp;ideo Finder</source>
-        <translation>V&amp;ideo Bulucu</translation>
+        <translation>V&amp;ideo Finder</translation>
     </message>
     <message>
         <location filename="../../persepolis/scripts/mainwindow.py" line="2414"/>
         <source>&lt;b&gt;Video file status: &lt;/b&gt;</source>
-        <translation>&lt;b&gt;Video dosyası durumu: &lt;/b&gt;</translation>
+        <translation>&lt;b&gt;Состояние видеофайла: &lt;/b&gt;</translation>
     </message>
     <message>
         <location filename="../../persepolis/scripts/mainwindow.py" line="2395"/>
         <source>&lt;b&gt;Audio file status: &lt;/b&gt;</source>
-        <translation>&lt;b&gt;Ses dosyası durumu: &lt;/b&gt;</translation>
+        <translation>&lt;b&gt;Состояние аудиофайла: &lt;/b&gt;</translation>
     </message>
     <message>
         <location filename="../../persepolis/scripts/mainwindow.py" line="2470"/>
         <source>&lt;b&gt;Status: &lt;/b&gt;</source>
-        <translation>&lt;b&gt;Durum: &lt;/b&gt;</translation>
+        <translation>&lt;b&gt;Состояние: &lt;/b&gt;</translation>
     </message>
     <message>
         <location filename="../../persepolis/scripts/mainwindow.py" line="2474"/>
         <source>&lt;b&gt;Muxing status: &lt;/b&gt;</source>
-        <translation>&lt;b&gt;Çoğullama durumu: &lt;/b&gt;</translation>
+        <translation>&lt;b&gt;Состояние мультиплексирования: &lt;/b&gt;</translation>
     </message>
     <message>
         <location filename="../../persepolis/scripts/mainwindow.py" line="2414"/>
         <source> downloaded</source>
-        <translation>indirildi</translation>
+        <translation>загружено</translation>
     </message>
     <message>
         <location filename="../../persepolis/scripts/mainwindow.py" line="2429"/>
         <source>Active</source>
-        <translation>Etkin</translation>
+        <translation>Активно</translation>
     </message>
     <message>
         <location filename="../../persepolis/scripts/mainwindow.py" line="2459"/>
         <source>Not Active</source>
-        <translation>Etkin Değil</translation>
+        <translation>Не активно</translation>
     </message>
     <message>
         <location filename="../../persepolis/scripts/mainwindow.py" line="2449"/>
         <source>Started</source>
-        <translation>Başladı</translation>
+        <translation>Запущено</translation>
     </message>
     <message>
         <location filename="../../persepolis/scripts/mainwindow.py" line="2452"/>
         <source>Error</source>
-        <translation>Hata</translation>
+        <translation>Ошибка</translation>
     </message>
     <message>
         <location filename="../../persepolis/scripts/mainwindow.py" line="2455"/>
         <source>Complete</source>
-        <translation>Tamamlanmış</translation>
+        <translation>Завершено</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/mainwindow_ui.py" line="409"/>
@@ -1194,27 +1194,27 @@ altındakini indir</translation>
     <message>
         <location filename="../../persepolis/scripts/progress.py" line="170"/>
         <source>Aria2 disconnected!</source>
-        <translation>Aria2 bağlantısı kesildi!</translation>
+        <translation>Aria2 отключен!</translation>
     </message>
     <message>
         <location filename="../../persepolis/scripts/progress.py" line="170"/>
         <source>Persepolis is trying to connect! be patient!</source>
-        <translation>Persepolis bağlanmayı deniyor! sabırlı olun!</translation>
+        <translation>Persepolis пытается подключиться! Будьте терпеливы!</translation>
     </message>
     <message>
         <location filename="../../persepolis/scripts/progress.py" line="151"/>
         <source>Aria2 did not respond!</source>
-        <translation>Aria2 yanıt vermedi!</translation>
+        <translation>Aria2 не ответил!</translation>
     </message>
     <message>
         <location filename="../../persepolis/scripts/progress.py" line="132"/>
         <source>Please try again.</source>
-        <translation>Lütfen tekrar deneyin.</translation>
+        <translation>Пожалуйста повторите заново.</translation>
     </message>
     <message>
         <location filename="../../persepolis/scripts/progress.py" line="151"/>
         <source>Try again!</source>
-        <translation>Tekrar deneyin!</translation>
+        <translation>Повторите заново!</translation>
     </message>
 </context>
 <context>
@@ -1222,72 +1222,72 @@ altındakini indir</translation>
     <message>
         <location filename="../../persepolis/gui/progress_ui.py" line="55"/>
         <source>Persepolis Download Manager</source>
-        <translation>Persepolis İndirme Yöneticisi</translation>
+        <translation>Менеджер Закачек Persepolis</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/progress_ui.py" line="206"/>
         <source>Status: </source>
-        <translation>Durum: </translation>
+        <translation>Статус:</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/progress_ui.py" line="207"/>
         <source>Downloaded:</source>
-        <translation>İndirildi:</translation>
+        <translation>Закачено:</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/progress_ui.py" line="208"/>
         <source>Transfer rate: </source>
-        <translation>Aktarım hızı: </translation>
+        <translation>Скорость передачи:</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/progress_ui.py" line="209"/>
         <source>Estimated time left:</source>
-        <translation>Tahmini kalan süre:</translation>
+        <translation>Ожидаемое время:</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/progress_ui.py" line="210"/>
         <source>Number of connections: </source>
-        <translation>Bağlantıların Sayısı: </translation>
+        <translation>Количество соединений:</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/progress_ui.py" line="211"/>
         <source>Download Information</source>
-        <translation>İndirme Bilgisi</translation>
+        <translation>Информация о закачке</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/progress_ui.py" line="214"/>
         <source>After download</source>
-        <translation>İndirdikten sonra</translation>
+        <translation>После закачки</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/progress_ui.py" line="226"/>
         <source>Apply</source>
-        <translation>Uygula</translation>
+        <translation>Принять</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/progress_ui.py" line="219"/>
         <source>Shut Down</source>
-        <translation>Kapat</translation>
+        <translation>Выключить</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/progress_ui.py" line="221"/>
         <source>Download Options</source>
-        <translation>İndirme Seçenekleri</translation>
+        <translation>Опции Закачки</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/progress_ui.py" line="223"/>
         <source>Resume</source>
-        <translation>Kaldığı Yerden Devam Et</translation>
+        <translation>Продолжить</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/progress_ui.py" line="224"/>
         <source>Pause</source>
-        <translation>Ara ver</translation>
+        <translation>Пауза</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/progress_ui.py" line="225"/>
         <source>Stop</source>
-        <translation>Durdur</translation>
+        <translation>Остановить</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/progress_ui.py" line="205"/>
@@ -1305,17 +1305,17 @@ altındakini indir</translation>
     <message>
         <location filename="../../persepolis/scripts/setting.py" line="1177"/>
         <source>&lt;b&gt;&lt;center&gt;Restart Persepolis Please!&lt;/center&gt;&lt;/b&gt;&lt;br&gt;&lt;center&gt;Some changes take effect after restarting Persepolis&lt;/center&gt;</source>
-        <translation>&lt;b&gt;&lt;center&gt;Lütfen Persepolis&apos;i Yeniden Başlat!&lt;/center&gt;&lt;/b&gt;&lt;br&gt;&lt;center&gt;Bazı değişiklikler Persepolis&apos;i yeniden başlattıktan sonra geçerli olur&lt;/center&gt;</translation>
+        <translation>&lt;b&gt;&lt;center&gt;Пожалуйста перезапустите Persepolis!&lt;/center&gt;&lt;/b&gt;&lt;br&gt;&lt;center&gt;Некоторые изменения вступят в силу после перезапуска Persepolis&lt;/center&gt;</translation>
     </message>
     <message>
         <location filename="../../persepolis/scripts/setting.py" line="1179"/>
         <source>Restart Persepolis!</source>
-        <translation>Persepolis&apos;i Yeniden başlat!</translation>
+        <translation>Перезапустить Persepolis!</translation>
     </message>
     <message>
         <location filename="../../persepolis/scripts/setting.py" line="443"/>
         <source>&lt;b&gt;&lt;center&gt;This shortcut has been used before!                    Use another one!&lt;/center&gt;&lt;/b&gt;</source>
-        <translation>&lt;b&gt;&lt;center&gt;Bu kısayol daha önce kullanılmıştır!    Diğer birini kullanın!&lt;/center&gt;&lt;/b&gt;</translation>
+        <translation>&lt;b&gt;&lt;center&gt;Это сочетание уже используется!                    Выберите другое!&lt;/center&gt;&lt;/b&gt;</translation>
     </message>
 </context>
 <context>
@@ -1323,217 +1323,217 @@ altındakini indir</translation>
     <message>
         <location filename="../../persepolis/gui/setting_ui.py" line="664"/>
         <source>Preferences</source>
-        <translation>Tercihler</translation>
+        <translation>Предпочтения</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/setting_ui.py" line="561"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Set number of tries if download failed.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;İndirme başarısız olursa deneme sayısını ayarla.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Задайте количество попыток, если загрузка не удалась.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/setting_ui.py" line="560"/>
         <source>Number of tries: </source>
-        <translation>Deneme sayısı: </translation>
+        <translation>Количество попыток:</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/setting_ui.py" line="567"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Set the seconds to wait between retries. Download manager will  retry  downloads  when  the  HTTP  server  returns  a  503 response.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Yeniden denemeler arasında beklemek için saniyeler ayarlayın. HTTP sunucusu bir 503 yanıtı döndürdüğünde indirme yöneticisi indirmeleri yeniden dener.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Установите количество секунд ожидания между попытками. Менеджер закачек будет повторять закачки, когда HTTP-сервер возвращает ответ 503.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/setting_ui.py" line="573"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Set timeout in seconds. &lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Zaman aşımını saniye olarak ayarla. &lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Установите тайм-аут в секундах. &lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/setting_ui.py" line="572"/>
         <source>Timeout (seconds): </source>
-        <translation>Zaman aşımı (saniye): </translation>
+        <translation>Тайм-аут (в секундах):</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/setting_ui.py" line="579"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Using multiple connections can help speed up your download.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Birden fazla bağlantı kullanmak, indirmenizi hızlandırmaya yardımcı olabilir&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Использование нескольких соединений может помочь ускорить загрузку.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/setting_ui.py" line="578"/>
         <source>Number of connections: </source>
-        <translation>Bağlantıların Sayısı: </translation>
+        <translation>Количество соединений:</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/setting_ui.py" line="582"/>
         <source>RPC port number: </source>
-        <translation>RPC bağlantı noktası numarası: </translation>
+        <translation>Номер порта RPC:</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/setting_ui.py" line="583"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt; Specify a port number for JSON-RPC/XML-RPC server to listen to. Possible Values: 1024 - 65535 Default: 6801 &lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;JSON-RPC/XML-RPC sunucusunu takip etmek için bir bağlantı noktası numarası belirtin. Olası Değerler: 1024 - 65535 Varsayılan: 6801&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt; Укажите номер порта для JSON-RPC / XML-RPC-сервера. Возможные значения: 1024 - 65535 По умолчанию: 6801 &lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/setting_ui.py" line="593"/>
         <source>Change Aria2 default path</source>
-        <translation>Aria2 varsayılan yolunu değiştir</translation>
+        <translation>Изменить путь по умолчанию для Aria2</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/setting_ui.py" line="608"/>
         <source>Change</source>
-        <translation>Değiştir</translation>
+        <translation>Изменить</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/setting_ui.py" line="601"/>
         <source>Download Options</source>
-        <translation>İndirme Seçenekleri</translation>
+        <translation>Опции Закачки</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/setting_ui.py" line="619"/>
         <source>Volume: </source>
-        <translation>Hacim: </translation>
+        <translation>Громкость:</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/setting_ui.py" line="621"/>
         <source>Notifications</source>
-        <translation>Bildirimler</translation>
+        <translation>Уведомления</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/setting_ui.py" line="624"/>
         <source>Style: </source>
-        <translation>Tarz: </translation>
+        <translation>Стиль:</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/setting_ui.py" line="625"/>
         <source>Color scheme: </source>
-        <translation>Renk şeması: </translation>
+        <translation>Цветовая схема:</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/setting_ui.py" line="626"/>
         <source>Icons: </source>
-        <translation>Simgeler: </translation>
+        <translation>Иконки:</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/setting_ui.py" line="630"/>
         <source>Notification type: </source>
-        <translation>Bildirim türü: </translation>
+        <translation>Тип уведомлений:</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/setting_ui.py" line="632"/>
         <source>Font: </source>
-        <translation>Yazı tipi: </translation>
+        <translation>Шрифт:</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/setting_ui.py" line="633"/>
         <source>Size: </source>
-        <translation>Boyut: </translation>
+        <translation>Размер:</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/setting_ui.py" line="654"/>
         <source>Run Persepolis at startup</source>
-        <translation>Başlangıçta Persepolis&apos;i çalıştır</translation>
+        <translation>Запускать Persepolis при старте системы</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/setting_ui.py" line="656"/>
         <source>Keep system awake!</source>
-        <translation>Sistemi uyanık tut!</translation>
+        <translation>Не позволять системе перейти в ждущий режим </translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/setting_ui.py" line="661"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Format HH:MM&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Biçim SS:DD&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Формат HH:MM&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/setting_ui.py" line="669"/>
         <source>File Name</source>
-        <translation>Dosya Adı</translation>
+        <translation>Имя файла</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/setting_ui.py" line="670"/>
         <source>Status</source>
-        <translation>Durum</translation>
+        <translation>Статус</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/setting_ui.py" line="671"/>
         <source>Size</source>
-        <translation>Boyut</translation>
+        <translation>Размер</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/setting_ui.py" line="672"/>
         <source>Downloaded</source>
-        <translation>İndirildi</translation>
+        <translation>Закачено</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/setting_ui.py" line="673"/>
         <source>Percentage</source>
-        <translation>Yüzdesi</translation>
+        <translation>Процент</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/setting_ui.py" line="674"/>
         <source>Connections</source>
-        <translation>Bağlantılar</translation>
+        <translation>Соединения</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/setting_ui.py" line="679"/>
         <source>Category</source>
-        <translation>Kategori</translation>
+        <translation>Категории</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/setting_ui.py" line="685"/>
         <source>Video Finder Options</source>
-        <translation>Video Bulucu Seçenekleri</translation>
+        <translation>Настройки Video Finder</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/setting_ui.py" line="688"/>
         <source>Maximum number of links to capture:&lt;br/&gt;&lt;small&gt;(If browser sends multiple video links at a time)&lt;/small&gt;</source>
-        <translation>Yakalama bağlantılarının en fazla sayısı:&lt;br/&gt;&lt;small&gt;(Tarayıcı bir seferde birden fazla video bağlantısı gönderirse)&lt;/small&gt;</translation>
+        <translation>Максимальное количество ссылок для захвата:&lt;br/&gt;&lt;small&gt;(Если браузер одновременно отправит несколько ссылок на видео)&lt;/small&gt;</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/setting_ui.py" line="692"/>
         <source>Defaults</source>
-        <translation>Varsayılanlar</translation>
+        <translation>Значения по умолчанию</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/setting_ui.py" line="693"/>
         <source>Cancel</source>
-        <translation>İptal</translation>
+        <translation>Отменить</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/setting_ui.py" line="694"/>
         <source>OK</source>
-        <translation>Tamam</translation>
+        <translation>OK</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/setting_ui.py" line="80"/>
         <source>Press new keys</source>
-        <translation>Yeni tuşlara basın</translation>
+        <translation>Нажмите новые клавиши</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/setting_ui.py" line="499"/>
         <source>Action</source>
-        <translation>Eylem</translation>
+        <translation>Действие</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/setting_ui.py" line="500"/>
         <source>Shortcut</source>
-        <translation>Kısayol</translation>
+        <translation>Сочетание клавиш</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/setting_ui.py" line="506"/>
         <source>Shortcuts</source>
-        <translation>Kısayollar</translation>
+        <translation>Сочетания клавиш</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/setting_ui.py" line="509"/>
         <source>Quit</source>
-        <translation>Programdan çık</translation>
+        <translation>Выход</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/setting_ui.py" line="635"/>
         <source>Hide main window if close button clicked.</source>
-        <translation>Kapat düğmesi tıklandığında ana pencereyi gizle.</translation>
+        <translation>Скрывать главное окно, если нажата клавиша закрытия.</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/setting_ui.py" line="637"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;This feature may not work in your operating system.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Bu özellik işletim sisteminizde çalışmayabilir.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Эта функция может не работать в вашей операционной системе.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/setting_ui.py" line="329"/>
@@ -1706,57 +1706,57 @@ altındakini indir</translation>
     <message>
         <location filename="../../persepolis/gui/text_queue_ui.py" line="271"/>
         <source>Persepolis Download Manager</source>
-        <translation>Persepolis İndirme Yöneticisi</translation>
+        <translation>Менеджер Закачек Persepolis</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/text_queue_ui.py" line="273"/>
         <source>Links</source>
-        <translation>Bağlantılar</translation>
+        <translation>Ссылки</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/text_queue_ui.py" line="278"/>
         <source>Select All</source>
-        <translation>Tümünü Seç</translation>
+        <translation>Выбрать все</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/text_queue_ui.py" line="279"/>
         <source>Deselect All</source>
-        <translation>Hiçbirini Seçme</translation>
+        <translation>Отменить выделить все</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/text_queue_ui.py" line="281"/>
         <source>Add to queue: </source>
-        <translation>Kuyruğa ekle: </translation>
+        <translation>Добавить в очередь:</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/text_queue_ui.py" line="283"/>
         <source>Proxy</source>
-        <translation>Ara sunucu</translation>
+        <translation>Прокси</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/text_queue_ui.py" line="285"/>
         <source>IP:</source>
-        <translation>IP:</translation>
+        <translation>IP: </translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/text_queue_ui.py" line="287"/>
         <source>Port:</source>
-        <translation>Bağlantı noktası:</translation>
+        <translation>Порт:</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/text_queue_ui.py" line="293"/>
         <source>Change Download Folder</source>
-        <translation>İndirme Dizinini Değiştir</translation>
+        <translation>Изменить папку для загрузки</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/text_queue_ui.py" line="301"/>
         <source>OK</source>
-        <translation>Tamam</translation>
+        <translation>OK</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/text_queue_ui.py" line="302"/>
         <source>Cancel</source>
-        <translation>İptal</translation>
+        <translation>Отменить</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/text_queue_ui.py" line="275"/>
@@ -1809,37 +1809,37 @@ altındakini indir</translation>
     <message>
         <location filename="../../persepolis/scripts/update.py" line="55"/>
         <source>Checking for newer version</source>
-        <translation>Yeni uyarlama denetleniyor</translation>
+        <translation>Проверить новую версию</translation>
     </message>
     <message>
         <location filename="../../persepolis/scripts/update.py" line="61"/>
         <source>The newest is the best, we recommend to update Persepolis.</source>
-        <translation>En yenisi en iyisidir, Persepolis&apos;i güncellemenizi öneririz</translation>
+        <translation>Новое всегда лучше, мы рекомендует обновить Persepolis.</translation>
     </message>
     <message>
         <location filename="../../persepolis/scripts/update.py" line="155"/>
         <source>Check for new update</source>
-        <translation>Yeni güncellemeyi denetle</translation>
+        <translation>Проверить обновление</translation>
     </message>
     <message>
         <location filename="../../persepolis/scripts/update.py" line="112"/>
         <source>Checking...</source>
-        <translation>Denetleniyor...</translation>
+        <translation>Проверяю...</translation>
     </message>
     <message>
         <location filename="../../persepolis/scripts/update.py" line="126"/>
         <source>A newer Persepolis release is available</source>
-        <translation>Daha yeni bir Persepolis sürümü mevcut</translation>
+        <translation>Доступна новая версия Persepolis</translation>
     </message>
     <message>
         <location filename="../../persepolis/scripts/update.py" line="145"/>
         <source>Latest version is installed :)</source>
-        <translation>Son uyarlama kurulu :)</translation>
+        <translation>Установлена последняя версия :)</translation>
     </message>
     <message>
         <location filename="../../persepolis/scripts/update.py" line="149"/>
         <source>You are using beta version</source>
-        <translation>Beta sürümünü kullanıyorsunuz</translation>
+        <translation>Вы используете бета-версию</translation>
     </message>
     <message>
         <location filename="../../persepolis/scripts/update.py" line="67"/>
@@ -1857,17 +1857,17 @@ altındakini indir</translation>
     <message>
         <location filename="../../persepolis/scripts/mainwindow.py" line="1913"/>
         <source>&lt;b&gt;Video file status: &lt;/b&gt;</source>
-        <translation>&lt;b&gt;Video dosyası durumu: &lt;/b&gt;</translation>
+        <translation>&lt;b&gt;Состояние видеофайла: &lt;/b&gt;</translation>
     </message>
     <message>
         <location filename="../../persepolis/scripts/mainwindow.py" line="1927"/>
         <source>&lt;b&gt;Audio file status: &lt;/b&gt;</source>
-        <translation>&lt;b&gt;Ses dosyası durumu: &lt;/b&gt;</translation>
+        <translation>&lt;b&gt;Состояние аудиофайла: &lt;/b&gt;</translation>
     </message>
     <message>
         <location filename="../../persepolis/scripts/mainwindow.py" line="1937"/>
         <source>&lt;b&gt;Muxing status: &lt;/b&gt;</source>
-        <translation>&lt;b&gt;Çoğullama durumu: &lt;/b&gt;</translation>
+        <translation>&lt;b&gt;Состояние мультиплексирования: &lt;/b&gt;</translation>
     </message>
 </context>
 <context>
@@ -1875,42 +1875,42 @@ altındakini indir</translation>
     <message>
         <location filename="../../persepolis/scripts/video_finder_addlink.py" line="173"/>
         <source>Video Finder</source>
-        <translation>Video Bulucu</translation>
+        <translation>Video Finder</translation>
     </message>
     <message>
         <location filename="../../persepolis/scripts/video_finder_addlink.py" line="248"/>
         <source>Fetch Media List</source>
-        <translation>Medya Listesini Getir</translation>
+        <translation>Выбор медиа-списка</translation>
     </message>
     <message>
         <location filename="../../persepolis/scripts/video_finder_addlink.py" line="249"/>
         <source>Select a format</source>
-        <translation>Bir dosya biçimi seç</translation>
+        <translation>Выберите формат</translation>
     </message>
     <message>
         <location filename="../../persepolis/scripts/video_finder_addlink.py" line="334"/>
         <source>Please enter a valid video link</source>
-        <translation>Lütfen geçerli bir video bağlantısı girin</translation>
+        <translation>Введите корректную ссылку для видео</translation>
     </message>
     <message>
         <location filename="../../persepolis/scripts/video_finder_addlink.py" line="355"/>
         <source>Fetching Media Info...</source>
-        <translation>Medya Bilgisi Alınıyor...</translation>
+        <translation>Получение информации о мультимедиа ...</translation>
     </message>
     <message>
         <location filename="../../persepolis/scripts/video_finder_addlink.py" line="251"/>
         <source>Video format:</source>
-        <translation>Video dosyası biçimi:</translation>
+        <translation>Формат видео:</translation>
     </message>
     <message>
         <location filename="../../persepolis/scripts/video_finder_addlink.py" line="252"/>
         <source>Audio format:</source>
-        <translation>Ses dosyası biçimi:</translation>
+        <translation>Формат аудио:</translation>
     </message>
     <message>
         <location filename="../../persepolis/scripts/video_finder_addlink.py" line="254"/>
         <source>Advanced options</source>
-        <translation>Gelişmiş seçenekler</translation>
+        <translation>Расширенные параметры</translation>
     </message>
 </context>
 </TS>
