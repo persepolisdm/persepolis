@@ -85,7 +85,7 @@ Type=Application
 Categories=Qt;Network;
 StartupNotify=true
 Exec=persepolis --tray
-Icon=persepolis
+Icon=com.github.persepolisdm.persepolis
 StartupWMClass=persepolis-download-Manager
 '''
 

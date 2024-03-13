@@ -53,7 +53,7 @@ class LogWindow_Ui(QWidget):
 
         # finding windows_size
         self.setMinimumSize(QtCore.QSize(620, 300))
-        self.setWindowIcon(QIcon.fromTheme('persepolis', QIcon(':/persepolis.svg')))
+        self.setWindowIcon(QIcon.fromTheme('persepolis', QIcon(':/com.github.persepolisdm.persepolis.svg')))
 
         verticalLayout = QVBoxLayout(self)
         horizontalLayout = QHBoxLayout()

@@ -2,7 +2,7 @@
 	<qresource prefix="/">
 
         <file>translators.txt</file>
-        <file>persepolis.svg</file>
+        <file>com.github.persepolisdm.persepolis.svg</file>
         <file>persepolis-tray.svg</file>
 		<file>Breeze/about.svg</file>		
 		<file>Breeze/add.svg</file>		

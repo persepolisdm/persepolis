@@ -52,7 +52,7 @@ class ProgressWindow_Ui(QWidget):
 # window
         self.setMinimumSize(QSize(595, 284))
 
-        self.setWindowIcon(QIcon.fromTheme('persepolis', QIcon(':/persepolis.svg')))
+        self.setWindowIcon(QIcon.fromTheme('persepolis', QIcon(':/com.github.persepolisdm.persepolis.svg')))
         self.setWindowTitle(QCoreApplication.translate("progress_ui_tr", "Persepolis Download Manager"))
 
         verticalLayout = QVBoxLayout(self)

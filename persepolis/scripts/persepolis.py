@@ -103,7 +103,7 @@ if lock_file_validation:
     if os_type in OS.UNIX_LIKE:
         try:
             from setproctitle import setproctitle
-            setproctitle("persepolis")
+            setproctitle("com.github.persepolisdm.persepolis")
         except:
             from persepolis.scripts import logger
             logger.sendToLog('setproctitle is not installed!', "ERROR")
@@ -376,16 +376,6 @@ def main():
         # set color_scheme and style
         # see palettes.py and setting.py
 
-        # this line is added fot fixing persepolis view in HighDpi displays
-        # more information at: https://doc.qt.io/qt-5/highdpi.html
-        try:
-            QApplication.setAttribute(Qt.AA_EnableHighDpiScaling)
-        except:
-            from persepolis.scripts import logger
-
-            # write error_message in log file.
-            logger.sendToLog('Qt.AA_EnableHighDpiScaling is not available!', "ERROR")
-
 
         # create QApplication
         persepolis_download_manager = PersepolisApplication(sys.argv)
@@ -404,12 +394,24 @@ def main():
             # write error_message in log file.
             logger.sendToLog('Qt.AA_UseHighDpiPixmaps is not available!', "ERROR")
 
+        # this line is added fot fixing persepolis view in HighDpi displays
+        # more information at: https://doc.qt.io/qt-5/highdpi.html
+        try:
+            persepolis_download_manager.setAttribute(Qt.AA_EnableHighDpiScaling)
+        except:
+            from persepolis.scripts import logger
+
+            # write error_message in log file.
+            logger.sendToLog('Qt.AA_EnableHighDpiScaling is not available!', "ERROR")
+
+
         # set organization name and domain and application name
-        QCoreApplication.setOrganizationName('persepolis_download_manager')
-        QCoreApplication.setApplicationName('persepolis')
+        persepolis_download_manager.setOrganizationName('com.github.persepolisdm.persepolis')
+        persepolis_download_manager.setApplicationName('com.github.persepolisdm.persepolis')
+        persepolis_download_manager.setDesktopFileName('com.github.persepolisdm.persepolis')
 
         # Persepolis setting
-        persepolis_download_manager.setting = QSettings()
+        persepolis_download_manager.setting = QSettings('persepolis_download_manager', 'persepolis')
 
         # get user's desired font and style , ... from setting
         custom_font = persepolis_download_manager.setting.value('settings/custom-font')

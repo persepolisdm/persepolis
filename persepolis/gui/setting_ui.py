@@ -39,7 +39,7 @@ class KeyCapturingWindow_Ui(QWidget):
         if self.translator.load(':/translations/locales/ui_' + locale, 'ts'):
             QCoreApplication.installTranslator(self.translator)
 
-        self.setWindowIcon(QIcon.fromTheme('persepolis', QIcon(':/persepolis.svg')))
+        self.setWindowIcon(QIcon.fromTheme('persepolis', QIcon(':/com.github.persepolisdm.persepolis.svg')))
         self.setWindowTitle(QCoreApplication.translate("setting_ui_tr", 'Preferences'))
 
         # set ui direction
@@ -96,7 +96,7 @@ class Setting_Ui(QWidget):
         if self.translator.load(':/translations/locales/ui_' + locale, 'ts'):
             QCoreApplication.installTranslator(self.translator)
 
-        self.setWindowIcon(QIcon.fromTheme('persepolis', QIcon(':/persepolis.svg')))
+        self.setWindowIcon(QIcon.fromTheme('persepolis', QIcon(':/com.github.persepolisdm.persepolis.svg')))
         self.setWindowTitle(QCoreApplication.translate("setting_ui_tr", 'Preferences'))
 
         # set ui direction

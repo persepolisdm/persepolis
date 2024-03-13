@@ -43,7 +43,7 @@ class checkupdate(QWidget):
         self.persepolis_setting = persepolis_setting
         icons = ':/' + \
             str(self.persepolis_setting.value('settings/icons')) + '/'
-        self.setWindowIcon(QIcon.fromTheme('persepolis', QIcon(':/persepolis.svg')))
+        self.setWindowIcon(QIcon.fromTheme('persepolis', QIcon(':/com.github.persepolisdm.persepolis.svg')))
 
 # add support for other languages
         locale = str(self.persepolis_setting.value('settings/locale'))

@@ -69,7 +69,7 @@ class AboutWindow_Ui(QWidget):
             str(self.persepolis_setting.value('settings/icons')) + '/'
 
         self.setMinimumSize(QSize(545, 375))
-        self.setWindowIcon(QIcon.fromTheme('persepolis', QIcon(':/persepolis.svg')))
+        self.setWindowIcon(QIcon.fromTheme('persepolis', QIcon(':/com.github.persepolisdm.persepolis.svg')))
 
         verticalLayout = QVBoxLayout(self)
 
@@ -85,7 +85,7 @@ class AboutWindow_Ui(QWidget):
         # persepolis icon
         if qtsvg_available:
             persepolis_icon_verticalLayout = QVBoxLayout()
-            self.persepolis_icon = QtSvgWidget.QSvgWidget(':/persepolis.svg')
+            self.persepolis_icon = QtSvgWidget.QSvgWidget(':/com.github.persepolisdm.persepolis.svg')
             self.persepolis_icon.setFixedSize(QSize(64, 64))
 
             persepolis_icon_verticalLayout.addWidget(self.persepolis_icon)

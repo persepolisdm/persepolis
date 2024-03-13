@@ -49,7 +49,7 @@ class TextQueue_Ui(QWidget):
         elif ui_direction in 'ltr':
             self.setLayoutDirection(Qt.LeftToRight)
 
-        self.setWindowIcon(QIcon.fromTheme('persepolis', QIcon(':/persepolis.svg')))
+        self.setWindowIcon(QIcon.fromTheme('persepolis', QIcon(':/com.github.persepolisdm.persepolis.svg')))
         window_verticalLayout = QVBoxLayout()
         self.setLayout(window_verticalLayout)
 

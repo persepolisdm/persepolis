@@ -82,7 +82,7 @@ def notifySend(message1, message2, time, sound, parent=None):
 
     else:
         if os_type in OS.UNIX_LIKE:
-            subprocess.Popen(['notify-send', '--icon', 'persepolis',
+            subprocess.Popen(['notify-send', '--icon', 'com.github.persepolisdm.persepolis',
                               '--app-name', 'Persepolis Download Manager',
                               '--expire-time', time,
                               message1, message2],
