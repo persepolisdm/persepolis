@@ -32,9 +32,6 @@ except:
 # platform
 os_type = platform.system()
 
-if os_type == OS.DARWIN:
-    from persepolis.scripts.mac_notification import notifyMac
-    
 # notifySend use notify-send program in user's system for sending notifications
 # and use playNotification function in play.py file for playing sound
 # notifications
@@ -94,8 +91,5 @@ def notifySend(message1, message2, time, sound, parent=None):
                              stdin=subprocess.PIPE,
                              shell=False)
 
-        elif os_type == OS.OSX:
-            parent.system_tray_icon.showMessage(message1, message2, QIcon.fromTheme('persepolis-tray', QIcon(':/persepolis-tray.svg')), 10000)
-
-        elif os_type == OS.WINDOWS:
+        else:
             parent.system_tray_icon.showMessage(message1, message2, QIcon.fromTheme('persepolis-tray', QIcon(':/persepolis-tray.svg')), 10000)
