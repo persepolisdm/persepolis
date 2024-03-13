@@ -28,5 +28,5 @@ icondir = join_paths(datadir, 'icons', 'hicolor', 'scalable', 'apps')
 subdir('persepolis')
 subdir('man')
 subdir('xdg')
-
+subdir('resources')
 
