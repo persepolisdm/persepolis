@@ -26,7 +26,7 @@ Type=Application
 X-KDE-SubstituteUID=false
 
 [Desktop Action Open]
-Exec=persepolis
+Exec=@persepolisbin@
 Name=Start Persepolis
 Name[bn]=পার্সেপোলিস শুরু করুন
 Name[fa]=اجرای برنامه
