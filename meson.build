@@ -1,6 +1,6 @@
 project('persepolis',
   version: '4.0.1', 
-  meson_version: '>=0.63.0')
+  meson_version: '>=0.61.2')
 
 python = import('python')
 python3 = python.find_installation('python3')
