@@ -18,7 +18,6 @@ Name=Persepolis Download Manager
 Name[bn]=পার্সেপোলিস
 Name[fa]=پرسپولیس
 Name[it]=Download Manager Persepolis
-Name[it]=Persepolis 다운로드 관리자
 StartupNotify=true
 StartupWMClass=com.github.persepolisdm.persepolis
 Terminal=false
