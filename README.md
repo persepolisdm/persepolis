@@ -44,7 +44,7 @@ It exemplifies the Achaemenid style of architecture. UNESCO declared the ruins o
 ### Credits
 
 **Alireza Amirsamimi:** Persepolis lead developer and manager  
-[GitHub](https://github.com/alireza-amirsamimi) | [E-mail](mailto:alireza.amirsamimi@ubuntu.ir)
+[GitHub](https://github.com/alireza-amirsamimi) | [E-mail](mailto:alireza.amirsamimi@gmail.com)
 
 **Mohammadreza Abdollahzadeh:** Arch Linux and BSD support  
 [GitHub](https://github.com/morealaz) | [E-mail](mailto:morealaz@gmail.com)
