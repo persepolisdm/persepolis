@@ -74,6 +74,9 @@ def startAria():
         if os.path.exists(aria2d):
             aria2c_command = aria2d
 
+            logger.sendToLog("Static version of aria2c will be launched", "INFO")
+ 
+
         # if aria2c's file is not valid, search user system for installed version of aria2c
         else:
             aria2c_command = 'aria2c'

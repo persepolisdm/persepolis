@@ -156,6 +156,7 @@ class CheckVersionsThread(QThread):
             if os.path.exists(ffmpeg_path_standaloe):
 
                 ffmpeg_path = ffmpeg_path_standaloe
+                logger.sendToLog("Static version of ffmpeg will be launched.", "INFO")
 
             else:
                 # if ffmpeg's file is not valid, search user system for installed version of ffmpeg
