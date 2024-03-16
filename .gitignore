@@ -10,3 +10,5 @@ man/persepolis.1.gz
 .idea/
 .mypy_cache
 persepolis_wenv/
+test/aria2c
+test/ffmpeg

@@ -147,7 +147,19 @@ class CheckVersionsThread(QThread):
         global ffmpeg_is_installed
 
         if os_type in OS.UNIX_LIKE:
-            ffmpeg_path = 'ffmpeg'
+
+            # find ffmpeg_path for standalone version of Persepolis
+            cwd = sys.argv[0]
+            current_directory = os.path.dirname(cwd)
+            ffmpeg_path_standaloe = os.path.join(current_directory, 'ffmpeg')
+
+            if os.path.exists(ffmpeg_path_standaloe):
+
+                ffmpeg_path = ffmpeg_path_standaloe
+
+            else:
+                # if ffmpeg's file is not valid, search user system for installed version of ffmpeg
+                ffmpeg_path = 'ffmpeg'
 
         elif os_type == OS.OSX:
 

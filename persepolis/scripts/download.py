@@ -66,7 +66,19 @@ def startAria():
     # in Linux and BSD
     if os_type in OS.UNIX_LIKE:
 
-        subprocess.Popen(['aria2c', '--no-conf',
+        # Find aria2c path for standalone version of Persepolis
+        cwd = sys.argv[0]
+        current_directory = os.path.dirname(cwd)
+        aria2d = os.path.join(current_directory, 'aria2c')
+
+        if os.path.exists(aria2d):
+            aria2c_command = aria2d
+
+        # if aria2c's file is not valid, search user system for installed version of aria2c
+        else:
+            aria2c_command = 'aria2c'
+
+        subprocess.Popen([aria2c_command, '--no-conf',
                           '--enable-rpc', '--rpc-listen-port=' + str(port),
                           '--rpc-max-request-size=2M',
                           '--rpc-listen-all', '--quiet=true'],
