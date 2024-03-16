@@ -71,7 +71,7 @@ try:
 except ModuleNotFoundError:
     # if youtube_dl module is not installed:
     logger.sendToLog(
-        "youtube_dl is not installed.", "ERROR")
+        "yt-dlp is not installed.", "ERROR")
     youtube_dl_is_installed = False
 
 # CheckVersionsThread thread can change this variable.
@@ -5634,7 +5634,7 @@ class MainWindow(MainWindow_Ui):
             error_message = ''
 
             if not(youtube_dl_is_installed):
-                error_message = QCoreApplication.translate("mainwindow_src_ui_tr", 'youtube-dl is not installed!')
+                error_message = QCoreApplication.translate("mainwindow_src_ui_tr", 'yt-dlp is not installed!')
                 error_message = error_message + '\n'
 
             if not(ffmpeg_is_installed):

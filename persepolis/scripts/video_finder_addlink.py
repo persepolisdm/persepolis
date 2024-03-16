@@ -34,7 +34,7 @@ import re
 import os
 
 # write youtube_dl version in log
-logger.sendToLog('youtube_dl version: '
+logger.sendToLog('yt-dlp version: '
                  + str(youtube_dl.version.__version__),
                  'INFO')
 
