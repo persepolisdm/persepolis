@@ -103,7 +103,7 @@ if lock_file_validation:
     if os_type in OS.UNIX_LIKE:
         try:
             from setproctitle import setproctitle
-            setproctitle("com.github.persepolisdm.persepolis")
+            setproctitle("persepolisdm")
         except:
             from persepolis.scripts import logger
             logger.sendToLog('setproctitle is not installed!', "ERROR")
@@ -407,8 +407,9 @@ def main():
 
         # set organization name and domain and application name
         persepolis_download_manager.setOrganizationName('com.github.persepolisdm.persepolis')
-        persepolis_download_manager.setApplicationName('com.github.persepolisdm.persepolis')
+        persepolis_download_manager.setApplicationName('PersepolisDM')
         persepolis_download_manager.setDesktopFileName('com.github.persepolisdm.persepolis')
+        persepolis_download_manager.setApplicationVersion('4.0.1')
 
         # Persepolis setting
         persepolis_download_manager.setting = QSettings('persepolis_download_manager', 'persepolis')
