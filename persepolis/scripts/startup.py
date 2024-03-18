@@ -72,22 +72,22 @@ def checkstartup():
 def addstartup():
     # check if it is linux
     if os_type in OS.UNIX_LIKE:
-        entry = \
-            '''[Desktop Entry]
-Name=Persepolis Download Manager
-Name[fa]=پرسپولیس
-Comment=Download Manager
-GenericName=Download Manager
-GenericName[fa]=نرم افزار مدیریت بارگیری
-Keywords=Internet;WWW;Web;
-Terminal=false
-Type=Application
-Categories=Qt;Network;
-StartupNotify=true
-Exec=persepolis --tray
-Icon=com.github.persepolisdm.persepolis
-StartupWMClass=persepolis-download-Manager
-'''
+        entry = '''
+        [Desktop Entry]
+        Name=Persepolis Download Manager
+        Name[fa]=پرسپولیس
+        Comment=Download Manager
+        GenericName=Download Manager
+        GenericName[fa]=نرم افزار مدیریت بارگیری
+        Keywords=Internet;WWW;Web;
+        Terminal=false
+        Type=Application
+        Categories=Qt;Network;
+        StartupNotify=true
+        Exec=persepolis --tray
+        Icon=com.github.persepolisdm.persepolis
+        StartupWMClass=persepolis-download-Manager
+        '''
 
         # check if the autostart directory exists & create entry
         if not os.path.exists(home_address + "/.config/autostart"):
@@ -97,32 +97,36 @@ StartupWMClass=persepolis-download-Manager
         startupfile.write(entry)
         os.chmod(home_address +
                  "/.config/autostart/persepolis.desktop", 0o644)
+
     # check if it is mac
     elif os_type == OS.OSX:
         # OS X
         cwd = sys.argv[0]
         cwd = os.path.dirname(cwd)
-        entry = '''<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-<plist version="1.0">
-<dict>
-	<key>Label</key>
-	<string>com.persepolisdm.persepolis</string>
-	<key>Program</key>
-	<string>''' + cwd + '''/Persepolis Download Manager</string>
-	<key>ProgramArguments</key>
-	<array>
-		<string>--tray</string>
-	</array>
-	<key>RunAtLoad</key>
-	<true/>
-</dict>
-</plist>\n'''
+        entry = '''
+            <?xml version="1.0" encoding="UTF-8"?>
+            <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+            <plist version="1.0">
+            <dict>
+                <key>Label</key>
+                <string>com.persepolisdm.persepolis</string>
+                <key>Program</key>
+                <string>''' + cwd + '''/Persepolis Download Manager</string>
+                <key>ProgramArguments</key>
+                <array>
+                    <string>--tray</string>
+                </array>
+                <key>RunAtLoad</key>
+                <true/>
+            </dict>
+            </plist>\n
+        '''
         startupfile = open(
             home_address + '/Library/LaunchAgents/com.persepolisdm.plist', 'w+')
         startupfile.write(entry)
         os.system('launchctl load ' + home_address +
                   "/Library/LaunchAgents/com.persepolisdm.plist")
+
     # check if it is Windows
     elif os_type == OS.WINDOWS:
 
@@ -139,13 +143,11 @@ StartupWMClass=persepolis-download-Manager
         # Close connection
         winreg.CloseKey(key)
 
+
 # remove startup file
-
-
 def removestartup():
     # check if it is linux
-    if os_type in OS.BSD_FAMILY:
-
+    if os_type in OS.UNIX_LIKE:
         # remove it
         os.remove(home_address + "/.config/autostart/persepolis.desktop")
 
