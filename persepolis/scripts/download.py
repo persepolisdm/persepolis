@@ -67,9 +67,8 @@ def startAria():
     if os_type in OS.UNIX_LIKE:
 
         # Find aria2c path for standalone version of Persepolis
-        cwd = sys.argv[0]
-        current_directory = os.path.dirname(cwd)
-        aria2d = os.path.join(current_directory, 'aria2c')
+        base_path = getattr(sys, '_MEIPASS', os.path.dirname(os.path.abspath(__file__)))
+        aria2d = os.path.join(base_path, 'aria2c')
 
         if os.path.exists(aria2d):
             aria2c_command = aria2d
