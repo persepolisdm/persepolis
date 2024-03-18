@@ -725,11 +725,12 @@ class VideoFinderAddLink(AddLinkWindow):
 
         # did user select separate audio and video?
         if len(link_list) == 2:
-            video_name = name + extension
-            audio_name = name + '.' + \
+            video_name = name + "_video" + extension
+            audio_name = name + "_audio" + '.' + \
                 str(self.no_video_list[self.audio_format_selection_comboBox.currentIndex() - 1]['ext'])
 
             name_list = [video_name, audio_name]
+
         else:
             name_list = [name + extension]
 
