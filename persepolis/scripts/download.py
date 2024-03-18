@@ -66,15 +66,22 @@ def startAria():
     # in Linux and BSD
     if os_type in OS.UNIX_LIKE:
 
-        # Find aria2c path for standalone version of Persepolis
+        # Find aria2c alongside path for standalone version of Persepolis
+        cwd = sys.argv[0]
+        current_directory = os.path.dirname(cwd)
+        aria2d_alongside = os.path.join(current_directory, 'aria2c')
+
+        # Find aria2c inside path for standalone version of Persepolis
         base_path = getattr(sys, '_MEIPASS', os.path.dirname(os.path.abspath(__file__)))
-        aria2d = os.path.join(base_path, 'aria2c')
+        aria2d_inside = os.path.join(base_path, 'aria2c')
 
-        if os.path.exists(aria2d):
-            aria2c_command = aria2d
+        if os.path.exists(aria2d_alongside):
+            aria2c_command = aria2d_alongside
+            logger.sendToLog("Static version of aria2c (alongside) will be launched", "INFO")
 
-            logger.sendToLog("Static version of aria2c will be launched", "INFO")
- 
+        elif os.path.exists(aria2d_inside):
+            aria2c_command = aria2d_inside
+            logger.sendToLog("Static version of aria2c (inside) will be launched", "INFO")
 
         # if aria2c's file is not valid, search user system for installed version of aria2c
         else:
