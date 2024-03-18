@@ -151,18 +151,18 @@ class CheckVersionsThread(QThread):
             # Find ffmpeg alongside path for standalone version of Persepolis
             cwd = sys.argv[0]
             current_directory = os.path.dirname(cwd)
-            ffmpeg_path_standaloe_alongsid = os.path.join(current_directory, 'ffmpeg')
+            ffmpeg_path_standalone_alongside = os.path.join(current_directory, 'ffmpeg')
 
             # Find ffmpeg inside path for standalone version of Persepolis
             base_path = getattr(sys, '_MEIPASS', os.path.dirname(os.path.abspath(__file__)))
-            ffmpeg_path_standaloe_inside = os.path.join(base_path, 'ffmpeg')
+            ffmpeg_path_standalone_inside = os.path.join(base_path, 'ffmpeg')
 
-            if os.path.exists(ffmpeg_path_standaloe_alongsid):
-                ffmpeg_path = ffmpeg_path_standaloe_alongsid
+            if os.path.exists(ffmpeg_path_standalone_alongside):
+                ffmpeg_path = ffmpeg_path_standalone_alongside
                 logger.sendToLog("Static version of ffmpeg (alongside) will be launched.", "INFO")
 
-            elif os.path.exists(ffmpeg_path_standaloe_inside):
-                ffmpeg_path = ffmpeg_path_standaloe_inside
+            elif os.path.exists(ffmpeg_path_standalone_inside):
+                ffmpeg_path = ffmpeg_path_standalone_inside
                 logger.sendToLog("Static version of ffmpeg (inside) will be launched.", "INFO")
 
             else:
