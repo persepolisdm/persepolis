@@ -30,7 +30,7 @@ except:
     from PyQt5.QtCore import pyqtSignal as Signal
     pyside6_is_installed = False
 
-from persepolis.scripts.useful_tools import muxer, freeSpace, determineConfigFolder, osAndDesktopEnvironment
+from persepolis.scripts.useful_tools import muxer, freeSpace, determineConfigFolder, osAndDesktopEnvironment, getExecPath
 from persepolis.scripts.video_finder_progress import VideoFinderProgressWindow
 from persepolis.gui.mainwindow_ui import MainWindow_Ui, QTableWidgetItem
 from persepolis.scripts.data_base import PluginsDB, PersepolisDB, TempDB
@@ -140,53 +140,71 @@ show_window_file = os.path.join(persepolis_tmp, 'show-window')
 
 
 class CheckVersionsThread(QThread):
-    def __init__(self):
+    def __init__(self, parent):
         QThread.__init__(self)
+        self.parent = parent
 
     def run(self):
         global ffmpeg_is_installed
 
-        if os_type in OS.UNIX_LIKE:
+        # find ffmpeg path
+        # If Persepolis run as a bundle.
+        if self.parent.is_bundle:
 
-            # Find ffmpeg alongside path for standalone version of Persepolis
+            # alongside of the bundle path 
             cwd = sys.argv[0]
             current_directory = os.path.dirname(cwd)
-            ffmpeg_path_standalone_alongside = os.path.join(current_directory, 'ffmpeg')
+            ffmpeg_alongside = os.path.join(current_directory, 'ffmpeg')
 
-            # Find ffmpeg inside path for standalone version of Persepolis
+            # inside of the bundle path.
             base_path = getattr(sys, '_MEIPASS', os.path.dirname(os.path.abspath(__file__)))
-            ffmpeg_path_standalone_inside = os.path.join(base_path, 'ffmpeg')
+            ffmpeg_inside = os.path.join(base_path, 'ffmpeg')
 
-            if os.path.exists(ffmpeg_path_standalone_alongside):
-                ffmpeg_path = ffmpeg_path_standalone_alongside
-                logger.sendToLog("Static version of ffmpeg (alongside) will be launched.", "INFO")
+            # Check outside of the bundle first.
+            if os.path.exists(ffmpeg_alongside):
 
-            elif os.path.exists(ffmpeg_path_standalone_inside):
-                ffmpeg_path = ffmpeg_path_standalone_inside
-                logger.sendToLog("Static version of ffmpeg (inside) will be launched.", "INFO")
+                ffmpeg_command = ffmpeg_alongside
+                logger.sendToLog("ffmpeg's file is detected alongside of bundle.", "INFO")
+
+            # Check inside of the bundle.
+            elif os.path.exists(ffmpeg_inside): 
+
+                ffmpeg_command = ffmpeg_inside
+                logger.sendToLog("ffmpeg's file is detected inside of bundle.", "INFO")
 
             else:
-                # if ffmpeg's file is not valid, search user system for installed version of ffmpeg
-                ffmpeg_path = 'ffmpeg'
+                logger.sendToLog("ffmpeg's file is NOT detected!!", "ERROR")
 
-        elif os_type == OS.OSX:
+        # I Persepolis run from test directory.
+        if self.parent.is_test:
 
+            # Check inside of test directory. 
             cwd = sys.argv[0]
             current_directory = os.path.dirname(cwd)
-            ffmpeg_path = os.path.join(current_directory, 'ffmpeg')
+            ffmpeg_alongside = os.path.join(current_directory, 'ffmpeg')
 
-        elif os_type == OS.WINDOWS:
+            if os.path.exists(ffmpeg_alongside):
 
-            cwd = sys.argv[0]
-            current_directory = os.path.dirname(cwd)
-            ffmpeg_path = os.path.join(current_directory, 'ffmpeg.exe')
+                ffmpeg_command = ffmpeg_alongside
+                logger.sendToLog("ffmpeg's file is detected inside of test directory.", "INFO")
 
+            else:
+                # use ffmpeg that installed on user's system
+                ffmpeg_command = 'ffmpeg'
+                logger.sendToLog("Persepolis will use ffmpeg that installed on user's system.", "INFO")
+
+
+        if not(self.parent.is_bundle) and not(self.parent.is_test):
+            aria2c_command = 'ffmpeg'
+            logger.sendToLog("Persepolis will use ffmpeg that installed on user's system.", "INFO")
+
+        # Try to test ffmpeg
         try:
             if os_type == OS.WINDOWS:
 
                 # NO_WINDOW option avoids opening additional CMD in MS Windows.
                 NO_WINDOW = 0x08000000
-                pipe = subprocess.Popen([ffmpeg_path, '-version'],
+                pipe = subprocess.Popen([ffmpeg_command, '-version'],
                                         stdout=subprocess.PIPE,
                                         stderr=subprocess.PIPE,
                                         stdin=subprocess.PIPE,
@@ -195,7 +213,7 @@ class CheckVersionsThread(QThread):
 
             else:
                 pipe = subprocess.Popen(
-                    [ffmpeg_path, '-version'],
+                    [ffmpeg_command, '-version'],
                     stdout=subprocess.PIPE,
                     stdin=subprocess.PIPE,
                     stderr=subprocess.PIPE,
@@ -248,14 +266,14 @@ class CheckVersionsThread(QThread):
             logger.sendToLog('Desktop env.: '
                              + str(desktop_env))
 
+
 # start aria2 when Persepolis starts
-
-
 class StartAria2Thread(QThread):
     ARIA2RESPONDSIGNAL = Signal(str)
 
-    def __init__(self):
+    def __init__(self, parent):
         QThread.__init__(self)
+        self.parent = parent
 
     def run(self):
         # aria_startup_answer is None when Persepolis starts! and after
@@ -277,7 +295,7 @@ class StartAria2Thread(QThread):
             # try 5 time if aria2 doesn't respond!
             for i in range(5):
 
-                answer = download.startAria()
+                answer = download.startAria(self.parent)
 
                 if answer == 'did not respond' and i != 4:
 
@@ -1323,8 +1341,36 @@ class MainWindow(MainWindow_Ui):
         # list of threads
         self.threadPool = []
 
+        # get execution path information
+        self.exec_dictionary = getExecPath()
+        self.exec_file_path = self.exec_dictionary['exec_file_path']
+        logger.sendToLog("Persepolis path is:\n\t" + 
+                         self.exec_file_path, "INFO")
+
+        if self.exec_dictionary['bundle']:
+
+            # Persepolis is run as a bundle.
+            self.is_bundle = True
+            logger.sendToLog("Persepolis is run as a bundle.", "INFO")
+
+        else:
+
+            self.is_bundle = False
+            
+        if self.exec_dictionary['test']:
+
+            # Persepolis is run from test directory.
+            self.is_test = True
+            logger.sendToLog("Persepolis is run from test directory.", "INFO")
+        else:
+            self.is_test = False
+
+        if not(self.is_bundle) and not(self.is_test):
+            self.is_test = False
+            logger.sendToLog("Persepolis is run as installed python madule.", "INFO")
+
         # start aria2
-        start_aria = StartAria2Thread()
+        start_aria = StartAria2Thread(self)
         self.threadPool.append(start_aria)
         self.threadPool[0].start()
         self.threadPool[0].ARIA2RESPONDSIGNAL.connect(self.startAriaMessage)
@@ -1448,7 +1494,7 @@ class MainWindow(MainWindow_Ui):
         self.threadPool[-1].KEEPSYSTEMAWAKESIGNAL.connect(self.keepAwake)
 
         # check if ffmpeg is installed
-        check_ffmpeg_is_installed = CheckVersionsThread()
+        check_ffmpeg_is_installed = CheckVersionsThread(self)
         self.threadPool.append(check_ffmpeg_is_installed)
         self.threadPool[-1].start()
 

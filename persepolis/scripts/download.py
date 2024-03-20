@@ -62,30 +62,64 @@ server = xmlrpc.client.ServerProxy(server_uri, allow_none=True)
 # start aria2 with RPC
 
 
-def startAria():
-    # in Linux and BSD
-    if os_type in OS.UNIX_LIKE:
+def startAria(parent):
 
-        # Find aria2c alongside path for standalone version of Persepolis
+    # find aria2c path
+    # If Persepolis run as a bundle.
+    if parent.is_bundle:
+
+        # alongside of the bundle path 
         cwd = sys.argv[0]
         current_directory = os.path.dirname(cwd)
         aria2d_alongside = os.path.join(current_directory, 'aria2c')
 
-        # Find aria2c inside path for standalone version of Persepolis
+        # inside of the bundle path.
         base_path = getattr(sys, '_MEIPASS', os.path.dirname(os.path.abspath(__file__)))
         aria2d_inside = os.path.join(base_path, 'aria2c')
 
+
+        # Check outside of the bundle first.
         if os.path.exists(aria2d_alongside):
+
             aria2c_command = aria2d_alongside
-            logger.sendToLog("Static version of aria2c (alongside) will be launched", "INFO")
+            logger.sendToLog("aria2c's file is detected alongside of bundle.", "INFO")
 
-        elif os.path.exists(aria2d_inside):
+        # Check inside of the bundle.
+        elif os.path.exists(aria2d_inside): 
+
             aria2c_command = aria2d_inside
-            logger.sendToLog("Static version of aria2c (inside) will be launched", "INFO")
+            logger.sendToLog("aria2c's file is detected inside of bundle.", "INFO")
 
-        # if aria2c's file is not valid, search user system for installed version of aria2c
         else:
+            logger.sendToLog("aria2c's file is NOT detected!!", "ERROR")
+
+    # I Persepolis run from test directory.
+    if parent.is_test:
+
+        # Check inside of test directory. 
+        cwd = sys.argv[0]
+        current_directory = os.path.dirname(cwd)
+        aria2d_alongside = os.path.join(current_directory, 'aria2c')
+
+        if os.path.exists(aria2d_alongside):
+
+            aria2c_command = aria2d_alongside
+            logger.sendToLog("aria2c's file is detected inside of test directory.", "INFO")
+
+        else:
+            # use aria2c that installed on user's system
             aria2c_command = 'aria2c'
+            logger.sendToLog("Persepolis will use aria2c that installed on user's system.", "INFO")
+
+
+    if not(parent.is_bundle) and not(parent.is_test):
+        aria2c_command = 'aria2c'
+        logger.sendToLog("Persepolis will use aria2c that installed on user's system.", "INFO")
+
+
+    # Run aria2c
+    # In Linux and BSD and Mac OSX
+    if os_type in OS.UNIX_LIKE or os_type == OS.OSX:
 
         subprocess.Popen([aria2c_command, '--no-conf',
                           '--enable-rpc', '--rpc-listen-port=' + str(port),
@@ -96,42 +130,12 @@ def startAria():
                          stdin=subprocess.PIPE,
                          shell=False)
 
-    # in macintosh
-    elif os_type == OS.OSX:
-        if aria2_path == "" or aria2_path == None or os.path.isfile(str(aria2_path)) == False:
-
-            cwd = sys.argv[0]
-            current_directory = os.path.dirname(cwd)
-            aria2d = os.path.join(current_directory, 'aria2c')
-
-        else:
-            aria2d = aria2_path
-
-        subprocess.Popen([aria2d, '--no-conf',
-                          '--enable-rpc', '--rpc-listen-port=' + str(port),
-                          '--rpc-max-request-size=2M',
-                          '--rpc-listen-all', '--quiet=true'],
-                         stderr=subprocess.PIPE,
-                         stdout=subprocess.PIPE,
-                         stdin=subprocess.PIPE,
-                         shell=False)
-
-    # in Windows
+    # In Microsoft Winsows
     elif os_type == OS.WINDOWS:
-        if aria2_path == "" or aria2_path == None or os.path.isfile(str(aria2_path)) == False:
-            cwd = sys.argv[0]
-            current_directory = os.path.dirname(cwd)
-
-            aria2d = os.path.join(current_directory, "aria2c.exe")  # aria2c.exe path
-        else:
-            aria2d = aria2_path
 
         # NO_WINDOW option avoids opening additional CMD window in MS Windows.
         NO_WINDOW = 0x08000000
 
-        if not os.path.exists(aria2d):
-            logger.sendToLog("Aria2 does not exist in the current path!", "ERROR")
-            return None
         # aria2 command in windows
         subprocess.Popen([aria2d, '--no-conf', '--enable-rpc', '--rpc-listen-port=' + str(port),
                           '--rpc-max-request-size=2M', '--rpc-listen-all', '--quiet=true'],

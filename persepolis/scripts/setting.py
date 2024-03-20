@@ -981,15 +981,15 @@ class PreferencesWindow(Setting_Ui):
         if self.startup_checkbox.isChecked():
             self.persepolis_setting.setValue('startup', 'yes')
 
-            if not(startup.checkstartup()):  # checking existence of Persepolis in  system's startup
+            if not(startup.checkStartUp()):  # checking existence of Persepolis in  system's startup
 
-                startup.addstartup()  # adding Persepolis to system's startup
+                startup.addStartUp(self.parent)  # adding Persepolis to system's startup
         else:
             self.persepolis_setting.setValue('startup', 'no')
 
-            if startup.checkstartup():  # checking existence of Persepolis in  system's startup
+            if startup.checkStartUp():  # checking existence of Persepolis in  system's startup
 
-                startup.removestartup()  # removing Persepolis from system's startup
+                startup.removeStartUp()  # removing Persepolis from system's startup
 
         # keep_awake_checkBox
         if self.keep_awake_checkBox.isChecked():

@@ -29,7 +29,7 @@ if os_type == OS.WINDOWS:
 
 
 # check startup
-def checkstartup():
+def checkStartUp():
     # check if it is linux
     if os_type in OS.UNIX_LIKE:
         # check if the startup exists
@@ -69,7 +69,7 @@ def checkstartup():
 # add startup file
 
 
-def addstartup():
+def addStartUp(parent):
     # check if it is linux
     if os_type in OS.UNIX_LIKE:
         entry = '''
@@ -84,10 +84,10 @@ def addstartup():
         Type=Application
         Categories=Qt;Network;
         StartupNotify=true
-        Exec=persepolis --tray
+        Exec={} --tray
         Icon=com.github.persepolisdm.persepolis
         StartupWMClass=persepolis-download-Manager
-        '''
+        '''.format(parent.exec_dictionary['exec_file_path'])
 
         # check if the autostart directory exists & create entry
         if not os.path.exists(home_address + "/.config/autostart"):
@@ -111,7 +111,7 @@ def addstartup():
                 <key>Label</key>
                 <string>com.persepolisdm.persepolis</string>
                 <key>Program</key>
-                <string>''' + cwd + '''/Persepolis Download Manager</string>
+                <string>{}</string>
                 <key>ProgramArguments</key>
                 <array>
                     <string>--tray</string>
@@ -120,7 +120,8 @@ def addstartup():
                 <true/>
             </dict>
             </plist>\n
-        '''
+        '''.format(parent.exec_dictionary['exec_file_path'])
+
         startupfile = open(
             home_address + '/Library/LaunchAgents/com.persepolisdm.plist', 'w+')
         startupfile.write(entry)
@@ -134,8 +135,8 @@ def addstartup():
         key = winreg.OpenKey(winreg.HKEY_CURRENT_USER,
                              "Software\\Microsoft\\Windows\\CurrentVersion\\Run", 0, winreg.KEY_ALL_ACCESS)
         # find current persepolis exe path
-        cwd = os.getcwd()
-        persepolisexetray = '"' + cwd + '\Persepolis Download Manager.exe' + '"' + ' --tray'
+        persepolisexetray = '"{}" --tray'.format(parent.exec_dictionary['exec_file_path'])
+
         # add persepolis to startup
         winreg.SetValueEx(key, 'persepolis', 0,
                           winreg.REG_SZ, persepolisexetray)
@@ -145,7 +146,7 @@ def addstartup():
 
 
 # remove startup file
-def removestartup():
+def removeStartUp():
     # check if it is linux
     if os_type in OS.UNIX_LIKE:
         # remove it
@@ -154,7 +155,7 @@ def removestartup():
     # check if it is mac OS
     elif os_type == OS.OSX:
         # OS X
-        if checkstartup():
+        if checkStartUp():
             os.system('launchctl unload ' + home_address +
                       "/Library/LaunchAgents/com.persepolisdm.plist")
             os.remove(home_address +
@@ -162,7 +163,7 @@ def removestartup():
 
     # check if it is Windows
     elif os_type == OS.WINDOWS:
-        if checkstartup():
+        if checkStartUp():
             # Connect to the startup path in Registry
             key = winreg.OpenKey(
                 winreg.HKEY_CURRENT_USER, "Software\\Microsoft\\Windows\\CurrentVersion\\Run", 0, winreg.KEY_ALL_ACCESS)

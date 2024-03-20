@@ -13,7 +13,7 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-from persepolis.scripts.useful_tools import determineConfigFolder
+from persepolis.scripts.useful_tools import determineConfigFolder, getExecPath
 from persepolis.scripts import osCommands
 from persepolis.constants import OS, BROWSER
 import subprocess
@@ -28,15 +28,17 @@ home_address = str(os.path.expanduser("~"))
 # download manager config folder .
 config_folder = determineConfigFolder()
 
-# browser can be firefox or chromium or chrome
-
 
 def browserIntegration(browser):
+    # get execution information.
+    exec_dictionary = getExecPath()
+    exec_path = exec_dictionary['exec_file_path'] 
+
+
     # for GNU/Linux
     if os_type == OS.LINUX:
-        # find Persepolis execution path
-        # persepolis execution path
-        exec_path = os.path.join(config_folder, 'persepolis_run_shell')
+        # intermediate shell script path
+        intermediate_script_path = os.path.join(config_folder, 'persepolis_run_shell')
 
         # Native Messaging Hosts folder path for every browser
         if browser == BROWSER.CHROMIUM:
@@ -65,8 +67,8 @@ def browserIntegration(browser):
     # for FreeBSD and OpenBSD
     elif os_type in OS.BSD_FAMILY:
         # find Persepolis execution path
-        # persepolis execution path
-        exec_path = os.path.join(config_folder, 'persepolis_run_shell')
+        # persepolis intermediate script path
+        intermediate_script_path = os.path.join(config_folder, 'persepolis_run_shell')
 
         # Native Messaging Hosts folder path for every browser
         if browser == BROWSER.CHROMIUM:
@@ -96,7 +98,7 @@ def browserIntegration(browser):
     elif os_type == OS.OSX:
         # find Persepolis execution path
         # persepolis execution path
-        exec_path = os.path.join(config_folder, 'persepolis_run_shell')
+        intermediate_script_path = os.path.join(config_folder, 'persepolis_run_shell')
 
         # Native Messaging Hosts folder path for every browser
         if browser == BROWSER.CHROMIUM:
@@ -125,13 +127,6 @@ def browserIntegration(browser):
 
     # for MicroSoft Windows os (windows 7 , ...)
     elif os_type == OS.WINDOWS:
-        # finding Persepolis execution path
-        cwd = sys.argv[0]
-
-        current_directory = os.path.dirname(cwd)
-
-        exec_path = os.path.join(
-            current_directory, 'Persepolis Download Manager.exe')
 
         # the execution path in json file for Windows must in form of
         # c:\\Users\\...\\Persepolis Download Manager.exe , so we need 2
@@ -149,7 +144,7 @@ def browserIntegration(browser):
     webextension_json_connector = {
         "name": "com.persepolis.pdmchromewrapper",
         "type": "stdio",
-        "path": str(exec_path),
+        "path": str(intermediate_script_path),
         "description": "Integrate Persepolis with %s using WebExtensions" % (browser)
     }
 
@@ -230,7 +225,7 @@ def browserIntegration(browser):
 
                 json_done = False
 
-    # create persepolis_run_shell file for gnu/linux and BSD and Mac
+    # create persepolis_run_shell(intermediate script) file for gnu/linux and BSD and Mac
     # firefox and chromium and ... call persepolis with Native Messaging system.
     # json file calls persepolis_run_shell file.
     if os_type in (OS.UNIX_LIKE + [OS.OSX]):
@@ -243,26 +238,14 @@ def browserIntegration(browser):
                 shebang = '#!' + shell
                 break
 
-        if os_type == OS.OSX:
-            # finding Persepolis execution path
-            cwd = sys.argv[0]
-
-            current_directory = os.path.dirname(cwd)
-
-            persepolis_path = os.path.join(
-                current_directory, 'Persepolis Download Manager')
-        else:
-            persepolis_path = 'persepolis'
-
-        persepolis_run_shell_contents = shebang + '\n' + '"' + persepolis_path + '" "$@"'
-
-        f = open(exec_path, 'w')
+        persepolis_run_shell_contents = shebang + '\n' + exec_path + "\t$@"
+        f = open(intermediate_script_path, 'w')
         f.writelines(persepolis_run_shell_contents)
         f.close()
 
         # make persepolis_run_shell executable
 
-        pipe_native = subprocess.Popen(['chmod', '+x', exec_path],
+        pipe_native = subprocess.Popen(['chmod', '+x', intermediate_script_path],
                                        stderr=subprocess.PIPE,
                                        stdout=subprocess.PIPE,
                                        stdin=subprocess.PIPE,

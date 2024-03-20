@@ -334,3 +334,42 @@ def muxer(parent, video_finder_dictionary):
                 result_dictionary['ffmpeg_error_message'] = ffmpeg_error_message.decode('utf-8', 'ignore')
 
     return result_dictionary
+
+# This function returns persepolis's execution path.
+def getExecPath():
+
+    exec_dictionary = {'bundle': None,
+                       'test': False,
+                       'exec_file_path': None}
+
+    # check if persepolis is run as a bundle.
+    if getattr(sys, 'frozen', False) and hasattr(sys, '_MEIPASS'):
+        exec_dictionary['bundle'] = True
+
+        # get executable path
+        bundle_path = os.path.dirname(sys.executable)
+        
+        # get bundle name
+        bundle_name = os.path.basename(sys.executable)
+
+        # write them in dictionary
+        exec_dictionary['exec_file_path'] = os.path.join(bundle_path, bundle_name)
+
+    else:
+        # persepolis is run from python script
+        exec_dictionary['bundle'] = False
+
+        # get execution path
+        script_path = os.path.dirname(os.path.abspath(sys.modules['__main__'].__file__))
+        script_name = os.path.basename(sys.argv[0]) 
+
+        if script_name == 'test.py':
+
+            # persepolis is run from test directory
+            exec_dictionary['test'] = True
+
+        # write it in dictionary
+        exec_dictionary['exec_file_path'] = os.path.join(script_path, script_name)
+
+    # return ressults
+    return exec_dictionary

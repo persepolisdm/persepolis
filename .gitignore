@@ -13,3 +13,4 @@ persepolis_wenv/
 test/aria2c
 test/ffmpeg
 dist/
+*.spec
