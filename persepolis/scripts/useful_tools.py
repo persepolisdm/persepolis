@@ -352,9 +352,10 @@ def getExecPath():
         # get bundle name
         bundle_name = os.path.basename(sys.executable)
 
-        # write them in dictionary
-        exec_dictionary['exec_file_path'] = os.path.join(bundle_path, bundle_name)
 
+        exec_file_path = os.path.join(bundle_path, bundle_name)
+
+           
     else:
         # persepolis is run from python script
         exec_dictionary['bundle'] = False
@@ -368,8 +369,19 @@ def getExecPath():
             # persepolis is run from test directory
             exec_dictionary['test'] = True
 
-        # write it in dictionary
-        exec_dictionary['exec_file_path'] = os.path.join(script_path, script_name)
+        exec_file_path = os.path.join(script_path, script_name)
+
+
+    # replace space with \+space for UNIX_LIKE and OSX
+    if os_type in OS.UNIX_LIKE or os_type == OS.OSX:
+
+        exec_file_path = exec_file_path.replace(" ", "\ ")
+
+    elif os_type == OS.WINDOWS:
+        exec_file_path = exec_file_path.replace('\\', r'\\')
+
+    # write it in dictionary
+    exec_dictionary['exec_file_path'] = exec_file_path 
 
     # return ressults
     return exec_dictionary

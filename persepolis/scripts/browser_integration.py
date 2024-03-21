@@ -141,12 +141,21 @@ def browserIntegration(browser):
                 home_address, 'AppData\Local\persepolis_download_manager', 'firefox')
 
     # WebExtension native hosts file prototype
-    webextension_json_connector = {
-        "name": "com.persepolis.pdmchromewrapper",
-        "type": "stdio",
-        "path": str(intermediate_script_path),
-        "description": "Integrate Persepolis with %s using WebExtensions" % (browser)
-    }
+    if os_type in OS.UNIX_LIKE or os_type == OS.OSX:
+        webextension_json_connector = {
+            "name": "com.persepolis.pdmchromewrapper",
+            "type": "stdio",
+            "path": str(intermediate_script_path),
+            "description": "Integrate Persepolis with %s using WebExtensions" % (browser)
+        }
+    elif os_type == OS.WINDOWS:
+        webextension_json_connector = {
+            "name": "com.persepolis.pdmchromewrapper",
+            "type": "stdio",
+            "path": str(exec_path),
+            "description": "Integrate Persepolis with %s using WebExtensions" % (browser)
+        }
+ 
 
     # Add chrom* keys
     if browser in BROWSER.CHROME_FAMILY:
@@ -228,7 +237,7 @@ def browserIntegration(browser):
     # create persepolis_run_shell(intermediate script) file for gnu/linux and BSD and Mac
     # firefox and chromium and ... call persepolis with Native Messaging system.
     # json file calls persepolis_run_shell file.
-    if os_type in (OS.UNIX_LIKE + [OS.OSX]):
+    if os_type in OS.UNIX_LIKE or os_type == OS.OSX:
         # find available shell
         shell_list = ['/bin/bash', '/usr/local/bin/bash', '/bin/sh', '/usr/local/bin/sh', '/bin/ksh', '/bin/tcsh']
 

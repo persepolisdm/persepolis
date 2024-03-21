@@ -160,20 +160,25 @@ class CheckVersionsThread(QThread):
             base_path = getattr(sys, '_MEIPASS', os.path.dirname(os.path.abspath(__file__)))
             ffmpeg_inside = os.path.join(base_path, 'ffmpeg')
 
-            # Check outside of the bundle first.
-            if os.path.exists(ffmpeg_alongside):
+            if os_type in OS.UNIX_LIKE:
+                # Check outside of the bundle first.
+                if os.path.exists(ffmpeg_alongside):
 
-                ffmpeg_command = ffmpeg_alongside
-                logger.sendToLog("ffmpeg's file is detected alongside of bundle.", "INFO")
+                    ffmpeg_command = ffmpeg_alongside
+                    logger.sendToLog("ffmpeg's file is detected alongside of bundle.", "INFO")
 
-            # Check inside of the bundle.
-            elif os.path.exists(ffmpeg_inside): 
+                # Check inside of the bundle.
+                elif os.path.exists(ffmpeg_inside): 
 
-                ffmpeg_command = ffmpeg_inside
-                logger.sendToLog("ffmpeg's file is detected inside of bundle.", "INFO")
+                    ffmpeg_command = ffmpeg_inside
+                    logger.sendToLog("ffmpeg's file is detected inside of bundle.", "INFO")
 
+                else:
+                    logger.sendToLog("ffmpeg's file is NOT detected!!", "ERROR")
             else:
-                logger.sendToLog("ffmpeg's file is NOT detected!!", "ERROR")
+
+                # for Mac OSX and MicroSoft Windows
+                ffmpeg_command = ffmpeg_alongside
 
         # I Persepolis run from test directory.
         if self.parent.is_test:

@@ -78,20 +78,25 @@ def startAria(parent):
         aria2d_inside = os.path.join(base_path, 'aria2c')
 
 
-        # Check outside of the bundle first.
-        if os.path.exists(aria2d_alongside):
+        if os_type in OS.UNIX_LIKE:
+            # Check outside of the bundle first.
+            if os.path.exists(aria2d_alongside):
 
-            aria2c_command = aria2d_alongside
-            logger.sendToLog("aria2c's file is detected alongside of bundle.", "INFO")
+                aria2c_command = aria2d_alongside
+                logger.sendToLog("aria2c's file is detected alongside of bundle.", "INFO")
 
-        # Check inside of the bundle.
-        elif os.path.exists(aria2d_inside): 
+            # Check inside of the bundle.
+            elif os.path.exists(aria2d_inside): 
 
-            aria2c_command = aria2d_inside
-            logger.sendToLog("aria2c's file is detected inside of bundle.", "INFO")
+                aria2c_command = aria2d_inside
+                logger.sendToLog("aria2c's file is detected inside of bundle.", "INFO")
 
+            else:
+                logger.sendToLog("aria2c's file is NOT detected!!", "ERROR")
         else:
-            logger.sendToLog("aria2c's file is NOT detected!!", "ERROR")
+
+            # for Mac OSX and Microsoft WINDOWS
+            aria2c_command = aria2d_alongside
 
     # I Persepolis run from test directory.
     if parent.is_test:
@@ -137,7 +142,7 @@ def startAria(parent):
         NO_WINDOW = 0x08000000
 
         # aria2 command in windows
-        subprocess.Popen([aria2d, '--no-conf', '--enable-rpc', '--rpc-listen-port=' + str(port),
+        subprocess.Popen([aria2c_command, '--no-conf', '--enable-rpc', '--rpc-listen-port=' + str(port),
                           '--rpc-max-request-size=2M', '--rpc-listen-all', '--quiet=true'],
                          stderr=subprocess.PIPE,
                          stdout=subprocess.PIPE,
