@@ -32,7 +32,7 @@ config_folder = determineConfigFolder()
 def browserIntegration(browser):
     # get execution information.
     exec_dictionary = getExecPath()
-    exec_path = exec_dictionary['exec_file_path'] 
+    exec_path = exec_dictionary['modified_exec_file_path'] 
 
 
     # for GNU/Linux

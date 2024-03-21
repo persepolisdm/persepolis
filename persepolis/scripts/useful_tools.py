@@ -340,7 +340,8 @@ def getExecPath():
 
     exec_dictionary = {'bundle': None,
                        'test': False,
-                       'exec_file_path': None}
+                       'exec_file_path': None,
+                       'modified_exec_file_path': None}
 
     # check if persepolis is run as a bundle.
     if getattr(sys, 'frozen', False) and hasattr(sys, '_MEIPASS'):
@@ -375,13 +376,14 @@ def getExecPath():
     # replace space with \+space for UNIX_LIKE and OSX
     if os_type in OS.UNIX_LIKE or os_type == OS.OSX:
 
-        exec_file_path = exec_file_path.replace(" ", "\ ")
+        modified_exec_file_path = exec_file_path.replace(" ", "\ ")
 
     elif os_type == OS.WINDOWS:
-        exec_file_path = exec_file_path.replace('\\', r'\\')
+        modified_exec_file_path = exec_file_path.replace('\\', r'\\')
 
     # write it in dictionary
     exec_dictionary['exec_file_path'] = exec_file_path 
+    exec_dictionary['modified_exec_file_path'] = modified_exec_file_path
 
     # return ressults
     return exec_dictionary

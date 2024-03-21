@@ -87,7 +87,7 @@ def addStartUp(parent):
         Exec={} --tray
         Icon=com.github.persepolisdm.persepolis
         StartupWMClass=persepolis-download-Manager
-        '''.format(parent.exec_dictionary['exec_file_path'])
+        '''.format(parent.exec_dictionary['modified_exec_file_path'])
 
         # check if the autostart directory exists & create entry
         if not os.path.exists(home_address + "/.config/autostart"):
