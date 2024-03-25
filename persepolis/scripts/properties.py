@@ -29,7 +29,7 @@ import os
 
 
 class PropertiesWindow(AddLinkWindow_Ui):
-    def __init__(self, parent, callback, gid, persepolis_setting, video_finder_dictionary=None):
+    def __init__(self, parent, callback, gid, persepolis_setting, gost_is_installed, video_finder_dictionary=None):
         super().__init__(persepolis_setting)
 
         self.parent = parent
@@ -63,23 +63,22 @@ class PropertiesWindow(AddLinkWindow_Ui):
 
         self.callback = callback
 
-# detect_proxy_pushButton
+        # detect_proxy_pushButton
         self.detect_proxy_pushButton.clicked.connect(
             self.detectProxy)
 
-# connect folder_pushButton
+        # connect folder_pushButton
         self.folder_pushButton.clicked.connect(self.changeFolder)
         self.download_folder_lineEdit.setEnabled(False)
 
         self.ok_pushButton.setEnabled(False)
         self.link_lineEdit.textChanged.connect(self.linkLineChanged)
 
-# connect OK and cancel button
-
+        # connect OK and cancel button
         self.cancel_pushButton.clicked.connect(self.close)
         self.ok_pushButton.clicked.connect(self.okButtonPressed)
 
-#frames and checkBoxes
+        #frames and checkBoxes
         self.proxy_frame.setEnabled(False)
         self.proxy_checkBox.toggled.connect(self.proxyFrame)
 
@@ -114,8 +113,8 @@ class PropertiesWindow(AddLinkWindow_Ui):
                 self.add_link_dictionary_2_backup[key] = self.add_link_dictionary_2[key]
 
 
-# initialization
-# disable folder_frame when download is complete
+        # initialization
+        # disable folder_frame when download is complete
         if self.video_finder_dictionary:
             if self.video_finder_dictionary['video_completed'] == 'yes' or self.video_finder_dictionary['audio_completed'] == 'yes':
                 self.folder_frame.setEnabled(False)
@@ -124,63 +123,81 @@ class PropertiesWindow(AddLinkWindow_Ui):
                 self.folder_frame.setEnabled(False)
 
 
-# link
+        # link
         self.link_lineEdit.setText(self.add_link_dictionary_1['link'])
 
         if self.video_finder_dictionary:
             self.link_lineEdit_2.setText(self.add_link_dictionary_2['link'])
 
-# ip_lineEdit initialization
+        # ip_lineEdit initialization
         if self.add_link_dictionary_1['ip']:
             self.proxy_checkBox.setChecked(True)
             self.ip_lineEdit.setText(self.add_link_dictionary_1['ip'])
-# port_spinBox initialization
+            # port_spinBox initialization
             try:
                 self.port_spinBox.setValue(
                     int(self.add_link_dictionary_1['port']))
             except:
                 pass
-# proxy user lineEdit initialization
+            # proxy user lineEdit initialization
             try:
                 self.proxy_user_lineEdit.setText(
                     self.add_link_dictionary_1['proxy_user'])
             except:
                 pass
-# proxy pass lineEdit initialization
+            # proxy pass lineEdit initialization
             try:
                 self.proxy_pass_lineEdit.setText(
                     self.add_link_dictionary_1['proxy_passwd'])
             except:
                 pass
 
+        # proxy type
+        proxy_type = self.add_link_dictionary_1['proxy_type'] 
 
-# download UserName initialization
+        # default is http
+        if not(gost_is_installed):
+            self.socks5_radioButton.setEnabled(False)
+        else:
+            self.socks5_radioButton.setEnabled(True)
+
+        if proxy_type == 'socks5':
+
+            self.socks5_radioButton.setChecked(True)
+
+        elif proxy_type == 'https':
+            self.https_radioButton.setChecked(True)
+
+        else:
+            self.http_radioButton.setChecked(True)
+ 
+        # download UserName initialization
         if self.add_link_dictionary_1['download_user']:
             self.download_checkBox.setChecked(True)
             self.download_user_lineEdit.setText(
                 self.add_link_dictionary_1['download_user'])
-# download PassWord initialization
+            # download PassWord initialization
             try:
                 self.download_pass_lineEdit.setText(
                     self.add_link_dictionary_1['download_passwd'])
             except:
                 pass
 
-# folder_path
+        # folder_path
         try:
             self.download_folder_lineEdit.setText(
                 self.add_link_dictionary_1['download_path'])
         except:
             pass
 
-# connections
+        # connections
         try:
             self.connections_spinBox.setValue(
                 int(self.add_link_dictionary_1['connections']))
         except:
             pass
 
-# get categories name and add them to add_queue_comboBox
+        # get categories name and add them to add_queue_comboBox
         categories_list = self.parent.persepolis_db.categoriesList()
         for queue in categories_list:
             if queue != 'All Downloads':
@@ -194,11 +211,11 @@ class PropertiesWindow(AddLinkWindow_Ui):
         self.add_queue_comboBox.setCurrentIndex(current_category_index)
 
 
-# add_queue_comboBox event
+        # add_queue_comboBox event
         self.add_queue_comboBox.currentIndexChanged.connect(self.queueChanged)
 
 
-# limit speed
+        # limit speed
         limit = str(self.add_link_dictionary_1['limit_value'])
         if limit != '0':
             self.limit_checkBox.setChecked(True)
@@ -210,7 +227,7 @@ class PropertiesWindow(AddLinkWindow_Ui):
             else:
                 self.limit_comboBox.setCurrentIndex(1)
 
-# start_time
+        # start_time
         if self.add_link_dictionary_1['start_time']:
             # get hour and minute
             hour, minute = self.add_link_dictionary_1['start_time'].split(':')
@@ -220,7 +237,7 @@ class PropertiesWindow(AddLinkWindow_Ui):
             self.start_time_qDataTimeEdit.setTime(q_time)
 
             self.start_checkBox.setChecked(True)
-# end_time
+        # end_time
         if self.add_link_dictionary_1['end_time']:
             # get hour and minute
             hour, minute = self.add_link_dictionary_1['end_time'].split(':')
@@ -245,7 +262,7 @@ class PropertiesWindow(AddLinkWindow_Ui):
             self.load_cookies_lineEdit.setText((self.add_link_dictionary_1['load_cookies']))
 
 
-# set window size and position
+        # set window size and position
         size = self.persepolis_setting.value(
             'PropertiesWindow/size', QSize(520, 425))
         position = self.persepolis_setting.value(
@@ -253,7 +270,7 @@ class PropertiesWindow(AddLinkWindow_Ui):
         self.resize(size)
         self.move(position)
 
-# detect system proxy setting, and set ip_lineEdit and port_spinBox
+    # detect system proxy setting, and set ip_lineEdit and port_spinBox
     def detectProxy(self, button):
         # get system proxy information
         system_proxy_dict = getProxy()
@@ -279,7 +296,7 @@ class PropertiesWindow(AddLinkWindow_Ui):
             self.detect_proxy_label.setText('No proxy detected!')
 
 
-# activate frames if checkBoxes checked
+    # activate frames if checkBoxes checked
     def proxyFrame(self, checkBox):
 
         if self.proxy_checkBox.isChecked():
@@ -352,32 +369,50 @@ class PropertiesWindow(AddLinkWindow_Ui):
             self.persepolis_setting.setValue(
                 'settings/download_path', self.download_folder_lineEdit.text())
 
+        # http, https or socks5 proxy
+        if self.http_radioButton.isChecked() == True:
+
+            proxy_type = 'http'
+        elif self.https_radioButton.isChecked() == True:
+
+            proxy_type = 'https'
+        else:
+
+            proxy_type = 'socks5'
+
         if not(self.proxy_checkBox.isChecked()):
             ip = None
             port = None
             proxy_user = None
             proxy_passwd = None
+            proxy_type = None
         else:
             ip = self.ip_lineEdit.text()
             if not(ip):
                 ip = None
+
             port = str(self.port_spinBox.value())
             if not(port):
                 port = None
+
             proxy_user = self.proxy_user_lineEdit.text()
             if not(proxy_user):
                 proxy_user = None
+
             proxy_passwd = self.proxy_pass_lineEdit.text()
             if not(proxy_passwd):
                 proxy_passwd = None
 
         if not(self.download_checkBox.isChecked()):
+
             download_user = None
             download_passwd = None
         else:
+
             download_user = self.download_user_lineEdit.text()
             if not(download_user):
                 download_user = None
+
             download_passwd = self.download_pass_lineEdit.text()
             if not(download_passwd):
                 download_passwd = None
@@ -434,6 +469,7 @@ class PropertiesWindow(AddLinkWindow_Ui):
         self.add_link_dictionary_1['port'] = port
         self.add_link_dictionary_1['proxy_user'] = proxy_user
         self.add_link_dictionary_1['proxy_passwd'] = proxy_passwd
+        self.add_link_dictionary_1['proxy_type'] = proxy_type
         self.add_link_dictionary_1['download_user'] = download_user
         self.add_link_dictionary_1['download_passwd'] = download_passwd
         self.add_link_dictionary_1['download_path'] = download_path
@@ -452,6 +488,7 @@ class PropertiesWindow(AddLinkWindow_Ui):
             self.add_link_dictionary_2['port'] = port
             self.add_link_dictionary_2['proxy_user'] = proxy_user
             self.add_link_dictionary_2['proxy_passwd'] = proxy_passwd
+            self.add_link_dictionary_2['proxy_type'] = proxy_type
             self.add_link_dictionary_2['download_user'] = download_user
             self.add_link_dictionary_2['download_passwd'] = download_passwd
             self.add_link_dictionary_2['download_path'] = download_path

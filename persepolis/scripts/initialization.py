@@ -235,6 +235,20 @@ if persepolis_version < 4.0:
 
     persepolis_setting.endGroup()
 
-    persepolis_setting.setValue('version/version', 4.0)
+
+
+if persepolis_version < 4.1:
+    # create an object for PersepolisDB
+    persepolis_db = PersepolisDB()
+
+    # correct data base
+    persepolis_db.correctDataBaseForVersion410()
+
+    # close connections
+    persepolis_db.closeConnections()
+
+    persepolis_setting.setValue('version/version', 4.1)
+
+
 
 persepolis_setting.sync()

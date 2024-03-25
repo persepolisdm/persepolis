@@ -15,12 +15,12 @@
 """
 
 try:
-    from PySide6.QtWidgets import QTabWidget, QDoubleSpinBox, QPushButton, QComboBox, QSpinBox, QVBoxLayout, QHBoxLayout, QLabel, QApplication, QWidget, QFileDialog, QMessageBox, QSizePolicy, QGridLayout, QCheckBox, QFrame, QLineEdit, QPushButton
+    from PySide6.QtWidgets import QTabWidget, QDoubleSpinBox, QPushButton, QComboBox, QSpinBox, QVBoxLayout, QHBoxLayout, QLabel, QApplication, QWidget, QFileDialog, QMessageBox, QSizePolicy, QGridLayout, QCheckBox, QFrame, QLineEdit, QPushButton, QRadioButton
     from PySide6.QtCore import Qt, QTranslator, QCoreApplication, QLocale
     from PySide6 import QtCore, QtGui, QtWidgets
     from PySide6.QtGui import QIcon
 except:
-    from PyQt5.QtWidgets import QTabWidget, QDoubleSpinBox, QPushButton, QComboBox, QSpinBox, QVBoxLayout, QHBoxLayout, QLabel, QApplication, QWidget, QFileDialog, QMessageBox, QSizePolicy, QGridLayout, QCheckBox, QFrame, QLineEdit, QPushButton
+    from PyQt5.QtWidgets import QTabWidget, QDoubleSpinBox, QPushButton, QComboBox, QSpinBox, QVBoxLayout, QHBoxLayout, QLabel, QApplication, QWidget, QFileDialog, QMessageBox, QSizePolicy, QGridLayout, QCheckBox, QFrame, QLineEdit, QPushButton, QRadioButton
     from PyQt5.QtCore import Qt, QTranslator, QCoreApplication, QLocale
     from PyQt5 import QtCore, QtGui, QtWidgets
     from PyQt5.QtGui import QIcon
@@ -181,8 +181,18 @@ class AddLinkWindow_Ui(QWidget):
 
         proxy_verticalLayout.addWidget(self.proxy_frame)
 
-        proxy_verticalLayout.addStretch(1)
+        # type of proxy
+        self.http_radioButton = QRadioButton(self.proxy_frame)
+        gridLayout.addWidget(self.http_radioButton, 4, 0, 1, 1)
 
+        self.https_radioButton = QRadioButton(self.proxy_frame)
+        gridLayout.addWidget(self.https_radioButton, 5, 0, 1, 1)
+
+        self.socks5_radioButton = QRadioButton(self.proxy_frame)
+        gridLayout.addWidget(self.socks5_radioButton, 6, 0, 1, 1)
+
+
+        proxy_verticalLayout.addStretch(1)
         self.add_link_tabWidget.addTab(self.proxy_tab, '')
 
         # more options tab
@@ -422,6 +432,10 @@ class AddLinkWindow_Ui(QWidget):
         self.ip_label.setText(QCoreApplication.translate("addlink_ui_tr", "IP: "))
         self.proxy_user_label.setText(QCoreApplication.translate("addlink_ui_tr", "Proxy username: "))
         self.port_label.setText(QCoreApplication.translate("addlink_ui_tr", "Port:"))
+
+        self.http_radioButton.setText(QCoreApplication.translate("addlink_ui_tr", "HTTP"))
+        self.https_radioButton.setText(QCoreApplication.translate("addlink_ui_tr", "HTTPS"))
+        self.socks5_radioButton.setText(QCoreApplication.translate("addlink_ui_tr", "SOCKS5"))
 
         self.download_checkBox.setText(QCoreApplication.translate("addlink_ui_tr", "Download username and password"))
         self.download_user_label.setText(QCoreApplication.translate("addlink_ui_tr", "Download username: "))

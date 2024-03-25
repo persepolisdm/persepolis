@@ -35,13 +35,13 @@ import os
 class QueueSpiderThread(QThread):
     QUEUESPIDERRETURNEDFILENAME = Signal(str)
 
-    def __init__(self, dict):
+    def __init__(self, dict_):
         QThread.__init__(self)
-        self.dict = dict
+        self.dict_ = dict_
 
     def run(self):
         try:
-            filename = spider.queueSpider(self.dict)
+            filename = spider.queueSpider(self.dict_)
             if filename:
                 self.QUEUESPIDERRETURNEDFILENAME.emit(filename)
             else:
@@ -57,7 +57,7 @@ class QueueSpiderThread(QThread):
 
 
 class TextQueue(TextQueue_Ui):
-    def __init__(self, parent, file_path, callback, persepolis_setting):
+    def __init__(self, parent, file_path, callback, gost_is_installed, persepolis_setting):
         super().__init__(persepolis_setting)
         self.persepolis_setting = persepolis_setting
         self.callback = callback
@@ -88,10 +88,10 @@ class TextQueue(TextQueue_Ui):
 
             # file_name
             file_name = '***'
-            dict = {'link': link}
+            dict_ = {'link': link}
 
             # spider finds file name
-            new_spider = QueueSpiderThread(dict)
+            new_spider = QueueSpiderThread(dict_)
             self.parent.threadPool.append(new_spider)
             self.parent.threadPool[-1].start()
             self.parent.threadPool[-1].QUEUESPIDERRETURNEDFILENAME.connect(
@@ -122,7 +122,7 @@ class TextQueue(TextQueue_Ui):
         self.add_queue_comboBox.addItem(
             QIcon(icons + 'add_queue'), 'Create new queue')
 
-# entry initialization
+        # entry initialization
 
         # get values from persepolis_setting
         global connections
@@ -154,6 +154,26 @@ class TextQueue(TextQueue_Ui):
 
         self.port_spinBox.setValue(int(int(settings_port)))
 
+        # http or socks5 initialization
+        settings_proxy_type = self.persepolis_setting.value(
+            'add_link_initialization/proxy_type', None)
+
+        # default is http
+        if not(gost_is_installed):
+            self.socks5_radioButton.setEnabled(False)
+        else:
+            self.socks5_radioButton.setEnabled(True)
+
+        if settings_proxy_type == 'socks5':
+
+            self.socks5_radioButton.setChecked(True)
+
+        elif settings_proxy_type == 'https':
+            self.https_radioButton.setChecked(True)
+
+        else:
+            self.http_radioButton.setChecked(True)
+ 
         # download UserName initialization
         settings_download_user = self.persepolis_setting.value(
             'add_link_initialization/download_user', None)
@@ -278,6 +298,26 @@ class TextQueue(TextQueue_Ui):
         self.persepolis_setting.setValue(
             'add_link_initialization/download_user', self.download_user_lineEdit.text())
 
+        # http, https or socks5 proxy
+        if self.http_radioButton.isChecked() == True:
+
+            proxy_type = 'http'
+            self.persepolis_setting.setValue(
+                'add_link_initialization/proxy_type', 'http')
+
+        elif self.https_radioButton.isChecked() == True:
+
+            proxy_type = 'https'
+            self.persepolis_setting.setValue(
+                'add_link_initialization/proxy_type', 'https')
+
+        else:
+
+            proxy_type = 'socks5'
+            self.persepolis_setting.setValue(
+                'add_link_initialization/proxy_type', 'socks5')
+
+
         # Check 'Remember path' and change default path if needed
         if self.folder_checkBox.isChecked() == True:
             self.persepolis_setting.setValue(
@@ -288,6 +328,7 @@ class TextQueue(TextQueue_Ui):
             port = None
             proxy_user = None
             proxy_passwd = None
+            proxy_type = None
         else:
             ip = self.ip_lineEdit.text()
             if not(ip):
@@ -326,7 +367,7 @@ class TextQueue(TextQueue_Ui):
         connections = self.connections_spinBox.value()
         download_path = self.download_folder_lineEdit.text()
 
-        dict = {'out': None,
+        dict_ = {'out': None,
                 'start_time': None,
                 'end_time': None,
                 'link': None,
@@ -336,6 +377,7 @@ class TextQueue(TextQueue_Ui):
                 'proxy_passwd': proxy_passwd,
                 'download_user': download_user,
                 'download_passwd': download_passwd,
+                'proxy_type': proxy_type,
                 'connections': connections,
                 'limit_value': limit,
                 'download_path': download_path,
@@ -353,16 +395,16 @@ class TextQueue(TextQueue_Ui):
             item = self.links_table.item(row, 0)
 
             # if item is checked
-            if (item.checkState() == 2):
-                # Create a copy from dict and add it to add_link_dictionary_list
+            if (item.checkState() == Qt.Checked):
+                # Create a copy from dict_ and add it to add_link_dictionary_list
                 self.add_link_dictionary_list.append(
-                    dict.copy())
+                    dict_.copy())
 
-                # get link and add it to dict
+                # get link and add it to dict_
                 link = self.links_table.item(row, 1).text()
                 self.add_link_dictionary_list[i]['link'] = str(link)
 
-                # add file name to the dict
+                # add file name to the dict_
                 self.add_link_dictionary_list[i]['out'] = self.links_table.item(
                     row, 0).text()
 

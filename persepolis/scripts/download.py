@@ -13,8 +13,9 @@
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+from persepolis.scripts.useful_tools import freeSpace, humanReadableSize, findExternalAppPath, runApplication
+from persepolis.scripts.socks5_to_http_convertor import Socks5ToHttpConvertor
 from persepolis.scripts.osCommands import moveFile, makeTempDownloadDir
-from persepolis.scripts.useful_tools import freeSpace, humanReadableSize
 from persepolis.scripts.bubble import notifySend
 from persepolis.scripts import logger
 from persepolis.constants import OS
@@ -65,90 +66,17 @@ server = xmlrpc.client.ServerProxy(server_uri, allow_none=True)
 def startAria(parent):
 
     # find aria2c path
-    # If Persepolis run as a bundle.
-    if parent.is_bundle:
-
-        # alongside of the bundle path 
-        cwd = sys.argv[0]
-        current_directory = os.path.dirname(cwd)
-        aria2d_alongside = os.path.join(current_directory, 'aria2c')
-
-        # inside of the bundle path.
-        base_path = getattr(sys, '_MEIPASS', os.path.dirname(os.path.abspath(__file__)))
-        aria2d_inside = os.path.join(base_path, 'aria2c')
-
-
-        if os_type in OS.UNIX_LIKE:
-            # Check outside of the bundle first.
-            if os.path.exists(aria2d_alongside):
-
-                aria2c_command = aria2d_alongside
-                logger.sendToLog("aria2c's file is detected alongside of bundle.", "INFO")
-
-            # Check inside of the bundle.
-            elif os.path.exists(aria2d_inside): 
-
-                aria2c_command = aria2d_inside
-                logger.sendToLog("aria2c's file is detected inside of bundle.", "INFO")
-
-            else:
-                logger.sendToLog("aria2c's file is NOT detected!!", "ERROR")
-        else:
-
-            # for Mac OSX and Microsoft WINDOWS
-            aria2c_command = aria2d_alongside
-
-    # I Persepolis run from test directory.
-    if parent.is_test:
-
-        # Check inside of test directory. 
-        cwd = sys.argv[0]
-        current_directory = os.path.dirname(cwd)
-        aria2d_alongside = os.path.join(current_directory, 'aria2c')
-
-        if os.path.exists(aria2d_alongside):
-
-            aria2c_command = aria2d_alongside
-            logger.sendToLog("aria2c's file is detected inside of test directory.", "INFO")
-
-        else:
-            # use aria2c that installed on user's system
-            aria2c_command = 'aria2c'
-            logger.sendToLog("Persepolis will use aria2c that installed on user's system.", "INFO")
-
-
-    if not(parent.is_bundle) and not(parent.is_test):
-        aria2c_command = 'aria2c'
-        logger.sendToLog("Persepolis will use aria2c that installed on user's system.", "INFO")
-
+    aria2c_command, log_list = findExternalAppPath('aria2c')
+    
+    logger.sendToLog(log_list[0], log_list[1])
 
     # Run aria2c
-    # In Linux and BSD and Mac OSX
-    if os_type in OS.UNIX_LIKE or os_type == OS.OSX:
-
-        subprocess.Popen([aria2c_command, '--no-conf',
+    command_argument = [aria2c_command, '--no-conf',
                           '--enable-rpc', '--rpc-listen-port=' + str(port),
                           '--rpc-max-request-size=2M',
-                          '--rpc-listen-all', '--quiet=true'],
-                         stderr=subprocess.PIPE,
-                         stdout=subprocess.PIPE,
-                         stdin=subprocess.PIPE,
-                         shell=False)
+                          '--rpc-listen-all', '--quiet=true']
 
-    # In Microsoft Winsows
-    elif os_type == OS.WINDOWS:
-
-        # NO_WINDOW option avoids opening additional CMD window in MS Windows.
-        NO_WINDOW = 0x08000000
-
-        # aria2 command in windows
-        subprocess.Popen([aria2c_command, '--no-conf', '--enable-rpc', '--rpc-listen-port=' + str(port),
-                          '--rpc-max-request-size=2M', '--rpc-listen-all', '--quiet=true'],
-                         stderr=subprocess.PIPE,
-                         stdout=subprocess.PIPE,
-                         stdin=subprocess.PIPE,
-                         shell=False,
-                         creationflags=NO_WINDOW)
+    pipe = runApplication(command_argument)
 
     time.sleep(2)
 
@@ -183,12 +111,13 @@ def downloadAria(gid, parent):
     add_link_dictionary = parent.persepolis_db.searchGidInAddLinkTable(gid)
 
     link = add_link_dictionary['link']
-    ip = add_link_dictionary['ip']
-    port = add_link_dictionary['port']
+    proxy_host = add_link_dictionary['ip']
+    proxy_port = add_link_dictionary['port']
     proxy_user = add_link_dictionary['proxy_user']
     proxy_passwd = add_link_dictionary['proxy_passwd']
     download_user = add_link_dictionary['download_user']
     download_passwd = add_link_dictionary['download_passwd']
+    proxy_type = add_link_dictionary['proxy_type']
     connections = add_link_dictionary['connections']
     limit = str(add_link_dictionary['limit_value'])
     start_time = add_link_dictionary['start_time']
@@ -199,11 +128,11 @@ def downloadAria(gid, parent):
     cookies = add_link_dictionary['load_cookies']
     referer = add_link_dictionary['referer']
 
-    # make header option
-    header_list = []
-    header_list.append("Cookie: " + str(cookies))
 
-# convert Mega to Kilo, RPC does not Support floating point numbers.
+
+    # make download options and send them to aria2c
+
+    # convert Mega to Kilo, RPC does not Support floating point numbers.
     if limit != '0':
         limit_number = limit[:-1]
         limit_number = float(limit_number)
@@ -215,7 +144,16 @@ def downloadAria(gid, parent):
             limit_unit = 'K'
         limit = str(limit_number) + limit_unit
 
-# create header list
+    # create header list
+    header_list = []
+    if cookies:
+        # in xmlrpc cookies must be passed as header
+        cookies_list = cookies.split(';')
+
+        for i in cookies_list:
+            header_list.append(i)
+
+
     if header != None:
         semicolon_split_header = header.split('; ')
         for i in semicolon_split_header:
@@ -227,7 +165,7 @@ def downloadAria(gid, parent):
     if len(header_list) == 0:
         header_list = None
 
-# update status and last_try_date in data_base
+    # update status and last_try_date in data_base
     if start_time:
         status = "scheduled"
     else:
@@ -237,15 +175,9 @@ def downloadAria(gid, parent):
     now_date = nowDate()
 
     # update data_base
-    dict = {'gid': gid, 'status': status, 'last_try_date': now_date}
-    parent.persepolis_db.updateDownloadTable([dict])
+    dict_ = {'gid': gid, 'status': status, 'last_try_date': now_date}
+    parent.persepolis_db.updateDownloadTable([dict_])
 
-    # create ip_port from ip and port in desired format.
-    # for example "127.0.0.1:8118"
-    if ip:
-        ip_port = str(ip) + ":" + str(port)
-    else:
-        ip_port = ""
 
     # call startTime if start_time is available
     # startTime creates sleep loop if user set start_time
@@ -313,12 +245,7 @@ def downloadAria(gid, parent):
             'out': out,
             'user-agent': user_agent,
             'referer': referer,
-            'all-proxy': ip_port,
             'max-download-limit': limit,
-            'all-proxy-user': str(proxy_user),
-            'all-proxy-passwd': str(proxy_passwd),
-            'http-user': str(download_user),
-            'http-passwd': str(download_passwd),
             'split': '16',
             'max-connection-per-server': str(connections),
             'min-split-size': '1M',
@@ -329,9 +256,57 @@ def downloadAria(gid, parent):
         if str(persepolis_setting.value('settings/dont-check-certificate')) == 'yes':
             aria_dict['check-certificate'] = 'false'
 
-        if not link.startswith("https"):
-            aria_dict['http-user'] = str(download_user)
-            aria_dict['http-passwd'] = str(download_passwd)
+
+        # Persepolis supports 3 type of proxy: http, https, socks5
+        # aria2c can't use socks5. so persepolis converts socks to http and send it to aria2c.
+
+        # create ip_port in desired format.
+        # for example "127.0.0.1:8118"
+        if proxy_host:
+
+            # if user checked socks5 proxy then run converter of socks5 to http
+            # don't run new instance, if it's still running
+            # write http_host and http_port to aria_dict
+            create_new_socks5_to_http_convertor = True
+            if proxy_type == 'socks5':
+                for instance in parent.socks5_to_http_convertor_list:
+
+                    try:
+                        if instance.isRunning() == True:
+                            if instance.socks5_host == proxy_host and instance.socks5_port == int(proxy_port) and instance.socks5_username == proxy_user:
+
+                                # so we don't need new stance. get instance information.
+                                # "socks5 to http convertor" creates local http server.
+                                create_new_socks5_to_http_convertor = False
+                                ip_port = instance.http_host + ":" + str(instance.http_port)
+                                aria_dict['all-proxy'] = ip_port
+
+                                break
+                        else:
+                            create_new_socks5_to_http_convertor = True
+                    except:
+                        create_new_socks5_to_http_convertor = True
+
+                # no instance finded. so create new instance.
+                if create_new_socks5_to_http_convertor:
+
+                    new_socks5_to_http_convertor = Socks5ToHttpConvertor(proxy_host, int(proxy_port), proxy_user, proxy_passwd, parent)
+                    parent.socks5_to_http_convertor_list.append(new_socks5_to_http_convertor)
+                    parent.socks5_to_http_convertor_list[-1].run()
+                    
+                    # wait until new_socks5_to_http_convertor starts
+                    time.sleep(2)
+                    # get instance information
+                    ip_port = new_socks5_to_http_convertor.http_host + ":" + str(new_socks5_to_http_convertor.http_port)
+                    aria_dict['all-proxy'] = ip_port
+
+            # http and https proxy
+            else: 
+                ip_port = proxy_host + ":" + str(proxy_port)
+                aria_dict['all-proxy'] = ip_port
+                aria_dict['all-proxy-user'] = proxy_user
+                aria_dict['all-proxy-passwd'] = proxy_passwd
+
 
         aria_dict_copy = aria_dict.copy()
         # remove empty key[value] from aria_dict
@@ -349,8 +324,8 @@ def downloadAria(gid, parent):
         except:
 
             # write error status in data_base
-            dict = {'gid': gid, 'status': 'error'}
-            parent.persepolis_db.updateDownloadTable([dict])
+            dict_ = {'gid': gid, 'status': 'error'}
+            parent.persepolis_db.updateDownloadTable([dict_])
 
             # write ERROR messages in log
             logger.sendToLog("Download did not start", "ERROR")
@@ -376,11 +351,11 @@ def tellActive():
     gid_list = []
 
     # convert download information in desired format.
-    for dict in downloads_status:
-        converted_info_dict = convertDownloadInformation(dict)
+    for dict_ in downloads_status:
+        converted_info_dict = convertDownloadInformation(dict_)
 
         # add gid to gid_list
-        gid_list.append(dict['gid'])
+        gid_list.append(dict_['gid'])
 
         # add converted information to download_status_list
         download_status_list.append(converted_info_dict)
@@ -738,8 +713,8 @@ def shutDown():
 
 def downloadStop(gid, parent):
     # get download status from data_base
-    dict = parent.persepolis_db.searchGidInDownloadTable(gid)
-    status = dict['status']
+    dict_ = parent.persepolis_db.searchGidInDownloadTable(gid)
+    status = dict_['status']
 
     # if status is "scheduled", then download request has not been sended to aria2!
     # so no need to send stop request to aria2.
@@ -768,8 +743,8 @@ def downloadStop(gid, parent):
                                                          start_time=True, end_time=True, after_download=True)
 
         # change status of download to "stopped" in data base
-        dict = {'gid': gid, 'status': 'stopped'}
-        parent.persepolis_db.updateDownloadTable([dict])
+        dict_ = {'gid': gid, 'status': 'stopped'}
+        parent.persepolis_db.updateDownloadTable([dict_])
 
     return answer
 
@@ -835,8 +810,8 @@ def activeDownloads():
     active_gids = []
     for i in answer:
         # extract gid from dictionary
-        dict = i
-        gid = dict['gid']
+        dict_ = i
+        gid = dict_['gid']
 
         # add gid to list
         active_gids.append(gid)
@@ -888,8 +863,8 @@ def startTime(start_time, gid, parent):
         sigma_now = nowTime()
 
         # check download status from data_base
-        dict = parent.persepolis_db.searchGidInDownloadTable(gid)
-        data_base_download_status = dict['status']
+        dict_ = parent.persepolis_db.searchGidInDownloadTable(gid)
+        data_base_download_status = dict_['status']
 
         # if data_base_download_status = stopped >> it means that user
         # canceled download and loop must break!
@@ -915,8 +890,8 @@ def endTime(end_time, gid, parent):
     while sigma_end != sigma_now:
 
         # get download status from data_base
-        dict = parent.persepolis_db.searchGidInDownloadTable(gid)
-        status = dict['status']
+        dict_ = parent.persepolis_db.searchGidInDownloadTable(gid)
+        status = dict_['status']
 
         # check download status
         if status == 'scheduled' or status == 'downloading' or status == 'paused' or status == 'waiting':

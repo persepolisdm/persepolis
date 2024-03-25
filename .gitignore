@@ -12,5 +12,6 @@ man/persepolis.1.gz
 persepolis_wenv/
 test/aria2c
 test/ffmpeg
+test/gost
 dist/
 *.spec

@@ -17,8 +17,15 @@ from persepolis.constants.Os import OS
 import urllib.parse
 import subprocess
 import platform
+import textwrap
 import sys
 import os
+
+try:
+    from PySide6.QtCore import QThread, Signal
+except:
+    from PyQt5.QtCore import QThread
+    from PyQt5.QtCore import pyqtSignal as Signal
 
 try:
     from persepolis.scripts import logger
@@ -34,6 +41,20 @@ os_type = platform.system()
 # user home address
 home_address = os.path.expanduser("~")
 
+# runApplication in a thread.
+class RunApplicationThread(QThread):
+    RUNAPPCALLBACKSIGNAL = Signal(list)
+
+    def __init__(self, command_argument, call_back=False):
+        QThread.__init__(self)
+        self.command_argument = command_argument
+        self.call_back = call_back
+
+    def run(self):
+        pipe = runApplication(self.command_argument)
+
+        if self.call_back:
+            self.RUNAPPCALLBACKSIGNAL.emit([pipe])
 
 # determine the config folder path based on the operating system
 def determineConfigFolder():
@@ -191,7 +212,7 @@ def returnDefaultSettings():
 
     return default_setting_dict
 
-
+# mix video and audio that downloads by video finder
 def muxer(parent, video_finder_dictionary):
 
     result_dictionary = {'error': 'no_error',
@@ -260,8 +281,11 @@ def muxer(parent, video_finder_dictionary):
                 i = i + 1
 
             # start muxing
-            if os_type in OS.UNIX_LIKE:
-                pipe = subprocess.Popen(['ffmpeg', '-i', video_file_path,
+            # find ffmpeg path
+            ffmpeg_command, log_list = findExternalAppPath('ffmpeg')
+
+            # run ffmpeg
+            command_argument = ['ffmpeg', '-i', video_file_path,
                                          '-i', audio_file_path,
                                          '-c', 'copy',
                                          '-shortest',
@@ -269,56 +293,9 @@ def muxer(parent, video_finder_dictionary):
                                          '-map', '1:a:0',
                                          '-loglevel', 'error',
                                          '-strict', '-2',
-                                         final_path_plus_name],
-                                        stderr=subprocess.PIPE,
-                                        stdout=subprocess.PIPE,
-                                        stdin=subprocess.PIPE,
-                                        shell=False)
+                                         final_path_plus_name]
 
-            elif os_type == OS.DARWIN:
-                # ffmpeg path in mac
-                # ...path/Persepolis Download Manager.app/Contents/MacOS/ffmpeg
-                cwd = sys.argv[0]
-                current_directory = os.path.dirname(cwd)
-                ffmpeg_path = os.path.join(current_directory, 'ffmpeg')
-
-                pipe = subprocess.Popen([ffmpeg_path, '-i', video_file_path,
-                                         '-i', audio_file_path,
-                                         '-c', 'copy',
-                                         '-shortest',
-                                         '-map', '0:v:0',
-                                         '-map', '1:a:0',
-                                         '-loglevel', 'error',
-                                         '-strict', '-2',
-                                         final_path_plus_name],
-                                        stderr=subprocess.PIPE,
-                                        stdout=subprocess.PIPE,
-                                        stdin=subprocess.PIPE,
-                                        shell=False)
-
-            elif os_type == OS.WINDOWS:
-                # ffmpeg path in windows
-                cwd = sys.argv[0]
-                current_directory = os.path.dirname(cwd)
-                ffmpeg_path = os.path.join(current_directory, 'ffmpeg.exe')
-
-                # NO_WINDOW option avoids opening additional CMD window in MS Windows.
-                NO_WINDOW = 0x08000000
-
-                pipe = subprocess.Popen([ffmpeg_path, '-i', video_file_path,
-                                         '-i', audio_file_path,
-                                         '-c', 'copy',
-                                         '-shortest',
-                                         '-map', '0:v:0',
-                                         '-map', '1:a:0',
-                                         '-loglevel', 'error',
-                                         '-strict', '-2',
-                                         final_path_plus_name],
-                                        stdout=subprocess.PIPE,
-                                        stdin=subprocess.PIPE,
-                                        stderr=subprocess.PIPE,
-                                        shell=False,
-                                        creationflags=NO_WINDOW)
+            pipe = runApplication(command_argument)
 
             if pipe.wait() == 0:
                 # muxing was finished successfully.
@@ -334,6 +311,162 @@ def muxer(parent, video_finder_dictionary):
                 result_dictionary['ffmpeg_error_message'] = ffmpeg_error_message.decode('utf-8', 'ignore')
 
     return result_dictionary
+
+# return version of gost
+def gostVersion():
+    # find app path
+    gost_command, log_list = findExternalAppPath('gost')
+
+    # Try to test gost
+    command_argument = [gost_command, '-V']
+    try:
+        pipe = runApplication(command_argument)
+
+        if pipe.wait() == 0:
+            gost_is_installed = True
+            gost_output, error = pipe.communicate()
+            gost_output = gost_output.decode('utf-8')
+
+        else:
+            gost_is_installed = False
+            gost_output = 'gost is not installed'
+    except:
+        gost_is_installed = False
+        gost_output = 'gost is not installed'
+
+    return gost_is_installed, gost_output, log_list
+
+
+
+
+# return version of ffmpeg
+def ffmpegVersion():
+
+    # find ffmpeg path
+    ffmpeg_command, log_list = findExternalAppPath('ffmpeg')
+
+    
+
+    # Try to test ffmpeg
+    command_argument = [ffmpeg_command, '-version']
+    try:
+        pipe = runApplication(command_argument)
+
+        if pipe.wait() == 0:
+            ffmpeg_is_installed = True
+            ffmpeg_output, error = pipe.communicate()
+            ffmpeg_output = ffmpeg_output.decode('utf-8')
+
+        else:
+            ffmpeg_is_installed = False
+            ffmpeg_output = 'ffmpeg is not installed'
+    except:
+        ffmpeg_is_installed = False
+        ffmpeg_output = 'ffmpeg is not installed'
+
+    # wrap ffmpeg_output with width=70
+    wrapper = textwrap.TextWrapper()
+    ffmpeg_output = wrapper.fill(ffmpeg_output)
+
+    ffmpeg_output = '\n**********\n'\
+        + str(ffmpeg_output)\
+        + '\n**********\n'
+
+    return ffmpeg_is_installed, ffmpeg_output, log_list
+
+
+# run an application
+def runApplication(command_argument):
+    if os_type == OS.WINDOWS:
+
+        # NO_WINDOW option avoids opening additional CMD in MS Windows.
+        NO_WINDOW = 0x08000000
+        pipe = subprocess.Popen(command_argument,
+                                stdout=subprocess.PIPE,
+                                stderr=subprocess.PIPE,
+                                stdin=subprocess.PIPE,
+                                shell=False,
+                                creationflags=NO_WINDOW)
+
+    else:
+        pipe = subprocess.Popen(
+            command_argument,
+            stdout=subprocess.PIPE,
+            stdin=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            shell=False)
+
+    return pipe
+
+# find exeternal application execution path
+def findExternalAppPath(app_name):
+    
+    # get Persepolis type information first.
+    persepolis_path_infromation = getExecPath()
+    is_bundle = persepolis_path_infromation['bundle']
+    is_test = persepolis_path_infromation['test']
+
+    # If Persepolis run as a bundle.
+    if is_bundle:
+
+        # alongside of the bundle path 
+        cwd = sys.argv[0]
+        current_directory = os.path.dirname(cwd)
+        app_alongside = os.path.join(current_directory, app_name)
+
+        # inside of the bundle path.
+        base_path = getattr(sys, '_MEIPASS', os.path.dirname(os.path.abspath(__file__)))
+        app_inside = os.path.join(base_path, app_name)
+
+        if os_type in OS.UNIX_LIKE:
+            # Check outside of the bundle first.
+            if os.path.exists(app_alongside):
+
+                app_command = app_alongside
+                log_list = ["{}'s file is detected alongside of bundle.".format(app_name), "INFO"]
+
+            # Check inside of the bundle.
+            elif os.path.exists(app_inside): 
+
+                app_command = app_inside
+                log_list = ["{}'s file is detected inside of bundle.".format(app_name), "INFO"]
+
+            else:
+                # use app that installed on user's system
+                app_command = app_name 
+                log_list = ["Persepolis will use {} that installed on user's system.".format(app_name), "INFO"]
+
+        else:
+
+            # for Mac OSX and MicroSoft Windows
+            app_command = app_alongside
+
+    # I Persepolis run from test directory.
+    if is_test:
+
+        # Check inside of test directory. 
+        cwd = sys.argv[0]
+        current_directory = os.path.dirname(cwd)
+        app_alongside = os.path.join(current_directory, app_name)
+
+        if os.path.exists(app_alongside):
+
+            app_command = app_alongside
+            log_list = ["{}'s file is detected inside of test directory.".format(app_name), "INFO"]
+
+        else:
+            # use app that installed on user's system
+            app_command = app_name 
+            log_list = ["Persepolis will use {} that installed on user's system.".format(app_name), "INFO"]
+
+
+    if not(is_bundle) and not(is_test):
+
+        app_command = app_name 
+        log_list = ["Persepolis will use {} that installed on user's system.".format(app_name), "INFO"]
+
+    return app_command, log_list
+
 
 # This function returns persepolis's execution path.
 def getExecPath():

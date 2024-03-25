@@ -15,11 +15,11 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 try:
-    from PySide6.QtWidgets import QHeaderView, QPushButton, QApplication, QWidget, QTabWidget, QVBoxLayout, QTableWidget, QAbstractItemView, QLabel, QLineEdit, QHBoxLayout, QSpinBox, QComboBox, QFrame, QCheckBox, QGridLayout
+    from PySide6.QtWidgets import QHeaderView, QPushButton, QApplication, QWidget, QTabWidget, QVBoxLayout, QTableWidget, QAbstractItemView, QLabel, QLineEdit, QHBoxLayout, QSpinBox, QComboBox, QFrame, QCheckBox, QGridLayout, QRadioButton
     from PySide6.QtCore import Qt, QTranslator, QCoreApplication, QLocale
     from PySide6.QtGui import QIcon
 except:
-    from PyQt5.QtWidgets import QHeaderView, QPushButton, QApplication, QWidget, QTabWidget, QVBoxLayout, QTableWidget, QAbstractItemView, QLabel, QLineEdit, QHBoxLayout, QSpinBox, QComboBox, QFrame, QCheckBox, QGridLayout
+    from PyQt5.QtWidgets import QHeaderView, QPushButton, QApplication, QWidget, QTabWidget, QVBoxLayout, QTableWidget, QAbstractItemView, QLabel, QLineEdit, QHBoxLayout, QSpinBox, QComboBox, QFrame, QCheckBox, QGridLayout, QRadioButton
     from PyQt5.QtCore import Qt, QTranslator, QCoreApplication, QLocale
     from PyQt5.QtGui import QIcon
 
@@ -144,6 +144,18 @@ class TextQueue_Ui(QWidget):
         self.port_spinBox.setSingleStep(1)
         proxy_gridLayout.addWidget(self.port_spinBox, 2, 1, 1, 1)
         proxy_verticalLayout.addWidget(self.proxy_frame)
+
+        # type of proxy
+        self.http_radioButton = QRadioButton(self.proxy_frame)
+        proxy_gridLayout.addWidget(self.http_radioButton, 4, 0, 1, 1)
+
+        self.https_radioButton = QRadioButton(self.proxy_frame)
+        proxy_gridLayout.addWidget(self.https_radioButton, 5, 0, 1, 1)
+
+        self.socks5_radioButton = QRadioButton(self.proxy_frame)
+        proxy_gridLayout.addWidget(self.socks5_radioButton, 6, 0, 1, 1)
+
+
         options_tab_verticalLayout.addLayout(proxy_verticalLayout)
 
         # download Username & Password
@@ -285,6 +297,11 @@ class TextQueue_Ui(QWidget):
         self.ip_label.setText(QCoreApplication.translate("text_ui_tr", "IP:"))
         self.proxy_user_label.setText(QCoreApplication.translate("text_ui_tr", "Proxy username: "))
         self.port_label.setText(QCoreApplication.translate("text_ui_tr", "Port:"))
+
+        self.http_radioButton.setText(QCoreApplication.translate("addlink_ui_tr", "HTTP"))
+        self.https_radioButton.setText(QCoreApplication.translate("addlink_ui_tr", "HTTPS"))
+        self.socks5_radioButton.setText(QCoreApplication.translate("addlink_ui_tr", "SOCKS5"))
+
 
         self.download_checkBox.setText(QCoreApplication.translate("text_ui_tr", "Download username and password"))
         self.download_user_label.setText(QCoreApplication.translate("text_ui_tr", "Download username: "))

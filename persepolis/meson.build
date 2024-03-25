@@ -53,7 +53,8 @@ scripts_sources = [
   'scripts/log_window.py',
   'scripts/persepolis.py',
   'scripts/setting.py',
-  'scripts/update.py'
+  'scripts/update.py',
+  'scripts/socks5_to_http_convertor.py'
   ]
 
 python3.install_sources(shell_sources, subdir: 'persepolis')

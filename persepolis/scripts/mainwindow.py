@@ -30,7 +30,7 @@ except:
     from PyQt5.QtCore import pyqtSignal as Signal
     pyside6_is_installed = False
 
-from persepolis.scripts.useful_tools import muxer, freeSpace, determineConfigFolder, osAndDesktopEnvironment, getExecPath
+from persepolis.scripts.useful_tools import muxer, freeSpace, determineConfigFolder, osAndDesktopEnvironment, getExecPath, ffmpegVersion, gostVersion
 from persepolis.scripts.video_finder_progress import VideoFinderProgressWindow
 from persepolis.gui.mainwindow_ui import MainWindow_Ui, QTableWidgetItem
 from persepolis.scripts.data_base import PluginsDB, PersepolisDB, TempDB
@@ -58,7 +58,6 @@ from copy import deepcopy
 from time import sleep
 import urllib.parse
 import subprocess
-import textwrap
 import random
 import time
 import sys
@@ -74,9 +73,12 @@ except ModuleNotFoundError:
         "yt-dlp is not installed.", "ERROR")
     youtube_dl_is_installed = False
 
-# CheckVersionsThread thread can change this variable.
+# CheckVersionsThread thread can change this variables.
 global ffmpeg_is_installed
-ffmpeg_is_installed = True
+ffmpeg_is_installed = False
+
+global gost_is_installed
+gost_is_installed = False
 
 # The GID (or gid) is a key to manage each download. Each download will be assigned a unique GID.
 # The GID is stored as 64-bit binary value in aria2. For RPC access,
@@ -134,10 +136,9 @@ plugin_ready = os.path.join(persepolis_tmp, 'persepolis-plugin-ready')
 
 show_window_file = os.path.join(persepolis_tmp, 'show-window')
 
-# this thread checks ffmpeg availability.
+# this thread checks ffmpeg and gost availability.
 # this thread checks ffmpeg and python and pyqt and qt versions and write them in log file.
 # this thread writes osi type and desktop env. in log file.
-
 
 class CheckVersionsThread(QThread):
     def __init__(self, parent):
@@ -145,106 +146,21 @@ class CheckVersionsThread(QThread):
         self.parent = parent
 
     def run(self):
+
         global ffmpeg_is_installed
+        # check ffmpeg version
+        ffmpeg_is_installed, ffmpeg_output, ffmpeg_command_log_list = ffmpegVersion()
 
-        # find ffmpeg path
-        # If Persepolis run as a bundle.
-        if self.parent.is_bundle:
-
-            # alongside of the bundle path 
-            cwd = sys.argv[0]
-            current_directory = os.path.dirname(cwd)
-            ffmpeg_alongside = os.path.join(current_directory, 'ffmpeg')
-
-            # inside of the bundle path.
-            base_path = getattr(sys, '_MEIPASS', os.path.dirname(os.path.abspath(__file__)))
-            ffmpeg_inside = os.path.join(base_path, 'ffmpeg')
-
-            if os_type in OS.UNIX_LIKE:
-                # Check outside of the bundle first.
-                if os.path.exists(ffmpeg_alongside):
-
-                    ffmpeg_command = ffmpeg_alongside
-                    logger.sendToLog("ffmpeg's file is detected alongside of bundle.", "INFO")
-
-                # Check inside of the bundle.
-                elif os.path.exists(ffmpeg_inside): 
-
-                    ffmpeg_command = ffmpeg_inside
-                    logger.sendToLog("ffmpeg's file is detected inside of bundle.", "INFO")
-
-                else:
-                    logger.sendToLog("ffmpeg's file is NOT detected!!", "ERROR")
-            else:
-
-                # for Mac OSX and MicroSoft Windows
-                ffmpeg_command = ffmpeg_alongside
-
-        # I Persepolis run from test directory.
-        if self.parent.is_test:
-
-            # Check inside of test directory. 
-            cwd = sys.argv[0]
-            current_directory = os.path.dirname(cwd)
-            ffmpeg_alongside = os.path.join(current_directory, 'ffmpeg')
-
-            if os.path.exists(ffmpeg_alongside):
-
-                ffmpeg_command = ffmpeg_alongside
-                logger.sendToLog("ffmpeg's file is detected inside of test directory.", "INFO")
-
-            else:
-                # use ffmpeg that installed on user's system
-                ffmpeg_command = 'ffmpeg'
-                logger.sendToLog("Persepolis will use ffmpeg that installed on user's system.", "INFO")
-
-
-        if not(self.parent.is_bundle) and not(self.parent.is_test):
-            aria2c_command = 'ffmpeg'
-            logger.sendToLog("Persepolis will use ffmpeg that installed on user's system.", "INFO")
-
-        # Try to test ffmpeg
-        try:
-            if os_type == OS.WINDOWS:
-
-                # NO_WINDOW option avoids opening additional CMD in MS Windows.
-                NO_WINDOW = 0x08000000
-                pipe = subprocess.Popen([ffmpeg_command, '-version'],
-                                        stdout=subprocess.PIPE,
-                                        stderr=subprocess.PIPE,
-                                        stdin=subprocess.PIPE,
-                                        shell=False,
-                                        creationflags=NO_WINDOW)
-
-            else:
-                pipe = subprocess.Popen(
-                    [ffmpeg_command, '-version'],
-                    stdout=subprocess.PIPE,
-                    stdin=subprocess.PIPE,
-                    stderr=subprocess.PIPE,
-                    shell=False)
-
-            if pipe.wait() == 0:
-                ffmpeg_is_installed = True
-                ffmpeg_output, error = pipe.communicate()
-                ffmpeg_output = ffmpeg_output.decode('utf-8')
-
-            else:
-                ffmpeg_is_installed = False
-                ffmpeg_output = 'ffmpeg is not installed'
-        except:
-            ffmpeg_is_installed = False
-            ffmpeg_output = 'ffmpeg is not installed'
-
-        # wrap ffmpeg_output with width=70
-        wrapper = textwrap.TextWrapper()
-        ffmpeg_output = wrapper.fill(ffmpeg_output)
-
-        ffmpeg_output = '\n**********\n'\
-            + str(ffmpeg_output)\
-            + '\n**********\n'
-
+        logger.sendToLog(ffmpeg_command_log_list[0], ffmpeg_command_log_list[1])
         logger.sendToLog(ffmpeg_output, "INFO")
+
+        global gost_is_installed
+        # check gost version
+        gost_is_installed, gost_output, gost_command_log_list = gostVersion()
+
+        logger.sendToLog(gost_command_log_list[0], gost_command_log_list[1])
+        logger.sendToLog(gost_output, "INFO")
+
 
         # log python version
         logger.sendToLog('python version: '
@@ -270,6 +186,8 @@ class CheckVersionsThread(QThread):
         if desktop_env:
             logger.sendToLog('Desktop env.: '
                              + str(desktop_env))
+
+        
 
 
 # start aria2 when Persepolis starts
@@ -473,7 +391,7 @@ class CheckDownloadInfoThread(QThread):
             # so aria2 connection in disconnected!
             # lets try to reconnect aria 5 times!
             for i in range(5):
-                answer = download.startAria()  # start aria2
+                answer = download.startAria(self)  # start aria2
                 if answer == 'did not respond' and i != 4:  # check answer
                     sleep(2)
                 else:
@@ -1158,11 +1076,12 @@ class ShutDownThread(QThread):
         self.category = category
         self.password = password
         self.parent = parent
+        self.crash = False
 
     def run(self):
         shutDown(self.parent, category=self.category, password=self.password)
 
-
+               
 # this thread is keeping system awake! because if system sleeps , then internet connection is disconnected!
 # strategy is simple! a loop is checking mouse position every 20 seconds.
 # if mouse position didn't change, cursor is moved by QCursor.setPos() (see keepAwake method) ! so this is keeping system awake!
@@ -1346,6 +1265,9 @@ class MainWindow(MainWindow_Ui):
         # list of threads
         self.threadPool = []
 
+        # list of SocksToHttpConvertor
+        self.socks5_to_http_convertor_list = []
+
         # get execution path information
         self.exec_dictionary = getExecPath()
         self.exec_file_path = self.exec_dictionary['exec_file_path']
@@ -1470,6 +1392,9 @@ class MainWindow(MainWindow_Ui):
         # key = video_gid and value = VideoFinder thread
         self.video_finder_threads_dict = {}
 
+        # no convert_socks5 thread is running now
+        self.socks5_to_http_convertor_is_still_running = False
+
         # CheckDownloadInfoThread
         check_download_info = CheckDownloadInfoThread(self)
         self.threadPool.append(check_download_info)
@@ -1498,9 +1423,11 @@ class MainWindow(MainWindow_Ui):
         self.threadPool[-1].start()
         self.threadPool[-1].KEEPSYSTEMAWAKESIGNAL.connect(self.keepAwake)
 
-        # check if ffmpeg is installed
-        check_ffmpeg_is_installed = CheckVersionsThread(self)
-        self.threadPool.append(check_ffmpeg_is_installed)
+        # this thread checks ffmpeg and gost availability.
+        # this thread checks ffmpeg and python and pyqt and qt versions and write them in log file.
+        # this thread writes osi type and desktop env. in log file.
+        check_version_thread = CheckVersionsThread(self)
+        self.threadPool.append(check_version_thread)
         self.threadPool[-1].start()
 
         # finding number or row that user selected!
@@ -2629,9 +2556,12 @@ class MainWindow(MainWindow_Ui):
     # browsers plugin (Single Download)
 
     def pluginAddLink(self, add_link_dictionary):
+
+        # check if gost is installed
+        global gost_is_installed
+
         # create an object for AddLinkWindow and add it to addlinkwindows_list.
-        addlinkwindow = AddLinkWindow(
-            self, self.callBack, self.persepolis_setting, add_link_dictionary)
+        addlinkwindow = AddLinkWindow(self, self.callBack, self.persepolis_setting, gost_is_installed, add_link_dictionary)
         self.addlinkwindows_list.append(addlinkwindow)
         self.addlinkwindows_list[-1].show()
 
@@ -2642,7 +2572,11 @@ class MainWindow(MainWindow_Ui):
     # This method creates addlinkwindow when user presses plus button in MainWindow
 
     def addLinkButtonPressed(self, button=None):
-        addlinkwindow = AddLinkWindow(self, self.callBack, self.persepolis_setting)
+
+        # check if gost is installed
+        global gost_is_installed
+
+        addlinkwindow = AddLinkWindow(self, self.callBack, self.persepolis_setting, gost_is_installed)
         self.addlinkwindows_list.append(addlinkwindow)
         self.addlinkwindows_list[-1].show()
 
@@ -2697,7 +2631,7 @@ class MainWindow(MainWindow_Ui):
         # get now time and date
         date = download.nowDate()
 
-        dict = {'file_name': file_name,
+        download_table_dict = {'file_name': file_name,
                 'status': status,
                 'size': '***',
                 'downloaded_size': '***',
@@ -2712,7 +2646,7 @@ class MainWindow(MainWindow_Ui):
                 'category': category}
 
         # write information in data_base
-        self.persepolis_db.insertInDownloadTable([dict])
+        self.persepolis_db.insertInDownloadTable([download_table_dict])
         self.persepolis_db.insertInAddLinkTable([add_link_dictionary])
 
         # find selected category in left side panel
@@ -2734,16 +2668,22 @@ class MainWindow(MainWindow_Ui):
             self.categoryTreeSelected(category_tree_model_index)
         else:
             # create a row in download_table for new download
-            list = [file_name, status, '***', '***', '***',
+            download_table_list = [file_name, status, '***', '***', '***',
                     '***', '***', '***', gid, add_link_dictionary['link'], date, date, category]
             self.download_table.insertRow(0)
             j = 0
             # add item in list to the row
-            for i in list:
+            for i in download_table_list:
                 item = QTableWidgetItem(i)
                 self.download_table.setItem(0, j, item)
                 j = j + 1
 
+#         print(len(add_link_dictionary))
+#         for key in add_link_dictionary.keys():
+#             print(key)
+#             print(add_link_dictionary[key])
+#             print(type(add_link_dictionary[key]))
+# 
         # if user didn't press download_later_pushButton in add_link window
         # then create new qthread for new download!
         if not(download_later):
@@ -2772,6 +2712,7 @@ class MainWindow(MainWindow_Ui):
             self.threadPool.append(new_spider)
             self.threadPool[-1].start()
             self.threadPool[-1].SPIDERSIGNAL.connect(self.spiderUpdate)
+
 
     # when user presses resume button this method is called
     def resumeButtonPressed(self, button=None):
@@ -2877,7 +2818,6 @@ class MainWindow(MainWindow_Ui):
 
     # this method called if user presses stop button in MainWindow
     def stopButtonPressed(self, button=None):
-
         self.stopAction.setEnabled(False)
         selected_row_return = self.selectedRow()  # finding user's selected row
 
@@ -3006,8 +2946,9 @@ class MainWindow(MainWindow_Ui):
                     return
 
             # creating propertieswindow
+            global gost_is_installed
             propertieswindow = PropertiesWindow(
-                self, self.propertiesCallback, gid, self.persepolis_setting, result_dictionary)
+                self, self.propertiesCallback, gid, self.persepolis_setting, gost_is_installed, result_dictionary)
             self.propertieswindows_list.append(propertieswindow)
             self.propertieswindows_list[-1].show()
 
@@ -3217,7 +3158,9 @@ class MainWindow(MainWindow_Ui):
         for db in self.persepolis_db, self.plugins_db, self.temp_db:
             db.closeConnections()
 
-        # ask threads to quit
+        for i in self.socks5_to_http_convertor_list:
+            i.stop()
+
         for i in self.threadPool:
             i.quit()
             i.wait()
@@ -4339,8 +4282,9 @@ class MainWindow(MainWindow_Ui):
     def pluginQueue(self, list_of_links):
 
         # create window
+        global gost_is_installed
         plugin_queue_window = BrowserPluginQueue(
-            self, list_of_links, self.queueCallback, self.persepolis_setting)
+            self, list_of_links, self.queueCallback, gost_is_installed, self.persepolis_setting)
         self.plugin_queue_window_list.append(plugin_queue_window)
         self.plugin_queue_window_list[-1].show()
 
@@ -4356,11 +4300,14 @@ class MainWindow(MainWindow_Ui):
         f_path, filters = QFileDialog.getOpenFileName(
             self, 'Select the text file that contains links')
 
+        # check if the gost is installed.
+        global gost_is_installed
+
         # if path is correct:
         if os.path.isfile(str(f_path)):
             # create a text_queue_window for getting information.
             text_queue_window = TextQueue(
-                self, f_path, self.queueCallback, self.persepolis_setting)
+                self, f_path, self.queueCallback, gost_is_installed, self.persepolis_setting)
 
             self.text_queue_window_list.append(text_queue_window)
             self.text_queue_window_list[-1].show()
@@ -5581,7 +5528,7 @@ class MainWindow(MainWindow_Ui):
 
         # add checkbox to the item
         item.setFlags(Qt.ItemIsUserCheckable | Qt.ItemIsEnabled)
-        if child.links_table.item(int(row_number), 0).checkState() == 2:
+        if child.links_table.item(int(row_number), 0).checkState() == Qt.Checked:
             item.setCheckState(Qt.Checked)
         else:
             item.setCheckState(Qt.Unchecked)
@@ -5678,13 +5625,17 @@ class MainWindow(MainWindow_Ui):
 
     def showVideoFinderAddLinkWindow(self, input_dict=None, menu=None):
 
+        # check if gost is installed.
+        global gost_is_installed
+
         # first check youtube_dl_is_installed and ffmpeg_is_installed value!
         # if youtube_dl or ffmpeg is not installed show an error message.
         if youtube_dl_is_installed and ffmpeg_is_installed:
             if not(input_dict):
                 input_dict = {}
+
             video_finder_addlink_window = VideoFinderAddLink(
-                parent=self, receiver_slot=self.videoFinderCallBack, settings=self.persepolis_setting, video_dict=input_dict)
+                parent=self, receiver_slot=self.videoFinderCallBack, gost_is_installed = gost_is_installed, settings=self.persepolis_setting, video_dict=input_dict)
             self.addlinkwindows_list.append(video_finder_addlink_window)
             video_finder_addlink_window.show()
             video_finder_addlink_window.raise_()
@@ -5712,7 +5663,7 @@ class MainWindow(MainWindow_Ui):
         # if we have only one link so we can download it like other ordinary links
         # but if we have seperated video and audio, then we must use VideoFinder thread and ...
         if len(add_link_dictionary_list) == 1:
-            self.callBack(add_link_dictionary_list[0], download_later, category)
+            self.callBack(add_link_dictionary=add_link_dictionary_list[0], download_later=download_later, category=category)
             return
 
         category = str(category)

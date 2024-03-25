@@ -80,26 +80,25 @@ class MediaListFetcherThread(QThread):
             self.cookies = self.makeHttpCookie(video_dict['load_cookies'])
 
         # Proxy
-        if 'ip' in video_dict.keys() and video_dict['ip']:
-            try:
-                # ip + port
-                ip_port = 'http://{}:{}'.format(video_dict['ip'], video_dict['port'])
+        if video_dict['ip']:
 
-                if 'referer' in video_dict.keys() and video_dict['proxy_user']:
-                    ip_port = 'http://{}:{}@{}'.format(video_dict['proxy_user'], video_dict['proxy_passwd'], ip_port)
+            # ip + port
+            ip_port = '{}:{}'.format(video_dict['ip'], str(video_dict['port']))
 
-                self.youtube_dl_options_dict['proxy'] = str(ip_port)
-            except:
-                pass
+            if video_dict['proxy_user']:
+                proxy_argument = '{}://{}:{}@{}'.format(video_dict['proxy_type'], video_dict['proxy_user'], video_dict['proxy_passwd'], ip_port)
 
-        if 'download_user' in video_dict.keys() and video_dict['download_user']:
-            try:
-                self.youtube_dl_options_dict['username'] = str(video_dict['download_user'])
-                self.youtube_dl_options_dict['password'] = str(video_dict['download_passwd'])
-            except:
-                pass
+            else:
+                proxy_argument = '{}://{}'.format(video_dict['proxy_type'], ip_port)
 
-        if 'link' in video_dict.keys() and video_dict['link']:
+            self.youtube_dl_options_dict['proxy'] = str(proxy_argument)
+
+        if video_dict['download_user']:
+            
+            self.youtube_dl_options_dict['username'] = str(video_dict['download_user'])
+            self.youtube_dl_options_dict['password'] = str(video_dict['download_passwd'])
+
+        if video_dict['link']:
             self.youtube_link = str(video_dict['link'])
 
     def run(self):
@@ -168,8 +167,8 @@ class VideoFinderAddLink(AddLinkWindow):
     running_thread = None
     threadPool = {}
 
-    def __init__(self, parent, receiver_slot, settings, video_dict={}):
-        super().__init__(parent, receiver_slot, settings, video_dict)
+    def __init__(self, parent, receiver_slot, gost_is_installed, settings, video_dict={}):
+        super().__init__(parent, receiver_slot, settings, gost_is_installed, video_dict)
         self.setWindowTitle(QCoreApplication.translate("ytaddlink_src_ui_tr", 'Video Finder'))
         self.size_label.hide()
 
@@ -360,9 +359,12 @@ class VideoFinderAddLink(AddLinkWindow):
         dictionary_to_send = deepcopy(self.plugin_add_link_dictionary)
         # More options
         more_options = self.collectMoreOptions()
+
         for k in more_options.keys():
             dictionary_to_send[k] = more_options[k]
+
         dictionary_to_send['link'] = self.link_lineEdit.text()
+        dictionary_to_send['socket-timeout'] = '5'
 
         fetcher_thread = MediaListFetcherThread(self.fetchedResult, dictionary_to_send, self)
         self.parent.threadPool.append(fetcher_thread)
@@ -582,21 +584,41 @@ class VideoFinderAddLink(AddLinkWindow):
     # This method collects additional information like proxy ip, user, password etc.
     def collectMoreOptions(self):
         options = {'ip': None, 'port': None, 'proxy_user': None, 'proxy_passwd': None, 'download_user': None,
-                   'download_passwd': None}
+                   'download_passwd': None, 'proxy_type': None}
+
         if self.proxy_checkBox.isChecked():
+
             options['ip'] = self.ip_lineEdit.text()
             options['port'] = self.port_spinBox.value()
             options['proxy_user'] = self.proxy_user_lineEdit.text()
             options['proxy_passwd'] = self.proxy_pass_lineEdit.text()
+
+            # http, https or socks5 proxy
+            if self.http_radioButton.isChecked() == True:
+
+                options['proxy_type'] = 'http'
+
+            elif self.https_radioButton.isChecked() == True:
+
+                options['proxy_type'] = 'https'
+
+            else:
+
+                options['proxy_type'] = 'socks5'
+
+
         if self.download_checkBox.isChecked():
+            
             options['download_user'] = self.download_user_lineEdit.text()
             options['download_passwd'] = self.download_pass_lineEdit.text()
 
         # These info (keys) are required for spider to find file size, because spider() does not check if key exists.
         additional_info = ['header', 'load_cookies', 'user_agent', 'referer', 'out']
         for i in additional_info:
+
             if i not in self.plugin_add_link_dictionary.keys():
                 options[i] = None
+
         return options
 
     # user submitted information by pressing ok_pushButton, so get information
@@ -654,12 +676,33 @@ class VideoFinderAddLink(AddLinkWindow):
         self.persepolis_setting.setValue(
             'add_link_initialization/download_user', self.download_user_lineEdit.text())
 
+        # http, https or socks5 proxy
+        if self.http_radioButton.isChecked() == True:
+
+            proxy_type = 'http'
+            self.persepolis_setting.setValue(
+                'add_link_initialization/proxy_type', 'http')
+
+        elif self.https_radioButton.isChecked() == True:
+
+            proxy_type = 'https'
+            self.persepolis_setting.setValue(
+                'add_link_initialization/proxy_type', 'https')
+
+        else:
+
+            proxy_type = 'socks5'
+            self.persepolis_setting.setValue(
+                'add_link_initialization/proxy_type', 'socks5')
+
+
         # get proxy information
         if not(self.proxy_checkBox.isChecked()):
             ip = None
             port = None
             proxy_user = None
             proxy_passwd = None
+            proxy_type = None
         else:
             ip = self.ip_lineEdit.text()
             if not(ip):
@@ -769,7 +812,7 @@ class VideoFinderAddLink(AddLinkWindow):
             # save information in a dictionary(add_link_dictionary).
             add_link_dictionary = {'referer': referer, 'header': header, 'user_agent': user_agent, 'load_cookies': load_cookies,
                                    'out': name_list[0], 'start_time': start_time, 'end_time': end_time, 'link': link_list[0], 'ip': ip,
-                                   'port': port, 'proxy_user': proxy_user, 'proxy_passwd': proxy_passwd,
+                                   'port': port, 'proxy_user': proxy_user, 'proxy_passwd': proxy_passwd, 'proxy_type': proxy_type,
                                    'download_user': download_user, 'download_passwd': download_passwd,
                                    'connections': connections, 'limit_value': limit, 'download_path': download_path}
 
@@ -778,13 +821,13 @@ class VideoFinderAddLink(AddLinkWindow):
         else:
             video_add_link_dictionary = {'referer': referer, 'header': header, 'user_agent': user_agent, 'load_cookies': load_cookies,
                                          'out': name_list[0], 'start_time': start_time, 'end_time': end_time, 'link': link_list[0], 'ip': ip,
-                                         'port': port, 'proxy_user': proxy_user, 'proxy_passwd': proxy_passwd,
+                                         'port': port, 'proxy_user': proxy_user, 'proxy_passwd': proxy_passwd, 'proxy_type': proxy_type,
                                          'download_user': download_user, 'download_passwd': download_passwd,
                                          'connections': connections, 'limit_value': limit, 'download_path': download_path}
 
             audio_add_link_dictionary = {'referer': referer, 'header': header, 'user_agent': user_agent, 'load_cookies': load_cookies,
                                          'out': name_list[1], 'start_time': None, 'end_time': end_time, 'link': link_list[1], 'ip': ip,
-                                         'port': port, 'proxy_user': proxy_user, 'proxy_passwd': proxy_passwd,
+                                         'port': port, 'proxy_user': proxy_user, 'proxy_passwd': proxy_passwd, 'proxy_type': proxy_type,
                                          'download_user': download_user, 'download_passwd': download_passwd,
                                          'connections': connections, 'limit_value': limit, 'download_path': download_path}
 
