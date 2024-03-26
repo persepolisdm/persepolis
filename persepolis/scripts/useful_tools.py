@@ -440,6 +440,7 @@ def findExternalAppPath(app_name):
 
             # for Mac OSX and MicroSoft Windows
             app_command = app_alongside
+            log_list = ["{}'s file is detected inside of bundle.".format(app_name), "INFO"]
 
     # I Persepolis run from test directory.
     if is_test:
