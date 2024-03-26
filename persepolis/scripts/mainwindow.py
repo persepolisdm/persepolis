@@ -451,14 +451,24 @@ class DownloadLink(QThread):
             dictionary = {'gid': self.gid, 'status': 'active'}
             self.parent.temp_db.updateSingleTable(dictionary)
 
-        # if request is not successful then persepolis is checking rpc
-        # connection with download.aria2Version() function
-        answer = download.downloadAria(self.gid, self.parent)
-        if answer == False:
-            version_answer = download.aria2Version()
+        # check aria2c availability first. then send the download request to aria2c
+        version_answer = download.aria2Version()
 
-            if version_answer == 'did not respond':
-                self.ARIA2NOTRESPOND.emit()
+        if version_answer == 'did not respond':
+            answer = download.downloadStop(self.gid, self.parent)
+            self.ARIA2NOTRESPOND.emit()
+            return answer
+            
+
+        else:
+            # if request is not successful then persepolis is checking rpc
+            # connection with download.aria2Version() function
+            answer = download.downloadAria(self.gid, self.parent)
+            if answer == False:
+                version_answer = download.aria2Version()
+
+                if version_answer == 'did not respond':
+                    self.ARIA2NOTRESPOND.emit()
 
 # Persepolis download audio and video separately and the muxing them :)
 # VideoFinder do this duty for Persepolis.
@@ -2815,6 +2825,8 @@ class MainWindow(MainWindow_Ui):
         notifySend(QCoreApplication.translate("mainwindow_src_ui_tr", 'Aria2 did not respond'),
                    QCoreApplication.translate("mainwindow_src_ui_tr", 'Try again'),
                    5000, 'critical', parent=self)
+
+        self.reconnectAria('Please restart aria2c')
 
     # this method called if user presses stop button in MainWindow
     def stopButtonPressed(self, button=None):

@@ -331,6 +331,7 @@ def downloadAria(gid, parent):
             logger.sendToLog("Download did not start", "ERROR")
             error_message = str(traceback.format_exc())
             logger.sendToLog(error_message, "ERROR")
+            downloadStop(gid, parent)
 
             # return False!
             return False
