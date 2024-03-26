@@ -24,7 +24,6 @@ from persepolis.constants import OS
 
 # get proxy function
 
-
 def getProxy():
     socks_proxy = False
 
@@ -32,9 +31,12 @@ def getProxy():
     os_type, desktop = osAndDesktopEnvironment()
 
     # destop == 'ubuntu:GNOME' to destop == 'GNOME'
-    tmp = re.search(r'.*:(.*)', desktop)
-    if tmp is not None:
-        desktop = tmp.group(1)
+    try:
+        tmp = re.search(r'.*:(.*)', desktop)
+        if tmp is not None:
+            desktop = tmp.group(1)
+    except:
+        pass
 
     # write in log
     platform = 'platform : ' + os_type
@@ -56,6 +58,7 @@ def getProxy():
 
         # user home directory path
         home_address = os.path.expanduser("~")
+
         # get proxy file content
         try:
             plasma_proxy_config_file_path = os.path.join(
