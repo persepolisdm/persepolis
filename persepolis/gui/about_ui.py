@@ -188,6 +188,40 @@ class AboutWindow_Ui(QWidget):
 
         verticalLayout.addWidget(self.about_tabWidget)
 
+        # Acknowledgments tab
+        self.acknowledgments_tab = QWidget(self)
+        acknowledgments_verticalLayout = QVBoxLayout(self.acknowledgments_tab)
+
+        self.acknowledgments_title_label = QLabel(self.acknowledgments_tab)
+        font.setBold(True)
+        font.setWeight(QFont.Weight.Bold)
+        self.acknowledgments_title_label.setFont(font)
+        self.acknowledgments_title_label.setAlignment(Qt.AlignCenter)
+        acknowledgments_verticalLayout.addWidget(self.acknowledgments_title_label)
+
+        self.acknowledgments_aria2c_label = QLabel(self.acknowledgments_tab)
+        self.acknowledgments_aria2c_label.setAlignment(Qt.AlignCenter)
+        self.acknowledgments_ffmpeg_label = QLabel(self.acknowledgments_tab)
+        self.acknowledgments_ffmpeg_label.setAlignment(Qt.AlignCenter)
+
+        self.acknowledgments_gost_label = QLabel(self.acknowledgments_tab)
+        self.acknowledgments_gost_label.setAlignment(Qt.AlignCenter)
+
+
+        self.acknowledgments_aria2c_label.setFont(font)
+        self.acknowledgments_ffmpeg_label.setFont(font)
+        self.acknowledgments_gost_label.setFont(font)
+
+
+        acknowledgments_verticalLayout.addWidget(self.acknowledgments_aria2c_label)
+        acknowledgments_verticalLayout.addWidget(self.acknowledgments_ffmpeg_label)
+        acknowledgments_verticalLayout.addWidget(self.acknowledgments_gost_label)
+        acknowledgments_verticalLayout.addStretch(1)
+
+
+
+
+
         # buttons
         button_horizontalLayout = QHBoxLayout()
         button_horizontalLayout.addStretch(1)
@@ -218,7 +252,7 @@ class AboutWindow_Ui(QWidget):
                                                               "TRANSLATORS NOTE: YOU REALLY DON'T NEED TO TRANSLATE THIS PART!"))
 
         # developers_tab
-        self.developers_title_label.setText(QCoreApplication.translate('about_ui_tr', 'Developers:'))
+        self.developers_title_label.setText(QCoreApplication.translate('about_ui_tr', 'Acknowledgments:'))
 
         self.name_label.setText(QCoreApplication.translate("about_ui_tr",
                                                            "\nAliReza AmirSamimi\nMohammadreza Abdollahzadeh\nSadegh Alirezaie\nMostafa Asadi\nJafar Akhondali\nKia Hamedi\nH.Rostami\nEhsan Titish\nMohammadAmin Vahedinia",
@@ -227,6 +261,19 @@ class AboutWindow_Ui(QWidget):
         self.contributors_thank_label.setText(QCoreApplication.translate('about_ui_tr', 'Special thanks to:'))
         self.contributors_link_label.setText(
             "<a href=https://github.com/persepolisdm/persepolis/graphs/contributors>our contributors</a>")
+
+        # Acknowledgments
+        self.acknowledgments_title_label.setText(QCoreApplication.translate('about_ui_tr', 'Acknowledgments:'))
+
+        self.acknowledgments_aria2c_label.setText(QCoreApplication.translate("about_ui_tr",
+                                                                           "<a href=https://github.com/aria2/aria2>Aria2c project</a>"))
+        self.acknowledgments_ffmpeg_label.setText(QCoreApplication.translate("about_ui_tr",
+                                                                           "<a href=https://github.com/ffmpeg/ffmpeg>FFmpeg project</a>"))
+        self.acknowledgments_gost_label.setText(QCoreApplication.translate("about_ui_tr",
+                                                                           "<a href=https://github.com/ginuerzh/gost>Gost project</a>"))
+
+
+
 
         # License
         self.license_text.setPlainText("""
@@ -247,6 +294,8 @@ class AboutWindow_Ui(QWidget):
         # tabs
         self.about_tabWidget.addTab(self.about_tab, QCoreApplication.translate("about_ui_tr", "About Persepolis"))
         self.about_tabWidget.addTab(self.developers_tab, QCoreApplication.translate("about_ui_tr", "Developers"))
+        self.about_tabWidget.addTab(self.acknowledgments_tab, QCoreApplication.translate("about_ui_tr", "Acknowledgments"))
+
         self.about_tabWidget.addTab(self.translators_tab, QCoreApplication.translate("about_ui_tr", "Translators"))
         self.about_tabWidget.addTab(self.license_tab, QCoreApplication.translate("about_ui_tr", "License"))
 

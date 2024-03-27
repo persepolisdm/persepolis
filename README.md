@@ -73,5 +73,10 @@ It exemplifies the Achaemenid style of architecture. UNESCO declared the ruins o
 
 [Persepolis website (En)](https://persepolisdm.github.io/) | [Persepolis website (Fa)](https://persepolisdm.github.io/fa) | [Twitter](https://twitter.com/persepolisdm) | [Telegram Channel](https://telegram.me/persepolisdm)
 
+### Acknowledgments:
+[Aria2c project](https://github.com/aria2/aria2)
+[FFmpeg project](https://github.com/FFmpeg/FFmpeg)
+[Gost project](https://github.com/ginuerzh/gost)
+
 ---
 _Is there any mistake in README.md? Report it in [issue tracker](https://github.com/persepolisdm/persepolis/issues) or correct it by yourself._
