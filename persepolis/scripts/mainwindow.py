@@ -4597,19 +4597,16 @@ class MainWindow(MainWindow_Ui):
             self.queue_panel_widget.hide()
 
             # update toolBar
-            list = [self.addlinkAction, self.resumeAction, self.pauseAction,
+            list = [self.addlinkAction, self.videoFinderAddLinkAction, self.resumeAction, self.pauseAction,
                     self.stopAction, self.removeSelectedAction, self.deleteSelectedAction,
-                    self.propertiesAction, self.progressAction, self.minimizeAction,
-                    self.videoFinderAddLinkAction, self.exitAction]
+                    self.propertiesAction, self.progressAction, self.minimizeAction, self.exitAction]
 
             for i in list:
                 self.toolBar.addAction(i)
 
-            self.toolBar.insertSeparator(self.addlinkAction)
             self.toolBar.insertSeparator(self.resumeAction)
             self.toolBar.insertSeparator(self.removeSelectedAction)
             self.toolBar.insertSeparator(self.propertiesAction)
-            self.toolBar.insertSeparator(self.videoFinderAddLinkAction)
             self.toolBar.insertSeparator(self.exitAction)
             self.toolBar.addSeparator()
 
@@ -4627,19 +4624,16 @@ class MainWindow(MainWindow_Ui):
             self.queuePanelWidget(category)
 
             # update toolBar
-            list = [self.addlinkAction, self.resumeAction, self.pauseAction,
+            list = [self.addlinkAction, self.videoFinderAddLinkAction, self.resumeAction, self.pauseAction,
                     self.stopAction, self.removeSelectedAction, self.deleteSelectedAction,
-                    self.propertiesAction, self.progressAction, self.minimizeAction,
-                    self.videoFinderAddLinkAction, self.exitAction]
+                    self.propertiesAction, self.progressAction, self.minimizeAction, self.exitAction]
 
             for i in list:
                 self.toolBar.addAction(i)
 
-            self.toolBar.insertSeparator(self.addlinkAction)
             self.toolBar.insertSeparator(self.resumeAction)
             self.toolBar.insertSeparator(self.removeSelectedAction)
             self.toolBar.insertSeparator(self.propertiesAction)
-            self.toolBar.insertSeparator(self.videoFinderAddLinkAction)
             self.toolBar.insertSeparator(self.exitAction)
             self.toolBar.addSeparator()
 
@@ -4657,20 +4651,19 @@ class MainWindow(MainWindow_Ui):
             self.queuePanelWidget(category)
 
             # update toolBar
-            list = [self.addlinkAction, self.removeSelectedAction, self.deleteSelectedAction,
+            list = [self.addlinkAction, self.videoFinderAddLinkAction, self.removeSelectedAction, self.deleteSelectedAction,
                     self.propertiesAction, self.startQueueAction, self.stopQueueAction,
                     self.removeQueueAction, self.moveUpSelectedAction, self.moveDownSelectedAction,
-                    self.minimizeAction, self.videoFinderAddLinkAction, self.exitAction]
+                    self.minimizeAction,  self.exitAction]
 
             for i in list:
                 self.toolBar.addAction(i)
 
-            self.toolBar.insertSeparator(self.addlinkAction)
+
             self.toolBar.insertSeparator(self.removeSelectedAction)
             self.toolBar.insertSeparator(self.propertiesAction)
             self.toolBar.insertSeparator(self.startQueueAction)
             self.toolBar.insertSeparator(self.minimizeAction)
-            self.toolBar.insertSeparator(self.videoFinderAddLinkAction)
             self.toolBar.insertSeparator(self.exitAction)
             self.toolBar.addSeparator()
 
