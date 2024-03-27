@@ -76,6 +76,8 @@ It exemplifies the Achaemenid style of architecture. UNESCO declared the ruins o
 ### Acknowledgments:
 [Aria2c project](https://github.com/aria2/aria2)
 
+[YT-DLP project](https://github.com/yt-dlp/yt-dlp) 
+
 [FFmpeg project](https://github.com/FFmpeg/FFmpeg)
 
 [Gost project](https://github.com/ginuerzh/gost)
