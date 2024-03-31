@@ -167,8 +167,8 @@ class VideoFinderAddLink(AddLinkWindow):
     running_thread = None
     threadPool = {}
 
-    def __init__(self, parent, receiver_slot, gost_is_installed, settings, video_dict={}):
-        super().__init__(parent, receiver_slot, settings, gost_is_installed, video_dict)
+    def __init__(self, parent, receiver_slot, socks5_to_http_convertor_is_installed, settings, video_dict={}):
+        super().__init__(parent, receiver_slot, settings, socks5_to_http_convertor_is_installed, video_dict)
         self.setWindowTitle(QCoreApplication.translate("ytaddlink_src_ui_tr", 'Video Finder'))
         self.size_label.hide()
 

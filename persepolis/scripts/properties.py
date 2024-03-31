@@ -29,7 +29,7 @@ import os
 
 
 class PropertiesWindow(AddLinkWindow_Ui):
-    def __init__(self, parent, callback, gid, persepolis_setting, gost_is_installed, video_finder_dictionary=None):
+    def __init__(self, parent, callback, gid, persepolis_setting, socks5_to_http_convertor_is_installed, video_finder_dictionary=None):
         super().__init__(persepolis_setting)
 
         self.parent = parent
@@ -156,7 +156,7 @@ class PropertiesWindow(AddLinkWindow_Ui):
         proxy_type = self.add_link_dictionary_1['proxy_type'] 
 
         # default is http
-        if not(gost_is_installed):
+        if not(socks5_to_http_convertor_is_installed):
             self.socks5_radioButton.setEnabled(False)
         else:
             self.socks5_radioButton.setEnabled(True)

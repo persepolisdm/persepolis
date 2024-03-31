@@ -30,7 +30,7 @@ except:
     from PyQt5.QtCore import pyqtSignal as Signal
     pyside6_is_installed = False
 
-from persepolis.scripts.useful_tools import muxer, freeSpace, determineConfigFolder, osAndDesktopEnvironment, getExecPath, ffmpegVersion, gostVersion
+from persepolis.scripts.useful_tools import muxer, freeSpace, determineConfigFolder, osAndDesktopEnvironment, getExecPath, ffmpegVersion, socks5ToHttpConvertorVersion
 from persepolis.scripts.video_finder_progress import VideoFinderProgressWindow
 from persepolis.gui.mainwindow_ui import MainWindow_Ui, QTableWidgetItem
 from persepolis.scripts.data_base import PluginsDB, PersepolisDB, TempDB
@@ -77,8 +77,8 @@ except ModuleNotFoundError:
 global ffmpeg_is_installed
 ffmpeg_is_installed = False
 
-global gost_is_installed
-gost_is_installed = False
+global socks5_to_http_convertor_is_installed
+socks5_to_http_convertor_is_installed = False
 
 # The GID (or gid) is a key to manage each download. Each download will be assigned a unique GID.
 # The GID is stored as 64-bit binary value in aria2. For RPC access,
@@ -141,6 +141,7 @@ show_window_file = os.path.join(persepolis_tmp, 'show-window')
 # this thread writes osi type and desktop env. in log file.
 
 class CheckVersionsThread(QThread):
+    TYPEOFCONVERTORSIGNAL = Signal(str)
     def __init__(self, parent):
         QThread.__init__(self)
         self.parent = parent
@@ -154,12 +155,12 @@ class CheckVersionsThread(QThread):
         logger.sendToLog(ffmpeg_command_log_list[0], ffmpeg_command_log_list[1])
         logger.sendToLog(ffmpeg_output, "INFO")
 
-        global gost_is_installed
-        # check gost version
-        gost_is_installed, gost_output, gost_command_log_list = gostVersion()
+        global socks5_to_http_convertor_is_installed
+        # check socks5_to_http_convertor version
+        socks5_to_http_convertor_is_installed, socks5_to_http_convertor_output, socks5_to_http_convertor_command_log_list, type_of_convertor = socks5ToHttpConvertorVersion()
 
-        logger.sendToLog(gost_command_log_list[0], gost_command_log_list[1])
-        logger.sendToLog(gost_output, "INFO")
+        logger.sendToLog(socks5_to_http_convertor_command_log_list[0], socks5_to_http_convertor_command_log_list[1])
+        logger.sendToLog(socks5_to_http_convertor_output, "INFO")
 
 
         # log python version
@@ -187,7 +188,9 @@ class CheckVersionsThread(QThread):
             logger.sendToLog('Desktop env.: '
                              + str(desktop_env))
 
-        
+        if type_of_convertor:
+            self.TYPEOFCONVERTORSIGNAL.emit(type_of_convertor)
+
 
 
 # start aria2 when Persepolis starts
@@ -196,7 +199,17 @@ class StartAria2Thread(QThread):
 
     def __init__(self, parent):
         QThread.__init__(self)
-        self.parent = parent
+        self.main_window = parent
+        self.process = None
+
+    def restartAria2c(self):
+
+        # kill process and create new process again
+        if self.process:
+            self.process.kill()
+            self.process.communicate()
+            sleep(1)
+            self.run()
 
     def run(self):
         # aria_startup_answer is None when Persepolis starts! and after
@@ -218,7 +231,7 @@ class StartAria2Thread(QThread):
             # try 5 time if aria2 doesn't respond!
             for i in range(5):
 
-                answer = download.startAria(self.parent)
+                self.process, answer = download.startAria(self)
 
                 if answer == 'did not respond' and i != 4:
 
@@ -379,8 +392,8 @@ class CheckDownloadInfoThread(QThread):
             shutdown_notification = 2
             break
 
-# when rpc connection between persepolis and aria is
-# disconnected then aria2_disconnected = 1
+    # when rpc connection between persepolis and aria is
+    # disconnected then aria2_disconnected = 1
     def reconnectAria(self):
         global aria2_disconnected
         aria2_disconnected = 0
@@ -463,7 +476,7 @@ class DownloadLink(QThread):
         else:
             # if request is not successful then persepolis is checking rpc
             # connection with download.aria2Version() function
-            answer = download.downloadAria(self.gid, self.parent)
+            answer = download.downloadAria(self, self.gid, self.parent)
             if answer == False:
                 version_answer = download.aria2Version()
 
@@ -1013,11 +1026,11 @@ class CheckingThread(QThread):
         global shutdown_notification
         global plugin_links_checked
 
-# shutdown_notification = 0 >> persepolis is running
-# 1 >> persepolis is ready for closing(closeEvent called)
-# 2 >> OK, let's close application!
+        # shutdown_notification = 0 >> persepolis is running
+        # 1 >> persepolis is ready for closing(closeEvent called)
+        # 2 >> OK, let's close application!
         while shutdown_notification == 0 and aria_startup_answer != 'ready':
-            sleep(2)
+            sleep(1)
 
         while shutdown_notification == 0:
             sleep(0.2)
@@ -1306,7 +1319,7 @@ class MainWindow(MainWindow_Ui):
             self.is_test = False
             logger.sendToLog("Persepolis is run as installed python madule.", "INFO")
 
-        # start aria2
+        # start aria2c
         start_aria = StartAria2Thread(self)
         self.threadPool.append(start_aria)
         self.threadPool[0].start()
@@ -1436,9 +1449,11 @@ class MainWindow(MainWindow_Ui):
         # this thread checks ffmpeg and gost availability.
         # this thread checks ffmpeg and python and pyqt and qt versions and write them in log file.
         # this thread writes osi type and desktop env. in log file.
+        self.type_of_convertor = None
         check_version_thread = CheckVersionsThread(self)
         self.threadPool.append(check_version_thread)
         self.threadPool[-1].start()
+        self.threadPool[-1].TYPEOFCONVERTORSIGNAL.connect(self.typeOfConvertor)
 
         # finding number or row that user selected!
         self.download_table.itemSelectionChanged.connect(self.selectedRow)
@@ -1622,6 +1637,12 @@ class MainWindow(MainWindow_Ui):
 
         # check reverse_checkBox
         self.reverse_checkBox.setChecked(False)
+
+
+    # This method set type_of_convertor_variable
+    # see TYPEOFCONVERTORSIGNAL and CheckVersionThread
+    def typeOfConvertor(self, message):
+        self.type_of_convertor = message
 
 # startAriaMessage function is showing some message on statusbar and
 # sending notification when aria failed to start! see StartAria2Thread for
@@ -2568,10 +2589,10 @@ class MainWindow(MainWindow_Ui):
     def pluginAddLink(self, add_link_dictionary):
 
         # check if gost is installed
-        global gost_is_installed
+        global socks5_to_http_convertor_is_installed
 
         # create an object for AddLinkWindow and add it to addlinkwindows_list.
-        addlinkwindow = AddLinkWindow(self, self.callBack, self.persepolis_setting, gost_is_installed, add_link_dictionary)
+        addlinkwindow = AddLinkWindow(self, self.callBack, self.persepolis_setting, socks5_to_http_convertor_is_installed, add_link_dictionary)
         self.addlinkwindows_list.append(addlinkwindow)
         self.addlinkwindows_list[-1].show()
 
@@ -2584,9 +2605,9 @@ class MainWindow(MainWindow_Ui):
     def addLinkButtonPressed(self, button=None):
 
         # check if gost is installed
-        global gost_is_installed
+        global socks5_to_http_convertor_is_installed
 
-        addlinkwindow = AddLinkWindow(self, self.callBack, self.persepolis_setting, gost_is_installed)
+        addlinkwindow = AddLinkWindow(self, self.callBack, self.persepolis_setting, socks5_to_http_convertor_is_installed)
         self.addlinkwindows_list.append(addlinkwindow)
         self.addlinkwindows_list[-1].show()
 
@@ -2958,9 +2979,9 @@ class MainWindow(MainWindow_Ui):
                     return
 
             # creating propertieswindow
-            global gost_is_installed
+            global socks5_to_http_convertor_is_installed
             propertieswindow = PropertiesWindow(
-                self, self.propertiesCallback, gid, self.persepolis_setting, gost_is_installed, result_dictionary)
+                self, self.propertiesCallback, gid, self.persepolis_setting, socks5_to_http_convertor_is_installed, result_dictionary)
             self.propertieswindows_list.append(propertieswindow)
             self.propertieswindows_list[-1].show()
 
@@ -3170,12 +3191,13 @@ class MainWindow(MainWindow_Ui):
         for db in self.persepolis_db, self.plugins_db, self.temp_db:
             db.closeConnections()
 
-        for i in self.socks5_to_http_convertor_list:
-            i.stop()
-
         for i in self.threadPool:
             i.quit()
             i.wait()
+
+        for i in self.socks5_to_http_convertor_list:
+            i.stop()
+
 
         QCoreApplication.instance().quit
         logger.sendToLog("Persepolis closed!", "INFO")
@@ -4294,9 +4316,9 @@ class MainWindow(MainWindow_Ui):
     def pluginQueue(self, list_of_links):
 
         # create window
-        global gost_is_installed
+        global socks5_to_http_convertor_is_installed
         plugin_queue_window = BrowserPluginQueue(
-            self, list_of_links, self.queueCallback, gost_is_installed, self.persepolis_setting)
+            self, list_of_links, self.queueCallback, socks5_to_http_convertor_is_installed, self.persepolis_setting)
         self.plugin_queue_window_list.append(plugin_queue_window)
         self.plugin_queue_window_list[-1].show()
 
@@ -4313,13 +4335,13 @@ class MainWindow(MainWindow_Ui):
             self, 'Select the text file that contains links')
 
         # check if the gost is installed.
-        global gost_is_installed
+        global socks5_to_http_convertor_is_installed
 
         # if path is correct:
         if os.path.isfile(str(f_path)):
             # create a text_queue_window for getting information.
             text_queue_window = TextQueue(
-                self, f_path, self.queueCallback, gost_is_installed, self.persepolis_setting)
+                self, f_path, self.queueCallback, socks5_to_http_convertor_is_installed, self.persepolis_setting)
 
             self.text_queue_window_list.append(text_queue_window)
             self.text_queue_window_list[-1].show()
@@ -5631,7 +5653,7 @@ class MainWindow(MainWindow_Ui):
     def showVideoFinderAddLinkWindow(self, input_dict=None, menu=None):
 
         # check if gost is installed.
-        global gost_is_installed
+        global socks5_to_http_convertor_is_installed
 
         # first check youtube_dl_is_installed and ffmpeg_is_installed value!
         # if youtube_dl or ffmpeg is not installed show an error message.
@@ -5640,7 +5662,7 @@ class MainWindow(MainWindow_Ui):
                 input_dict = {}
 
             video_finder_addlink_window = VideoFinderAddLink(
-                parent=self, receiver_slot=self.videoFinderCallBack, gost_is_installed = gost_is_installed, settings=self.persepolis_setting, video_dict=input_dict)
+                parent=self, receiver_slot=self.videoFinderCallBack, socks5_to_http_convertor_is_installed = socks5_to_http_convertor_is_installed, settings=self.persepolis_setting, video_dict=input_dict)
             self.addlinkwindows_list.append(video_finder_addlink_window)
             video_finder_addlink_window.show()
             video_finder_addlink_window.raise_()

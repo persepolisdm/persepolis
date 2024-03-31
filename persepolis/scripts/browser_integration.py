@@ -13,7 +13,7 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-from persepolis.scripts.useful_tools import determineConfigFolder, getExecPath
+from persepolis.scripts.useful_tools import determineConfigFolder, getExecPath, findExternalAppPath
 from persepolis.scripts import osCommands
 from persepolis.constants import OS, BROWSER
 import subprocess
@@ -34,11 +34,12 @@ def browserIntegration(browser):
     exec_dictionary = getExecPath()
     exec_path = exec_dictionary['modified_exec_file_path'] 
 
+    logg_message = ["", "INFO"]
 
     # for GNU/Linux
     if os_type == OS.LINUX:
         # intermediate shell script path
-        intermediate_script_path = os.path.join(config_folder, 'persepolis_run_shell')
+        intermediary = os.path.join(config_folder, 'persepolis_run_shell')
 
         # Native Messaging Hosts folder path for every browser
         if browser == BROWSER.CHROMIUM:
@@ -68,7 +69,7 @@ def browserIntegration(browser):
     elif os_type in OS.BSD_FAMILY:
         # find Persepolis execution path
         # persepolis intermediate script path
-        intermediate_script_path = os.path.join(config_folder, 'persepolis_run_shell')
+        intermediary = os.path.join(config_folder, 'persepolis_run_shell')
 
         # Native Messaging Hosts folder path for every browser
         if browser == BROWSER.CHROMIUM:
@@ -98,7 +99,7 @@ def browserIntegration(browser):
     elif os_type == OS.OSX:
         # find Persepolis execution path
         # persepolis execution path
-        intermediate_script_path = os.path.join(config_folder, 'persepolis_run_shell')
+        intermediary = os.path.join(config_folder, 'persepolis_run_shell')
 
         # Native Messaging Hosts folder path for every browser
         if browser == BROWSER.CHROMIUM:
@@ -131,31 +132,25 @@ def browserIntegration(browser):
         # the execution path in json file for Windows must in form of
         # c:\\Users\\...\\Persepolis Download Manager.exe , so we need 2
         # "\" in address
-        exec_path = exec_path.replace('\\', r'\\')
-
+        intermediary, logg_message = findExternalAppPath('PersepolisBI')
+        
         if browser in BROWSER.CHROME_FAMILY:
             native_message_folder = os.path.join(
-                home_address, 'AppData\Local\persepolis_download_manager', 'chrome')
+                home_address, 'AppData','Local',
+                'persepolis_download_manager', 'chrome')
         else:
             native_message_folder = os.path.join(
-                home_address, 'AppData\Local\persepolis_download_manager', 'firefox')
+                home_address, 'AppData', 'Local',
+                'persepolis_download_manager', 'firefox')
 
     # WebExtension native hosts file prototype
-    if os_type in OS.UNIX_LIKE or os_type == OS.OSX:
-        webextension_json_connector = {
-            "name": "com.persepolis.pdmchromewrapper",
-            "type": "stdio",
-            "path": str(intermediate_script_path),
-            "description": "Integrate Persepolis with %s using WebExtensions" % (browser)
-        }
-    elif os_type == OS.WINDOWS:
-        webextension_json_connector = {
-            "name": "com.persepolis.pdmchromewrapper",
-            "type": "stdio",
-            "path": str(exec_path),
-            "description": "Integrate Persepolis with %s using WebExtensions" % (browser)
-        }
- 
+    webextension_json_connector = {
+        "name": "com.persepolis.pdmchromewrapper",
+        "type": "stdio",
+        "path": str(intermediary),
+        "description": "Integrate Persepolis with %s using WebExtensions" % (browser)
+    }
+
 
     # Add chrom* keys
     if browser in BROWSER.CHROME_FAMILY:
@@ -248,13 +243,13 @@ def browserIntegration(browser):
                 break
 
         persepolis_run_shell_contents = shebang + '\n' + exec_path + "\t$@"
-        f = open(intermediate_script_path, 'w')
+        f = open(intermediary, 'w')
         f.writelines(persepolis_run_shell_contents)
         f.close()
 
         # make persepolis_run_shell executable
 
-        pipe_native = subprocess.Popen(['chmod', '+x', intermediate_script_path],
+        pipe_native = subprocess.Popen(['chmod', '+x', intermediary],
                                        stderr=subprocess.PIPE,
                                        stdout=subprocess.PIPE,
                                        stdin=subprocess.PIPE,
@@ -265,4 +260,4 @@ def browserIntegration(browser):
         else:
             native_done = False
 
-    return json_done, native_done
+    return json_done, native_done, logg_message

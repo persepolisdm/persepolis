@@ -156,7 +156,7 @@ persepolis_setting.endGroup()
 
 # Browser integration for Firefox and chromium and google chrome
 for browser in ['chrome', 'chromium', 'opera', 'vivaldi', 'firefox', 'brave']:
-    json_done, native_done = browserIntegration(browser)
+    json_done, native_done, log_message2 = browserIntegration(browser)
 
     log_message = browser
 
@@ -173,6 +173,7 @@ for browser in ['chrome', 'chromium', 'opera', 'vivaldi', 'firefox', 'brave']:
         log_message = log_message + ': ' + 'persepolis executer file ERROR!\n'
 
     logger.sendToLog(log_message)
+    logger.sendToLog(log_message2[0], log_message2[1])
 
 # get locale and set ui direction
 locale = str(persepolis_setting.value('settings/locale'))

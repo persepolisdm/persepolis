@@ -22,9 +22,9 @@ import sys
 import os
 
 try:
-    from PySide6.QtCore import QThread, Signal
+    from PySide6.QtCore import QThread, Signal, QProcess
 except:
-    from PyQt5.QtCore import QThread
+    from PyQt5.QtCore import QThread, QProcess
     from PyQt5.QtCore import pyqtSignal as Signal
 
 try:
@@ -313,31 +313,80 @@ def muxer(parent, video_finder_dictionary):
     return result_dictionary
 
 # return version of gost
-def gostVersion():
-    # find app path
-    gost_command, log_list = findExternalAppPath('gost')
-
-    # Try to test gost
-    command_argument = [gost_command, '-V']
+def socks5ToHttpConvertorVersion():
+    type_of_convertor = None
+    # persepolis use gost, pproxy, sthp for converting socks5 to http
+    # try to find sthp
+    sthp_command, log_list = findExternalAppPath('sthp')
+    command_argument = [sthp_command, '--version']
     try:
         pipe = runApplication(command_argument)
 
         if pipe.wait() == 0:
-            gost_is_installed = True
-            gost_output, error = pipe.communicate()
-            gost_output = gost_output.decode('utf-8')
+            socks5_to_http_convertor_is_installed = True
+            type_of_convertor = 'sthp'
+            sthp_output, error = pipe.communicate()
+            sthp_output = sthp_output.decode('utf-8')
 
         else:
-            gost_is_installed = False
-            gost_output = 'gost is not installed'
+            socks5_to_http_convertor_is_installed = False
     except:
-        gost_is_installed = False
-        gost_output = 'gost is not installed'
+        socks5_to_http_convertor_is_installed = False
 
-    return gost_is_installed, gost_output, log_list
+    if socks5_to_http_convertor_is_installed:
+        return socks5_to_http_convertor_is_installed, sthp_output, log_list, type_of_convertor
+
+    else:
+
+        # find gost path
+        gost_command, log_list = findExternalAppPath('gost')
+
+        # Try to test gost
+        command_argument = [gost_command, '-V']
+        try:
+            pipe = runApplication(command_argument)
+
+            if pipe.wait() == 0:
+                socks5_to_http_convertor_is_installed = True
+                type_of_convertor = 'gost'
+                gost_output, error = pipe.communicate()
+                gost_output = gost_output.decode('utf-8')
+
+            else:
+                socks5_to_http_convertor_is_installed = False
+        except:
+            socks5_to_http_convertor_is_installed = False
+
+    if socks5_to_http_convertor_is_installed:
+        return socks5_to_http_convertor_is_installed, gost_output, log_list, type_of_convertor
 
 
 
+
+    else:
+
+        # try to find pproxy
+        pproxy_command, log_list = findExternalAppPath('pproxy')
+        command_argument = [pproxy_command, '--version']
+        try:
+            pipe = runApplication(command_argument)
+
+            if pipe.wait() == 0:
+                socks5_to_http_convertor_is_installed = True
+                type_of_convertor = 'pproxy'
+                pproxy_output, error = pipe.communicate()
+                pproxy_output = pproxy_output.decode('utf-8')
+
+            else:
+                socks5_to_http_convertor_is_installed = False
+                pproxy_output = 'No socks to http convertor found.'
+        except:
+            socks5_to_http_convertor_is_installed = False
+            pproxy_output = 'No socks to http convertor found.'
+
+
+
+    return socks5_to_http_convertor_is_installed, pproxy_output, log_list, type_of_convertor
 
 # return version of ffmpeg
 def ffmpegVersion():
@@ -375,6 +424,13 @@ def ffmpegVersion():
     return ffmpeg_is_installed, ffmpeg_output, log_list
 
 
+# run apllication with qprocess
+def qRunApplication(command: str, command_argument: list, parent=None):
+
+    process = QProcess(parent=parent)
+    process.start(command, command_argument)
+    return process
+
 # run an application
 def runApplication(command_argument):
     if os_type == OS.WINDOWS:
@@ -405,6 +461,9 @@ def findExternalAppPath(app_name):
     persepolis_path_infromation = getExecPath()
     is_bundle = persepolis_path_infromation['bundle']
     is_test = persepolis_path_infromation['test']
+
+    if os_type == OS.WINDOWS:
+        app_name = app_name + '.exe'
 
     # If Persepolis run as a bundle.
     if is_bundle:
@@ -440,7 +499,7 @@ def findExternalAppPath(app_name):
 
             # for Mac OSX and MicroSoft Windows
             app_command = app_alongside
-            log_list = ["{}'s file is detected inside of bundle.".format(app_name), "INFO"]
+            log_list = ["{}'s file is detected alongside of bundle.".format(app_name), "INFO"]
 
     # I Persepolis run from test directory.
     if is_test:
@@ -510,7 +569,7 @@ def getExecPath():
     # replace space with \+space for UNIX_LIKE and OSX
     if os_type in OS.UNIX_LIKE or os_type == OS.OSX:
 
-        modified_exec_file_path = exec_file_path.replace(" ", "\ ")
+        modified_exec_file_path = exec_file_path.replace(" ", r"\ ")
 
     elif os_type == OS.WINDOWS:
         modified_exec_file_path = exec_file_path.replace('\\', r'\\')

@@ -22,12 +22,14 @@ from persepolis.scripts import logger
 from socket import socket
 
 
+
 class Socks5ToHttpConvertor():
-    def __init__(self, socks5_host, socks5_port, socks5_username, socks5_password, parent):
+    def __init__(self, socks5_host, socks5_port, socks5_username, socks5_password, main_window, parent):
         self.socks5_host = socks5_host
         self.socks5_port = socks5_port
         self.socks5_username = socks5_username
         self.socks5_password = socks5_password
+        self.main_window = main_window
         self.parent = parent
 
         # get random free port on localhost
@@ -35,54 +37,89 @@ class Socks5ToHttpConvertor():
         sock = socket()
         sock.bind(('', 0))
         self.http_port = sock.getsockname()[1]
+        self.process = None
 
-        logger.sendToLog("gost runs http server:\n\t\thttp://127.0.0.1:{}".format(str(self.http_port)))
+        logger.sendToLog("{} runs http server:\n\t\thttp://127.0.0.1:{}".format(str(self.main_window.type_of_convertor), str(self.http_port)))
 
         self.pipe_is_running = False
 
     def isRunning(self):
-        # check gost is running or not
-        if self.pipe_is_running == True and self.pipe.poll() == None:
-
-            self.pipe_is_running = True
+        # check process is running or not
+        if self.process:
+            if self.process.poll() == None:
+                self.pipe_is_running = True
+            else:
+                self.pipe_is_running = False
         else:
-
-            # gost is not running
             self.pipe_is_running = False
+
+        #     if self.process.ProcessState != QProcess.NotRunning:
+        #         self.pipe_is_running = True
+        #     else:
+        #         self.pipe_is_running = False
+        # else:
+        #     self.pipe_is_running = False
+
 
         return self.pipe_is_running
             
 
     def stop(self):
+        # kill process
         try:
-            self.pipe.kill()
-            self.pipe.communicate()
+            self.process.kill()
+            self.process.communicate()
+            self.pipe_is_running = False
         except:
-            pass
-        self.pipe_is_running = False
+            self.pipe_is_running = False
 
     def run(self):
         if not(self.pipe_is_running):
-            # find gost path
-            gost_command, log_list = findExternalAppPath('gost')
+            # find type of convertor
+            if self.main_window.type_of_convertor:
 
-            # run gost
-            http_argument = 'http://' + str(self.http_host) + ':' + str(self.http_port)
+                # find convertor path
+                convertor_app_path, log_list = findExternalAppPath(self.main_window.type_of_convertor)
 
-            if self.socks5_username:
+                # run convertor
+                http_argument = 'http://' + str(self.http_host) + ':' + str(self.http_port)
 
-                socks5_argument = 'socks5://' + str(self.socks5_username) + ':' + str(self.socks5_password) + '@' + str(self.socks5_host) + ':' + str(self.socks5_port)
+                if self.socks5_username:
 
-            else:
+                    socks5_argument = 'socks5://' + str(self.socks5_username) + ':' + str(self.socks5_password) + '@' + str(self.socks5_host) + ':' + str(self.socks5_port)
 
-                socks5_argument = 'socks5://' + str(self.socks5_host) + ':' + str(self.socks5_port)
+                else:
 
-                command_argument = [gost_command, 
-                                '-L', http_argument,
-                                '-F', socks5_argument]
+                    socks5_argument = 'socks5://' + str(self.socks5_host) + ':' + str(self.socks5_port)
+
+                # gost
+                if self.main_window.type_of_convertor == 'gost': 
+
+                    command_argument = [convertor_app_path ,'-L', http_argument,
+                                    '-F', socks5_argument]
+                # pproxy
+                elif self.main_window.type_of_convertor == 'pproxy':
+
+                    command_argument = [convertor_app_path ,'-l', http_argument,
+                                    '-r', socks5_argument]
+                #sthp
+                else:
+
+                    if self.socks5_username:
+                        command_argument = [convertor_app_path, '--listen-ip', str(self.http_host),
+                                            '--port', str(self.http_port),
+                                            '--socks-address', '{}:{}'.format(self.socks5_host, self.socks5_port),
+                                            '--username', self.socks5_username,
+                                            '--password', self.socks5_password]
+
+                    else:
+                        command_argument = [convertor_app_path ,'--listen-ip', str(self.http_host),
+                                            '--port', str(self.http_port),
+                                            '--socks-address', '{}:{}'.format(self.socks5_host, self.socks5_port)]
 
 
-
-            self.pipe_is_running = True
-            self.pipe = runApplication(command_argument)
+                self.pipe_is_running = True
+                self.process = runApplication(command_argument)
+                # self.process = QProcess()
+                # self.process.start(convertor_app_path, command_argument)
 

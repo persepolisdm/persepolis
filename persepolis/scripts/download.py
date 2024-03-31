@@ -76,7 +76,7 @@ def startAria(parent):
                           '--rpc-max-request-size=2M',
                           '--rpc-listen-all', '--quiet=true']
 
-    pipe = runApplication(command_argument)
+    process = runApplication(command_argument)
 
     time.sleep(2)
 
@@ -84,7 +84,7 @@ def startAria(parent):
     answer = aria2Version()
 
     # return result
-    return answer
+    return process, answer
 
 # check aria2 release version . Persepolis uses this function to
 # check that aria2 RPC connection is available or not.
@@ -103,12 +103,12 @@ def aria2Version():
 # this function sends download request to aria2
 
 
-def downloadAria(gid, parent):
+def downloadAria(parent, gid, main_window):
     # add_link_dictionary is a dictionary that contains user download request
     # information.
 
     # get information from data_base
-    add_link_dictionary = parent.persepolis_db.searchGidInAddLinkTable(gid)
+    add_link_dictionary = main_window.persepolis_db.searchGidInAddLinkTable(gid)
 
     link = add_link_dictionary['link']
     proxy_host = add_link_dictionary['ip']
@@ -176,21 +176,21 @@ def downloadAria(gid, parent):
 
     # update data_base
     dict_ = {'gid': gid, 'status': status, 'last_try_date': now_date}
-    parent.persepolis_db.updateDownloadTable([dict_])
+    main_window.persepolis_db.updateDownloadTable([dict_])
 
 
     # call startTime if start_time is available
     # startTime creates sleep loop if user set start_time
     # see startTime function for more information.
     if start_time:
-        start_time_status = startTime(start_time, gid, parent)
+        start_time_status = startTime(start_time, gid, main_window)
     else:
         start_time_status = "downloading"
 
     if start_time_status == "scheduled":
         # read limit value again from data_base before starting download!
         # perhaps user changed this in progress bar window
-        add_link_dictionary = parent.persepolis_db.searchGidInAddLinkTable(gid)
+        add_link_dictionary = main_window.persepolis_db.searchGidInAddLinkTable(gid)
         limit = add_link_dictionary['limit_value']
 
         # convert Mega to Kilo, RPC does not Support floating point numbers.
@@ -207,7 +207,7 @@ def downloadAria(gid, parent):
 
 
         # set start_time value to None in data_base!
-        parent.persepolis_db.setDefaultGidInAddlinkTable(gid, start_time=True)
+        main_window.persepolis_db.setDefaultGidInAddlinkTable(gid, start_time=True)
 
     # Find download_path_temp from persepolis_setting
     # if download_path_temp and download_path aren't in same partition on hard disk,
@@ -269,7 +269,7 @@ def downloadAria(gid, parent):
             # write http_host and http_port to aria_dict
             create_new_socks5_to_http_convertor = True
             if proxy_type == 'socks5':
-                for instance in parent.socks5_to_http_convertor_list:
+                for instance in main_window.socks5_to_http_convertor_list:
 
                     try:
                         if instance.isRunning() == True:
@@ -290,9 +290,9 @@ def downloadAria(gid, parent):
                 # no instance finded. so create new instance.
                 if create_new_socks5_to_http_convertor:
 
-                    new_socks5_to_http_convertor = Socks5ToHttpConvertor(proxy_host, int(proxy_port), proxy_user, proxy_passwd, parent)
-                    parent.socks5_to_http_convertor_list.append(new_socks5_to_http_convertor)
-                    parent.socks5_to_http_convertor_list[-1].run()
+                    new_socks5_to_http_convertor = Socks5ToHttpConvertor(proxy_host, int(proxy_port), proxy_user, proxy_passwd, main_window, parent)
+                    main_window.socks5_to_http_convertor_list.append(new_socks5_to_http_convertor)
+                    main_window.socks5_to_http_convertor_list[-1].run()
                     
                     # wait until new_socks5_to_http_convertor starts
                     time.sleep(2)
@@ -319,19 +319,28 @@ def downloadAria(gid, parent):
 
             logger.sendToLog(answer + " Starts", 'INFO')
             if end_time:
-                endTime(end_time, gid, parent)
+                endTime(end_time, gid, main_window)
 
         except:
 
             # write error status in data_base
             dict_ = {'gid': gid, 'status': 'error'}
-            parent.persepolis_db.updateDownloadTable([dict_])
+            main_window.persepolis_db.updateDownloadTable([dict_])
 
             # write ERROR messages in log
             logger.sendToLog("Download did not start", "ERROR")
             error_message = str(traceback.format_exc())
             logger.sendToLog(error_message, "ERROR")
-            downloadStop(gid, parent)
+            downloadStop(gid, main_window)
+
+            # check if aria2c is crashed.
+            # if "No URI to download" is in error message then restart aria2c
+            if error_message.find('No URI to download') != -1:
+
+                logger.sendToLog("aria2c is restarted!", "INFO")
+
+                # reset aria2c
+                main_window.threadPool[0].restartAria2c()
 
             # return False!
             return False
