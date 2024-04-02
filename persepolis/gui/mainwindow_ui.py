@@ -140,8 +140,6 @@ class MenuWidget(QPushButton):
 
         helpMenu.addAction(self.parent.issueAction)
 
-        helpMenu.addAction(self.parent.updateAction)
-
         helpMenu.addAction(self.parent.logAction)
 
         helpMenu.addAction(self.parent.helpAction)
@@ -714,11 +712,6 @@ class MainWindow_Ui(QMainWindow):
         self.issueAction = QAction(QIcon(icons + 'about'), QCoreApplication.translate("mainwindow_ui_tr", 'Report an Issue'),
                                    self, statusTip=QCoreApplication.translate("mainwindow_ui_tr", 'Report an issue'), triggered=self.reportIssue)
         helpMenu.addAction(self.issueAction)
-
-        # updateAction
-        self.updateAction = QAction(QIcon(icons + 'about'), QCoreApplication.translate("mainwindow_ui_tr", 'Check for Newer Version'),
-                                    self, statusTip=QCoreApplication.translate("mainwindow_ui_tr", 'Check for newer release'), triggered=self.newUpdate)
-        helpMenu.addAction(self.updateAction)
 
         # logAction
         self.logAction = QAction(QIcon(icons + 'about'), QCoreApplication.translate("mainwindow_ui_tr", 'Show Log File'),

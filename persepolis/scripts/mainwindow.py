@@ -43,7 +43,6 @@ from persepolis.scripts.play import playNotification
 from persepolis.scripts.addlink import AddLinkWindow
 from persepolis.scripts.text_queue import TextQueue
 from persepolis.scripts.log_window import LogWindow
-from persepolis.scripts.update import checkupdate
 from persepolis.scripts.shutdown import shutDown
 from persepolis.scripts.about import AboutWindow
 from persepolis.scripts.bubble import notifySend
@@ -58,9 +57,11 @@ from copy import deepcopy
 from time import sleep
 import urllib.parse
 import subprocess
+import requests
 import random
 import time
 import sys
+import ast
 import os
 
 global youtube_dl_is_installed
@@ -190,6 +191,40 @@ class CheckVersionsThread(QThread):
 
         if type_of_convertor:
             self.TYPEOFCONVERTORSIGNAL.emit(type_of_convertor)
+
+
+# check for newer version of Persepolis
+class CheckNewerVersionThread(QThread):
+
+    NEWVERSIONISAVAILABLESIGNAL = Signal(str)
+
+    def __init__(self, parent):
+        QThread.__init__(self)
+
+        # get current_version from QSettings
+        self.current_version = parent.persepolis_setting.value('version/version')
+
+    def run(self):
+        try:
+            # get information dictionary from github
+            updatesource = requests.get('https://persepolisdm.github.io/version', timeout=5)
+
+            updatesource_text = updatesource.text
+            updatesource_dict = ast.literal_eval(updatesource_text)
+
+            # get latest stable version
+            server_version = updatesource_dict['version']
+
+            # Comparison
+            if float(server_version) > float(self.current_version):
+
+                self.NEWVERSIONISAVAILABLESIGNAL.emit(str(server_version))
+
+        except Exception as e:
+            logger.sendToLog("An error occurred while checking for a new release:")
+            logger.sendToLog("{}".format(str(e)))
+
+
 
 
 
@@ -1403,7 +1438,6 @@ class MainWindow(MainWindow_Ui):
         self.text_queue_window_list = []
         self.about_window_list = []
         self.plugin_queue_window_list = []
-        self.checkupdatewindow_list = []
         self.logwindow_list = []
         self.progress_window_list_dict = {}
         self.capturekeywindows_list = []
@@ -1656,6 +1690,15 @@ class MainWindow(MainWindow_Ui):
 
             self.category_tree_qwidget.setEnabled(True)
 
+            # Check for newer version of Persepolis
+            # start aria2c
+            check_for_newer_version = CheckNewerVersionThread(self) 
+            self.threadPool.append(check_for_newer_version)
+            self.threadPool[-1].start()
+            self.threadPool[-1].NEWVERSIONISAVAILABLESIGNAL.connect(self.newVersionIsAvailable)
+
+
+
         elif message == 'try again':
             self.statusbar.showMessage(
                 QCoreApplication.translate("mainwindow_src_ui_tr", "Aria2 didn't respond! be patient! Persepolis tries again in 2 seconds!"))
@@ -1674,11 +1717,15 @@ class MainWindow(MainWindow_Ui):
             self.propertiesAction.setEnabled(True)
             self.category_tree_qwidget.setEnabled(True)
 
-    def reconnectAria(self, message):
-        # this function is executing if RECONNECTARIASIGNAL is emitted by CheckingThread .
+        # this method is executing if RECONNECTARIASIGNAL is emitted by CheckingThread .
         # if message is 'did not respond' then a message(Persepolis can not connect to Aria2) shown
         # if message is not 'did not respond' , it means that reconnecting
         # Aria2 was successful.
+
+        # This method checks newer version of Persepolis is released or not.
+
+    def reconnectAria(self, message):
+
         if message == 'did not respond':
             self.statusbar.showMessage(QCoreApplication.translate("mainwindow_src_ui_tr", 'Error...'))
             notifySend(QCoreApplication.translate("mainwindow_src_ui_tr", 'Persepolis can not connect to Aria2'),
@@ -1733,7 +1780,17 @@ class MainWindow(MainWindow_Ui):
             else:
                 QCursor.setPos(cursor_array[0] - 1, cursor_array[1] - 1)
 
-# if keep_awake_checkBox toggled by user , this method is called.
+    # This method notifies user about newer version of Persepolis
+    def newVersionIsAvailable(self, message):
+
+        # notify user about newer version
+        notifySend(QCoreApplication.translate("mainwindow_src_ui_tr", "Version {} is available!".format(message)),
+                   QCoreApplication.translate("mainwindow_src_ui_tr", "Please update Persepolis."),
+                   10000, '', parent=self)
+
+
+
+    # if keep_awake_checkBox toggled by user , this method is called.
     def keepAwakeCheckBoxToggled(self, checkbox):
         if self.keep_awake_checkBox.isChecked():
             self.persepolis_setting.setValue('settings/awake', 'yes')
@@ -1745,10 +1802,10 @@ class MainWindow(MainWindow_Ui):
         self.persepolis_setting.sync()
 
 
-# this method updates download_table in MainWindow
-#
-# download_table_header = ['File Name', 'Status', 'Size', 'Downloaded', 'Percentage', 'Connections',
-#                       'Transfer rate', 'Estimated time left', 'Gid', 'Link', 'First try date', 'Last try date', 'Category']
+    # this method updates download_table in MainWindow
+    #
+    # download_table_header = ['File Name', 'Status', 'Size', 'Downloaded', 'Percentage', 'Connections',
+    #                       'Transfer rate', 'Estimated time left', 'Gid', 'Link', 'First try date', 'Last try date', 'Category']
 
     def checkDownloadInfo(self, list):
 
@@ -5281,14 +5338,6 @@ class MainWindow(MainWindow_Ui):
     # this method opens persepolis wiki page in github
     def persepolisHelp(self, menu=None):
         osCommands.xdgOpen('https://github.com/persepolisdm/persepolis/wiki')
-
-    # this method opens update menu
-
-    def newUpdate(self, menu=None):
-        checkupdatewindow = checkupdate(
-            self.persepolis_setting)
-        self.checkupdatewindow_list.append(checkupdatewindow)
-        self.checkupdatewindow_list[-1].show()
 
     # this method opens LogWindow
 

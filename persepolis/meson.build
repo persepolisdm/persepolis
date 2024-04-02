@@ -53,7 +53,6 @@ scripts_sources = [
   'scripts/log_window.py',
   'scripts/persepolis.py',
   'scripts/setting.py',
-  'scripts/update.py',
   'scripts/socks5_to_http_convertor.py'
   ]
 
