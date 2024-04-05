@@ -15,3 +15,6 @@ test/ffmpeg
 test/gost
 dist/
 *.spec
+test/aria2c.exe
+test/ffmpeg.exe
+test/sthp.exe
