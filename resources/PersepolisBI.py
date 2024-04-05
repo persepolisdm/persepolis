@@ -12,10 +12,10 @@
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-
 import logging
 import json
 import subprocess
+from subprocess import CREATE_NO_WINDOW, DETACHED_PROCESS, CREATE_NEW_PROCESS_GROUP, CREATE_BREAKAWAY_FROM_JOB
 import platform
 import os
 import sys
@@ -25,7 +25,7 @@ import random
 import sqlite3
 from copy import deepcopy
 from time import sleep
-from PySide6.QtCore import QProcess, QSettings
+from PySide6.QtCore import QSettings
 
 # a "PersepolisBI.exe" file must be created from this script. 
 # "PersepolisBI.exe" and "Persepolis Download Manager.exe" must be in same directory.
@@ -292,15 +292,19 @@ sendToLog(log_list[0], log_list[1])
 
 # call persepolis 
 try:
-
-    process = QProcess()
-
+    creationflags = DETACHED_PROCESS | CREATE_NEW_PROCESS_GROUP | CREATE_BREAKAWAY_FROM_JOB | CREATE_NO_WINDOW
+    
     if browser_url:
-        process.startDetached(app_command)
+        subprocess.Popen([app_command],
+                         creationflags=creationflags,                
+                        shell=False)
+
         sendToLog("Download link(s) is sended to persepolis", "INFO")
 
     elif start_persepolis_if_browser_executed:
-        process.startDetached(app_command, ["--tray"])
+        subprocess.Popen([app_command, '--tray'],
+                         creationflags=creationflags,
+                        shell=False)
         sendToLog("Browser is executed and persepolis called by browser.")
 
 except Exception as e:
