@@ -6076,7 +6076,7 @@ class MainWindow(MainWindow_Ui):
         icons = ':/' + str(new_icons) + '/'
 
         action_icon_dict = {self.stopAllAction: 'stop_all', self.minimizeAction: 'minimize', self.addlinkAction: 'add', self.addtextfileAction: 'file', self.resumeAction: 'play', self.pauseAction: 'pause', self.stopAction: 'stop', self.propertiesAction: 'setting', self.progressAction: 'window', self.openFileAction: 'file', self.openDownloadFolderAction: 'folder', self.openDefaultDownloadFolderAction: 'folder', self.exitAction: 'exit',
-                            self.createQueueAction: 'add_queue', self.removeQueueAction: 'remove_queue', self.startQueueAction: 'start_queue', self.stopQueueAction: 'stop_queue', self.preferencesAction: 'preferences', self.aboutAction: 'about', self.issueAction: 'about', self.updateAction: 'about', self.videoFinderAddLinkAction: 'video_finder', self.qmenu: 'menu'}
+                            self.createQueueAction: 'add_queue', self.removeQueueAction: 'remove_queue', self.startQueueAction: 'start_queue', self.stopQueueAction: 'stop_queue', self.preferencesAction: 'preferences', self.aboutAction: 'about', self.issueAction: 'about', self.videoFinderAddLinkAction: 'video_finder', self.qmenu: 'menu'}
 
         for key in action_icon_dict.keys():
             key.setIcon(QIcon(icons + str(action_icon_dict[key])))
