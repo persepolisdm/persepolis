@@ -237,34 +237,6 @@ def findMountPoint(path):
 
     return path
 
-# this function creates temporary download folder in mount point of given path
-def makeTempDownloadDir(path):
-
-    # if path and home_address are in the same partition,
-    # create temp folder in default settings address.
-    if os.lstat(path).st_dev == os.lstat(home_address):
-
-        if os_type != OS.WINDOWS:
-            download_path_temp = os.path.join(home_address, '.persepolis')
-        else:
-            download_path_temp = os.path.join(
-                home_address, 'AppData', 'Local', 'persepolis')
-
-        # create directory
-        download_path_temp = makeDirs(download_path_temp)
-
-    else:
-        # Find mount point and create temp folder there!
-        mount_point = findMountPoint(path)
-        download_path_temp = os.path.join(mount_point, 'persepolis')
-
-        # Create folder and give new temp address from makeDirs function.
-        # Please checkout osCommands.py for more information.
-        download_path_temp = makeDirs(download_path_temp, hidden=True)
-
-
-    return download_path_temp
-
 # move downloaded file to another destination.
 def moveFile(old_file_path, new_path, new_path_type='folder'):
 

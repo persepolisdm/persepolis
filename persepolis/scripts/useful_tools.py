@@ -169,15 +169,9 @@ def freeSpace(dir):
 def returnDefaultSettings():
     os_type, desktop_env = osAndDesktopEnvironment()
 
-    # persepolis temporary download folder
-    if os_type != OS.WINDOWS:
-        download_path_temp = home_address + '/.persepolis'
-    else:
-        download_path_temp = os.path.join(
-            home_address, 'AppData', 'Local', 'persepolis')
-
     # user download folder path
     download_path = os.path.join(home_address, 'Downloads', 'Persepolis')
+
 
     # set dark fusion for default style settings. 
     style = 'Fusion'
@@ -202,7 +196,7 @@ def returnDefaultSettings():
                             'column10': 'yes', 'column11': 'yes', 'column12': 'yes', 'subfolder': 'yes', 'startup': 'no', 'show-progress': 'yes',
                             'show-menubar': 'no', 'show-sidepanel': 'yes', 'rpc-port': 6801, 'notification': 'Native notification', 'after-dialog': 'yes',
                             'tray-icon': 'yes', 'browser-persepolis': 'yes', 'hide-window': 'yes', 'max-tries': 5, 'retry-wait': 0, 'timeout': 60,
-                            'connections': 16, 'download_path_temp': download_path_temp, 'download_path': download_path, 'sound': 'yes', 'sound-volume': 100,
+                            'connections': 16, 'download_path': download_path, 'sound': 'yes', 'sound-volume': 100,
                             'style': style, 'color-scheme': color_scheme, 'icons': icons, 'font': 'Ubuntu', 'font-size': 9, 'aria2_path': '',
                             'video_finder/max_links': '3', 'shortcuts/delete_shortcut': delete_shortcut, 'shortcuts/remove_shortcut': remove_shortcut,
                             'shortcuts/add_new_download_shortcut': add_new_download_shortcut, 'shortcuts/import_text_shortcut': import_text_shortcut,

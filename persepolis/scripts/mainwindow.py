@@ -1245,10 +1245,6 @@ class MainWindow(MainWindow_Ui):
         if self.translator.load(':/translations/locales/ui_' + locale, 'ts'):
             QCoreApplication.installTranslator(self.translator)
 
-        # find temp_download_folder
-        global temp_download_folder
-        temp_download_folder = persepolis_setting.value('settings/download_path_temp')
-
         # this variable is changed to True,
         # if user highlights multiple items in download_table
         self.multi_items_selected = False
@@ -1879,11 +1875,18 @@ class MainWindow(MainWindow_Ui):
             else:
                 video_finder_link = False
 
+
+
             if status == 'error':
-                # check free space in temp_download_folder!
+                # check free space in download_folder
                 # perhaps insufficient space in hard disk caused this error!
                 # find free space in KiB
-                free_space = freeSpace(temp_download_folder)
+                # find download path
+                dictionary = self.persepolis_db.searchGidInAddLinkTable(gid)
+                download_path = dictionary['download_path']
+
+
+                free_space = freeSpace(download_path)
 
                 # find file size
                 file_size = dict['size']
@@ -1934,7 +1937,7 @@ class MainWindow(MainWindow_Ui):
                             # show notification
                             notifySend(QCoreApplication.translate("mainwindow_src_ui_tr", "Error: ") + error,
                                        QCoreApplication.translate("mainwindow_src_ui_tr",
-                                                                  'Please change the temporary download folder'),
+                                                                  'There is not enough disk space available at the download folder! Please choose another one or clear some space.'),
                                        10000, 'fail', parent=self)
 
             # find row of this gid in download_table!
@@ -1944,6 +1947,7 @@ class MainWindow(MainWindow_Ui):
                 if gid == row_gid:
                     row = i
                     break
+
 
             # update download_table items
             if row != None:
@@ -2766,12 +2770,7 @@ class MainWindow(MainWindow_Ui):
                 self.download_table.setItem(0, j, item)
                 j = j + 1
 
-#         print(len(add_link_dictionary))
-#         for key in add_link_dictionary.keys():
-#             print(key)
-#             print(add_link_dictionary[key])
-#             print(type(add_link_dictionary[key]))
-# 
+ 
         # if user didn't press download_later_pushButton in add_link window
         # then create new qthread for new download!
         if not(download_later):
@@ -3625,17 +3624,23 @@ class MainWindow(MainWindow_Ui):
             # remove row from download_table
             self.download_table.removeRow(row)
 
-            # remove download item from data base
-            self.persepolis_db.deleteItemInDownloadTable(gid, category)
 
-            # remove file of download from download temp folder
+            # find download_path
+            dictionary = self.persepolis_db.searchGidInAddLinkTable(gid)
+            download_path = dictionary['download_path']
+
+            # remove file of download from download folder
             if file_name != '***' and status != 'complete':
                 file_name_path = os.path.join(
-                    temp_download_folder,  str(file_name))
-                osCommands.remove(file_name_path)  # remove file
+                    download_path,  str(file_name))
+
+                answer = osCommands.remove(file_name_path)  # remove file
 
                 file_name_aria = file_name_path + str('.aria2')
                 osCommands.remove(file_name_aria)  # remove file.aria
+
+            # remove download item from data base
+            self.persepolis_db.deleteItemInDownloadTable(gid, category)
 
         # tell the CheckDownloadInfoThread that job is done!
         global checking_flag
@@ -3779,29 +3784,35 @@ class MainWindow(MainWindow_Ui):
             # find status
             status = self.download_table.item(row, 1).text()
 
+
+
+
             # if download is not completed,
             # remove downloaded file form download temp folder
-            if file_name != '***' and status != 'complete':
-                file_name_path = os.path.join(
-                    temp_download_folder, str(file_name))
+            # find download path
+            dictionary = self.persepolis_db.searchGidInAddLinkTable(gid)
+            if dictionary:
+                download_path = dictionary['download_path']
 
-                # remove file : file_name_path
-                osCommands.remove(file_name_path)
 
-                # remove aria2 download information file : file_name_aria
-                file_name_aria = file_name_path + str('.aria2')
-                osCommands.remove(file_name_aria)
+                if file_name != '***' and status != 'complete':
+                    file_name_path = os.path.join(
+                        download_path, str(file_name))
 
-            # remove downloaded file, if download is completed
-            if status == 'complete':
+                    # remove file : file_name_path
+                    osCommands.remove(file_name_path)
 
-                # find download path
-                dictionary = self.persepolis_db.searchGidInAddLinkTable(gid)
-                if dictionary:
-                    file_path = dictionary['download_path']
+                    # remove aria2 download information file : file_name_aria
+                    file_name_aria = file_name_path + str('.aria2')
+                    osCommands.remove(file_name_aria)
 
-                    remove_answer = osCommands.remove(file_path)
+                # remove downloaded file, if download is completed
+                elif status == 'complete':
 
+                    # download is complete. so download_path == file_name_path
+                    remove_answer = osCommands.remove(download_path)
+
+                    # if file not existed, notify user
                     if remove_answer == 'no':
                         notifySend(str(file_path), QCoreApplication.translate("mainwindow_src_ui_tr", 'Not Found'),
                                    5000, 'warning', parent=self)

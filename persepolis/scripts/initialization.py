@@ -124,24 +124,18 @@ for key in default_setting_dict.keys():
     setting_value = persepolis_setting.value(key, default_setting_dict[key])
     persepolis_setting.setValue(key, setting_value)
 
-# download files is downloading in temporary folder(download_path_temp) and then they will be moved to user download folder(download_path) after completion.
-# Check that mount point is available of not!
-if not(os.path.exists(persepolis_setting.value('download_path_temp'))):
-    persepolis_setting.setValue('download_path_temp', default_setting_dict['download_path_temp'])
-
+# set default dwonload path
 if not(os.path.exists(persepolis_setting.value('download_path'))):
     persepolis_setting.setValue('download_path', default_setting_dict['download_path'])
 
 
 persepolis_setting.sync()
 
-# this section  creates temporary download folder and download folder and
+# Create downloads folder and subfolders. 
 # download sub folders if they did not existed.
-download_path_temp = persepolis_setting.value('download_path_temp')
 download_path = persepolis_setting.value('download_path')
 
-
-folder_list = [download_path_temp, download_path]
+folder_list = [download_path]
 
 # add subfolders to folder_list if user checked subfolders check box in setting window.
 if persepolis_setting.value('subfolder') == 'yes':
@@ -251,5 +245,18 @@ if persepolis_version < 4.1:
     persepolis_setting.setValue('version/version', 4.1)
 
 
+if persepolis_version < 4.11:
+    # create an object for PersepolisDB
+    persepolis_db = PersepolisDB()
+
+    # correct data base
+    persepolis_db.correctDataBaseForVersion411()
+
+    # close connections
+    persepolis_db.closeConnections()
+
+    persepolis_setting.setValue('version/version', 4.11)
+
+   
 
 persepolis_setting.sync()

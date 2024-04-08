@@ -1407,6 +1407,73 @@ class PersepolisDB():
 
     # close connections
 
+    def correctDataBaseForVersion411(self):
+         # lock data base
+        self.lockCursor()
+
+
+        # find gid of all unfinished downloads in download_db_table
+        self.persepolis_db_cursor.execute("""SELECT gid FROM download_db_table WHERE status IS NOT 'complete'""")
+
+        result = self.persepolis_db_cursor.fetchall()
+        gid_list = []
+
+        for result_tuple in result:
+            gid_list.append(result_tuple[0])
+
+
+
+        # correct download path
+        for gid in gid_list:
+
+            # find download_path
+            self.persepolis_db_cursor.execute("""SELECT download_path FROM addlink_db_table WHERE gid = '{}'""".format(str(gid)))
+            tuple_ = self.persepolis_db_cursor.fetchone()
+
+            download_path = tuple_[0]
+
+            import platform
+            os_type = platform.system()
+            home_address = os.path.expanduser("~")
+
+
+            if os.lstat(download_path).st_dev == os.lstat(home_address).st_dev:
+
+                if os_type != 'Windows':
+                    download_path_temp = os.path.join(home_address, '.persepolis')
+                else:
+                    download_path_temp = os.path.join(
+                        home_address, 'AppData', 'Local', 'persepolis')
+
+            else:
+
+                from persepolis.scripts.osCommands import findMountPoint
+
+                # Find mount point 
+                mount_point = findMountPoint(download_path)
+
+                
+                # find download_path_temp
+                if os_type == 'Windows':
+
+                    download_path_temp = os.path.join(mount_point, 'persepolis')
+
+                else:
+
+                    download_path_temp = os.path.join(mount_point, '.persepolis')
+
+
+            # set download_path_temp as download_path
+            self.persepolis_db_cursor.execute("""UPDATE addlink_db_table SET download_path = '{}'
+                                                                            WHERE gid = '{}' """.format(download_path_temp, gid))
+     
+            self.persepolis_db_connection.commit()
+
+
+        # job is done! open the lock
+        self.lock = False
+
+
     def closeConnections(self):
         # lock data base
         self.lockCursor()

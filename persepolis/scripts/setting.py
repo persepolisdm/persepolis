@@ -125,8 +125,6 @@ class PreferencesWindow(Setting_Ui):
         # save_as_tab
         self.download_folder_lineEdit.setText(
             str(self.persepolis_setting.value('download_path')))
-        self.temp_download_lineEdit.setText(
-            str(self.persepolis_setting.value('download_path_temp')))
 
         # subfolder
         if str(self.persepolis_setting.value('subfolder')) == 'yes':
@@ -214,9 +212,6 @@ class PreferencesWindow(Setting_Ui):
         self.download_folder_lineEdit.setEnabled(False)
         self.download_folder_pushButton.clicked.connect(
             self.downloadFolderPushButtonClicked)
-        self.temp_download_lineEdit.setEnabled(False)
-        self.temp_download_pushButton.clicked.connect(
-            self.tempDownloadPushButtonClicked)
 
         # dial
         self.volume_dial.setNotchesVisible(True)
@@ -661,18 +656,6 @@ class PreferencesWindow(Setting_Ui):
             self.persepolis_setting.setValue(
                 'settings/download_path', str(fname))
 
-    def tempDownloadPushButtonClicked(self, button):
-
-        download_path_temp = str(
-            self.persepolis_setting.value('settings/download_path_temp'))
-        fname = QFileDialog.getExistingDirectory(
-            self, 'Open f', download_path_temp)
-
-        if fname:
-            self.temp_download_lineEdit.setText(fname)
-            self.persepolis_setting.setValue(
-                'settings/download_path_temp', str(fname))
-
     def dialChanged(self, dial):
 
         self.volume_label.setText('Volume : ' + str(self.volume_dial.value()))
@@ -704,8 +687,6 @@ class PreferencesWindow(Setting_Ui):
         # save_as_tab
         self.download_folder_lineEdit.setText(
             str(self.setting_dict['download_path']))
-        self.temp_download_lineEdit.setText(
-            str(self.setting_dict['download_path_temp']))
 
         self.subfolder_checkBox.setChecked(True)
 
@@ -843,8 +824,6 @@ class PreferencesWindow(Setting_Ui):
             'rpc-port', self.rpc_port_spinbox.value())
         self.persepolis_setting.setValue(
             'download_path', self.download_folder_lineEdit.text())
-        self.persepolis_setting.setValue(
-            'download_path_temp', self.temp_download_lineEdit.text())
         self.persepolis_setting.setValue(
             'sound-volume', self.volume_dial.value())
         self.persepolis_setting.setValue(
@@ -999,14 +978,12 @@ class PreferencesWindow(Setting_Ui):
             self.persepolis_setting.setValue('awake', 'no')
             self.parent.keep_awake_checkBox.setChecked(False)
 
-        # this section  creates temporary download folder and download folder and
+        # this section  creates download folder and
         # download sub folders if they did not existed.
 
-        download_path_temp = self.persepolis_setting.value(
-            'download_path_temp')
         download_path = self.persepolis_setting.value('download_path')
 
-        folder_list = [download_path_temp, download_path]
+        folder_list = [download_path]
 
         if self.subfolder_checkBox.isChecked():
             self.persepolis_setting.setValue('subfolder', 'yes')
@@ -1168,7 +1145,7 @@ class PreferencesWindow(Setting_Ui):
         show_message_box = False
         for key in self.first_key_value_dict.keys():
             if self.first_key_value_dict[key] != self.second_key_value_dict[key]:
-                if key in ['locale', 'aria2_path', 'download_path_temp', 'download_path', 'custom-font', 'rpc-port', 'max-tries', 'retry-wait', 'timeout', 'connections', 'style', 'font', 'font-size', 'color-scheme']:
+                if key in ['locale', 'aria2_path', 'download_path', 'custom-font', 'rpc-port', 'max-tries', 'retry-wait', 'timeout', 'connections', 'style', 'font', 'font-size', 'color-scheme']:
                     show_message_box = True
 
         # if any thing changed that needs restarting, then notify user about "Some changes take effect after restarting persepolis"

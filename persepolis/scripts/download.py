@@ -15,7 +15,7 @@
 
 from persepolis.scripts.useful_tools import freeSpace, humanReadableSize, findExternalAppPath, runApplication
 from persepolis.scripts.socks5_to_http_convertor import Socks5ToHttpConvertor
-from persepolis.scripts.osCommands import moveFile, makeTempDownloadDir
+from persepolis.scripts.osCommands import moveFile, makeDirs 
 from persepolis.scripts.bubble import notifySend
 from persepolis.scripts import logger
 from persepolis.constants import OS
@@ -209,30 +209,13 @@ def downloadAria(parent, gid, main_window):
         # set start_time value to None in data_base!
         main_window.persepolis_db.setDefaultGidInAddlinkTable(gid, start_time=True)
 
-    # Find download_path_temp from persepolis_setting
-    # if download_path_temp and download_path aren't in same partition on hard disk,
-    # then create new temp folder in that partition.
-    # Why? when download is completed, file must be moved to download_path from temp folder.
-    # It helps moving speed :)
     persepolis_setting.sync()
-
-    # Find default download_path_temp
-    download_path_temp = persepolis_setting.value('settings/download_path_temp')
 
     # Find user's selected download_path
     download_path = add_link_dictionary['download_path'] 
 
-    # check is download_path is existed
-    if os.path.isdir(download_path):
-
-        if os.lstat(download_path).st_dev != os.lstat(download_path_temp).st_dev:
-
-            # Create folder and give new temp address from makeTempDownloadDir function.
-            # Please checkout osCommands.py for more information.
-            download_path_temp = makeTempDownloadDir(download_path) 
-    else:
-        # write an error in logger
-        logger.sendToLog("download_path is not found!", "ERROR")
+    # Create download_path if not existed
+    makeDirs(download_path)
 
     if start_time_status != 'stopped':
         # send download request to aria2
@@ -250,7 +233,7 @@ def downloadAria(parent, gid, main_window):
             'max-connection-per-server': str(connections),
             'min-split-size': '1M',
             'continue': 'true',
-            'dir': str(download_path_temp)
+            'dir': str(download_path)
         }
 
         if str(persepolis_setting.value('settings/dont-check-certificate')) == 'yes':
