@@ -31,6 +31,8 @@ config_folder = determineConfigFolder()
 
 
 class LogWindow(LogWindow_Ui):
+
+
     def __init__(self, persepolis_setting):
         super().__init__(persepolis_setting)
 

@@ -19,8 +19,6 @@
 from persepolis.scripts.useful_tools import determineConfigFolder, returnDefaultSettings
 from persepolis.scripts.browser_integration import browserIntegration
 from persepolis.scripts import osCommands
-import subprocess
-import shutil
 import time
 import os
 

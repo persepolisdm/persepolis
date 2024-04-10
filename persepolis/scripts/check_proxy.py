@@ -15,7 +15,6 @@
 
 import re
 import subprocess
-import requests
 import urllib
 import os
 from persepolis.scripts.useful_tools import osAndDesktopEnvironment

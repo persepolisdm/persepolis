@@ -17,8 +17,6 @@ from persepolis.scripts.useful_tools import determineConfigFolder
 from persepolis.scripts.osCommands import remove, removeDir
 from persepolis.scripts.data_base import PersepolisDB
 from persepolis.scripts.newopen import readList
-import time
-import ast
 import os
 
 # config_folder

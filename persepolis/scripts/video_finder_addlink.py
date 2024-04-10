@@ -15,17 +15,17 @@
 """
 try:
     from PySide6.QtWidgets import QCheckBox, QPushButton, QTextEdit, QFrame, QLabel, QComboBox, QHBoxLayout, QApplication
-    from PySide6.QtCore import Qt, QThread, Signal, QCoreApplication, QTranslator, QLocale
+    from PySide6.QtCore import QThread, Signal, QCoreApplication, QTranslator, QLocale
 except:
     from PyQt5.QtWidgets import QCheckBox, QPushButton, QTextEdit, QFrame, QLabel, QComboBox, QHBoxLayout, QApplication
-    from PyQt5.QtCore import Qt, QThread, QCoreApplication, QTranslator, QLocale
+    from PyQt5.QtCore import QThread, QCoreApplication, QTranslator, QLocale
     from PyQt5.QtCore import pyqtSignal as Signal
 
 from persepolis.scripts.useful_tools import determineConfigFolder
 from persepolis.scripts.addlink import AddLinkWindow
 from persepolis.scripts import logger, osCommands
 from persepolis.scripts.spider import spider
-from time import time, sleep
+from time import time
 from functools import partial
 from random import random
 from copy import deepcopy

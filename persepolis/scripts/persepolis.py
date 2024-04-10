@@ -16,11 +16,11 @@
 try:
     from PySide6.QtGui import QFont
     from PySide6.QtWidgets import QApplication, QStyleFactory
-    from PySide6.QtCore import QFile, QTextStream, QCoreApplication, QSettings, Qt
+    from PySide6.QtCore import QFile, QTextStream, QSettings, Qt
 except:
     from PyQt5.QtGui import QFont
     from PyQt5.QtWidgets import QApplication, QStyleFactory
-    from PyQt5.QtCore import QFile, QTextStream, QCoreApplication, QSettings, Qt
+    from PyQt5.QtCore import QFile, QTextStream, QSettings, Qt
 
 from persepolis.gui import resources
 import traceback
@@ -84,7 +84,6 @@ else:  # for windows
     from win32event import CreateMutex
     from win32api import GetLastError
     from winerror import ERROR_ALREADY_EXISTS
-    from sys import exit
 
     handle = CreateMutex(None, 1, 'persepolis_download_manager')
 
@@ -95,6 +94,8 @@ else:  # for windows
 
 # run persepolis mainwindow
 if lock_file_validation:
+
+    # execute initialization script
     from persepolis.scripts import initialization
     from persepolis.scripts.mainwindow import MainWindow
 

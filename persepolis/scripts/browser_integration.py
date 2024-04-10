@@ -18,7 +18,6 @@ from persepolis.scripts import osCommands
 from persepolis.constants import OS, BROWSER
 import subprocess
 import platform
-import sys
 import os
 
 os_type = platform.system()

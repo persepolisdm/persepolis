@@ -26,7 +26,6 @@ import traceback
 import platform
 import time
 import ast
-import sys
 import os
 
 try:
@@ -239,6 +238,11 @@ def downloadAria(parent, gid, main_window):
         if str(persepolis_setting.value('settings/dont-check-certificate')) == 'yes':
             aria_dict['check-certificate'] = 'false'
 
+
+        # if user used user name and password for download
+        if download_user:
+            aria_dict['http-user'] = download_user
+            aria_dict['http-passwd'] = download_passwd
 
         # Persepolis supports 3 type of proxy: http, https, socks5
         # aria2c can't use socks5. so persepolis converts socks to http and send it to aria2c.

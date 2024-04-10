@@ -16,7 +16,6 @@
 from persepolis.scripts.useful_tools import humanReadableSize
 from requests.cookies import cookiejar_from_dict
 from http.cookies import SimpleCookie
-from requests import Session
 import requests
 
 

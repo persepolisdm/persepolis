@@ -28,7 +28,6 @@ from persepolis.scripts.useful_tools import returnDefaultSettings
 from persepolis.scripts import osCommands
 from persepolis.scripts import startup
 import platform
-import copy
 import sys
 import os
 

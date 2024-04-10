@@ -25,7 +25,6 @@ os_type = platform.system()
 
 if os_type == OS.WINDOWS:
     import winreg
-    from winreg import QueryValueEx, OpenKey, SetValueEx
 
 
 # check startup

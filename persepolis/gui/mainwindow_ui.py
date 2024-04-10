@@ -13,13 +13,13 @@
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 try:
-    from PySide6.QtWidgets import QHeaderView, QDoubleSpinBox, QPushButton, QComboBox,  QMenu, QTreeView, QSplitter, QSizePolicy, QGridLayout, QHBoxLayout, QVBoxLayout, QTableWidgetItem, QAbstractItemView, QApplication, QToolBar, QMenuBar, QStatusBar, QTableWidget, QMainWindow, QWidget, QFrame, QAbstractItemView, QCheckBox, QSpinBox, QLabel
-    from PySide6.QtGui import QShortcut, QAction, QCursor, QKeySequence, QIcon, QStandardItemModel, QStandardItem
-    from PySide6.QtCore import QCoreApplication, QRect, QSize, Qt, QTranslator, QLocale
+    from PySide6.QtWidgets import QHeaderView, QDoubleSpinBox, QPushButton, QComboBox,  QMenu, QTreeView, QSplitter, QHBoxLayout, QVBoxLayout, QTableWidgetItem, QAbstractItemView, QToolBar, QMenuBar, QStatusBar, QTableWidget, QMainWindow, QWidget, QFrame, QCheckBox, QLabel
+    from PySide6.QtGui import QShortcut, QAction, QCursor, QIcon, QStandardItemModel
+    from PySide6.QtCore import QCoreApplication, QRect, Qt, QTranslator, QLocale
 except:
-    from PyQt5.QtWidgets import QHeaderView, QShortcut, QDoubleSpinBox, QPushButton, QComboBox,  QTreeView, QSplitter, QSizePolicy, QGridLayout, QHBoxLayout, QVBoxLayout, QMenu, QTableWidgetItem, QAbstractItemView, QApplication, QToolBar, QMenuBar, QStatusBar, QTableWidget, QAction, QMainWindow, QWidget, QFrame, QAbstractItemView, QCheckBox, QSpinBox, QLabel
-    from PyQt5.QtGui import QCursor, QKeySequence, QIcon, QStandardItemModel, QStandardItem
-    from PyQt5.QtCore import QCoreApplication, QRect, QSize, Qt, QTranslator, QLocale
+    from PyQt5.QtWidgets import QHeaderView, QShortcut, QDoubleSpinBox, QPushButton, QComboBox,  QTreeView, QSplitter, QHBoxLayout, QVBoxLayout, QMenu, QTableWidgetItem, QAbstractItemView, QToolBar, QMenuBar, QStatusBar, QTableWidget, QAction, QMainWindow, QWidget, QFrame, QCheckBox, QLabel
+    from PyQt5.QtGui import QCursor, QIcon, QStandardItemModel 
+    from PyQt5.QtCore import QCoreApplication, QRect, Qt, QTranslator, QLocale
 
 from persepolis.gui import resources
 from persepolis.gui.customized_widgets import MyQDateTimeEdit

@@ -17,10 +17,10 @@
 from persepolis.gui.progress_ui import ProgressWindow_Ui
 
 try:
-    from PySide6.QtWidgets import QWidget, QHBoxLayout, QVBoxLayout, QLabel
+    from PySide6.QtWidgets import QWidget, QVBoxLayout, QLabel
     from PySide6.QtCore import QCoreApplication
 except:
-    from PyQt5.QtWidgets import QWidget, QHBoxLayout, QVBoxLayout, QLabel
+    from PyQt5.QtWidgets import QWidget, QVBoxLayout, QLabel
     from PyQt5.QtCore import QCoreApplication
 
 class VideoFinderProgressWindow_Ui(ProgressWindow_Ui):

@@ -15,11 +15,11 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 try:
-    from PySide6.QtWidgets import QHBoxLayout, QApplication, QFileDialog, QCheckBox, QLineEdit, QPushButton
+    from PySide6.QtWidgets import QApplication, QFileDialog
     from PySide6.QtCore import Qt, QPoint, QSize, QDir, QThread, Signal
     from PySide6.QtGui import QIcon
 except:
-    from PyQt5.QtWidgets import QHBoxLayout, QApplication, QFileDialog, QCheckBox, QLineEdit, QPushButton
+    from PyQt5.QtWidgets import QApplication, QFileDialog
     from PyQt5.QtCore import Qt, QPoint, QSize, QDir, QThread
     from PyQt5.QtGui import QIcon
     from PyQt5.QtCore import pyqtSignal as Signal

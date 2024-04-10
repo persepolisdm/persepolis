@@ -22,7 +22,6 @@ except:
 
 
 from persepolis.gui.after_download_ui import AfterDownloadWindow_Ui
-from persepolis.scripts.play import playNotification
 from persepolis.scripts import osCommands
 import os
 

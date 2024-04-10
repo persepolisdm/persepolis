@@ -15,14 +15,12 @@
 """
 try:
     from PySide6.QtWidgets import QWidget, QTabWidget, QHBoxLayout, QVBoxLayout, QLabel, QTextEdit, QPushButton
-    from PySide6.QtCore import Qt, QSize, QPoint, QTranslator, QCoreApplication, QLocale
-    from PySide6 import QtCore, QtGui, QtWidgets
+    from PySide6.QtCore import Qt, QSize, QTranslator, QCoreApplication, QLocale
     from PySide6.QtGui import QIcon, QFont
     pyside6_is_installed = True
 except:
     from PyQt5.QtWidgets import QWidget, QTabWidget, QHBoxLayout, QVBoxLayout, QLabel, QTextEdit, QPushButton
-    from PyQt5.QtCore import Qt, QSize, QPoint, QTranslator, QCoreApplication, QLocale
-    from PyQt5 import QtCore, QtGui, QtWidgets
+    from PyQt5.QtCore import Qt, QSize, QTranslator, QCoreApplication, QLocale
     from PyQt5.QtGui import QIcon, QFont
     pyside6_is_installed = False
 

@@ -15,9 +15,7 @@
 """
 
 from persepolis.scripts.useful_tools import determineConfigFolder
-from persepolis.scripts import logger
 from time import sleep
-import traceback
 import sqlite3
 import random
 import ast

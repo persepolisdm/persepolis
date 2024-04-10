@@ -14,17 +14,16 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 global pyside6_is_installed
-
 try:
     from PySide6.QtWidgets import QCheckBox, QLineEdit, QAbstractItemView, QFileDialog, QSystemTrayIcon, QMenu, QApplication, QInputDialog, QMessageBox
-    from PySide6.QtCore import QDir, QTime, QCoreApplication, QRect, QSize, QPoint, QThread, Signal, Qt, QTranslator, QLocale
+    from PySide6.QtCore import QDir, QTime, QCoreApplication, QSize, QPoint, QThread, Signal, Qt, QTranslator, QLocale
     from PySide6.QtGui import QFont, QIcon, QStandardItem, QCursor, QAction
     from PySide6 import __version__ as PYQT_VERSION_STR
     from PySide6.QtCore import __version__ as QT_VERSION_STR 
     pyside6_is_installed = True
 except:
     from PyQt5.QtWidgets import QCheckBox, QLineEdit, QAbstractItemView, QAction, QFileDialog, QSystemTrayIcon, QMenu, QApplication, QInputDialog, QMessageBox
-    from PyQt5.QtCore import QDir, QTime, QCoreApplication, QRect, QSize, QPoint, QThread, Qt, QTranslator, QLocale, QT_VERSION_STR
+    from PyQt5.QtCore import QDir, QTime, QCoreApplication, QSize, QPoint, QThread, Qt, QTranslator, QLocale, QT_VERSION_STR
     from PyQt5.QtGui import QFont, QIcon, QStandardItem, QCursor
     from PyQt5.Qt import PYQT_VERSION_STR
     from PyQt5.QtCore import pyqtSignal as Signal
@@ -39,7 +38,6 @@ from persepolis.scripts.after_download import AfterDownloadWindow
 from persepolis.scripts.properties import PropertiesWindow
 from persepolis.scripts.setting import PreferencesWindow
 from persepolis.scripts.progress import ProgressWindow
-from persepolis.scripts.play import playNotification
 from persepolis.scripts.addlink import AddLinkWindow
 from persepolis.scripts.text_queue import TextQueue
 from persepolis.scripts.log_window import LogWindow
@@ -569,7 +567,6 @@ class VideoFinder(QThread):
             # check start time and end time
             add_link_dictionary = self.parent.persepolis_db.searchGidInAddLinkTable(video_gid)
             start_time = add_link_dictionary['start_time']
-            end_time = add_link_dictionary['end_time']
 
             if self.video_completed == 'no' and start_time:
 
@@ -1840,7 +1837,6 @@ class MainWindow(MainWindow_Ui):
             if gid in self.all_video_finder_gid_list:
 
                 video_finder_dictionary = self.persepolis_db.searchGidInVideoFinderTable(gid)
-                video_gid = video_finder_dictionary['video_gid']
 
                 video_finder_thread = self.video_finder_threads_dict[video_finder_dictionary['video_gid']]
                 video_finder_link = True
@@ -2263,7 +2259,6 @@ class MainWindow(MainWindow_Ui):
     # is reported and the download is not added.
     # gidGenerator generates GID for downloads
     def gidGenerator(self):
-        return_list = True
         # this loop repeats until we have a unique GID
         while True:
 
@@ -3634,7 +3629,7 @@ class MainWindow(MainWindow_Ui):
                 file_name_path = os.path.join(
                     download_path,  str(file_name))
 
-                answer = osCommands.remove(file_name_path)  # remove file
+                osCommands.remove(file_name_path)  # remove file
 
                 file_name_aria = file_name_path + str('.aria2')
                 osCommands.remove(file_name_aria)  # remove file.aria
@@ -3814,7 +3809,7 @@ class MainWindow(MainWindow_Ui):
 
                     # if file not existed, notify user
                     if remove_answer == 'no':
-                        notifySend(str(file_path), QCoreApplication.translate("mainwindow_src_ui_tr", 'Not Found'),
+                        notifySend(str(file_name), QCoreApplication.translate("mainwindow_src_ui_tr", 'Not Found'),
                                    5000, 'warning', parent=self)
 
             # remove row from download_table
@@ -5555,7 +5550,7 @@ class MainWindow(MainWindow_Ui):
 
         # if initializing_path is not available, so use default download_path.
         if not(initializing_path):
-            initializing = str(
+            initializing_path = str(
                 self.persepolis_setting.value('settings/download_path'))
 
         # open file manager and get new download path
@@ -5580,9 +5575,6 @@ class MainWindow(MainWindow_Ui):
         for row in self.userSelectedRows():
             # get download status
             status = self.download_table.item(row, 1).text()
-
-            # find category
-            category = self.download_table.item(row, 12).text()
 
             # only download items with "complete" can be moved.
             if (status == 'complete'):
@@ -5872,7 +5864,10 @@ class MainWindow(MainWindow_Ui):
 
             # notify user
             if not(add_link_dictionary_list[0]['start_time']):
+
                 message = QCoreApplication.translate("mainwindow_src_ui_tr", "Download Starts")
+                notifySend(message, '', 10000, 'no', parent=self)
+
             else:
                 # write name and size of download files in download's table
                 for add_link_dictionary in add_link_dictionary_list:
@@ -5951,8 +5946,8 @@ class MainWindow(MainWindow_Ui):
             audio_file_path = audio_add_link_dictionary['download_path']
             video_file_path = video_add_link_dictionary['download_path']
 
-            remove_answer = osCommands.remove(audio_file_path)
-            remove_answer = osCommands.remove(video_file_path)
+            osCommands.remove(audio_file_path)
+            osCommands.remove(video_file_path)
 
             # remove audio row from download_table
             if row != None:
@@ -6062,9 +6057,6 @@ class MainWindow(MainWindow_Ui):
 
             # find download gid
             gid = self.download_table.item(selected_row_return, 8).text()
-            download_status = self.download_table.item(
-                selected_row_return, 1).text()
-
             # read data from data base
             result_dictionary = self.persepolis_db.searchGidInVideoFinderTable(gid)
 

@@ -15,11 +15,9 @@
 """
 try:
     from PySide6.QtCore import Qt, QSize, QPoint, QFile, QIODevice, QTextStream
-    from PySide6.QtWidgets import QWidget
     from PySide6.QtGui import QIcon
 except:
     from PyQt5.QtCore import Qt, QSize, QPoint, QFile, QIODevice, QTextStream
-    from PyQt5.QtWidgets import QWidget
     from PyQt5.QtGui import QIcon
 
 from persepolis.gui.about_ui import AboutWindow_Ui

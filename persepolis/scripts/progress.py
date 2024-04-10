@@ -16,11 +16,11 @@
 
 try:
     from PySide6.QtCore import Qt, QSize, QPoint, QThread, QTranslator, QCoreApplication, QLocale
-    from PySide6.QtWidgets import QLineEdit, QWidget, QSizePolicy,  QInputDialog
+    from PySide6.QtWidgets import QLineEdit, QInputDialog
     from PySide6.QtGui import QIcon
 except:
     from PyQt5.QtCore import Qt, QSize, QPoint, QThread, QTranslator, QCoreApplication, QLocale
-    from PyQt5.QtWidgets import QLineEdit, QWidget, QSizePolicy,  QInputDialog
+    from PyQt5.QtWidgets import QLineEdit, QInputDialog
     from PyQt5.QtGui import QIcon
 
 from persepolis.gui.progress_ui import ProgressWindow_Ui
@@ -30,7 +30,6 @@ from persepolis.scripts import download
 from persepolis.constants import OS
 import subprocess
 import platform
-import time
 
 os_type = platform.system()
 
