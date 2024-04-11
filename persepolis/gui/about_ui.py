@@ -28,13 +28,13 @@ from persepolis.gui import resources
 
 if pyside6_is_installed == True:
     try:
-        from PySide6 import QtSvgWidget
+        from PySide6 import QtSvgWidgets
         qtsvg_available = True
     except:
         qtsvg_available = False
 else:
     try:
-        from PyQt5 import QtSvg as QtSvgWidget
+        from PyQt5 import QtSvg as QtSvgWidgets
         qtsvg_available = True
     except:
         qtsvg_available = False
@@ -83,7 +83,7 @@ class AboutWindow_Ui(QWidget):
         # persepolis icon
         if qtsvg_available:
             persepolis_icon_verticalLayout = QVBoxLayout()
-            self.persepolis_icon = QtSvgWidget.QSvgWidget(':/com.github.persepolisdm.persepolis.svg')
+            self.persepolis_icon = QtSvgWidgets.QSvgWidget(':/com.github.persepolisdm.persepolis.svg')
             self.persepolis_icon.setFixedSize(QSize(64, 64))
 
             persepolis_icon_verticalLayout.addWidget(self.persepolis_icon)
