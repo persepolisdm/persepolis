@@ -83,10 +83,17 @@ class PreferencesWindow(Setting_Ui):
         self.rpc_port_spinbox.setValue(
             int(self.persepolis_setting.value('rpc-port')))
 
+        # check certificate
         if str(self.persepolis_setting.value('dont-check-certificate')) == 'yes':
             self.dont_check_certificate_checkBox.setChecked(True)
         else:
             self.dont_check_certificate_checkBox.setChecked(False)
+
+        # remote time
+        if str(self.persepolis_setting.value('remote-time')) == 'yes':
+            self.remote_time_checkBox.setChecked(True)
+        else:
+            self.remote_time_checkBox.setChecked(False)
 
 
         # add support for other languages
@@ -683,6 +690,9 @@ class PreferencesWindow(Setting_Ui):
         # dont_check_certificate_checkBox
         self.dont_check_certificate_checkBox.setChecked(False)
 
+        # uncheck remote time 
+        self.remote_time_checkBox.setChecked(False)
+
         # save_as_tab
         self.download_folder_lineEdit.setText(
             str(self.setting_dict['download_path']))
@@ -839,6 +849,12 @@ class PreferencesWindow(Setting_Ui):
             self.persepolis_setting.setValue('dont-check-certificate', 'yes')
         else:
             self.persepolis_setting.setValue('dont-check-certificate', 'no')
+
+        # remote time 
+        if self.remote_time_checkBox.isChecked():
+            self.persepolis_setting.setValue('remote-time', 'yes')
+        else:
+            self.persepolis_setting.setValue('remote-time', 'no')
 
 
 

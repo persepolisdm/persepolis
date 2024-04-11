@@ -197,6 +197,10 @@ class Setting_Ui(QWidget):
         self.dont_check_certificate_checkBox = QCheckBox(self.download_options_tab)
         download_options_tab_verticalLayout.addWidget(self.dont_check_certificate_checkBox)
 
+        # remote time
+        self.remote_time_checkBox = QCheckBox(self.download_options_tab)
+        download_options_tab_verticalLayout.addWidget(self.remote_time_checkBox)
+
         # change aria2 path
         aria2_path_verticalLayout = QVBoxLayout()
 
@@ -573,6 +577,13 @@ class Setting_Ui(QWidget):
         self.dont_check_certificate_checkBox.setText(QCoreApplication.translate("setting_ui_tr", "Don't use certificate to verify the peers"))
         self.dont_check_certificate_checkBox.setToolTip(
                 QCoreApplication.translate("setting_ui_tr", "<html><head/><body><p>This option avoids SSL/TLS handshake failure. But use it at your own risk!</p></body></html>"))
+
+
+        self.remote_time_checkBox.setText(QCoreApplication.translate("setting_ui_tr", "Remote time"))
+        self.remote_time_checkBox.setToolTip(
+                QCoreApplication.translate("setting_ui_tr", "<html><head/><body><p>Retrieve timestamp of the remote file from the remote HTTP/FTP server and if it is available, apply it to the local file.</p></body></html>"))
+
+
 
         self.aria2_path_checkBox.setText(QCoreApplication.translate("setting_ui_tr", 'Change Aria2 default path'))
         self.aria2_path_pushButton.setText(QCoreApplication.translate("setting_ui_tr", 'Change'))

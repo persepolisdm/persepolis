@@ -235,8 +235,13 @@ def downloadAria(parent, gid, main_window):
             'dir': str(download_path)
         }
 
+        # check certificate
         if str(persepolis_setting.value('settings/dont-check-certificate')) == 'yes':
             aria_dict['check-certificate'] = 'false'
+
+        # remote time
+        if str(persepolis_setting.value('settings/remote-time')) == 'yes':
+            aria_dict['remote-time'] = 'true'
 
 
         # if user used user name and password for download
@@ -723,7 +728,9 @@ def downloadStop(gid, parent):
             answer = server.aria2.remove(gid)
             if status == 'downloading':
                 server.aria2.removeDownloadResult(gid)
-        except:
+        except Exception as error:
+
+            logger.sendToLog(str(error), "ERROR")
             answer = "None"
 
         # write a messages in log and terminal
@@ -765,7 +772,9 @@ def downloadUnpause(gid):
     try:
         # send unpause request to aria2
         answer = server.aria2.unpause(gid)
-    except:
+    except Exception as error:
+
+        logger.sendToLog(str(error), "ERROR")
         answer = None
 
     logger.sendToLog(str(answer) + " unpaused", "INFO")
