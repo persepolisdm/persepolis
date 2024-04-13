@@ -152,6 +152,9 @@ class TextQueue_Ui(QWidget):
         self.https_radioButton = QRadioButton(self.proxy_frame)
         proxy_gridLayout.addWidget(self.https_radioButton, 5, 0, 1, 1)
 
+        # hide this widget until https support
+        self.https_radioButton.hide()
+
         self.socks5_radioButton = QRadioButton(self.proxy_frame)
         proxy_gridLayout.addWidget(self.socks5_radioButton, 6, 0, 1, 1)
 
