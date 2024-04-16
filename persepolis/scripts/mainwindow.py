@@ -2978,7 +2978,7 @@ class MainWindow(MainWindow_Ui):
             gid = self.download_table.item(selected_row_return, 8).text()
 
             # send pause request to aria2
-            answer = download.downloadPause(gid)
+            answer = download.downloadPause(gid, self)
 
             # if aria2 did not respond , then check aria2 availability!
             # and if aria2 disconnected then call aria2Disconnected

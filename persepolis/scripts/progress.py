@@ -135,7 +135,7 @@ class ProgressWindow(ProgressWindow_Ui):
     def pausePushButtonPressed(self, button):
 
         if self.status == "downloading":
-            answer = download.downloadPause(self.gid)
+            answer = download.downloadPause(self.gid, self.parent)
 
             # if aria2 did not respond , then this function is checking for aria2
             # availability , and if aria2 disconnected then aria2Disconnected is

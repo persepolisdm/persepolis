@@ -137,7 +137,7 @@ class MediaListFetcherThread(QThread):
         cookies = '# HTTP cookie file.\n'
         if raw_cookie:
             try:
-                raw_cookies = re.split(';\s*', str(raw_cookie))
+                raw_cookies = re.split(';\\s*', str(raw_cookie))
                 # Format all cookie values as netscape cookie.
                 for c in raw_cookies:
                     key, val = c.split('=', 1)

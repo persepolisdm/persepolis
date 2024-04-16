@@ -713,9 +713,9 @@ def shutDown():
 # and changes status of download to "stopped" in data_base
 
 
-def downloadStop(gid, parent):
+def downloadStop(gid, main_window):
     # get download status from data_base
-    dict_ = parent.persepolis_db.searchGidInDownloadTable(gid)
+    dict_ = main_window.persepolis_db.searchGidInDownloadTable(gid)
     status = dict_['status']
 
     # if status is "scheduled", then download request has not been sended to aria2!
@@ -733,6 +733,13 @@ def downloadStop(gid, parent):
             logger.sendToLog(str(error), "ERROR")
             answer = "None"
 
+            # reset aria2c
+            main_window.threadPool[0].restartAria2c()
+
+            logger.sendToLog("aria2c is restarted!", "INFO")
+
+
+
         # write a messages in log and terminal
         logger.sendToLog(answer + " stopped", "INFO")
 
@@ -743,24 +750,30 @@ def downloadStop(gid, parent):
 
     if status != 'complete':
         # change start_time end_time and after_download value to None in date base
-        parent.persepolis_db.setDefaultGidInAddlinkTable(gid,
+        main_window.persepolis_db.setDefaultGidInAddlinkTable(gid,
                                                          start_time=True, end_time=True, after_download=True)
 
         # change status of download to "stopped" in data base
         dict_ = {'gid': gid, 'status': 'stopped'}
-        parent.persepolis_db.updateDownloadTable([dict_])
+        main_window.persepolis_db.updateDownloadTable([dict_])
 
     return answer
 
 
 # downloadPause pauses download
-def downloadPause(gid):
+def downloadPause(gid, main_window):
     # see aria2 documentation for more information
 
     # send pause request to aria2 .
     try:
         answer = server.aria2.pause(gid)
-    except:
+    except Exception as error:
+
+        logger.sendToLog(str(error), "ERROR")
+
+        # stop download
+        downloadStop(gid, main_window)
+
         answer = None
 
     logger.sendToLog(str(answer) + " paused", "INFO")
