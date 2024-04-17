@@ -80,6 +80,8 @@ It exemplifies the Achaemenid style of architecture. UNESCO declared the ruins o
 
 [FFmpeg project](https://github.com/FFmpeg/FFmpeg)
 
+[Socks to http proxy](https://github.com/KaranGauswami/socks-to-http-proxy)
+
 [Gost project](https://github.com/ginuerzh/gost)
 
 ---
