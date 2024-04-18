@@ -62,9 +62,9 @@ except:
     print("Warning: python3-psutil is not installed!")
     not_installed = not_installed + 'psutil, '
 
-# youtube_dl
+# yt_dlp
 try:
-    import yt_dlp as youtube_dl
+    import yt_dlp
     print('yt-dlp is found')
 except:
     print('Warning: yt-dlp is not installed!')
@@ -85,6 +85,24 @@ if answer != 0:
     not_installed = not_installed + 'ffmpeg, '
 else:
     print('ffmpeg is found!')
+
+
+# gost or sthp
+socks_to_http_convertor_is_installed = False
+answer = os.system('gost -V 1>/dev/null')
+if answer == 0:
+    socks_to_http_convertor_is_installed = True
+else:
+    answer = os.system('sthp -V 1>/dev/null')
+    if answer == 0:
+        socks_to_http_convertor_is_installed = True
+
+if socks_to_http_convertor_is_installed:
+    print("gost or sthp is found!")
+else:
+    print('socks to http convertor is not installed!')
+    not_installed = not_installed + 'socks to http convertor'
+
 
 
 # sound-theme-freedesktop
