@@ -85,7 +85,7 @@ def spider(add_link_dictionary):
             filename_splited = filename_splited[-1]
 
             # getting file name in desired format
-            filename = filename_splited[1:-1]
+            filename = filename_splited.strip()
 
     if not(filename):
         filename = link.split('/')[-1]
@@ -149,7 +149,7 @@ def queueSpider(add_link_dictionary):
             filename_splited = content_disposition.split('filename=')
             filename_splited = filename_splited[-1]
             # getting file name in desired format
-            filename = filename_splited[1:-1]
+            filename = filename_splited.strip()
 
     if not(filename):
         filename = link.split('/')[-1]
@@ -209,6 +209,6 @@ def addLinkSpider(add_link_dictionary):
             filename_splited = content_disposition.split('filename=')
             filename_splited = filename_splited[-1]
             # getting file name in desired format
-            file_name = str(filename_splited[1:-1])
+            file_name = filename_splited.strip()
 
     return file_name, file_size  # If no Content-Length ? fixed it.
