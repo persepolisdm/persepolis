@@ -4,65 +4,60 @@
 <context>
     <name>about_ui_tr</name>
     <message>
-        <location filename="../../persepolis/gui/about_ui.py" line="298"/>
+        <location filename="../../persepolis/gui/about_ui.py" line="303"/>
         <source>About Persepolis</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/about_ui.py" line="241"/>
+        <location filename="../../persepolis/gui/about_ui.py" line="244"/>
         <source>Persepolis Download Manager</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/about_ui.py" line="243"/>
+        <location filename="../../persepolis/gui/about_ui.py" line="246"/>
         <source>&lt;a href=https://persepolisdm.github.io&gt;https://persepolisdm.github.io&lt;/a&gt;</source>
         <comment>TRANSLATORS NOTE: YOU REALLY DON&apos;T NEED TO TRANSLATE THIS PART!</comment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/about_ui.py" line="247"/>
+        <location filename="../../persepolis/gui/about_ui.py" line="250"/>
         <source>&lt;a href=https://telegram.me/persepolisdm&gt;https://telegram.me/persepolisdm&lt;/a&gt;</source>
         <comment>TRANSLATORS NOTE: YOU REALLY DON&apos;T NEED TO TRANSLATE THIS PART!</comment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/about_ui.py" line="251"/>
+        <location filename="../../persepolis/gui/about_ui.py" line="254"/>
         <source>&lt;a href=https://twitter.com/persepolisdm&gt;https://twitter.com/persepolisdm&lt;/a&gt;</source>
         <comment>TRANSLATORS NOTE: YOU REALLY DON&apos;T NEED TO TRANSLATE THIS PART!</comment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/about_ui.py" line="299"/>
+        <location filename="../../persepolis/gui/about_ui.py" line="304"/>
         <source>Developers</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/about_ui.py" line="302"/>
+        <location filename="../../persepolis/gui/about_ui.py" line="307"/>
         <source>Translators</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/about_ui.py" line="303"/>
+        <location filename="../../persepolis/gui/about_ui.py" line="308"/>
         <source>License</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/about_ui.py" line="306"/>
+        <location filename="../../persepolis/gui/about_ui.py" line="311"/>
         <source>OK</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/about_ui.py" line="262"/>
+        <location filename="../../persepolis/gui/about_ui.py" line="265"/>
         <source>Special thanks to:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/about_ui.py" line="242"/>
-        <source>Version 4.0.1</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../persepolis/gui/about_ui.py" line="258"/>
+        <location filename="../../persepolis/gui/about_ui.py" line="261"/>
         <source>
 AliReza AmirSamimi
 Mohammadreza Abdollahzadeh
@@ -77,33 +72,43 @@ MohammadAmin Vahedinia</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/about_ui.py" line="267"/>
+        <location filename="../../persepolis/gui/about_ui.py" line="270"/>
         <source>Acknowledgments:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/about_ui.py" line="269"/>
+        <location filename="../../persepolis/gui/about_ui.py" line="272"/>
         <source>&lt;a href=https://github.com/aria2/aria2&gt;Aria2c project&lt;/a&gt;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/about_ui.py" line="271"/>
+        <location filename="../../persepolis/gui/about_ui.py" line="274"/>
         <source>&lt;a href=https://github.com/yt-dlp/yt-dlp&gt;YT-DLP project&lt;/a&gt;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/about_ui.py" line="273"/>
+        <location filename="../../persepolis/gui/about_ui.py" line="276"/>
         <source>&lt;a href=https://github.com/ffmpeg/ffmpeg&gt;FFmpeg project&lt;/a&gt;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/about_ui.py" line="275"/>
+        <location filename="../../persepolis/gui/about_ui.py" line="280"/>
         <source>&lt;a href=https://github.com/ginuerzh/gost&gt;Gost project&lt;/a&gt;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/about_ui.py" line="300"/>
+        <location filename="../../persepolis/gui/about_ui.py" line="305"/>
         <source>Acknowledgments</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../persepolis/gui/about_ui.py" line="245"/>
+        <source>Version 4.1.0</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../persepolis/gui/about_ui.py" line="278"/>
+        <source>&lt;a href=https://github.com/KaranGauswami/socks-to-http-proxy&gt;Socks to http proxy project&lt;/a&gt;</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

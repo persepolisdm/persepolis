@@ -167,7 +167,7 @@ parser.add_argument('--tray', action='store_true',
                     help="Persepolis is starting in tray icon. It's useful when you want to put persepolis in system's startup.")
 parser.add_argument('--parent-window', action='store', nargs=1,
                     help='this switch is used for chrome native messaging in Windows')
-parser.add_argument('--version', action='version', version='Persepolis Download Manager 4.0.1')
+parser.add_argument('--version', action='version', version='Persepolis Download Manager 4.1.0')
 
 
 # Clears unwanted args ( like args from Browers via NHM )
@@ -409,7 +409,7 @@ def main():
         persepolis_download_manager.setOrganizationName('com.github.persepolisdm.persepolis')
         persepolis_download_manager.setApplicationName('PersepolisDM')
         persepolis_download_manager.setDesktopFileName('com.github.persepolisdm.persepolis')
-        persepolis_download_manager.setApplicationVersion('4.0.1')
+        persepolis_download_manager.setApplicationVersion('4.1.0')
 
         # Persepolis setting
         persepolis_download_manager.setting = QSettings('persepolis_download_manager', 'persepolis')

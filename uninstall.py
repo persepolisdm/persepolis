@@ -46,7 +46,7 @@ else:
 
 
 # finding persepolis directories in /usr/lib/python3.6/site-packages/
-python_version_list = ['python3.5','python3.6', 'python3.7', 'python3.8', 'python3.9', 'python3.10', 'python3.11']
+python_version_list = ['python3.5','python3.6', 'python3.7', 'python3.8', 'python3.9', 'python3.10', 'python3.11', 'python3.12']
 
 for python_version in python_version_list:
     # for BSD

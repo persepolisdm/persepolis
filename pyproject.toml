@@ -7,7 +7,7 @@ py-modules = ["persepolis"]
 
 [project]
 name = "persepolis"
-version = "4.0.1"
+version = "4.1.0"
 dependencies = [
   "pyside6",
   "requests",
