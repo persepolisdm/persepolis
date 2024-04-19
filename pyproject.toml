@@ -1,6 +1,6 @@
 [build-system]
-requires = ["mesonpy"]
-build-backend = "meson-python"
+requires = ["meson-python"]
+build-backend = "mesonpy"
 
 [tool.setuptools]
 py-modules = ["persepolis"]
