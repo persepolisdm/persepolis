@@ -63,6 +63,7 @@ class TextQueue_Ui(QWidget):
 
         # link table
         self.links_table = QTableWidget(self.links_tab)
+        self.links_table.setSizeAdjustPolicy(QAbstractItemView.AdjustToContents)
         links_tab_verticalLayout.addWidget(self.links_table)
 
         self.links_table.setSelectionBehavior(QAbstractItemView.SelectRows)
