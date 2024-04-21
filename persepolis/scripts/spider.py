@@ -17,11 +17,16 @@ from persepolis.scripts.useful_tools import humanReadableSize
 from requests.cookies import cookiejar_from_dict
 from http.cookies import SimpleCookie
 import requests
+from pathlib import Path
+from urllib.parse import urlparse, unquote
 
 
 # for more information about "requests" library , please see
 # http://docs.python-requests.org/en/master/
 
+
+def getFileNameFromLink(link):
+    return Path(unquote(urlparse(link).path)).name
 
 # spider function finds name of file and file size from header
 def spider(add_link_dictionary):
@@ -88,7 +93,7 @@ def spider(add_link_dictionary):
             filename = filename_splited.strip(' "\'')
 
     if not(filename):
-        filename = link.split('/')[-1]
+        filename = getFileNameFromLink(link)
 
     # if user set file name before in add_link_dictionary['out'],
     # then set "out" for filename
@@ -152,7 +157,7 @@ def queueSpider(add_link_dictionary):
             filename = filename_splited.strip(' "\'')
 
     if not(filename):
-        filename = link.split('/')[-1]
+        filename = getFileNameFromLink(link)
 
     return filename
 
@@ -210,5 +215,8 @@ def addLinkSpider(add_link_dictionary):
             filename_splited = filename_splited[-1]
             # getting file name in desired format
             file_name = filename_splited.strip(' "\'')
+
+    if not(file_name):
+        file_name = getFileNameFromLink(link)
 
     return file_name, file_size  # If no Content-Length ? fixed it.
