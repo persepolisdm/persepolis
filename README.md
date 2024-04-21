@@ -7,6 +7,7 @@
 
 > **Content**  
 > - [About](https://github.com/persepolisdm/persepolis#about)  
+> - [How to install PersepolisDM](https://github.com/persepolisdm/persepolis/wiki)
 > - [FAQ](https://github.com/persepolisdm/persepolis#faq)  
 > - [Screenshots](https://github.com/persepolisdm/persepolis#screenshots)  
 > - [Credits](https://github.com/persepolisdm/persepolis#credits)  
@@ -21,7 +22,11 @@ Persepolis is a download manager & a GUI for [Aria2](https://github.com/aria2/ar
 - Download video from youtube and ...
 - and many more!
 
+Demonstration clip:
 [![Demonstration video](https://img.youtube.com/vi/QHdMShFgzhQ/0.jpg)](https://www.youtube.com/watch?v=QHdMShFgzhQ)
+
+### How to install PersepolisDM?
+> Please checkout Persepolis [wiki](https://github.com/persepolisdm/persepolis/wiki)
 
 ### **FAQ**
 > **Where does the name come from?**
