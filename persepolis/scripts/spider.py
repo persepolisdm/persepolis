@@ -71,7 +71,7 @@ def spider(add_link_dictionary):
 
     # find headers
     try:
-        response = requests_session.head(link, timeout=2.50)
+        response = requests_session.head(link, timeout=2.50, allow_redirects=True)
         header = response.headers
     except:
         header = {}
@@ -138,7 +138,7 @@ def queueSpider(add_link_dictionary):
 
     # find headers
     try:
-        response = requests_session.head(link, timeout=2.50)
+        response = requests_session.head(link, timeout=2.50, allow_redirects=True)
         header = response.headers
     except:
         header = {}
@@ -188,7 +188,7 @@ def addLinkSpider(add_link_dictionary):
 
     # find headers
     try:
-        response = requests_session.head(link, timeout=2.50)
+        response = requests_session.head(link, timeout=2.50, allow_redirects=True)
         header = response.headers
     except:
         header = {}
