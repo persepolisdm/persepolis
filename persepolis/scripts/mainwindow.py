@@ -55,6 +55,7 @@ from copy import deepcopy
 from time import sleep
 import urllib.parse
 import subprocess
+import tempfile
 import requests
 import random
 import time
@@ -4409,6 +4410,31 @@ class MainWindow(MainWindow_Ui):
             self.text_queue_window_list.append(text_queue_window)
             self.text_queue_window_list[-1].show()
 
+    # this method is importing download links from clipboard.
+    # clipboard must contain links.
+    def importLinksFromClipboard(self, menu=None):
+        # get links from clipboard
+        clipboard = QApplication.clipboard().text()
+
+        # create temp file to save links
+        temp = tempfile.NamedTemporaryFile(mode="w+", prefix="persepolis")
+        temp.write(clipboard)
+        temp.flush()
+        temp_file_path = temp.name
+
+        # check if the gost is installed.
+        global socks5_to_http_convertor_is_installed
+
+        # create a text_queue_window for getting information.
+        text_queue_window = TextQueue(
+            self, temp_file_path, self.queueCallback, socks5_to_http_convertor_is_installed, self.persepolis_setting)
+        
+        self.text_queue_window_list.append(text_queue_window)
+        self.text_queue_window_list[-1].show()
+        
+        # close temp file (delete file)
+        temp.close()
+
     # callback of text_queue_window and plugin_queue_window.AboutWindow
     # See importText and pluginQueue method for more information.
     def queueCallback(self, add_link_dictionary_list, category):
@@ -6078,7 +6104,7 @@ class MainWindow(MainWindow_Ui):
         global icons
         icons = ':/' + str(new_icons) + '/'
 
-        action_icon_dict = {self.stopAllAction: 'stop_all', self.minimizeAction: 'minimize', self.addlinkAction: 'add', self.addtextfileAction: 'file', self.resumeAction: 'play', self.pauseAction: 'pause', self.stopAction: 'stop', self.propertiesAction: 'setting', self.progressAction: 'window', self.openFileAction: 'file', self.openDownloadFolderAction: 'folder', self.openDefaultDownloadFolderAction: 'folder', self.exitAction: 'exit',
+        action_icon_dict = {self.stopAllAction: 'stop_all', self.minimizeAction: 'minimize', self.addlinkAction: 'add', self.addtextfileAction: 'file', self.addFromClipboardAction: 'clipboard', self.resumeAction: 'play', self.pauseAction: 'pause', self.stopAction: 'stop', self.propertiesAction: 'setting', self.progressAction: 'window', self.openFileAction: 'file', self.openDownloadFolderAction: 'folder', self.openDefaultDownloadFolderAction: 'folder', self.exitAction: 'exit',
                             self.createQueueAction: 'add_queue', self.removeQueueAction: 'remove_queue', self.startQueueAction: 'start_queue', self.stopQueueAction: 'stop_queue', self.preferencesAction: 'preferences', self.aboutAction: 'about', self.issueAction: 'about', self.videoFinderAddLinkAction: 'video_finder', self.qmenu: 'menu'}
 
         for key in action_icon_dict.keys():
