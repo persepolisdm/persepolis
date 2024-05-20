@@ -98,6 +98,8 @@ class MenuWidget(QPushButton):
 
         fileMenu.addAction(self.parent.addtextfileAction)
 
+        fileMenu.addAction(self.parent.addFromClipboardAction)
+
         downloadMenu.addAction(self.parent.resumeAction)
 
         downloadMenu.addAction(self.parent.pauseAction)
@@ -572,6 +574,12 @@ class MainWindow_Ui(QMainWindow):
 
         fileMenu.addAction(self.addtextfileAction)
 
+        # importText From Clipboard
+        self.addFromClipboardAction = QAction(QIcon(icons + 'clipboard'), QCoreApplication.translate("mainwindow_ui_tr", 'Import Links from Clipboard...'), self,
+                                         statusTip=QCoreApplication.translate("mainwindow_ui_tr", 'Import Links From Clipboard'), triggered=self.importLinksFromClipboard)
+        
+        fileMenu.addAction(self.addFromClipboardAction)
+        
         # resumeAction
         self.resumeAction = QAction(QIcon(icons + 'play'), QCoreApplication.translate("mainwindow_ui_tr", 'Resume Download'), self,
                                     statusTip=QCoreApplication.translate("mainwindow_ui_tr", "Resume Download"), triggered=self.resumeButtonPressed)
