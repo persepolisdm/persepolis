@@ -17,11 +17,16 @@ from persepolis.scripts.useful_tools import humanReadableSize
 from requests.cookies import cookiejar_from_dict
 from http.cookies import SimpleCookie
 import requests
+from pathlib import Path
+from urllib.parse import urlparse, unquote
 
 
 # for more information about "requests" library , please see
 # http://docs.python-requests.org/en/master/
 
+
+def getFileNameFromLink(link):
+    return Path(unquote(urlparse(link).path)).name
 
 # spider function finds name of file and file size from header
 def spider(add_link_dictionary):
@@ -71,7 +76,7 @@ def spider(add_link_dictionary):
 
     # find headers
     try:
-        response = requests_session.head(link, timeout=2.50)
+        response = requests_session.head(link, timeout=2.50, allow_redirects=True)
         header = response.headers
     except:
         header = {}
@@ -85,10 +90,10 @@ def spider(add_link_dictionary):
             filename_splited = filename_splited[-1]
 
             # getting file name in desired format
-            filename = filename_splited.strip()
+            filename = filename_splited.strip(' "\'')
 
     if not(filename):
-        filename = link.split('/')[-1]
+        filename = getFileNameFromLink(link)
 
     # if user set file name before in add_link_dictionary['out'],
     # then set "out" for filename
@@ -108,107 +113,16 @@ def spider(add_link_dictionary):
 
 # this function finds and returns file name for links.
 def queueSpider(add_link_dictionary):
-    # get download information from add_link_dictionary
-    for i in ['link', 'header', 'out', 'user_agent', 'load_cookies', 'referer']:
-        if not (i in add_link_dictionary):
-            add_link_dictionary[i] = None
-
-    link = add_link_dictionary['link']
-    header = add_link_dictionary['header']
-    user_agent = add_link_dictionary['user_agent']
-    raw_cookies = add_link_dictionary['load_cookies']
-    referer = add_link_dictionary['referer']
-
-    requests_session = requests.Session()  # defining a requests Session
-
-    if raw_cookies:  # set cookies
-        cookie = SimpleCookie()
-        cookie.load(raw_cookies)
-
-        cookies = {key: morsel.value for key, morsel in cookie.items()}
-        requests_session.cookies = cookiejar_from_dict(cookies)
-
-    if referer:
-        # set referer to the session
-        requests_session.headers.update({'referer': referer})
-
-    if user_agent:
-        # set user_agent to the session
-        requests_session.headers.update({'user-agent': user_agent})
-
-    # find headers
-    try:
-        response = requests_session.head(link, timeout=2.50)
-        header = response.headers
-    except:
-        header = {}
-    filename = None
-    if 'Content-Disposition' in header.keys():  # checking if filename is available
-        content_disposition = header['Content-Disposition']
-        if content_disposition.find('filename') != -1:
-            filename_splited = content_disposition.split('filename=')
-            filename_splited = filename_splited[-1]
-            # getting file name in desired format
-            filename = filename_splited.strip()
-
-    if not(filename):
-        filename = link.split('/')[-1]
+    filename = addLinkSpider(add_link_dictionary)[0]
 
     return filename
 
 
 def addLinkSpider(add_link_dictionary):
     # get user's download information from add_link_dictionary
-    for i in ['link', 'header', 'out', 'user_agent', 'load_cookies', 'referer']:
+    for i in ['link','ip','port','proxy_user','proxy_passwd','download_user','download_passwd',
+              'header', 'out', 'user_agent', 'load_cookies', 'referer']:
         if not (i in add_link_dictionary):
             add_link_dictionary[i] = None
-
-    link = add_link_dictionary['link']
-    header = add_link_dictionary['header']
-    user_agent = add_link_dictionary['user_agent']
-    raw_cookies = add_link_dictionary['load_cookies']
-    referer = add_link_dictionary['referer']
-
-    requests_session = requests.Session()  # defining a requests Session
-
-    if raw_cookies:  # set cookies
-        cookie = SimpleCookie()
-        cookie.load(raw_cookies)
-
-        cookies = {key: morsel.value for key, morsel in cookie.items()}
-        requests_session.cookies = cookiejar_from_dict(cookies)
-
-    if referer:
-        # set referer to the session
-        requests_session.headers.update({'referer': referer})
-
-    if user_agent:
-        # set user_agent to the session
-        requests_session.headers.update({'user-agent': user_agent})
-
-    # find headers
-    try:
-        response = requests_session.head(link, timeout=2.50)
-        header = response.headers
-    except:
-        header = {}
-
-    # find file size
-    file_size = None
-    if 'Content-Length' in header.keys():  # checking if file_size is available
-        file_size = int(header['Content-Length'])
-
-        # converting file_size to KiB or MiB or GiB
-        file_size = str(humanReadableSize(file_size))
-
-    # find file name
-    file_name = None
-    if 'Content-Disposition' in header.keys():  # checking if filename is available
-        content_disposition = header['Content-Disposition']
-        if content_disposition.find('filename') != -1:
-            filename_splited = content_disposition.split('filename=')
-            filename_splited = filename_splited[-1]
-            # getting file name in desired format
-            file_name = filename_splited.strip()
-
-    return file_name, file_size  # If no Content-Length ? fixed it.
+    
+    return spider(add_link_dictionary)
