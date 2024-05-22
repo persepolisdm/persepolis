@@ -25,7 +25,7 @@ except:
     from PyQt5.QtWidgets import QCheckBox, QLineEdit, QAbstractItemView, QAction, QFileDialog, QSystemTrayIcon, QMenu, QApplication, QInputDialog, QMessageBox
     from PyQt5.QtCore import QDir, QTime, QCoreApplication, QSize, QPoint, QThread, Qt, QTranslator, QLocale, QT_VERSION_STR
     from PyQt5.QtGui import QFont, QIcon, QStandardItem, QCursor
-    from PyQt5.Qt import PYQT_VERSION_STR
+    from PyQt5.Qt import PYQT_VERSION_STR 
     from PyQt5.QtCore import pyqtSignal as Signal
     pyside6_is_installed = False
 
@@ -162,7 +162,6 @@ class CheckVersionsThread(QThread):
         logger.sendToLog(socks5_to_http_convertor_command_log_list[0], socks5_to_http_convertor_command_log_list[1])
         logger.sendToLog(socks5_to_http_convertor_output, "INFO")
 
-
         # log python version
         logger.sendToLog('python version: '
                          + str(sys.version))
@@ -190,6 +189,33 @@ class CheckVersionsThread(QThread):
 
         if type_of_convertor:
             self.TYPEOFCONVERTORSIGNAL.emit(type_of_convertor)
+
+# check clipboard
+
+
+class CheckClipBoardThread(QThread):
+
+    CHECKCLIPBOARDSIGNAL = Signal()
+
+    def __init__(self, parent):
+        QThread.__init__(self)
+        global shutdown_notification
+
+    def run(self):
+        # shutdown_notification = 0 >> persepolis is running
+        # 1 >> persepolis is ready for closing(closeEvent called)
+        # 2 >> OK, let's close application!
+        while shutdown_notification == 0 and aria_startup_answer != 'ready':
+            sleep(1)
+
+        clipboard = QApplication.clipboard()
+        old_clipboard = clipboard.text()
+        while shutdown_notification == 0:
+            sleep(0.5)
+            new_clipboard = clipboard.text()
+            if new_clipboard != old_clipboard:
+                self.CHECKCLIPBOARDSIGNAL.emit()
+            old_clipboard = new_clipboard
 
 
 # check for newer version of Persepolis
@@ -223,12 +249,9 @@ class CheckNewerVersionThread(QThread):
             logger.sendToLog("An error occurred while checking for a new release:")
             logger.sendToLog("{}".format(str(e)))
 
-
-
-
-
 # start aria2 when Persepolis starts
 class StartAria2Thread(QThread):
+
     ARIA2RESPONDSIGNAL = Signal(str)
 
     def __init__(self, parent):
@@ -1467,7 +1490,17 @@ class MainWindow(MainWindow_Ui):
         self.threadPool[3].CHECKPLUGINDBSIGNAL.connect(self.checkPluginCall)
         self.threadPool[3].SHOWMAINWINDOWSIGNAL.connect(self.showMainWindow)
 
-        # keepAwake
+        # Checking clipboard
+        if str(self.persepolis_setting.value('settings/check-clipboard')) == 'yes':
+            # QApplication.clipboard().dataChanged.connect(self.importLinksFromClipboard)
+
+            check_clipboard_thread = CheckClipBoardThread(self)
+            self.threadPool.append(check_clipboard_thread)
+            self.threadPool[-1].start()
+            self.threadPool[-1].CHECKCLIPBOARDSIGNAL.connect(
+                    self.importLinksFromClipboard)
+
+        # keepawake
         self.ongoing_downloads = 0
         keep_awake = KeepAwakeThread()
         self.threadPool.append(keep_awake)
@@ -1872,8 +1905,6 @@ class MainWindow(MainWindow_Ui):
             else:
                 video_finder_link = False
 
-
-
             if status == 'error':
                 # check free space in download_folder
                 # perhaps insufficient space in hard disk caused this error!
@@ -1881,7 +1912,6 @@ class MainWindow(MainWindow_Ui):
                 # find download path
                 dictionary = self.persepolis_db.searchGidInAddLinkTable(gid)
                 download_path = dictionary['download_path']
-
 
                 free_space = freeSpace(download_path)
 
@@ -3038,7 +3068,8 @@ class MainWindow(MainWindow_Ui):
             self.propertieswindows_list[-1].show()
 
     # callBack of PropertiesWindow
-    def propertiesCallback(self, add_link_dictionary, gid, category, video_finder_dictionary=None):
+    def propertiesCallback(self, add_link_dictionary, gid, category,
+                           video_finder_dictionary=None):
 
         # if checking_flag is equal to 1, it means that user pressed remove or
         # delete button or ... . so checking download information must be
@@ -3048,12 +3079,16 @@ class MainWindow(MainWindow_Ui):
             self.threadPool.append(wait_check)
             self.threadPool[-1].start()
             self.threadPool[-1].QTABLEREADY.connect(
-                partial(self.propertiesCallback2, add_link_dictionary, gid, category, video_finder_dictionary))
+                partial(self.propertiesCallback2, add_link_dictionary, gid,
+                        category, video_finder_dictionary))
         else:
-            self.propertiesCallback2(add_link_dictionary, gid, category, video_finder_dictionary)
+            self.propertiesCallback2(add_link_dictionary, gid, category,
+                                     video_finder_dictionary)
 
-    def propertiesCallback2(self, add_link_dictionary, gid, category, video_finder_dictionary=None):
-        # current_category_tree_text is current category that highlighted by user
+    def propertiesCallback2(self, add_link_dictionary, gid, category,
+                            video_finder_dictionary=None):
+        # current_category_tree_text is current category
+        # that highlighted by user
         # in the left side panel
         current_category_tree_text = str(
             self.category_tree.currentIndex().data())
@@ -3409,7 +3444,7 @@ class MainWindow(MainWindow_Ui):
         # find user's selected row
         selected_row_return = self.selectedRow()
 
-        if selected_row_return != None:
+        if selected_row_return is not None:
             # find gid
             gid = self.download_table.item(
                 selected_row_return, 8).text()
@@ -4416,24 +4451,37 @@ class MainWindow(MainWindow_Ui):
         # get links from clipboard
         clipboard = QApplication.clipboard().text()
 
+        # create a list from links
+        links_list = clipboard.splitlines()
+
+        for item in links_list:
+            if (("tp:/" in item[2:6]) or ("tps:/" in item[2:7])):
+                continue
+            else:
+                links_list.remove(item)
+                
         # create temp file to save links
-        temp = tempfile.NamedTemporaryFile(mode="w+", prefix="persepolis")
-        temp.write(clipboard)
-        temp.flush()
-        temp_file_path = temp.name
+        if len(links_list) == 1:
+            self.addLinkButtonPressed(button=None)
 
-        # check if the gost is installed.
-        global socks5_to_http_convertor_is_installed
+        elif len(links_list) > 1:
+            temp = tempfile.NamedTemporaryFile(mode="w+", prefix="persepolis")
+            temp.write(clipboard)
+            temp.flush()
+            temp_file_path = temp.name
 
-        # create a text_queue_window for getting information.
-        text_queue_window = TextQueue(
-            self, temp_file_path, self.queueCallback, socks5_to_http_convertor_is_installed, self.persepolis_setting)
-        
-        self.text_queue_window_list.append(text_queue_window)
-        self.text_queue_window_list[-1].show()
-        
-        # close temp file (delete file)
-        temp.close()
+            # clear clipboard
+            QApplication.clipboard().setText("")
+            
+            # create a text_queue_window for getting information.
+            text_queue_window = TextQueue(
+                self, temp_file_path, self.queueCallback,
+                socks5_to_http_convertor_is_installed, self.persepolis_setting)
+            self.text_queue_window_list.append(text_queue_window)
+            self.text_queue_window_list[-1].show()
+
+            # close temp file (delete file)
+            temp.close()
 
     # callback of text_queue_window and plugin_queue_window.AboutWindow
     # See importText and pluginQueue method for more information.

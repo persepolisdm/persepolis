@@ -398,6 +398,10 @@ class Setting_Ui(QWidget):
         # keep system awake
         self.keep_awake_checkBox = QCheckBox()
         style_tab_verticalLayout.addWidget(self.keep_awake_checkBox)
+        
+        # check clipboard
+        self.check_clipboard_checkBox = QCheckBox()
+        style_tab_verticalLayout.addWidget(self.check_clipboard_checkBox)
 
         style_tab_verticalLayout.addStretch(1)
 
@@ -649,6 +653,12 @@ class Setting_Ui(QWidget):
         self.keep_awake_checkBox.setToolTip(
             QCoreApplication.translate("setting_ui_tr", "<html><head/><body><p>This option will prevent the system from going to sleep.\
             It is necessary if your power manager is suspending the system automatically. </p></body></html>"))
+
+        self.check_clipboard_checkBox.setText(QCoreApplication.translate("setting_ui_tr", "Check system clipboard for copied links"))
+        self.check_clipboard_checkBox.setToolTip(
+            QCoreApplication.translate("setting_ui_tr", "<html><head/><body><p>The program will automatically check the clipboard for copied links.\
+            </p></body></html>"))
+
 
         self.wait_queue_time.setToolTip(
             QCoreApplication.translate("setting_ui_tr", "<html><head/><body><p>Format HH:MM</p></body></html>"))

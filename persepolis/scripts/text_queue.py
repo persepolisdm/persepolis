@@ -57,7 +57,8 @@ class QueueSpiderThread(QThread):
 
 
 class TextQueue(TextQueue_Ui):
-    def __init__(self, parent, file_path, callback, socks5_to_http_convertor_is_installed, persepolis_setting):
+    def __init__(self, parent, file_path, callback,
+                 socks5_to_http_convertor_is_installed, persepolis_setting):
         super().__init__(persepolis_setting)
         self.persepolis_setting = persepolis_setting
         self.callback = callback
@@ -95,7 +96,8 @@ class TextQueue(TextQueue_Ui):
             self.parent.threadPool.append(new_spider)
             self.parent.threadPool[-1].start()
             self.parent.threadPool[-1].QUEUESPIDERRETURNEDFILENAME.connect(
-                partial(self.parent.queueSpiderCallBack, child=self, row_number=len(link_list) - k))
+                partial(self.parent.queueSpiderCallBack, child=self,
+                        row_number=len(link_list) - k))
             k = k + 1
 
             item = QTableWidgetItem(file_name)
@@ -159,7 +161,7 @@ class TextQueue(TextQueue_Ui):
             'add_link_initialization/proxy_type', None)
 
         # default is http
-        if not(socks5_to_http_convertor_is_installed):
+        if not (socks5_to_http_convertor_is_installed):
             self.socks5_radioButton.setEnabled(False)
         else:
             self.socks5_radioButton.setEnabled(True)
@@ -173,7 +175,7 @@ class TextQueue(TextQueue_Ui):
 
         else:
             self.http_radioButton.setChecked(True)
- 
+
         # download UserName initialization
         settings_download_user = self.persepolis_setting.value(
             'add_link_initialization/download_user', None)
@@ -192,7 +194,7 @@ class TextQueue(TextQueue_Ui):
 
         self.deselect_all_pushButton.clicked.connect(self.deselectAll)
 
-        #frames and checkBoxes
+        # frames and checkBoxes
         self.proxy_frame.setEnabled(False)
         self.proxy_checkBox.toggled.connect(self.proxyFrame)
 
@@ -230,7 +232,8 @@ class TextQueue(TextQueue_Ui):
     # this method is called, when user changes add_queue_comboBox
     def queueChanged(self, combo):
         if str(self.add_queue_comboBox.currentText()) == 'Create new queue':
-            # if user want to create new queue, then call createQueue method from mainwindow(parent)
+            # if user want to create new queue, then callback
+            # createQueue method from mainwindow(parent)
             new_queue = self.parent.createQueue(combo)
 
             if new_queue:
@@ -279,7 +282,9 @@ class TextQueue(TextQueue_Ui):
             self, 'Select a directory', download_path)
 
         if fname:
-            # Returns pathName with the '/' separators converted to separators that are appropriate for the underlying operating system.
+            # Returns pathName with the '/' separators converted to
+            # separators that are appropriate for the underlying
+            # operating system.
             # On Windows, toNativeSeparators("c:/winnt/system32") returns
             # "c:\winnt\system32".
             fname = QDir.toNativeSeparators(fname)
@@ -294,18 +299,20 @@ class TextQueue(TextQueue_Ui):
         self.persepolis_setting.setValue(
             'add_link_initialization/port', self.port_spinBox.value())
         self.persepolis_setting.setValue(
-            'add_link_initialization/proxy_user', self.proxy_user_lineEdit.text())
+            'add_link_initialization/proxy_user',
+            self.proxy_user_lineEdit.text())
         self.persepolis_setting.setValue(
-            'add_link_initialization/download_user', self.download_user_lineEdit.text())
+            'add_link_initialization/download_user',
+            self.download_user_lineEdit.text())
 
         # http, https or socks5 proxy
-        if self.http_radioButton.isChecked() == True:
+        if self.http_radioButton.isChecked() is True:
 
             proxy_type = 'http'
             self.persepolis_setting.setValue(
                 'add_link_initialization/proxy_type', 'http')
 
-        elif self.https_radioButton.isChecked() == True:
+        elif self.https_radioButton.isChecked() is True:
 
             proxy_type = 'https'
             self.persepolis_setting.setValue(
@@ -317,13 +324,12 @@ class TextQueue(TextQueue_Ui):
             self.persepolis_setting.setValue(
                 'add_link_initialization/proxy_type', 'socks5')
 
-
         # Check 'Remember path' and change default path if needed
-        if self.folder_checkBox.isChecked() == True:
+        if self.folder_checkBox.isChecked() is True:
             self.persepolis_setting.setValue(
                 'settings/download_path', self.download_folder_lineEdit.text())
 
-        if not(self.proxy_checkBox.isChecked()):
+        if not (self.proxy_checkBox.isChecked()):
             ip = None
             port = None
             proxy_user = None
@@ -331,30 +337,30 @@ class TextQueue(TextQueue_Ui):
             proxy_type = None
         else:
             ip = self.ip_lineEdit.text()
-            if not(ip):
+            if not (ip):
                 ip = None
             port = self.port_spinBox.value()
-            if not(port):
+            if not (port):
                 port = None
             proxy_user = self.proxy_user_lineEdit.text()
-            if not(proxy_user):
+            if not (proxy_user):
                 proxy_user = None
             proxy_passwd = self.proxy_pass_lineEdit.text()
-            if not(proxy_passwd):
+            if not (proxy_passwd):
                 proxy_passwd = None
 
-        if not(self.download_checkBox.isChecked()):
+        if not (self.download_checkBox.isChecked()):
             download_user = None
             download_passwd = None
         else:
             download_user = self.download_user_lineEdit.text()
-            if not(download_user):
+            if not (download_user):
                 download_user = None
             download_passwd = self.download_pass_lineEdit.text()
-            if not(download_passwd):
+            if not (download_passwd):
                 download_passwd = None
 
-        if not(self.limit_checkBox.isChecked()):
+        if not (self.limit_checkBox.isChecked()):
             limit = 0
         else:
             if self.limit_comboBox.currentText() == "KiB/s":
@@ -368,25 +374,25 @@ class TextQueue(TextQueue_Ui):
         download_path = self.download_folder_lineEdit.text()
 
         dict_ = {'out': None,
-                'start_time': None,
-                'end_time': None,
-                'link': None,
-                'ip': ip,
-                'port': port,
-                'proxy_user': proxy_user,
-                'proxy_passwd': proxy_passwd,
-                'download_user': download_user,
-                'download_passwd': download_passwd,
-                'proxy_type': proxy_type,
-                'connections': connections,
-                'limit_value': limit,
-                'download_path': download_path,
-                'referer': None,
-                'load_cookies': None,
-                'user_agent': None,
-                'header': None,
-                'after_download': None
-                }
+                 'start_time': None,
+                 'end_time': None,
+                 'link': None,
+                 'ip': ip,
+                 'port': port,
+                 'proxy_user': proxy_user,
+                 'proxy_passwd': proxy_passwd,
+                 'download_user': download_user,
+                 'download_passwd': download_passwd,
+                 'proxy_type': proxy_type,
+                 'connections': connections,
+                 'limit_value': limit,
+                 'download_path': download_path,
+                 'referer': None,
+                 'load_cookies': None,
+                 'user_agent': None,
+                 'header': None,
+                 'after_download': None
+                 }
 
         # find checked links in links_table
         self.add_link_dictionary_list = []
@@ -396,7 +402,8 @@ class TextQueue(TextQueue_Ui):
 
             # if item is checked
             if (item.checkState() == Qt.Checked):
-                # Create a copy from dict_ and add it to add_link_dictionary_list
+                # Create a copy from dict_ and add it
+                # to add_link_dictionary_list
                 self.add_link_dictionary_list.append(
                     dict_.copy())
 
@@ -422,7 +429,6 @@ class TextQueue(TextQueue_Ui):
     def keyPressEvent(self, event):
         if event.key() == Qt.Key_Escape:
             self.close()
-
 
     def closeEvent(self, event):
         self.persepolis_setting.setValue('TextQueue/size', self.size())

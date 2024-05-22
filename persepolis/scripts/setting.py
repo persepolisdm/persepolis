@@ -289,6 +289,12 @@ class PreferencesWindow(Setting_Ui):
         else:
             self.keep_awake_checkBox.setChecked(False)
 
+        # check_clipboard_checkBox
+        if str(self.persepolis_setting.value('check-clipboard')) == 'yes':
+            self.check_clipboard_checkBox.setChecked(True)
+        else:
+            self.check_clipboard_checkBox.setChecked(False)
+
         # columns_tab
         if str(self.persepolis_setting.value('column0')) == 'yes':
             self.column0_checkBox.setChecked(True)
@@ -775,6 +781,9 @@ class PreferencesWindow(Setting_Ui):
         # keep_awake_checkBox
         self.keep_awake_checkBox.setChecked(False)
 
+        # check clipboard
+        self.check_clipboard_checkBox.setChecked(False)
+
         # columns_tab
         self.column0_checkBox.setChecked(True)
         self.column1_checkBox.setChecked(True)
@@ -993,6 +1002,14 @@ class PreferencesWindow(Setting_Ui):
             self.persepolis_setting.setValue('awake', 'no')
             self.parent.keep_awake_checkBox.setChecked(False)
 
+        # check_clipboard_checkBox
+        if self.check_clipboard_checkBox.isChecked():
+            self.persepolis_setting.setValue('check-clipboard', 'yes')
+        else:
+            self.persepolis_setting.setValue('check-clipboard', 'no')
+
+
+
         # this section  creates download folder and
         # download sub folders if they did not existed.
 
@@ -1160,7 +1177,12 @@ class PreferencesWindow(Setting_Ui):
         show_message_box = False
         for key in self.first_key_value_dict.keys():
             if self.first_key_value_dict[key] != self.second_key_value_dict[key]:
-                if key in ['locale', 'aria2_path', 'download_path', 'custom-font', 'rpc-port', 'max-tries', 'retry-wait', 'timeout', 'connections', 'style', 'font', 'font-size', 'color-scheme']:
+                if key in ['locale', 'aria2_path', 'download_path',
+                           'custom-font', 'rpc-port', 'max-tries',
+                           'retry-wait', 'timeout', 'connections',
+                           'style', 'font', 'font-size', 'color-scheme',
+                           'check-clipboard']:
+
                     show_message_box = True
 
         # if any thing changed that needs restarting, then notify user about "Some changes take effect after restarting persepolis"
