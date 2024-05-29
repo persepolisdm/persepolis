@@ -32,7 +32,6 @@ config_folder = determineConfigFolder()
 
 class LogWindow(LogWindow_Ui):
 
-
     def __init__(self, persepolis_setting):
         super().__init__(persepolis_setting)
 
@@ -124,7 +123,6 @@ class LogWindow(LogWindow_Ui):
     def keyPressEvent(self, event):
         if event.key() == Qt.Key_Escape:
             self.close()
-
 
     def closeEvent(self, event):
         self.layout().setSizeConstraint(QtWidgets.QLayout.SetDefaultConstraint)

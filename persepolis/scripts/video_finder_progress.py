@@ -115,7 +115,6 @@ class VideoFinderProgressWindow(VideoFinderProgressWindow_Ui):
         if event.key() == Qt.Key_Escape:
             self.close()
 
-
     def closeEvent(self, event):
 
         # save window size and position
@@ -131,7 +130,7 @@ class VideoFinderProgressWindow(VideoFinderProgressWindow_Ui):
             # if aria2 did not respond , then this function is checking for aria2
             # availability , and if aria2 disconnected then aria2Disconnected is
             # executed
-            if not(answer):
+            if not (answer):
                 version_answer = download.aria2Version()
                 if version_answer == 'did not respond':
                     self.parent.aria2Disconnected()
@@ -149,7 +148,7 @@ class VideoFinderProgressWindow(VideoFinderProgressWindow_Ui):
             # if aria2 did not respond , then this function is checking for aria2
             # availability , and if aria2 disconnected then aria2Disconnected is
             # executed
-            if not(answer):
+            if not (answer):
                 version_answer = download.aria2Version()
                 if version_answer == 'did not respond':
                     self.parent.aria2Disconnected()
@@ -183,7 +182,7 @@ class VideoFinderProgressWindow(VideoFinderProgressWindow_Ui):
     def limitCheckBoxToggled(self, checkBoxes):
 
         # user checked limit_checkBox
-        if self.limit_checkBox.isChecked() == True:
+        if self.limit_checkBox.isChecked() is True:
             self.limit_frame.setEnabled(True)
             self.limit_pushButton.setEnabled(True)
 
@@ -275,7 +274,7 @@ class VideoFinderProgressWindow(VideoFinderProgressWindow_Ui):
                         ok = False
                         break
 
-                if ok != False:
+                if ok is not False:
 
                     # if user selects shutdown option after download progress,
                     # value of 'shutdown' will changed in temp_db for this progress

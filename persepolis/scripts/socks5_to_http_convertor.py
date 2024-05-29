@@ -22,7 +22,6 @@ from persepolis.scripts import logger
 from socket import socket
 
 
-
 class Socks5ToHttpConvertor():
     def __init__(self, socks5_host, socks5_port, socks5_username, socks5_password, main_window, parent):
         self.socks5_host = socks5_host
@@ -46,7 +45,7 @@ class Socks5ToHttpConvertor():
     def isRunning(self):
         # check process is running or not
         if self.process:
-            if self.process.poll() == None:
+            if self.process.poll() is None:
                 self.pipe_is_running = True
             else:
                 self.pipe_is_running = False
@@ -60,9 +59,7 @@ class Socks5ToHttpConvertor():
         # else:
         #     self.pipe_is_running = False
 
-
         return self.pipe_is_running
-            
 
     def stop(self):
         # kill process
@@ -74,7 +71,7 @@ class Socks5ToHttpConvertor():
             self.pipe_is_running = False
 
     def run(self):
-        if not(self.pipe_is_running):
+        if not (self.pipe_is_running):
             # find type of convertor
             if self.main_window.type_of_convertor:
 
@@ -93,16 +90,16 @@ class Socks5ToHttpConvertor():
                     socks5_argument = 'socks5://' + str(self.socks5_host) + ':' + str(self.socks5_port)
 
                 # gost
-                if self.main_window.type_of_convertor == 'gost': 
+                if self.main_window.type_of_convertor == 'gost':
 
-                    command_argument = [convertor_app_path ,'-L', http_argument,
-                                    '-F', socks5_argument]
+                    command_argument = [convertor_app_path, '-L', http_argument,
+                                        '-F', socks5_argument]
                 # pproxy
                 elif self.main_window.type_of_convertor == 'pproxy':
 
-                    command_argument = [convertor_app_path ,'-l', http_argument,
-                                    '-r', socks5_argument]
-                #sthp
+                    command_argument = [convertor_app_path, '-l', http_argument,
+                                        '-r', socks5_argument]
+                # sthp
                 else:
 
                     if self.socks5_username:
@@ -113,13 +110,11 @@ class Socks5ToHttpConvertor():
                                             '--password', self.socks5_password]
 
                     else:
-                        command_argument = [convertor_app_path ,'--listen-ip', str(self.http_host),
+                        command_argument = [convertor_app_path, '--listen-ip', str(self.http_host),
                                             '--port', str(self.http_port),
                                             '--socks-address', '{}:{}'.format(self.socks5_host, self.socks5_port)]
-
 
                 self.pipe_is_running = True
                 self.process = runApplication(command_argument)
                 # self.process = QProcess()
                 # self.process.start(convertor_app_path, command_argument)
-

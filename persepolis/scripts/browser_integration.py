@@ -31,7 +31,7 @@ config_folder = determineConfigFolder()
 def browserIntegration(browser):
     # get execution information.
     exec_dictionary = getExecPath()
-    exec_path = exec_dictionary['modified_exec_file_path'] 
+    exec_path = exec_dictionary['modified_exec_file_path']
 
     logg_message = ["", "INFO"]
 
@@ -93,7 +93,6 @@ def browserIntegration(browser):
             native_message_folder = home_address + \
                 '/.config/BraveSoftware/Brave-Browser/NativeMessagingHosts'
 
-
     # for Mac OSX
     elif os_type == OS.OSX:
         # find Persepolis execution path
@@ -132,10 +131,10 @@ def browserIntegration(browser):
         # c:\\Users\\...\\Persepolis Download Manager.exe , so we need 2
         # "\" in address
         intermediary, logg_message = findExternalAppPath('PersepolisBI')
-        
+
         if browser in BROWSER.CHROME_FAMILY:
             native_message_folder = os.path.join(
-                home_address, 'AppData','Local',
+                home_address, 'AppData', 'Local',
                 'persepolis_download_manager', 'chrome')
         else:
             native_message_folder = os.path.join(
@@ -149,7 +148,6 @@ def browserIntegration(browser):
         "path": str(intermediary),
         "description": "Integrate Persepolis with %s using WebExtensions" % (browser)
     }
-
 
     # Add chrom* keys
     if browser in BROWSER.CHROME_FAMILY:

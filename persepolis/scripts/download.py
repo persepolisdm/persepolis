@@ -15,7 +15,7 @@
 
 from persepolis.scripts.useful_tools import freeSpace, humanReadableSize, findExternalAppPath, runApplication
 from persepolis.scripts.socks5_to_http_convertor import Socks5ToHttpConvertor
-from persepolis.scripts.osCommands import moveFile, makeDirs 
+from persepolis.scripts.osCommands import moveFile, makeDirs
 from persepolis.scripts.bubble import notifySend
 from persepolis.scripts import logger
 from persepolis.constants import OS
@@ -66,14 +66,14 @@ def startAria(parent):
 
     # find aria2c path
     aria2c_command, log_list = findExternalAppPath('aria2c')
-    
+
     logger.sendToLog(log_list[0], log_list[1])
 
     # Run aria2c
     command_argument = [aria2c_command, '--no-conf',
-                          '--enable-rpc', '--rpc-listen-port=' + str(port),
-                          '--rpc-max-request-size=2M',
-                          '--rpc-listen-all', '--quiet=true']
+                        '--enable-rpc', '--rpc-listen-port=' + str(port),
+                        '--rpc-max-request-size=2M',
+                        '--rpc-listen-all', '--quiet=true']
 
     process = runApplication(command_argument)
 
@@ -100,8 +100,6 @@ def aria2Version():
     return answer
 
 # this function sends download request to aria2
-
-
 def downloadAria(parent, gid, main_window):
     # add_link_dictionary is a dictionary that contains user download request
     # information.
@@ -127,8 +125,6 @@ def downloadAria(parent, gid, main_window):
     cookies = add_link_dictionary['load_cookies']
     referer = add_link_dictionary['referer']
 
-
-
     # make download options and send them to aria2c
 
     # convert Mega to Kilo, RPC does not Support floating point numbers.
@@ -139,7 +135,7 @@ def downloadAria(parent, gid, main_window):
         if limit_unit == 'K':
             limit_number = round(limit_number)
         else:
-            limit_number = round(1024*limit_number)
+            limit_number = round(1024 * limit_number)
             limit_unit = 'K'
         limit = str(limit_number) + limit_unit
 
@@ -152,8 +148,7 @@ def downloadAria(parent, gid, main_window):
         for i in cookies_list:
             header_list.append(i)
 
-
-    if header != None:
+    if header is not None:
         semicolon_split_header = header.split('; ')
         for i in semicolon_split_header:
             equal_split_header = i.split('=', 1)
@@ -177,7 +172,6 @@ def downloadAria(parent, gid, main_window):
     dict_ = {'gid': gid, 'status': status, 'last_try_date': now_date}
     main_window.persepolis_db.updateDownloadTable([dict_])
 
-
     # call startTime if start_time is available
     # startTime creates sleep loop if user set start_time
     # see startTime function for more information.
@@ -200,10 +194,9 @@ def downloadAria(parent, gid, main_window):
             if limit_unit == 'K':
                 limit_number = round(limit_number)
             else:
-                limit_number = round(1024*limit_number)
+                limit_number = round(1024 * limit_number)
                 limit_unit = 'K'
             limit = str(limit_number) + limit_unit
-
 
         # set start_time value to None in data_base!
         main_window.persepolis_db.setDefaultGidInAddlinkTable(gid, start_time=True)
@@ -211,7 +204,7 @@ def downloadAria(parent, gid, main_window):
     persepolis_setting.sync()
 
     # Find user's selected download_path
-    download_path = add_link_dictionary['download_path'] 
+    download_path = add_link_dictionary['download_path']
 
     # Create download_path if not existed
     makeDirs(download_path)
@@ -243,7 +236,6 @@ def downloadAria(parent, gid, main_window):
         if str(persepolis_setting.value('settings/remote-time')) == 'yes':
             aria_dict['remote-time'] = 'true'
 
-
         # if user used user name and password for download
         if download_user:
             aria_dict['http-user'] = download_user
@@ -264,7 +256,7 @@ def downloadAria(parent, gid, main_window):
                 for instance in main_window.socks5_to_http_convertor_list:
 
                     try:
-                        if instance.isRunning() == True:
+                        if instance.isRunning() is True:
                             if instance.socks5_host == proxy_host and instance.socks5_port == int(proxy_port) and instance.socks5_username == proxy_user:
 
                                 # so we don't need new stance. get instance information.
@@ -285,7 +277,7 @@ def downloadAria(parent, gid, main_window):
                     new_socks5_to_http_convertor = Socks5ToHttpConvertor(proxy_host, int(proxy_port), proxy_user, proxy_passwd, main_window, parent)
                     main_window.socks5_to_http_convertor_list.append(new_socks5_to_http_convertor)
                     main_window.socks5_to_http_convertor_list[-1].run()
-                    
+
                     # wait until new_socks5_to_http_convertor starts
                     time.sleep(2)
                     # get instance information
@@ -293,12 +285,11 @@ def downloadAria(parent, gid, main_window):
                     aria_dict['all-proxy'] = ip_port
 
             # http and https proxy
-            else: 
+            else:
                 ip_port = proxy_host + ":" + str(proxy_port)
                 aria_dict['all-proxy'] = ip_port
                 aria_dict['all-proxy-user'] = proxy_user
                 aria_dict['all-proxy-passwd'] = proxy_passwd
-
 
         aria_dict_copy = aria_dict.copy()
         # remove empty key[value] from aria_dict
@@ -341,6 +332,8 @@ def downloadAria(parent, gid, main_window):
         logger.sendToLog("Download Canceled", "INFO")
 
 # this function returns list of download information
+
+
 def tellActive():
     # get download information from aria2
     try:
@@ -449,7 +442,7 @@ def convertDownloadInformation(download_status):
         file_status = ast.literal_eval(file_status)
         path = str(file_status['path'])
         file_name = urllib.parse.unquote(os.path.basename(path))
-        if not(file_name):
+        if not (file_name):
             file_name = None
 
         uris = file_status['uris']
@@ -462,7 +455,7 @@ def convertDownloadInformation(download_status):
         link = None
 
     for i in download_status.keys():
-        if not(download_status[i]):
+        if not (download_status[i]):
             download_status[i] = None
 
     # find file_size
@@ -478,7 +471,7 @@ def convertDownloadInformation(download_status):
         downloaded = None
 
     # convert file_size and downloaded_size to KiB and MiB and GiB
-    if (downloaded != None and file_size != None and file_size != 0):
+    if (downloaded is not None and file_size is not None and file_size != 0):
         file_size_back = file_size
 
         # converting file_size to KiB or MiB or GiB
@@ -505,21 +498,21 @@ def convertDownloadInformation(download_status):
 
     # convert download_speed to desired units.
     # and find estimate_time_left
-    if (downloaded != None and download_speed != 0):
-        estimate_time_left = int((file_size - downloaded)/download_speed)
+    if (downloaded is not None and download_speed != 0):
+        estimate_time_left = int((file_size - downloaded) / download_speed)
 
         # converting file_size to KiB or MiB or GiB
         download_speed_str = humanReadableSize(download_speed, 'speed') + '/s'
 
         eta = ""
         if estimate_time_left >= 3600:
-            eta = eta + str(int(estimate_time_left/3600)) + "h"
+            eta = eta + str(int(estimate_time_left / 3600)) + "h"
             estimate_time_left = estimate_time_left % 3600
-            eta = eta + str(int(estimate_time_left/60)) + "m"
+            eta = eta + str(int(estimate_time_left / 60)) + "m"
             estimate_time_left = estimate_time_left % 60
             eta = eta + str(estimate_time_left) + "s"
         elif estimate_time_left >= 60:
-            eta = eta + str(int(estimate_time_left/60)) + "m"
+            eta = eta + str(int(estimate_time_left / 60)) + "m"
             estimate_time_left = estimate_time_left % 60
             eta = eta + str(estimate_time_left) + "s"
         else:
@@ -607,7 +600,7 @@ def downloadCompleteAction(parent, path, download_path, file_name, file_size):
 
     free_space = freeSpace(download_path)
 
-    if free_space != None and file_size != None:
+    if free_space is not None and file_size is not None:
 
         # compare free disk space and file_size
         if free_space >= file_size:
@@ -615,7 +608,7 @@ def downloadCompleteAction(parent, path, download_path, file_name, file_size):
             # move the file to the download folder
             move_answer = moveFile(str(path), str(file_path), 'file')
 
-            if not(move_answer):
+            if not (move_answer):
                 # write error message in log
                 logger.sendToLog('Persepolis can not move file', "ERROR")
                 file_path = path
@@ -634,7 +627,7 @@ def downloadCompleteAction(parent, path, download_path, file_name, file_size):
         # move the file to the download folder
         move_answer = moveFile(str(path), str(file_path), 'file')
 
-        if not(move_answer):
+        if not (move_answer):
             logger.sendToLog('Persepolis can not move file', "ERROR")
             file_path = path
 
@@ -738,8 +731,6 @@ def downloadStop(gid, main_window):
 
             logger.sendToLog("aria2c is restarted!", "INFO")
 
-
-
         # write a messages in log and terminal
         logger.sendToLog(answer + " stopped", "INFO")
 
@@ -751,7 +742,7 @@ def downloadStop(gid, main_window):
     if status != 'complete':
         # change start_time end_time and after_download value to None in date base
         main_window.persepolis_db.setDefaultGidInAddlinkTable(gid,
-                                                         start_time=True, end_time=True, after_download=True)
+                                                              start_time=True, end_time=True, after_download=True)
 
         # change status of download to "stopped" in data base
         dict_ = {'gid': gid, 'status': 'stopped'}
@@ -807,7 +798,7 @@ def limitSpeed(gid, limit):
         if limit_unit == 'K':
             limit_number = round(limit_number)
         else:
-            limit_number = round(1024*limit_number)
+            limit_number = round(1024 * limit_number)
             limit_unit = 'K'
         limit = str(limit_number) + limit_unit
 
@@ -852,7 +843,7 @@ def nowDate():
 
 def sigmaTime(time):
     hour, minute = time.split(":")
-    return (int(hour)*60 + int(minute))
+    return (int(hour) * 60 + int(minute))
 
 # nowTime returns now time in HH:MM format!
 
@@ -876,7 +867,7 @@ def startTime(start_time, gid, parent):
 
     status = 'scheduled'
 
-  # this loop is continuing until download time arrival!
+    # this loop is continuing until download time arrival!
     while sigma_start != sigma_now:
         time.sleep(2.1)
         sigma_now = nowTime()

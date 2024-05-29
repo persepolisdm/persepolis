@@ -159,8 +159,8 @@ def compatibility():
                      'after_download']
 
         for key in keys_list:
-                # if a key is missed in dict,
-                # then add this key to the dict and assign None value for the key.
+            # if a key is missed in dict,
+            # then add this key to the dict and assign None value for the key.
             if key not in add_link_dictionary.keys():
                 add_link_dictionary[key] = None
 

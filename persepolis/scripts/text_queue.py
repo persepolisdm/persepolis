@@ -103,8 +103,8 @@ class TextQueue(TextQueue_Ui):
             item = QTableWidgetItem(file_name)
 
             # add checkbox to the item
-            item.setFlags(Qt.ItemIsUserCheckable |
-                          Qt.ItemIsEnabled)
+            item.setFlags(Qt.ItemIsUserCheckable
+                          | Qt.ItemIsEnabled)
             item.setCheckState(Qt.Checked)
 
             # insert file_name

@@ -176,7 +176,7 @@ class TempDB():
         tuple_ = list_[0]
 
         dict_ = {'shutdown': str(tuple_[0]),
-                'status': tuple_[1]}
+                 'status': tuple_[1]}
 
         return dict_
 
@@ -312,12 +312,12 @@ class PluginsDB():
         # put the information in tuple_s in dictionary format and add it to new_list
         for tuple_ in list_:
             dict_ = {'link': tuple_[0],
-                    'referer': tuple_[1],
-                    'load_cookies': tuple_[2],
-                    'user_agent': tuple_[3],
-                    'header': tuple_[4],
-                    'out': tuple_[5]
-                    }
+                     'referer': tuple_[1],
+                     'load_cookies': tuple_[2],
+                     'user_agent': tuple_[3],
+                     'header': tuple_[4],
+                     'out': tuple_[5]
+                     }
 
             new_list.append(dict_)
 
@@ -441,9 +441,9 @@ class PersepolisDB():
                                                                                 header TEXT,
                                                                                 after_download TEXT,
                                                                                 proxy_type TEXT,
-                                                                                FOREIGN KEY(gid) REFERENCES download_db_table(gid) 
-                                                                                ON UPDATE CASCADE 
-                                                                                ON DELETE CASCADE 
+                                                                                FOREIGN KEY(gid) REFERENCES download_db_table(gid)
+                                                                                ON UPDATE CASCADE
+                                                                                ON DELETE CASCADE
                                                                                     )""")
         # video_finder_db_table contains addlink window download information
         self.persepolis_db_cursor.execute("""CREATE TABLE IF NOT EXISTS video_finder_db_table(
@@ -469,7 +469,7 @@ class PersepolisDB():
         # add 'All Downloads' and 'Single Downloads' to the category_db_table if they wasn't added.
         answer = self.searchCategoryInCategoryTable('All Downloads')
 
-        if not(answer):
+        if not (answer):
             all_downloads_dict = {'category': 'All Downloads',
                                   'start_time_enable': 'no',
                                   'start_time': '0:0',
@@ -499,7 +499,7 @@ class PersepolisDB():
 
         # add default queue with the name 'Scheduled Downloads'
         answer = self.searchCategoryInCategoryTable('Scheduled Downloads')
-        if not(answer):
+        if not (answer):
             scheduled_downloads_dict = {'category': 'Scheduled Downloads',
                                         'start_time_enable': 'no',
                                         'start_time': '0:0',
@@ -690,19 +690,19 @@ class PersepolisDB():
             return None
 
         dict_ = {'file_name': tuple_[0],
-                'status': tuple_[1],
-                'size': tuple_[2],
-                'downloaded_size': tuple_[3],
-                'percent': tuple_[4],
-                'connections': tuple_[5],
-                'rate': tuple_[6],
-                'estimate_time_left': tuple_[7],
-                'gid': tuple_[8],
-                'link': tuple_[9],
-                'first_try_date': tuple_[10],
-                'last_try_date': tuple_[11],
-                'category': tuple_[12]
-                }
+                 'status': tuple_[1],
+                 'size': tuple_[2],
+                 'downloaded_size': tuple_[3],
+                 'percent': tuple_[4],
+                 'connections': tuple_[5],
+                 'rate': tuple_[6],
+                 'estimate_time_left': tuple_[7],
+                 'gid': tuple_[8],
+                 'link': tuple_[9],
+                 'first_try_date': tuple_[10],
+                 'last_try_date': tuple_[11],
+                 'category': tuple_[12]
+                 }
 
         # return results
         return dict_
@@ -728,19 +728,19 @@ class PersepolisDB():
         for tuple_ in rows:
             # change format of tuple_ to dictionary
             dict_ = {'file_name': tuple_[0],
-                    'status': tuple_[1],
-                    'size': tuple_[2],
-                    'downloaded_size': tuple_[3],
-                    'percent': tuple_[4],
-                    'connections': tuple_[5],
-                    'rate': tuple_[6],
-                    'estimate_time_left': tuple_[7],
-                    'gid': tuple_[8],
-                    'link': tuple_[9],
-                    'first_try_date': tuple_[10],
-                    'last_try_date': tuple_[11],
-                    'category': tuple_[12]
-                    }
+                     'status': tuple_[1],
+                     'size': tuple_[2],
+                     'downloaded_size': tuple_[3],
+                     'percent': tuple_[4],
+                     'connections': tuple_[5],
+                     'rate': tuple_[6],
+                     'estimate_time_left': tuple_[7],
+                     'gid': tuple_[8],
+                     'link': tuple_[9],
+                     'first_try_date': tuple_[10],
+                     'last_try_date': tuple_[11],
+                     'category': tuple_[12]
+                     }
 
             # add dict to the downloads_dict
             # gid is key and dict_ is value
@@ -783,26 +783,26 @@ class PersepolisDB():
             return None
 
         dict_ = {'gid': tuple_[1],
-                'out': tuple_[2],
-                'start_time': tuple_[3],
-                'end_time': tuple_[4],
-                'link': tuple_[5],
-                'ip': tuple_[6],
-                'port': tuple_[7],
-                'proxy_user': tuple_[8],
-                'proxy_passwd': tuple_[9],
-                'download_user': tuple_[10],
-                'download_passwd': tuple_[11],
-                'connections': tuple_[12],
-                'limit_value': tuple_[13],
-                'download_path': tuple_[14],
-                'referer': tuple_[15],
-                'load_cookies': tuple_[16],
-                'user_agent': tuple_[17],
-                'header': tuple_[18],
-                'after_download': tuple_[19],
-                'proxy_type': tuple_[20]
-                }
+                 'out': tuple_[2],
+                 'start_time': tuple_[3],
+                 'end_time': tuple_[4],
+                 'link': tuple_[5],
+                 'ip': tuple_[6],
+                 'port': tuple_[7],
+                 'proxy_user': tuple_[8],
+                 'proxy_passwd': tuple_[9],
+                 'download_user': tuple_[10],
+                 'download_passwd': tuple_[11],
+                 'connections': tuple_[12],
+                 'limit_value': tuple_[13],
+                 'download_path': tuple_[14],
+                 'referer': tuple_[15],
+                 'load_cookies': tuple_[16],
+                 'user_agent': tuple_[17],
+                 'header': tuple_[18],
+                 'after_download': tuple_[19],
+                 'proxy_type': tuple_[20]
+                 }
 
         return dict_
 
@@ -828,26 +828,26 @@ class PersepolisDB():
         for tuple_ in rows:
             # change format of tuple_ to dictionary
             dict_ = {'gid': tuple_[1],
-                    'out': tuple_[2],
-                    'start_time': tuple_[3],
-                    'end_time': tuple_[4],
-                    'link': tuple_[5],
-                    'ip': tuple_[6],
-                    'port': tuple_[7],
-                    'proxy_user': tuple_[8],
-                    'proxy_passwd': tuple_[9],
-                    'download_user': tuple_[10],
-                    'download_passwd': tuple_[11],
-                    'connections': tuple_[12],
-                    'limit_value': tuple_[13],
-                    'download_path': tuple_[14],
-                    'referer': tuple_[15],
-                    'load_cookies': tuple_[16],
-                    'user_agent': tuple_[17],
-                    'header': tuple_[18],
-                    'after_download': tuple_[19],
-                    'proxy_type': tuple_[20]
-                    }
+                     'out': tuple_[2],
+                     'start_time': tuple_[3],
+                     'end_time': tuple_[4],
+                     'link': tuple_[5],
+                     'ip': tuple_[6],
+                     'port': tuple_[7],
+                     'proxy_user': tuple_[8],
+                     'proxy_passwd': tuple_[9],
+                     'download_user': tuple_[10],
+                     'download_passwd': tuple_[11],
+                     'connections': tuple_[12],
+                     'limit_value': tuple_[13],
+                     'download_path': tuple_[14],
+                     'referer': tuple_[15],
+                     'load_cookies': tuple_[16],
+                     'user_agent': tuple_[17],
+                     'header': tuple_[18],
+                     'after_download': tuple_[19],
+                     'proxy_type': tuple_[20]
+                     }
 
             # add dict_ to the addlink_dict
             # gid as key and dict_ as value
@@ -855,9 +855,7 @@ class PersepolisDB():
 
         return addlink_dict
 
-
 # this method updates download_db_table
-
     def updateDownloadTable(self, list_):
         # lock data base
         self.lockCursor()
@@ -905,9 +903,7 @@ class PersepolisDB():
         # job is done! open the lock
         self.lock = False
 
-
 # this method updates category_db_table
-
     def updateCategoryTable(self, list_):
         # lock data base
         self.lockCursor()
@@ -953,9 +949,7 @@ class PersepolisDB():
         # job is done! open the lock
         self.lock = False
 
-
 # this method updates addlink_db_table
-
     def updateAddLinkTable(self, list_):
         # lock data base
         self.lockCursor()
@@ -1100,16 +1094,16 @@ class PersepolisDB():
 
         # create a dictionary from results
         dict_ = {'category': tuple_[0],
-                'start_time_enable': tuple_[1],
-                'start_time': tuple_[2],
-                'end_time_enable': tuple_[3],
-                'end_time': tuple_[4],
-                'reverse': tuple_[5],
-                'limit_enable': tuple_[6],
-                'limit_value': tuple_[7],
-                'after_download': tuple_[8],
-                'gid_list': gid_list
-                }
+                 'start_time_enable': tuple_[1],
+                 'start_time': tuple_[2],
+                 'end_time_enable': tuple_[3],
+                 'end_time': tuple_[4],
+                 'reverse': tuple_[5],
+                 'limit_enable': tuple_[6],
+                 'limit_value': tuple_[7],
+                 'after_download': tuple_[8],
+                 'gid_list': gid_list
+                 }
 
         # return dictionary
         return dict_
@@ -1144,7 +1138,7 @@ class PersepolisDB():
                                         reverse = 'no', limit_enable = 'no', after_download = 'no'""")
 
         # change status of download to 'stopped' if status isn't 'complete' or 'error'
-        self.persepolis_db_cursor.execute("""UPDATE download_db_table SET status = 'stopped' 
+        self.persepolis_db_cursor.execute("""UPDATE download_db_table SET status = 'stopped'
                                         WHERE status NOT IN ('complete', 'error')""")
 
         # change start_time and end_time and
@@ -1168,10 +1162,10 @@ class PersepolisDB():
 
         # find download items is download_db_table with status = "downloading" or "waiting" or paused or scheduled
         if category:
-            self.persepolis_db_cursor.execute("""SELECT gid FROM download_db_table WHERE (category = '{}') AND (status = 'downloading' OR status = 'waiting' 
+            self.persepolis_db_cursor.execute("""SELECT gid FROM download_db_table WHERE (category = '{}') AND (status = 'downloading' OR status = 'waiting'
                                             OR status = 'scheduled' OR status = 'paused')""".format(str(category)))
         else:
-            self.persepolis_db_cursor.execute("""SELECT gid FROM download_db_table WHERE (status = 'downloading' OR status = 'waiting' 
+            self.persepolis_db_cursor.execute("""SELECT gid FROM download_db_table WHERE (status = 'downloading' OR status = 'waiting'
                                             OR status = 'scheduled' OR status = 'paused')""")
 
         # create a list for returning answer
@@ -1285,9 +1279,7 @@ class PersepolisDB():
         # job is done! open the lock
         self.lock = False
 
-
 # this method deletes all items in data_base
-
     def resetDataBase(self):
         # update gid_list in categories with empty gid_list
         all_downloads_dict = {'category': 'All Downloads', 'gid_list': []}
@@ -1350,7 +1342,6 @@ class PersepolisDB():
                 # update category_db_table
                 self.updateCategoryTable([category_dict])
 
-
 # this method replaces:
 # GB >> GiB
 # MB >> MiB
@@ -1364,13 +1355,13 @@ class PersepolisDB():
 
         for units in [['KB', 'KiB'], ['MB', 'MiB'], ['GB', 'GiB']]:
             dict_ = {'old_unit': units[0],
-                    'new_unit': units[1]}
+                     'new_unit': units[1]}
 
-            self.persepolis_db_cursor.execute("""UPDATE download_db_table 
+            self.persepolis_db_cursor.execute("""UPDATE download_db_table
                     SET size = replace(size, :old_unit, :new_unit)""", dict_)
-            self.persepolis_db_cursor.execute("""UPDATE download_db_table 
+            self.persepolis_db_cursor.execute("""UPDATE download_db_table
                     SET rate = replace(rate, :old_unit, :new_unit)""", dict_)
-            self.persepolis_db_cursor.execute("""UPDATE download_db_table 
+            self.persepolis_db_cursor.execute("""UPDATE download_db_table
                     SET downloaded_size = replace(downloaded_size, :old_unit, :new_unit)""", dict_)
 
         self.persepolis_db_connection.commit()
@@ -1379,8 +1370,8 @@ class PersepolisDB():
         self.lock = False
 
     def correctDataBaseForVersion410(self):
-    
-        #lock data base
+
+        # lock data base
         self.lockCursor()
 
         # set all proxy_type to http
@@ -1399,16 +1390,14 @@ class PersepolisDB():
 
             self.persepolis_db_connection.commit()
 
-
         # job is done! open the lock
         self.lock = False
 
     # close connections
 
     def correctDataBaseForVersion411(self):
-         # lock data base
+        # lock data base
         self.lockCursor()
-
 
         # find gid of all unfinished downloads in download_db_table
         self.persepolis_db_cursor.execute("""SELECT gid FROM download_db_table WHERE status IS NOT 'complete'""")
@@ -1418,8 +1407,6 @@ class PersepolisDB():
 
         for result_tuple in result:
             gid_list.append(result_tuple[0])
-
-
 
         # correct download path
         for gid in gid_list:
@@ -1434,7 +1421,6 @@ class PersepolisDB():
             os_type = platform.system()
             home_address = os.path.expanduser("~")
 
-
             if os.lstat(download_path).st_dev == os.lstat(home_address).st_dev:
 
                 if os_type != 'Windows':
@@ -1447,10 +1433,9 @@ class PersepolisDB():
 
                 from persepolis.scripts.osCommands import findMountPoint
 
-                # Find mount point 
+                # Find mount point
                 mount_point = findMountPoint(download_path)
 
-                
                 # find download_path_temp
                 if os_type == 'Windows':
 
@@ -1460,17 +1445,14 @@ class PersepolisDB():
 
                     download_path_temp = os.path.join(mount_point, '.persepolis')
 
-
             # set download_path_temp as download_path
             self.persepolis_db_cursor.execute("""UPDATE addlink_db_table SET download_path = '{}'
                                                                             WHERE gid = '{}' """.format(download_path_temp, gid))
-     
-            self.persepolis_db_connection.commit()
 
+            self.persepolis_db_connection.commit()
 
         # job is done! open the lock
         self.lock = False
-
 
     def closeConnections(self):
         # lock data base

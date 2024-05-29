@@ -16,6 +16,8 @@
 
 # THIS FILE CONTAINING SOME VARIABLES , ... THAT USING FOR INITIALIZING PERSEPOLIS
 
+from persepolis.scripts.data_base import PersepolisDB, PluginsDB
+from persepolis.scripts import logger
 from persepolis.scripts.useful_tools import determineConfigFolder, returnDefaultSettings
 from persepolis.scripts.browser_integration import browserIntegration
 from persepolis.scripts import osCommands
@@ -40,7 +42,6 @@ for folder in [config_folder, persepolis_tmp]:
     osCommands.makeDirs(folder)
 
 # persepolisdm.log file contains persepolis log.
-from persepolis.scripts import logger
 
 # refresh logs!
 log_file = os.path.join(str(config_folder), 'persepolisdm.log')
@@ -82,7 +83,6 @@ else:
                  + '\n')
     f.close()
 
-from persepolis.scripts.data_base import PersepolisDB, PluginsDB
 
 # create an object for PersepolisDB
 persepolis_db = PersepolisDB()
@@ -123,13 +123,13 @@ for key in default_setting_dict.keys():
     persepolis_setting.setValue(key, setting_value)
 
 # set default dwonload path
-if not(os.path.exists(persepolis_setting.value('download_path'))):
+if not (os.path.exists(persepolis_setting.value('download_path'))):
     persepolis_setting.setValue('download_path', default_setting_dict['download_path'])
 
 
 persepolis_setting.sync()
 
-# Create downloads folder and subfolders. 
+# Create downloads folder and subfolders.
 # download sub folders if they did not existed.
 download_path = persepolis_setting.value('download_path')
 
@@ -152,16 +152,16 @@ for browser in ['chrome', 'chromium', 'opera', 'vivaldi', 'firefox', 'brave']:
 
     log_message = browser
 
-    if json_done == True:
+    if json_done is True:
         log_message = log_message + ': ' + 'Json file is created successfully.\n'
 
     else:
         log_message = log_message + ': ' + 'Json ERROR!\n'
 
-    if native_done == True:
+    if native_done is True:
         log_message = log_message + 'persepolis executer file is created successfully.\n'
 
-    elif native_done == False:
+    elif native_done is False:
         log_message = log_message + ': ' + 'persepolis executer file ERROR!\n'
 
     logger.sendToLog(log_message)
@@ -229,7 +229,6 @@ if persepolis_version < 4.0:
     persepolis_setting.endGroup()
 
 
-
 if persepolis_version < 4.1:
     # create an object for PersepolisDB
     persepolis_db = PersepolisDB()
@@ -255,6 +254,5 @@ if persepolis_version < 4.11:
 
     persepolis_setting.setValue('version/version', 4.11)
 
-   
 
 persepolis_setting.sync()

@@ -42,6 +42,8 @@ os_type = platform.system()
 home_address = os.path.expanduser("~")
 
 # runApplication in a thread.
+
+
 class RunApplicationThread(QThread):
     RUNAPPCALLBACKSIGNAL = Signal(list)
 
@@ -57,6 +59,8 @@ class RunApplicationThread(QThread):
             self.RUNAPPCALLBACKSIGNAL.emit([pipe])
 
 # determine the config folder path based on the operating system
+
+
 def determineConfigFolder():
     if os_type in OS.UNIX_LIKE:
         config_folder = os.path.join(
@@ -83,7 +87,7 @@ def osAndDesktopEnvironment():
 
 
 # this function converts file_size to KiB or MiB or GiB
-def humanReadableSize(size, input_type='file_size'): 
+def humanReadableSize(size, input_type='file_size'):
     labels = ['KiB', 'MiB', 'GiB', 'TiB']
     i = -1
     if size < 1024:
@@ -92,7 +96,7 @@ def humanReadableSize(size, input_type='file_size'):
     while size >= 1024:
         i += 1
         size = size / 1024
-        
+
     if input_type == 'speed':
         j = 0
     else:
@@ -125,20 +129,20 @@ def convertToByte(file_size):
         size_value = int(float(file_size[:-3]))
 
     # covert them in byte
-    if not(unit):
+    if not (unit):
         in_byte_value = size_value
 
     elif unit == 'KiB':
-        in_byte_value = size_value*1024
+        in_byte_value = size_value * 1024
 
     elif unit == 'MiB':
-        in_byte_value = size_value*1024*1024
+        in_byte_value = size_value * 1024 * 1024
 
     elif unit == 'GiB':
-        in_byte_value = size_value*1024*1024*1024
+        in_byte_value = size_value * 1024 * 1024 * 1024
 
     elif unit == 'TiB':
-        in_byte_value = size_value*1024*1024*1024*1024
+        in_byte_value = size_value * 1024 * 1024 * 1024 * 1024
 
     return int(in_byte_value)
 
@@ -172,8 +176,7 @@ def returnDefaultSettings():
     # user download folder path
     download_path = os.path.join(home_address, 'Downloads', 'Persepolis')
 
-
-    # set dark fusion for default style settings. 
+    # set dark fusion for default style settings.
     style = 'Fusion'
     color_scheme = 'Dark Fusion'
     icons = 'Breeze-Dark'
@@ -207,6 +210,8 @@ def returnDefaultSettings():
     return default_setting_dict
 
 # mix video and audio that downloads by video finder
+
+
 def muxer(parent, video_finder_dictionary):
 
     result_dictionary = {'error': 'no_error',
@@ -280,14 +285,14 @@ def muxer(parent, video_finder_dictionary):
 
             # run ffmpeg
             command_argument = ['ffmpeg', '-i', video_file_path,
-                                         '-i', audio_file_path,
-                                         '-c', 'copy',
-                                         '-shortest',
-                                         '-map', '0:v:0',
-                                         '-map', '1:a:0',
-                                         '-loglevel', 'error',
-                                         '-strict', '-2',
-                                         final_path_plus_name]
+                                '-i', audio_file_path,
+                                '-c', 'copy',
+                                '-shortest',
+                                '-map', '0:v:0',
+                                '-map', '1:a:0',
+                                '-loglevel', 'error',
+                                '-strict', '-2',
+                                final_path_plus_name]
 
             pipe = runApplication(command_argument)
 
@@ -307,6 +312,8 @@ def muxer(parent, video_finder_dictionary):
     return result_dictionary
 
 # return version of gost
+
+
 def socks5ToHttpConvertorVersion():
     type_of_convertor = None
     # persepolis use gost, pproxy, sthp for converting socks5 to http
@@ -354,9 +361,6 @@ def socks5ToHttpConvertorVersion():
     if socks5_to_http_convertor_is_installed:
         return socks5_to_http_convertor_is_installed, gost_output, log_list, type_of_convertor
 
-
-
-
     else:
 
         # try to find pproxy
@@ -378,17 +382,15 @@ def socks5ToHttpConvertorVersion():
             socks5_to_http_convertor_is_installed = False
             pproxy_output = 'No socks to http convertor found.'
 
-
-
     return socks5_to_http_convertor_is_installed, pproxy_output, log_list, type_of_convertor
 
 # return version of ffmpeg
+
+
 def ffmpegVersion():
 
     # find ffmpeg path
     ffmpeg_command, log_list = findExternalAppPath('ffmpeg')
-
-    
 
     # Try to test ffmpeg
     command_argument = [ffmpeg_command, '-version']
@@ -426,6 +428,8 @@ def qRunApplication(command: str, command_argument: list, parent=None):
     return process
 
 # run an application
+
+
 def runApplication(command_argument):
     if os_type == OS.WINDOWS:
 
@@ -449,8 +453,10 @@ def runApplication(command_argument):
     return pipe
 
 # find exeternal application execution path
+
+
 def findExternalAppPath(app_name):
-    
+
     # get Persepolis type information first.
     persepolis_path_infromation = getExecPath()
     is_bundle = persepolis_path_infromation['bundle']
@@ -462,7 +468,7 @@ def findExternalAppPath(app_name):
     # If Persepolis run as a bundle.
     if is_bundle:
 
-        # alongside of the bundle path 
+        # alongside of the bundle path
         cwd = sys.argv[0]
         current_directory = os.path.dirname(cwd)
         app_alongside = os.path.join(current_directory, app_name)
@@ -479,14 +485,14 @@ def findExternalAppPath(app_name):
                 log_list = ["{}'s file is detected alongside of bundle.".format(app_name), "INFO"]
 
             # Check inside of the bundle.
-            elif os.path.exists(app_inside): 
+            elif os.path.exists(app_inside):
 
                 app_command = app_inside
                 log_list = ["{}'s file is detected inside of bundle.".format(app_name), "INFO"]
 
             else:
                 # use app that installed on user's system
-                app_command = app_name 
+                app_command = app_name
                 log_list = ["Persepolis will use {} that installed on user's system.".format(app_name), "INFO"]
 
         else:
@@ -498,7 +504,7 @@ def findExternalAppPath(app_name):
     # I Persepolis run from test directory.
     if is_test:
 
-        # Check inside of test directory. 
+        # Check inside of test directory.
         cwd = sys.argv[0]
         current_directory = os.path.dirname(cwd)
         app_alongside = os.path.join(current_directory, app_name)
@@ -510,13 +516,12 @@ def findExternalAppPath(app_name):
 
         else:
             # use app that installed on user's system
-            app_command = app_name 
+            app_command = app_name
             log_list = ["Persepolis will use {} that installed on user's system.".format(app_name), "INFO"]
 
+    if not (is_bundle) and not (is_test):
 
-    if not(is_bundle) and not(is_test):
-
-        app_command = app_name 
+        app_command = app_name
         log_list = ["Persepolis will use {} that installed on user's system.".format(app_name), "INFO"]
 
     return app_command, log_list
@@ -536,21 +541,19 @@ def getExecPath():
 
         # get executable path
         bundle_path = os.path.dirname(sys.executable)
-        
+
         # get bundle name
         bundle_name = os.path.basename(sys.executable)
 
-
         exec_file_path = os.path.join(bundle_path, bundle_name)
 
-           
     else:
         # persepolis is run from python script
         exec_dictionary['bundle'] = False
 
         # get execution path
         script_path = os.path.dirname(os.path.abspath(sys.modules['__main__'].__file__))
-        script_name = os.path.basename(sys.argv[0]) 
+        script_name = os.path.basename(sys.argv[0])
 
         if script_name == 'test.py':
 
@@ -558,7 +561,6 @@ def getExecPath():
             exec_dictionary['test'] = True
 
         exec_file_path = os.path.join(script_path, script_name)
-
 
     # replace space with \+space for UNIX_LIKE and OSX
     if os_type in OS.UNIX_LIKE or os_type == OS.OSX:
@@ -569,7 +571,7 @@ def getExecPath():
         modified_exec_file_path = exec_file_path.replace('\\', r'\\')
 
     # write it in dictionary
-    exec_dictionary['exec_file_path'] = exec_file_path 
+    exec_dictionary['exec_file_path'] = exec_file_path
     exec_dictionary['modified_exec_file_path'] = modified_exec_file_path
 
     # return ressults

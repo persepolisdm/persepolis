@@ -36,11 +36,13 @@ def findFileManager():
 
 
 def touch(file_path):
-    if not(os.path.isfile(file_path)):
+    if not (os.path.isfile(file_path)):
         f = open(file_path, 'w')
         f.close()
 
 # xdgOpen opens files or folders
+
+
 def xdgOpen(file_path, f_type='file', path='file'):
 
     # we have a file path and we want to open it's directory.
@@ -148,7 +150,7 @@ def xdgOpen(file_path, f_type='file', path='file'):
         CREATE_NO_WINDOW = 0x08000000
 
         if highlight:
-            subprocess.Popen(['explorer.exe', '/select,',  file_path],
+            subprocess.Popen(['explorer.exe', '/select,', file_path],
                              stderr=subprocess.PIPE,
                              stdout=subprocess.PIPE,
                              stdin=subprocess.PIPE,
@@ -157,7 +159,7 @@ def xdgOpen(file_path, f_type='file', path='file'):
 
         else:
 
-            subprocess.Popen(['cmd', '/C', 'start', file_path,  file_path],
+            subprocess.Popen(['cmd', '/C', 'start', file_path, file_path],
                              stderr=subprocess.PIPE,
                              stdout=subprocess.PIPE,
                              stdin=subprocess.PIPE,
@@ -165,7 +167,9 @@ def xdgOpen(file_path, f_type='file', path='file'):
                              creationflags=CREATE_NO_WINDOW)
 
 # remove file with path of file_path
-def remove(file_path): 
+
+
+def remove(file_path):
     if os.path.isfile(file_path):
         try:
             # function returns  ok, if operation was successful
@@ -181,6 +185,8 @@ def remove(file_path):
         return 'no'
 
 # removeDir removes folder : folder_path
+
+
 def removeDir(folder_path):
 
     # check folder_path existence
@@ -197,7 +203,9 @@ def removeDir(folder_path):
         # return 'no' if file didn't existed
         return 'no'
 
-# make directory 
+# make directory
+
+
 def makeDirs(folder_path, hidden=False):
 
     if hidden:
@@ -219,7 +227,7 @@ def makeDirs(folder_path, hidden=False):
 
             # In linux and bsd a dot character must be added in the start of the directory's name
             dir_name = os.path.basename(folder_path)
-            dir_name = '.' + dir_name 
+            dir_name = '.' + dir_name
             folder_path = os.path.join(os.path.dirname(folder_path), dir_name)
 
             os.makedirs(folder_path, exist_ok=True)
@@ -228,8 +236,10 @@ def makeDirs(folder_path, hidden=False):
         os.makedirs(folder_path, exist_ok=True)
 
     return folder_path
-    
+
 # this function returns mount point
+
+
 def findMountPoint(path):
 
     while not os.path.ismount(path):
@@ -238,6 +248,8 @@ def findMountPoint(path):
     return path
 
 # move downloaded file to another destination.
+
+
 def moveFile(old_file_path, new_path, new_path_type='folder'):
 
     # new_path_type can be file or folder

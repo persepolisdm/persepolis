@@ -22,7 +22,6 @@ from persepolis.scripts import logger
 from persepolis.constants import OS
 
 # get proxy function
-
 def getProxy():
     socks_proxy = False
 
@@ -43,7 +42,7 @@ def getProxy():
 
     proxy = {}
     if os_type in OS.UNIX_LIKE:
-        if desktop == None:
+        if desktop is None:
             desktop_env_type = 'Desktop Environment not detected!'
         else:
             desktop_env_type = 'Desktop environment: ' + str(desktop)
@@ -118,14 +117,14 @@ def getProxy():
         else:
             logger.sendToLog('no proxy file detected', 'INFO')
 
-    # Detect proxy from GNOME Desktop        
+    # Detect proxy from GNOME Desktop
     elif desktop == 'GNOME':
         process = subprocess.run(['gsettings', 'get', 'org.gnome.system.proxy', 'mode'], stdout=subprocess.PIPE)
-        mode = re.search(r'manual' , process.stdout.decode('utf-8'))
-        if mode is not None:    
+        mode = re.search(r'manual', process.stdout.decode('utf-8'))
+        if mode is not None:
             try:
                 process = subprocess.run(['gsettings', 'get', 'org.gnome.system.proxy.http', 'host'], stdout=subprocess.PIPE)
-                proxy['http_proxy_ip'] = re.search(r"\'([\w0-9\.]+)\'" , process.stdout.decode('utf-8')).group(1)
+                proxy['http_proxy_ip'] = re.search(r"\'([\w0-9\.]+)\'", process.stdout.decode('utf-8')).group(1)
                 process = subprocess.run(['gsettings', 'get', 'org.gnome.system.proxy.http', 'port'], stdout=subprocess.PIPE)
                 proxy['http_proxy_port'] = process.stdout.decode('utf-8')
             except:
@@ -133,7 +132,7 @@ def getProxy():
 
             try:
                 process = subprocess.run(['gsettings', 'get', 'org.gnome.system.proxy.https', 'host'], stdout=subprocess.PIPE)
-                proxy['https_proxy_ip'] = re.search(r"\'([\w0-9\.]+)\'" , process.stdout.decode('utf-8')).group(1)
+                proxy['https_proxy_ip'] = re.search(r"\'([\w0-9\.]+)\'", process.stdout.decode('utf-8')).group(1)
                 process = subprocess.run(['gsettings', 'get', 'org.gnome.system.proxy.https', 'port'], stdout=subprocess.PIPE)
                 proxy['https_proxy_port'] = process.stdout.decode('utf-8')
             except:
@@ -141,19 +140,19 @@ def getProxy():
 
             try:
                 process = subprocess.run(['gsettings', 'get', 'org.gnome.system.proxy.ftp', 'host'], stdout=subprocess.PIPE)
-                proxy['ftp_proxy_ip'] = re.search(r"\'([\w0-9\.]+)\'" , process.stdout.decode('utf-8')).group(1)
+                proxy['ftp_proxy_ip'] = re.search(r"\'([\w0-9\.]+)\'", process.stdout.decode('utf-8')).group(1)
                 process = subprocess.run(['gsettings', 'get', 'org.gnome.system.proxy.ftp', 'port'], stdout=subprocess.PIPE)
                 proxy['ftp_proxy_port'] = process.stdout.decode('utf-8')
             except:
                 logger.sendToLog('no ftp proxy detected', 'INFO')
-            
+
             try:
                 process = subprocess.run(['gsettings', 'get', 'org.gnome.system.proxy.socks', 'host'], stdout=subprocess.PIPE)
-                value = re.search(r"\'([\w0-9\.]+)\'" , process.stdout.decode('utf-8')).group(1)
+                # value = re.search(r"\'([\w0-9\.]+)\'", process.stdout.decode('utf-8')).group(1)
                 socks_proxy = True
             except:
                 socks_proxy = False
-        
+
         else:
             logger.sendToLog('no manual proxy detected', 'INFO')
 

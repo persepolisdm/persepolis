@@ -152,7 +152,7 @@ class PersepolisApplication(QApplication):
 
 # create  terminal arguments
 parser = argparse.ArgumentParser(description='Persepolis Download Manager')
-#parser.add_argument('chromium', nargs = '?', default = 'no', help='this switch is used for chrome native messaging in Linux and Mac')
+# parser.add_argument('chromium', nargs = '?', default = 'no', help='this switch is used for chrome native messaging in Linux and Mac')
 parser.add_argument('--link', action='store', nargs=1, help='Download link.(Use "" for links)')
 parser.add_argument('--referer', action='store', nargs=1,
                     help='Set an http referrer (Referer). This affects all http/https downloads.  If * is given, the download URI is also used as the referrer.')
@@ -274,7 +274,7 @@ if args.clear:
 if args.default:
     persepolis_setting.clear()
     persepolis_setting.sync()
-    print ('Persepolis restored default')
+    print('Persepolis restored default')
     sys.exit(0)
 
 
@@ -366,7 +366,7 @@ else:
 
 def main():
     # if lock_file is existed , it means persepolis is still running!
-    if lock_file_validation and (not((args.parent_window or unknownargs) and browser_url == False) or ((args.parent_window or unknownargs) and start_persepolis_if_browser_executed)):
+    if lock_file_validation and (not ((args.parent_window or unknownargs) and browser_url is False) or ((args.parent_window or unknownargs) and start_persepolis_if_browser_executed)):
 
         # set QT_AUTO_SCREEN_SCALE_FACTOR to 1 for "high DPI displays"
         os.environ['QT_AUTO_SCREEN_SCALE_FACTOR'] = '1'
@@ -375,7 +375,6 @@ def main():
 
         # set color_scheme and style
         # see palettes.py and setting.py
-
 
         # create QApplication
         persepolis_download_manager = PersepolisApplication(sys.argv)
@@ -403,7 +402,6 @@ def main():
 
             # write error_message in log file.
             logger.sendToLog('Qt.AA_EnableHighDpiScaling is not available!', "ERROR")
-
 
         # set organization name and domain and application name
         persepolis_download_manager.setOrganizationName('com.github.persepolisdm.persepolis')
@@ -459,7 +457,7 @@ def main():
 
         sys.exit(persepolis_download_manager.exec_())
 
-    elif not((args.parent_window or unknownargs)):
+    elif not ((args.parent_window or unknownargs)):
 
         # this section warns user that program is still running and no need to run it again
         # and creating a file to notify mainwindow for showing itself!

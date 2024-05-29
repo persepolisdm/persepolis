@@ -129,7 +129,6 @@ class AfterDownloadWindow(AfterDownloadWindow_Ui):
         if event.key() == Qt.Key_Escape:
             self.close()
 
-
     def closeEvent(self, event):
         # saving window size and position
         self.persepolis_setting.setValue(

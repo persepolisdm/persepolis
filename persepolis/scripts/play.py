@@ -36,7 +36,7 @@ def playNotification(file):
     volume_percent = int(persepolis_setting.value('settings/sound-volume'))
 
 # Paplay volume value must be between 0 (silent) and 65536 (100% volume)
-    volume = int((65536 * volume_percent)/100)
+    volume = int((65536 * volume_percent) / 100)
 
     if enable_notification == 'yes':
         if os_type in OS.UNIX_LIKE:

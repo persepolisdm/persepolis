@@ -33,6 +33,7 @@ import platform
 
 os_type = platform.system()
 
+
 class ShutDownThread(QThread):
     def __init__(self, parent, gid, password=None):
         QThread.__init__(self)
@@ -92,7 +93,7 @@ class ProgressWindow(ProgressWindow_Ui):
 
         self.limit_spinBox.valueChanged.connect(self.limitComboBoxChanged)
 
-  # set window size and position
+        # set window size and position
         size = self.persepolis_setting.value(
             'ProgressWindow/size', QSize(595, 274))
         position = self.persepolis_setting.value(
@@ -104,7 +105,6 @@ class ProgressWindow(ProgressWindow_Ui):
     def keyPressEvent(self, event):
         if event.key() == Qt.Key_Escape:
             self.close()
-
 
     def closeEvent(self, event):
         # save window size and position
@@ -122,7 +122,7 @@ class ProgressWindow(ProgressWindow_Ui):
             # if aria2 did not respond , then this function is checking for aria2
             # availability , and if aria2 disconnected then aria2Disconnected is
             # executed
-            if not(answer):
+            if not (answer):
                 version_answer = download.aria2Version()
                 if version_answer == 'did not respond':
                     self.parent.aria2Disconnected()
@@ -140,7 +140,7 @@ class ProgressWindow(ProgressWindow_Ui):
             # if aria2 did not respond , then this function is checking for aria2
             # availability , and if aria2 disconnected then aria2Disconnected is
             # executed
-            if not(answer):
+            if not (answer):
                 version_answer = download.aria2Version()
                 if version_answer == 'did not respond':
                     self.parent.aria2Disconnected()
@@ -173,7 +173,7 @@ class ProgressWindow(ProgressWindow_Ui):
     def limitCheckBoxToggled(self, checkBoxes):
 
         # user checked limit_checkBox
-        if self.limit_checkBox.isChecked() == True:
+        if self.limit_checkBox.isChecked() is True:
             self.limit_frame.setEnabled(True)
             self.limit_pushButton.setEnabled(True)
 
@@ -252,7 +252,7 @@ class ProgressWindow(ProgressWindow_Ui):
                         ok = False
                         break
 
-                if ok != False:
+                if ok is not False:
 
                     # if user selects shutdown option after download progress,
                     # value of 'shutdown' will changed in temp_db for this gid

@@ -95,7 +95,6 @@ class PreferencesWindow(Setting_Ui):
         else:
             self.remote_time_checkBox.setChecked(False)
 
-
         # add support for other languages
         locale = str(self.persepolis_setting.value('settings/locale'))
         QLocale.setDefault(QLocale(locale))
@@ -118,7 +117,7 @@ class PreferencesWindow(Setting_Ui):
         aria2_path = self.persepolis_setting.value('settings/aria2_path')
 
         self.aria2_path_lineEdit.setEnabled(False)
-        if aria2_path != None:
+        if aria2_path is not None:
             self.aria2_path_checkBox.setChecked(True)
             self.aria2_path_lineEdit.setText(str(aria2_path))
 
@@ -165,7 +164,7 @@ class PreferencesWindow(Setting_Ui):
             self.style_comboBox.setCurrentIndex(current_style_index)
 
         # available language
-        available_language = ['en_US', 'fa_IR','ar', 'es_ES', 'fr_FR', 'ko', 'pl_PL', 'pt', 'ru', 'tr', 'zh_CN', 'de', 'hu', 'nl_NL', 'pt_BR', 'sv', 'tr_TR', 'zh_TW']
+        available_language = ['en_US', 'fa_IR', 'ar', 'es_ES', 'fr_FR', 'ko', 'pl_PL', 'pt', 'ru', 'tr', 'zh_CN', 'de', 'hu', 'nl_NL', 'pt_BR', 'sv', 'tr_TR', 'zh_TW']
         for lang in available_language:
             self.lang_comboBox.addItem(str(QLocale(lang).nativeLanguageName()), lang)
 
@@ -410,7 +409,6 @@ class PreferencesWindow(Setting_Ui):
         for member in self.persepolis_setting.allKeys():
             self.first_key_value_dict[member] = str(self.persepolis_setting.value(member))
 
-
         # if style_comboBox is changed, self.styleComboBoxChanged is called.
         self.style_comboBox.currentIndexChanged.connect(self.styleComboBoxChanged)
 
@@ -429,8 +427,8 @@ class PreferencesWindow(Setting_Ui):
         self.resize(size)
         self.move(position)
 
-
     # run this method if user doubleclicks on an item in shortcut_table
+
     def showCaptureKeyboardWindow(self):
 
         # show KeyCapturingWindow
@@ -441,7 +439,7 @@ class PreferencesWindow(Setting_Ui):
 
     def callBack(self, keys):
         # do nothing if keys is empty
-        if not(keys):
+        if not (keys):
             return
 
         # check that if shortcut used before.
@@ -450,7 +448,6 @@ class PreferencesWindow(Setting_Ui):
             self.msgBox.setText(QCoreApplication.translate("setting_src_ui_tr", "<b><center>This shortcut has been used before!\
                     Use another one!</center></b>"))
             self.msgBox.setIcon(QMessageBox.Warning)
-            reply = self.msgBox.exec_()
 
         # set new shortcut
         else:
@@ -493,7 +490,7 @@ class PreferencesWindow(Setting_Ui):
             self.color_comboBox.setEnabled(True)
 
             # color_comboBox items
-            color_scheme = ['Dark Fusion', 'Light Fusion'] 
+            color_scheme = ['Dark Fusion', 'Light Fusion']
 
             # add items
             self.color_comboBox.addItems(color_scheme)
@@ -537,14 +534,14 @@ class PreferencesWindow(Setting_Ui):
         elif selected_style == 'Adwaita' or selected_style == 'macintosh':
             dark_theme = False
 
-        if dark_theme == True:
+        if dark_theme is True:
             self.icon_comboBox.clear()
 
             if selected_size < 48:
                 icons = ['Breeze-Dark', 'Papirus-Dark']
             else:
                 icons = ['Breeze-Dark']
- 
+
             self.icon_comboBox.addItems(icons)
 
             # current_icons_index is -1, if findText couldn't find icon index.
@@ -556,14 +553,13 @@ class PreferencesWindow(Setting_Ui):
 
             self.icon_comboBox.setCurrentIndex(current_icons_index)
 
-        elif dark_theme == False:
+        elif dark_theme is False:
 
             if selected_size < 48:
                 icons = ['Breeze', 'Papirus', 'Papirus-Light']
             else:
                 icons = ['Breeze', 'Papirus']
 
-
             self.icon_comboBox.addItems(icons)
 
             # current_icons_index is -1, if findText couldn't find icon index.
@@ -574,15 +570,14 @@ class PreferencesWindow(Setting_Ui):
                 current_icons_index = 0
 
             self.icon_comboBox.setCurrentIndex(current_icons_index)
-
 
         else:
             if selected_size < 48:
                 icons = ['Breeze', 'Breeze-Dark', 'Papirus',
-                        'Papirus-Dark', 'Papirus-Light']
+                         'Papirus-Dark', 'Papirus-Light']
             else:
                 icons = ['Breeze', 'Breeze-Dark', 'Papirus']
- 
+
             self.icon_comboBox.addItems(icons)
 
             # current_icons_index is -1, if findText couldn't find icon index.
@@ -593,7 +588,6 @@ class PreferencesWindow(Setting_Ui):
                 current_icons_index = 0
 
             self.icon_comboBox.setCurrentIndex(current_icons_index)
-
 
     def fontCheckBoxState(self, checkBox):
 
@@ -610,7 +604,6 @@ class PreferencesWindow(Setting_Ui):
         if event.key() == Qt.Key_Escape:
             self.close()
 
-
     def closeEvent(self, event):
 
         # saving window size and position
@@ -620,7 +613,7 @@ class PreferencesWindow(Setting_Ui):
         self.persepolis_setting.sync()
         event.accept()
 
-        if self.parent.isVisible() == False:
+        if self.parent.isVisible() is False:
             self.parent.minMaxTray(event)
         self.close()
 
@@ -696,7 +689,7 @@ class PreferencesWindow(Setting_Ui):
         # dont_check_certificate_checkBox
         self.dont_check_certificate_checkBox.setChecked(False)
 
-        # uncheck remote time 
+        # uncheck remote time
         self.remote_time_checkBox.setChecked(False)
 
         # save_as_tab
@@ -859,13 +852,11 @@ class PreferencesWindow(Setting_Ui):
         else:
             self.persepolis_setting.setValue('dont-check-certificate', 'no')
 
-        # remote time 
+        # remote time
         if self.remote_time_checkBox.isChecked():
             self.persepolis_setting.setValue('remote-time', 'yes')
         else:
             self.persepolis_setting.setValue('remote-time', 'no')
-
-
 
         # changing icons
 
@@ -984,7 +975,7 @@ class PreferencesWindow(Setting_Ui):
         if self.startup_checkbox.isChecked():
             self.persepolis_setting.setValue('startup', 'yes')
 
-            if not(startup.checkStartUp()):  # checking existence of Persepolis in  system's startup
+            if not (startup.checkStartUp()):  # checking existence of Persepolis in  system's startup
 
                 startup.addStartUp(self.parent)  # adding Persepolis to system's startup
         else:
@@ -1007,8 +998,6 @@ class PreferencesWindow(Setting_Ui):
             self.persepolis_setting.setValue('check-clipboard', 'yes')
         else:
             self.persepolis_setting.setValue('check-clipboard', 'no')
-
-
 
         # this section  creates download folder and
         # download sub folders if they did not existed.

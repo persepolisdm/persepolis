@@ -28,7 +28,6 @@ except:
     from PyQt5.QtGui import QIcon
 
 
-
 # platform
 os_type = platform.system()
 
@@ -78,7 +77,6 @@ def notifySend(message1, message2, time, sound, parent=None):
     # using Qt notification or Native system notification
     if enable_notification == 'QT notification':
         parent.system_tray_icon.showMessage(message1, message2, QIcon.fromTheme('persepolis-tray', QIcon(':/persepolis-tray.svg')), 10000)
-
 
     else:
         if os_type in OS.UNIX_LIKE:

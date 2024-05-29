@@ -51,7 +51,7 @@ def checkStartUp():
         try:
             aKey = winreg.OpenKey(
                 winreg.HKEY_CURRENT_USER, "Software\\Microsoft\\Windows\\CurrentVersion\\Run", 0, winreg.KEY_ALL_ACCESS)
-            startupvalue = winreg.QueryValueEx(aKey, 'persepolis')
+            # startupvalue = winreg.QueryValueEx(aKey, 'persepolis')
             startup = True
         except WindowsError:
             startup = False
@@ -94,8 +94,8 @@ def addStartUp(parent):
         startupfile = open(
             home_address + "/.config/autostart/persepolis.desktop", 'w+')
         startupfile.write(entry)
-        os.chmod(home_address +
-                 "/.config/autostart/persepolis.desktop", 0o644)
+        os.chmod(home_address
+                 + "/.config/autostart/persepolis.desktop", 0o644)
 
     # check if it is mac
     elif os_type == OS.OSX:
@@ -124,8 +124,8 @@ def addStartUp(parent):
         startupfile = open(
             home_address + '/Library/LaunchAgents/com.persepolisdm.plist', 'w+')
         startupfile.write(entry)
-        os.system('launchctl load ' + home_address +
-                  "/Library/LaunchAgents/com.persepolisdm.plist")
+        os.system('launchctl load ' + home_address
+                  + "/Library/LaunchAgents/com.persepolisdm.plist")
 
     # check if it is Windows
     elif os_type == OS.WINDOWS:
@@ -155,10 +155,10 @@ def removeStartUp():
     elif os_type == OS.OSX:
         # OS X
         if checkStartUp():
-            os.system('launchctl unload ' + home_address +
-                      "/Library/LaunchAgents/com.persepolisdm.plist")
-            os.remove(home_address +
-                      "/Library/LaunchAgents/com.persepolisdm.plist")
+            os.system('launchctl unload ' + home_address
+                      + "/Library/LaunchAgents/com.persepolisdm.plist")
+            os.remove(home_address
+                      + "/Library/LaunchAgents/com.persepolisdm.plist")
 
     # check if it is Windows
     elif os_type == OS.WINDOWS:

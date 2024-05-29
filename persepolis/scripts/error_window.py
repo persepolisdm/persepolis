@@ -76,7 +76,6 @@ class ErrorWindow(QWidget):
         if event.key() == Qt.Key_Escape:
             self.close()
 
-
     def closePushButtonPressed(self, button):
         self.close()
 

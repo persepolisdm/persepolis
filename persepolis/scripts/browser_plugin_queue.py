@@ -96,8 +96,8 @@ class BrowserPluginQueue(TextQueue_Ui):
 
             item = QTableWidgetItem(file_name)
             # add checkbox to the item
-            item.setFlags(Qt.ItemIsUserCheckable |
-                          Qt.ItemIsEnabled)
+            item.setFlags(Qt.ItemIsUserCheckable
+                          | Qt.ItemIsEnabled)
             item.setCheckState(Qt.Checked)
 
             # insert file_name
@@ -120,7 +120,6 @@ class BrowserPluginQueue(TextQueue_Ui):
         self.add_queue_comboBox.addItem(
             QIcon(icons + 'add_queue'), 'Create new queue')
 
-
         # entry initialization
         global connections
         connections = int(
@@ -128,7 +127,6 @@ class BrowserPluginQueue(TextQueue_Ui):
         global download_path
         download_path = str(
             self.persepolis_setting.value('settings/download_path'))
-
 
         # initialization
         self.connections_spinBox.setValue(connections)
@@ -153,7 +151,6 @@ class BrowserPluginQueue(TextQueue_Ui):
 
         self.port_spinBox.setValue(int(int(settings_port)))
 
-
         # download UserName initialization
         settings_download_user = self.persepolis_setting.value(
             'add_link_initialization/download_user', None)
@@ -165,7 +162,7 @@ class BrowserPluginQueue(TextQueue_Ui):
             'add_link_initialization/proxy_type', None)
 
         # default is http
-        if not(socks5_to_http_convertor_is_installed):
+        if not (socks5_to_http_convertor_is_installed):
             self.socks5_radioButton.setEnabled(False)
         else:
             self.socks5_radioButton.setEnabled(True)
@@ -179,7 +176,7 @@ class BrowserPluginQueue(TextQueue_Ui):
 
         else:
             self.http_radioButton.setChecked(True)
- 
+
         # connect folder_pushButton
         self.folder_pushButton.clicked.connect(self.changeFolder)
 
@@ -193,8 +190,7 @@ class BrowserPluginQueue(TextQueue_Ui):
 
         self.deselect_all_pushButton.clicked.connect(self.deselectAll)
 
-
-        #frames and checkBoxes
+        # frames and checkBoxes
         self.proxy_frame.setEnabled(False)
         self.proxy_checkBox.toggled.connect(self.proxyFrame)
 
@@ -254,8 +250,8 @@ class BrowserPluginQueue(TextQueue_Ui):
             else:
                 self.add_queue_comboBox.setCurrentIndex(0)
 
-
     # activate frames if checkBoxes checked
+
     def proxyFrame(self, checkBox):
 
         if self.proxy_checkBox.isChecked():
@@ -302,13 +298,13 @@ class BrowserPluginQueue(TextQueue_Ui):
             'add_link_initialization/download_user', self.download_user_lineEdit.text())
 
         # http, https or socks5 proxy
-        if self.http_radioButton.isChecked() == True:
+        if self.http_radioButton.isChecked() is True:
 
             proxy_type = 'http'
             self.persepolis_setting.setValue(
                 'add_link_initialization/proxy_type', 'http')
 
-        elif self.https_radioButton.isChecked() == True:
+        elif self.https_radioButton.isChecked() is True:
 
             proxy_type = 'https'
             self.persepolis_setting.setValue(
@@ -320,8 +316,7 @@ class BrowserPluginQueue(TextQueue_Ui):
             self.persepolis_setting.setValue(
                 'add_link_initialization/proxy_type', 'socks5')
 
-
-        if not(self.proxy_checkBox.isChecked()):
+        if not (self.proxy_checkBox.isChecked()):
             ip = None
             port = None
             proxy_user = None
@@ -329,30 +324,30 @@ class BrowserPluginQueue(TextQueue_Ui):
             proxy_type = None
         else:
             ip = self.ip_lineEdit.text()
-            if not(ip):
+            if not (ip):
                 ip = None
             port = self.port_spinBox.value()
-            if not(port):
+            if not (port):
                 port = None
             proxy_user = self.proxy_user_lineEdit.text()
-            if not(proxy_user):
+            if not (proxy_user):
                 proxy_user = None
             proxy_passwd = self.proxy_pass_lineEdit.text()
-            if not(proxy_passwd):
+            if not (proxy_passwd):
                 proxy_passwd = None
 
-        if not(self.download_checkBox.isChecked()):
+        if not (self.download_checkBox.isChecked()):
             download_user = None
             download_passwd = None
         else:
             download_user = self.download_user_lineEdit.text()
-            if not(download_user):
+            if not (download_user):
                 download_user = None
             download_passwd = self.download_pass_lineEdit.text()
-            if not(download_passwd):
+            if not (download_passwd):
                 download_passwd = None
 
-        if not(self.limit_checkBox.isChecked()):
+        if not (self.limit_checkBox.isChecked()):
             limit = 0
         else:
             if self.limit_comboBox.currentText() == "KiB/s":
@@ -366,26 +361,25 @@ class BrowserPluginQueue(TextQueue_Ui):
         download_path = self.download_folder_lineEdit.text()
 
         dict_ = {'out': None,
-                'start_time': None,
-                'end_time': None,
-                'link': None,
-                'ip': ip,
-                'port': port,
-                'proxy_user': proxy_user,
-                'proxy_passwd': proxy_passwd,
-                'proxy_type': proxy_type,
-                'download_user': download_user,
-                'download_passwd': download_passwd,
-                'connections': connections,
-                'limit_value': limit,
-                'download_path': download_path,
-                'referer': None,
-                'load_cookies': None,
-                'user_agent': None,
-                'header': None,
-                'after_download': None
-                }
-
+                 'start_time': None,
+                 'end_time': None,
+                 'link': None,
+                 'ip': ip,
+                 'port': port,
+                 'proxy_user': proxy_user,
+                 'proxy_passwd': proxy_passwd,
+                 'proxy_type': proxy_type,
+                 'download_user': download_user,
+                 'download_passwd': download_passwd,
+                 'connections': connections,
+                 'limit_value': limit,
+                 'download_path': download_path,
+                 'referer': None,
+                 'load_cookies': None,
+                 'user_agent': None,
+                 'header': None,
+                 'after_download': None
+                 }
 
         # find checked links in links_table
 
@@ -431,7 +425,6 @@ class BrowserPluginQueue(TextQueue_Ui):
     def keyPressEvent(self, event):
         if event.key() == Qt.Key_Escape:
             self.close()
-
 
     def closeEvent(self, event):
         self.persepolis_setting.setValue('TextQueue/size', self.size())

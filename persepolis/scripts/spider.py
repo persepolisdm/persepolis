@@ -29,6 +29,8 @@ def getFileNameFromLink(link):
     return Path(unquote(urlparse(link).path)).name
 
 # spider function finds name of file and file size from header
+
+
 def spider(add_link_dictionary):
 
     # get user's download request from add_link_dictionary
@@ -92,7 +94,7 @@ def spider(add_link_dictionary):
             # getting file name in desired format
             filename = filename_splited.strip(' "\'')
 
-    if not(filename):
+    if not (filename):
         filename = getFileNameFromLink(link)
 
     # if user set file name before in add_link_dictionary['out'],
@@ -120,9 +122,9 @@ def queueSpider(add_link_dictionary):
 
 def addLinkSpider(add_link_dictionary):
     # get user's download information from add_link_dictionary
-    for i in ['link','ip','port','proxy_user','proxy_passwd','download_user','download_passwd',
+    for i in ['link', 'ip', 'port', 'proxy_user', 'proxy_passwd', 'download_user', 'download_passwd',
               'header', 'out', 'user_agent', 'load_cookies', 'referer']:
         if not (i in add_link_dictionary):
             add_link_dictionary[i] = None
-    
+
     return spider(add_link_dictionary)
