@@ -34,4 +34,3 @@ class MyQDateTimeEdit(QDateTimeEdit):
         # change ui direction from rtl to ltr
         if ui_direction == 'rtl':
             self.setLayoutDirection(Qt.LeftToRight)
-

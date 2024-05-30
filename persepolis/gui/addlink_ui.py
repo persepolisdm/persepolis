@@ -29,6 +29,7 @@ except:
 from persepolis.gui import resources
 from persepolis.gui.customized_widgets import MyQDateTimeEdit
 
+
 class AddLinkWindow_Ui(QWidget):
     def __init__(self, persepolis_setting):
         super().__init__()
@@ -194,7 +195,6 @@ class AddLinkWindow_Ui(QWidget):
 
         self.socks5_radioButton = QRadioButton(self.proxy_frame)
         gridLayout.addWidget(self.socks5_radioButton, 6, 0, 1, 1)
-
 
         proxy_verticalLayout.addStretch(1)
         self.add_link_tabWidget.addTab(self.proxy_tab, '')

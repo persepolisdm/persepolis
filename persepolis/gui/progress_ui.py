@@ -26,6 +26,7 @@ except:
 
 from persepolis.gui import resources
 
+
 class ProgressWindow_Ui(QWidget):
     def __init__(self, persepolis_setting):
         super().__init__()
@@ -210,17 +211,17 @@ class ProgressWindow_Ui(QWidget):
         self.time_label.setText(QCoreApplication.translate("progress_ui_tr", "Estimated time left:"))
         self.connections_label.setText(QCoreApplication.translate("progress_ui_tr", "Number of connections: "))
         self.progress_tabWidget.setTabText(self.progress_tabWidget.indexOf(
-            self.information_tab),  QCoreApplication.translate("progress_ui_tr", "Download Information"))
+            self.information_tab), QCoreApplication.translate("progress_ui_tr", "Download Information"))
         self.limit_checkBox.setText(QCoreApplication.translate("progress_ui_tr", "Limit speed"))
         self.after_checkBox.setText(QCoreApplication.translate("progress_ui_tr", "After download"))
         self.limit_comboBox.setItemText(0, "KiB/s")
         self.limit_comboBox.setItemText(1, "MiB/s")
         self.limit_pushButton.setText(QCoreApplication.translate("progress_ui_tr", "Apply"))
 
-        self.after_comboBox.setItemText(0,  QCoreApplication.translate("progress_ui_tr", "Shut Down"))
+        self.after_comboBox.setItemText(0, QCoreApplication.translate("progress_ui_tr", "Shut Down"))
 
         self.progress_tabWidget.setTabText(
-            self.progress_tabWidget.indexOf(self.options_tab),  QCoreApplication.translate("progress_ui_tr", "Download Options"))
+            self.progress_tabWidget.indexOf(self.options_tab), QCoreApplication.translate("progress_ui_tr", "Download Options"))
         self.resume_pushButton.setText(QCoreApplication.translate("progress_ui_tr", "Resume"))
         self.pause_pushButton.setText(QCoreApplication.translate("progress_ui_tr", "Pause"))
         self.stop_pushButton.setText(QCoreApplication.translate("progress_ui_tr", "Stop"))

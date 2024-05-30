@@ -13,18 +13,20 @@
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 try:
-    from PySide6.QtWidgets import QHeaderView, QDoubleSpinBox, QPushButton, QComboBox,  QMenu, QTreeView, QSplitter, QHBoxLayout, QVBoxLayout, QTableWidgetItem, QAbstractItemView, QToolBar, QMenuBar, QStatusBar, QTableWidget, QMainWindow, QWidget, QFrame, QCheckBox, QLabel
+    from PySide6.QtWidgets import QHeaderView, QDoubleSpinBox, QPushButton, QComboBox, QMenu, QTreeView, QSplitter, QHBoxLayout, QVBoxLayout, QTableWidgetItem, QAbstractItemView, QToolBar, QMenuBar, QStatusBar, QTableWidget, QMainWindow, QWidget, QFrame, QCheckBox, QLabel
     from PySide6.QtGui import QShortcut, QAction, QCursor, QIcon, QStandardItemModel
     from PySide6.QtCore import QCoreApplication, QRect, Qt, QTranslator, QLocale
 except:
-    from PyQt5.QtWidgets import QHeaderView, QShortcut, QDoubleSpinBox, QPushButton, QComboBox,  QTreeView, QSplitter, QHBoxLayout, QVBoxLayout, QMenu, QTableWidgetItem, QAbstractItemView, QToolBar, QMenuBar, QStatusBar, QTableWidget, QAction, QMainWindow, QWidget, QFrame, QCheckBox, QLabel
-    from PyQt5.QtGui import QCursor, QIcon, QStandardItemModel 
+    from PyQt5.QtWidgets import QHeaderView, QShortcut, QDoubleSpinBox, QPushButton, QComboBox, QTreeView, QSplitter, QHBoxLayout, QVBoxLayout, QMenu, QTableWidgetItem, QAbstractItemView, QToolBar, QMenuBar, QStatusBar, QTableWidget, QAction, QMainWindow, QWidget, QFrame, QCheckBox, QLabel
+    from PyQt5.QtGui import QCursor, QIcon, QStandardItemModel
     from PyQt5.QtCore import QCoreApplication, QRect, Qt, QTranslator, QLocale
 
 from persepolis.gui import resources
 from persepolis.gui.customized_widgets import MyQDateTimeEdit
 
 # align center for items in download table
+
+
 class QTableWidgetItem(QTableWidgetItem):
     def __init__(self, input):
         super().__init__(input)
@@ -165,8 +167,8 @@ class DownloadTableWidget(QTableWidget):
         # creating context menu
         self.tablewidget_menu = QMenu(self)
         self.sendMenu = self.tablewidget_menu.addMenu('')
-        
-        # don't wrap items 
+
+        # don't wrap items
         self.setWordWrap(False)
 
     def contextMenuEvent(self, event):
@@ -489,7 +491,7 @@ class MainWindow_Ui(QMainWindow):
         self.toolBar.setFloatable(False)
         self.toolBar.setMovable(False)
 
-        #toolBar and menubar and actions
+        # toolBar and menubar and actions
         self.persepolis_setting.beginGroup('settings/shortcuts')
 
         # videoFinderAddLinkAction
@@ -576,10 +578,10 @@ class MainWindow_Ui(QMainWindow):
 
         # importText From Clipboard
         self.addFromClipboardAction = QAction(QIcon(icons + 'clipboard'), QCoreApplication.translate("mainwindow_ui_tr", 'Import Links from Clipboard...'), self,
-                                         statusTip=QCoreApplication.translate("mainwindow_ui_tr", 'Import Links From Clipboard'), triggered=self.importLinksFromClipboard)
-        
+                                              statusTip=QCoreApplication.translate("mainwindow_ui_tr", 'Import Links From Clipboard'), triggered=self.importLinksFromClipboard)
+
         fileMenu.addAction(self.addFromClipboardAction)
-        
+
         # resumeAction
         self.resumeAction = QAction(QIcon(icons + 'play'), QCoreApplication.translate("mainwindow_ui_tr", 'Resume Download'), self,
                                     statusTip=QCoreApplication.translate("mainwindow_ui_tr", "Resume Download"), triggered=self.resumeButtonPressed)

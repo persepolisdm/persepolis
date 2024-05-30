@@ -24,6 +24,7 @@ except:
 
 from persepolis.gui import resources
 
+
 class AfterDownloadWindow_Ui(QWidget):
     def __init__(self, persepolis_setting):
         super().__init__()

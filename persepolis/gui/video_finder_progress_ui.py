@@ -23,6 +23,7 @@ except:
     from PyQt5.QtWidgets import QWidget, QVBoxLayout, QLabel
     from PyQt5.QtCore import QCoreApplication
 
+
 class VideoFinderProgressWindow_Ui(ProgressWindow_Ui):
     def __init__(self, persepolis_setting):
         super().__init__(persepolis_setting)
@@ -58,4 +59,4 @@ class VideoFinderProgressWindow_Ui(ProgressWindow_Ui):
             "video_finder_progress_ui_tr", "<b>Mixing status: </b>"))
 
         self.progress_tabWidget.setTabText(self.progress_tabWidget.indexOf(
-            self.status_tab),  QCoreApplication.translate("setting_ui_tr", "Status"))
+            self.status_tab), QCoreApplication.translate("setting_ui_tr", "Status"))

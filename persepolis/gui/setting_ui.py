@@ -25,6 +25,7 @@ except:
 from persepolis.gui.customized_widgets import MyQDateTimeEdit
 from persepolis.gui import resources
 
+
 class KeyCapturingWindow_Ui(QWidget):
     def __init__(self, persepolis_setting):
         super().__init__()
@@ -398,7 +399,7 @@ class Setting_Ui(QWidget):
         # keep system awake
         self.keep_awake_checkBox = QCheckBox()
         style_tab_verticalLayout.addWidget(self.keep_awake_checkBox)
-        
+
         # check clipboard
         self.check_clipboard_checkBox = QCheckBox()
         style_tab_verticalLayout.addWidget(self.check_clipboard_checkBox)
@@ -580,14 +581,11 @@ class Setting_Ui(QWidget):
 
         self.dont_check_certificate_checkBox.setText(QCoreApplication.translate("setting_ui_tr", "Don't use certificate to verify the peers"))
         self.dont_check_certificate_checkBox.setToolTip(
-                QCoreApplication.translate("setting_ui_tr", "<html><head/><body><p>This option avoids SSL/TLS handshake failure. But use it at your own risk!</p></body></html>"))
-
+            QCoreApplication.translate("setting_ui_tr", "<html><head/><body><p>This option avoids SSL/TLS handshake failure. But use it at your own risk!</p></body></html>"))
 
         self.remote_time_checkBox.setText(QCoreApplication.translate("setting_ui_tr", "Remote time"))
         self.remote_time_checkBox.setToolTip(
-                QCoreApplication.translate("setting_ui_tr", "<html><head/><body><p>Retrieve timestamp of the remote file from the remote HTTP/FTP server and if it is available, apply it to the local file.</p></body></html>"))
-
-
+            QCoreApplication.translate("setting_ui_tr", "<html><head/><body><p>Retrieve timestamp of the remote file from the remote HTTP/FTP server and if it is available, apply it to the local file.</p></body></html>"))
 
         self.aria2_path_checkBox.setText(QCoreApplication.translate("setting_ui_tr", 'Change Aria2 default path'))
         self.aria2_path_pushButton.setText(QCoreApplication.translate("setting_ui_tr", 'Change'))
@@ -598,7 +596,7 @@ class Setting_Ui(QWidget):
         self.aria2_path_pushButton.setToolTip(aria2_path_tooltip)
 
         self.setting_tabWidget.setTabText(self.setting_tabWidget.indexOf(
-            self.download_options_tab),  QCoreApplication.translate("setting_ui_tr", "Download Options"))
+            self.download_options_tab), QCoreApplication.translate("setting_ui_tr", "Download Options"))
 
         self.download_folder_label.setText(QCoreApplication.translate("setting_ui_tr", "Download folder: "))
         self.download_folder_pushButton.setText(QCoreApplication.translate("setting_ui_tr", "Change"))
@@ -607,7 +605,7 @@ class Setting_Ui(QWidget):
             "setting_ui_tr", "Create subfolders for Music,Videos, ... in default download folder"))
 
         self.setting_tabWidget.setTabText(
-            self.setting_tabWidget.indexOf(self.save_as_tab),  QCoreApplication.translate("setting_ui_tr", "Save As"))
+            self.setting_tabWidget.indexOf(self.save_as_tab), QCoreApplication.translate("setting_ui_tr", "Save As"))
 
         self.enable_notifications_checkBox.setText(
             QCoreApplication.translate("setting_ui_tr", "Enable Notification Sounds"))
@@ -615,7 +613,7 @@ class Setting_Ui(QWidget):
         self.volume_label.setText(QCoreApplication.translate("setting_ui_tr", "Volume: "))
 
         self.setting_tabWidget.setTabText(self.setting_tabWidget.indexOf(
-            self.notifications_tab),  QCoreApplication.translate("setting_ui_tr", "Notifications"))
+            self.notifications_tab), QCoreApplication.translate("setting_ui_tr", "Notifications"))
 
         self.style_label.setText(QCoreApplication.translate("setting_ui_tr", "Style: "))
         self.color_label.setText(QCoreApplication.translate("setting_ui_tr", "Color scheme: "))
@@ -659,12 +657,11 @@ class Setting_Ui(QWidget):
             QCoreApplication.translate("setting_ui_tr", "<html><head/><body><p>The program will automatically check the clipboard for copied links.\
             </p></body></html>"))
 
-
         self.wait_queue_time.setToolTip(
             QCoreApplication.translate("setting_ui_tr", "<html><head/><body><p>Format HH:MM</p></body></html>"))
 
         self.setting_tabWidget.setTabText(
-            self.setting_tabWidget.indexOf(self.style_tab),  QCoreApplication.translate("setting_ui_tr", "Preferences"))
+            self.setting_tabWidget.indexOf(self.style_tab), QCoreApplication.translate("setting_ui_tr", "Preferences"))
 
 # columns_tab
         self.show_column_label.setText(QCoreApplication.translate("setting_ui_tr", 'Show these columns:'))
@@ -685,7 +682,7 @@ class Setting_Ui(QWidget):
 
 # Video Finder options tab
         self.setting_tabWidget.setTabText(self.setting_tabWidget.indexOf(
-            self.video_finder_tab), QCoreApplication.translate("setting_ui_tr",  "Video Finder Options"))
+            self.video_finder_tab), QCoreApplication.translate("setting_ui_tr", "Video Finder Options"))
 
         self.max_links_label.setText(QCoreApplication.translate("setting_ui_tr", 'Maximum number of links to capture:<br/>'
                                                                 '<small>(If browser sends multiple video links at a time)</small>'))

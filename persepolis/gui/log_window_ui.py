@@ -26,6 +26,7 @@ except:
 
 from persepolis.gui import resources
 
+
 class LogWindow_Ui(QWidget):
     def __init__(self, persepolis_setting):
         super().__init__()

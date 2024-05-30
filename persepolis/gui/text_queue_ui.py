@@ -25,6 +25,7 @@ except:
 
 from persepolis.gui import resources
 
+
 class TextQueue_Ui(QWidget):
     def __init__(self, persepolis_setting):
         super().__init__()
@@ -158,7 +159,6 @@ class TextQueue_Ui(QWidget):
 
         self.socks5_radioButton = QRadioButton(self.proxy_frame)
         proxy_gridLayout.addWidget(self.socks5_radioButton, 6, 0, 1, 1)
-
 
         options_tab_verticalLayout.addLayout(proxy_verticalLayout)
 
@@ -305,7 +305,6 @@ class TextQueue_Ui(QWidget):
         self.http_radioButton.setText(QCoreApplication.translate("addlink_ui_tr", "HTTP"))
         self.https_radioButton.setText(QCoreApplication.translate("addlink_ui_tr", "HTTPS"))
         self.socks5_radioButton.setText(QCoreApplication.translate("addlink_ui_tr", "SOCKS5"))
-
 
         self.download_checkBox.setText(QCoreApplication.translate("text_ui_tr", "Download username and password"))
         self.download_user_label.setText(QCoreApplication.translate("text_ui_tr", "Download username: "))

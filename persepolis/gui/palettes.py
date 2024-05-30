@@ -20,6 +20,7 @@ except:
     from PyQt5.QtGui import QPalette, QColor
     from PyQt5.QtCore import Qt
 
+
 class DarkFusionPalette(QPalette):
     def __init__(self):
         super().__init__()
@@ -63,7 +64,7 @@ class DarkFusionPalette(QPalette):
 class LightFusionPalette(QPalette):
     def __init__(self):
         super().__init__()
-        # EFF0F1 
+        # EFF0F1
         self.setColor(QPalette.Window, QColor(239, 240, 241))
 
         self.setColor(QPalette.WindowText, QColor(49, 54, 59))
@@ -99,4 +100,3 @@ class LightFusionPalette(QPalette):
                       QColor(111, 111, 111))
 
         self.setColor(QPalette.Disabled, QPalette.Base, QColor(227, 227, 227))
-
