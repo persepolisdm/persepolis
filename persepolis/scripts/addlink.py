@@ -108,8 +108,6 @@ class AddLinkWindow(AddLinkWindow_Ui):
             text = clipboard.text()
             if (("tp:/" in text[2:6]) or ("tps:/" in text[2:7])):
                 self.link_lineEdit.setText(str(text))
-                # clear clipboard
-                QApplication.clipboard().setText("")
 
         # detect_proxy_pushButton
         self.detect_proxy_pushButton.clicked.connect(

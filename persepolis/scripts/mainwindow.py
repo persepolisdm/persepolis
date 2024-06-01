@@ -211,13 +211,13 @@ class CheckClipBoardThread(QThread):
             sleep(1)
 
         clipboard = QApplication.clipboard()
-        old_clipboard = clipboard.text()
+        old_clipboard = ""
         while shutdown_notification == 0:
             sleep(0.5)
             new_clipboard = clipboard.text()
-            if new_clipboard != old_clipboard:
+            if (new_clipboard != old_clipboard) and (new_clipboard != ""):
                 self.CHECKCLIPBOARDSIGNAL.emit()
-            old_clipboard = new_clipboard
+                old_clipboard = new_clipboard
 
 
 # check for newer version of Persepolis
@@ -1289,6 +1289,7 @@ class MainWindow(MainWindow_Ui):
         system_tray_menu.addAction(self.addlinkAction)
         system_tray_menu.addAction(self.videoFinderAddLinkAction)
         system_tray_menu.addAction(self.stopAllAction)
+        system_tray_menu.addAction(self.addFromClipboardAction)
         system_tray_menu.addAction(self.minimizeAction)
         system_tray_menu.addAction(self.exitAction)
         self.system_tray_icon.setContextMenu(system_tray_menu)
@@ -4455,9 +4456,6 @@ class MainWindow(MainWindow_Ui):
             temp.write(clipboard)
             temp.flush()
             temp_file_path = temp.name
-
-            # clear clipboard
-            QApplication.clipboard().setText("")
 
             # create a text_queue_window for getting information.
             text_queue_window = TextQueue(
