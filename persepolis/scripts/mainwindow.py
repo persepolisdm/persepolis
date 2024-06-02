@@ -2606,6 +2606,25 @@ class MainWindow(MainWindow_Ui):
             # hide video_finder_widget
             self.video_finder_widget.hide()
 
+    # Check if this link is related to video finder or not
+    def checkVideoFinderSupportedSites(self, link):
+        # add your favorite site in this list
+        # please don't add porn sites!
+        supported_sites_list = [
+            'youtube.com/watch',
+            'aparat.com/v/',
+            'vimeo.com/',
+            'dailymotion.com/video',
+            'https://soundcloud.com/'
+        ]
+        video_finder_supported = False
+        for supported_site in supported_sites_list:
+            if supported_site in link:
+                video_finder_supported = True
+                break
+
+        return video_finder_supported
+
     # when user requests calls persepolis with browser plugin,
     # this method is called by CheckingThread.
     def checkPluginCall(self):
@@ -2622,26 +2641,9 @@ class MainWindow(MainWindow_Ui):
         # get maximum of youtube,... link from persepolis_setting
         max_links = int(self.persepolis_setting.value('settings/video_finder/max_links', 3))
 
-        # add your favorite site in this list
-        # please don't add porn sites!
-        supported_sites_list = [
-            'youtube.com/watch',
-            'aparat.com/v/',
-            'vimeo.com/',
-            'dailymotion.com/video',
-            'https://soundcloud.com/'
-        ]
-
         for link in list_of_links:
 
-            # if link is on of supported_sites_list member then change
-            # video_finder_supported to True value.
-            video_finder_supported = False
-
-            for supported_site in supported_sites_list:
-                if supported_site in link['link']:
-                    video_finder_supported = True
-                    break
+            video_finder_supported = self.checkVideoFinderSupportedSites(link['link'])
 
             # if link is on of supported_sites_list member, the open video_finder_addlink_window
             if max_links and video_finder_supported:
@@ -4449,7 +4451,12 @@ class MainWindow(MainWindow_Ui):
 
         # create temp file to save links
         if len(links_list) == 1:
-            self.addLinkButtonPressed(button=None)
+            video_finder_supported = self.checkVideoFinderSupportedSites(links_list[0])
+
+            if video_finder_supported is True:
+                self.showVideoFinderAddLinkWindow()
+            else:
+                self.addLinkButtonPressed(button=None)
 
         elif len(links_list) > 1:
             temp = tempfile.NamedTemporaryFile(mode="w+", prefix="persepolis")
