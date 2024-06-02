@@ -4,7 +4,7 @@
 <context>
     <name>about_ui_tr</name>
     <message>
-        <location filename="../../persepolis/gui/about_ui.py" line="293"/>
+        <location filename="../../persepolis/gui/about_ui.py" line="294"/>
         <source>About Persepolis</source>
         <translation type="unfinished"></translation>
     </message>
@@ -14,50 +14,50 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/about_ui.py" line="239"/>
+        <location filename="../../persepolis/gui/about_ui.py" line="240"/>
         <source>&lt;a href=https://persepolisdm.github.io&gt;https://persepolisdm.github.io&lt;/a&gt;</source>
         <comment>TRANSLATORS NOTE: YOU REALLY DON&apos;T NEED TO TRANSLATE THIS PART!</comment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/about_ui.py" line="243"/>
+        <location filename="../../persepolis/gui/about_ui.py" line="244"/>
         <source>&lt;a href=https://telegram.me/persepolisdm&gt;https://telegram.me/persepolisdm&lt;/a&gt;</source>
         <comment>TRANSLATORS NOTE: YOU REALLY DON&apos;T NEED TO TRANSLATE THIS PART!</comment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/about_ui.py" line="247"/>
+        <location filename="../../persepolis/gui/about_ui.py" line="248"/>
         <source>&lt;a href=https://twitter.com/persepolisdm&gt;https://twitter.com/persepolisdm&lt;/a&gt;</source>
         <comment>TRANSLATORS NOTE: YOU REALLY DON&apos;T NEED TO TRANSLATE THIS PART!</comment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/about_ui.py" line="294"/>
+        <location filename="../../persepolis/gui/about_ui.py" line="295"/>
         <source>Developers</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/about_ui.py" line="297"/>
+        <location filename="../../persepolis/gui/about_ui.py" line="298"/>
         <source>Translators</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/about_ui.py" line="298"/>
+        <location filename="../../persepolis/gui/about_ui.py" line="299"/>
         <source>License</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/about_ui.py" line="301"/>
+        <location filename="../../persepolis/gui/about_ui.py" line="302"/>
         <source>OK</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/about_ui.py" line="258"/>
+        <location filename="../../persepolis/gui/about_ui.py" line="259"/>
         <source>Special thanks to:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/about_ui.py" line="254"/>
+        <location filename="../../persepolis/gui/about_ui.py" line="255"/>
         <source>
 AliReza AmirSamimi
 Mohammadreza Abdollahzadeh
@@ -72,43 +72,44 @@ MohammadAmin Vahedinia</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/about_ui.py" line="263"/>
+        <location filename="../../persepolis/gui/about_ui.py" line="264"/>
         <source>Acknowledgments:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/about_ui.py" line="265"/>
+        <location filename="../../persepolis/gui/about_ui.py" line="266"/>
         <source>&lt;a href=https://github.com/aria2/aria2&gt;Aria2c project&lt;/a&gt;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/about_ui.py" line="267"/>
+        <location filename="../../persepolis/gui/about_ui.py" line="268"/>
         <source>&lt;a href=https://github.com/yt-dlp/yt-dlp&gt;YT-DLP project&lt;/a&gt;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/about_ui.py" line="269"/>
+        <location filename="../../persepolis/gui/about_ui.py" line="270"/>
         <source>&lt;a href=https://github.com/ffmpeg/ffmpeg&gt;FFmpeg project&lt;/a&gt;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/about_ui.py" line="273"/>
+        <location filename="../../persepolis/gui/about_ui.py" line="274"/>
         <source>&lt;a href=https://github.com/ginuerzh/gost&gt;Gost project&lt;/a&gt;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/about_ui.py" line="295"/>
+        <location filename="../../persepolis/gui/about_ui.py" line="296"/>
         <source>Acknowledgments</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/about_ui.py" line="238"/>
-        <source>Version 4.1.0</source>
+        <location filename="../../persepolis/gui/about_ui.py" line="272"/>
+        <source>&lt;a href=https://github.com/KaranGauswami/socks-to-http-proxy&gt;Socks to http proxy project&lt;/a&gt;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/about_ui.py" line="271"/>
-        <source>&lt;a href=https://github.com/KaranGauswami/socks-to-http-proxy&gt;Socks to http proxy project&lt;/a&gt;</source>
+        <location filename="../../persepolis/gui/about_ui.py" line="238"/>
+        <source>Version 4.2.0</source>
+        <comment>TRANSLATORS NOTE: YOU REALLY DON&apos;T NEED TO TRANSLATE THIS PART!</comment>
         <translation type="unfinished"></translation>
     </message>
 </context>
