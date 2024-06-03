@@ -193,8 +193,6 @@ class CheckVersionsThread(QThread):
             self.TYPEOFCONVERTORSIGNAL.emit(type_of_convertor)
 
 # check clipboard
-
-
 class CheckClipBoardThread(QThread):
 
     CHECKCLIPBOARDSIGNAL = Signal()
@@ -218,6 +216,21 @@ class CheckClipBoardThread(QThread):
             if (new_clipboard != old_clipboard) and (new_clipboard != ""):
                 self.CHECKCLIPBOARDSIGNAL.emit()
                 old_clipboard = new_clipboard
+
+
+# check if any thing in clipboard or not
+class CheckClipboardStateThread(QThread):
+
+    WINDOWISACTIVESIGNAL = Signal()
+
+    def __init__(self):
+        QThread.__init__(self)
+
+    def run(self):
+        while (QApplication.clipboard().text() == ""):
+            sleep(0.1)
+
+        self.WINDOWISACTIVESIGNAL.emit()
 
 
 # check for newer version of Persepolis
@@ -4437,6 +4450,17 @@ class MainWindow(MainWindow_Ui):
     # this method is importing download links from clipboard.
     # clipboard must contain links.
     def importLinksFromClipboard(self, menu=None):
+
+        # show main window
+        self.showMainWindow()
+
+        check_main_window_state_thread = CheckClipboardStateThread()
+        self.threadPool.append(check_main_window_state_thread)
+        self.threadPool[-1].start()
+        self.threadPool[-1].WINDOWISACTIVESIGNAL.connect(
+            self.importLinksFromClipboard2)
+
+    def importLinksFromClipboard2(self):
         # get links from clipboard
         clipboard = QApplication.clipboard().text()
 
