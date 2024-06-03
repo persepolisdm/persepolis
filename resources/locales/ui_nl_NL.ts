@@ -2,65 +2,60 @@
 <context>
     <name>about_ui_tr</name>
     <message>
-        <location filename="../../persepolis/gui/about_ui.py" line="298"/>
+        <location filename="../../persepolis/gui/about_ui.py" line="294"/>
         <source>About Persepolis</source>
         <translation>Over Persepolis</translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/about_ui.py" line="241"/>
+        <location filename="../../persepolis/gui/about_ui.py" line="237"/>
         <source>Persepolis Download Manager</source>
         <translation>Persepolis-downloadbeheer</translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/about_ui.py" line="243"/>
+        <location filename="../../persepolis/gui/about_ui.py" line="240"/>
         <source>&lt;a href=https://persepolisdm.github.io&gt;https://persepolisdm.github.io&lt;/a&gt;</source>
         <comment>TRANSLATORS NOTE: YOU REALLY DON'T NEED TO TRANSLATE THIS PART!</comment>
         <translation>&lt;a href=https://persepolisdm.github.io&gt;https://persepolisdm.github.io&lt;/a&gt;</translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/about_ui.py" line="247"/>
+        <location filename="../../persepolis/gui/about_ui.py" line="244"/>
         <source>&lt;a href=https://telegram.me/persepolisdm&gt;https://telegram.me/persepolisdm&lt;/a&gt;</source>
         <comment>TRANSLATORS NOTE: YOU REALLY DON'T NEED TO TRANSLATE THIS PART!</comment>
         <translation>&lt;a href=https://telegram.me/persepolisdm&gt;https://telegram.me/persepolisdm&lt;/a&gt;</translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/about_ui.py" line="251"/>
+        <location filename="../../persepolis/gui/about_ui.py" line="248"/>
         <source>&lt;a href=https://twitter.com/persepolisdm&gt;https://twitter.com/persepolisdm&lt;/a&gt;</source>
         <comment>TRANSLATORS NOTE: YOU REALLY DON'T NEED TO TRANSLATE THIS PART!</comment>
         <translation>&lt;a href=https://twitter.com/persepolisdm&gt;https://twitter.com/persepolisdm&lt;/a&gt;</translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/about_ui.py" line="299"/>
+        <location filename="../../persepolis/gui/about_ui.py" line="295"/>
         <source>Developers</source>
         <translation>Ontwikkelaars</translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/about_ui.py" line="302"/>
+        <location filename="../../persepolis/gui/about_ui.py" line="298"/>
         <source>Translators</source>
         <translation>Vertalers</translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/about_ui.py" line="303"/>
+        <location filename="../../persepolis/gui/about_ui.py" line="299"/>
         <source>License</source>
         <translation>Licentie</translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/about_ui.py" line="306"/>
+        <location filename="../../persepolis/gui/about_ui.py" line="302"/>
         <source>OK</source>
         <translation>Oké</translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/about_ui.py" line="262"/>
+        <location filename="../../persepolis/gui/about_ui.py" line="259"/>
         <source>Special thanks to:</source>
         <translation>Met heel veel dank aan:</translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/about_ui.py" line="242"/>
-        <source>Version 4.0.1</source>
-        <translation>Versie 4.0.1</translation>
-    </message>
-    <message>
-        <location filename="../../persepolis/gui/about_ui.py" line="258"/>
+        <location filename="../../persepolis/gui/about_ui.py" line="255"/>
         <source>
 AliReza AmirSamimi
 Mohammadreza Abdollahzadeh
@@ -84,34 +79,45 @@ Ehsan Titish
 MohammadAmin Vahedinia</translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/about_ui.py" line="267"/>
+        <location filename="../../persepolis/gui/about_ui.py" line="264"/>
         <source>Acknowledgments:</source>
-        <translation type="unfinished"/>
+        <translation>Erkenningen:</translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/about_ui.py" line="269"/>
+        <location filename="../../persepolis/gui/about_ui.py" line="266"/>
         <source>&lt;a href=https://github.com/aria2/aria2&gt;Aria2c project&lt;/a&gt;</source>
-        <translation type="unfinished"/>
+        <translation>&lt;a href=https://github.com/aria2/aria2&gt;Aria2c-project&lt;/a&gt;</translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/about_ui.py" line="271"/>
+        <location filename="../../persepolis/gui/about_ui.py" line="268"/>
         <source>&lt;a href=https://github.com/yt-dlp/yt-dlp&gt;YT-DLP project&lt;/a&gt;</source>
-        <translation type="unfinished"/>
+        <translation>&lt;a href=https://github.com/yt-dlp/yt-dlp&gt;YT-DLP-project&lt;/a&gt;</translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/about_ui.py" line="273"/>
+        <location filename="../../persepolis/gui/about_ui.py" line="270"/>
         <source>&lt;a href=https://github.com/ffmpeg/ffmpeg&gt;FFmpeg project&lt;/a&gt;</source>
-        <translation type="unfinished"/>
+        <translation>&lt;a href=https://github.com/ffmpeg/ffmpeg&gt;FFmpeg-project&lt;/a&gt;</translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/about_ui.py" line="275"/>
+        <location filename="../../persepolis/gui/about_ui.py" line="274"/>
         <source>&lt;a href=https://github.com/ginuerzh/gost&gt;Gost project&lt;/a&gt;</source>
-        <translation type="unfinished"/>
+        <translation>&lt;a href=https://github.com/ginuerzh/gost&gt;Gost-project&lt;/a&gt;</translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/about_ui.py" line="300"/>
+        <location filename="../../persepolis/gui/about_ui.py" line="296"/>
         <source>Acknowledgments</source>
-        <translation type="unfinished"/>
+        <translation>Erkenningen</translation>
+    </message>
+    <message>
+        <location filename="../../persepolis/gui/about_ui.py" line="272"/>
+        <source>&lt;a href=https://github.com/KaranGauswami/socks-to-http-proxy&gt;Socks to http proxy project&lt;/a&gt;</source>
+        <translation>&lt;a href=https://github.com/KaranGauswami/socks-to-http-proxy&gt;Socks to http proxy-project&lt;/a&gt;</translation>
+    </message>
+    <message>
+        <location filename="../../persepolis/gui/about_ui.py" line="238"/>
+        <source>Version 4.2.0</source>
+        <comment>TRANSLATORS NOTE: YOU REALLY DON'T NEED TO TRANSLATE THIS PART!</comment>
+        <translation>Versie 4.2.0</translation>
     </message>
 </context>
 <context>
@@ -267,19 +273,19 @@ MohammadAmin Vahedinia</translation>
         <translation>Later downloaden</translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/text_queue_ui.py" line="304"/>
-        <source>HTTP</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
         <location filename="../../persepolis/gui/text_queue_ui.py" line="305"/>
-        <source>HTTPS</source>
-        <translation type="unfinished"/>
+        <source>HTTP</source>
+        <translation>Http</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/text_queue_ui.py" line="306"/>
+        <source>HTTPS</source>
+        <translation>Https</translation>
+    </message>
+    <message>
+        <location filename="../../persepolis/gui/text_queue_ui.py" line="307"/>
         <source>SOCKS5</source>
-        <translation type="unfinished"/>
+        <translation>Socks5</translation>
     </message>
 </context>
 <context>
@@ -298,42 +304,42 @@ MohammadAmin Vahedinia</translation>
 <context>
     <name>after_download_ui_tr</name>
     <message>
-        <location filename="../../persepolis/gui/after_download_ui.py" line="52"/>
+        <location filename="../../persepolis/gui/after_download_ui.py" line="53"/>
         <source>Persepolis Download Manager</source>
         <translation>Persepolis-downloadbeheer</translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/after_download_ui.py" line="112"/>
+        <location filename="../../persepolis/gui/after_download_ui.py" line="113"/>
         <source>  Open File  </source>
         <translation>  Bestand openen  </translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/after_download_ui.py" line="113"/>
+        <location filename="../../persepolis/gui/after_download_ui.py" line="114"/>
         <source>Open Download Folder</source>
         <translation>Downloadmap openen</translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/after_download_ui.py" line="114"/>
+        <location filename="../../persepolis/gui/after_download_ui.py" line="115"/>
         <source>   OK   </source>
         <translation>Oké</translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/after_download_ui.py" line="115"/>
+        <location filename="../../persepolis/gui/after_download_ui.py" line="116"/>
         <source>Don&apos;t show this message again.</source>
         <translation>Bericht niet meer tonen</translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/after_download_ui.py" line="117"/>
+        <location filename="../../persepolis/gui/after_download_ui.py" line="118"/>
         <source>&lt;b&gt;Download Completed!&lt;/b&gt;</source>
         <translation>&lt;b&gt;Download afgerond!&lt;/b&gt;</translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/after_download_ui.py" line="118"/>
+        <location filename="../../persepolis/gui/after_download_ui.py" line="119"/>
         <source>&lt;b&gt;Save as&lt;/b&gt;: </source>
         <translation>&lt;b&gt;Opslaan als&lt;/b&gt;: </translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/after_download_ui.py" line="119"/>
+        <location filename="../../persepolis/gui/after_download_ui.py" line="120"/>
         <source>&lt;b&gt;Link&lt;/b&gt;: </source>
         <translation>&lt;b&gt;Link&lt;/b&gt;: </translation>
     </message>
@@ -341,32 +347,32 @@ MohammadAmin Vahedinia</translation>
 <context>
     <name>log_window_ui_tr</name>
     <message>
-        <location filename="../../persepolis/gui/log_window_ui.py" line="97"/>
+        <location filename="../../persepolis/gui/log_window_ui.py" line="98"/>
         <source>Persepolis Log</source>
         <translation>Logboek</translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/log_window_ui.py" line="100"/>
+        <location filename="../../persepolis/gui/log_window_ui.py" line="101"/>
         <source>Report Issue</source>
         <translation>Probleem melden</translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/log_window_ui.py" line="98"/>
+        <location filename="../../persepolis/gui/log_window_ui.py" line="99"/>
         <source>Close</source>
         <translation>Sluiten</translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/log_window_ui.py" line="99"/>
+        <location filename="../../persepolis/gui/log_window_ui.py" line="100"/>
         <source>Copy Selected to Clipboard</source>
         <translation>Selectie kopiëren naar klembord</translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/log_window_ui.py" line="101"/>
+        <location filename="../../persepolis/gui/log_window_ui.py" line="102"/>
         <source>Refresh Log Messages</source>
         <translation>Logberichten herladen</translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/log_window_ui.py" line="102"/>
+        <location filename="../../persepolis/gui/log_window_ui.py" line="103"/>
         <source>Clear Log Messages</source>
         <translation>Logberichten wissen</translation>
     </message>
@@ -374,854 +380,864 @@ MohammadAmin Vahedinia</translation>
 <context>
     <name>mainwindow_src_ui_tr</name>
     <message>
-        <location filename="../../persepolis/scripts/mainwindow.py" line="1030"/>
+        <location filename="../../persepolis/scripts/mainwindow.py" line="1057"/>
         <source>Persepolis</source>
         <translation>Persepolis</translation>
     </message>
     <message>
-        <location filename="../../persepolis/scripts/mainwindow.py" line="989"/>
+        <location filename="../../persepolis/scripts/mainwindow.py" line="1016"/>
         <source>Queue Stopped!</source>
         <translation>Wachtrij gestopt!</translation>
     </message>
     <message>
-        <location filename="../../persepolis/scripts/mainwindow.py" line="2196"/>
+        <location filename="../../persepolis/scripts/mainwindow.py" line="2224"/>
         <source>Persepolis is shutting down</source>
         <translation>Persepolis sluit je</translation>
     </message>
     <message>
-        <location filename="../../persepolis/scripts/mainwindow.py" line="2196"/>
+        <location filename="../../persepolis/scripts/mainwindow.py" line="2224"/>
         <source>your system in 20 seconds</source>
         <translation>systeem over 20 seconden af</translation>
     </message>
     <message>
-        <location filename="../../persepolis/scripts/mainwindow.py" line="1030"/>
+        <location filename="../../persepolis/scripts/mainwindow.py" line="1057"/>
         <source>Queue completed!</source>
         <translation>Wachtrij afgerond!</translation>
     </message>
     <message>
-        <location filename="../../persepolis/scripts/mainwindow.py" line="3336"/>
+        <location filename="../../persepolis/scripts/mainwindow.py" line="3366"/>
         <source>Show main Window</source>
         <translation>Hoofdvenster tonen</translation>
     </message>
     <message>
-        <location filename="../../persepolis/scripts/mainwindow.py" line="1312"/>
+        <location filename="../../persepolis/scripts/mainwindow.py" line="1340"/>
         <source>Please Wait...</source>
         <translation>Even geduld…</translation>
     </message>
     <message>
-        <location filename="../../persepolis/scripts/mainwindow.py" line="1681"/>
+        <location filename="../../persepolis/scripts/mainwindow.py" line="1718"/>
         <source>Ready...</source>
         <translation>Klaar…</translation>
     </message>
     <message>
-        <location filename="../../persepolis/scripts/mainwindow.py" line="1696"/>
+        <location filename="../../persepolis/scripts/mainwindow.py" line="1731"/>
         <source>Aria2 didn&apos;t respond! be patient! Persepolis tries again in 2 seconds!</source>
         <translation>Aria2 reageert niet; even geduld! Persepolis probeert het over 2 seconden opnieuw!</translation>
     </message>
     <message>
-        <location filename="../../persepolis/scripts/mainwindow.py" line="1723"/>
+        <location filename="../../persepolis/scripts/mainwindow.py" line="1758"/>
         <source>Error...</source>
         <translation>Foutmelding…</translation>
     </message>
     <message>
-        <location filename="../../persepolis/scripts/mainwindow.py" line="1724"/>
+        <location filename="../../persepolis/scripts/mainwindow.py" line="1759"/>
         <source>Persepolis can not connect to Aria2</source>
         <translation>Persepolis kan geen verbinding maken met Aria2</translation>
     </message>
     <message>
-        <location filename="../../persepolis/scripts/mainwindow.py" line="1704"/>
+        <location filename="../../persepolis/scripts/mainwindow.py" line="1739"/>
         <source>Check your network &amp; Restart Persepolis</source>
         <translation>Controleer je internetverbinding en herstart Persepolis</translation>
     </message>
     <message>
-        <location filename="../../persepolis/scripts/mainwindow.py" line="1724"/>
+        <location filename="../../persepolis/scripts/mainwindow.py" line="1759"/>
         <source>Restart Persepolis</source>
         <translation>Persepolis herstarten</translation>
     </message>
     <message>
-        <location filename="../../persepolis/scripts/mainwindow.py" line="1730"/>
+        <location filename="../../persepolis/scripts/mainwindow.py" line="1765"/>
         <source>Reconnecting Aria2...</source>
         <translation>Bezig met herverbinden…</translation>
     </message>
     <message>
-        <location filename="../../persepolis/scripts/mainwindow.py" line="1748"/>
+        <location filename="../../persepolis/scripts/mainwindow.py" line="1783"/>
         <source>Persepolis reconnected aria2 successfully</source>
         <translation>Herverbonden met Aria2</translation>
     </message>
     <message>
-        <location filename="../../persepolis/scripts/mainwindow.py" line="1934"/>
+        <location filename="../../persepolis/scripts/mainwindow.py" line="1963"/>
         <source>Error: </source>
         <translation>Foutmelding:</translation>
     </message>
     <message>
-        <location filename="../../persepolis/scripts/mainwindow.py" line="2032"/>
+        <location filename="../../persepolis/scripts/mainwindow.py" line="2060"/>
         <source>&lt;b&gt;Link&lt;/b&gt;: </source>
         <translation>&lt;b&gt;Link&lt;/b&gt;: </translation>
     </message>
     <message>
-        <location filename="../../persepolis/scripts/mainwindow.py" line="2046"/>
+        <location filename="../../persepolis/scripts/mainwindow.py" line="2074"/>
         <source>&lt;b&gt;Downloaded&lt;/b&gt;: </source>
         <translation>&lt;b&gt;Gedownload&lt;/b&gt;: </translation>
     </message>
     <message>
-        <location filename="../../persepolis/scripts/mainwindow.py" line="2054"/>
+        <location filename="../../persepolis/scripts/mainwindow.py" line="2082"/>
         <source>&lt;b&gt;Transfer rate&lt;/b&gt;: </source>
         <translation>&lt;b&gt;Snelheid&lt;/b&gt;: </translation>
     </message>
     <message>
-        <location filename="../../persepolis/scripts/mainwindow.py" line="2060"/>
+        <location filename="../../persepolis/scripts/mainwindow.py" line="2088"/>
         <source>&lt;b&gt;Estimated time left&lt;/b&gt;: </source>
         <translation>&lt;b&gt;Resterende tijd (geschat)&lt;/b&gt;: </translation>
     </message>
     <message>
-        <location filename="../../persepolis/scripts/mainwindow.py" line="2066"/>
+        <location filename="../../persepolis/scripts/mainwindow.py" line="2094"/>
         <source>&lt;b&gt;Connections&lt;/b&gt;: </source>
         <translation>&lt;b&gt;Aantal verbindingen&lt;/b&gt;: </translation>
     </message>
     <message>
-        <location filename="../../persepolis/scripts/mainwindow.py" line="2086"/>
+        <location filename="../../persepolis/scripts/mainwindow.py" line="2114"/>
         <source>&lt;b&gt;Status&lt;/b&gt;: </source>
         <translation>&lt;b&gt;Status&lt;/b&gt;: </translation>
     </message>
     <message>
-        <location filename="../../persepolis/scripts/mainwindow.py" line="2139"/>
+        <location filename="../../persepolis/scripts/mainwindow.py" line="2167"/>
         <source>Download Stopped</source>
         <translation>Download gestopt</translation>
     </message>
     <message>
-        <location filename="../../persepolis/scripts/mainwindow.py" line="2160"/>
+        <location filename="../../persepolis/scripts/mainwindow.py" line="2188"/>
         <source>Error - </source>
         <translation>Foutmelding - </translation>
     </message>
     <message>
-        <location filename="../../persepolis/scripts/mainwindow.py" line="2215"/>
+        <location filename="../../persepolis/scripts/mainwindow.py" line="2243"/>
         <source>Download Complete</source>
         <translation>Download afgerond</translation>
     </message>
     <message>
-        <location filename="../../persepolis/scripts/mainwindow.py" line="2676"/>
+        <location filename="../../persepolis/scripts/mainwindow.py" line="2703"/>
         <source>&lt;b&gt;&lt;center&gt;This link has been added before!                    Are you sure you want to add it again?&lt;/center&gt;&lt;/b&gt;</source>
         <translation>&lt;b&gt;&lt;center&gt;Je hebt deze link al toegevoegd!                    Weet je zeker dat je deze opnieuw wilt toevoegen?&lt;/center&gt;&lt;/b&gt;</translation>
     </message>
     <message>
-        <location filename="../../persepolis/scripts/mainwindow.py" line="5868"/>
+        <location filename="../../persepolis/scripts/mainwindow.py" line="5932"/>
         <source>Download Starts</source>
         <translation>Download start</translation>
     </message>
     <message>
-        <location filename="../../persepolis/scripts/mainwindow.py" line="2789"/>
+        <location filename="../../persepolis/scripts/mainwindow.py" line="2815"/>
         <source>Download Scheduled</source>
         <translation>Download ingepland</translation>
     </message>
     <message>
-        <location filename="../../persepolis/scripts/mainwindow.py" line="6052"/>
+        <location filename="../../persepolis/scripts/mainwindow.py" line="6115"/>
         <source>Operation was not successful.</source>
         <translation>Handeling mislukt.</translation>
     </message>
     <message>
-        <location filename="../../persepolis/scripts/mainwindow.py" line="6052"/>
+        <location filename="../../persepolis/scripts/mainwindow.py" line="6115"/>
         <source>Please resume the following category: </source>
         <translation>Hervat de volgende categorie: </translation>
     </message>
     <message>
-        <location filename="../../persepolis/scripts/mainwindow.py" line="2990"/>
+        <location filename="../../persepolis/scripts/mainwindow.py" line="3016"/>
         <source>Aria2 disconnected!</source>
         <translation>Verbinding met Aria2 verbroken!</translation>
     </message>
     <message>
-        <location filename="../../persepolis/scripts/mainwindow.py" line="2951"/>
+        <location filename="../../persepolis/scripts/mainwindow.py" line="2977"/>
         <source>Persepolis is trying to connect!be patient!</source>
         <translation>Persepolis probeert opnieuw te verbinden; even geduld…</translation>
     </message>
     <message>
-        <location filename="../../persepolis/scripts/mainwindow.py" line="2995"/>
+        <location filename="../../persepolis/scripts/mainwindow.py" line="3021"/>
         <source>Aria2 did not respond!</source>
         <translation>Aria2 reageert niet!</translation>
     </message>
     <message>
-        <location filename="../../persepolis/scripts/mainwindow.py" line="2844"/>
+        <location filename="../../persepolis/scripts/mainwindow.py" line="2870"/>
         <source>Try again!</source>
         <translation>Probeer het opnieuw!</translation>
     </message>
     <message>
-        <location filename="../../persepolis/scripts/mainwindow.py" line="2897"/>
+        <location filename="../../persepolis/scripts/mainwindow.py" line="2923"/>
         <source>Aria2 did not respond</source>
         <translation>Aria2 reageert niet</translation>
     </message>
     <message>
-        <location filename="../../persepolis/scripts/mainwindow.py" line="2897"/>
+        <location filename="../../persepolis/scripts/mainwindow.py" line="2923"/>
         <source>Try again</source>
         <translation>Probeer het opnieuw</translation>
     </message>
     <message>
-        <location filename="../../persepolis/scripts/mainwindow.py" line="2970"/>
+        <location filename="../../persepolis/scripts/mainwindow.py" line="2996"/>
         <source>Please stop the following category: </source>
         <translation>Zet de volgende categorie stop: </translation>
     </message>
     <message>
-        <location filename="../../persepolis/scripts/mainwindow.py" line="2990"/>
+        <location filename="../../persepolis/scripts/mainwindow.py" line="3016"/>
         <source>Persepolis is trying to connect! be patient!</source>
         <translation>Persepolis probeert te verbinden; even geduld…</translation>
     </message>
     <message>
-        <location filename="../../persepolis/scripts/mainwindow.py" line="2995"/>
+        <location filename="../../persepolis/scripts/mainwindow.py" line="3021"/>
         <source>Please try again.</source>
         <translation>Probeer het opnieuw.</translation>
     </message>
     <message>
-        <location filename="../../persepolis/scripts/mainwindow.py" line="3347"/>
+        <location filename="../../persepolis/scripts/mainwindow.py" line="3377"/>
         <source>Minimize to system tray</source>
         <translation>Minimaliseren naar systeemvak</translation>
     </message>
     <message>
-        <location filename="../../persepolis/scripts/mainwindow.py" line="3812"/>
+        <location filename="../../persepolis/scripts/mainwindow.py" line="3837"/>
         <source>Not Found</source>
         <translation>Niet gevonden</translation>
     </message>
     <message>
-        <location filename="../../persepolis/scripts/mainwindow.py" line="3755"/>
+        <location filename="../../persepolis/scripts/mainwindow.py" line="3784"/>
         <source>Operation was not successful!</source>
         <translation>Handeling mislukt!</translation>
     </message>
     <message>
-        <location filename="../../persepolis/scripts/mainwindow.py" line="3543"/>
+        <location filename="../../persepolis/scripts/mainwindow.py" line="3573"/>
         <source>Operation was not successful! Please stop the following category first: </source>
         <translation>De handeling is mislukt! Zet eerst de volgende categorie stop: </translation>
     </message>
     <message>
-        <location filename="../../persepolis/scripts/mainwindow.py" line="3594"/>
+        <location filename="../../persepolis/scripts/mainwindow.py" line="3624"/>
         <source>Please stop the following download first: </source>
         <translation>Zet eerst de volgende download stop: </translation>
     </message>
     <message>
-        <location filename="../../persepolis/scripts/mainwindow.py" line="3655"/>
+        <location filename="../../persepolis/scripts/mainwindow.py" line="3684"/>
         <source>&lt;b&gt;&lt;center&gt;This operation will delete                     downloaded files from your hard disk&lt;br&gt;PERMANENTLY!&lt;/center&gt;&lt;/b&gt;</source>
         <translation>&lt;b&gt;&lt;center&gt;Deze handeling verwijdert                     de gedownloade bestanden&lt;br&gt;PERMANENT van je schijf!&lt;/center&gt;&lt;/b&gt;</translation>
     </message>
     <message>
-        <location filename="../../persepolis/scripts/mainwindow.py" line="4819"/>
+        <location filename="../../persepolis/scripts/mainwindow.py" line="4883"/>
         <source>&lt;center&gt;Do you want to continue?&lt;/center&gt;</source>
         <translation>&lt;center&gt;Wil je doorgaan?&lt;/center&gt;</translation>
     </message>
     <message>
-        <location filename="../../persepolis/scripts/mainwindow.py" line="3705"/>
+        <location filename="../../persepolis/scripts/mainwindow.py" line="3734"/>
         <source>Please stop the following category first: </source>
         <translation>Zet eerst de volgende categorie stop: </translation>
     </message>
     <message>
-        <location filename="../../persepolis/scripts/mainwindow.py" line="4332"/>
+        <location filename="../../persepolis/scripts/mainwindow.py" line="4357"/>
         <source>&lt;/b&gt;&quot; already exists!</source>
         <translation>&lt;/b&gt;” bestaat al!</translation>
     </message>
     <message>
-        <location filename="../../persepolis/scripts/mainwindow.py" line="4663"/>
+        <location filename="../../persepolis/scripts/mainwindow.py" line="4728"/>
         <source>Send selected downloads to</source>
         <translation>Selectie versturen naar</translation>
     </message>
     <message>
-        <location filename="../../persepolis/scripts/mainwindow.py" line="4666"/>
+        <location filename="../../persepolis/scripts/mainwindow.py" line="4731"/>
         <source>Send to</source>
         <translation>Versturen naar</translation>
     </message>
     <message>
-        <location filename="../../persepolis/scripts/mainwindow.py" line="4793"/>
+        <location filename="../../persepolis/scripts/mainwindow.py" line="4857"/>
         <source>Sort by</source>
         <translation>Sorteren op</translation>
     </message>
     <message>
-        <location filename="../../persepolis/scripts/mainwindow.py" line="4816"/>
+        <location filename="../../persepolis/scripts/mainwindow.py" line="4880"/>
         <source>&lt;b&gt;&lt;center&gt;This operation will remove                     all download items in this queue&lt;br&gt;from &quot;All Downloads&quot; list!&lt;/center&gt;&lt;/b&gt;</source>
         <translation>&lt;b&gt;&lt;center&gt;Deze handeling verwijdert                     alle downloaditems in deze wachtrij&lt;br&gt;van de lijst ‘Alle downloads’!&lt;/center&gt;&lt;/b&gt;</translation>
     </message>
     <message>
-        <location filename="../../persepolis/scripts/mainwindow.py" line="4841"/>
+        <location filename="../../persepolis/scripts/mainwindow.py" line="4905"/>
         <source>&lt;b&gt;Sorry! You can&apos;t remove default queue!&lt;/b&gt;</source>
         <translation>&lt;b&gt;Je kunt de standaard wachtrij niet verwijderen!&lt;/b&gt;</translation>
     </message>
     <message>
-        <location filename="../../persepolis/scripts/mainwindow.py" line="5062"/>
+        <location filename="../../persepolis/scripts/mainwindow.py" line="5126"/>
         <source>Some items didn&apos;t transferred successfully!</source>
         <translation>Sommige items zijn niet goed overgekomen!</translation>
     </message>
     <message>
-        <location filename="../../persepolis/scripts/mainwindow.py" line="5062"/>
+        <location filename="../../persepolis/scripts/mainwindow.py" line="5126"/>
         <source>Please stop download progress first.</source>
         <translation>Zet eerst de downloadvoortgang stop.</translation>
     </message>
     <message>
-        <location filename="../../persepolis/scripts/mainwindow.py" line="5092"/>
+        <location filename="../../persepolis/scripts/mainwindow.py" line="5156"/>
         <source>Hide options</source>
         <translation>Opties verbergen</translation>
     </message>
     <message>
-        <location filename="../../persepolis/scripts/mainwindow.py" line="5096"/>
+        <location filename="../../persepolis/scripts/mainwindow.py" line="5160"/>
         <source>Show options</source>
         <translation>Opties tonen</translation>
     </message>
     <message>
-        <location filename="../../persepolis/scripts/mainwindow.py" line="5682"/>
+        <location filename="../../persepolis/scripts/mainwindow.py" line="5746"/>
         <source>Stop all downloads first!</source>
         <translation>Zet eerst alle downloads stop!</translation>
     </message>
     <message>
-        <location filename="../../persepolis/scripts/mainwindow.py" line="1225"/>
+        <location filename="../../persepolis/scripts/mainwindow.py" line="1252"/>
         <source>Moving is</source>
         <translation>De verplaatsing is</translation>
     </message>
     <message>
-        <location filename="../../persepolis/scripts/mainwindow.py" line="1225"/>
+        <location filename="../../persepolis/scripts/mainwindow.py" line="1252"/>
         <source>finished!</source>
         <translation>is afgerond!</translation>
     </message>
     <message>
-        <location filename="../../persepolis/scripts/mainwindow.py" line="3727"/>
+        <location filename="../../persepolis/scripts/mainwindow.py" line="3756"/>
         <source>Download is in progress by video finder!</source>
         <translation>De download is bezig in de videozoeker!</translation>
     </message>
     <message>
-        <location filename="../../persepolis/scripts/mainwindow.py" line="3727"/>
+        <location filename="../../persepolis/scripts/mainwindow.py" line="3756"/>
         <source>be patient!</source>
         <translation>even geduld!</translation>
     </message>
     <message>
-        <location filename="../../persepolis/scripts/mainwindow.py" line="3755"/>
+        <location filename="../../persepolis/scripts/mainwindow.py" line="3784"/>
         <source>Stop the following download first: </source>
         <translation>Breek eerst de volgende download af: </translation>
     </message>
     <message>
-        <location filename="../../persepolis/scripts/mainwindow.py" line="5730"/>
+        <location filename="../../persepolis/scripts/mainwindow.py" line="5794"/>
         <source>ffmpeg is not installed!</source>
         <translation>ffmpeg is niet geïnstalleerd</translation>
     </message>
     <message>
-        <location filename="../../persepolis/scripts/mainwindow.py" line="6024"/>
+        <location filename="../../persepolis/scripts/mainwindow.py" line="6088"/>
         <source>Not enough free space in:</source>
         <translation>Onvoldoende vrije ruimte in:</translation>
     </message>
     <message>
-        <location filename="../../persepolis/scripts/mainwindow.py" line="6030"/>
+        <location filename="../../persepolis/scripts/mainwindow.py" line="6094"/>
         <source>muxing error</source>
         <translation>muxing-fout</translation>
     </message>
     <message>
-        <location filename="../../persepolis/scripts/mainwindow.py" line="6030"/>
+        <location filename="../../persepolis/scripts/mainwindow.py" line="6094"/>
         <source>an error occurred</source>
         <translation>er is een fout opgetreden</translation>
     </message>
     <message>
-        <location filename="../../persepolis/scripts/mainwindow.py" line="1780"/>
+        <location filename="../../persepolis/scripts/mainwindow.py" line="1814"/>
         <source>Please update Persepolis.</source>
-        <translation type="unfinished"/>
+        <translation>Werk Persepolis bij.</translation>
     </message>
     <message>
-        <location filename="../../persepolis/scripts/mainwindow.py" line="1934"/>
+        <location filename="../../persepolis/scripts/mainwindow.py" line="1963"/>
         <source>There is not enough disk space available at the download folder! Please choose another one or clear some space.</source>
-        <translation type="unfinished"/>
+        <translation>Er is onvoldoende vrije ruimte beschikbaar in de downloadmap. Maak ruimte vrij of kies een andere map.</translation>
     </message>
     <message>
-        <location filename="../../persepolis/scripts/mainwindow.py" line="5725"/>
+        <location filename="../../persepolis/scripts/mainwindow.py" line="5789"/>
         <source>yt-dlp is not installed!</source>
-        <translation type="unfinished"/>
+        <translation>yt-dlp is niet geïnstalleerd</translation>
     </message>
 </context>
 <context>
     <name>mainwindow_ui_tr</name>
     <message>
-        <location filename="../../persepolis/gui/mainwindow_ui.py" line="65"/>
+        <location filename="../../persepolis/gui/mainwindow_ui.py" line="67"/>
         <source>File</source>
         <translation>Bestand</translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/mainwindow_ui.py" line="66"/>
+        <location filename="../../persepolis/gui/mainwindow_ui.py" line="68"/>
         <source>Edit</source>
         <translation>Bewerken</translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/mainwindow_ui.py" line="67"/>
+        <location filename="../../persepolis/gui/mainwindow_ui.py" line="69"/>
         <source>View</source>
         <translation>Beeld</translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/mainwindow_ui.py" line="68"/>
+        <location filename="../../persepolis/gui/mainwindow_ui.py" line="70"/>
         <source>Download</source>
         <translation>Download</translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/mainwindow_ui.py" line="69"/>
+        <location filename="../../persepolis/gui/mainwindow_ui.py" line="71"/>
         <source>Queue</source>
         <translation>Wachtrij</translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/mainwindow_ui.py" line="70"/>
+        <location filename="../../persepolis/gui/mainwindow_ui.py" line="72"/>
         <source>Video Finder</source>
         <translation>Video&apos;s zoeken</translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/mainwindow_ui.py" line="722"/>
+        <location filename="../../persepolis/gui/mainwindow_ui.py" line="732"/>
         <source>Help</source>
         <translation>Hulp</translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/mainwindow_ui.py" line="470"/>
+        <location filename="../../persepolis/gui/mainwindow_ui.py" line="474"/>
         <source>Sort by</source>
         <translation>Sorteren op</translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/mainwindow_ui.py" line="475"/>
+        <location filename="../../persepolis/gui/mainwindow_ui.py" line="479"/>
         <source>Persepolis Download Manager</source>
         <translation>Persepolis-downloadbeheer</translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/mainwindow_ui.py" line="407"/>
+        <location filename="../../persepolis/gui/mainwindow_ui.py" line="411"/>
         <source>Category</source>
         <translation>Categorie</translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/mainwindow_ui.py" line="508"/>
+        <location filename="../../persepolis/gui/mainwindow_ui.py" line="512"/>
         <source>File Name</source>
         <translation>Bestandsnaam</translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/mainwindow_ui.py" line="406"/>
+        <location filename="../../persepolis/gui/mainwindow_ui.py" line="410"/>
         <source>Status</source>
         <translation>Status</translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/mainwindow_ui.py" line="406"/>
+        <location filename="../../persepolis/gui/mainwindow_ui.py" line="410"/>
         <source>Size</source>
         <translation>Grootte</translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/mainwindow_ui.py" line="406"/>
+        <location filename="../../persepolis/gui/mainwindow_ui.py" line="410"/>
         <source>Downloaded</source>
         <translation>Gedownload</translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/mainwindow_ui.py" line="406"/>
+        <location filename="../../persepolis/gui/mainwindow_ui.py" line="410"/>
         <source>Percentage</source>
         <translation>Percentage</translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/mainwindow_ui.py" line="406"/>
+        <location filename="../../persepolis/gui/mainwindow_ui.py" line="410"/>
         <source>Connections</source>
         <translation>Aantal verbindingen</translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/mainwindow_ui.py" line="407"/>
+        <location filename="../../persepolis/gui/mainwindow_ui.py" line="411"/>
         <source>Link</source>
         <translation>Link</translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/mainwindow_ui.py" line="461"/>
+        <location filename="../../persepolis/gui/mainwindow_ui.py" line="465"/>
         <source>&amp;File</source>
         <translation>&amp;Bestand</translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/mainwindow_ui.py" line="462"/>
+        <location filename="../../persepolis/gui/mainwindow_ui.py" line="466"/>
         <source>&amp;Edit</source>
         <translation>B&amp;ewerken</translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/mainwindow_ui.py" line="463"/>
+        <location filename="../../persepolis/gui/mainwindow_ui.py" line="467"/>
         <source>&amp;View</source>
         <translation>&amp;Beeld</translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/mainwindow_ui.py" line="464"/>
+        <location filename="../../persepolis/gui/mainwindow_ui.py" line="468"/>
         <source>&amp;Download</source>
         <translation>&amp;Download</translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/mainwindow_ui.py" line="465"/>
+        <location filename="../../persepolis/gui/mainwindow_ui.py" line="469"/>
         <source>&amp;Queue</source>
         <translation>&amp;Wachtrij</translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/mainwindow_ui.py" line="467"/>
+        <location filename="../../persepolis/gui/mainwindow_ui.py" line="471"/>
         <source>&amp;Help</source>
         <translation>&amp;Hulp</translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/mainwindow_ui.py" line="533"/>
+        <location filename="../../persepolis/gui/mainwindow_ui.py" line="537"/>
         <source>Show/Hide system tray icon</source>
         <translation>Systeemvakpictogram tonen/verbergen</translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/mainwindow_ui.py" line="559"/>
+        <location filename="../../persepolis/gui/mainwindow_ui.py" line="563"/>
         <source>Add New Download Link</source>
         <translation>Nieuwe downloadlink toevoegen</translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/mainwindow_ui.py" line="576"/>
+        <location filename="../../persepolis/gui/mainwindow_ui.py" line="586"/>
         <source>Resume Download</source>
         <translation>Download hervatten</translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/mainwindow_ui.py" line="582"/>
+        <location filename="../../persepolis/gui/mainwindow_ui.py" line="592"/>
         <source>Pause Download</source>
         <translation>Download pauzeren</translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/mainwindow_ui.py" line="588"/>
+        <location filename="../../persepolis/gui/mainwindow_ui.py" line="598"/>
         <source>Stop Download</source>
         <translation>Download stopzetten</translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/mainwindow_ui.py" line="588"/>
+        <location filename="../../persepolis/gui/mainwindow_ui.py" line="598"/>
         <source>Stop/Cancel Download</source>
         <translation>Download afbreken/stopzetten</translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/mainwindow_ui.py" line="594"/>
+        <location filename="../../persepolis/gui/mainwindow_ui.py" line="604"/>
         <source>Properties</source>
         <translation>Eigenschappen</translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/mainwindow_ui.py" line="600"/>
+        <location filename="../../persepolis/gui/mainwindow_ui.py" line="610"/>
         <source>Progress</source>
         <translation>Voortgang</translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/mainwindow_ui.py" line="623"/>
+        <location filename="../../persepolis/gui/mainwindow_ui.py" line="633"/>
         <source>Exit</source>
         <translation>Afsluiten</translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/mainwindow_ui.py" line="631"/>
+        <location filename="../../persepolis/gui/mainwindow_ui.py" line="641"/>
         <source>Clear all items in download list</source>
         <translation>Alle items op downloadlijst wissen</translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/mainwindow_ui.py" line="663"/>
+        <location filename="../../persepolis/gui/mainwindow_ui.py" line="673"/>
         <source>Create new download queue</source>
         <translation>Nieuwe downloadwachtrij creëren</translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/mainwindow_ui.py" line="668"/>
+        <location filename="../../persepolis/gui/mainwindow_ui.py" line="678"/>
         <source>Remove this queue</source>
         <translation>Deze wachtrij verwijderen</translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/mainwindow_ui.py" line="673"/>
+        <location filename="../../persepolis/gui/mainwindow_ui.py" line="683"/>
         <source>Start this queue</source>
         <translation>Deze wachtrij starten</translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/mainwindow_ui.py" line="679"/>
+        <location filename="../../persepolis/gui/mainwindow_ui.py" line="689"/>
         <source>Stop this queue</source>
         <translation>Deze wachtrij stopzetten</translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/mainwindow_ui.py" line="685"/>
+        <location filename="../../persepolis/gui/mainwindow_ui.py" line="695"/>
         <source>Move currently selected items up by one row</source>
         <translation>Selectie één rij omhoog verplaatsen</translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/mainwindow_ui.py" line="694"/>
+        <location filename="../../persepolis/gui/mainwindow_ui.py" line="704"/>
         <source>Move currently selected items down by one row</source>
         <translation>Selectie één rij omlaag verplaatsen</translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/mainwindow_ui.py" line="702"/>
+        <location filename="../../persepolis/gui/mainwindow_ui.py" line="712"/>
         <source>Preferences</source>
         <translation>Voorkeuren</translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/mainwindow_ui.py" line="707"/>
+        <location filename="../../persepolis/gui/mainwindow_ui.py" line="717"/>
         <source>About</source>
         <translation>Over</translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/mainwindow_ui.py" line="712"/>
+        <location filename="../../persepolis/gui/mainwindow_ui.py" line="722"/>
         <source>Report an issue</source>
         <translation>Probleem melden</translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/mainwindow_ui.py" line="735"/>
+        <location filename="../../persepolis/gui/mainwindow_ui.py" line="745"/>
         <source>Start Time</source>
         <translation>Begintijd</translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/mainwindow_ui.py" line="737"/>
+        <location filename="../../persepolis/gui/mainwindow_ui.py" line="747"/>
         <source>End Time</source>
         <translation>Eindtijd</translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/mainwindow_ui.py" line="739"/>
+        <location filename="../../persepolis/gui/mainwindow_ui.py" line="749"/>
         <source>Download bottom of
  the list first</source>
         <translation>Onderaan beginnen
  met downloaden</translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/mainwindow_ui.py" line="742"/>
+        <location filename="../../persepolis/gui/mainwindow_ui.py" line="752"/>
         <source>Limit Speed</source>
         <translation>Snelheid inperken</translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/mainwindow_ui.py" line="755"/>
+        <location filename="../../persepolis/gui/mainwindow_ui.py" line="765"/>
         <source>Apply</source>
         <translation>Toepassen</translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/mainwindow_ui.py" line="747"/>
+        <location filename="../../persepolis/gui/mainwindow_ui.py" line="757"/>
         <source>After download</source>
         <translation>Actie na downloaden:</translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/mainwindow_ui.py" line="748"/>
+        <location filename="../../persepolis/gui/mainwindow_ui.py" line="758"/>
         <source>Shut Down</source>
         <translation>Afsluiten</translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/mainwindow_ui.py" line="466"/>
+        <location filename="../../persepolis/gui/mainwindow_ui.py" line="470"/>
         <source>V&amp;ideo Finder</source>
         <translation>V&amp;ideo&apos;s zoeken</translation>
     </message>
     <message>
-        <location filename="../../persepolis/scripts/mainwindow.py" line="2499"/>
+        <location filename="../../persepolis/scripts/mainwindow.py" line="2526"/>
         <source>&lt;b&gt;Video file status: &lt;/b&gt;</source>
         <translation>&lt;b&gt;Status van videobestand: &lt;/b&gt;</translation>
     </message>
     <message>
-        <location filename="../../persepolis/scripts/mainwindow.py" line="2480"/>
+        <location filename="../../persepolis/scripts/mainwindow.py" line="2507"/>
         <source>&lt;b&gt;Audio file status: &lt;/b&gt;</source>
         <translation>&lt;b&gt;Status van audiobestand: &lt;/b&gt;</translation>
     </message>
     <message>
-        <location filename="../../persepolis/scripts/mainwindow.py" line="2555"/>
+        <location filename="../../persepolis/scripts/mainwindow.py" line="2582"/>
         <source>&lt;b&gt;Status: &lt;/b&gt;</source>
         <translation>&lt;b&gt;Status: &lt;/b&gt;</translation>
     </message>
     <message>
-        <location filename="../../persepolis/scripts/mainwindow.py" line="2559"/>
+        <location filename="../../persepolis/scripts/mainwindow.py" line="2585"/>
         <source>&lt;b&gt;Muxing status: &lt;/b&gt;</source>
         <translation>&lt;b&gt;Muxing-status: &lt;/b&gt;</translation>
     </message>
     <message>
-        <location filename="../../persepolis/scripts/mainwindow.py" line="2499"/>
+        <location filename="../../persepolis/scripts/mainwindow.py" line="2526"/>
         <source> downloaded</source>
         <translation>gedownload</translation>
     </message>
     <message>
-        <location filename="../../persepolis/scripts/mainwindow.py" line="2514"/>
+        <location filename="../../persepolis/scripts/mainwindow.py" line="2541"/>
         <source>Active</source>
         <translation>Actief</translation>
     </message>
     <message>
-        <location filename="../../persepolis/scripts/mainwindow.py" line="2544"/>
+        <location filename="../../persepolis/scripts/mainwindow.py" line="2571"/>
         <source>Not Active</source>
         <translation>Inactief</translation>
     </message>
     <message>
-        <location filename="../../persepolis/scripts/mainwindow.py" line="2534"/>
+        <location filename="../../persepolis/scripts/mainwindow.py" line="2561"/>
         <source>Started</source>
         <translation>Gestart</translation>
     </message>
     <message>
-        <location filename="../../persepolis/scripts/mainwindow.py" line="2537"/>
+        <location filename="../../persepolis/scripts/mainwindow.py" line="2564"/>
         <source>Error</source>
         <translation>Fout</translation>
     </message>
     <message>
-        <location filename="../../persepolis/scripts/mainwindow.py" line="2540"/>
+        <location filename="../../persepolis/scripts/mainwindow.py" line="2567"/>
         <source>Complete</source>
         <translation>Voltooid</translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/mainwindow_ui.py" line="407"/>
+        <location filename="../../persepolis/gui/mainwindow_ui.py" line="411"/>
         <source>Transfer Rate</source>
         <translation>Snelheid</translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/mainwindow_ui.py" line="407"/>
+        <location filename="../../persepolis/gui/mainwindow_ui.py" line="411"/>
         <source>Estimated Time Left</source>
         <translation>Resterende tijd (geschat)</translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/mainwindow_ui.py" line="518"/>
+        <location filename="../../persepolis/gui/mainwindow_ui.py" line="522"/>
         <source>First Try Date</source>
         <translation>Datum eerste poging</translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/mainwindow_ui.py" line="523"/>
+        <location filename="../../persepolis/gui/mainwindow_ui.py" line="527"/>
         <source>Last Try Date</source>
         <translation>Datum laatste poging</translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/mainwindow_ui.py" line="494"/>
+        <location filename="../../persepolis/gui/mainwindow_ui.py" line="498"/>
         <source>Find Video Links...</source>
         <translation>Videolinks zoeken…</translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/mainwindow_ui.py" line="494"/>
+        <location filename="../../persepolis/gui/mainwindow_ui.py" line="498"/>
         <source>Download video or audio from Youtube, Vimeo, etc.</source>
         <translation>Download video&apos;s of audio van YouTube, Vimeo, etc.</translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/mainwindow_ui.py" line="503"/>
+        <location filename="../../persepolis/gui/mainwindow_ui.py" line="507"/>
         <source>Stop All Active Downloads</source>
         <translation>Alle actieve downloads stopzetten</translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/mainwindow_ui.py" line="513"/>
+        <location filename="../../persepolis/gui/mainwindow_ui.py" line="517"/>
         <source>File Size</source>
         <translation>Bestandsgrootte</translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/mainwindow_ui.py" line="528"/>
+        <location filename="../../persepolis/gui/mainwindow_ui.py" line="532"/>
         <source>Download Status</source>
         <translation>Downloadstatus</translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/mainwindow_ui.py" line="533"/>
+        <location filename="../../persepolis/gui/mainwindow_ui.py" line="537"/>
         <source>Show System Tray Icon</source>
         <translation>Systeemvakpictogram tonen</translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/mainwindow_ui.py" line="539"/>
+        <location filename="../../persepolis/gui/mainwindow_ui.py" line="543"/>
         <source>Show Menubar</source>
         <translation>Menubalk tonen</translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/mainwindow_ui.py" line="545"/>
+        <location filename="../../persepolis/gui/mainwindow_ui.py" line="549"/>
         <source>Show Side Panel</source>
         <translation>Zijpaneel tonen</translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/mainwindow_ui.py" line="551"/>
+        <location filename="../../persepolis/gui/mainwindow_ui.py" line="555"/>
         <source>Minimize to System Tray</source>
         <translation>Minimaliseren naar systeemvak</translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/mainwindow_ui.py" line="559"/>
+        <location filename="../../persepolis/gui/mainwindow_ui.py" line="563"/>
         <source>Add New Download Link...</source>
         <translation>Nieuwe downloadlink toevoegen…</translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/mainwindow_ui.py" line="567"/>
+        <location filename="../../persepolis/gui/mainwindow_ui.py" line="571"/>
         <source>Import Links from Text File...</source>
         <translation>Links importeren uit tekstbestand…</translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/mainwindow_ui.py" line="567"/>
+        <location filename="../../persepolis/gui/mainwindow_ui.py" line="571"/>
         <source>Create a text file and put links in it, line by line!</source>
         <translation>Creëer een tekstbestand en vul dit regel voor regel met links.</translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/mainwindow_ui.py" line="606"/>
+        <location filename="../../persepolis/gui/mainwindow_ui.py" line="616"/>
         <source>Open File...</source>
         <translation>Bestand openen…</translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/mainwindow_ui.py" line="611"/>
+        <location filename="../../persepolis/gui/mainwindow_ui.py" line="621"/>
         <source>Open Download Folder</source>
         <translation>Downloadmap openen</translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/mainwindow_ui.py" line="617"/>
+        <location filename="../../persepolis/gui/mainwindow_ui.py" line="627"/>
         <source>Open Default Download Folder</source>
         <translation>Standaard downloadmap openen</translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/mainwindow_ui.py" line="631"/>
+        <location filename="../../persepolis/gui/mainwindow_ui.py" line="641"/>
         <source>Clear Download List</source>
         <translation>Downloadlijst wissen</translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/mainwindow_ui.py" line="636"/>
+        <location filename="../../persepolis/gui/mainwindow_ui.py" line="646"/>
         <source>Remove Selected Downloads from List</source>
         <translation>Selectie verwijderen van lijst</translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/mainwindow_ui.py" line="646"/>
+        <location filename="../../persepolis/gui/mainwindow_ui.py" line="656"/>
         <source>Delete Selected Download Files</source>
         <translation>Selectie verwijderen</translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/mainwindow_ui.py" line="656"/>
+        <location filename="../../persepolis/gui/mainwindow_ui.py" line="666"/>
         <source>Move Selected Download Files to Another Folder...</source>
         <translation>Selectie verplaatsen naar andere locatie…</translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/mainwindow_ui.py" line="656"/>
+        <location filename="../../persepolis/gui/mainwindow_ui.py" line="666"/>
         <source>Move Selected Download Files to Another Folder</source>
         <translation>Selectie verplaatsen naar andere locatie</translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/mainwindow_ui.py" line="663"/>
+        <location filename="../../persepolis/gui/mainwindow_ui.py" line="673"/>
         <source>Create New Queue...</source>
         <translation>Nieuwe wachtrij creëren…</translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/mainwindow_ui.py" line="668"/>
+        <location filename="../../persepolis/gui/mainwindow_ui.py" line="678"/>
         <source>Remove Queue</source>
         <translation>Wachtrij verwijderen</translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/mainwindow_ui.py" line="673"/>
+        <location filename="../../persepolis/gui/mainwindow_ui.py" line="683"/>
         <source>Start Queue</source>
         <translation>Wachtrij starten</translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/mainwindow_ui.py" line="679"/>
+        <location filename="../../persepolis/gui/mainwindow_ui.py" line="689"/>
         <source>Stop Queue</source>
         <translation>Wachtrij stoppen</translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/mainwindow_ui.py" line="685"/>
+        <location filename="../../persepolis/gui/mainwindow_ui.py" line="695"/>
         <source>Move Selected Items Up</source>
         <translation>Selectie omhoog verplaatsen</translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/mainwindow_ui.py" line="694"/>
+        <location filename="../../persepolis/gui/mainwindow_ui.py" line="704"/>
         <source>Move Selected Items Down</source>
         <translation>Selectie omhoog verplaatsen</translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/mainwindow_ui.py" line="712"/>
+        <location filename="../../persepolis/gui/mainwindow_ui.py" line="722"/>
         <source>Report an Issue</source>
         <translation>Probleem melden</translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/mainwindow_ui.py" line="717"/>
+        <location filename="../../persepolis/gui/mainwindow_ui.py" line="727"/>
         <source>Show Log File</source>
         <translation>Logboek bekijken</translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/mainwindow_ui.py" line="734"/>
+        <location filename="../../persepolis/gui/mainwindow_ui.py" line="744"/>
         <source>Hide Options</source>
         <translation>Opties verbergen</translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/mainwindow_ui.py" line="750"/>
+        <location filename="../../persepolis/gui/mainwindow_ui.py" line="760"/>
         <source>Keep System Awake!</source>
         <translation>Systeem actief houden</translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/mainwindow_ui.py" line="751"/>
+        <location filename="../../persepolis/gui/mainwindow_ui.py" line="761"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;This option will prevent the system from going to sleep.            It is necessary if your power manager is suspending the system automatically. &lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Deze optie voorkomt dat het systeem inactief wordt.            Dit is nodig als energiebeheer je systeem automatisch in de pauze- of slaapstand zet.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/mainwindow_ui.py" line="757"/>
+        <location filename="../../persepolis/gui/mainwindow_ui.py" line="767"/>
         <source>Start Mixing</source>
         <translation>Mengen starten</translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/mainwindow_ui.py" line="759"/>
+        <location filename="../../persepolis/gui/mainwindow_ui.py" line="769"/>
         <source>&lt;b&gt;Video File Status: &lt;/b&gt;</source>
         <translation>&lt;b&gt;Status van videobestand: &lt;/b&gt;</translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/mainwindow_ui.py" line="760"/>
+        <location filename="../../persepolis/gui/mainwindow_ui.py" line="770"/>
         <source>&lt;b&gt;Audio File Status: &lt;/b&gt;</source>
         <translation>&lt;b&gt;Status van audiobestand: &lt;/b&gt;</translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/mainwindow_ui.py" line="763"/>
+        <location filename="../../persepolis/gui/mainwindow_ui.py" line="773"/>
         <source>&lt;b&gt;Mixing status: &lt;/b&gt;</source>
         <translation>&lt;b&gt;Mengstatus: &lt;/b&gt;</translation>
+    </message>
+    <message>
+        <location filename="../../persepolis/gui/mainwindow_ui.py" line="580"/>
+        <source>Import Links from Clipboard...</source>
+        <translation>Links importeren van klembord…</translation>
+    </message>
+    <message>
+        <location filename="../../persepolis/gui/mainwindow_ui.py" line="580"/>
+        <source>Import Links From Clipboard</source>
+        <translation>Links importeren van klembord</translation>
     </message>
 </context>
 <context>
@@ -1255,82 +1271,82 @@ MohammadAmin Vahedinia</translation>
 <context>
     <name>progress_ui_tr</name>
     <message>
-        <location filename="../../persepolis/gui/progress_ui.py" line="55"/>
+        <location filename="../../persepolis/gui/progress_ui.py" line="56"/>
         <source>Persepolis Download Manager</source>
         <translation>Persepolis-downloadbeheer</translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/progress_ui.py" line="206"/>
+        <location filename="../../persepolis/gui/progress_ui.py" line="207"/>
         <source>Status: </source>
         <translation>Status: </translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/progress_ui.py" line="207"/>
+        <location filename="../../persepolis/gui/progress_ui.py" line="208"/>
         <source>Downloaded:</source>
         <translation>Gedownload:</translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/progress_ui.py" line="208"/>
+        <location filename="../../persepolis/gui/progress_ui.py" line="209"/>
         <source>Transfer rate: </source>
         <translation>Snelheid:</translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/progress_ui.py" line="209"/>
+        <location filename="../../persepolis/gui/progress_ui.py" line="210"/>
         <source>Estimated time left:</source>
         <translation>Resterende tijd (geschat):</translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/progress_ui.py" line="210"/>
+        <location filename="../../persepolis/gui/progress_ui.py" line="211"/>
         <source>Number of connections: </source>
         <translation>Aantal gelijktijdige verbindingen:</translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/progress_ui.py" line="211"/>
+        <location filename="../../persepolis/gui/progress_ui.py" line="212"/>
         <source>Download Information</source>
         <translation>Downloadinformatie</translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/progress_ui.py" line="214"/>
+        <location filename="../../persepolis/gui/progress_ui.py" line="215"/>
         <source>After download</source>
         <translation>Actie na downloaden</translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/progress_ui.py" line="226"/>
+        <location filename="../../persepolis/gui/progress_ui.py" line="227"/>
         <source>Apply</source>
         <translation>Toepassen</translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/progress_ui.py" line="219"/>
+        <location filename="../../persepolis/gui/progress_ui.py" line="220"/>
         <source>Shut Down</source>
         <translation>Afsluiten</translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/progress_ui.py" line="221"/>
+        <location filename="../../persepolis/gui/progress_ui.py" line="222"/>
         <source>Download Options</source>
         <translation>Downloadopties</translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/progress_ui.py" line="223"/>
+        <location filename="../../persepolis/gui/progress_ui.py" line="224"/>
         <source>Resume</source>
         <translation>Hervatten</translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/progress_ui.py" line="224"/>
+        <location filename="../../persepolis/gui/progress_ui.py" line="225"/>
         <source>Pause</source>
         <translation>Pauzeren</translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/progress_ui.py" line="225"/>
+        <location filename="../../persepolis/gui/progress_ui.py" line="226"/>
         <source>Stop</source>
         <translation>Stoppen</translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/progress_ui.py" line="205"/>
+        <location filename="../../persepolis/gui/progress_ui.py" line="206"/>
         <source>Link: </source>
         <translation>Link: </translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/progress_ui.py" line="213"/>
+        <location filename="../../persepolis/gui/progress_ui.py" line="214"/>
         <source>Limit speed</source>
         <translation>Snelheid inperken</translation>
     </message>
@@ -1338,17 +1354,17 @@ MohammadAmin Vahedinia</translation>
 <context>
     <name>setting_src_ui_tr</name>
     <message>
-        <location filename="../../persepolis/scripts/setting.py" line="1169"/>
+        <location filename="../../persepolis/scripts/setting.py" line="1180"/>
         <source>&lt;b&gt;&lt;center&gt;Restart Persepolis Please!&lt;/center&gt;&lt;/b&gt;&lt;br&gt;&lt;center&gt;Some changes take effect after restarting Persepolis&lt;/center&gt;</source>
         <translation>&lt;b&gt;&lt;center&gt;Herstart Persepolis!&lt;/center&gt;&lt;/b&gt;&lt;br&gt;&lt;center&gt;Sommige wijzigingen worden pas toegepast na een herstart.&lt;/center&gt;</translation>
     </message>
     <message>
-        <location filename="../../persepolis/scripts/setting.py" line="1171"/>
+        <location filename="../../persepolis/scripts/setting.py" line="1182"/>
         <source>Restart Persepolis!</source>
         <translation>Herstart Persepolis!</translation>
     </message>
     <message>
-        <location filename="../../persepolis/scripts/setting.py" line="444"/>
+        <location filename="../../persepolis/scripts/setting.py" line="448"/>
         <source>&lt;b&gt;&lt;center&gt;This shortcut has been used before!                    Use another one!&lt;/center&gt;&lt;/b&gt;</source>
         <translation>&lt;b&gt;&lt;center&gt;Deze sneltoets wordt al gebruikt!                    Kies een andere!&lt;/center&gt;&lt;/b&gt;</translation>
     </message>
@@ -1356,430 +1372,440 @@ MohammadAmin Vahedinia</translation>
 <context>
     <name>setting_ui_tr</name>
     <message>
-        <location filename="../../persepolis/gui/setting_ui.py" line="656"/>
+        <location filename="../../persepolis/gui/setting_ui.py" line="663"/>
         <source>Preferences</source>
         <translation>Voorkeuren</translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/setting_ui.py" line="549"/>
+        <location filename="../../persepolis/gui/setting_ui.py" line="554"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Set number of tries if download failed.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Stel in hoe vaak opnieuw moet worden geprobeerd na een mislukking&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/setting_ui.py" line="548"/>
+        <location filename="../../persepolis/gui/setting_ui.py" line="553"/>
         <source>Number of tries: </source>
         <translation>Aantal pogingen:</translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/setting_ui.py" line="555"/>
+        <location filename="../../persepolis/gui/setting_ui.py" line="560"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Set the seconds to wait between retries. Download manager will  retry  downloads  when  the  HTTP  server  returns  a  503 response.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Stel het aantal seconden in tussen pogingen. Persepolis doet een nieuwe poging als de http-server ‘503’ antwoordt.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/setting_ui.py" line="561"/>
+        <location filename="../../persepolis/gui/setting_ui.py" line="566"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Set timeout in seconds. &lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Stel de time-out in, in seconden.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/setting_ui.py" line="560"/>
+        <location filename="../../persepolis/gui/setting_ui.py" line="565"/>
         <source>Timeout (seconds): </source>
         <translation>Time-out (in seconden):</translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/setting_ui.py" line="567"/>
+        <location filename="../../persepolis/gui/setting_ui.py" line="572"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Using multiple connections can help speed up your download.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Meerdere gelijktijdige verbindingen kunnen het downloaden versnellen.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/setting_ui.py" line="566"/>
+        <location filename="../../persepolis/gui/setting_ui.py" line="571"/>
         <source>Number of connections: </source>
         <translation>Aantal gelijktijdige verbindingen:</translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/setting_ui.py" line="570"/>
+        <location filename="../../persepolis/gui/setting_ui.py" line="575"/>
         <source>RPC port number: </source>
         <translation>RPC-poortnummer:</translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/setting_ui.py" line="571"/>
+        <location filename="../../persepolis/gui/setting_ui.py" line="576"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt; Specify a port number for JSON-RPC/XML-RPC server to listen to. Possible Values: 1024 - 65535 Default: 6801 &lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Geef een poortnummer op waar de JSON-RPC/XML-RPC-server naar moet luisteren. Mogelijke waarden zijn 1024 - 65535 // De standaardpoort is 6801&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/setting_ui.py" line="588"/>
+        <location filename="../../persepolis/gui/setting_ui.py" line="590"/>
         <source>Change Aria2 default path</source>
         <translation>Standaardlocatie van Aria2 wijzigen</translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/setting_ui.py" line="600"/>
+        <location filename="../../persepolis/gui/setting_ui.py" line="602"/>
         <source>Change</source>
         <translation>Wijzigen</translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/setting_ui.py" line="596"/>
+        <location filename="../../persepolis/gui/setting_ui.py" line="598"/>
         <source>Download Options</source>
         <translation>Downloadopties</translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/setting_ui.py" line="611"/>
+        <location filename="../../persepolis/gui/setting_ui.py" line="613"/>
         <source>Volume: </source>
         <translation>Volume:  </translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/setting_ui.py" line="613"/>
+        <location filename="../../persepolis/gui/setting_ui.py" line="615"/>
         <source>Notifications</source>
         <translation>Meldingen</translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/setting_ui.py" line="616"/>
+        <location filename="../../persepolis/gui/setting_ui.py" line="618"/>
         <source>Style: </source>
         <translation>Stijl: </translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/setting_ui.py" line="617"/>
+        <location filename="../../persepolis/gui/setting_ui.py" line="619"/>
         <source>Color scheme: </source>
         <translation>Kleurenschema: </translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/setting_ui.py" line="618"/>
+        <location filename="../../persepolis/gui/setting_ui.py" line="620"/>
         <source>Icons: </source>
         <translation>Pictogrammen: </translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/setting_ui.py" line="622"/>
+        <location filename="../../persepolis/gui/setting_ui.py" line="624"/>
         <source>Notification type: </source>
         <translation>Soort melding: </translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/setting_ui.py" line="624"/>
+        <location filename="../../persepolis/gui/setting_ui.py" line="626"/>
         <source>Font: </source>
         <translation>Lettertype: </translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/setting_ui.py" line="625"/>
+        <location filename="../../persepolis/gui/setting_ui.py" line="627"/>
         <source>Size: </source>
         <translation>Grootte: </translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/setting_ui.py" line="646"/>
+        <location filename="../../persepolis/gui/setting_ui.py" line="648"/>
         <source>Run Persepolis at startup</source>
         <translation>Automatisch opstarten</translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/setting_ui.py" line="648"/>
+        <location filename="../../persepolis/gui/setting_ui.py" line="650"/>
         <source>Keep system awake!</source>
         <translation>Systeem actief houden</translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/setting_ui.py" line="653"/>
+        <location filename="../../persepolis/gui/setting_ui.py" line="660"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Format HH:MM&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Opmaak: UU:MM&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/setting_ui.py" line="661"/>
+        <location filename="../../persepolis/gui/setting_ui.py" line="668"/>
         <source>File Name</source>
         <translation>Bestandsnaam</translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/video_finder_progress_ui.py" line="60"/>
+        <location filename="../../persepolis/gui/video_finder_progress_ui.py" line="61"/>
         <source>Status</source>
         <translation>Status</translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/setting_ui.py" line="663"/>
+        <location filename="../../persepolis/gui/setting_ui.py" line="670"/>
         <source>Size</source>
         <translation>Grootte</translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/setting_ui.py" line="664"/>
+        <location filename="../../persepolis/gui/setting_ui.py" line="671"/>
         <source>Downloaded</source>
         <translation>Gedownload</translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/setting_ui.py" line="665"/>
+        <location filename="../../persepolis/gui/setting_ui.py" line="672"/>
         <source>Percentage</source>
         <translation>Percentage</translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/setting_ui.py" line="666"/>
+        <location filename="../../persepolis/gui/setting_ui.py" line="673"/>
         <source>Connections</source>
         <translation>Aantal verbindingen</translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/setting_ui.py" line="671"/>
+        <location filename="../../persepolis/gui/setting_ui.py" line="678"/>
         <source>Category</source>
         <translation>Categorie</translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/setting_ui.py" line="677"/>
+        <location filename="../../persepolis/gui/setting_ui.py" line="684"/>
         <source>Video Finder Options</source>
         <translation>Video-zoekopties</translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/setting_ui.py" line="680"/>
+        <location filename="../../persepolis/gui/setting_ui.py" line="687"/>
         <source>Maximum number of links to capture:&lt;br/&gt;&lt;small&gt;(If browser sends multiple video links at a time)&lt;/small&gt;</source>
         <translation>Maximaal aantal op te halen links: &lt;br/&gt;&lt;small&gt; (indien de browser meerdere videolinks tegelijk aanbiedt)&lt;/small&gt;</translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/setting_ui.py" line="684"/>
+        <location filename="../../persepolis/gui/setting_ui.py" line="691"/>
         <source>Defaults</source>
         <translation>Standaardwaarden</translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/setting_ui.py" line="685"/>
+        <location filename="../../persepolis/gui/setting_ui.py" line="692"/>
         <source>Cancel</source>
         <translation>Annuleren</translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/setting_ui.py" line="686"/>
+        <location filename="../../persepolis/gui/setting_ui.py" line="693"/>
         <source>OK</source>
         <translation>Oké</translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/setting_ui.py" line="79"/>
+        <location filename="../../persepolis/gui/setting_ui.py" line="80"/>
         <source>Press new keys</source>
         <translation>Druk op de gewenste toetsen</translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/setting_ui.py" line="487"/>
+        <location filename="../../persepolis/gui/setting_ui.py" line="492"/>
         <source>Action</source>
         <translation>Actie</translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/setting_ui.py" line="488"/>
+        <location filename="../../persepolis/gui/setting_ui.py" line="493"/>
         <source>Shortcut</source>
         <translation>Sneltoets</translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/setting_ui.py" line="494"/>
+        <location filename="../../persepolis/gui/setting_ui.py" line="499"/>
         <source>Shortcuts</source>
         <translation>Sneltoetsen</translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/setting_ui.py" line="497"/>
+        <location filename="../../persepolis/gui/setting_ui.py" line="502"/>
         <source>Quit</source>
         <translation>Afsluiten</translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/setting_ui.py" line="627"/>
+        <location filename="../../persepolis/gui/setting_ui.py" line="629"/>
         <source>Hide main window if close button clicked.</source>
         <translation>Hoofdvenster minimaliseren na klikken op sluitknop.</translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/setting_ui.py" line="629"/>
+        <location filename="../../persepolis/gui/setting_ui.py" line="631"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;This feature may not work in your operating system.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Deze functie werkt mogelijk niet op je besturingssysteem.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/setting_ui.py" line="317"/>
+        <location filename="../../persepolis/gui/setting_ui.py" line="318"/>
         <source>Language: </source>
         <translation>Taal:</translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/setting_ui.py" line="498"/>
+        <location filename="../../persepolis/gui/setting_ui.py" line="503"/>
         <source>Minimize to System Tray</source>
         <translation>Minimaliseren naar systeemvak</translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/setting_ui.py" line="499"/>
+        <location filename="../../persepolis/gui/setting_ui.py" line="504"/>
         <source>Remove Download Items</source>
         <translation>Gedownloade items wissen</translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/setting_ui.py" line="500"/>
+        <location filename="../../persepolis/gui/setting_ui.py" line="505"/>
         <source>Delete Download Items</source>
         <translation>Gedownloade items verwijderen</translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/setting_ui.py" line="501"/>
+        <location filename="../../persepolis/gui/setting_ui.py" line="506"/>
         <source>Move Selected Items Up</source>
         <translation>Selectie omhoog verplaatsen</translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/setting_ui.py" line="502"/>
+        <location filename="../../persepolis/gui/setting_ui.py" line="507"/>
         <source>Move Selected Items Down</source>
         <translation>Selectie omhoog verplaatsen</translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/setting_ui.py" line="503"/>
+        <location filename="../../persepolis/gui/setting_ui.py" line="508"/>
         <source>Add New Download Link</source>
         <translation>Nieuwe downloadlink toevoegen</translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/setting_ui.py" line="504"/>
+        <location filename="../../persepolis/gui/setting_ui.py" line="509"/>
         <source>Add New Video Link</source>
         <translation>Nieuwe videolink toevoegen</translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/setting_ui.py" line="505"/>
+        <location filename="../../persepolis/gui/setting_ui.py" line="510"/>
         <source>Import Links from Text File</source>
         <translation>Links importeren uit tekstbestand</translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/setting_ui.py" line="554"/>
+        <location filename="../../persepolis/gui/setting_ui.py" line="559"/>
         <source>Wait period between retries (seconds): </source>
         <translation>Tijd tussen pogingen (in seconden):</translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/setting_ui.py" line="574"/>
+        <location filename="../../persepolis/gui/setting_ui.py" line="579"/>
         <source>Wait period between each download in queue:</source>
         <translation>Wachttijd tussen downloads in wachtrij:</translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/setting_ui.py" line="577"/>
+        <location filename="../../persepolis/gui/setting_ui.py" line="582"/>
         <source>Don&apos;t use certificate to verify the peers</source>
         <translation>Geen certificaten gebruiken om peers te verifiëren</translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/setting_ui.py" line="578"/>
+        <location filename="../../persepolis/gui/setting_ui.py" line="583"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;This option avoids SSL/TLS handshake failure. But use it at your own risk!&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Let op: met deze optie omzeil je de ssl-/tls-overdrachtsfoutmelding. Gebruik is op eigen risico!&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/setting_ui.py" line="590"/>
+        <location filename="../../persepolis/gui/setting_ui.py" line="592"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Attention: Wrong path may cause problems! Do it carefully or don&apos;t change default setting!&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Let op: een verkeerde locatie problemen veroorzaken! Bij twijfel niet aanpassen.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/setting_ui.py" line="599"/>
+        <location filename="../../persepolis/gui/setting_ui.py" line="601"/>
         <source>Download folder: </source>
         <translation>Downloadmap: </translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/setting_ui.py" line="602"/>
+        <location filename="../../persepolis/gui/setting_ui.py" line="604"/>
         <source>Create subfolders for Music,Videos, ... in default download folder</source>
         <translation>Submappen creëren in downloadmap voor muziek, video&apos;s, etc.</translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/setting_ui.py" line="605"/>
+        <location filename="../../persepolis/gui/setting_ui.py" line="607"/>
         <source>Save As</source>
         <translation>Opslaan als</translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/setting_ui.py" line="608"/>
+        <location filename="../../persepolis/gui/setting_ui.py" line="610"/>
         <source>Enable Notification Sounds</source>
         <translation>Meldingsgeluiden inschakelen</translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/setting_ui.py" line="620"/>
+        <location filename="../../persepolis/gui/setting_ui.py" line="622"/>
         <source>Toolbar icons size: </source>
         <translation>Pictogramgrootte op werkbalk: </translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/setting_ui.py" line="632"/>
+        <location filename="../../persepolis/gui/setting_ui.py" line="634"/>
         <source>If browser is opened, start Persepolis in system tray</source>
         <translation>Persepolis opstarten in systeemvak indien browser geopend is</translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/setting_ui.py" line="635"/>
+        <location filename="../../persepolis/gui/setting_ui.py" line="637"/>
         <source>Enable system tray icon</source>
         <translation>Systeemvakpictogram tonen</translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/setting_ui.py" line="638"/>
+        <location filename="../../persepolis/gui/setting_ui.py" line="640"/>
         <source>Show download complete dialog when download is finished</source>
         <translation>Bevestigingsvenster tonen als het downloaden is afgerond</translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/setting_ui.py" line="641"/>
+        <location filename="../../persepolis/gui/setting_ui.py" line="643"/>
         <source>Show menubar</source>
         <translation>Menubalk tonen</translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/setting_ui.py" line="642"/>
+        <location filename="../../persepolis/gui/setting_ui.py" line="644"/>
         <source>Show side panel</source>
         <translation>Zijpaneel tonen</translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/setting_ui.py" line="643"/>
+        <location filename="../../persepolis/gui/setting_ui.py" line="645"/>
         <source>Show download progress window</source>
         <translation>Venster met downloadvoortgang tonen</translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/setting_ui.py" line="649"/>
+        <location filename="../../persepolis/gui/setting_ui.py" line="651"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;This option will prevent the system from going to sleep.            It is necessary if your power manager is suspending the system automatically. &lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Deze optie voorkomt dat het systeem inactief wordt.            Dit is nodig als energiebeheer je systeem automatisch in de pauze- of slaapstand zet.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/setting_ui.py" line="660"/>
+        <location filename="../../persepolis/gui/setting_ui.py" line="667"/>
         <source>Show these columns:</source>
         <translation>Te tonen kolommen:</translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/setting_ui.py" line="667"/>
+        <location filename="../../persepolis/gui/setting_ui.py" line="674"/>
         <source>Transfer Rate</source>
         <translation>Snelheid</translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/setting_ui.py" line="668"/>
+        <location filename="../../persepolis/gui/setting_ui.py" line="675"/>
         <source>Estimated Time Left</source>
         <translation>Resterende tijd (geschat)</translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/setting_ui.py" line="669"/>
+        <location filename="../../persepolis/gui/setting_ui.py" line="676"/>
         <source>First Try Date</source>
         <translation>Datum eerste poging</translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/setting_ui.py" line="670"/>
+        <location filename="../../persepolis/gui/setting_ui.py" line="677"/>
         <source>Last Try Date</source>
         <translation>Datum laatste poging</translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/setting_ui.py" line="673"/>
+        <location filename="../../persepolis/gui/setting_ui.py" line="680"/>
         <source>Columns Customization</source>
         <translation>Kolomaanpassing</translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/setting_ui.py" line="582"/>
+        <location filename="../../persepolis/gui/setting_ui.py" line="586"/>
         <source>Remote time</source>
-        <translation type="unfinished"/>
+        <translation>Externe tijd</translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/setting_ui.py" line="583"/>
+        <location filename="../../persepolis/gui/setting_ui.py" line="587"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Retrieve timestamp of the remote file from the remote HTTP/FTP server and if it is available, apply it to the local file.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation type="unfinished"/>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Haal de tijd op uit het externe bestand van de externe http-/ftp-server en pas toe op het lokale bestand (indien beschikbaar).&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+    </message>
+    <message>
+        <location filename="../../persepolis/gui/setting_ui.py" line="655"/>
+        <source>Check system clipboard for copied links</source>
+        <translation>Controleer het klembord op gekopieerde links</translation>
+    </message>
+    <message>
+        <location filename="../../persepolis/gui/setting_ui.py" line="656"/>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The program will automatically check the clipboard for copied links.            &lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Het programma zal het klembord automatisch scannen op gekopieerde links.            &lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
 </context>
 <context>
     <name>text_ui_tr</name>
     <message>
-        <location filename="../../persepolis/gui/text_queue_ui.py" line="286"/>
+        <location filename="../../persepolis/gui/text_queue_ui.py" line="287"/>
         <source>Persepolis Download Manager</source>
         <translation>Persepolis-downloadbeheer</translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/text_queue_ui.py" line="288"/>
+        <location filename="../../persepolis/gui/text_queue_ui.py" line="289"/>
         <source>Links</source>
         <translation>Links</translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/text_queue_ui.py" line="293"/>
+        <location filename="../../persepolis/gui/text_queue_ui.py" line="294"/>
         <source>Select All</source>
         <translation>Alles selecteren</translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/text_queue_ui.py" line="294"/>
+        <location filename="../../persepolis/gui/text_queue_ui.py" line="295"/>
         <source>Deselect All</source>
         <translation>Selectie ongedaan maken</translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/text_queue_ui.py" line="296"/>
+        <location filename="../../persepolis/gui/text_queue_ui.py" line="297"/>
         <source>Add to queue: </source>
         <translation>Toevoegen aan wachtrij: </translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/text_queue_ui.py" line="298"/>
+        <location filename="../../persepolis/gui/text_queue_ui.py" line="299"/>
         <source>Proxy</source>
         <translation>Proxy</translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/text_queue_ui.py" line="300"/>
+        <location filename="../../persepolis/gui/text_queue_ui.py" line="301"/>
         <source>IP:</source>
         <translation>Ip-adres:</translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/text_queue_ui.py" line="302"/>
+        <location filename="../../persepolis/gui/text_queue_ui.py" line="303"/>
         <source>Port:</source>
         <translation>Poort: </translation>
     </message>
@@ -1799,17 +1825,17 @@ MohammadAmin Vahedinia</translation>
         <translation>Annuleren</translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/text_queue_ui.py" line="290"/>
+        <location filename="../../persepolis/gui/text_queue_ui.py" line="291"/>
         <source>Download Options</source>
         <translation>Downloadopties</translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/text_queue_ui.py" line="299"/>
+        <location filename="../../persepolis/gui/text_queue_ui.py" line="300"/>
         <source>Proxy password: </source>
         <translation>Proxywachtwoord: </translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/text_queue_ui.py" line="301"/>
+        <location filename="../../persepolis/gui/text_queue_ui.py" line="302"/>
         <source>Proxy username: </source>
         <translation>Proxy-gebruikersnaam:</translation>
     </message>
@@ -1847,24 +1873,24 @@ MohammadAmin Vahedinia</translation>
 <context>
     <name>video_finder_progress_ui_tr</name>
     <message>
-        <location filename="../../persepolis/scripts/mainwindow.py" line="1999"/>
+        <location filename="../../persepolis/scripts/mainwindow.py" line="2027"/>
         <source>&lt;b&gt;Video file status: &lt;/b&gt;</source>
         <translation>&lt;b&gt;Status van videobestand: &lt;/b&gt;</translation>
     </message>
     <message>
-        <location filename="../../persepolis/scripts/mainwindow.py" line="2013"/>
+        <location filename="../../persepolis/scripts/mainwindow.py" line="2041"/>
         <source>&lt;b&gt;Audio file status: &lt;/b&gt;</source>
         <translation>&lt;b&gt;Status van audiobestand: &lt;/b&gt;</translation>
     </message>
     <message>
-        <location filename="../../persepolis/scripts/mainwindow.py" line="2023"/>
+        <location filename="../../persepolis/scripts/mainwindow.py" line="2051"/>
         <source>&lt;b&gt;Muxing status: &lt;/b&gt;</source>
         <translation>&lt;b&gt;Muxing-status: &lt;/b&gt;</translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/video_finder_progress_ui.py" line="57"/>
+        <location filename="../../persepolis/gui/video_finder_progress_ui.py" line="58"/>
         <source>&lt;b&gt;Mixing status: &lt;/b&gt;</source>
-        <translation type="unfinished"/>
+        <translation>&lt;b&gt;Mengstatus: &lt;/b&gt;</translation>
     </message>
 </context>
 <context>
