@@ -51,7 +51,7 @@ def checkStartUp():
         try:
             aKey = winreg.OpenKey(
                 winreg.HKEY_CURRENT_USER, "Software\\Microsoft\\Windows\\CurrentVersion\\Run", 0, winreg.KEY_ALL_ACCESS)
-            # startupvalue = winreg.QueryValueEx(aKey, 'persepolis')
+            startupvalue = winreg.QueryValueEx(aKey, 'persepolis')
             startup = True
         except WindowsError:
             startup = False
