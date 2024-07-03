@@ -294,6 +294,13 @@ class PreferencesWindow(Setting_Ui):
         else:
             self.check_clipboard_checkBox.setChecked(False)
 
+        # When a download request is sent from the browser extension,
+        # the download will start without showing the Add Link window.
+        if str(self.persepolis_setting.value('dont-show-addlinkwindow')) == 'yes':
+            self.dont_show_add_link_window_checkBox.setChecked(True)
+        else:
+            self.dont_show_add_link_window_checkBox.setChecked(False)
+
         # columns_tab
         if str(self.persepolis_setting.value('column0')) == 'yes':
             self.column0_checkBox.setChecked(True)
@@ -777,6 +784,9 @@ class PreferencesWindow(Setting_Ui):
         # check clipboard
         self.check_clipboard_checkBox.setChecked(False)
 
+        # don't show addlinkwindows
+        self.dont_show_add_link_window_checkBox.setChecked(False)
+
         # columns_tab
         self.column0_checkBox.setChecked(True)
         self.column1_checkBox.setChecked(True)
@@ -851,6 +861,12 @@ class PreferencesWindow(Setting_Ui):
             self.persepolis_setting.setValue('dont-check-certificate', 'yes')
         else:
             self.persepolis_setting.setValue('dont-check-certificate', 'no')
+
+        # don't show addlinkwindows
+        if self.dont_show_add_link_window_checkBox.isChecked():
+            self.persepolis_setting.setValue('dont-show-addlinkwindow', 'yes')
+        else:
+            self.persepolis_setting.setValue('dont-show-addlinkwindow', 'no')
 
         # remote time
         if self.remote_time_checkBox.isChecked():

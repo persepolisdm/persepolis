@@ -404,6 +404,11 @@ class Setting_Ui(QWidget):
         self.check_clipboard_checkBox = QCheckBox()
         style_tab_verticalLayout.addWidget(self.check_clipboard_checkBox)
 
+        # Don't show the add link window when the download request is
+        # sent by the browser extension.
+        self.dont_show_add_link_window_checkBox = QCheckBox()
+        style_tab_verticalLayout.addWidget(self.dont_show_add_link_window_checkBox)
+
         style_tab_verticalLayout.addStretch(1)
 
         # columns_tab
@@ -655,6 +660,11 @@ class Setting_Ui(QWidget):
         self.check_clipboard_checkBox.setText(QCoreApplication.translate("setting_ui_tr", "Check system clipboard for copied links"))
         self.check_clipboard_checkBox.setToolTip(
             QCoreApplication.translate("setting_ui_tr", "<html><head/><body><p>The program will automatically check the clipboard for copied links.\
+            </p></body></html>"))
+
+        self.dont_show_add_link_window_checkBox.setText(QCoreApplication.translate("setting_ui_tr", "Download requests from the browser will be executed immediately."))
+        self.dont_show_add_link_window_checkBox.setToolTip(
+            QCoreApplication.translate("setting_ui_tr", "<html><head/><body><p>When a download request is sent from the browser extension, the download will start without showing the Add Link window.\
             </p></body></html>"))
 
         self.wait_queue_time.setToolTip(

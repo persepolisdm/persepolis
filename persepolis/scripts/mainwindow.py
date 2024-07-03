@@ -2674,7 +2674,22 @@ class MainWindow(MainWindow_Ui):
 
             # this line calls pluginAddLink method and send a dictionary that contains
             # link information
-            self.pluginAddLink(list_of_links[0])
+            if str(self.persepolis_setting.value('settings/dont-show-addlinkwindow')) == 'yes':
+                # When a download request is sent from the browser extension,
+                # the download will start without showing the Add Link window.
+                # add default values to add_link_dictionary
+                for key in ['start_time', 'end_time', 'ip', 'port', 'proxy_user', 'proxy_passwd', 'proxy_type', 'download_user', 'download_passwd']:
+                    list_of_links[0][key] = None
+
+                list_of_links[0]['connections'] = int(self.persepolis_setting.value('settings/connections'))
+                list_of_links[0]['limit_value'] = 0
+                list_of_links[0]['download_path'] = str(self.persepolis_setting.value('settings/download_path'))
+
+                # Call callBack methods instead of pluginAddLink method.
+                # In this case, the download will start without showing the add link window.
+                self.callBack(list_of_links[0], False, 'Single Downloads')
+            else:
+                self.pluginAddLink(list_of_links[0])
 
         elif len(list_of_links):  # we have queue request from browser plugin # Length non-zero
             self.pluginQueue(list_of_links)
