@@ -14,13 +14,14 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 try:
+    from PySide6 import QtWidgets, QtCore
+    from PySide6.QtCore import __version__ as QT_VERSION_STR
     from PySide6.QtGui import QFont
-    from PySide6.QtWidgets import QApplication, QStyleFactory
     from PySide6.QtCore import QFile, QTextStream, QSettings, Qt
 except:
+    from PyQt5 import QtWidgets, QtCore
     from PyQt5.QtGui import QFont
-    from PyQt5.QtWidgets import QApplication, QStyleFactory
-    from PyQt5.QtCore import QFile, QTextStream, QSettings, Qt
+    from PyQt5.QtCore import QFile, QTextStream, QSettings, Qt, QT_VERSION_STR
 
 from persepolis.gui import resources
 import traceback
@@ -113,7 +114,7 @@ if lock_file_validation:
 persepolis_setting = QSettings('persepolis_download_manager', 'persepolis')
 
 
-class PersepolisApplication(QApplication):
+class PersepolisApplication(QtWidgets.QApplication):
     def __init__(self, argv):
         super().__init__(argv)
 
@@ -368,8 +369,27 @@ def main():
     # if lock_file is existed , it means persepolis is still running!
     if lock_file_validation and (not ((args.parent_window or unknownargs) and browser_url is False) or ((args.parent_window or unknownargs) and start_persepolis_if_browser_executed)):
 
+        QAPP = QtWidgets.QApplication.instance()
+        if QAPP is None:
+            # We do not have an already instantiated QApplication
+            # let's add some sane defaults
+
+            # hidpi handling
+            qtVersionCompare = tuple(map(int, QT_VERSION_STR.split(".")))
+            if qtVersionCompare > (6, 0):
+                # Qt6 seems to support hidpi without needing to do anything so continue
+                pass
+            elif qtVersionCompare > (5, 14):
+                os.environ["QT_ENABLE_HIGHDPI_SCALING"] = "1"
+                QtWidgets.QApplication.setHighDpiScaleFactorRoundingPolicy(
+                    QtCore.Qt.HighDpiScaleFactorRoundingPolicy.PassThrough
+                )
+            else:  # qt 5.12 and 5.13
+                QtWidgets.QApplication.setAttribute(QtCore.Qt.AA_EnableHighDpiScaling)
+                QtWidgets.QApplication.setAttribute(QtCore.Qt.AA_UseHighDpiPixmaps)
+
         # set QT_AUTO_SCREEN_SCALE_FACTOR to 1 for "high DPI displays"
-        os.environ['QT_AUTO_SCREEN_SCALE_FACTOR'] = '1'
+#         os.environ['QT_AUTO_SCREEN_SCALE_FACTOR'] = '1'
 
         # run mainwindow
 
@@ -383,26 +403,22 @@ def main():
         # when it's minimized in system tray.
         persepolis_download_manager.setQuitOnLastWindowClosed(False)
 
-        # Enable High DPI display
-        try:
-            if hasattr(QStyleFactory, 'AA_UseHighDpiPixmaps'):
-                persepolis_download_manager.setAttribute(Qt.AA_UseHighDpiPixmaps)
-        except:
-            from persepolis.scripts import logger
-
-            # write error_message in log file.
-            logger.sendToLog('Qt.AA_UseHighDpiPixmaps is not available!', "ERROR")
-
+#         # Enable High DPI display
+#         try:
+#             if hasattr(QStyleFactory, 'AA_UseHighDpiPixmaps'):
+#                 persepolis_download_manager.setAttribute(Qt.AA_UseHighDpiPixmaps)
+#         except:
+#             from persepolis.scripts import logger
+#             # write error_message in log file.
+#             logger.sendToLog('Qt.AA_UseHighDpiPixmaps is not available!', "ERROR")
         # this line is added fot fixing persepolis view in HighDpi displays
         # more information at: https://doc.qt.io/qt-5/highdpi.html
-        try:
-            persepolis_download_manager.setAttribute(Qt.AA_EnableHighDpiScaling)
-        except:
-            from persepolis.scripts import logger
-
-            # write error_message in log file.
-            logger.sendToLog('Qt.AA_EnableHighDpiScaling is not available!', "ERROR")
-
+#         try:
+#             persepolis_download_manager.setAttribute(Qt.AA_EnableHighDpiScaling)
+#         except:
+#             from persepolis.scripts import logger
+#             # write error_message in log file.
+#             logger.sendToLog('Qt.AA_EnableHighDpiScaling is not available!', "ERROR")
         # set organization name and domain and application name
         persepolis_download_manager.setOrganizationName('com.github.persepolisdm.persepolis')
         persepolis_download_manager.setApplicationName('PersepolisDM')
