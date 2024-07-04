@@ -138,7 +138,7 @@ show_window_file = os.path.join(persepolis_tmp, 'show-window')
 
 # this thread checks ffmpeg and gost availability.
 # this thread checks ffmpeg and python and pyqt and qt versions and write them in log file.
-# this thread writes osi type and desktop env. in log file.
+# this thread writes os type and desktop env. in log file.
 
 
 class CheckVersionsThread(QThread):
@@ -191,6 +191,7 @@ class CheckVersionsThread(QThread):
 
         if type_of_convertor:
             self.TYPEOFCONVERTORSIGNAL.emit(type_of_convertor)
+
 
 # check clipboard
 class CheckClipBoardThread(QThread):
@@ -1823,8 +1824,10 @@ class MainWindow(MainWindow_Ui):
     # This method notifies user about newer version of Persepolis
     def newVersionIsAvailable(self, message):
 
+        new_version = str(message)
+        new_version = new_version[0:-1] + '.' + new_version[-1]
         # notify user about newer version
-        notifySend(QCoreApplication.translate("mainwindow_src_ui_tr", "Version {} is available!".format(message)),
+        notifySend(QCoreApplication.translate("mainwindow_src_ui_tr", "Version {} is available!".format(new_version)),
                    QCoreApplication.translate("mainwindow_src_ui_tr", "Please update Persepolis."),
                    10000, '', parent=self)
 
