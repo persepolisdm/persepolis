@@ -380,13 +380,23 @@ def main():
                 # Qt6 seems to support hidpi without needing to do anything so continue
                 pass
             elif qtVersionCompare > (5, 14):
-                os.environ["QT_ENABLE_HIGHDPI_SCALING"] = "1"
-                QtWidgets.QApplication.setHighDpiScaleFactorRoundingPolicy(
-                    QtCore.Qt.HighDpiScaleFactorRoundingPolicy.PassThrough
-                )
+
+                try:
+                    os.environ["QT_ENABLE_HIGHDPI_SCALING"] = "1"
+                    QtWidgets.QApplication.setHighDpiScaleFactorRoundingPolicy(
+                        QtCore.Qt.HighDpiScaleFactorRoundingPolicy.PassThrough
+                    )
+                except Exception as error_message:
+                    from persepolis.scripts import logger
+                    logger.sendToLog(str(error_message), "ERROR")
+
             else:  # qt 5.12 and 5.13
-                QtWidgets.QApplication.setAttribute(QtCore.Qt.AA_EnableHighDpiScaling)
-                QtWidgets.QApplication.setAttribute(QtCore.Qt.AA_UseHighDpiPixmaps)
+                try:
+                    QtWidgets.QApplication.setAttribute(QtCore.Qt.AA_EnableHighDpiScaling)
+                    QtWidgets.QApplication.setAttribute(QtCore.Qt.AA_UseHighDpiPixmaps)
+                except Exception as error_message:
+                    from persepolis.scripts import logger
+                    logger.sendToLog(str(error_message), "ERROR")
 
         # set QT_AUTO_SCREEN_SCALE_FACTOR to 1 for "high DPI displays"
 #         os.environ['QT_AUTO_SCREEN_SCALE_FACTOR'] = '1'
