@@ -108,7 +108,7 @@ MohammadAmin Vahedinia</source>
     </message>
     <message>
         <location filename="../../persepolis/gui/about_ui.py" line="238"/>
-        <source>Version 4.2.0</source>
+        <source>Version 4.3.0</source>
         <comment>TRANSLATORS NOTE: YOU REALLY DON&apos;T NEED TO TRANSLATE THIS PART!</comment>
         <translation type="unfinished"></translation>
     </message>
