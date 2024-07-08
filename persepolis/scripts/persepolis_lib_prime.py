@@ -21,8 +21,8 @@ import threading
 import os
 from requests.cookies import cookiejar_from_dict
 from http.cookies import SimpleCookie
-from persepolis_lib.useful_tools import convertTime, humanReadableSize, convertSize, sendToLog
-import sys
+from persepolis_lib.useful_tools import convertTime, humanReadableSize
+from persepolis.scripts import logger
 import json
 from urllib.parse import urlparse, unquote
 from pathlib import Path
@@ -32,10 +32,8 @@ from urllib3.util.retry import Retry
 
 class Download():
     def __init__(self, add_link_dictionary, number_of_threads,
-                 python_request_chunk_size=1, timeout=15, retry=5, progress_bar=False, threads_progress_bar=False):
+                 python_request_chunk_size=1, timeout=15, retry=5):
         self.python_request_chunk_size = python_request_chunk_size
-        self.progress_bar = progress_bar
-        self.threads_progress_bar = threads_progress_bar
         self.downloaded_size = 0
         self.finished_threads = 0
         self.eta = "0"
@@ -64,7 +62,7 @@ class Download():
         self.timeout = timeout
         self.retry = retry
         self.lock = False
-        self.speed_limit = 10 * 1024
+        self.speed_limit = 0
         self.sleep_for_speed_limiting = 0
         self.not_converted_download_speed = 0
 
@@ -130,8 +128,7 @@ class Download():
         try:
             self.file_size = int(self.file_header['content-length'])
         except Exception as error:
-            print(str(error))
-            print("Invalid URL")
+            logger.sendToLog("Invalid URL: " + str(error), 'ERROR')
             self.file_size = None
 
         return self.file_size
@@ -178,10 +175,10 @@ class Download():
     def multiThreadSupport(self):
         if 'Accept-Ranges' in self.file_header.keys():
             if self.file_header['Accept-Ranges'] == 'bytes':
-                sendToLog('Server supports multi thread downloading!')
+                logger.sendToLog('Server supports multi thread downloading!')
                 return True
             else:
-                sendToLog('Server dosn\'t support multi thread downloading!')
+                logger.sendToLog('Server dosn\'t support multi thread downloading!', 'ERROR')
                 return False
 
     def createControlFile(self):
@@ -315,7 +312,7 @@ class Download():
             diffrence_size = self.downloaded_size - last_download_value
             diffrence_size_converted, speed_unit = humanReadableSize(
                 diffrence_size, 'speed')
-            download_speed = round(diffrence_size_converted / diffrence_time,
+            download_speed = round(float(diffrence_size_converted) / diffrence_time,
                                    2)
             self.download_speed_str = (str(download_speed)
                                        + " " + speed_unit + "/s")
@@ -330,140 +327,15 @@ class Download():
 
             self.eta = convertTime(eta_second)
 
-            # TODO not work properly
             # downloadrate limitation
-            # First, check the current download speed. If it is more than the requested speed, increase the sleep time between data reception by one second.
-            # If it was less, reduce the sleep time by 0.25 second.
-            if self.speed_limit != 0:
-                if not_converted_download_speed > self.speed_limit:
-                    # increase sleep_for_speed_limiting
-                    speed_ratio = not_converted_download_speed / self.speed_limit
-                    self.sleep_for_speed_limiting = self.sleep_for_speed_limiting + speed_ratio
-                    sendToLog('speed_ratio' + str(speed_ratio))
-
-                elif not_converted_download_speed < self.speed_limit:
-                    # decrease sleep_for_speed_limiting
-                    self.sleep_for_speed_limiting = self.sleep_for_speed_limiting - 0.1
-
-                    # sleep_for_speed_limiting value must be positive number
-                    if self.sleep_for_speed_limiting < 0:
-                        self.sleep_for_speed_limiting = 0
-
-                sendToLog('sleep value' + str(self.sleep_for_speed_limiting))
+            # "Speed limit" is whole number. The more it is, the more sleep time is given to the data
+            # receiving loop, which reduces the download speed.
+            self.sleep_for_speed_limiting = (self.speed_limit * 1) / self.number_of_threads
 
             end_time = time.perf_counter()
             last_download_value = self.downloaded_size
 
             time.sleep(5)
-
-    # this method shows progress bar
-    def progressBar(self):
-
-        size, unit = humanReadableSize(self.file_size)
-        percent = 0
-        while (self.download_status == 'Downloading'):
-            time.sleep(0.5)
-            percent = (self.downloaded_size / self.file_size) * 100
-
-            converted_downloaded_size = convertSize(self.downloaded_size, unit)
-            show_download_information = (str(round(converted_downloaded_size, 2))
-                                         + '|' + str(size)
-                                         + ' ' + unit)
-            filled_up_Length = int(percent / 2)
-            bar = ('*' * filled_up_Length
-                   + '-' * (50 - filled_up_Length))
-
-            # find downloded size of every part
-            downloaded_size_list_str = ""
-            if self.threads_progress_bar is True:
-                for i in range(0, 64):
-                    part_size_converted, unit_part_size = humanReadableSize(
-                        self.download_infromation_list[i][1])
-                    downloaded_size_list_str = (
-                        downloaded_size_list_str
-                        + "part "
-                        + str(i + 1)
-                        + ": "
-                        + str(part_size_converted)
-                        + unit_part_size
-                        + "|")
-                    if i in list(range(3, 64, 4)):
-                        downloaded_size_list_str = downloaded_size_list_str + '\n'
-                downloaded_size_list_str = downloaded_size_list_str + "\n"
-                number_of_lines = downloaded_size_list_str.count("\n")
-            else:
-                number_of_lines = 0
-
-            # number os active threads
-            active_connection = self.number_of_threads - self.finished_threads
-
-            # delete last line
-            sys.stdout.write(
-                '[%s] %s%s ...%s, %s |connections:%s|ETA:%s\n%s' % (
-                    bar,
-                    int(percent),
-                    '%',
-                    show_download_information,
-                    self.download_speed_str,
-                    active_connection,
-                    self.eta,
-                    downloaded_size_list_str))
-
-            sys.stdout.flush()
-
-            # move curser to the first line and clear screen
-            for i in list(range(number_of_lines + 1)):
-                sys.stdout.write('\x1b[1A')
-                sys.stdout.write('\x1b[2K')
-
-        # print download complete message
-        if self.download_status == 'Complete':
-            # cursor up one line
-            sys.stdout.write('\x1b[1A')
-            # delete last line
-            sys.stdout.write('\x1b[2K')
-            sys.stdout.write(
-                '[%s] %s%s ...%s, %s   \r' % ('Download complete!',
-                                              int(100),
-                                              '%',
-                                              ('|' + str(size)
-                                                   + ' ' + unit),
-                                              self.file_path))
-            sys.stdout.flush()
-
-        elif self.download_status == 'Stopped':
-            show_download_information = (str(round(converted_downloaded_size, 2))
-                                         + '|' + str(size)
-                                         + ' ' + unit)
-            # cursor up one line
-            sys.stdout.write('\x1b[1A')
-            # delete last line
-            sys.stdout.write('\x1b[2K')
-            sys.stdout.write(
-                '[%s] %s%s ...%s   \n' % ('Download stopped!',
-                                          int(percent),
-                                          '%',
-                                          show_download_information))
-            sys.stdout.write('\x1b[2K')
-            sys.stdout.write('  Please wait...\n')
-            sys.stdout.flush()
-
-        elif self.download_status == 'Error':
-            show_download_information = (str(round(converted_downloaded_size, 2))
-                                         + '|' + str(size)
-                                         + ' ' + unit)
-            # cursor up one line
-            sys.stdout.write('\x1b[1A')
-            # delete last line
-            sys.stdout.write('\x1b[2K')
-            sys.stdout.write(
-                '[%s] %s%s ...%s   \n' % ('Error!',
-                                          int(percent),
-                                          '%',
-                                          show_download_information))
-            sys.stdout.write('\x1b[2K')
-            sys.stdout.write('  Please wait...\n')
-            sys.stdout.flush()
 
     # this method runs progress bar and speed calculator
     def runProgressBar(self):
@@ -472,13 +344,6 @@ class Download():
             target=self.downloadSpeed)
         calculate_speed_thread.setDaemon(True)
         calculate_speed_thread.start()
-
-        if self.progress_bar is True:
-            # run a thread for showing progress bar
-            progress_bar_thread = threading.Thread(
-                target=self.progressBar)
-            progress_bar_thread.setDaemon(True)
-            progress_bar_thread.start()
 
     # threadHandler asks new part for download from this method.
     def askForNewPart(self):
@@ -589,16 +454,11 @@ class Download():
                             self.download_infromation_list[part_number][2] = 'stopped'
                             break
 
-            except Exception as e:
+            except:
                 self.download_infromation_list[part_number][2] = 'error'
-                error_text = ("part_number: "
-                              + str(part_number)
-                              + " " + str(e))
-                sendToLog(error_text)
 
             # so it's complete successfully.
             if (downloaded_part == part_size):
-                sendToLog('part ' + str(part_number) + ' is complete!')
                 self.download_infromation_list[part_number][2] = 'complete'
             else:
                 self.download_infromation_list[part_number][2] = 'error'
@@ -653,22 +513,21 @@ class Download():
 
             time.sleep(1)
 
-        sendToLog(str(self.finished_threads))
         # If the downloaded size is the same as the file size, then the download has been completed successfully.
         if self.file_size == self.downloaded_size:
 
             self.download_status = 'Complete'
-            sendToLog('Download complete.')
+            logger.sendToLog('Download complete.')
 
         # If the download is not complete and the user has not stopped the download, then the download has encountered an error.
         elif self.download_status != 'Stopped':
 
             self.download_status = 'Error'
-            sendToLog('Error')
+            logger.sendToLog('Download Error')
 
         elif self.download_status == 'Stopped':
 
-            sendToLog('Download stopped.')
+            logger.sendToLog('Download stopped.')
 
         # Return the current Thread object
         main_thread = threading.current_thread()
@@ -678,8 +537,6 @@ class Download():
             if t is main_thread:
                 continue
             t.join()
-
-        print('\r', flush=True)
 
         # close requests session
         self.requests_session.close()
@@ -715,9 +572,4 @@ class Download():
         if self.download_status == 'Complete':
             os.remove(self.control_json_file_path)
 
-        # delete last line
-        if self.progress_bar is True:
-            sys.stdout.write('\x1b[2K')
-            sys.stdout.write('  persepolis_lib is closed!\n')
-            sys.stdout.flush()
-        sendToLog("persepolis_lib is closed!")
+        logger.sendToLog("persepolis_lib is closed!")

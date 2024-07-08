@@ -107,9 +107,21 @@ def humanReadableSize(size, input_type='file_size'):
     else:
         return str(round(size, None)) + ' ' + labels[i]
 
+
+# this function converts second to hour and minute
+def convertTime(time):
+    minutes = int(time // 60)
+    if minutes == 0:
+        return str(int(time)) + 's'
+    elif minutes < 60:
+        return str(minutes) + 'm'
+    else:
+        hours = minutes // 60
+        minutes = minutes - (hours * 60)
+        return str(hours) + 'h ' + str(minutes) + 'm'
+
+
 # this function converts human readable size to byte
-
-
 def convertToByte(file_size):
 
     # if unit is not in Byte
