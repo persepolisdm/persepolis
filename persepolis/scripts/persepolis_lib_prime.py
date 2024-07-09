@@ -31,8 +31,7 @@ from urllib3.util.retry import Retry
 
 
 class Download():
-    def __init__(self, add_link_dictionary, number_of_threads,
-                 python_request_chunk_size=1, timeout=15, retry=5):
+    def __init__(self, add_link_dictionary, python_request_chunk_size=1, timeout=15, retry=5):
         self.python_request_chunk_size = python_request_chunk_size
         self.downloaded_size = 0
         self.finished_threads = 0
@@ -67,10 +66,7 @@ class Download():
         self.not_converted_download_speed = 0
 
         # number_of_threads can't be more that 64
-        if number_of_threads <= 64:
-            self.number_of_threads = int(number_of_threads)
-        else:
-            self.number_of_threads = 64
+        self.number_of_threads = int(add_link_dictionary['connections'])
 
     # create requests session
     def createSession(self):

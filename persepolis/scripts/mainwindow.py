@@ -31,6 +31,7 @@ from persepolis.scripts import spider
 from persepolis.scripts import logger
 from persepolis.scripts import download
 from persepolis.scripts import osCommands
+from persepolis.scripts import persepolis_lib_prime
 from persepolis.scripts.bubble import notifySend
 from persepolis.scripts.about import AboutWindow
 from persepolis.scripts.shutdown import shutDown
@@ -517,45 +518,16 @@ class SpiderThread(QThread):
             logger.sendToLog(
                 "Spider couldn't find download information", "ERROR")
 
-# this thread sending download request to aria2
 
-
+# this thread starts download.
 class DownloadLink(QThread):
-    ARIA2NOTRESPOND = Signal()
-
-    def __init__(self, gid, parent):
+    def __init__(self, add_link_dictionary, download_session):
         QThread.__init__(self)
-        self.gid = gid
-        self.parent = parent
+        self.add_link_dictionary = add_link_dictionary
+        self.download_session = download_session
 
     def run(self):
-        # add gid of download to the active gids in temp_db
-        # or update data base , if it was existed before
-        try:
-            self.parent.temp_db.insertInSingleTable(self.gid)
-        except:
-            # release lock
-            self.parent.temp_db.lock = False
-            dictionary = {'gid': self.gid, 'status': 'active'}
-            self.parent.temp_db.updateSingleTable(dictionary)
-
-        # check aria2c availability first. then send the download request to aria2c
-        version_answer = download.aria2Version()
-
-        if version_answer == 'did not respond':
-            answer = download.downloadStop(self.gid, self.parent)
-            self.ARIA2NOTRESPOND.emit()
-            return answer
-
-        else:
-            # if request is not successful then persepolis is checking rpc
-            # connection with download.aria2Version() function
-            answer = download.downloadAria(self, self.gid, self.parent)
-            if answer is False:
-                version_answer = download.aria2Version()
-
-                if version_answer == 'did not respond':
-                    self.ARIA2NOTRESPOND.emit()
+        self.download_session.start()
 
 # Persepolis download audio and video separately and the muxing them :)
 # VideoFinder do this duty for Persepolis.
@@ -2742,7 +2714,7 @@ class MainWindow(MainWindow_Ui):
                 return
 
         category = str(category)
-        # aria2 identifies each download by the ID called GID. The GID must be
+        # Persepolis identifies each download by the ID called GID. The GID must be
         # hex string of 16 characters.
         # if user presses ok button on add link window , a gid generates for download.
         gid = self.gidGenerator()
@@ -2825,11 +2797,15 @@ class MainWindow(MainWindow_Ui):
 
         # if user didn't press download_later_pushButton in add_link window
         # then create new qthread for new download!
+        # TODO از اینجا ادامه بده
         if not (download_later):
-            new_download = DownloadLink(gid, self)
+            # create download_session
+            download_session = persepolis_lib_prime.Download(add_link_dictionary)
+
+            # strat download in thread
+            new_download = DownloadLink(add_link_dictionary, download_session)
             self.threadPool.append(new_download)
             self.threadPool[-1].start()
-            self.threadPool[-1].ARIA2NOTRESPOND.connect(self.aria2NotRespond)
 
             # open progress window for download.
             self.progressBarOpen(gid)
