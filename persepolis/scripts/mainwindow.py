@@ -521,14 +521,24 @@ class SpiderThread(QThread):
 
 # this thread starts download.
 class DownloadLink(QThread):
-    def __init__(self, add_link_dictionary, download_session):
+    def __init__(self, add_link_dictionary, download_session, main_window):
         QThread.__init__(self)
         self.add_link_dictionary = add_link_dictionary
         self.download_session = download_session
+        self.main_window = main_window
 
     def run(self):
-        self.download_session.start()
+        # add gid of download to the active gids in temp_db
+        # or update data base , if it was existed before
+        try:
+            self.main_window.temp_db.insertInSingleTable(self.gid)
+        except:
+            # release lock
+            self.main_window.temp_db.lock = False
+            dictionary = {'gid': self.gid, 'status': 'active'}
+            self.parent.temp_db.updateSingleTable(dictionary)
 
+        self.download_session.start()
 # Persepolis download audio and video separately and the muxing them :)
 # VideoFinder do this duty for Persepolis.
 # see data_base.py for understanding the code
@@ -1448,6 +1458,9 @@ class MainWindow(MainWindow_Ui):
         self.progress_window_list_dict = {}
         self.capturekeywindows_list = []
 
+        # download_sessions_list contains some dictionaries.
+        # every dictionary contains GID and session of that download process.
+        self.download_sessions_list = []
         # queue_list_dict contains queue threads >> queue_list_dict[name of queue]
         self.queue_list_dict = {}
 
@@ -2802,8 +2815,13 @@ class MainWindow(MainWindow_Ui):
             # create download_session
             download_session = persepolis_lib_prime.Download(add_link_dictionary)
 
+            download_session_dict = {'gid': gid,
+                                     'download_session': download_session}
+
+            self.download_sessions_list.append(download_session_dict)
+
             # strat download in thread
-            new_download = DownloadLink(add_link_dictionary, download_session)
+            new_download = DownloadLink(add_link_dictionary, download_session, self)
             self.threadPool.append(new_download)
             self.threadPool[-1].start()
 
@@ -2815,6 +2833,7 @@ class MainWindow(MainWindow_Ui):
             if not (add_link_dictionary['start_time']):
                 message = QCoreApplication.translate("mainwindow_src_ui_tr", "Download Starts")
             else:
+                # get download information with spider.
                 new_spider = SpiderThread(add_link_dictionary, self)
                 self.threadPool.append(new_spider)
                 self.threadPool[-1].start()
@@ -2823,6 +2842,7 @@ class MainWindow(MainWindow_Ui):
             notifySend(message, '', 10000, 'no', parent=self)
 
         else:
+            # get download information with spider.
             new_spider = SpiderThread(add_link_dictionary, self)
             self.threadPool.append(new_spider)
             self.threadPool[-1].start()
