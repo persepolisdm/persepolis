@@ -521,9 +521,9 @@ class SpiderThread(QThread):
 
 # this thread starts download.
 class DownloadLink(QThread):
-    def __init__(self, add_link_dictionary, download_session, main_window):
+    def __init__(self, gid, download_session, main_window):
         QThread.__init__(self)
-        self.add_link_dictionary = add_link_dictionary
+        self.gid = gid
         self.download_session = download_session
         self.main_window = main_window
 
@@ -536,11 +536,12 @@ class DownloadLink(QThread):
             # release lock
             self.main_window.temp_db.lock = False
             dictionary = {'gid': self.gid, 'status': 'active'}
-            self.parent.temp_db.updateSingleTable(dictionary)
+            self.main_window.temp_db.updateSingleTable(dictionary)
 
         self.download_session.start()
+
 # Persepolis download audio and video separately and the muxing them :)
-# VideoFinder do this duty for Persepolis.
+# VideoFinder do this job for Persepolis.
 # see data_base.py for understanding the code
 # we have video_finder_db_table in data base. it's contains some items that helps
 # VideoFinder for managing the situation.
@@ -554,9 +555,9 @@ class DownloadLink(QThread):
 class VideoFinder(QThread):
     VIDEOFINDERCOMPLETED = Signal(dict)
 
-    def __init__(self, video_finder_dictionary, parent):
+    def __init__(self, video_finder_dictionary, main_window):
         QThread.__init__(self)
-        self.parent = parent
+        self.main_window = main_window
         self.video_finder_dictionary = video_finder_dictionary
 
     # First: Download video
@@ -573,7 +574,7 @@ class VideoFinder(QThread):
         audio_gid = self.video_finder_dictionary['audio_gid']
 
         # find category
-        dictionary = self.parent.persepolis_db.searchGidInDownloadTable(video_gid)
+        dictionary = self.main_window.persepolis_db.searchGidInDownloadTable(video_gid)
         category = dictionary['category']
 
         # VideoFinder handles downloads by itself, if category is "Single Downloads"
@@ -582,26 +583,26 @@ class VideoFinder(QThread):
             # create an item for this thread in temp_db if not exists!
             try:
                 video_finder_plus_gid = 'video_finder_' + str(video_gid)
-                self.parent.temp_db.insertInQueueTable(video_finder_plus_gid)
+                self.main_window.temp_db.insertInQueueTable(video_finder_plus_gid)
             except:
                 # release lock
-                self.parent.temp_db.lock = False
+                self.main_window.temp_db.lock = False
 
             # check start time and end time
-            add_link_dictionary = self.parent.persepolis_db.searchGidInAddLinkTable(video_gid)
+            add_link_dictionary = self.main_window.persepolis_db.searchGidInAddLinkTable(video_gid)
             start_time = add_link_dictionary['start_time']
 
             if self.video_completed == 'no' and start_time:
 
                 # set start time only for video and cancel start time for audio.
                 # because video will downloaded first and start time must be set for first video! not second one
-                self.parent.persepolis_db.setDefaultGidInAddlinkTable(audio_gid, start_time=True)
+                self.main_window.persepolis_db.setDefaultGidInAddlinkTable(audio_gid, start_time=True)
 
         # update checking status in data base for starting the job!
         self.checking = 'yes'
         self.video_finder_dictionary['checking'] = 'yes'
 
-        self.parent.persepolis_db.updateVideoFinderTable([self.video_finder_dictionary])
+        self.main_window.persepolis_db.updateVideoFinderTable([self.video_finder_dictionary])
 
         # if category "Single Downloads" >> manage download yourself.
         # if category is not "Single Download" >> just check the status time to time and wait until download ends!
@@ -609,10 +610,22 @@ class VideoFinder(QThread):
             if category == "Single Downloads":
 
                 # start video downloading
-                new_download = DownloadLink(video_gid, self.parent)
-                self.parent.threadPool.append(new_download)
-                self.parent.threadPool[-1].start()
-                self.parent.threadPool[-1].ARIA2NOTRESPOND.connect(self.parent.aria2NotRespond)
+                # get add_link_dictionary for video
+                add_link_dictionary = self.main_window.persepolis_db.searchGidInAddLinkTable(video_gid)
+                # create download_session
+                download_session = persepolis_lib_prime.Download(add_link_dictionary)
+
+                # add download_session and gid to download_session_dict
+                download_session_dict = {'gid': video_gid,
+                                         'download_session': download_session}
+
+                # append download_session_dict to download_sessions_list
+                self.download_sessions_list.append(download_session_dict)
+
+                # strat download in thread
+                new_download = DownloadLink(video_gid, download_session, self.main_window)
+                self.main_window.threadPool.append(new_download)
+                self.main_window.threadPool[-1].start()
 
             # check the download status
             # continue loop and check the download status
@@ -628,7 +641,7 @@ class VideoFinder(QThread):
                 # update data base
                 self.video_finder_dictionary['video_completed'] = 'yes'
 
-                self.parent.persepolis_db.updateVideoFinderTable([self.video_finder_dictionary])
+                self.main_window.persepolis_db.updateVideoFinderTable([self.video_finder_dictionary])
 
             # video is downloaded completely!
             # let's start audio downloading
@@ -637,10 +650,22 @@ class VideoFinder(QThread):
                 # if category "Single Downloads" >> start download yourself.
                 # if category is not "Single Download" >> just check the status time to time
                 if category == "Single Downloads":
-                    new_download = DownloadLink(audio_gid, self.parent)
-                    self.parent.threadPool.append(new_download)
-                    self.parent.threadPool[-1].start()
-                    self.parent.threadPool[-1].ARIA2NOTRESPOND.connect(self.parent.aria2NotRespond)
+                    # get add_link_dictionary for video
+                    add_link_dictionary = self.main_window.persepolis_db.searchGidInAddLinkTable(audio_gid)
+                    # create download_session
+                    download_session = persepolis_lib_prime.Download(add_link_dictionary)
+
+                    # add download_session and gid to download_session_dict
+                    download_session_dict = {'gid': audio_gid,
+                                             'download_session': download_session}
+
+                    # append download_session_dict to download_sessions_list
+                    self.download_sessions_list.append(download_session_dict)
+
+                    # strat download in thread
+                    new_download = DownloadLink(audio_gid, download_session, self.main_window)
+                    self.main_window.threadPool.append(new_download)
+                    self.main_window.threadPool[-1].start()
 
                 # check the download status
                 # continue loop and check the download status
@@ -660,11 +685,11 @@ class VideoFinder(QThread):
             self.muxing = 'started'
 
             # update data base
-            self.parent.persepolis_db.updateVideoFinderTable([self.video_finder_dictionary])
+            self.main_window.persepolis_db.updateVideoFinderTable([self.video_finder_dictionary])
 
             # audio and video files are downloaded completely.
             # lets start muxing
-            result_dictionary = muxer(self.parent, self.video_finder_dictionary)
+            result_dictionary = muxer(self.main_window, self.video_finder_dictionary)
             error_message = result_dictionary['error']
             ffmpeg_error_message = result_dictionary['ffmpeg_error_message']
 
@@ -679,7 +704,7 @@ class VideoFinder(QThread):
                 self.muxing = 'error'
 
             # update data base
-            self.parent.persepolis_db.updateVideoFinderTable([self.video_finder_dictionary])
+            self.main_window.persepolis_db.updateVideoFinderTable([self.video_finder_dictionary])
 
             complete_dictionary = {'error': error_message,
                                    'final_path': result_dictionary['final_path'],
@@ -697,7 +722,7 @@ class VideoFinder(QThread):
         if category == 'Single Downloads':
 
             # check if user selected shutdown after download in progress window.
-            shutdown_dict = self.parent.temp_db.returnCategory(video_finder_plus_gid)
+            shutdown_dict = self.main_window.temp_db.returnCategory(video_finder_plus_gid)
             shutdown_status = shutdown_dict['shutdown']
 
             if shutdown_status == 'wait':
@@ -706,7 +731,7 @@ class VideoFinder(QThread):
                 # write 'shutdown' value for this category in temp_db
                 shutdown_dict = {'category': video_finder_plus_gid,
                                  'shutdown': 'shutdown'}
-                self.parent.temp_db.updateQueueTable(shutdown_dict)
+                self.main_window.temp_db.updateQueueTable(shutdown_dict)
 
 
 # this thread is managing queue and sending download request to aria2
@@ -2710,6 +2735,7 @@ class MainWindow(MainWindow_Ui):
         self.addlinkwindows_list.append(addlinkwindow)
         self.addlinkwindows_list[-1].show()
 
+    # TODO از اینجا شروع کردم
     # callback of AddLinkWindow
     def callBack(self, add_link_dictionary, download_later, category):
         exists = self.persepolis_db.searchLinkInAddLinkTable(add_link_dictionary['link'])
@@ -2810,18 +2836,19 @@ class MainWindow(MainWindow_Ui):
 
         # if user didn't press download_later_pushButton in add_link window
         # then create new qthread for new download!
-        # TODO از اینجا ادامه بده
         if not (download_later):
             # create download_session
             download_session = persepolis_lib_prime.Download(add_link_dictionary)
 
+            # add download_session and gid to download_session_dict
             download_session_dict = {'gid': gid,
                                      'download_session': download_session}
 
+            # append download_session_dict to download_sessions_list
             self.download_sessions_list.append(download_session_dict)
 
             # strat download in thread
-            new_download = DownloadLink(add_link_dictionary, download_session, self)
+            new_download = DownloadLink(gid, download_session, self)
             self.threadPool.append(new_download)
             self.threadPool[-1].start()
 
@@ -2849,9 +2876,9 @@ class MainWindow(MainWindow_Ui):
             self.threadPool[-1].SPIDERSIGNAL.connect(self.spiderUpdate)
 
     # when user presses resume button this method is called
-
     def resumeButtonPressed(self, button=None):
 
+        # disable the button
         self.resumeAction.setEnabled(False)
 
         # find user's selected row
@@ -2880,23 +2907,12 @@ class MainWindow(MainWindow_Ui):
             # download thread must be created !
             if download_status == "paused":
 
-                answer = download.downloadUnpause(gid)
-
-                # if aria2 did not respond , then this function checks for aria2
-                # availability , and if aria2 disconnected then aria2Disconnected is
-                # called.
-                if not (answer):
-                    version_answer = download.aria2Version()
-                    if version_answer == 'did not respond':
-                        self.aria2Disconnected()
-                        notifySend(QCoreApplication.translate("mainwindow_src_ui_tr", "Aria2 disconnected!"),
-                                   QCoreApplication.translate("mainwindow_src_ui_tr",
-                                                              "Persepolis is trying to connect!be patient!"),
-                                   10000, 'warning', parent=self)
-                    else:
-                        notifySend(QCoreApplication.translate("mainwindow_src_ui_tr", "Aria2 did not respond!"),
-                                   QCoreApplication.translate("mainwindow_src_ui_tr", "Try again!"),
-                                   10000, 'warning', parent=self)
+                # search gid in download_sessions_list
+                for download_session_dict in self.download_sessions_list:
+                    if download_session_dict['gid'] == gid:
+                        # unpause download
+                        download_session_dict['download_session'].downloadUnpause()
+                        break
 
             else:
 
@@ -2933,9 +2949,21 @@ class MainWindow(MainWindow_Ui):
                             progress_window.activateWindow()
 
                 else:
+                    # get information from data_base
+                    add_link_dictionary = self.persepolis_db.searchGidInAddLinkTable(gid)
 
-                    # create new download thread
-                    new_download = DownloadLink(gid, self)
+                    # create download_session
+                    download_session = persepolis_lib_prime.Download(add_link_dictionary)
+
+                    # add download_session and gid to download_session_dict
+                    download_session_dict = {'gid': gid,
+                                             'download_session': download_session}
+
+                    # append download_session_dict to download_sessions_list
+                    self.download_sessions_list.append(download_session_dict)
+
+                    # strat download in thread
+                    new_download = DownloadLink(gid, download_session, self)
                     self.threadPool.append(new_download)
                     self.threadPool[-1].start()
                     self.threadPool[-1].ARIA2NOTRESPOND.connect(self.aria2NotRespond)
@@ -2943,8 +2971,9 @@ class MainWindow(MainWindow_Ui):
                 # create new progress_window
                 self.progressBarOpen(gid)
 
-    # this method called if aria2 crashed or disconnected!
 
+    # TODO از اینجا ادامه بده
+    # this method called if aria2 crashed or disconnected!
     def aria2NotRespond(self):
         self.aria2Disconnected()
         notifySend(QCoreApplication.translate("mainwindow_src_ui_tr", 'Aria2 did not respond'),
