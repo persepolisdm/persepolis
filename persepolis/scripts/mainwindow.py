@@ -2971,22 +2971,14 @@ class MainWindow(MainWindow_Ui):
                 # create new progress_window
                 self.progressBarOpen(gid)
 
-
-    # TODO از اینجا ادامه بده
-    # this method called if aria2 crashed or disconnected!
-    def aria2NotRespond(self):
-        self.aria2Disconnected()
-        notifySend(QCoreApplication.translate("mainwindow_src_ui_tr", 'Aria2 did not respond'),
-                   QCoreApplication.translate("mainwindow_src_ui_tr", 'Try again'),
-                   5000, 'critical', parent=self)
-
-        self.reconnectAria('Please restart aria2c')
-
     # this method called if user presses stop button in MainWindow
     def stopButtonPressed(self, button=None):
-        self.stopAction.setEnabled(False)
-        selected_row_return = self.selectedRow()  # finding user's selected row
 
+        # disable stop button
+        self.stopAction.setEnabled(False)
+
+        # finding user's selected row
+        selected_row_return = self.selectedRow()
         if selected_row_return is not None:
             # find download category
             category = self.download_table.item(selected_row_return, 12).text()
@@ -3021,22 +3013,14 @@ class MainWindow(MainWindow_Ui):
 
                 self.temp_db.updateSingleTable(dictionary)
 
-            answer = download.downloadStop(gid, self)
-
-            # if aria2 did not respond , then this function is checking for aria2
-            # availability , and if aria2 disconnected then aria2Disconnected is
-            # executed
-            if answer == 'None':
-                version_answer = download.aria2Version()
-                if version_answer == 'did not respond':
-                    self.aria2Disconnected()
-                    notifySend(QCoreApplication.translate("mainwindow_src_ui_tr", "Aria2 disconnected!"),
-                               QCoreApplication.translate("mainwindow_src_ui_tr",
-                                                          "Persepolis is trying to connect!be patient!"),
-                               10000, 'warning', parent=self)
+            # search gid in download_sessions_list
+            for download_session_dict in self.download_sessions_list:
+                if download_session_dict['gid'] == gid:
+                    # stop download
+                    download_session_dict['download_session'].downloadStop()
+                    break
 
     # this method called if user presses pause button in MainWindow
-
     def pauseButtonPressed(self, button=None):
         self.pauseAction.setEnabled(False)
 
@@ -3059,25 +3043,14 @@ class MainWindow(MainWindow_Ui):
             # find download gid
             gid = self.download_table.item(selected_row_return, 8).text()
 
-            # send pause request to aria2
-            answer = download.downloadPause(gid, self)
+            # search gid in download_sessions_list
+            for download_session_dict in self.download_sessions_list:
+                if download_session_dict['gid'] == gid:
+                    # stop download
+                    download_session_dict['download_session'].downloadUnpause()
+                    break
 
-            # if aria2 did not respond , then check aria2 availability!
-            # and if aria2 disconnected then call aria2Disconnected
-            if not (answer):
-                version_answer = download.aria2Version()
-                if version_answer == 'did not respond':
-                    self.aria2Disconnected()
-                    download.downloadStop(gid, self)
-                    notifySend(QCoreApplication.translate("mainwindow_src_ui_tr", "Aria2 disconnected!"),
-                               QCoreApplication.translate("mainwindow_src_ui_tr",
-                                                          "Persepolis is trying to connect! be patient!"),
-                               10000, 'warning', parent=self)
-                else:
-                    notifySend(QCoreApplication.translate("mainwindow_src_ui_tr", "Aria2 did not respond!"),
-                               QCoreApplication.translate("mainwindow_src_ui_tr", "Please try again."),
-                               10000, 'critical', parent=self)
-
+    # TODO از اینجا ادامه بده
     # This method called if properties button pressed by user in MainWindow
     def propertiesButtonPressed(self, button=None):
         result_dictionary = None
