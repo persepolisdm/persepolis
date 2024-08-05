@@ -852,9 +852,8 @@ def nowTime():
     now_time = time.strftime("%H:%M")
     return sigmaTime(now_time)
 
+
 # this function creates sleep time,if user sets "start time" for download.
-
-
 def startTime(start_time, gid, parent):
     # write some messages
     logger.sendToLog("Download starts at " + start_time, "INFO")

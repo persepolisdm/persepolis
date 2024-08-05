@@ -613,7 +613,7 @@ class VideoFinder(QThread):
                 # get add_link_dictionary for video
                 add_link_dictionary = self.main_window.persepolis_db.searchGidInAddLinkTable(video_gid)
                 # create download_session
-                download_session = persepolis_lib_prime.Download(add_link_dictionary)
+                download_session = persepolis_lib_prime.Download(add_link_dictionary, self.main_window)
 
                 # add download_session and gid to download_session_dict
                 download_session_dict = {'gid': video_gid,
@@ -653,7 +653,7 @@ class VideoFinder(QThread):
                     # get add_link_dictionary for video
                     add_link_dictionary = self.main_window.persepolis_db.searchGidInAddLinkTable(audio_gid)
                     # create download_session
-                    download_session = persepolis_lib_prime.Download(add_link_dictionary)
+                    download_session = persepolis_lib_prime.Download(add_link_dictionary, self.main_window)
 
                     # add download_session and gid to download_session_dict
                     download_session_dict = {'gid': audio_gid,
@@ -2838,7 +2838,7 @@ class MainWindow(MainWindow_Ui):
         # then create new qthread for new download!
         if not (download_later):
             # create download_session
-            download_session = persepolis_lib_prime.Download(add_link_dictionary)
+            download_session = persepolis_lib_prime.Download(add_link_dictionary, self)
 
             # add download_session and gid to download_session_dict
             download_session_dict = {'gid': gid,
@@ -2953,7 +2953,7 @@ class MainWindow(MainWindow_Ui):
                     add_link_dictionary = self.persepolis_db.searchGidInAddLinkTable(gid)
 
                     # create download_session
-                    download_session = persepolis_lib_prime.Download(add_link_dictionary)
+                    download_session = persepolis_lib_prime.Download(add_link_dictionary, self)
 
                     # add download_session and gid to download_session_dict
                     download_session_dict = {'gid': gid,
@@ -3050,7 +3050,6 @@ class MainWindow(MainWindow_Ui):
                     download_session_dict['download_session'].downloadUnpause()
                     break
 
-    # TODO از اینجا ادامه بده
     # This method called if properties button pressed by user in MainWindow
     def propertiesButtonPressed(self, button=None):
         result_dictionary = None
@@ -3090,6 +3089,7 @@ class MainWindow(MainWindow_Ui):
                 self, self.propertiesCallback, gid, self.persepolis_setting, socks5_to_http_convertor_is_installed, result_dictionary)
             self.propertieswindows_list.append(propertieswindow)
             self.propertieswindows_list[-1].show()
+
 
     # callBack of PropertiesWindow
     def propertiesCallback(self, add_link_dictionary, gid, category,
@@ -3157,6 +3157,7 @@ class MainWindow(MainWindow_Ui):
 
     # This method is called if user presses "show/hide progress window" button in
     # MainWindow
+    # TODO از اینجا ادامه بده
     def progressButtonPressed(self, button=None):
 
         # find user's selected row

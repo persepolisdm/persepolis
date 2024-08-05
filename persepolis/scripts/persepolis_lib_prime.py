@@ -21,7 +21,7 @@ import threading
 import os
 from requests.cookies import cookiejar_from_dict
 from http.cookies import SimpleCookie
-from persepolis_lib.useful_tools import convertTime, humanReadableSize
+from persepolis_lib.useful_tools import convertTime, humanReadableSize, makeDirs
 from persepolis.scripts import logger
 import json
 from urllib.parse import urlparse, unquote
@@ -31,18 +31,18 @@ from urllib3.util.retry import Retry
 
 
 class Download():
-    def __init__(self, add_link_dictionary, python_request_chunk_size=1, timeout=15, retry=5):
+    def __init__(self, add_link_dictionary, main_window, python_request_chunk_size=1, timeout=15, retry=5):
         self.python_request_chunk_size = python_request_chunk_size
         self.downloaded_size = 0
         self.finished_threads = 0
         self.eta = "0"
         self.resume = False
+        self.main_window = main_window
         self.download_speed_str = "0"
         self.__Version__ = "0.0.1"
 
-        # download_status can be in Pending, Downloading, Stop, Error, Paused
-        # All download_status start with a capital letter.
-        self.download_status = 'Pending'
+        # download_status can be in waiting, downloading, stop, error, eaused
+        self.download_status = 'waiting'
         self.exit_event = threading.Event()
 
         self.link = add_link_dictionary['link']
@@ -58,6 +58,8 @@ class Download():
         self.user_agent = add_link_dictionary['user_agent']
         self.raw_cookies = add_link_dictionary['load_cookies']
         self.referer = add_link_dictionary['referer']
+        self.start_time = add_link_dictionary['start_time']
+
         self.timeout = timeout
         self.retry = retry
         self.lock = False
@@ -67,6 +69,16 @@ class Download():
 
         # number_of_threads can't be more that 64
         self.number_of_threads = int(add_link_dictionary['connections'])
+
+    # this method get http header as string and convert it to dictionary
+    def convertHeaderToDictionary(headers):
+        dic = {}
+        for line in headers.split("\n"):
+            if line.startswith(("GET", "POST")):
+                continue
+            point_index = line.find(":")
+            dic[line[:point_index].strip()] = line[point_index + 1:].strip()
+        return dic
 
     # create requests session
     def createSession(self):
@@ -106,6 +118,12 @@ class Download():
             # setting user_agent to the session
             self.requests_session.headers.update(
                 {'user-agent': self.user_agent})
+
+        if self.header is not None:
+            # convert header to dictionary
+            dict_ = self.convertHeaderToDictionary(self.header)
+            # update headers
+            self.requests_session.headers.update(dict_)
 
         # set retry numbers.
         # backoff_factor will help to apply delays between attempts to avoid failing again
@@ -185,15 +203,13 @@ class Download():
         # control file path is same as download file path.
         control_json_file = self.file_name + '.persepolis'
 
-        # if user set download path
-        if self.download_path:
+        # Create download_path if not existed
+        makeDirs(self.download_path)
 
-            self.file_path = os.path.join(self.download_path, self.file_name)
-            self.control_json_file_path = os.path.join(
-                self.download_path, control_json_file)
-        else:
-            self.file_path = self.file_name
-            self.control_json_file_path = control_json_file
+        # if user set download path
+        self.file_path = os.path.join(self.download_path, self.file_name)
+        self.control_json_file_path = os.path.join(
+            self.download_path, control_json_file)
 
         # create json control file if not created before
         try:
@@ -303,7 +319,7 @@ class Download():
         last_download_value = self.downloaded_size
         end_time = time.perf_counter()
         # this loop repeated every 5 second.
-        while self.download_status == 'Downloading' or self.download_status == 'Paused':
+        while self.download_status == 'downloading' or self.download_status == 'paused':
             diffrence_time = time.perf_counter() - end_time
             diffrence_size = self.downloaded_size - last_download_value
             diffrence_size_converted, speed_unit = humanReadableSize(
@@ -365,7 +381,7 @@ class Download():
     # by each thread for downloading the content from specified
     # location to storage
     def threadHandler(self, thread_number):
-        while self.download_status == 'Downloading' or self.download_status == 'Paused':
+        while self.download_status == 'downloading' or self.download_status == 'paused':
 
             # Wait for the lock to be released.
             while self.lock is True:
@@ -422,7 +438,7 @@ class Download():
                                                  * self.python_request_chunk_size)
                     for data in response.iter_content(
                             chunk_size=python_request_chunk_size):
-                        if self.download_status == 'Downloading':
+                        if self.download_status == 'downloading':
                             fp.write(data)
 
                             # maybe the last chunk is less than 1MiB(default chunk size)
@@ -446,9 +462,9 @@ class Download():
                             # perhaps user set limitation for download rate.
                             time.sleep(self.sleep_for_speed_limiting)
 
-                        elif self.download_status == 'Paused':
+                        elif self.download_status == 'paused':
                             # wait for unpausing
-                            while self.download_status == 'Paused':
+                            while self.download_status == 'paused':
                                 time.sleep(0.2)
 
                         else:
@@ -510,7 +526,7 @@ class Download():
     # this method checks and manages download progress.
     def checkDownloadProgress(self):
         # Run this loop until the download is finished.
-        while (self.file_size != self.downloaded_size) and (self.download_status == 'Downloading' or self.download_status == 'Paused') and \
+        while (self.file_size != self.downloaded_size) and (self.download_status == 'downloading' or self.download_status == 'paused') and \
               (self.finished_threads != self.number_of_threads):
 
             time.sleep(1)
@@ -518,16 +534,16 @@ class Download():
         # If the downloaded size is the same as the file size, then the download has been completed successfully.
         if self.file_size == self.downloaded_size:
 
-            self.download_status = 'Complete'
+            self.download_status = 'complete'
             logger.sendToLog('Download complete.')
 
         # If the download is not complete and the user has not stopped the download, then the download has encountered an error.
-        elif self.download_status != 'Stopped':
+        elif self.download_status != 'stopped':
 
-            self.download_status = 'Error'
+            self.download_status = 'error'
             logger.sendToLog('Download Error')
 
-        elif self.download_status == 'Stopped':
+        elif self.download_status == 'stopped':
 
             logger.sendToLog('Download stopped.')
 
@@ -543,41 +559,123 @@ class Download():
         # close requests session
         self.requests_session.close()
 
+    # This method returns data and time in string format
+    # for example >> 2017/09/09 , 13:12:26
+    def nowDate(self):
+        date = time.strftime("%Y/%m/%d , %H:%M:%S")
+        return date
+
+    def sigmaTime(self, time):
+        hour, minute = time.split(":")
+        return (int(hour) * 60 + int(minute))
+
+    # nowTime returns now time in HH:MM format!
+    def nowTime(self):
+        now_time = time.strftime("%H:%M")
+        return self.sigmaTime(now_time)
+
+    # this method creates sleep time,if user sets "start time" for download.
+    def startTime(self, start_time, gid, parent):
+        # write some messages
+        logger.sendToLog("Download starts at " + start_time, "INFO")
+
+        # start_time that specified by user
+        sigma_start = self.sigmaTime(start_time)
+
+        # get current time
+        sigma_now = self.nowTime()
+
+        status = 'scheduled'
+
+        # this loop is continuing until download time arrival!
+        while sigma_start != sigma_now:
+            time.sleep(2.1)
+            sigma_now = self.nowTime()
+
+            # check download status from data_base
+            dict_ = parent.persepolis_db.searchGidInDownloadTable(gid)
+            data_base_download_status = dict_['status']
+
+            # if data_base_download_status = stopped >> it means that user
+            # canceled download and loop must break!
+            if data_base_download_status == 'stopped':
+                status = 'stopped'
+                break
+            else:
+                status = 'scheduled'
+
+        # if user canceled download , then return 'stopped' and if download time arrived then return 'scheduled'!
+        return status
+
     # this method starts download
     def start(self):
         self.createSession()
-        file_size = self.getFileSize()
-        if file_size:
-            self.download_status = 'Downloading'
-            self.getFileName()
-
-            self.getFileTag()
-
-            self.createControlFile()
-            self.definePartSizes()
-
-            self.runProgressBar()
-
-            self.runDownloadThreads()
-
-            self.checkDownloadProgress()
+        # update status and last_try_date in data_base
+        if self.start_time:
+            status = "scheduled"
         else:
-            self.download_status = 'Error'
-        self.close()
+            status = "waiting"
+
+        # get last_try_date
+        now_date = self.nowDate()
+
+        # update data_base
+        dict_ = {'gid': self.gid, 'status': status, 'last_try_date': now_date}
+        self.main_window.persepolis_db.updateDownloadTable([dict_])
+
+        # call startTime if start_time is available
+        # startTime creates sleep loop if user set start_time
+        # see startTime function for more information.
+        if self.start_time:
+            start_time_status = self.startTime(self.start_time, self.gid, self.main_window)
+        else:
+            start_time_status = "downloading"
+
+        if start_time_status == "scheduled":
+            # read limit value again from data_base before starting download!
+            # perhaps user changed this in progress bar window
+            self.add_link_dictionary = self.main_window.persepolis_db.searchGidInAddLinkTable(self.gid)
+
+            # set start_time value to None in data_base!
+            self.main_window.persepolis_db.setDefaultGidInAddlinkTable(self.gid, start_time=True)
+
+        if start_time_status != 'stopped':
+            # start download
+            file_size = self.getFileSize()
+            if file_size:
+                self.download_status = 'downloading'
+                self.getFileName()
+
+                self.getFileTag()
+
+                self.createControlFile()
+                self.definePartSizes()
+
+                self.runProgressBar()
+
+                self.runDownloadThreads()
+
+                self.checkDownloadProgress()
+            else:
+                self.download_status = 'error'
+            self.close()
+        else:
+            # if start_time_status is "stopped" it means download Canceled by user
+            logger.sendToLog("Download Canceled", "INFO")
 
     def downloadPause(self):
-        self.download_status = 'Paused'
+        self.download_status = 'paused'
 
     def downloadUnpause(self):
-        self.download_status = 'Downloading'
+        self.download_status = 'downloading'
 
     def downloadStop(self, signum, frame):
-        self.download_status = 'Stopped'
+        self.download_status = 'stopped'
         self.exit_event.set()
 
     def close(self):
         # if download complete, so delete control file
-        if self.download_status == 'Complete':
+        if self.download_status == 'complete':
             os.remove(self.control_json_file_path)
 
         logger.sendToLog("persepolis_lib is closed!")
