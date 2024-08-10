@@ -25,7 +25,6 @@ except:
 
 from persepolis.gui.progress_ui import ProgressWindow_Ui
 from persepolis.scripts.shutdown import shutDown
-from persepolis.scripts.bubble import notifySend
 from persepolis.scripts import download
 from persepolis.constants import OS
 import subprocess
@@ -39,17 +38,17 @@ class ShutDownThread(QThread):
         QThread.__init__(self)
         self.gid = gid
         self.password = password
-        self.parent = parent
+        self.main_window = parent
 
     def run(self):
-        shutDown(self.parent, gid=self.gid, password=self.password)
+        shutDown(self.main_window, gid=self.gid, password=self.password)
 
 
 class ProgressWindow(ProgressWindow_Ui):
     def __init__(self, parent, gid, persepolis_setting):
         super().__init__(persepolis_setting)
         self.persepolis_setting = persepolis_setting
-        self.parent = parent
+        self.main_window = parent
         self.gid = gid
         self.status = None
         self.resume_pushButton.clicked.connect(self.resumePushButtonPressed)
@@ -74,7 +73,7 @@ class ProgressWindow(ProgressWindow_Ui):
             QCoreApplication.installTranslator(self.translator)
 
 # check if limit speed activated by user or not
-        add_link_dictionary = self.parent.persepolis_db.searchGidInAddLinkTable(gid)
+        add_link_dictionary = self.main_window.persepolis_db.searchGidInAddLinkTable(gid)
 
         limit = str(add_link_dictionary['limit_value'])
         if limit != '0':
@@ -117,58 +116,37 @@ class ProgressWindow(ProgressWindow_Ui):
     def resumePushButtonPressed(self, button):
 
         if self.status == "paused":
-            answer = download.downloadUnpause(self.gid)
-
-            # if aria2 did not respond , then this function is checking for aria2
-            # availability , and if aria2 disconnected then aria2Disconnected is
-            # executed
-            if not (answer):
-                version_answer = download.aria2Version()
-                if version_answer == 'did not respond':
-                    self.parent.aria2Disconnected()
-                    notifySend(QCoreApplication.translate("progress_src_ui_tr", "Aria2 disconnected!"), QCoreApplication.translate("progress_src_ui_tr", "Persepolis is trying to connect! be patient!"),
-                               10000, 'warning', parent=self.parent)
-                else:
-                    notifySend(QCoreApplication.translate("progress_src_ui_tr", "Aria2 did not respond!"), QCoreApplication.translate("progress_src_ui_tr", "Please try again."), 10000,
-                               'warning', parent=self.parent)
+            # search gid in download_sessions_list
+            for download_session_dict in self.main_window.download_sessions_list:
+                if download_session_dict['gid'] == self.gid:
+                    # unpause download
+                    download_session_dict['download_session'].downloadUnpause()
+                    break
 
     def pausePushButtonPressed(self, button):
 
         if self.status == "downloading":
-            answer = download.downloadPause(self.gid, self.parent)
-
-            # if aria2 did not respond , then this function is checking for aria2
-            # availability , and if aria2 disconnected then aria2Disconnected is
-            # executed
-            if not (answer):
-                version_answer = download.aria2Version()
-                if version_answer == 'did not respond':
-                    self.parent.aria2Disconnected()
-                    download.downloadStop(self.gid, self.parent)
-                    notifySend("Aria2 disconnected!", "Persepolis is trying to connect! be patient!",
-                               10000, 'warning', parent=self.parent)
-                else:
-                    notifySend(QCoreApplication.translate("progress_src_ui_tr", "Aria2 did not respond!"), QCoreApplication.translate("progress_src_ui_tr", "Try again!"), 10000,
-                               'critical', parent=self.parent)
+            # search gid in download_sessions_list
+            for download_session_dict in self.main_window.download_sessions_list:
+                if download_session_dict['gid'] == self.gid:
+                    # unpause download
+                    download_session_dict['download_session'].downloadPause()
+                    break
 
     def stopPushButtonPressed(self, button):
 
         dict = {'gid': self.gid,
                 'shutdown': 'canceled'}
 
-        self.parent.temp_db.updateSingleTable(dict)
+        self.main_window.temp_db.updateSingleTable(dict)
 
-        answer = download.downloadStop(self.gid, self.parent)
-
-        # if aria2 did not respond , then this function is checking for aria2
-        # availability , and if aria2 disconnected then aria2Disconnected is
-        # executed
-        if answer == 'None':
-            version_answer = download.aria2Version()
-            if version_answer == 'did not respond':
-                self.parent.aria2Disconnected()
-                notifySend(QCoreApplication.translate("progress_src_ui_tr", "Aria2 disconnected!"), QCoreApplication.translate("progress_src_ui_tr", "Persepolis is trying to connect! be patient!"),
-                           10000, 'warning', parent=self.parent)
+        if self.status == "downloading":
+            # search gid in download_sessions_list
+            for download_session_dict in self.main_window.download_sessions_list:
+                if download_session_dict['gid'] == self.gid:
+                    # unpause download
+                    download_session_dict['download_session'].downloadStop()
+                    break
 
     def limitCheckBoxToggled(self, checkBoxes):
 
@@ -188,7 +166,7 @@ class ProgressWindow(ProgressWindow_Ui):
             else:
                 # update limit value in data_base
                 add_link_dictionary = {'gid': self.gid, 'limit_value': '0'}
-                self.parent.persepolis_db.updateAddLinkTable([add_link_dictionary])
+                self.main_window.persepolis_db.updateAddLinkTable([add_link_dictionary])
 
     def limitComboBoxChanged(self, connect):
         self.limit_pushButton.setEnabled(True)
@@ -207,7 +185,7 @@ class ProgressWindow(ProgressWindow_Ui):
             dict = {'gid': self.gid,
                     'shutdown': 'canceled'}
 
-            self.parent.temp_db.updateSingleTable(dict)
+            self.main_window.temp_db.updateSingleTable(dict)
 
     def afterPushButtonPressed(self, button):
         self.after_pushButton.setEnabled(False)
@@ -261,9 +239,9 @@ class ProgressWindow(ProgressWindow_Ui):
                     # shutDown method will check that value in a loop .
                     # when "wait" changes to "shutdown" then shutdown.py script
                     # will shut down the system.
-                    shutdown_enable = ShutDownThread(self.parent, self.gid, passwd)
-                    self.parent.threadPool.append(shutdown_enable)
-                    self.parent.threadPool[-1].start()
+                    shutdown_enable = ShutDownThread(self.main_window, self.gid, passwd)
+                    self.main_window.threadPool.append(shutdown_enable)
+                    self.main_window.threadPool[-1].start()
 
                 else:
                     self.after_checkBox.setChecked(False)
@@ -271,9 +249,9 @@ class ProgressWindow(ProgressWindow_Ui):
                 self.after_checkBox.setChecked(False)
 
         else:  # for Windows
-            shutdown_enable = ShutDownThread(self.parent, self.gid)
-            self.parent.threadPool.append(shutdown_enable)
-            self.parent.threadPool[-1].start()
+            shutdown_enable = ShutDownThread(self.main_window, self.gid)
+            self.main_window.threadPool.append(shutdown_enable)
+            self.main_window.threadPool[-1].start()
 
     def limitPushButtonPressed(self, button):
         self.limit_pushButton.setEnabled(False)
@@ -290,7 +268,7 @@ class ProgressWindow(ProgressWindow_Ui):
         else:
             # update limit value in data_base
             add_link_dictionary = {'gid': self.gid, 'limit_value': limit_value}
-            self.parent.persepolis_db.updateAddLinkTable([add_link_dictionary])
+            self.main_window.persepolis_db.updateAddLinkTable([add_link_dictionary])
 
     def changeIcon(self, icons):
         icons = ':/' + str(icons) + '/'

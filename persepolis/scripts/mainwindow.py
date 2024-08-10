@@ -3157,7 +3157,6 @@ class MainWindow(MainWindow_Ui):
 
     # This method is called if user presses "show/hide progress window" button in
     # MainWindow
-    # TODO از اینجا ادامه بده
     def progressButtonPressed(self, button=None):
 
         # find user's selected row
@@ -3249,6 +3248,7 @@ class MainWindow(MainWindow_Ui):
             self.closeAction(event)
 
     # close application actions is in this method (to close program completely this method must call)
+    # TODO از اینجا ادامه بده
     def closeAction(self, event=None):
         # save window size  and position
         self.persepolis_setting.setValue('MainWindow/size', self.size())
