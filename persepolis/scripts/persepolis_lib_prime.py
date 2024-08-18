@@ -669,7 +669,7 @@ class Download():
     def downloadUnpause(self):
         self.download_status = 'downloading'
 
-    def downloadStop(self, signum, frame):
+    def downloadStop(self):
         self.download_status = 'stopped'
         self.exit_event.set()
 

@@ -266,9 +266,8 @@ class CheckNewerVersionThread(QThread):
             logger.sendToLog("An error occurred while checking for a new release:")
             logger.sendToLog("{}".format(str(e)))
 
+
 # start aria2 when Persepolis starts
-
-
 class StartAria2Thread(QThread):
 
     ARIA2RESPONDSIGNAL = Signal(str)
@@ -887,14 +886,23 @@ class Queue(QThread):
                 # write changes in data base
                 self.parent.persepolis_db.updateAddLinkTable([add_link_dict])
 
+                # create download_session
+                download_session = persepolis_lib_prime.Download(add_link_dict, self)
+
+                # add download_session and gid to download_session_dict
+                download_session_dict = {'gid': gid,
+                                         'download_session': download_session}
+
+                # append download_session_dict to download_sessions_list
+                self.download_sessions_list.append(download_session_dict)
+
+                # strat download in thread
+                new_download = DownloadLink(gid, download_session, self.parent)
+                self.threadPool.append(new_download)
+                self.threadPool[-1].start()
+
                 # delete add_link_dict
                 del add_link_dict
-
-                # start new thread for download
-                new_download = DownloadLink(gid, self.parent)
-                self.parent.threadPool.append(new_download)
-                self.parent.threadPool[-1].start()
-                self.parent.threadPool[-1].ARIA2NOTRESPOND.connect(self.parent.aria2NotRespond)
                 sleep(3)
 
                 # limit download speed if user limited speed for previous download
@@ -951,16 +959,12 @@ class Queue(QThread):
 
                     if self.stop:
                         # it means user stopped queue
-                        answer = download.downloadStop(gid, self.parent)
-
-                        # if aria2 did not respond , then this function is checking
-                        # for aria2 availability , and if aria2 disconnected then
-                        # aria2Disconnected is executed
-                        if answer == 'None':
-                            version_answer = download.aria2Version()
-                            if version_answer == 'did not respond':
-                                self.parent.aria2Disconnected()
-                        status = 'stopped'
+                        # search gid in download_sessions_list
+                        for download_session_dict in self.download_sessions_list:
+                            if download_session_dict['gid'] == gid:
+                                # stop download
+                                download_session_dict['download_session'].downloadStop()
+                                break
 
                     if self.limit and status == 'downloading' and self.limit_changed:
                         # It means user want to limit download speed
@@ -1053,18 +1057,6 @@ class Queue(QThread):
             # this section is sending shutdown signal to the shutdown script(if user
             # select shutdown for after download)
             if self.after:
-                # shutdown aria2c
-                answer = download.shutDown()
-
-                # KILL aria2c if didn't respond. R.I.P :))
-                if not (answer) and (os_type != OS.WINDOWS):
-
-                    subprocess.Popen(['killall', 'aria2c'],
-                                     stderr=subprocess.PIPE,
-                                     stdout=subprocess.PIPE,
-                                     stdin=subprocess.PIPE,
-                                     shell=False)
-
                 # write 'shutdown' value for this category in temp_db
                 shutdown_dict = {'category': self.category, 'shutdown': 'shutdown'}
                 self.parent.temp_db.updateQueueTable(shutdown_dict)
@@ -2785,7 +2777,7 @@ class MainWindow(MainWindow_Ui):
             status = 'stopped'
 
         # get now time and date
-        date = download.nowDate()
+        date = persepolis_lib_prime.nowDate()
 
         download_table_dict = {'file_name': file_name,
                                'status': status,
@@ -3090,7 +3082,6 @@ class MainWindow(MainWindow_Ui):
             self.propertieswindows_list.append(propertieswindow)
             self.propertieswindows_list[-1].show()
 
-
     # callBack of PropertiesWindow
     def propertiesCallback(self, add_link_dictionary, gid, category,
                            video_finder_dictionary=None):
@@ -3248,7 +3239,6 @@ class MainWindow(MainWindow_Ui):
             self.closeAction(event)
 
     # close application actions is in this method (to close program completely this method must call)
-    # TODO از اینجا ادامه بده
     def closeAction(self, event=None):
         # save window size  and position
         self.persepolis_setting.setValue('MainWindow/size', self.size())
@@ -3289,8 +3279,6 @@ class MainWindow(MainWindow_Ui):
         # hide system_tray_icon
         self.system_tray_icon.hide()
 
-        download.shutDown()  # shutting down Aria2
-        sleep(0.5)
         global shutdown_notification  # see start of this script and see inherited QThreads
 
         # shutdown_notification = 0 >> persepolis running , 1 >> persepolis is
@@ -3307,15 +3295,11 @@ class MainWindow(MainWindow_Ui):
             i.quit()
             i.wait()
 
-        for i in self.socks5_to_http_convertor_list:
-            i.stop()
-
         QCoreApplication.instance().quit
         logger.sendToLog("Persepolis closed!", "INFO")
         sys.exit(0)
 
     # showTray method shows/hides persepolis's icon in system tray icon
-
     def showTray(self, menu=None):
         # check if user checked trayAction in menu or not
         if self.trayAction.isChecked():
@@ -3341,7 +3325,6 @@ class MainWindow(MainWindow_Ui):
 
     # this method shows/hides menubar and
     # it's called when user toggles showMenuBarAction in view menu
-
     def showMenuBar(self, menu=None):
         # persepolis has 2 menu bar
         # 1. menubar in main window
@@ -3421,17 +3404,14 @@ class MainWindow(MainWindow_Ui):
 
         for gid in active_gid_list:
 
-            answer = download.downloadStop(gid, self)
-            # if aria2 did not respond , then this function is checking for
-            # aria2 availability , and if aria2 disconnected then
-            # aria2Disconnected is executed
-            if answer == 'None':
-                version_answer = download.aria2Version()
-                if version_answer == 'did not respond':
-                    self.aria2Disconnected()
+            # search gid in download_sessions_list
+            for download_session_dict in self.download_sessions_list:
+                if download_session_dict['gid'] == gid:
+                    # stop download
+                    download_session_dict['download_session'].downloadStop()
+                    break
 
     # this method creates Preferences window
-
     def openPreferences(self, menu=None):
         self.preferenceswindow = PreferencesWindow(
             self, self.persepolis_setting)
@@ -3504,7 +3484,6 @@ class MainWindow(MainWindow_Ui):
                                'warning', parent=self)
 
     # this method executes(opens) download file if download's progress was finished
-
     def openFile(self, menu=None):
         # find user's selected row
         selected_row_return = self.selectedRow()
@@ -4544,7 +4523,7 @@ class MainWindow(MainWindow_Ui):
         download_table_list = []
 
         # get now time and date
-        date = download.nowDate()
+        date = persepolis_lib_prime.nowDate()
 
         # add dictionary of downloads to data base
         for add_link_dictionary in add_link_dictionary_list:
@@ -4607,7 +4586,6 @@ class MainWindow(MainWindow_Ui):
 
     # this method is called , when user clicks on an item in
     # category_tree (left side panel)
-
     def categoryTreeSelected(self, item):
         new_selection = item
         if current_category_tree_index != new_selection:
@@ -4908,7 +4886,6 @@ class MainWindow(MainWindow_Ui):
         sortMenu.addAction(self.sort_download_status_Action)
 
     # this method removes the queue that is selected in category_tree
-
     def removeQueue(self, menu=None):
         # show Warning message to user.
         # checks persepolis_setting first!
@@ -4964,8 +4941,8 @@ class MainWindow(MainWindow_Ui):
         self.category_tree.setCurrentIndex(all_download_index)
         self.categoryTreeSelected(all_download_index)
 
+    # TODO از اینجا ادامه بده
     # this method starts the queue that is selected in category_tree
-
     def startQueue(self, menu=None):
         self.startQueueAction.setEnabled(False)
 
@@ -5886,7 +5863,7 @@ class MainWindow(MainWindow_Ui):
                 status = 'stopped'
 
             # get now time and date
-            date = download.nowDate()
+            date = persepolis_lib_prime.nowDate()
 
             dictionary = {'file_name': file_name,
                           'status': status,
