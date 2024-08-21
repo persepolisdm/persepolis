@@ -66,9 +66,11 @@ class Download():
         self.speed_limit = 0
         self.sleep_for_speed_limiting = 0
         self.not_converted_download_speed = 0
+        self.download_percent = 0
 
         # number_of_threads can't be more that 64
         self.number_of_threads = int(add_link_dictionary['connections'])
+        self.number_of_active_connections = self.number_of_threads
 
     # this method get http header as string and convert it to dictionary
     def convertHeaderToDictionary(headers):
@@ -529,8 +531,17 @@ class Download():
         while (self.file_size != self.downloaded_size) and (self.download_status == 'downloading' or self.download_status == 'paused') and \
               (self.finished_threads != self.number_of_threads):
 
+            # Calculate download percent
+            self.download_percent = int((self.downloaded_size / self.file_size) * 100)
+
+            # Calculate number of active threads
+            self.number_of_active_connections = self.number_of_threads - self.finished_threads
             time.sleep(1)
 
+        # Calculate download percent
+        self.download_percent = int((self.downloaded_size / self.file_size) * 100)
+
+        self.number_of_active_connections = 0
         # If the downloaded size is the same as the file size, then the download has been completed successfully.
         if self.file_size == self.downloaded_size:
 
@@ -679,3 +690,25 @@ class Download():
             os.remove(self.control_json_file_path)
 
         logger.sendToLog("persepolis_lib is closed!")
+
+    # This method returns download status
+    def tellStatus(self):
+        # return information in dictionary format
+        download_info = {
+            'file_name': self.file_name,
+            'status': self.download_status,
+            'size': self.file_size,
+            'downloaded_size': self.downloaded_size,
+            'percent': self.download_percent,
+            'connections': self.number_of_active_connections,
+            'rate': self.download_speed_str,
+            'estimate_time_left': self.eta,
+            'link': self.link
+        }
+
+        return download_info
+
+    # This method limits download speed
+    # TODO باید یه فمری براش بکنم
+    def limitSpeed(self, limit_value):
+        pass
