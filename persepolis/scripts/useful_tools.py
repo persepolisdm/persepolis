@@ -18,6 +18,7 @@ import urllib.parse
 import subprocess
 import platform
 import textwrap
+import time
 import sys
 import os
 
@@ -91,7 +92,7 @@ def humanReadableSize(size, input_type='file_size'):
     labels = ['KiB', 'MiB', 'GiB', 'TiB']
     i = -1
     if size < 1024:
-        return str(size) + ' B'
+        return str(size), 'B'
 
     while size >= 1024:
         i += 1
@@ -103,9 +104,9 @@ def humanReadableSize(size, input_type='file_size'):
         j = 1
 
     if i > j:
-        return str(round(size, 2)) + ' ' + labels[i]
+        return round(size, 2), labels[i]
     else:
-        return str(round(size, None)) + ' ' + labels[i]
+        return round(size, None), labels[i]
 
 
 # this function converts second to hour and minute
@@ -588,3 +589,10 @@ def getExecPath():
 
     # return ressults
     return exec_dictionary
+
+
+# This method returns data and time in string format
+# for example >> 2017/09/09 , 13:12:26
+def nowDate():
+    date = time.strftime("%Y/%m/%d , %H:%M:%S")
+    return date

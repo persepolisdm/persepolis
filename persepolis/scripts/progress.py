@@ -25,7 +25,6 @@ except:
 
 from persepolis.gui.progress_ui import ProgressWindow_Ui
 from persepolis.scripts.shutdown import shutDown
-from persepolis.scripts import download
 from persepolis.constants import OS
 import subprocess
 import platform
@@ -161,8 +160,11 @@ class ProgressWindow(ProgressWindow_Ui):
 
             # check download status is "scheduled" or not!
             if self.status != 'scheduled':
-                # tell aria2 for unlimited speed
-                download.limitSpeed(self.gid, "0")
+                for download_session_dict in self.main_window.download_sessions_list:
+                    if download_session_dict['gid'] == self.gid:
+                        # cancel the limitation of download speed
+                        download_session_dict['download_session'].limitSpeed(10)
+                        break
             else:
                 # update limit value in data_base
                 add_link_dictionary = {'gid': self.gid, 'limit_value': '0'}
@@ -260,11 +262,16 @@ class ProgressWindow(ProgressWindow_Ui):
         else:
             limit_value = str(self.limit_spinBox.value()) + str("M")
 
-    # if download was started before , send the limit_speed request to aria2 .
+    # if download was started before , setlimit_speed.
     # else save the request in data_base
 
         if self.status != 'scheduled':
-            download.limitSpeed(self.gid, limit_value)
+            for download_session_dict in self.main_window.download_sessions_list:
+                if download_session_dict['gid'] == self.gid:
+                    # limit  download speed
+                    download_session_dict['download_session'].limitSpeed(limit_value)
+                    break
+
         else:
             # update limit value in data_base
             add_link_dictionary = {'gid': self.gid, 'limit_value': limit_value}

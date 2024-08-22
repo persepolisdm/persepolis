@@ -163,7 +163,7 @@ class Setting_Ui(QWidget):
 
         self.connections_spinBox = QSpinBox(self.download_options_tab)
         self.connections_spinBox.setMinimum(1)
-        self.connections_spinBox.setMaximum(16)
+        self.connections_spinBox.setMaximum(64)
         connections_horizontalLayout.addWidget(self.connections_spinBox)
 
         download_options_tab_verticalLayout.addLayout(connections_horizontalLayout)

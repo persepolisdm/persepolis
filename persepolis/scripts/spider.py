@@ -107,10 +107,11 @@ def spider(add_link_dictionary):
         file_size = int(header['Content-Length'])
 
         # converting file_size to KiB or MiB or GiB
-        file_size = humanReadableSize(file_size)
+        file_size, unit = humanReadableSize(file_size)
 
+        file_size_with_unit = str(file_size) + ' ' + unit
     # return results
-    return filename, file_size
+    return filename, file_size_with_unit
 
 
 # this function finds and returns file name for links.

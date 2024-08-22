@@ -335,8 +335,8 @@ class AddLinkWindow_Ui(QWidget):
 
         self.connections_spinBox = QSpinBox(self.connections_frame)
         self.connections_spinBox.setMinimum(1)
-        self.connections_spinBox.setMaximum(16)
-        self.connections_spinBox.setProperty("value", 16)
+        self.connections_spinBox.setMaximum(64)
+        self.connections_spinBox.setProperty("value", 64)
         horizontalLayout_3.addWidget(self.connections_spinBox)
         connections_horizontalLayout.addWidget(self.connections_frame)
         connections_horizontalLayout.addStretch(1)

@@ -45,7 +45,7 @@ from persepolis.scripts.browser_plugin_queue import BrowserPluginQueue
 from persepolis.scripts.data_base import PluginsDB, PersepolisDB, TempDB
 from persepolis.gui.mainwindow_ui import MainWindow_Ui, QTableWidgetItem
 from persepolis.scripts.video_finder_progress import VideoFinderProgressWindow
-from persepolis.scripts.useful_tools import muxer, freeSpace, determineConfigFolder, osAndDesktopEnvironment, getExecPath, ffmpegVersion, socks5ToHttpConvertorVersion
+from persepolis.scripts.useful_tools import nowDate, muxer, freeSpace, determineConfigFolder, osAndDesktopEnvironment, getExecPath, ffmpegVersion, socks5ToHttpConvertorVersion
 global pyside6_is_installed
 try:
     from PySide6.QtWidgets import QCheckBox, QLineEdit, QAbstractItemView, QFileDialog, QSystemTrayIcon, QMenu, QApplication, QInputDialog, QMessageBox
@@ -80,13 +80,6 @@ ffmpeg_is_installed = False
 global socks5_to_http_convertor_is_installed
 socks5_to_http_convertor_is_installed = False
 
-# The GID (or gid) is a key to manage each download. Each download will be assigned a unique GID.
-# The GID is stored as 64-bit binary value in aria2. For RPC access,
-# it is represented as a hex string of 16 characters (e.g., 2089b05ecca3d829).
-# Normally, aria2 generates this GID for each download, but the user can
-# specify GIDs manually
-
-
 # shutdown_notification = 0 >> persepolis is running
 # 1 >> persepolis is ready for closing(closeEvent  is called)
 # 2 >> OK, let's close application!
@@ -101,16 +94,6 @@ shutdown_notification = 0
 
 global checking_flag
 checking_flag = 0
-
-# when rpc connection between persepolis and aria is disconnected >>
-# aria2_disconnected = 1
-# aria2_disconnected = 0 >> every thing is ok :)
-global aria2_disconnected
-aria2_disconnected = 0
-
-global aria_startup_answer
-aria_startup_answer = None
-
 
 global button_pressed_counter
 button_pressed_counter = 0
@@ -206,7 +189,7 @@ class CheckClipBoardThread(QThread):
         # shutdown_notification = 0 >> persepolis is running
         # 1 >> persepolis is ready for closing(closeEvent called)
         # 2 >> OK, let's close application!
-        while shutdown_notification == 0 and aria_startup_answer != 'ready':
+        while shutdown_notification == 0:
             sleep(1)
 
         clipboard = QApplication.clipboard()
@@ -274,16 +257,14 @@ class CheckSelectedRowThread(QThread):
         QThread.__init__(self)
 
     def run(self):
-        while shutdown_notification == 0 and aria_startup_answer != 'ready':
+        while shutdown_notification == 0:
             sleep(1)
         while shutdown_notification == 0:
             sleep(0.2)
             self.CHECKSELECTEDROWSIGNAL.emit()
 
 
-# This thread is getting download information from aria2 and updating database
-# this class is checking aria2 rpc connection! if aria rpc is not
-# available , this class restarts aria!
+# This thread is getting download information and updating database
 class CheckDownloadInfoThread(QThread):
     DOWNLOAD_INFO_SIGNAL = Signal(list)
 
@@ -325,10 +306,9 @@ class CheckDownloadInfoThread(QThread):
                 for download_session_dict in self.main_window.download_sessions_list:
 
                     # get information
-                    returned_dict = download_session_dict.tellStatus()
+                    returned_dict = download_session_dict['download_session'].tellStatus()
 
                     # add gid to download_session_dict
-                    returned_dict['gid'] = download_session_dict['gid']
                     download_status_list.append(returned_dict)
 
                 # now we have a list that contains download information (download_status_list)
@@ -474,7 +454,7 @@ class VideoFinder(QThread):
                 # get add_link_dictionary for video
                 add_link_dictionary = self.main_window.persepolis_db.searchGidInAddLinkTable(video_gid)
                 # create download_session
-                download_session = persepolis_lib_prime.Download(add_link_dictionary, self.main_window)
+                download_session = persepolis_lib_prime.Download(add_link_dictionary, self.main_window, video_gid)
 
                 # add download_session and gid to download_session_dict
                 download_session_dict = {'gid': video_gid,
@@ -514,7 +494,7 @@ class VideoFinder(QThread):
                     # get add_link_dictionary for video
                     add_link_dictionary = self.main_window.persepolis_db.searchGidInAddLinkTable(audio_gid)
                     # create download_session
-                    download_session = persepolis_lib_prime.Download(add_link_dictionary, self.main_window)
+                    download_session = persepolis_lib_prime.Download(add_link_dictionary, self.main_window, audio_gid)
 
                     # add download_session and gid to download_session_dict
                     download_session_dict = {'gid': audio_gid,
@@ -595,7 +575,7 @@ class VideoFinder(QThread):
                 self.main_window.temp_db.updateQueueTable(shutdown_dict)
 
 
-# this thread is managing queue and sending download request to aria2
+# this thread is managing queue
 class Queue(QThread):
     # this signal emitted when download status of queue changes to stop
     REFRESHTOOLBARSIGNAL = Signal(str)
@@ -749,7 +729,7 @@ class Queue(QThread):
                 self.main_window.persepolis_db.updateAddLinkTable([add_link_dict])
 
                 # create download_session
-                download_session = persepolis_lib_prime.Download(add_link_dict, self)
+                download_session = persepolis_lib_prime.Download(add_link_dict, self, gid)
 
                 # add download_session and gid to download_session_dict
                 download_session_dict = {'gid': gid,
@@ -839,10 +819,11 @@ class Queue(QThread):
                             limit = str(self.limit_spinBox_value) + str("M")
 
                         # apply limitation
-                        for download_status_dict in self.main_window.download_sessions_list:
-                            if download_status_dict['gid'] == gid:
+                        for download_session_dict in self.main_window.download_sessions_list:
+                            if download_session_dict['gid'] == gid:
 
-                                download_session.limitSpeed(limit)
+                                download_session_dict['download_session'].limitSpeed(limit)
+                                break
 
                         # done!
                         self.limit_changed = False
@@ -851,11 +832,11 @@ class Queue(QThread):
                         # speed limitation is canceled by user!
                         # cancel limitation
                         # apply limitation
-                        for download_status_dict in self.main_window.download_sessions_list:
-                            if download_status_dict['gid'] == gid:
+                        for download_session_dict in self.main_window.download_sessions_list:
+                            if download_session_dict['gid'] == gid:
 
-                                download_session.limitSpeed("0")
-
+                                download_session_dict['download_session'].limitSpeed(10)
+                                break
 
                         # done!
                         self.limit_changed = False
@@ -971,7 +952,7 @@ class CheckingThread(QThread):
         # shutdown_notification = 0 >> persepolis is running
         # 1 >> persepolis is ready for closing(closeEvent called)
         # 2 >> OK, let's close application!
-        while shutdown_notification == 0 and aria_startup_answer != 'ready':
+        while shutdown_notification == 0:
             sleep(1)
 
         while shutdown_notification == 0:
@@ -1060,9 +1041,6 @@ class KeepAwakeThread(QThread):
 
     def run(self):
         while shutdown_notification == 0:
-
-            while aria_startup_answer != 'ready':
-                sleep(1)
 
             old_cursor_array = [0, 0]
             add = True
@@ -1355,22 +1333,22 @@ class MainWindow(MainWindow_Ui):
         # CheckDownloadInfoThread
         check_download_info = CheckDownloadInfoThread(self)
         self.threadPool.append(check_download_info)
-        self.threadPool[1].start()
-        self.threadPool[1].DOWNLOAD_INFO_SIGNAL.connect(self.checkDownloadInfo)
+        self.threadPool[0].start()
+        self.threadPool[0].DOWNLOAD_INFO_SIGNAL.connect(self.checkDownloadInfo)
 
         # CheckSelectedRowThread
         check_selected_row = CheckSelectedRowThread()
         self.threadPool.append(check_selected_row)
-        self.threadPool[2].start()
-        self.threadPool[2].CHECKSELECTEDROWSIGNAL.connect(
+        self.threadPool[1].start()
+        self.threadPool[1].CHECKSELECTEDROWSIGNAL.connect(
             self.checkSelectedRow)
 
         # CheckingThread
         check_browser_plugin = CheckingThread()
         self.threadPool.append(check_browser_plugin)
-        self.threadPool[3].start()
-        self.threadPool[3].CHECKPLUGINDBSIGNAL.connect(self.checkPluginCall)
-        self.threadPool[3].SHOWMAINWINDOWSIGNAL.connect(self.showMainWindow)
+        self.threadPool[2].start()
+        self.threadPool[2].CHECKPLUGINDBSIGNAL.connect(self.checkPluginCall)
+        self.threadPool[2].SHOWMAINWINDOWSIGNAL.connect(self.showMainWindow)
 
         # Checking clipboard
         if str(self.persepolis_setting.value('settings/check-clipboard')) == 'yes':
@@ -1444,9 +1422,7 @@ class MainWindow(MainWindow_Ui):
         # this line set toolBar And Context Menu Items
         self.toolBarAndContextMenuItems('All Downloads')
 
-        # It will be enabled after aria2 startup!(see startAriaMessage method)
-        # .This line added for solving crash problems on startup
-        self.category_tree_qwidget.setEnabled(False)
+        self.category_tree_qwidget.setEnabled(True)
 
         # keep_awake_checkBox
         if str(self.persepolis_setting.value('settings/awake')) == 'yes':
@@ -1586,43 +1562,6 @@ class MainWindow(MainWindow_Ui):
 
     def typeOfConvertor(self, message):
         self.type_of_convertor = message
-
-# startAriaMessage function is showing some message on statusbar and
-# sending notification when aria failed to start! see StartAria2Thread for
-# more details
-    def startAriaMessage(self, message):
-        global aria_startup_answer
-        if message == 'yes':
-            sleep(0.5)
-            self.statusbar.showMessage(QCoreApplication.translate("mainwindow_src_ui_tr", 'Ready...'))
-            aria_startup_answer = 'ready'
-
-            self.category_tree_qwidget.setEnabled(True)
-
-            # Check for newer version of Persepolis
-            # start aria2c
-            check_for_newer_version = CheckNewerVersionThread(self)
-            self.threadPool.append(check_for_newer_version)
-            self.threadPool[-1].start()
-            self.threadPool[-1].NEWVERSIONISAVAILABLESIGNAL.connect(self.newVersionIsAvailable)
-
-        elif message == 'try again':
-            self.statusbar.showMessage(
-                QCoreApplication.translate("mainwindow_src_ui_tr", "Aria2 didn't respond! be patient! Persepolis tries again in 2 seconds!"))
-            logger.sendToLog(
-                "Aria2 didn't respond! be patient!Persepolis tries again in 2 seconds!",
-                "WARNING")
-
-        else:
-            self.statusbar.showMessage(QCoreApplication.translate("mainwindow_src_ui_tr", 'Error...'))
-            notifySend(QCoreApplication.translate("mainwindow_src_ui_tr", 'Persepolis can not connect to Aria2'),
-                       QCoreApplication.translate("mainwindow_src_ui_tr", 'Check your network & Restart Persepolis'),
-                       10000, 'critical', parent=self)
-
-            logger.sendToLog('Persepolis can not connect to Aria2', 'ERROR')
-
-            self.propertiesAction.setEnabled(True)
-            self.category_tree_qwidget.setEnabled(True)
 
     # read KeepAwakeThread for more information
     def keepAwake(self, add):
@@ -2101,7 +2040,7 @@ class MainWindow(MainWindow_Ui):
         link_clipboard.setText(str(link_string), mode=link_clipboard.Clipboard)
         self.addLinkButtonPressed(button=link_clipboard)
 
-    # aria2 identifies each download by the ID called GID.
+    # persepolis identifies each download by the ID called GID.
     # The GID must be hex string of 16 characters,
     # thus [0-9a-zA-Z] are allowed and leading zeros must
     # not be stripped. The GID all 0 is reserved and must
@@ -2582,7 +2521,7 @@ class MainWindow(MainWindow_Ui):
             status = 'stopped'
 
         # get now time and date
-        date = persepolis_lib_prime.nowDate()
+        date = nowDate()
 
         download_table_dict = {'file_name': file_name,
                                'status': status,
@@ -2635,7 +2574,7 @@ class MainWindow(MainWindow_Ui):
         # then create new qthread for new download!
         if not (download_later):
             # create download_session
-            download_session = persepolis_lib_prime.Download(add_link_dictionary, self)
+            download_session = persepolis_lib_prime.Download(add_link_dictionary, self, gid)
 
             # add download_session and gid to download_session_dict
             download_session_dict = {'gid': gid,
@@ -2750,7 +2689,7 @@ class MainWindow(MainWindow_Ui):
                     add_link_dictionary = self.persepolis_db.searchGidInAddLinkTable(gid)
 
                     # create download_session
-                    download_session = persepolis_lib_prime.Download(add_link_dictionary, self)
+                    download_session = persepolis_lib_prime.Download(add_link_dictionary, self, gid)
 
                     # add download_session and gid to download_session_dict
                     download_session_dict = {'gid': gid,
@@ -2763,7 +2702,6 @@ class MainWindow(MainWindow_Ui):
                     new_download = DownloadLink(gid, download_session, self)
                     self.threadPool.append(new_download)
                     self.threadPool[-1].start()
-                    self.threadPool[-1].ARIA2NOTRESPOND.connect(self.aria2NotRespond)
 
                 # create new progress_window
                 self.progressBarOpen(gid)
@@ -3474,8 +3412,8 @@ class MainWindow(MainWindow_Ui):
 
                 osCommands.remove(file_name_path)  # remove file
 
-                file_name_aria = file_name_path + str('.aria2')
-                osCommands.remove(file_name_aria)  # remove file.aria
+                json_control_file = file_name_path + str('.persepolis')
+                osCommands.remove(json_control_file)  # remove file.persepolis
 
             # remove download item from data base
             self.persepolis_db.deleteItemInDownloadTable(gid, category)
@@ -3636,9 +3574,9 @@ class MainWindow(MainWindow_Ui):
                     # remove file : file_name_path
                     osCommands.remove(file_name_path)
 
-                    # remove aria2 download information file : file_name_aria
-                    file_name_aria = file_name_path + str('.aria2')
-                    osCommands.remove(file_name_aria)
+                    # remove persepolis control_json_file file : json_control_file
+                    json_control_file = file_name_path + str('.persepolis')
+                    osCommands.remove(json_control_file)
 
                 # remove downloaded file, if download is completed
                 elif status == 'complete':
@@ -4328,12 +4266,12 @@ class MainWindow(MainWindow_Ui):
         download_table_list = []
 
         # get now time and date
-        date = persepolis_lib_prime.nowDate()
+        date = nowDate()
 
         # add dictionary of downloads to data base
         for add_link_dictionary in add_link_dictionary_list:
 
-            # aria2 identifies each download by the ID called GID. The GID must
+            # persepolis identifies each download by the ID called GID. The GID must
             # be hex string of 16 characters.
             gid = self.gidGenerator()
 
@@ -5635,7 +5573,7 @@ class MainWindow(MainWindow_Ui):
 
         for add_link_dictionary in add_link_dictionary_list:
 
-            # aria2 identifies each download by the ID called GID. The GID must be
+            # persepolis identifies each download by the ID called GID. The GID must be
             # hex string of 16 characters.
             # if user presses ok button on add link window , a gid generates for download.
             gid = self.gidGenerator()
@@ -5668,7 +5606,7 @@ class MainWindow(MainWindow_Ui):
                 status = 'stopped'
 
             # get now time and date
-            date = persepolis_lib_prime.nowDate()
+            date = nowDate()
 
             dictionary = {'file_name': file_name,
                           'status': status,

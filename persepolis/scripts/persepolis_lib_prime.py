@@ -21,7 +21,8 @@ import threading
 import os
 from requests.cookies import cookiejar_from_dict
 from http.cookies import SimpleCookie
-from persepolis_lib.useful_tools import convertTime, humanReadableSize, makeDirs
+from persepolis.scripts.useful_tools import convertTime, humanReadableSize
+from persepolis.scripts.osCommands import makeDirs
 from persepolis.scripts import logger
 import json
 from urllib.parse import urlparse, unquote
@@ -31,7 +32,7 @@ from urllib3.util.retry import Retry
 
 
 class Download():
-    def __init__(self, add_link_dictionary, main_window, python_request_chunk_size=1, timeout=15, retry=5):
+    def __init__(self, add_link_dictionary, main_window, gid, python_request_chunk_size=1, timeout=15, retry=5):
         self.python_request_chunk_size = python_request_chunk_size
         self.downloaded_size = 0
         self.finished_threads = 0
@@ -39,6 +40,7 @@ class Download():
         self.resume = False
         self.main_window = main_window
         self.download_speed_str = "0"
+        self.gid = gid
         self.__Version__ = "0.0.1"
 
         # download_status can be in waiting, downloading, stop, error, eaused
@@ -59,11 +61,12 @@ class Download():
         self.raw_cookies = add_link_dictionary['load_cookies']
         self.referer = add_link_dictionary['referer']
         self.start_time = add_link_dictionary['start_time']
+        self.file_name = '***'
+        self.file_size = 0
 
         self.timeout = timeout
         self.retry = retry
         self.lock = False
-        self.speed_limit = 0
         self.sleep_for_speed_limiting = 0
         self.not_converted_download_speed = 0
         self.download_percent = 0
@@ -324,8 +327,7 @@ class Download():
         while self.download_status == 'downloading' or self.download_status == 'paused':
             diffrence_time = time.perf_counter() - end_time
             diffrence_size = self.downloaded_size - last_download_value
-            diffrence_size_converted, speed_unit = humanReadableSize(
-                diffrence_size, 'speed')
+            diffrence_size_converted, speed_unit = humanReadableSize(diffrence_size, 'speed')
             download_speed = round(float(diffrence_size_converted) / diffrence_time,
                                    2)
             self.download_speed_str = (str(download_speed)
@@ -340,11 +342,6 @@ class Download():
                 eta_second = 0
 
             self.eta = convertTime(eta_second)
-
-            # downloadrate limitation
-            # "Speed limit" is whole number. The more it is, the more sleep time is given to the data
-            # receiving loop, which reduces the download speed.
-            self.sleep_for_speed_limiting = (self.speed_limit * 1) / self.number_of_threads
 
             end_time = time.perf_counter()
             last_download_value = self.downloaded_size
@@ -426,7 +423,11 @@ class Download():
                 # r+b mode is open the binary file in read or write mode.
                 with open(self.file_path, "r+b") as fp:
 
+                    # The seek() method sets the current file position in a file stream.
                     fp.seek(start)
+
+                    # The Python File tell() method is used to find the current position of
+                    # the file cursor (or pointer) within the file.
                     fp.tell()
 
                     # why we use iter_content
@@ -462,6 +463,9 @@ class Download():
                             self.downloaded_size = (self.downloaded_size
                                                     + update_size)
                             # perhaps user set limitation for download rate.
+                            # downloadrate limitation
+                            # "Speed limit" is whole number. The more it is, the more sleep time is given to the data
+                            # receiving loop, which reduces the download speed.
                             time.sleep(self.sleep_for_speed_limiting)
 
                         elif self.download_status == 'paused':
@@ -693,12 +697,16 @@ class Download():
 
     # This method returns download status
     def tellStatus(self):
+        downloded_size, downloaded_size_unit = humanReadableSize(self.downloaded_size)
+        file_size, file_size_unit = humanReadableSize(self.file_size)
+
         # return information in dictionary format
         download_info = {
+            'gid': self.gid,
             'file_name': self.file_name,
             'status': self.download_status,
-            'size': self.file_size,
-            'downloaded_size': self.downloaded_size,
+            'size': str(file_size) + ' ' + file_size_unit,
+            'downloaded_size': str(downloded_size) + ' ' + downloaded_size_unit,
             'percent': self.download_percent,
             'connections': self.number_of_active_connections,
             'rate': self.download_speed_str,
@@ -709,6 +717,6 @@ class Download():
         return download_info
 
     # This method limits download speed
-    # TODO باید یه فمری براش بکنم
     def limitSpeed(self, limit_value):
-        pass
+        # multiple limit_value to 0.1 for calculating sleep_for_speed_limiting
+        self.sleep_for_speed_limiting = (10 - limit_value) * 0.1

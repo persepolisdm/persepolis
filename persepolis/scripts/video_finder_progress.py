@@ -25,7 +25,6 @@ except:
 from persepolis.constants import OS
 from persepolis.gui.video_finder_progress_ui import VideoFinderProgressWindow_Ui
 from persepolis.scripts.shutdown import shutDown
-from persepolis.scripts import download
 import subprocess
 import platform
 
@@ -177,8 +176,11 @@ class VideoFinderProgressWindow(VideoFinderProgressWindow_Ui):
 
                 if status != 'scheduled':
 
-                    # tell aria2 for unlimited speed
-                    download.limitSpeed(gid, "0")
+                    for download_session_dict in self.main_window.download_sessions_list:
+                        if download_session_dict['gid'] == self.gid:
+                            # cancel the limitation of download speed
+                            download_session_dict['download_session'].limitSpeed(10)
+                            break
 
                 else:
                     # update limit value in data_base
@@ -298,8 +300,11 @@ class VideoFinderProgressWindow(VideoFinderProgressWindow_Ui):
             status = dictionary['status']
 
             if status != 'scheduled':
-
-                download.limitSpeed(self.gid, limit_value)
+                for download_session_dict in self.main_window.download_sessions_list:
+                    if download_session_dict['gid'] == self.gid:
+                        # limit  download speed
+                        download_session_dict['download_session'].limitSpeed(limit_value)
+                        break
             else:
                 # update limit value in data_base
                 add_link_dictionary = {'gid': gid, 'limit_value': limit_value}
