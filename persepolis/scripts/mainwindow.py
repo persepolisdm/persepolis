@@ -258,8 +258,6 @@ class CheckSelectedRowThread(QThread):
 
     def run(self):
         while shutdown_notification == 0:
-            sleep(1)
-        while shutdown_notification == 0:
             sleep(0.2)
             self.CHECKSELECTEDROWSIGNAL.emit()
 
@@ -1197,9 +1195,6 @@ class MainWindow(MainWindow_Ui):
             self.category_tree_qwidget.hide()
             self.showSidePanelAction.setChecked(False)
 
-        # set message for statusbar
-        self.statusbar.showMessage(QCoreApplication.translate("mainwindow_src_ui_tr", 'Please Wait...'))
-
         self.checkSelectedRow()
 
         # list of threads
@@ -2093,7 +2088,6 @@ class MainWindow(MainWindow_Ui):
 
     # this method activates/deactivates QActions according to selected row!
     def checkSelectedRow(self):
-
         rows_list = self.userSelectedRows()
 
         # check if user selected multiple items

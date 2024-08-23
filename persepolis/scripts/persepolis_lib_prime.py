@@ -21,9 +21,10 @@ import threading
 import os
 from requests.cookies import cookiejar_from_dict
 from http.cookies import SimpleCookie
-from persepolis.scripts.useful_tools import convertTime, humanReadableSize
-from persepolis.scripts.osCommands import makeDirs
+from persepolis.scripts.useful_tools import convertTime, humanReadableSize, freeSpace
+from persepolis.scripts.osCommands import makeDirs, moveFile
 from persepolis.scripts import logger
+from persepolis.scripts.bubble import notifySend
 import json
 from urllib.parse import urlparse, unquote
 from pathlib import Path
@@ -74,6 +75,8 @@ class Download():
         # number_of_threads can't be more that 64
         self.number_of_threads = int(add_link_dictionary['connections'])
         self.number_of_active_connections = self.number_of_threads
+
+        self.thread_list = []
 
     # this method get http header as string and convert it to dictionary
     def convertHeaderToDictionary(headers):
@@ -323,7 +326,7 @@ class Download():
         # and divide them to get the download speed.
         last_download_value = self.downloaded_size
         end_time = time.perf_counter()
-        # this loop repeated every 5 second.
+        # this loop repeated every 0.5 second.
         while self.download_status == 'downloading' or self.download_status == 'paused':
             diffrence_time = time.perf_counter() - end_time
             diffrence_size = self.downloaded_size - last_download_value
@@ -346,7 +349,7 @@ class Download():
             end_time = time.perf_counter()
             last_download_value = self.downloaded_size
 
-            time.sleep(5)
+            time.sleep(0.5)
 
     # this method runs progress bar and speed calculator
     def runProgressBar(self):
@@ -355,6 +358,7 @@ class Download():
             target=self.downloadSpeed)
         calculate_speed_thread.setDaemon(True)
         calculate_speed_thread.start()
+        self.thread_list.append(calculate_speed_thread)
 
     # threadHandler asks new part for download from this method.
     def askForNewPart(self):
@@ -491,8 +495,7 @@ class Download():
 
     # this method save download information in json format every 1 second
     def saveInfo(self):
-        while (self.finished_threads != self.number_of_threads) and\
-                (not (self.exit_event.wait(timeout=1))):
+        while self.download_status == 'downloading' or self.download_status == 'paused':
             control_dict = {
                 'ETag': self.etag,
                 'file_name': self.file_name,
@@ -502,6 +505,7 @@ class Download():
             # write control_dict in json file
             with open(self.control_json_file_path, "w") as outfile:
                 json.dump(control_dict, outfile, indent=2)
+            time.sleep(1)
 
     # this method runs download threads
     def runDownloadThreads(self):
@@ -522,12 +526,14 @@ class Download():
                 kwargs={'thread_number': i})
             t.setDaemon(True)
             t.start()
+            self.thread_list.append(t)
 
         # run saveInfo thread for updating control file
         save_control_thread = threading.Thread(
             target=self.saveInfo)
         save_control_thread.setDaemon(True)
         save_control_thread.start()
+        self.thread_list.append(save_control_thread)
 
     # this method checks and manages download progress.
     def checkDownloadProgress(self):
@@ -561,18 +567,6 @@ class Download():
         elif self.download_status == 'stopped':
 
             logger.sendToLog('Download stopped.')
-
-        # Return the current Thread object
-        main_thread = threading.current_thread()
-
-        # Return a list of all Thread objects currently alive
-        for t in threading.enumerate():
-            if t is main_thread:
-                continue
-            t.join()
-
-        # close requests session
-        self.requests_session.close()
 
     # This method returns data and time in string format
     # for example >> 2017/09/09 , 13:12:26
@@ -647,10 +641,6 @@ class Download():
             start_time_status = "downloading"
 
         if start_time_status == "scheduled":
-            # read limit value again from data_base before starting download!
-            # perhaps user changed this in progress bar window
-            self.add_link_dictionary = self.main_window.persepolis_db.searchGidInAddLinkTable(self.gid)
-
             # set start_time value to None in data_base!
             self.main_window.persepolis_db.setDefaultGidInAddlinkTable(self.gid, start_time=True)
 
@@ -686,12 +676,44 @@ class Download():
 
     def downloadStop(self):
         self.download_status = 'stopped'
-        self.exit_event.set()
+#         self.exit_event.set()
 
     def close(self):
         # if download complete, so delete control file
         if self.download_status == 'complete':
             os.remove(self.control_json_file_path)
+
+            # move file to download folder
+            self.main_window.persepolis_setting.sync()
+
+            # if user specified download_path is equal to persepolis_setting download_path,
+            # then subfolder must added to download path.
+            if self.main_window.persepolis_setting.value('settings/download_path') == self.download_path:
+
+                # return new download_path according to file extension.
+                new_download_path = self.findDownloadPath(
+                    self.file_name, self.download_path, self.main_window.persepolis_setting.value('settings/subfolder'))
+
+            # if file is related to VideoFinder thread, don't move it from temp folder...
+            video_finder_dictionary = self.main_window.persepolis_db.searchGidInVideoFinderTable(self.gid)
+            if video_finder_dictionary:
+                file_path = self.file_path
+            else:
+                file_path = self.downloadCompleteAction(new_download_path)
+
+            # update download_path in addlink_db_table
+            # find user preferred download_path from addlink_db_table in data_base
+            add_link_dictionary = self.main_window.persepolis_db.searchGidInAddLinkTable(self.gid)
+
+            add_link_dictionary['download_path'] = file_path
+            self.main_window.persepolis_db.updateAddLinkTable([add_link_dictionary])
+
+        # close requests session
+        self.requests_session.close()
+
+        # ask threads for exiting.
+        for thread in self.thread_list:
+            thread.join()
 
         logger.sendToLog("persepolis_lib is closed!")
 
@@ -707,8 +729,8 @@ class Download():
             'status': self.download_status,
             'size': str(file_size) + ' ' + file_size_unit,
             'downloaded_size': str(downloded_size) + ' ' + downloaded_size_unit,
-            'percent': self.download_percent,
-            'connections': self.number_of_active_connections,
+            'percent': str(self.download_percent) + '%',
+            'connections': str(self.number_of_active_connections),
             'rate': self.download_speed_str,
             'estimate_time_left': self.eta,
             'link': self.link
@@ -720,3 +742,112 @@ class Download():
     def limitSpeed(self, limit_value):
         # multiple limit_value to 0.1 for calculating sleep_for_speed_limiting
         self.sleep_for_speed_limiting = (10 - limit_value) * 0.1
+
+    # download complete actions!
+    # this method is returning file_path of file in the user's download folder
+    # and move downloaded file after download completion.
+    def downloadCompleteAction(self, new_download_path):
+
+        # rename file if file already existed
+        i = 1
+        new_file_path = os.path.join(new_download_path, self.file_name)
+
+        while os.path.isfile(new_file_path):
+            file_name_split = self.file_name.split('.')
+            extension_length = len(file_name_split[-1]) + 1
+
+            new_name = self.file_name[0:-extension_length] + \
+                '_' + str(i) + self.file_name[-extension_length:]
+            new_file_path = os.path.join(new_download_path, new_name)
+            i = i + 1
+
+        free_space = freeSpace(new_download_path)
+
+        if free_space is not None and self.file_size is not None:
+
+            # compare free disk space and file_size
+            if free_space >= self.file_size:
+
+                # move the file to the download folder
+                move_answer = moveFile(str(self.file_path), str(new_file_path), 'file')
+
+                if not (move_answer):
+                    # write error message in log
+                    logger.sendToLog('Persepolis can not move file', "ERROR")
+                    new_file_path = self.file_path
+
+            else:
+                # notify user if we have insufficient disk space
+                # and do not move file from temp download folder to download folder
+                new_file_path = self.file_path
+                logger.sendToLog('Insufficient disk space in download folder', "ERROR")
+
+                # show notification
+                notifySend("Insufficient disk space!", 'Please change download folder',
+                           10000, 'fail', parent=self.main_window)
+
+        else:
+            # move the file to the download folder
+            move_answer = moveFile(str(self.file_path), str(new_file_path), 'file')
+
+            if not (move_answer):
+                logger.sendToLog('Persepolis can not move file', "ERROR")
+                new_file_path = self.file_path
+
+        return str(new_file_path)
+
+    # this function returns folder of download according to file extension
+    def findDownloadPath(self, file_name, download_path, subfolder):
+
+        file_name_split = file_name.split('.')
+        file_extension = file_name_split[-1]
+
+        # convert extension letters to lower case
+        # for example "JPG" will be converted in "jpg"
+        file_extension = file_extension.lower()
+
+        # remove query from file_extension if existed
+        # if '?' in file_extension, then file_name contains query components.
+        if '?' in file_extension:
+            file_extension = file_extension.split('?')[0]
+
+        # audio formats
+        audio = ['act', 'aiff', 'aac', 'amr', 'ape', 'au', 'awb', 'dct', 'dss', 'dvf', 'flac', 'gsm', 'iklax', 'ivs', 'm4a',
+                 'm4p', 'mmf', 'mp3', 'mpc', 'msv', 'ogg', 'oga', 'opus', 'ra', 'raw', 'sln', 'tta', 'vox', 'wav', 'wma', 'wv']
+
+        # video formats
+        video = ['3g2', '3gp', 'asf', 'avi', 'drc', 'flv', 'm4v', 'mkv', 'mng', 'mov', 'qt', 'mp4', 'm4p', 'mpg', 'mp2',
+                 'mpeg', 'mpe', 'mpv', 'm2v', 'mxf', 'nsv', 'ogv', 'rmvb', 'roq', 'svi', 'vob', 'webm', 'wmv', 'yuv', 'rm']
+
+        # document formats
+        document = ['doc', 'docx', 'html', 'htm', 'fb2', 'odt', 'sxw', 'pdf', 'ps', 'rtf', 'tex', 'txt', 'epub', 'pub'
+                    'mobi', 'azw', 'azw3', 'azw4', 'kf8', 'chm', 'cbt', 'cbr', 'cbz', 'cb7', 'cba', 'ibooks', 'djvu', 'md']
+
+        # compressed formats
+        compressed = ['a', 'ar', 'cpio', 'shar', 'LBR', 'iso', 'lbr', 'mar', 'tar', 'bz2', 'F', 'gz', 'lz', 'lzma', 'lzo',
+                      'rz', 'sfark', 'sz', 'xz', 'Z', 'z', 'infl', '7z', 's7z', 'ace', 'afa', 'alz', 'apk', 'arc', 'arj', 'b1',
+                      'ba', 'bh', 'cab', 'cfs', 'cpt', 'dar', 'dd', 'dgc', 'dmg', 'ear', 'gca', 'ha', 'hki', 'ice', 'jar', 'kgb',
+                      'lzh', 'lha', 'lzx', 'pac', 'partimg', 'paq6', 'paq7', 'paq8', 'pea', 'pim', 'pit', 'qda', 'rar', 'rk', 'sda',
+                      'sea', 'sen', 'sfx', 'sit', 'sitx', 'sqx', 'tar.gz', 'tgz', 'tar.Z', 'tar.bz2', 'tbz2', 'tar.lzma', 'tlz', 'uc',
+                      'uc0', 'uc2', 'ucn', 'ur2', 'ue2', 'uca', 'uha', 'war', 'wim', 'xar', 'xp3', 'yz1', 'zip', 'zipx', 'zoo', 'zpaq',
+                      'zz', 'ecc', 'par', 'par2']
+
+        # return download_path
+        if str(subfolder) == 'yes':
+            if file_extension in audio:
+                return os.path.join(download_path, 'Audios')
+
+            # aria2c downloads youtube links file_name with 'videoplayback' name?!
+            elif (file_extension in video) or (file_name == 'videoplayback'):
+                return os.path.join(download_path, 'Videos')
+
+            elif file_extension in document:
+                return os.path.join(download_path, 'Documents')
+
+            elif file_extension in compressed:
+                return os.path.join(download_path, 'Compressed')
+
+            else:
+                return os.path.join(download_path, 'Others')
+        else:
+            return download_path
