@@ -320,7 +320,6 @@ class Download():
                     self.download_infromation_list[i] = [self.file_size, 0, 'complete', -1]
 
     # this method calculates download rate and ETA every second
-    # and alculates sleep between data reception for limiting download rate.
     def downloadSpeed(self):
         # Calculate the difference between downloaded volume and elapsed time
         # and divide them to get the download speed.
@@ -349,7 +348,7 @@ class Download():
             end_time = time.perf_counter()
             last_download_value = self.downloaded_size
 
-            time.sleep(0.5)
+            time.sleep(2)
 
     # this method runs progress bar and speed calculator
     def runProgressBar(self):
@@ -740,8 +739,8 @@ class Download():
 
     # This method limits download speed
     def limitSpeed(self, limit_value):
-        # multiple limit_value to 0.1 for calculating sleep_for_speed_limiting
-        self.sleep_for_speed_limiting = (10 - limit_value) * 0.1
+        # Calculate sleep time between data receiving. It's reduce download speed.
+        self.sleep_for_speed_limiting = (10 - limit_value) * 0.005 * (self.number_of_active_connections)
 
     # download complete actions!
     # this method is returning file_path of file in the user's download folder

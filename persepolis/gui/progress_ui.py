@@ -16,11 +16,11 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 try:
-    from PySide6.QtWidgets import QCheckBox, QProgressBar, QFrame, QDoubleSpinBox, QComboBox, QWidget, QTabWidget, QVBoxLayout, QHBoxLayout, QPushButton, QLabel
+    from PySide6.QtWidgets import QDial, QCheckBox, QProgressBar, QFrame, QComboBox, QWidget, QTabWidget, QVBoxLayout, QHBoxLayout, QPushButton, QLabel
     from PySide6.QtCore import Qt, QTranslator, QCoreApplication, QLocale, QSize
     from PySide6.QtGui import QIcon
 except:
-    from PyQt5.QtWidgets import QCheckBox, QProgressBar, QFrame, QDoubleSpinBox, QComboBox, QWidget, QTabWidget, QVBoxLayout, QHBoxLayout, QPushButton, QLabel
+    from PyQt5.QtWidgets import QDial, QCheckBox, QProgressBar, QFrame, QComboBox, QWidget, QTabWidget, QVBoxLayout, QHBoxLayout, QPushButton, QLabel
     from PyQt5.QtCore import Qt, QTranslator, QCoreApplication, QLocale, QSize
     from PyQt5.QtGui import QIcon
 
@@ -101,11 +101,8 @@ class ProgressWindow_Ui(QWidget):
 #         options_tab_horizontalLayout.setContentsMargins(11, 11, 11, 11)
 
 
-# limit_checkBox
-        self.limit_checkBox = QCheckBox(self.options_tab)
-
+# limit speed
         limit_verticalLayout = QVBoxLayout()
-        limit_verticalLayout.addWidget(self.limit_checkBox)
 
 # limit_frame
         self.limit_frame = QFrame(self.options_tab)
@@ -114,24 +111,19 @@ class ProgressWindow_Ui(QWidget):
         limit_frame_verticalLayout = QVBoxLayout(self.limit_frame)
         limit_frame_horizontalLayout = QHBoxLayout()
 
-# limit_spinBox
-        self.limit_spinBox = QDoubleSpinBox(self.options_tab)
-        self.limit_spinBox.setMinimum(1)
-        self.limit_spinBox.setMaximum(1023)
-        limit_frame_horizontalLayout.addWidget(self.limit_spinBox)
+# limit dial and label
 
-# limit_comboBox
-        self.limit_comboBox = QComboBox(self.options_tab)
-        self.limit_comboBox.addItem("")
-        self.limit_comboBox.addItem("")
+        self.limit_dial = QDial(self.limit_frame)
+        self.limit_dial.setNotchesVisible(True)
+        self.limit_dial.setMaximum(10)
+        self.limit_dial.setMinimum(0)
 
-        limit_frame_horizontalLayout.addWidget(self.limit_comboBox)
+        self.limit_label = QLabel(self.limit_frame)
 
-# limit_pushButton
-        self.limit_pushButton = QPushButton(self.options_tab)
+        limit_frame_verticalLayout.addWidget(self.limit_dial)
+        limit_frame_verticalLayout.addWidget(self.limit_label)
 
         limit_frame_verticalLayout.addLayout(limit_frame_horizontalLayout)
-        limit_frame_verticalLayout.addWidget(self.limit_pushButton)
 
         limit_verticalLayout.addWidget(self.limit_frame)
 
@@ -212,11 +204,7 @@ class ProgressWindow_Ui(QWidget):
         self.connections_label.setText(QCoreApplication.translate("progress_ui_tr", "Number of connections: "))
         self.progress_tabWidget.setTabText(self.progress_tabWidget.indexOf(
             self.information_tab), QCoreApplication.translate("progress_ui_tr", "Download Information"))
-        self.limit_checkBox.setText(QCoreApplication.translate("progress_ui_tr", "Limit speed"))
         self.after_checkBox.setText(QCoreApplication.translate("progress_ui_tr", "After download"))
-        self.limit_comboBox.setItemText(0, "KiB/s")
-        self.limit_comboBox.setItemText(1, "MiB/s")
-        self.limit_pushButton.setText(QCoreApplication.translate("progress_ui_tr", "Apply"))
 
         self.after_comboBox.setItemText(0, QCoreApplication.translate("progress_ui_tr", "Shut Down"))
 

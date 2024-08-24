@@ -54,42 +54,26 @@ class ProgressWindow(ProgressWindow_Ui):
         self.stop_pushButton.clicked.connect(self.stopPushButtonPressed)
         self.pause_pushButton.clicked.connect(self.pausePushButtonPressed)
         self.download_progressBar.setValue(0)
-        self.limit_pushButton.clicked.connect(self.limitPushButtonPressed)
-
-        self.limit_frame.setEnabled(False)
-        self.limit_checkBox.toggled.connect(self.limitCheckBoxToggled)
 
         self.after_frame.setEnabled(False)
         self.after_checkBox.toggled.connect(self.afterCheckBoxToggled)
 
         self.after_pushButton.clicked.connect(self.afterPushButtonPressed)
 
-# add support for other languages
+        # add support for other languages
         locale = str(self.persepolis_setting.value('settings/locale'))
         QLocale.setDefault(QLocale(locale))
         self.translator = QTranslator()
         if self.translator.load(':/translations/locales/ui_' + locale, 'ts'):
             QCoreApplication.installTranslator(self.translator)
 
-# check if limit speed activated by user or not
-        add_link_dictionary = self.main_window.persepolis_db.searchGidInAddLinkTable(gid)
-
-        limit = str(add_link_dictionary['limit_value'])
-        if limit != '0':
-            limit_number = limit[:-1]
-            limit_unit = limit[-1]
-            self.limit_spinBox.setValue(float(limit_number))
-            if limit_unit == 'K':
-                self.after_comboBox.setCurrentIndex(0)
-            else:
-                self.after_comboBox.setCurrentIndex(1)
-            self.limit_checkBox.setChecked(True)
+        # speed limit
+        self.limit_dial.setValue(10)
+        self.limit_dial.sliderReleased.connect(self.limitDialIsReleased)
+        self.limit_dial.valueChanged.connect(self.limitDialIsChanged)
+        self.limit_label.setText('Speed : Maximum')
 
         self.after_comboBox.currentIndexChanged.connect(self.afterComboBoxChanged)
-
-        self.limit_comboBox.currentIndexChanged.connect(self.limitComboBoxChanged)
-
-        self.limit_spinBox.valueChanged.connect(self.limitComboBoxChanged)
 
         # set window size and position
         size = self.persepolis_setting.value(
@@ -146,32 +130,6 @@ class ProgressWindow(ProgressWindow_Ui):
                     # unpause download
                     download_session_dict['download_session'].downloadStop()
                     break
-
-    def limitCheckBoxToggled(self, checkBoxes):
-
-        # user checked limit_checkBox
-        if self.limit_checkBox.isChecked() is True:
-            self.limit_frame.setEnabled(True)
-            self.limit_pushButton.setEnabled(True)
-
-        # user unchecked limit_checkBox
-        else:
-            self.limit_frame.setEnabled(False)
-
-            # check download status is "scheduled" or not!
-            if self.status != 'scheduled':
-                for download_session_dict in self.main_window.download_sessions_list:
-                    if download_session_dict['gid'] == self.gid:
-                        # cancel the limitation of download speed
-                        download_session_dict['download_session'].limitSpeed(10)
-                        break
-            else:
-                # update limit value in data_base
-                add_link_dictionary = {'gid': self.gid, 'limit_value': '0'}
-                self.main_window.persepolis_db.updateAddLinkTable([add_link_dictionary])
-
-    def limitComboBoxChanged(self, connect):
-        self.limit_pushButton.setEnabled(True)
 
     def afterComboBoxChanged(self, connect):
         self.after_pushButton.setEnabled(True)
@@ -255,27 +213,23 @@ class ProgressWindow(ProgressWindow_Ui):
             self.main_window.threadPool.append(shutdown_enable)
             self.main_window.threadPool[-1].start()
 
-    def limitPushButtonPressed(self, button):
-        self.limit_pushButton.setEnabled(False)
-        if self.limit_comboBox.currentText() == "KiB/s":
-            limit_value = str(self.limit_spinBox.value()) + str("K")
+    def limitDialIsReleased(self):
+        limit_value = self.limit_dial.value()
+
+        # set speed limit value
+        for download_session_dict in self.main_window.download_sessions_list:
+            if download_session_dict['gid'] == self.gid:
+                # limit  download speed
+                download_session_dict['download_session'].limitSpeed(limit_value)
+                break
+
+    def limitDialIsChanged(self, button):
+        if self.limit_dial.value() == 10:
+            self.limit_label.setText('Speed : Maximum')
+        elif self.limit_dial.value() == 0:
+            self.limit_label.setText('Speed : Minimum')
         else:
-            limit_value = str(self.limit_spinBox.value()) + str("M")
-
-    # if download was started before , setlimit_speed.
-    # else save the request in data_base
-
-        if self.status != 'scheduled':
-            for download_session_dict in self.main_window.download_sessions_list:
-                if download_session_dict['gid'] == self.gid:
-                    # limit  download speed
-                    download_session_dict['download_session'].limitSpeed(limit_value)
-                    break
-
-        else:
-            # update limit value in data_base
-            add_link_dictionary = {'gid': self.gid, 'limit_value': limit_value}
-            self.main_window.persepolis_db.updateAddLinkTable([add_link_dictionary])
+            self.limit_label.setText('Speed')
 
     def changeIcon(self, icons):
         icons = ':/' + str(icons) + '/'

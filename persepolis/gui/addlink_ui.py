@@ -296,31 +296,6 @@ class AddLinkWindow_Ui(QWidget):
         end_verticalLayout.addWidget(self.end_frame)
         time_limit_horizontalLayout.addLayout(end_verticalLayout)
 
-        # limit Speed ->
-        limit_verticalLayout = QVBoxLayout()
-
-        self.limit_checkBox = QCheckBox(self.more_options_tab)
-        limit_verticalLayout.addWidget(self.limit_checkBox)
-
-        self.limit_frame = QFrame(self.more_options_tab)
-        self.limit_frame.setFrameShape(QFrame.StyledPanel)
-        self.limit_frame.setFrameShadow(QFrame.Raised)
-
-        horizontalLayout_4 = QHBoxLayout(self.limit_frame)
-
-        self.limit_spinBox = QDoubleSpinBox(self.limit_frame)
-        self.limit_spinBox.setMinimum(1)
-        self.limit_spinBox.setMaximum(1023)
-        horizontalLayout_4.addWidget(self.limit_spinBox)
-
-        self.limit_comboBox = QComboBox(self.limit_frame)
-        self.limit_comboBox.addItem("")
-        self.limit_comboBox.addItem("")
-        horizontalLayout_4.addWidget(self.limit_comboBox)
-        limit_verticalLayout.addWidget(self.limit_frame)
-        time_limit_horizontalLayout.addLayout(limit_verticalLayout)
-        more_options_tab_verticalLayout.addLayout(time_limit_horizontalLayout)
-
         # number of connections ->
         connections_horizontalLayout = QHBoxLayout()
         connections_horizontalLayout.setContentsMargins(-1, 10, -1, -1)
@@ -451,10 +426,6 @@ class AddLinkWindow_Ui(QWidget):
 
         self.start_checkBox.setText(QCoreApplication.translate("addlink_ui_tr", "Start time"))
         self.end_checkBox.setText(QCoreApplication.translate("addlink_ui_tr", "End time"))
-
-        self.limit_checkBox.setText(QCoreApplication.translate("addlink_ui_tr", "Limit speed"))
-        self.limit_comboBox.setItemText(0, "KiB/s")
-        self.limit_comboBox.setItemText(1, "MiB/s")
 
         self.connections_label.setText(QCoreApplication.translate("addlink_ui_tr", "Number of connections:"))
 

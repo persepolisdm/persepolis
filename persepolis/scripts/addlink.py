@@ -185,9 +185,6 @@ class AddLinkWindow(AddLinkWindow_Ui):
         self.download_frame.setEnabled(False)
         self.download_checkBox.toggled.connect(self.downloadFrame)
 
-        self.limit_frame.setEnabled(False)
-        self.limit_checkBox.toggled.connect(self.limitFrame)
-
         self.start_frame.setEnabled(False)
         self.start_checkBox.toggled.connect(self.startFrame)
 
@@ -271,13 +268,6 @@ class AddLinkWindow(AddLinkWindow_Ui):
             self.download_frame.setEnabled(True)
         else:
             self.download_frame.setEnabled(False)
-
-    def limitFrame(self, checkBox):
-
-        if self.limit_checkBox.isChecked() is True:
-            self.limit_frame.setEnabled(True)
-        else:
-            self.limit_frame.setEnabled(False)
 
     def startFrame(self, checkBox):
 
@@ -424,15 +414,6 @@ class AddLinkWindow(AddLinkWindow_Ui):
             if not (download_passwd):
                 download_passwd = None
 
-        # check that if user limits download speed.
-        if not (self.limit_checkBox.isChecked()):
-            limit = 0
-        else:
-            if self.limit_comboBox.currentText() == "KiB/s":
-                limit = str(self.limit_spinBox.value()) + str("K")
-            else:
-                limit = str(self.limit_spinBox.value()) + str("M")
-
         # get start time for download if user set that.
         if not (self.start_checkBox.isChecked()):
             start_time = None
@@ -489,7 +470,7 @@ class AddLinkWindow(AddLinkWindow_Ui):
                                     'out': out, 'start_time': start_time, 'end_time': end_time, 'link': link, 'ip': ip,
                                     'port': port, 'proxy_user': proxy_user, 'proxy_passwd': proxy_passwd, 'proxy_type': proxy_type,
                                     'download_user': download_user, 'download_passwd': download_passwd,
-                                    'connections': connections, 'limit_value': limit, 'download_path': download_path}
+                                    'connections': connections, 'limit_value': 0, 'download_path': download_path}
 
         # get category of download
         category = str(self.add_queue_comboBox.currentText())
