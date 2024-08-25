@@ -452,17 +452,17 @@ class VideoFinder(QThread):
                 # get add_link_dictionary for video
                 add_link_dictionary = self.main_window.persepolis_db.searchGidInAddLinkTable(video_gid)
                 # create download_session
-                download_session = persepolis_lib_prime.Download(add_link_dictionary, self.main_window, video_gid)
+                video_download_session = persepolis_lib_prime.Download(add_link_dictionary, self.main_window, video_gid)
 
                 # add download_session and gid to download_session_dict
                 download_session_dict = {'gid': video_gid,
-                                         'download_session': download_session}
+                                         'download_session': video_download_session}
 
                 # append download_session_dict to download_sessions_list
                 self.main_window.download_sessions_list.append(download_session_dict)
 
                 # strat download in thread
-                new_download = DownloadLink(video_gid, download_session, self.main_window)
+                new_download = DownloadLink(video_gid, video_download_session, self.main_window)
                 self.main_window.threadPool.append(new_download)
                 self.main_window.threadPool[-1].start()
 
@@ -492,17 +492,19 @@ class VideoFinder(QThread):
                     # get add_link_dictionary for video
                     add_link_dictionary = self.main_window.persepolis_db.searchGidInAddLinkTable(audio_gid)
                     # create download_session
-                    download_session = persepolis_lib_prime.Download(add_link_dictionary, self.main_window, audio_gid)
+                    audio_download_session = persepolis_lib_prime.Download(add_link_dictionary, self.main_window, audio_gid)
 
                     # add download_session and gid to download_session_dict
                     download_session_dict = {'gid': audio_gid,
-                                             'download_session': download_session}
+                                             'download_session': audio_download_session}
 
                     # append download_session_dict to download_sessions_list
                     self.main_window.download_sessions_list.append(download_session_dict)
 
+                    # set speed limitation of video_download_session for audio_download_session
+                    audio_download_session.sleep_for_speed_limiting = video_download_session.sleep_for_speed_limiting
                     # strat download in thread
-                    new_download = DownloadLink(audio_gid, download_session, self.main_window)
+                    new_download = DownloadLink(audio_gid, audio_download_session, self.main_window)
                     self.main_window.threadPool.append(new_download)
                     self.main_window.threadPool[-1].start()
 
@@ -588,7 +590,6 @@ class Queue(QThread):
     def run(self):
         self.start = True
         self.stop = False
-        self.limit = False
         self.limit_changed = False
         self.after = False
         self.break_for_loop = False
@@ -729,6 +730,9 @@ class Queue(QThread):
                 # create download_session
                 download_session = persepolis_lib_prime.Download(add_link_dict, self, gid)
 
+                # check limit speed value
+                download_session.limitSpeed(self.main_window.limit_dial.value())
+
                 # add download_session and gid to download_session_dict
                 download_session_dict = {'gid': gid,
                                          'download_session': download_session}
@@ -744,10 +748,6 @@ class Queue(QThread):
                 # delete add_link_dict
                 del add_link_dict
                 sleep(3)
-
-                # limit download speed if user limited speed for previous download
-                if self.limit:
-                    self.limit_changed = True
 
                 # continue loop until download has finished
                 while status == 'downloading' or status == 'waiting' or status == 'paused' or status == 'scheduled':
@@ -806,34 +806,16 @@ class Queue(QThread):
                                 download_session_dict['download_session'].downloadStop()
                                 break
 
-                    if self.limit and status == 'downloading' and self.limit_changed:
+                    if status == 'downloading' and self.limit_changed:
                         # It means user want to limit download speed
                         # get limitation value
-                        self.limit_comboBox_value = self.main_window.limit_comboBox.currentText()
-                        self.limit_spinBox_value = self.main_window.limit_spinBox.value()
-                        if self.limit_comboBox_value == "KiB/s":
-                            limit = str(self.limit_spinBox_value) + str("K")
-                        else:
-                            limit = str(self.limit_spinBox_value) + str("M")
+                        limit_value = self.main_window.limit_dial.value()
 
                         # apply limitation
                         for download_session_dict in self.main_window.download_sessions_list:
                             if download_session_dict['gid'] == gid:
 
-                                download_session_dict['download_session'].limitSpeed(limit)
-                                break
-
-                        # done!
-                        self.limit_changed = False
-
-                    if not (self.limit) and status == 'downloading' and self.limit_changed:
-                        # speed limitation is canceled by user!
-                        # cancel limitation
-                        # apply limitation
-                        for download_session_dict in self.main_window.download_sessions_list:
-                            if download_session_dict['gid'] == gid:
-
-                                download_session_dict['download_session'].limitSpeed(10)
+                                download_session_dict['download_session'].limitSpeed(limit_value)
                                 break
 
                         # done!
@@ -877,7 +859,6 @@ class Queue(QThread):
                         self.main_window.after_checkBox.setChecked(False)
 
                     self.stop = True
-                    self.limit = False
                     self.limit_changed = False
 
                     # it means that break outer "for" loop
@@ -924,7 +905,6 @@ class Queue(QThread):
             logger.sendToLog('Queue completed', 'INFO')
 
             self.stop = True
-            self.limit = False
             self.limit_changed = False
             self.after = False
 
@@ -1395,16 +1375,11 @@ class MainWindow(MainWindow_Ui):
         self.after_checkBox.toggled.connect(self.afterFrame)
         self.after_checkBox.setChecked(False)
 
-        # connecting limit_checkBox to limitFrame
-        self.limit_checkBox.toggled.connect(self.limitFrame)
-
-        # connecting limit_pushButton to limitPushButtonPressed
-        self.limit_pushButton.clicked.connect(self.limitPushButtonPressed)
-
-        # connecting limit_comboBox and limit_spinBox to limitComboBoxChanged
-        self.limit_comboBox.currentIndexChanged.connect(
-            self.limitComboBoxChanged)
-        self.limit_spinBox.valueChanged.connect(self.limitComboBoxChanged)
+        # speed limit
+        self.limit_dial.setValue(10)
+        self.limit_dial.sliderReleased.connect(self.limitDialIsReleased)
+        self.limit_dial.valueChanged.connect(self.limitDialIsChanged)
+        self.limit_label.setText('Speed : Maximum')
 
         # connecting after_pushButton to afterPushButtonPressed
         self.after_pushButton.clicked.connect(self.afterPushButtonPressed)
@@ -4379,20 +4354,6 @@ class MainWindow(MainWindow_Ui):
         else:
             queue_dict['reverse'] = 'no'
 
-        # limit_checkBox
-        if self.limit_checkBox.isChecked():
-            queue_dict['limit_enable'] = 'yes'
-        else:
-            queue_dict['limit_enable'] = 'no'
-
-        # limit_comboBox and limit_spinBox
-        if self.limit_comboBox.currentText() == "KiB/s":
-            limit = str(self.limit_spinBox.value()) + str("K")
-        else:
-            limit = str(self.limit_spinBox.value()) + str("M")
-
-        queue_dict['limit_value'] = str(limit)
-
         # after_checkBox
         if self.after_checkBox.isChecked():
             queue_dict['after_download'] = 'yes'
@@ -4914,40 +4875,20 @@ class MainWindow(MainWindow_Ui):
             self.queue_panel_widget_frame.hide()
             self.queue_panel_show_button.setText(QCoreApplication.translate("mainwindow_src_ui_tr", 'Show options'))
 
-    # this metode is activating after_pushButton with limit_comboBox changing
-    def limitComboBoxChanged(self, connect):
-        self.limit_pushButton.setEnabled(True)
-
-    # this method activates or deactivates limit_frame according to
-    # limit_checkBox situation
-
-    def limitFrame(self, checkBox):
-        if self.limit_checkBox.isChecked():
-            self.limit_frame.setEnabled(True)
-            self.limit_pushButton.setEnabled(True)
-        else:
-            self.limit_frame.setEnabled(False)
-
-        # current_category_tree_text is the name of queue that selected by user
-            current_category_tree_text = str(
-                current_category_tree_index.data())
-
-        # inform queue about changes
-            if current_category_tree_text in self.queue_list_dict.keys():
-                self.queue_list_dict[current_category_tree_text].limit = False
-                self.queue_list_dict[current_category_tree_text].limit_changed = True
-
-    # this method limits download speed in queue
-
-    def limitPushButtonPressed(self, button):
-        self.limit_pushButton.setEnabled(False)
-
+    def limitDialIsReleased(self):
         # current_category_tree_text is the name of queue that selected by user
         current_category_tree_text = str(current_category_tree_index.data())
 
         # informing queue about changes
-        self.queue_list_dict[current_category_tree_text].limit = True
         self.queue_list_dict[current_category_tree_text].limit_changed = True
+
+    def limitDialIsChanged(self, button):
+        if self.limit_dial.value() == 10:
+            self.limit_label.setText('Speed : Maximum')
+        elif self.limit_dial.value() == 0:
+            self.limit_label.setText('Speed : Minimum')
+        else:
+            self.limit_label.setText('Speed')
 
     # this method handles user's shutdown request
     def afterPushButtonPressed(self, button):
@@ -5061,50 +5002,8 @@ class MainWindow(MainWindow_Ui):
             self.start_end_frame.hide()
             self.limit_after_frame.show()
 
-            # check that if user set limit speed
-            limit_status = self.queue_list_dict[str(category)].limit
-
             # check that if user selected 'shutdown after download'
             after_status = self.queue_list_dict[str(category)].after
-
-            if limit_status:  # It means queue's download speed limited by user
-                # get limit_spinBox value and limit_comboBox value
-                limit_number = self.queue_list_dict[str(
-                    category)].limit_spinBox_value
-                limit_unit = self.queue_list_dict[str(
-                    category)].limit_comboBox_value
-
-                # set limit_spinBox value
-                self.limit_spinBox.setValue(limit_number)
-
-                # set limit_comboBox value
-                if limit_unit == 'K':
-                    self.after_comboBox.setCurrentIndex(0)
-                else:
-                    self.after_comboBox.setCurrentIndex(1)
-
-                # enable limit_frame
-                self.limit_checkBox.setChecked(True)
-
-            else:
-                # disable limit_frame
-                self.limit_checkBox.setChecked(False)
-
-            # limit speed
-                limit = str(queue_info_dict['limit_value'])
-
-            # limit values
-                limit_number = limit[0:-1]
-                limit_unit = limit[-1]
-
-            # limit_spinBox
-                self.limit_spinBox.setValue(float(limit_number))
-
-            # limit_comboBox
-                if limit_unit == 'K':
-                    self.limit_comboBox.setCurrentIndex(0)
-                else:
-                    self.limit_comboBox.setCurrentIndex(1)
 
             # if after_status is True,
             # it means that user was selected
@@ -5116,7 +5015,6 @@ class MainWindow(MainWindow_Ui):
 
         else:
             # so queue is stopped
-
             self.start_end_frame.show()
             self.limit_after_frame.hide()
 

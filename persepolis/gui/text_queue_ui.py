@@ -219,24 +219,11 @@ class TextQueue_Ui(QWidget):
         # limit Speed
         limit_verticalLayout = QVBoxLayout()
 
-        self.limit_checkBox = QCheckBox(self.options_tab)
-        limit_verticalLayout.addWidget(self.limit_checkBox)
-
         self.limit_frame = QFrame(self.options_tab)
         self.limit_frame.setFrameShape(QFrame.StyledPanel)
         self.limit_frame.setFrameShadow(QFrame.Raised)
 
-        limit_horizontalLayout = QHBoxLayout(self.limit_frame)
-
-        self.limit_spinBox = QSpinBox(self.limit_frame)
-        self.limit_spinBox.setMinimum(1)
-        self.limit_spinBox.setMaximum(1023)
-        limit_horizontalLayout.addWidget(self.limit_spinBox)
-
-        self.limit_comboBox = QComboBox(self.limit_frame)
-        self.limit_comboBox.addItem("KiB/S")
-        self.limit_comboBox.addItem("MiB/S")
-        limit_horizontalLayout.addWidget(self.limit_comboBox)
+        connections_verticaLayout = QVBoxLayout(self.limit_frame)
 
         limit_verticalLayout.addWidget(self.limit_frame)
 
@@ -251,16 +238,15 @@ class TextQueue_Ui(QWidget):
         self.connections_frame.setFrameShape(QFrame.StyledPanel)
         self.connections_frame.setFrameShadow(QFrame.Raised)
 
-        horizontalLayout_3 = QHBoxLayout(self.connections_frame)
         self.connections_label = QLabel(self.connections_frame)
-        horizontalLayout_3.addWidget(self.connections_label)
+        connections_verticaLayout.addWidget(self.connections_label)
 
         self.connections_spinBox = QSpinBox(self.connections_frame)
         self.connections_spinBox.setMinimum(1)
         self.connections_spinBox.setMaximum(64)
         self.connections_spinBox.setProperty("value", 64)
 
-        horizontalLayout_3.addWidget(self.connections_spinBox)
+        connections_verticaLayout.addWidget(self.connections_spinBox)
         connections_horizontalLayout.addWidget(self.connections_frame)
 
         limit_connections_horizontalLayout.addLayout(connections_horizontalLayout)
@@ -313,8 +299,6 @@ class TextQueue_Ui(QWidget):
         self.folder_pushButton.setText(QCoreApplication.translate("text_ui_tr", "Change Download Folder"))
         self.folder_checkBox.setText(QCoreApplication.translate("addlink_ui_tr", "Remember this path"))
         self.folder_label.setText(QCoreApplication.translate("text_ui_tr", "Download folder: "))
-
-        self.limit_checkBox.setText(QCoreApplication.translate("text_ui_tr", "Limit speed"))
 
         self.connections_label.setText(QCoreApplication.translate("text_ui_tr", "Number of connections:"))
 

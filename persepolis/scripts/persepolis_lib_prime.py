@@ -46,7 +46,6 @@ class Download():
 
         # download_status can be in waiting, downloading, stop, error, eaused
         self.download_status = 'waiting'
-        self.exit_event = threading.Event()
 
         self.link = add_link_dictionary['link']
         self.name = add_link_dictionary['out']

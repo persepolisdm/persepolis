@@ -15,13 +15,13 @@
 """
 
 try:
-    from PySide6.QtWidgets import QTabWidget, QDoubleSpinBox, QPushButton, QComboBox, QSpinBox, QVBoxLayout, QHBoxLayout, QLabel, QWidget, QGridLayout, QCheckBox, QFrame, QLineEdit, QRadioButton
+    from PySide6.QtWidgets import QTabWidget, QPushButton, QComboBox, QSpinBox, QVBoxLayout, QHBoxLayout, QLabel, QWidget, QGridLayout, QCheckBox, QFrame, QLineEdit, QRadioButton
 
     from PySide6.QtCore import Qt, QTranslator, QCoreApplication, QLocale
     from PySide6 import QtCore
     from PySide6.QtGui import QIcon
 except:
-    from PyQt5.QtWidgets import QTabWidget, QDoubleSpinBox, QPushButton, QComboBox, QSpinBox, QVBoxLayout, QHBoxLayout, QLabel, QWidget, QGridLayout, QCheckBox, QFrame, QLineEdit, QRadioButton
+    from PyQt5.QtWidgets import QTabWidget, QPushButton, QComboBox, QSpinBox, QVBoxLayout, QHBoxLayout, QLabel, QWidget, QGridLayout, QCheckBox, QFrame, QLineEdit, QRadioButton
     from PyQt5.QtCore import Qt, QTranslator, QCoreApplication, QLocale
     from PyQt5 import QtCore
     from PyQt5.QtGui import QIcon
@@ -296,6 +296,19 @@ class AddLinkWindow_Ui(QWidget):
         end_verticalLayout.addWidget(self.end_frame)
         time_limit_horizontalLayout.addLayout(end_verticalLayout)
 
+        # limit Speed ->
+        limit_verticalLayout = QVBoxLayout()
+
+        self.limit_frame = QFrame(self.more_options_tab)
+        self.limit_frame.setFrameShape(QFrame.StyledPanel)
+        self.limit_frame.setFrameShadow(QFrame.Raised)
+
+        verticalLayout_4 = QVBoxLayout(self.limit_frame)
+
+        limit_verticalLayout.addWidget(self.limit_frame)
+        time_limit_horizontalLayout.addLayout(limit_verticalLayout)
+        more_options_tab_verticalLayout.addLayout(time_limit_horizontalLayout)
+
         # number of connections ->
         connections_horizontalLayout = QHBoxLayout()
         connections_horizontalLayout.setContentsMargins(-1, 10, -1, -1)
@@ -304,15 +317,14 @@ class AddLinkWindow_Ui(QWidget):
         self.connections_frame.setFrameShape(QFrame.StyledPanel)
         self.connections_frame.setFrameShadow(QFrame.Raised)
 
-        horizontalLayout_3 = QHBoxLayout(self.connections_frame)
         self.connections_label = QLabel(self.connections_frame)
-        horizontalLayout_3.addWidget(self.connections_label)
+        verticalLayout_4.addWidget(self.connections_label)
 
         self.connections_spinBox = QSpinBox(self.connections_frame)
         self.connections_spinBox.setMinimum(1)
         self.connections_spinBox.setMaximum(64)
         self.connections_spinBox.setProperty("value", 64)
-        horizontalLayout_3.addWidget(self.connections_spinBox)
+        verticalLayout_4.addWidget(self.connections_spinBox)
         connections_horizontalLayout.addWidget(self.connections_frame)
         connections_horizontalLayout.addStretch(1)
 

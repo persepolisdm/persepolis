@@ -201,9 +201,6 @@ class TextQueue(TextQueue_Ui):
         self.download_frame.setEnabled(False)
         self.download_checkBox.toggled.connect(self.downloadFrame)
 
-        self.limit_frame.setEnabled(False)
-        self.limit_checkBox.toggled.connect(self.limitFrame)
-
         # set focus to ok button
         self.ok_pushButton.setFocus()
 
@@ -269,13 +266,6 @@ class TextQueue(TextQueue_Ui):
             self.download_frame.setEnabled(True)
         else:
             self.download_frame.setEnabled(False)
-
-    def limitFrame(self, checkBox):
-
-        if self.limit_checkBox.isChecked():
-            self.limit_frame.setEnabled(True)
-        else:
-            self.limit_frame.setEnabled(False)
 
     def changeFolder(self, button):
         fname = QFileDialog.getExistingDirectory(
@@ -360,14 +350,6 @@ class TextQueue(TextQueue_Ui):
             if not (download_passwd):
                 download_passwd = None
 
-        if not (self.limit_checkBox.isChecked()):
-            limit = 0
-        else:
-            if self.limit_comboBox.currentText() == "KiB/s":
-                limit = str(self.limit_spinBox.value()) + str("K")
-            else:
-                limit = str(self.limit_spinBox.value()) + str("M")
-
         category = str(self.add_queue_comboBox.currentText())
 
         connections = self.connections_spinBox.value()
@@ -385,7 +367,7 @@ class TextQueue(TextQueue_Ui):
                  'download_passwd': download_passwd,
                  'proxy_type': proxy_type,
                  'connections': connections,
-                 'limit_value': limit,
+                 'limit_value': 0,
                  'download_path': download_path,
                  'referer': None,
                  'load_cookies': None,

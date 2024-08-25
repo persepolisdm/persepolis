@@ -85,9 +85,6 @@ class PropertiesWindow(AddLinkWindow_Ui):
         self.download_frame.setEnabled(False)
         self.download_checkBox.toggled.connect(self.downloadFrame)
 
-        self.limit_frame.setEnabled(False)
-        self.limit_checkBox.toggled.connect(self.limitFrame)
-
         self.start_frame.setEnabled(False)
         self.start_checkBox.toggled.connect(self.startFrame)
 
@@ -211,18 +208,6 @@ class PropertiesWindow(AddLinkWindow_Ui):
         # add_queue_comboBox event
         self.add_queue_comboBox.currentIndexChanged.connect(self.queueChanged)
 
-        # limit speed
-        limit = str(self.add_link_dictionary_1['limit_value'])
-        if limit != '0':
-            self.limit_checkBox.setChecked(True)
-            limit_number = limit[0:-1]
-            limit_unit = limit[-1]
-            self.limit_spinBox.setValue(float(limit_number))
-            if limit_unit == "K":
-                self.limit_comboBox.setCurrentIndex(0)
-            else:
-                self.limit_comboBox.setCurrentIndex(1)
-
         # start_time
         if self.add_link_dictionary_1['start_time']:
             # get hour and minute
@@ -305,13 +290,6 @@ class PropertiesWindow(AddLinkWindow_Ui):
             self.download_frame.setEnabled(True)
         else:
             self.download_frame.setEnabled(False)
-
-    def limitFrame(self, checkBox):
-
-        if self.limit_checkBox.isChecked():
-            self.limit_frame.setEnabled(True)
-        else:
-            self.limit_frame.setEnabled(False)
 
     def startFrame(self, checkBox):
 
@@ -412,14 +390,6 @@ class PropertiesWindow(AddLinkWindow_Ui):
             if not (download_passwd):
                 download_passwd = None
 
-        if not (self.limit_checkBox.isChecked()):
-            limit = 0
-        else:
-            if self.limit_comboBox.currentText() == "KiB/s":
-                limit = str(self.limit_spinBox.value()) + str("K")
-            else:
-                limit = str(self.limit_spinBox.value()) + str("M")
-
         if not (self.start_checkBox.isChecked()):
             start_time = None
         else:
@@ -468,7 +438,6 @@ class PropertiesWindow(AddLinkWindow_Ui):
         self.add_link_dictionary_1['download_user'] = download_user
         self.add_link_dictionary_1['download_passwd'] = download_passwd
         self.add_link_dictionary_1['download_path'] = download_path
-        self.add_link_dictionary_1['limit_value'] = limit
         self.add_link_dictionary_1['connections'] = connections
         self.add_link_dictionary_1['referer'] = referer
         self.add_link_dictionary_1['header'] = header
@@ -487,7 +456,6 @@ class PropertiesWindow(AddLinkWindow_Ui):
             self.add_link_dictionary_2['download_user'] = download_user
             self.add_link_dictionary_2['download_passwd'] = download_passwd
             self.add_link_dictionary_2['download_path'] = download_path
-            self.add_link_dictionary_2['limit_value'] = limit
             self.add_link_dictionary_2['connections'] = connections
             self.add_link_dictionary_2['referer'] = referer
             self.add_link_dictionary_2['header'] = header
