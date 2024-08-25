@@ -26,7 +26,15 @@ from urllib.parse import urlparse, unquote
 
 
 def getFileNameFromLink(link):
-    return Path(unquote(urlparse(link).path)).name
+    parsed_linkd = urlparse(link)
+    file_name = Path(parsed_linkd.path).name
+
+    # URL might contain percent-encoded characters
+    # for example farsi characters in link
+    if file_name.find('%'):
+        file_name = unquote(file_name)
+
+    return file_name
 
 # spider function finds name of file and file size from header
 
@@ -85,14 +93,18 @@ def spider(add_link_dictionary):
 
     filename = None
     file_size = None
-    if 'Content-Disposition' in header.keys():  # checking if filename is available
+    # check if filename is available in header
+    if 'Content-Disposition' in header.keys():
         content_disposition = header['Content-Disposition']
+
         if content_disposition.find('filename') != -1:
+
+            # so file name is available in header
             filename_splited = content_disposition.split('filename=')
             filename_splited = filename_splited[-1]
 
             # getting file name in desired format
-            filename = filename_splited.strip(' "\'')
+            filename = filename_splited.strip()
 
     if not (filename):
         filename = getFileNameFromLink(link)
@@ -104,12 +116,18 @@ def spider(add_link_dictionary):
 
     # check if file_size is available
     if 'Content-Length' in header.keys():
-        file_size = int(header['Content-Length'])
+        try:
+            file_size = int(header['Content-Length'])
 
-        # converting file_size to KiB or MiB or GiB
-        file_size, unit = humanReadableSize(file_size)
+            # converting file_size to KiB or MiB or GiB
+            file_size, unit = humanReadableSize(file_size)
 
-        file_size_with_unit = str(file_size) + ' ' + unit
+            file_size_with_unit = str(file_size) + ' ' + unit
+        except Exception as error:
+            file_size_with_unit = 'None'
+    else:
+        file_size_with_unit = 'None'
+
     # return results
     return filename, file_size_with_unit
 

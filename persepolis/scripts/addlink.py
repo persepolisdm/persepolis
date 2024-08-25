@@ -470,7 +470,7 @@ class AddLinkWindow(AddLinkWindow_Ui):
                                     'out': out, 'start_time': start_time, 'end_time': end_time, 'link': link, 'ip': ip,
                                     'port': port, 'proxy_user': proxy_user, 'proxy_passwd': proxy_passwd, 'proxy_type': proxy_type,
                                     'download_user': download_user, 'download_passwd': download_passwd,
-                                    'connections': connections, 'limit_value': 0, 'download_path': download_path}
+                                    'connections': connections, 'limit_value': 10, 'download_path': download_path}
 
         # get category of download
         category = str(self.add_queue_comboBox.currentText())

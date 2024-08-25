@@ -802,7 +802,7 @@ class VideoFinderAddLink(AddLinkWindow):
                                    'out': name_list[0], 'start_time': start_time, 'end_time': end_time, 'link': link_list[0], 'ip': ip,
                                    'port': port, 'proxy_user': proxy_user, 'proxy_passwd': proxy_passwd, 'proxy_type': proxy_type,
                                    'download_user': download_user, 'download_passwd': download_passwd,
-                                   'connections': connections, 'limit_value': 0, 'download_path': download_path}
+                                   'connections': connections, 'limit_value': 10, 'download_path': download_path}
 
             add_link_dictionary_list.append(add_link_dictionary)
 
@@ -811,13 +811,13 @@ class VideoFinderAddLink(AddLinkWindow):
                                          'out': name_list[0], 'start_time': start_time, 'end_time': end_time, 'link': link_list[0], 'ip': ip,
                                          'port': port, 'proxy_user': proxy_user, 'proxy_passwd': proxy_passwd, 'proxy_type': proxy_type,
                                          'download_user': download_user, 'download_passwd': download_passwd,
-                                         'connections': connections, 'limit_value': 0, 'download_path': download_path}
+                                         'connections': connections, 'limit_value': 10, 'download_path': download_path}
 
             audio_add_link_dictionary = {'referer': referer, 'header': header, 'user_agent': user_agent, 'load_cookies': load_cookies,
                                          'out': name_list[1], 'start_time': None, 'end_time': end_time, 'link': link_list[1], 'ip': ip,
                                          'port': port, 'proxy_user': proxy_user, 'proxy_passwd': proxy_passwd, 'proxy_type': proxy_type,
                                          'download_user': download_user, 'download_passwd': download_passwd,
-                                         'connections': connections, 'limit_value': 0, 'download_path': download_path}
+                                         'connections': connections, 'limit_value': 10, 'download_path': download_path}
 
             add_link_dictionary_list = [video_add_link_dictionary, audio_add_link_dictionary]
 

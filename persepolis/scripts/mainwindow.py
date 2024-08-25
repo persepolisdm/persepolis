@@ -726,9 +726,10 @@ class Queue(QThread):
 
                 # write changes in data base
                 self.main_window.persepolis_db.updateAddLinkTable([add_link_dict])
+                add_link_dict = self.main_window.persepolis_db.searchGidInAddLinkTable(gid)
 
                 # create download_session
-                download_session = persepolis_lib_prime.Download(add_link_dict, self, gid)
+                download_session = persepolis_lib_prime.Download(add_link_dict, self.main_window, gid)
 
                 # check limit speed value
                 download_session.limitSpeed(self.main_window.limit_dial.value())
@@ -742,8 +743,8 @@ class Queue(QThread):
 
                 # strat download in thread
                 new_download = DownloadLink(gid, download_session, self.main_window)
-                self.threadPool.append(new_download)
-                self.threadPool[-1].start()
+                self.main_window.threadPool.append(new_download)
+                self.main_window.threadPool[-1].start()
 
                 # delete add_link_dict
                 del add_link_dict
@@ -5048,7 +5049,6 @@ class MainWindow(MainWindow_Ui):
             else:
                 self.reverse_checkBox.setChecked(False)
 
-        self.limitFrame(category)
         self.afterFrame(category)
         self.startFrame(category)
         self.endFrame(category)

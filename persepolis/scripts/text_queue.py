@@ -367,7 +367,7 @@ class TextQueue(TextQueue_Ui):
                  'download_passwd': download_passwd,
                  'proxy_type': proxy_type,
                  'connections': connections,
-                 'limit_value': 0,
+                 'limit_value': 10,
                  'download_path': download_path,
                  'referer': None,
                  'load_cookies': None,

@@ -354,7 +354,7 @@ class BrowserPluginQueue(TextQueue_Ui):
                  'download_user': download_user,
                  'download_passwd': download_passwd,
                  'connections': connections,
-                 'limit_value': 0,
+                 'limit_value': 10,
                  'download_path': download_path,
                  'referer': None,
                  'load_cookies': None,
