@@ -1102,7 +1102,11 @@ class MainWindow(MainWindow_Ui):
         global icons
         icons = ':/' + \
             str(self.persepolis_setting.value('settings/icons')) + '/'
-# add support for other languages
+
+        # get version
+        self.persepolis_version = self.persepolis_main.applicationVersion()
+
+        # add support for other languages
         locale = str(self.persepolis_setting.value('settings/locale'))
         QLocale.setDefault(QLocale(locale))
         self.translator = QTranslator()
@@ -1119,7 +1123,7 @@ class MainWindow(MainWindow_Ui):
         # see showQueuePanelOptions method for more information.
         self.show_queue_panel = True
 
-# system_tray_icon
+        # system_tray_icon
         self.system_tray_icon = QSystemTrayIcon()
         self.system_tray_icon.setIcon(
             QIcon.fromTheme('persepolis-tray', QIcon(':/persepolis-tray.svg')))
@@ -1211,7 +1215,7 @@ class MainWindow(MainWindow_Ui):
             self.is_test = False
             logger.sendToLog("Persepolis is run as installed python madule.", "INFO")
 
-    # initializing
+        # initializing
         # create an object for PluginsDB
         self.plugins_db = PluginsDB()
 
@@ -3351,8 +3355,15 @@ class MainWindow(MainWindow_Ui):
         # remove duplicate items
         gid_list = set(gid_list)
 
-        # find row number for specific gid
         for gid in gid_list:
+            # remove it from download_sessions_list
+            for download_session_dict in self.download_sessions_list:
+                if download_session_dict['gid'] == gid:
+                    # remove item
+                    self.download_sessions_list.remove(download_session_dict)
+                    break
+
+            # find row number for specific gid
             for i in range(self.download_table.rowCount()):
                 row_gid = self.download_table.item(i, 8).text()
                 if gid == row_gid:
@@ -3513,8 +3524,15 @@ class MainWindow(MainWindow_Ui):
         # remove duplicate items
         gid_list = set(gid_list)
 
-        # find row number for specific gid
         for gid in gid_list:
+            # remove it from download_sessions_list
+            for download_session_dict in self.download_sessions_list:
+                if download_session_dict['gid'] == gid:
+                    # remove item
+                    self.download_sessions_list.remove(download_session_dict)
+                    break
+
+            # find row number for specific gid
             for i in range(self.download_table.rowCount()):
                 row_gid = self.download_table.item(i, 8).text()
                 if gid == row_gid:

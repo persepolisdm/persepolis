@@ -53,6 +53,7 @@ class Download():
         self.port = add_link_dictionary['port']
         self.proxy_user = add_link_dictionary['proxy_user']
         self.proxy_passwd = add_link_dictionary['proxy_passwd']
+        self.proxy_type = add_link_dictionary['proxy_type']
         self.download_user = add_link_dictionary['download_user']
         self.download_passwd = add_link_dictionary['download_passwd']
         self.header = add_link_dictionary['header']
@@ -61,9 +62,9 @@ class Download():
         self.referer = add_link_dictionary['referer']
         self.start_time = add_link_dictionary['start_time']
         self.end_time = add_link_dictionary['end_time']
+        self.number_of_parts = 0
         self.file_name = '***'
         self.file_size = 0
-
         self.timeout = timeout
         self.retry = retry
         self.lock = False
@@ -85,6 +86,7 @@ class Download():
                 continue
             point_index = line.find(":")
             dic[line[:point_index].strip()] = line[point_index + 1:].strip()
+
         return dic
 
     # create requests session
@@ -94,12 +96,20 @@ class Download():
 
         # check if user set proxy
         if self.ip:
-            ip_port = 'http://' + str(self.ip) + ":" + str(self.port)
+            ip_port = '://' + str(self.ip) + ":" + str(self.port)
             if self.proxy_user:
-                ip_port = ('http://' + self.proxy_user + ':'
+                ip_port = ('://' + self.proxy_user + ':'
                            + self.proxy_passwd + '@' + ip_port)
+            if self.proxy_type == 'socks5':
+                ip_port = 'socks5' + ip_port
+            else:
+                ip_port = 'http' + ip_port
+
+            proxies = {'http': ip_port,
+                       'https': ip_port}
+
             # set proxy to the session
-            self.requests_session.proxies = {'http': ip_port}
+            self.requests_session.proxies.update(proxies)
 
         # check if download session needs authenthication
         if self.download_user:
@@ -122,6 +132,11 @@ class Download():
 
         # set user_agent
         if self.user_agent:
+            # setting user_agent to the session
+            self.requests_session.headers.update(
+                {'user-agent': self.user_agent})
+        else:
+            self.user_agent = 'PersepolisDM/' + str(self.main_window.persepolis_version)
             # setting user_agent to the session
             self.requests_session.headers.update(
                 {'user-agent': self.user_agent})
@@ -291,8 +306,11 @@ class Download():
             # read number of threads
             self.download_infromation_list = data_dict['download_infromation_list']
 
+            # number_of_parts
+            self.number_of_parts = data_dict['number_of_parts']
+
             # set pending status for uncomplete parts
-            for i in range(0, 64):
+            for i in range(0, self.number_of_parts):
                 if self.download_infromation_list[i][2] != 'complete':
                     self.download_infromation_list[i] = [self.download_infromation_list[i][0], self.download_infromation_list[i][1], 'pending', -1]
 
@@ -304,19 +322,20 @@ class Download():
 
             # if part_size greater than 1 MiB
             if part_size >= 1024**2:
+                self.number_of_parts = 64
                 for i in range(0, 64):
                     self.download_infromation_list[i] = [i * part_size, 0, 'pending', -1]
 
             else:
                 # Calculate how many parts of one MiB we need.
-                number_of_parts = int(self.file_size // (1024**2)) + 1
-                for i in range(0, number_of_parts):
+                self.number_of_parts = int(self.file_size // (1024**2)) + 1
+                for i in range(0, self.number_of_parts):
                     self.download_infromation_list[i] = [i * 1024 * 1024, 0, 'pending', -1]
 
                 # Set the starting byte number of the remaining parts equal to the size of the file.
                 # The size of the file is equal to the last byte of the file.
                 # The status of these parts is complete. Because we have nothing to download.
-                for i in range(number_of_parts, 64):
+                for i in range(self.number_of_parts, 64):
                     self.download_infromation_list[i] = [self.file_size, 0, 'complete', -1]
 
     # this method calculates download rate and ETA every second
@@ -362,7 +381,7 @@ class Download():
     # threadHandler asks new part for download from this method.
     def askForNewPart(self):
         self.lock = True
-        for i in range(0, 64):
+        for i in range(0, self.number_of_parts):
             # Check that this part is not being downloaded or its download is not complete.
             # Check that the number of retries of this part has not reached the set limit.
             if (self.download_infromation_list[i][2] not in ['complete', 'downloading']) and (self.download_infromation_list[i][3] != self.retry):
@@ -373,7 +392,7 @@ class Download():
                 break
 
             # no part found
-            if i == 63:
+            if i == (self.number_of_parts - 1):
                 i = None
 
         self.lock = False
@@ -389,7 +408,7 @@ class Download():
             while self.lock is True:
                 # Random sleep prevents two threads from downloading the same part at the same time.
                 # sleep random time
-                time.sleep(random.uniform(0, 0.5))
+                time.sleep(random.uniform(1, 3))
             part_number = self.askForNewPart()
 
             # If part_number is None, no part is available for download. So exit the loop.
@@ -397,7 +416,7 @@ class Download():
                 break
             try:
                 # calculate part size
-                if part_number != 63:
+                if part_number != (self.number_of_parts - 1):
                     part_size = self.download_infromation_list[part_number + 1][0] - self.download_infromation_list[part_number][0]
                 else:
                     part_size = self.file_size - self.download_infromation_list[part_number][0]
@@ -407,7 +426,7 @@ class Download():
                 start = self.download_infromation_list[part_number][0] + downloaded_part
 
                 # end of part is equal to start of the next part
-                if part_number != 63:
+                if part_number != (self.number_of_parts - 1):
                     end = self.download_infromation_list[part_number + 1][0]
                 else:
                     end = self.file_size
@@ -416,6 +435,8 @@ class Download():
                 chunk_headers = {'Range': 'bytes=%d-%d' % (start, end)}
 
                 # request the specified part and get into variable
+                # When stream=True is set on the request, this avoids
+                # reading the content at once into memory for large responses
                 self.requests_session.headers.update(chunk_headers)
                 response = self.requests_session.get(
                     self.link, allow_redirects=True, stream=True,
@@ -455,6 +476,10 @@ class Download():
                                 # so the last small chunk is equal to :
                                 update_size = (part_size - downloaded_part)
 
+                            # if update_size greater than actual data length:
+                            if update_size > len(data):
+                                update_size = len(data)
+
                             # update downloaded_part
                             downloaded_part = (downloaded_part
                                                + update_size)
@@ -480,7 +505,7 @@ class Download():
                             self.download_infromation_list[part_number][2] = 'stopped'
                             break
 
-            except:
+            except Exception:
                 self.download_infromation_list[part_number][2] = 'error'
 
             # so it's complete successfully.
@@ -499,6 +524,7 @@ class Download():
                 'ETag': self.etag,
                 'file_name': self.file_name,
                 'file_size': self.file_size,
+                'number_of_parts': self.number_of_parts,
                 'download_infromation_list': self.download_infromation_list}
 
             # write control_dict in json file
@@ -595,7 +621,6 @@ class Download():
         # get current time
         sigma_now = self.nowTime()
 
-        print(self.download_status)
         # this loop is continuing until download time arrival!
         while sigma_start != sigma_now and self.download_status == 'scheduled':
             time.sleep(2.1)

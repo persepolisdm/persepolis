@@ -47,6 +47,7 @@ def spider(add_link_dictionary):
     port = add_link_dictionary['port']
     proxy_user = add_link_dictionary['proxy_user']
     proxy_passwd = add_link_dictionary['proxy_passwd']
+    proxy_type = add_link_dictionary['proxy_type']
     download_user = add_link_dictionary['download_user']
     download_passwd = add_link_dictionary['download_passwd']
     header = add_link_dictionary['header']
@@ -57,12 +58,22 @@ def spider(add_link_dictionary):
 
     # define a requests session
     requests_session = requests.Session()
+    # check if user set proxy
     if ip:
-        ip_port = 'http://' + str(ip) + ":" + str(port)
+        ip_port = '://' + str(ip) + ":" + str(port)
         if proxy_user:
-            ip_port = 'http://' + proxy_user + ':' + proxy_passwd + '@' + ip_port
+            ip_port = ('://' + proxy_user + ':'
+                       + proxy_passwd + '@' + ip_port)
+        if proxy_type == 'socks5':
+            ip_port = 'socks5' + ip_port
+        else:
+            ip_port = 'http' + ip_port
+
+        proxies = {'http': ip_port,
+                   'https': ip_port}
+
         # set proxy to the session
-        requests_session.proxies = {'http': ip_port}
+        requests_session.proxies.update(proxies)
 
     if download_user:
         # set download user pass to the session
@@ -83,6 +94,11 @@ def spider(add_link_dictionary):
     # set user_agent
     if user_agent:
         requests_session.headers.update({'user-agent': user_agent})  # setting user_agent to the session
+    else:
+        user_agent = 'PersepolisDM/4.3.0'
+        # setting user_agent to the session
+        requests_session.headers.update(
+            {'user-agent': user_agent})
 
     # find headers
     try:
@@ -128,6 +144,7 @@ def spider(add_link_dictionary):
     else:
         file_size_with_unit = 'None'
 
+    requests_session.close()
     # return results
     return filename, file_size_with_unit
 
@@ -142,7 +159,7 @@ def queueSpider(add_link_dictionary):
 def addLinkSpider(add_link_dictionary):
     # get user's download information from add_link_dictionary
     for i in ['link', 'ip', 'port', 'proxy_user', 'proxy_passwd', 'download_user', 'download_passwd',
-              'header', 'out', 'user_agent', 'load_cookies', 'referer']:
+              'header', 'out', 'user_agent', 'proxy_type', 'load_cookies', 'referer']:
         if not (i in add_link_dictionary):
             add_link_dictionary[i] = None
 

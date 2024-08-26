@@ -98,16 +98,12 @@ def humanReadableSize(size, input_type='file_size'):
         i += 1
         size = size / 1024
 
-    if input_type == 'speed':
-        j = 0
-    else:
-        j = 1
-
-    if i > j:
+    if i > 1:
         return round(size, 2), labels[i]
+    elif i == 1:
+        return round(size, 1), labels[i]
     else:
         return round(size, None), labels[i]
-
 
 # this function converts second to hour and minute
 def convertTime(time):
