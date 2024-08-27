@@ -423,6 +423,7 @@ class Download():
 
                 # get start byte number of this part and add it to downloaded size. download resume from this byte number
                 downloaded_part = self.download_infromation_list[part_number][1]
+
                 start = self.download_infromation_list[part_number][0] + downloaded_part
 
                 # end of part is equal to start of the next part
@@ -431,6 +432,7 @@ class Download():
                 else:
                     end = self.file_size
 
+#                 print(str(part_size) + ' ' + str(downloaded_part) + ' ' + str(part_number) + ' ' + str(start) + ' ' + str(end))
                 # specify the start and end of the part for request header.
                 chunk_headers = {'Range': 'bytes=%d-%d' % (start, end)}
 
@@ -469,17 +471,23 @@ class Download():
                             fp.write(data)
 
                             # maybe the last chunk is less than default chunk size
-                            if downloaded_part <= (part_size
-                                                   - python_request_chunk_size):
+                            if (part_size - downloaded_part) >= python_request_chunk_size:
                                 update_size = python_request_chunk_size
+                                # if update_size is not equal with actual data length,
+                                # then redownload this chunk.
+                                # exit this "for loop" for redownloading this chunk.
+                                if update_size != len(data):
+                                    # This loop does not end due to an error in the request.
+                                    # Therefore, no number should be added to the number of retries.
+                                    self.download_infromation_list[part_number][3] -= 1
+                                    break
                             else:
                                 # so the last small chunk is equal to :
                                 update_size = (part_size - downloaded_part)
+                                # some times last chunks are smaller
+                                if len(data) < update_size:
+                                    update_size = len(data)
 
-                            # if update_size is not equal with actual data length, so reject
-                            # this chunk and set erroe status. download this chunk again.
-                            if update_size != len(data):
-                                break
                             # update downloaded_part
                             downloaded_part = (downloaded_part
                                                + update_size)

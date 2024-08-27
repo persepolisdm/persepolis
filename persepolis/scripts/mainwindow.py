@@ -1890,7 +1890,7 @@ class MainWindow(MainWindow_Ui):
 
                     # close progress_window if download status is stopped or
                     # completed or error
-                    # if window is related to video finder and download is completed, the don't close window
+                    # if window is related to video finder and download is completed, don't close window
                     if (video_finder_link is True and progress_window.status == 'complete'):
 
                         # disable stop and pause and push buttons
