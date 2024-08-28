@@ -168,19 +168,6 @@ class Setting_Ui(QWidget):
 
         download_options_tab_verticalLayout.addLayout(connections_horizontalLayout)
 
-        # rpc_port
-        self.rpc_port_label = QLabel(self.download_options_tab)
-        self.rpc_horizontalLayout = QHBoxLayout()
-        self.rpc_horizontalLayout.addWidget(self.rpc_port_label)
-
-        self.rpc_port_spinbox = QSpinBox(self.download_options_tab)
-        self.rpc_port_spinbox.setMinimum(1024)
-        self.rpc_port_spinbox.setMaximum(65535)
-        self.rpc_horizontalLayout.addWidget(self.rpc_port_spinbox)
-
-        download_options_tab_verticalLayout.addLayout(
-            self.rpc_horizontalLayout)
-
         # wait_queue
         wait_queue_horizontalLayout = QHBoxLayout()
 
@@ -197,28 +184,6 @@ class Setting_Ui(QWidget):
         # don't check certificate checkBox
         self.dont_check_certificate_checkBox = QCheckBox(self.download_options_tab)
         download_options_tab_verticalLayout.addWidget(self.dont_check_certificate_checkBox)
-
-        # remote time
-        self.remote_time_checkBox = QCheckBox(self.download_options_tab)
-        download_options_tab_verticalLayout.addWidget(self.remote_time_checkBox)
-
-        # change aria2 path
-        aria2_path_verticalLayout = QVBoxLayout()
-
-        self.aria2_path_checkBox = QCheckBox(self.download_options_tab)
-        aria2_path_verticalLayout.addWidget(self.aria2_path_checkBox)
-
-        aria2_path_horizontalLayout = QHBoxLayout()
-
-        self.aria2_path_lineEdit = QLineEdit(self.download_options_tab)
-        aria2_path_horizontalLayout.addWidget(self.aria2_path_lineEdit)
-
-        self.aria2_path_pushButton = QPushButton(self.download_options_tab)
-        aria2_path_horizontalLayout.addWidget(self.aria2_path_pushButton)
-
-        aria2_path_verticalLayout.addLayout(aria2_path_horizontalLayout)
-
-        download_options_tab_verticalLayout.addLayout(aria2_path_verticalLayout)
 
         download_options_tab_verticalLayout.addStretch(1)
 
@@ -554,16 +519,16 @@ class Setting_Ui(QWidget):
         self.setWindowTitle(QCoreApplication.translate("setting_ui_tr", "Preferences"))
 
         self.tries_label.setToolTip(
-            QCoreApplication.translate("setting_ui_tr", "<html><head/><body><p>Set number of tries if download failed.</p></body></html>"))
+            QCoreApplication.translate("setting_ui_tr", "<html><head/><body><p>Set number of retries if download failed.</p></body></html>"))
         self.tries_label.setText(QCoreApplication.translate("setting_ui_tr", "Number of tries: "))
         self.tries_spinBox.setToolTip(
-            QCoreApplication.translate("setting_ui_tr", "<html><head/><body><p>Set number of tries if download failed.</p></body></html>"))
+            QCoreApplication.translate("setting_ui_tr", "<html><head/><body><p>Set number of retries if download failed.</p></body></html>"))
 
         self.wait_label.setToolTip(
-            QCoreApplication.translate("setting_ui_tr", "<html><head/><body><p>Set the seconds to wait between retries. Download manager will  retry  downloads  when  the  HTTP  server  returns  a  503 response.</p></body></html>"))
+            QCoreApplication.translate("setting_ui_tr", "<html><head/><body><p>Set the seconds to wait between retries.</p></body></html>"))
         self.wait_label.setText(QCoreApplication.translate("setting_ui_tr", "Wait period between retries (seconds): "))
         self.wait_spinBox.setToolTip(
-            QCoreApplication.translate("setting_ui_tr", "<html><head/><body><p>Set the seconds to wait between retries. Download manager will  retry  downloads  when  the  HTTP  server  returns  a  503 response.</p></body></html>"))
+            QCoreApplication.translate("setting_ui_tr", "<html><head/><body><p>Set the seconds to wait between retries.</p></body></html>"))
 
         self.time_out_label.setToolTip(
             QCoreApplication.translate("setting_ui_tr", "<html><head/><body><p>Set timeout in seconds. </p></body></html>"))
@@ -577,28 +542,12 @@ class Setting_Ui(QWidget):
         self.connections_spinBox.setToolTip(
             QCoreApplication.translate("setting_ui_tr", "<html><head/><body><p>Using multiple connections can help speed up your download.</p></body></html>"))
 
-        self.rpc_port_label.setText(QCoreApplication.translate("setting_ui_tr", "RPC port number: "))
-        self.rpc_port_spinbox.setToolTip(
-            QCoreApplication.translate("setting_ui_tr", "<html><head/><body><p> Specify a port number for JSON-RPC/XML-RPC server to listen to. Possible Values: 1024 - 65535 Default: 6801 </p></body></html>"))
-
         self.wait_queue_label.setText(QCoreApplication.translate(
             "setting_ui_tr", 'Wait period between each download in queue:'))
 
         self.dont_check_certificate_checkBox.setText(QCoreApplication.translate("setting_ui_tr", "Don't use certificate to verify the peers"))
         self.dont_check_certificate_checkBox.setToolTip(
             QCoreApplication.translate("setting_ui_tr", "<html><head/><body><p>This option avoids SSL/TLS handshake failure. But use it at your own risk!</p></body></html>"))
-
-        self.remote_time_checkBox.setText(QCoreApplication.translate("setting_ui_tr", "Remote time"))
-        self.remote_time_checkBox.setToolTip(
-            QCoreApplication.translate("setting_ui_tr", "<html><head/><body><p>Retrieve timestamp of the remote file from the remote HTTP/FTP server and if it is available, apply it to the local file.</p></body></html>"))
-
-        self.aria2_path_checkBox.setText(QCoreApplication.translate("setting_ui_tr", 'Change Aria2 default path'))
-        self.aria2_path_pushButton.setText(QCoreApplication.translate("setting_ui_tr", 'Change'))
-        aria2_path_tooltip = QCoreApplication.translate(
-            "setting_ui_tr", "<html><head/><body><p>Attention: Wrong path may cause problems! Do it carefully or don't change default setting!</p></body></html>")
-        self.aria2_path_checkBox.setToolTip(aria2_path_tooltip)
-        self.aria2_path_lineEdit.setToolTip(aria2_path_tooltip)
-        self.aria2_path_pushButton.setToolTip(aria2_path_tooltip)
 
         self.setting_tabWidget.setTabText(self.setting_tabWidget.indexOf(
             self.download_options_tab), QCoreApplication.translate("setting_ui_tr", "Download Options"))

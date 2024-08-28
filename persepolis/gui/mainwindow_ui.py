@@ -13,11 +13,11 @@
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 try:
-    from PySide6.QtWidgets import QDial, QHeaderView, QDoubleSpinBox, QPushButton, QComboBox, QMenu, QTreeView, QSplitter, QHBoxLayout, QVBoxLayout, QTableWidgetItem, QAbstractItemView, QToolBar, QMenuBar, QStatusBar, QTableWidget, QMainWindow, QWidget, QFrame, QCheckBox, QLabel
+    from PySide6.QtWidgets import QDial, QHeaderView, QPushButton, QComboBox, QMenu, QTreeView, QSplitter, QHBoxLayout, QVBoxLayout, QTableWidgetItem, QAbstractItemView, QToolBar, QMenuBar, QStatusBar, QTableWidget, QMainWindow, QWidget, QFrame, QCheckBox, QLabel
     from PySide6.QtGui import QShortcut, QAction, QCursor, QIcon, QStandardItemModel
     from PySide6.QtCore import QCoreApplication, QRect, Qt, QTranslator, QLocale
 except:
-    from PyQt5.QtWidgets import QDial, QHeaderView, QShortcut, QDoubleSpinBox, QPushButton, QComboBox, QTreeView, QSplitter, QHBoxLayout, QVBoxLayout, QMenu, QTableWidgetItem, QAbstractItemView, QToolBar, QMenuBar, QStatusBar, QTableWidget, QAction, QMainWindow, QWidget, QFrame, QCheckBox, QLabel
+    from PyQt5.QtWidgets import QDial, QHeaderView, QShortcut, QPushButton, QComboBox, QTreeView, QSplitter, QHBoxLayout, QVBoxLayout, QMenu, QTableWidgetItem, QAbstractItemView, QToolBar, QMenuBar, QStatusBar, QTableWidget, QAction, QMainWindow, QWidget, QFrame, QCheckBox, QLabel
     from PyQt5.QtGui import QCursor, QIcon, QStandardItemModel
     from PyQt5.QtCore import QCoreApplication, QRect, Qt, QTranslator, QLocale
 
@@ -728,7 +728,6 @@ class MainWindow_Ui(QMainWindow):
         self.qmenu = MenuWidget(self)
 
         self.toolBar2.addWidget(self.qmenu)
-
 
         # labels
         self.queue_panel_show_button.setText(QCoreApplication.translate("mainwindow_ui_tr", "Hide Options"))

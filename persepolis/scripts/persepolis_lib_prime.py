@@ -33,7 +33,7 @@ from urllib3.util.retry import Retry
 
 
 class Download():
-    def __init__(self, add_link_dictionary, main_window, gid, python_request_chunk_size=1, timeout=15, retry=5):
+    def __init__(self, add_link_dictionary, main_window, gid, python_request_chunk_size=1):
         self.python_request_chunk_size = python_request_chunk_size
         self.downloaded_size = 0
         self.finished_threads = 0
@@ -65,12 +65,18 @@ class Download():
         self.number_of_parts = 0
         self.file_name = '***'
         self.file_size = 0
-        self.timeout = timeout
-        self.retry = retry
+        self.timeout = int(main_window.persepolis_setting.value('settings/timeout'))
+        self.retry = int(main_window.persepolis_setting.value('settings/max-tries'))
+        self.retry_wait = int(main_window.persepolis_setting.value('settings/retry-wait'))
         self.lock = False
         self.sleep_for_speed_limiting = 0
         self.not_converted_download_speed = 0
         self.download_percent = 0
+        # check certificate
+        if str(main_window.persepolis_setting.value('settings/dont-check-certificate')) == 'yes':
+            self.check_certificate = False
+        else:
+            self.check_certificate = True
 
         # number_of_threads can't be more that 64
         self.number_of_threads = int(add_link_dictionary['connections'])
@@ -150,7 +156,7 @@ class Download():
     def setRetry(self):
         # set retry numbers.
         # backoff_factor will help to apply delays between attempts to avoid failing again
-        retry = Retry(connect=self.retry, backoff_factor=1)
+        retry = Retry(connect=self.retry, backoff_factor=self.retry_wait)
         adapter = HTTPAdapter(max_retries=retry)
         self.requests_session.mount('http://', adapter)
         self.requests_session.mount('https://', adapter)
@@ -160,7 +166,7 @@ class Download():
     def getFileSize(self):
         # find file size
         try:
-            response = self.requests_session.head(self.link, allow_redirects=True, timeout=5)
+            response = self.requests_session.head(self.link, allow_redirects=True, timeout=self.timeout, verify=self.check_certificate)
             self.file_header = response.headers
 
             self.file_size = int(self.file_header['content-length'])
@@ -442,7 +448,7 @@ class Download():
                 self.requests_session.headers.update(chunk_headers)
                 response = self.requests_session.get(
                     self.link, allow_redirects=True, stream=True,
-                    timeout=self.timeout)
+                    timeout=self.timeout, verify=self.check_certificate)
 
                 # open the file and write the content of the html page
                 # into file.
