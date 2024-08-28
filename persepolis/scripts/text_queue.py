@@ -57,8 +57,7 @@ class QueueSpiderThread(QThread):
 
 
 class TextQueue(TextQueue_Ui):
-    def __init__(self, parent, file_path, callback,
-                 socks5_to_http_convertor_is_installed, persepolis_setting):
+    def __init__(self, parent, file_path, callback, persepolis_setting):
         super().__init__(persepolis_setting)
         self.persepolis_setting = persepolis_setting
         self.callback = callback
@@ -161,11 +160,6 @@ class TextQueue(TextQueue_Ui):
             'add_link_initialization/proxy_type', None)
 
         # default is http
-        if not (socks5_to_http_convertor_is_installed):
-            self.socks5_radioButton.setEnabled(False)
-        else:
-            self.socks5_radioButton.setEnabled(True)
-
         if settings_proxy_type == 'socks5':
 
             self.socks5_radioButton.setChecked(True)

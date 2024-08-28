@@ -66,7 +66,7 @@ class AddLinkSpiderThread(QThread):
 
 
 class AddLinkWindow(AddLinkWindow_Ui):
-    def __init__(self, parent, callback, persepolis_setting, socks5_to_http_convertor_is_installed, plugin_add_link_dictionary={}):
+    def __init__(self, parent, callback, persepolis_setting, plugin_add_link_dictionary={}):
         super().__init__(persepolis_setting)
         self.callback = callback
         self.plugin_add_link_dictionary = plugin_add_link_dictionary
@@ -140,12 +140,6 @@ class AddLinkWindow(AddLinkWindow_Ui):
         # http or socks5 initialization
         settings_proxy_type = self.persepolis_setting.value(
             'add_link_initialization/proxy_type', None)
-
-        # default is http
-        if not (socks5_to_http_convertor_is_installed):
-            self.socks5_radioButton.setEnabled(False)
-        else:
-            self.socks5_radioButton.setEnabled(True)
 
         if settings_proxy_type == 'socks5':
 

@@ -45,7 +45,7 @@ from persepolis.scripts.browser_plugin_queue import BrowserPluginQueue
 from persepolis.scripts.data_base import PluginsDB, PersepolisDB, TempDB
 from persepolis.gui.mainwindow_ui import MainWindow_Ui, QTableWidgetItem
 from persepolis.scripts.video_finder_progress import VideoFinderProgressWindow
-from persepolis.scripts.useful_tools import nowDate, muxer, freeSpace, determineConfigFolder, osAndDesktopEnvironment, getExecPath, ffmpegVersion, socks5ToHttpConvertorVersion
+from persepolis.scripts.useful_tools import nowDate, muxer, freeSpace, determineConfigFolder, osAndDesktopEnvironment, getExecPath, ffmpegVersion
 global pyside6_is_installed
 try:
     from PySide6.QtWidgets import QCheckBox, QLineEdit, QAbstractItemView, QFileDialog, QSystemTrayIcon, QMenu, QApplication, QInputDialog, QMessageBox
@@ -77,8 +77,6 @@ except ModuleNotFoundError:
 global ffmpeg_is_installed
 ffmpeg_is_installed = False
 
-global socks5_to_http_convertor_is_installed
-socks5_to_http_convertor_is_installed = False
 
 # shutdown_notification = 0 >> persepolis is running
 # 1 >> persepolis is ready for closing(closeEvent  is called)
@@ -125,7 +123,6 @@ show_window_file = os.path.join(persepolis_tmp, 'show-window')
 
 
 class CheckVersionsThread(QThread):
-    TYPEOFCONVERTORSIGNAL = Signal(str)
 
     def __init__(self, parent):
         QThread.__init__(self)
@@ -139,13 +136,6 @@ class CheckVersionsThread(QThread):
 
         logger.sendToLog(ffmpeg_command_log_list[0], ffmpeg_command_log_list[1])
         logger.sendToLog(ffmpeg_output, "INFO")
-
-        global socks5_to_http_convertor_is_installed
-        # check socks5_to_http_convertor version
-        socks5_to_http_convertor_is_installed, socks5_to_http_convertor_output, socks5_to_http_convertor_command_log_list, type_of_convertor = socks5ToHttpConvertorVersion()
-
-        logger.sendToLog(socks5_to_http_convertor_command_log_list[0], socks5_to_http_convertor_command_log_list[1])
-        logger.sendToLog(socks5_to_http_convertor_output, "INFO")
 
         # log python version
         logger.sendToLog('python version: '
@@ -171,10 +161,6 @@ class CheckVersionsThread(QThread):
         if desktop_env:
             logger.sendToLog('Desktop env.: '
                              + str(desktop_env))
-
-        if type_of_convertor:
-            self.TYPEOFCONVERTORSIGNAL.emit(type_of_convertor)
-
 
 # check clipboard
 class CheckClipBoardThread(QThread):
@@ -1185,9 +1171,6 @@ class MainWindow(MainWindow_Ui):
         # list of threads
         self.threadPool = []
 
-        # list of SocksToHttpConvertor
-        self.socks5_to_http_convertor_list = []
-
         # get execution path information
         self.exec_dictionary = getExecPath()
         self.exec_file_path = self.exec_dictionary['exec_file_path']
@@ -1307,9 +1290,6 @@ class MainWindow(MainWindow_Ui):
         # key = video_gid and value = VideoFinder thread
         self.video_finder_threads_dict = {}
 
-        # no convert_socks5 thread is running now
-        self.socks5_to_http_convertor_is_still_running = False
-
         # CheckDownloadInfoThread
         check_download_info = CheckDownloadInfoThread(self)
         self.threadPool.append(check_download_info)
@@ -1347,14 +1327,12 @@ class MainWindow(MainWindow_Ui):
         self.threadPool[-1].start()
         self.threadPool[-1].KEEPSYSTEMAWAKESIGNAL.connect(self.keepAwake)
 
-        # this thread checks ffmpeg and gost availability.
+        # this thread checks ffmpeg availability.
         # this thread checks ffmpeg and python and pyqt and qt versions and write them in log file.
-        # this thread writes osi type and desktop env. in log file.
-        self.type_of_convertor = None
+        # this thread writes os type and desktop env. in log file.
         check_version_thread = CheckVersionsThread(self)
         self.threadPool.append(check_version_thread)
         self.threadPool[-1].start()
-        self.threadPool[-1].TYPEOFCONVERTORSIGNAL.connect(self.typeOfConvertor)
 
         # finding number or row that user selected!
         self.download_table.itemSelectionChanged.connect(self.selectedRow)
@@ -1531,12 +1509,6 @@ class MainWindow(MainWindow_Ui):
 
         # check reverse_checkBox
         self.reverse_checkBox.setChecked(False)
-
-    # This method set type_of_convertor_variable
-    # see TYPEOFCONVERTORSIGNAL and CheckVersionThread
-
-    def typeOfConvertor(self, message):
-        self.type_of_convertor = message
 
     # read KeepAwakeThread for more information
     def keepAwake(self, add):
@@ -2421,12 +2393,8 @@ class MainWindow(MainWindow_Ui):
     # browsers plugin (Single Download)
 
     def pluginAddLink(self, add_link_dictionary):
-
-        # check if gost is installed
-        global socks5_to_http_convertor_is_installed
-
         # create an object for AddLinkWindow and add it to addlinkwindows_list.
-        addlinkwindow = AddLinkWindow(self, self.callBack, self.persepolis_setting, socks5_to_http_convertor_is_installed, add_link_dictionary)
+        addlinkwindow = AddLinkWindow(self, self.callBack, self.persepolis_setting, add_link_dictionary)
         self.addlinkwindows_list.append(addlinkwindow)
         self.addlinkwindows_list[-1].show()
 
@@ -2438,14 +2406,10 @@ class MainWindow(MainWindow_Ui):
 
     def addLinkButtonPressed(self, button=None):
 
-        # check if gost is installed
-        global socks5_to_http_convertor_is_installed
-
-        addlinkwindow = AddLinkWindow(self, self.callBack, self.persepolis_setting, socks5_to_http_convertor_is_installed)
+        addlinkwindow = AddLinkWindow(self, self.callBack, self.persepolis_setting)
         self.addlinkwindows_list.append(addlinkwindow)
         self.addlinkwindows_list[-1].show()
 
-    # TODO از اینجا شروع کردم
     # callback of AddLinkWindow
     def callBack(self, add_link_dictionary, download_later, category):
         exists = self.persepolis_db.searchLinkInAddLinkTable(add_link_dictionary['link'])
@@ -2792,10 +2756,9 @@ class MainWindow(MainWindow_Ui):
 
                     return
 
-            # creating propertieswindow
-            global socks5_to_http_convertor_is_installed
+            # creat propertieswindow
             propertieswindow = PropertiesWindow(
-                self, self.propertiesCallback, gid, self.persepolis_setting, socks5_to_http_convertor_is_installed, result_dictionary)
+                self, self.propertiesCallback, gid, self.persepolis_setting, result_dictionary)
             self.propertieswindows_list.append(propertieswindow)
             self.propertieswindows_list[-1].show()
 
@@ -4144,9 +4107,8 @@ class MainWindow(MainWindow_Ui):
     def pluginQueue(self, list_of_links):
 
         # create window
-        global socks5_to_http_convertor_is_installed
         plugin_queue_window = BrowserPluginQueue(
-            self, list_of_links, self.queueCallback, socks5_to_http_convertor_is_installed, self.persepolis_setting)
+            self, list_of_links, self.queueCallback, self.persepolis_setting)
         self.plugin_queue_window_list.append(plugin_queue_window)
         self.plugin_queue_window_list[-1].show()
 
@@ -4162,14 +4124,11 @@ class MainWindow(MainWindow_Ui):
         f_path, filters = QFileDialog.getOpenFileName(
             self, 'Select the text file that contains links')
 
-        # check if the gost is installed.
-        global socks5_to_http_convertor_is_installed
-
         # if path is correct:
         if os.path.isfile(str(f_path)):
             # create a text_queue_window for getting information.
             text_queue_window = TextQueue(
-                self, f_path, self.queueCallback, socks5_to_http_convertor_is_installed, self.persepolis_setting)
+                self, f_path, self.queueCallback, self.persepolis_setting)
 
             self.text_queue_window_list.append(text_queue_window)
             self.text_queue_window_list[-1].show()
@@ -4217,8 +4176,7 @@ class MainWindow(MainWindow_Ui):
 
             # create a text_queue_window for getting information.
             text_queue_window = TextQueue(
-                self, temp_file_path, self.queueCallback,
-                socks5_to_http_convertor_is_installed, self.persepolis_setting)
+                self, temp_file_path, self.queueCallback, self.persepolis_setting)
             self.text_queue_window_list.append(text_queue_window)
             self.text_queue_window_list[-1].show()
 
@@ -5437,10 +5395,6 @@ class MainWindow(MainWindow_Ui):
         checking_flag = 0
 
     def showVideoFinderAddLinkWindow(self, input_dict=None, menu=None):
-
-        # check if gost is installed.
-        global socks5_to_http_convertor_is_installed
-
         # first check youtube_dl_is_installed and ffmpeg_is_installed value!
         # if youtube_dl or ffmpeg is not installed show an error message.
         if youtube_dl_is_installed and ffmpeg_is_installed:
@@ -5448,7 +5402,7 @@ class MainWindow(MainWindow_Ui):
                 input_dict = {}
 
             video_finder_addlink_window = VideoFinderAddLink(
-                parent=self, receiver_slot=self.videoFinderCallBack, socks5_to_http_convertor_is_installed=socks5_to_http_convertor_is_installed, settings=self.persepolis_setting, video_dict=input_dict)
+                parent=self, receiver_slot=self.videoFinderCallBack, settings=self.persepolis_setting, video_dict=input_dict)
             self.addlinkwindows_list.append(video_finder_addlink_window)
             video_finder_addlink_window.show()
             video_finder_addlink_window.raise_()
