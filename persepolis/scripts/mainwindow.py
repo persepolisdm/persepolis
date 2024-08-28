@@ -918,9 +918,6 @@ class CheckingThread(QThread):
         # 1 >> persepolis is ready for closing(closeEvent called)
         # 2 >> OK, let's close application!
         while shutdown_notification == 0:
-            sleep(1)
-
-        while shutdown_notification == 0:
             sleep(0.2)
 
             # it means , user clicked on persepolis icon and persepolis is
@@ -2756,7 +2753,7 @@ class MainWindow(MainWindow_Ui):
 
                     return
 
-            # creat propertieswindow
+            # create propertieswindow
             propertieswindow = PropertiesWindow(
                 self, self.propertiesCallback, gid, self.persepolis_setting, result_dictionary)
             self.propertieswindows_list.append(propertieswindow)
