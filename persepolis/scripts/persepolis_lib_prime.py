@@ -33,8 +33,7 @@ from urllib3.util.retry import Retry
 
 
 class Download():
-    def __init__(self, add_link_dictionary, main_window, gid, python_request_chunk_size=1):
-        self.python_request_chunk_size = python_request_chunk_size
+    def __init__(self, add_link_dictionary, main_window, gid):
         self.downloaded_size = 0
         self.finished_threads = 0
         self.eta = "0"
@@ -68,6 +67,7 @@ class Download():
         self.timeout = int(main_window.persepolis_setting.value('settings/timeout'))
         self.retry = int(main_window.persepolis_setting.value('settings/max-tries'))
         self.retry_wait = int(main_window.persepolis_setting.value('settings/retry-wait'))
+        self.python_request_chunk_size = int(main_window.persepolis_setting.value('settings/chunk-size'))
         self.lock = False
         self.sleep_for_speed_limiting = 0
         self.not_converted_download_speed = 0

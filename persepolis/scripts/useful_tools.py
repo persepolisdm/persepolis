@@ -208,7 +208,7 @@ def returnDefaultSettings():
                             'column10': 'yes', 'column11': 'yes', 'column12': 'yes', 'subfolder': 'yes', 'startup': 'no', 'show-progress': 'yes',
                             'show-menubar': 'no', 'show-sidepanel': 'yes', 'notification': 'Native notification', 'after-dialog': 'yes',
                             'tray-icon': 'yes', 'browser-persepolis': 'yes', 'hide-window': 'yes', 'max-tries': 5, 'retry-wait': 1, 'timeout': 5,
-                            'connections': 64, 'download_path': download_path, 'sound': 'yes', 'sound-volume': 100,
+                            'connections': 64, 'download_path': download_path, 'sound': 'yes', 'sound-volume': 100, 'chunk-size': 100,
                             'style': style, 'color-scheme': color_scheme, 'icons': icons, 'font': 'Ubuntu', 'font-size': 9,
                             'video_finder/max_links': '3', 'shortcuts/delete_shortcut': delete_shortcut, 'shortcuts/remove_shortcut': remove_shortcut,
                             'shortcuts/add_new_download_shortcut': add_new_download_shortcut, 'shortcuts/import_text_shortcut': import_text_shortcut,

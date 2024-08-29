@@ -168,6 +168,18 @@ class Setting_Ui(QWidget):
 
         download_options_tab_verticalLayout.addLayout(connections_horizontalLayout)
 
+        # chunk_size
+        chunk_size_horizontalLayout = QHBoxLayout()
+        self.chunk_size_label = QLabel(self.download_options_tab)
+        chunk_size_horizontalLayout.addWidget(self.chunk_size_label)
+
+        self.chunk_size_spinBox = QSpinBox(self.download_options_tab)
+        self.chunk_size_spinBox.setMinimum(1)
+        self.chunk_size_spinBox.setMaximum(1024)
+        chunk_size_horizontalLayout.addWidget(self.chunk_size_spinBox)
+
+        download_options_tab_verticalLayout.addLayout(chunk_size_horizontalLayout)
+
         # wait_queue
         wait_queue_horizontalLayout = QHBoxLayout()
 
@@ -541,6 +553,10 @@ class Setting_Ui(QWidget):
         self.connections_label.setText(QCoreApplication.translate("setting_ui_tr", "Number of connections: "))
         self.connections_spinBox.setToolTip(
             QCoreApplication.translate("setting_ui_tr", "<html><head/><body><p>Using multiple connections can help speed up your download.</p></body></html>"))
+
+        self.chunk_size_label.setText(QCoreApplication.translate("setting_ui_tr", "Chunk size(KiB): "))
+        self.chunk_size_label.setToolTip(
+            QCoreApplication.translate("setting_ui_tr", "It is python requests library chunk size. Do not change this If you are not familiar with it."))
 
         self.wait_queue_label.setText(QCoreApplication.translate(
             "setting_ui_tr", 'Wait period between each download in queue:'))

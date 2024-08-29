@@ -73,6 +73,8 @@ class PreferencesWindow(Setting_Ui):
         # initialization
         self.tries_spinBox.setValue(
             int(self.persepolis_setting.value('max-tries')))
+        self.chunk_size_spinBox.setValue(
+            int(self.persepolis_setting.value('chunk-size')))
         self.wait_spinBox.setValue(
             int(self.persepolis_setting.value('retry-wait')))
         self.time_out_spinBox.setValue(
@@ -633,6 +635,7 @@ class PreferencesWindow(Setting_Ui):
         self.setting_dict = returnDefaultSettings()
 
         self.tries_spinBox.setValue(int(self.setting_dict['max-tries']))
+        self.chunk_size_spinBox.setValue(int(self.setting_dict['chunk-size']))
         self.wait_spinBox.setValue(int(self.setting_dict['retry-wait']))
         self.time_out_spinBox.setValue(int(self.setting_dict['timeout']))
         self.connections_spinBox.setValue(
@@ -782,6 +785,8 @@ class PreferencesWindow(Setting_Ui):
 
         self.persepolis_setting.setValue(
             'max-tries', self.tries_spinBox.value())
+        self.persepolis_setting.setValue(
+            'chunk-size', self.chunk_size_spinBox.value())
         self.persepolis_setting.setValue(
             'retry-wait', self.wait_spinBox.value())
         self.persepolis_setting.setValue(
@@ -1117,7 +1122,7 @@ class PreferencesWindow(Setting_Ui):
         for key in self.first_key_value_dict.keys():
             if self.first_key_value_dict[key] != self.second_key_value_dict[key]:
                 if key in ['locale', 'download_path',
-                           'custom-font', 'max-tries',
+                           'custom-font', 'max-tries', 'chunk-size',
                            'retry-wait', 'timeout', 'connections',
                            'style', 'font', 'font-size', 'color-scheme',
                            'check-clipboard']:
