@@ -35,13 +35,14 @@ import os
 class QueueSpiderThread(QThread):
     QUEUESPIDERRETURNEDFILENAME = Signal(str)
 
-    def __init__(self, dict_):
+    def __init__(self, dict_, main_window):
         QThread.__init__(self)
         self.dict_ = dict_
+        self.main_window = main_window
 
     def run(self):
         try:
-            filename = spider.queueSpider(self.dict_)
+            filename = spider.queueSpider(self.dict_, self.main_window)
             if filename:
                 self.QUEUESPIDERRETURNEDFILENAME.emit(filename)
             else:
@@ -91,7 +92,7 @@ class TextQueue(TextQueue_Ui):
             dict_ = {'link': link}
 
             # spider finds file name
-            new_spider = QueueSpiderThread(dict_)
+            new_spider = QueueSpiderThread(dict_, self.parent)
             self.parent.threadPool.append(new_spider)
             self.parent.threadPool[-1].start()
             self.parent.threadPool[-1].QUEUESPIDERRETURNEDFILENAME.connect(

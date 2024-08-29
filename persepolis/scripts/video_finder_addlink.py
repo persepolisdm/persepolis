@@ -49,7 +49,7 @@ class MediaListFetcherThread(QThread):
     RESULT = Signal(dict)
     cookies = '# HTTP cookie file.\n'  # We shall write it in a file when thread starts.
 
-    def __init__(self, receiver_slot, video_dict, parent):
+    def __init__(self, receiver_slot, video_dict):
         super().__init__()
         self.RESULT.connect(receiver_slot)
         self.video_dict = video_dict
@@ -152,10 +152,11 @@ class MediaListFetcherThread(QThread):
 class FileSizeFetcherThread(QThread):
     FOUND = Signal(dict)
 
-    def __init__(self, dictionary, thread_key):
+    def __init__(self, dictionary, thread_key, main_window):
         super().__init__()
         self.dictionary = dictionary
         self.key = thread_key
+        self.main_window = main_window
 
     def run(self):
         spider_file_size = spider(self.dictionary)[1]
@@ -486,7 +487,7 @@ class VideoFinderAddLink(AddLinkWindow):
                         for key in more_options.keys():
                             input_dict[key] = more_options[key]
 
-                        size_fetcher = FileSizeFetcherThread(input_dict, i)
+                        size_fetcher = FileSizeFetcherThread(input_dict, i, self.parent)
                         self.threadPool[str(i)] = {'thread': size_fetcher, 'item_id': i}
                         self.parent.threadPool.append(size_fetcher)
                         self.parent.threadPool[-1].start()
