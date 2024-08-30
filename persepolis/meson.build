@@ -49,11 +49,10 @@ scripts_sources = [
   'scripts/osCommands.py',
   'scripts/text_queue.py',
   'scripts/browser_plugin_queue.py',
-  'scripts/download.py',
+  'scripts/persepolis_lib_prime.py',
   'scripts/log_window.py',
   'scripts/persepolis.py',
   'scripts/setting.py',
-  'scripts/socks5_to_http_convertor.py'
   ]
 
 python3.install_sources(shell_sources, subdir: 'persepolis')
