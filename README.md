@@ -13,10 +13,10 @@
 > - [Credits](https://github.com/persepolisdm/persepolis#credits)  
 
 ### **About**
-Persepolis is a download manager & a GUI for [Aria2](https://github.com/aria2/aria2). It's written in Python. Persepolis is a sample of free and open source software. It's developed for GNU/Linux distributions, BSDs, MacOS, and Microsoft Windows.  
+Persepolis is a pure python download manager. Persepolis is a sample of free and open source software. It's developed for GNU/Linux distributions, BSDs, MacOS, and Microsoft Windows.  
 
 ### **Features**
-- Multi-segment downloading
+- Multi-segment downloading(64 connections)
 - Scheduling downloads
 - Download queuing
 - Download video from youtube and ...
@@ -81,15 +81,8 @@ It exemplifies the Achaemenid style of architecture. UNESCO declared the ruins o
 [Persepolis website (En)](https://persepolisdm.github.io/) | [Persepolis website (Fa)](https://persepolisdm.github.io/fa) | [Twitter](https://twitter.com/persepolisdm) | [Telegram Channel](https://telegram.me/persepolisdm)
 
 ### Acknowledgments:
-[Aria2c project](https://github.com/aria2/aria2)
-
 [YT-DLP project](https://github.com/yt-dlp/yt-dlp) 
 
 [FFmpeg project](https://github.com/FFmpeg/FFmpeg)
-
-[Socks to http proxy](https://github.com/KaranGauswami/socks-to-http-proxy)
-
-[Gost project](https://github.com/ginuerzh/gost)
-
 ---
 _Is there any mistake in README.md? Report it in [issue tracker](https://github.com/persepolisdm/persepolis/issues) or correct it by yourself._
