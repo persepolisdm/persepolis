@@ -159,7 +159,7 @@ class FileSizeFetcherThread(QThread):
         self.main_window = main_window
 
     def run(self):
-        spider_file_size = spider(self.dictionary)[1]
+        spider_file_size = spider(self.dictionary, self.main_window)[1]
         self.FOUND.emit({'thread_key': self.key,
                          'file_size': spider_file_size})
 
@@ -367,7 +367,7 @@ class VideoFinderAddLink(AddLinkWindow):
         dictionary_to_send['link'] = self.link_lineEdit.text()
         dictionary_to_send['socket-timeout'] = '5'
 
-        fetcher_thread = MediaListFetcherThread(self.fetchedResult, dictionary_to_send, self)
+        fetcher_thread = MediaListFetcherThread(self.fetchedResult, dictionary_to_send)
         self.parent.threadPool.append(fetcher_thread)
         self.parent.threadPool[-1].start()
 
