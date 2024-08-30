@@ -151,6 +151,7 @@ class Setting_Ui(QWidget):
         time_out_horizontalLayout.addWidget(self.time_out_label)
 
         self.time_out_spinBox = QSpinBox(self.download_options_tab)
+        self.time_out_spinBox.setMinimum(1)
         time_out_horizontalLayout.addWidget(self.time_out_spinBox)
 
         download_options_tab_verticalLayout.addLayout(time_out_horizontalLayout)

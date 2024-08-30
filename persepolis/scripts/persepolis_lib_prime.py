@@ -62,8 +62,8 @@ class Download():
         self.start_time = add_link_dictionary['start_time']
         self.end_time = add_link_dictionary['end_time']
         self.number_of_parts = 0
-        self.file_name = '***'
-        self.file_size = 0
+        self.file_name = None
+        self.file_size = None
         self.timeout = int(main_window.persepolis_setting.value('settings/timeout'))
         self.retry = int(main_window.persepolis_setting.value('settings/max-tries'))
         self.retry_wait = int(main_window.persepolis_setting.value('settings/retry-wait'))
@@ -72,6 +72,7 @@ class Download():
         self.sleep_for_speed_limiting = 0
         self.not_converted_download_speed = 0
         self.download_percent = 0
+        self.error_message = ''
         # check certificate
         if str(main_window.persepolis_setting.value('settings/dont-check-certificate')) == 'yes':
             self.check_certificate = False
@@ -164,14 +165,31 @@ class Download():
     # get file size
     # if file size is not available, then download link is invalid
     def getFileSize(self):
+        error_message = None
+        error_message2 = None
         # find file size
         try:
             response = self.requests_session.head(self.link, allow_redirects=True, timeout=self.timeout, verify=self.check_certificate)
+            response.raise_for_status()
             self.file_header = response.headers
 
             self.file_size = int(self.file_header['content-length'])
-        except Exception as error:
-            logger.sendToLog("Invalid URL: " + str(error), 'ERROR')
+        except requests.exceptions.HTTPError as error:
+            error_message = 'HTTP error'
+            error_message2 = str(error)
+        except requests.exceptions.ConnectionError as error:
+            error_message = 'Connection error'
+            error_message2 = str(error)
+        except requests.exceptions.Timeout as error:
+            error_message = 'Timeout error'
+            error_message2 = str(error)
+        except requests.exceptions.RequestException as error:
+            error_message = 'Request error'
+            error_message2 = str(error)
+
+        if error_message:
+            logger.sendToLog(error_message + ' - ' + error_message2, 'ERROR')
+            self.error_message = error_message
             self.file_size = None
 
         return self.file_size
@@ -420,6 +438,8 @@ class Download():
             # If part_number is None, no part is available for download. So exit the loop.
             if part_number is None:
                 break
+            error_message = None
+            error_message2 = None
             try:
                 # calculate part size
                 if part_number != (self.number_of_parts - 1):
@@ -519,8 +539,29 @@ class Download():
                             self.download_infromation_list[part_number][2] = 'stopped'
                             break
 
-            except Exception:
+            except requests.exceptions.HTTPError as error:
+                error_message = 'HTTP error'
+                error_message2 = str(error)
                 self.download_infromation_list[part_number][2] = 'error'
+
+            except requests.exceptions.ConnectionError as error:
+                error_message = 'Connection error'
+                error_message2 = str(error)
+                self.download_infromation_list[part_number][2] = 'error'
+
+            except requests.exceptions.Timeout as error:
+                error_message = 'Timeout error'
+                error_message2 = str(error)
+                self.download_infromation_list[part_number][2] = 'error'
+
+            except requests.exceptions.RequestException as error:
+                error_message = 'Request error'
+                error_message2 = str(error)
+                self.download_infromation_list[part_number][2] = 'error'
+
+            if error_message:
+                self.error_message = error_message
+                logger.sendToLog(error_message + ' - ' + error_message2, 'ERROR')
 
             # so it's complete successfully.
             if (downloaded_part == part_size):
@@ -800,7 +841,8 @@ class Download():
             'connections': str(self.number_of_active_connections),
             'rate': self.download_speed_str,
             'estimate_time_left': self.eta,
-            'link': self.link
+            'link': self.link,
+            'error': self.error_message
         }
 
         return download_info

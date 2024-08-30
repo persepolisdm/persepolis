@@ -1869,7 +1869,8 @@ class MainWindow(MainWindow_Ui):
 
                     else:
                         progress_window.close()
-
+                        # remove item from download_sessions_list
+                        self.removeItemFromSessionList(gid)
                         # eliminate window information from progress_window_list_dict
                         del self.progress_window_list_dict[gid]
 
@@ -3317,11 +3318,7 @@ class MainWindow(MainWindow_Ui):
 
         for gid in gid_list:
             # remove it from download_sessions_list
-            for download_session_dict in self.download_sessions_list:
-                if download_session_dict['gid'] == gid:
-                    # remove item
-                    self.download_sessions_list.remove(download_session_dict)
-                    break
+            self.removeItemFromSessionList(gid)
 
             # find row number for specific gid
             for i in range(self.download_table.rowCount()):
@@ -3486,12 +3483,7 @@ class MainWindow(MainWindow_Ui):
 
         for gid in gid_list:
             # remove it from download_sessions_list
-            for download_session_dict in self.download_sessions_list:
-                if download_session_dict['gid'] == gid:
-                    # remove item
-                    self.download_sessions_list.remove(download_session_dict)
-                    break
-
+            self.removeItemFromSessionList(gid)
             # find row number for specific gid
             for i in range(self.download_table.rowCount()):
                 row_gid = self.download_table.item(i, 8).text()
@@ -3546,6 +3538,15 @@ class MainWindow(MainWindow_Ui):
         # telling the CheckDownloadInfoThread that job is done!
         global checking_flag
         checking_flag = 0
+
+    # this method removes item from download_status_list.
+    def removeItemFromSessionList(self, gid):
+        # remove it from download_sessions_list
+        for download_session_dict in self.download_sessions_list:
+            if download_session_dict['gid'] == gid:
+                # remove item
+                self.download_sessions_list.remove(download_session_dict)
+                break
 
     # this method sorts download table by name
     def sortByName(self, menu=None):
