@@ -28,7 +28,6 @@ from persepolis.scripts.useful_tools import returnDefaultSettings
 from persepolis.scripts import osCommands
 from persepolis.scripts import startup
 import platform
-import sys
 import os
 
 home_address = os.path.expanduser("~")
@@ -74,26 +73,20 @@ class PreferencesWindow(Setting_Ui):
         # initialization
         self.tries_spinBox.setValue(
             int(self.persepolis_setting.value('max-tries')))
+        self.chunk_size_spinBox.setValue(
+            int(self.persepolis_setting.value('chunk-size')))
         self.wait_spinBox.setValue(
             int(self.persepolis_setting.value('retry-wait')))
         self.time_out_spinBox.setValue(
             int(self.persepolis_setting.value('timeout')))
         self.connections_spinBox.setValue(
             int(self.persepolis_setting.value('connections')))
-        self.rpc_port_spinbox.setValue(
-            int(self.persepolis_setting.value('rpc-port')))
 
         # check certificate
         if str(self.persepolis_setting.value('dont-check-certificate')) == 'yes':
             self.dont_check_certificate_checkBox.setChecked(True)
         else:
             self.dont_check_certificate_checkBox.setChecked(False)
-
-        # remote time
-        if str(self.persepolis_setting.value('remote-time')) == 'yes':
-            self.remote_time_checkBox.setChecked(True)
-        else:
-            self.remote_time_checkBox.setChecked(False)
 
         # add support for other languages
         locale = str(self.persepolis_setting.value('settings/locale'))
@@ -110,22 +103,6 @@ class PreferencesWindow(Setting_Ui):
             q_time = QTime(0, 0)
 
         self.wait_queue_time.setTime(q_time)
-
-        # change aria2 path
-        self.aria2_path_pushButton.clicked.connect(self.changeAria2Path)
-        self.aria2_path_checkBox.toggled.connect(self.ariaCheckBoxToggled)
-        aria2_path = self.persepolis_setting.value('settings/aria2_path')
-
-        self.aria2_path_lineEdit.setEnabled(False)
-        if aria2_path is not None:
-            self.aria2_path_checkBox.setChecked(True)
-            self.aria2_path_lineEdit.setText(str(aria2_path))
-
-        self.ariaCheckBoxToggled('aria2')
-
-        if os_type in OS.UNIX_LIKE:
-            for widget in self.aria2_path_checkBox, self.aria2_path_lineEdit, self.aria2_path_pushButton:
-                widget.hide()
 
         # save_as_tab
         self.download_folder_lineEdit.setText(
@@ -631,27 +608,6 @@ class PreferencesWindow(Setting_Ui):
         else:
             self.sound_frame.setEnabled(False)
 
-    def ariaCheckBoxToggled(self, checkBox):
-
-        if self.aria2_path_checkBox.isChecked():
-            self.aria2_path_pushButton.setEnabled(True)
-        else:
-            self.aria2_path_pushButton.setEnabled(False)
-
-    def changeAria2Path(self, button):
-
-        cwd = sys.argv[0]
-        cwd = os.path.dirname(cwd)
-
-        f_path, filters = QFileDialog.getOpenFileName(
-            self, 'Select aria2 path', cwd)
-
-        # if path is correct:
-        if os.path.isfile(str(f_path)):
-            self.aria2_path_lineEdit.setText(str(f_path))
-        else:
-            self.aria2_path_checkBox.setChecked(False)
-
     def downloadFolderPushButtonClicked(self, button):
 
         download_path = str(
@@ -679,14 +635,11 @@ class PreferencesWindow(Setting_Ui):
         self.setting_dict = returnDefaultSettings()
 
         self.tries_spinBox.setValue(int(self.setting_dict['max-tries']))
+        self.chunk_size_spinBox.setValue(int(self.setting_dict['chunk-size']))
         self.wait_spinBox.setValue(int(self.setting_dict['retry-wait']))
         self.time_out_spinBox.setValue(int(self.setting_dict['timeout']))
         self.connections_spinBox.setValue(
             int(self.setting_dict['connections']))
-
-        self.rpc_port_spinbox.setValue(int(self.setting_dict['rpc-port']))
-        self.aria2_path_lineEdit.setText('')
-        self.aria2_path_checkBox.setChecked(False)
 
         # wait-queue
         wait_queue_list = self.setting_dict['wait-queue']
@@ -695,9 +648,6 @@ class PreferencesWindow(Setting_Ui):
 
         # dont_check_certificate_checkBox
         self.dont_check_certificate_checkBox.setChecked(False)
-
-        # uncheck remote time
-        self.remote_time_checkBox.setChecked(False)
 
         # save_as_tab
         self.download_folder_lineEdit.setText(
@@ -836,13 +786,13 @@ class PreferencesWindow(Setting_Ui):
         self.persepolis_setting.setValue(
             'max-tries', self.tries_spinBox.value())
         self.persepolis_setting.setValue(
+            'chunk-size', self.chunk_size_spinBox.value())
+        self.persepolis_setting.setValue(
             'retry-wait', self.wait_spinBox.value())
         self.persepolis_setting.setValue(
             'timeout', self.time_out_spinBox.value())
         self.persepolis_setting.setValue(
             'connections', self.connections_spinBox.value())
-        self.persepolis_setting.setValue(
-            'rpc-port', self.rpc_port_spinbox.value())
         self.persepolis_setting.setValue(
             'download_path', self.download_folder_lineEdit.text())
         self.persepolis_setting.setValue(
@@ -851,10 +801,6 @@ class PreferencesWindow(Setting_Ui):
             'notification', self.notification_comboBox.currentText())
         self.persepolis_setting.setValue(
             'wait-queue', self.wait_queue_time.text().split(':'))
-
-        # change aria2_path
-        if self.aria2_path_checkBox.isChecked():
-            self.persepolis_setting.setValue('settings/aria2_path', str(self.aria2_path_lineEdit.text()))
 
         # don't check certificate
         if self.dont_check_certificate_checkBox.isChecked():
@@ -868,14 +814,7 @@ class PreferencesWindow(Setting_Ui):
         else:
             self.persepolis_setting.setValue('dont-show-addlinkwindow', 'no')
 
-        # remote time
-        if self.remote_time_checkBox.isChecked():
-            self.persepolis_setting.setValue('remote-time', 'yes')
-        else:
-            self.persepolis_setting.setValue('remote-time', 'no')
-
         # changing icons
-
         icons = self.icon_comboBox.currentText()
         self.persepolis_setting.setValue('icons', icons)
 
@@ -1182,8 +1121,8 @@ class PreferencesWindow(Setting_Ui):
         show_message_box = False
         for key in self.first_key_value_dict.keys():
             if self.first_key_value_dict[key] != self.second_key_value_dict[key]:
-                if key in ['locale', 'aria2_path', 'download_path',
-                           'custom-font', 'rpc-port', 'max-tries',
+                if key in ['locale', 'download_path',
+                           'custom-font', 'max-tries', 'chunk-size',
                            'retry-wait', 'timeout', 'connections',
                            'style', 'font', 'font-size', 'color-scheme',
                            'check-clipboard']:

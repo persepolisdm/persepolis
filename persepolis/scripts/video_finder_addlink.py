@@ -49,7 +49,7 @@ class MediaListFetcherThread(QThread):
     RESULT = Signal(dict)
     cookies = '# HTTP cookie file.\n'  # We shall write it in a file when thread starts.
 
-    def __init__(self, receiver_slot, video_dict, parent):
+    def __init__(self, receiver_slot, video_dict):
         super().__init__()
         self.RESULT.connect(receiver_slot)
         self.video_dict = video_dict
@@ -152,13 +152,14 @@ class MediaListFetcherThread(QThread):
 class FileSizeFetcherThread(QThread):
     FOUND = Signal(dict)
 
-    def __init__(self, dictionary, thread_key):
+    def __init__(self, dictionary, thread_key, main_window):
         super().__init__()
         self.dictionary = dictionary
         self.key = thread_key
+        self.main_window = main_window
 
     def run(self):
-        spider_file_size = spider(self.dictionary)[1]
+        spider_file_size = spider(self.dictionary, self.main_window)[1]
         self.FOUND.emit({'thread_key': self.key,
                          'file_size': spider_file_size})
 
@@ -167,8 +168,8 @@ class VideoFinderAddLink(AddLinkWindow):
     running_thread = None
     threadPool = {}
 
-    def __init__(self, parent, receiver_slot, socks5_to_http_convertor_is_installed, settings, video_dict={}):
-        super().__init__(parent, receiver_slot, settings, socks5_to_http_convertor_is_installed, video_dict)
+    def __init__(self, parent, receiver_slot, settings, video_dict={}):
+        super().__init__(parent, receiver_slot, settings, video_dict)
         self.setWindowTitle(QCoreApplication.translate("ytaddlink_src_ui_tr", 'Video Finder'))
         self.size_label.hide()
 
@@ -366,7 +367,7 @@ class VideoFinderAddLink(AddLinkWindow):
         dictionary_to_send['link'] = self.link_lineEdit.text()
         dictionary_to_send['socket-timeout'] = '5'
 
-        fetcher_thread = MediaListFetcherThread(self.fetchedResult, dictionary_to_send, self)
+        fetcher_thread = MediaListFetcherThread(self.fetchedResult, dictionary_to_send)
         self.parent.threadPool.append(fetcher_thread)
         self.parent.threadPool[-1].start()
 
@@ -486,7 +487,7 @@ class VideoFinderAddLink(AddLinkWindow):
                         for key in more_options.keys():
                             input_dict[key] = more_options[key]
 
-                        size_fetcher = FileSizeFetcherThread(input_dict, i)
+                        size_fetcher = FileSizeFetcherThread(input_dict, i, self.parent)
                         self.threadPool[str(i)] = {'thread': size_fetcher, 'item_id': i}
                         self.parent.threadPool.append(size_fetcher)
                         self.parent.threadPool[-1].start()
@@ -726,15 +727,6 @@ class VideoFinderAddLink(AddLinkWindow):
             if not (download_passwd):
                 download_passwd = None
 
-        # check that if user limits download speed.
-        if not (self.limit_checkBox.isChecked()):
-            limit = 0
-        else:
-            if self.limit_comboBox.currentText() == "KiB/s":
-                limit = str(self.limit_spinBox.value()) + str("K")
-            else:
-                limit = str(self.limit_spinBox.value()) + str("M")
-
         # get start time for download if user set that.
         if not (self.start_checkBox.isChecked()):
             start_time = None
@@ -811,7 +803,7 @@ class VideoFinderAddLink(AddLinkWindow):
                                    'out': name_list[0], 'start_time': start_time, 'end_time': end_time, 'link': link_list[0], 'ip': ip,
                                    'port': port, 'proxy_user': proxy_user, 'proxy_passwd': proxy_passwd, 'proxy_type': proxy_type,
                                    'download_user': download_user, 'download_passwd': download_passwd,
-                                   'connections': connections, 'limit_value': limit, 'download_path': download_path}
+                                   'connections': connections, 'limit_value': 10, 'download_path': download_path}
 
             add_link_dictionary_list.append(add_link_dictionary)
 
@@ -820,13 +812,13 @@ class VideoFinderAddLink(AddLinkWindow):
                                          'out': name_list[0], 'start_time': start_time, 'end_time': end_time, 'link': link_list[0], 'ip': ip,
                                          'port': port, 'proxy_user': proxy_user, 'proxy_passwd': proxy_passwd, 'proxy_type': proxy_type,
                                          'download_user': download_user, 'download_passwd': download_passwd,
-                                         'connections': connections, 'limit_value': limit, 'download_path': download_path}
+                                         'connections': connections, 'limit_value': 10, 'download_path': download_path}
 
             audio_add_link_dictionary = {'referer': referer, 'header': header, 'user_agent': user_agent, 'load_cookies': load_cookies,
                                          'out': name_list[1], 'start_time': None, 'end_time': end_time, 'link': link_list[1], 'ip': ip,
                                          'port': port, 'proxy_user': proxy_user, 'proxy_passwd': proxy_passwd, 'proxy_type': proxy_type,
                                          'download_user': download_user, 'download_passwd': download_passwd,
-                                         'connections': connections, 'limit_value': limit, 'download_path': download_path}
+                                         'connections': connections, 'limit_value': 10, 'download_path': download_path}
 
             add_link_dictionary_list = [video_add_link_dictionary, audio_add_link_dictionary]
 

@@ -36,13 +36,14 @@ import os
 class QueueSpiderThread(QThread):
     QUEUESPIDERRETURNEDFILENAME = Signal(str)
 
-    def __init__(self, dict):
+    def __init__(self, dict, main_window):
         QThread.__init__(self)
         self.dict = dict
+        self.main_window = main_window
 
     def run(self):
         try:
-            filename = spider.queueSpider(self.dict)
+            filename = spider.queueSpider(self.dict, self.main_window)
             if filename:
                 self.QUEUESPIDERRETURNEDFILENAME.emit(filename)
             else:
@@ -58,7 +59,7 @@ class QueueSpiderThread(QThread):
 
 
 class BrowserPluginQueue(TextQueue_Ui):
-    def __init__(self, parent, list_of_links, callback, socks5_to_http_convertor_is_installed, persepolis_setting):
+    def __init__(self, parent, list_of_links, callback, persepolis_setting):
         super().__init__(persepolis_setting)
         self.persepolis_setting = persepolis_setting
         self.callback = callback
@@ -87,7 +88,7 @@ class BrowserPluginQueue(TextQueue_Ui):
 
             if file_name == '***':
                 # spider finds file name
-                new_spider = QueueSpiderThread(dict)
+                new_spider = QueueSpiderThread(dict, self.parent)
                 self.parent.threadPool.append(new_spider)
                 self.parent.threadPool[-1].start()
                 self.parent.threadPool[-1].QUEUESPIDERRETURNEDFILENAME.connect(
@@ -162,11 +163,6 @@ class BrowserPluginQueue(TextQueue_Ui):
             'add_link_initialization/proxy_type', None)
 
         # default is http
-        if not (socks5_to_http_convertor_is_installed):
-            self.socks5_radioButton.setEnabled(False)
-        else:
-            self.socks5_radioButton.setEnabled(True)
-
         if settings_proxy_type == 'socks5':
 
             self.socks5_radioButton.setChecked(True)
@@ -196,9 +192,6 @@ class BrowserPluginQueue(TextQueue_Ui):
 
         self.download_frame.setEnabled(False)
         self.download_checkBox.toggled.connect(self.downloadFrame)
-
-        self.limit_frame.setEnabled(False)
-        self.limit_checkBox.toggled.connect(self.limitFrame)
 
         # set focus to ok button
         self.ok_pushButton.setFocus()
@@ -265,13 +258,6 @@ class BrowserPluginQueue(TextQueue_Ui):
             self.download_frame.setEnabled(True)
         else:
             self.download_frame.setEnabled(False)
-
-    def limitFrame(self, checkBox):
-
-        if self.limit_checkBox.isChecked():
-            self.limit_frame.setEnabled(True)
-        else:
-            self.limit_frame.setEnabled(False)
 
     def changeFolder(self, button):
         fname = QFileDialog.getExistingDirectory(
@@ -347,14 +333,6 @@ class BrowserPluginQueue(TextQueue_Ui):
             if not (download_passwd):
                 download_passwd = None
 
-        if not (self.limit_checkBox.isChecked()):
-            limit = 0
-        else:
-            if self.limit_comboBox.currentText() == "KiB/s":
-                limit = str(self.limit_spinBox.value()) + str("K")
-            else:
-                limit = str(self.limit_spinBox.value()) + str("M")
-
         category = str(self.add_queue_comboBox.currentText())
 
         connections = self.connections_spinBox.value()
@@ -372,7 +350,7 @@ class BrowserPluginQueue(TextQueue_Ui):
                  'download_user': download_user,
                  'download_passwd': download_passwd,
                  'connections': connections,
-                 'limit_value': limit,
+                 'limit_value': 10,
                  'download_path': download_path,
                  'referer': None,
                  'load_cookies': None,

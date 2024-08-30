@@ -37,14 +37,15 @@ import os
 class AddLinkSpiderThread(QThread):
     ADDLINKSPIDERSIGNAL = Signal(dict)
 
-    def __init__(self, add_link_dictionary):
+    def __init__(self, add_link_dictionary, main_window):
         QThread.__init__(self)
         self.add_link_dictionary = add_link_dictionary
+        self.main_window = main_window
 
     def run(self):
         try:
             # get file name and file size
-            file_name, file_size = spider.addLinkSpider(self.add_link_dictionary)
+            file_name, file_size = spider.addLinkSpider(self.add_link_dictionary, self.main_window)
 
             spider_dict = {'file_size': file_size, 'file_name': file_name}
 
@@ -66,7 +67,7 @@ class AddLinkSpiderThread(QThread):
 
 
 class AddLinkWindow(AddLinkWindow_Ui):
-    def __init__(self, parent, callback, persepolis_setting, socks5_to_http_convertor_is_installed, plugin_add_link_dictionary={}):
+    def __init__(self, parent, callback, persepolis_setting, plugin_add_link_dictionary={}):
         super().__init__(persepolis_setting)
         self.callback = callback
         self.plugin_add_link_dictionary = plugin_add_link_dictionary
@@ -141,12 +142,6 @@ class AddLinkWindow(AddLinkWindow_Ui):
         settings_proxy_type = self.persepolis_setting.value(
             'add_link_initialization/proxy_type', None)
 
-        # default is http
-        if not (socks5_to_http_convertor_is_installed):
-            self.socks5_radioButton.setEnabled(False)
-        else:
-            self.socks5_radioButton.setEnabled(True)
-
         if settings_proxy_type == 'socks5':
 
             self.socks5_radioButton.setChecked(True)
@@ -184,9 +179,6 @@ class AddLinkWindow(AddLinkWindow_Ui):
 
         self.download_frame.setEnabled(False)
         self.download_checkBox.toggled.connect(self.downloadFrame)
-
-        self.limit_frame.setEnabled(False)
-        self.limit_checkBox.toggled.connect(self.limitFrame)
 
         self.start_frame.setEnabled(False)
         self.start_checkBox.toggled.connect(self.startFrame)
@@ -272,13 +264,6 @@ class AddLinkWindow(AddLinkWindow_Ui):
         else:
             self.download_frame.setEnabled(False)
 
-    def limitFrame(self, checkBox):
-
-        if self.limit_checkBox.isChecked() is True:
-            self.limit_frame.setEnabled(True)
-        else:
-            self.limit_frame.setEnabled(False)
-
     def startFrame(self, checkBox):
 
         if self.start_checkBox.isChecked() is True:
@@ -320,7 +305,7 @@ class AddLinkWindow(AddLinkWindow_Ui):
             dict = {'link': str(self.link_lineEdit.text())}
 
             # spider is finding file size
-            new_spider = AddLinkSpiderThread(dict)
+            new_spider = AddLinkSpiderThread(dict, self.parent)
             self.parent.threadPool.append(new_spider)
             self.parent.threadPool[-1].start()
             self.parent.threadPool[-1].ADDLINKSPIDERSIGNAL.connect(
@@ -424,15 +409,6 @@ class AddLinkWindow(AddLinkWindow_Ui):
             if not (download_passwd):
                 download_passwd = None
 
-        # check that if user limits download speed.
-        if not (self.limit_checkBox.isChecked()):
-            limit = 0
-        else:
-            if self.limit_comboBox.currentText() == "KiB/s":
-                limit = str(self.limit_spinBox.value()) + str("K")
-            else:
-                limit = str(self.limit_spinBox.value()) + str("M")
-
         # get start time for download if user set that.
         if not (self.start_checkBox.isChecked()):
             start_time = None
@@ -489,7 +465,7 @@ class AddLinkWindow(AddLinkWindow_Ui):
                                     'out': out, 'start_time': start_time, 'end_time': end_time, 'link': link, 'ip': ip,
                                     'port': port, 'proxy_user': proxy_user, 'proxy_passwd': proxy_passwd, 'proxy_type': proxy_type,
                                     'download_user': download_user, 'download_passwd': download_passwd,
-                                    'connections': connections, 'limit_value': limit, 'download_path': download_path}
+                                    'connections': connections, 'limit_value': 10, 'download_path': download_path}
 
         # get category of download
         category = str(self.add_queue_comboBox.currentText())

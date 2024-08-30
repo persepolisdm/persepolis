@@ -196,27 +196,16 @@ class AboutWindow_Ui(QWidget):
         self.acknowledgments_title_label.setAlignment(Qt.AlignCenter)
         acknowledgments_verticalLayout.addWidget(self.acknowledgments_title_label)
 
-        self.acknowledgments_aria2c_label = QLabel(self.acknowledgments_tab)
-        self.acknowledgments_aria2c_label.setAlignment(Qt.AlignCenter)
         self.acknowledgments_ffmpeg_label = QLabel(self.acknowledgments_tab)
         self.acknowledgments_ffmpeg_label.setAlignment(Qt.AlignCenter)
         self.acknowledgments_ytdlp_label = QLabel(self.acknowledgments_tab)
         self.acknowledgments_ytdlp_label.setAlignment(Qt.AlignCenter)
-        self.acknowledgments_sthp_label = QLabel(self.acknowledgments_tab)
-        self.acknowledgments_sthp_label.setAlignment(Qt.AlignCenter)
-        self.acknowledgments_gost_label = QLabel(self.acknowledgments_tab)
-        self.acknowledgments_gost_label.setAlignment(Qt.AlignCenter)
 
-        self.acknowledgments_aria2c_label.setFont(font)
         self.acknowledgments_ffmpeg_label.setFont(font)
         self.acknowledgments_ytdlp_label.setFont(font)
-        self.acknowledgments_gost_label.setFont(font)
 
-        acknowledgments_verticalLayout.addWidget(self.acknowledgments_aria2c_label)
         acknowledgments_verticalLayout.addWidget(self.acknowledgments_ytdlp_label)
         acknowledgments_verticalLayout.addWidget(self.acknowledgments_ffmpeg_label)
-        acknowledgments_verticalLayout.addWidget(self.acknowledgments_sthp_label)
-        acknowledgments_verticalLayout.addWidget(self.acknowledgments_gost_label)
         acknowledgments_verticalLayout.addStretch(1)
 
         # buttons
@@ -263,16 +252,10 @@ class AboutWindow_Ui(QWidget):
         # Acknowledgments
         self.acknowledgments_title_label.setText(QCoreApplication.translate('about_ui_tr', 'Acknowledgments:'))
 
-        self.acknowledgments_aria2c_label.setText(QCoreApplication.translate("about_ui_tr",
-                                                                             "<a href=https://github.com/aria2/aria2>Aria2c project</a>"))
         self.acknowledgments_ytdlp_label.setText(QCoreApplication.translate("about_ui_tr",
                                                                             "<a href=https://github.com/yt-dlp/yt-dlp>YT-DLP project</a>"))
         self.acknowledgments_ffmpeg_label.setText(QCoreApplication.translate("about_ui_tr",
                                                                              "<a href=https://github.com/ffmpeg/ffmpeg>FFmpeg project</a>"))
-        self.acknowledgments_sthp_label.setText(QCoreApplication.translate("about_ui_tr",
-                                                                           "<a href=https://github.com/KaranGauswami/socks-to-http-proxy>Socks to http proxy project</a>"))
-        self.acknowledgments_gost_label.setText(QCoreApplication.translate("about_ui_tr",
-                                                                           "<a href=https://github.com/ginuerzh/gost>Gost project</a>"))
 
         # License
         self.license_text.setPlainText("""

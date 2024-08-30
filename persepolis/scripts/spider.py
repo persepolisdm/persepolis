@@ -26,12 +26,20 @@ from urllib.parse import urlparse, unquote
 
 
 def getFileNameFromLink(link):
-    return Path(unquote(urlparse(link).path)).name
+    parsed_linkd = urlparse(link)
+    file_name = Path(parsed_linkd.path).name
+
+    # URL might contain percent-encoded characters
+    # for example farsi characters in link
+    if file_name.find('%'):
+        file_name = unquote(file_name)
+
+    return file_name
 
 # spider function finds name of file and file size from header
 
 
-def spider(add_link_dictionary):
+def spider(add_link_dictionary, main_window):
 
     # get user's download request from add_link_dictionary
     link = add_link_dictionary['link']
@@ -39,6 +47,7 @@ def spider(add_link_dictionary):
     port = add_link_dictionary['port']
     proxy_user = add_link_dictionary['proxy_user']
     proxy_passwd = add_link_dictionary['proxy_passwd']
+    proxy_type = add_link_dictionary['proxy_type']
     download_user = add_link_dictionary['download_user']
     download_passwd = add_link_dictionary['download_passwd']
     header = add_link_dictionary['header']
@@ -49,12 +58,22 @@ def spider(add_link_dictionary):
 
     # define a requests session
     requests_session = requests.Session()
+    # check if user set proxy
     if ip:
-        ip_port = 'http://' + str(ip) + ":" + str(port)
+        ip_port = '://' + str(ip) + ":" + str(port)
         if proxy_user:
-            ip_port = 'http://' + proxy_user + ':' + proxy_passwd + '@' + ip_port
+            ip_port = ('://' + proxy_user + ':'
+                       + proxy_passwd + '@' + ip_port)
+        if proxy_type == 'socks5':
+            ip_port = 'socks5' + ip_port
+        else:
+            ip_port = 'http' + ip_port
+
+        proxies = {'http': ip_port,
+                   'https': ip_port}
+
         # set proxy to the session
-        requests_session.proxies = {'http': ip_port}
+        requests_session.proxies.update(proxies)
 
     if download_user:
         # set download user pass to the session
@@ -75,6 +94,12 @@ def spider(add_link_dictionary):
     # set user_agent
     if user_agent:
         requests_session.headers.update({'user-agent': user_agent})  # setting user_agent to the session
+    else:
+        user_agent = 'PersepolisDM/' + str(main_window.persepolis_version)
+
+        # setting user_agent to the session
+        requests_session.headers.update(
+            {'user-agent': user_agent})
 
     # find headers
     try:
@@ -85,14 +110,18 @@ def spider(add_link_dictionary):
 
     filename = None
     file_size = None
-    if 'Content-Disposition' in header.keys():  # checking if filename is available
+    # check if filename is available in header
+    if 'Content-Disposition' in header.keys():
         content_disposition = header['Content-Disposition']
+
         if content_disposition.find('filename') != -1:
+
+            # so file name is available in header
             filename_splited = content_disposition.split('filename=')
             filename_splited = filename_splited[-1]
 
             # getting file name in desired format
-            filename = filename_splited.strip(' "\'')
+            filename = filename_splited.strip()
 
     if not (filename):
         filename = getFileNameFromLink(link)
@@ -104,27 +133,35 @@ def spider(add_link_dictionary):
 
     # check if file_size is available
     if 'Content-Length' in header.keys():
-        file_size = int(header['Content-Length'])
+        try:
+            file_size = int(header['Content-Length'])
 
-        # converting file_size to KiB or MiB or GiB
-        file_size = humanReadableSize(file_size)
+            # converting file_size to KiB or MiB or GiB
+            file_size, unit = humanReadableSize(file_size)
 
+            file_size_with_unit = str(file_size) + ' ' + unit
+        except Exception:
+            file_size_with_unit = 'None'
+    else:
+        file_size_with_unit = 'None'
+
+    requests_session.close()
     # return results
-    return filename, file_size
+    return filename, file_size_with_unit
 
 
 # this function finds and returns file name for links.
-def queueSpider(add_link_dictionary):
-    filename = addLinkSpider(add_link_dictionary)[0]
+def queueSpider(add_link_dictionary, main_window):
+    filename = addLinkSpider(add_link_dictionary, main_window)[0]
 
     return filename
 
 
-def addLinkSpider(add_link_dictionary):
+def addLinkSpider(add_link_dictionary, main_window):
     # get user's download information from add_link_dictionary
     for i in ['link', 'ip', 'port', 'proxy_user', 'proxy_passwd', 'download_user', 'download_passwd',
-              'header', 'out', 'user_agent', 'load_cookies', 'referer']:
+              'header', 'out', 'user_agent', 'proxy_type', 'load_cookies', 'referer']:
         if not (i in add_link_dictionary):
             add_link_dictionary[i] = None
 
-    return spider(add_link_dictionary)
+    return spider(add_link_dictionary, main_window)

@@ -18,6 +18,7 @@ import urllib.parse
 import subprocess
 import platform
 import textwrap
+import time
 import sys
 import os
 
@@ -91,25 +92,33 @@ def humanReadableSize(size, input_type='file_size'):
     labels = ['KiB', 'MiB', 'GiB', 'TiB']
     i = -1
     if size < 1024:
-        return str(size) + ' B'
+        return str(size), 'B'
 
     while size >= 1024:
         i += 1
         size = size / 1024
 
-    if input_type == 'speed':
-        j = 0
+    if i > 1:
+        return round(size, 2), labels[i]
+    elif i == 1:
+        return round(size, 1), labels[i]
     else:
-        j = 1
+        return round(size, None), labels[i]
 
-    if i > j:
-        return str(round(size, 2)) + ' ' + labels[i]
+# this function converts second to hour and minute
+def convertTime(time):
+    minutes = int(time // 60)
+    if minutes == 0:
+        return str(int(time)) + 's'
+    elif minutes < 60:
+        return str(minutes) + 'm'
     else:
-        return str(round(size, None)) + ' ' + labels[i]
+        hours = minutes // 60
+        minutes = minutes - (hours * 60)
+        return str(hours) + 'h ' + str(minutes) + 'm'
+
 
 # this function converts human readable size to byte
-
-
 def convertToByte(file_size):
 
     # if unit is not in Byte
@@ -197,15 +206,15 @@ def returnDefaultSettings():
     default_setting_dict = {'locale': 'en_US', 'toolbar_icon_size': 32, 'wait-queue': [0, 0], 'awake': 'no', 'custom-font': 'no', 'column0': 'yes',
                             'column1': 'yes', 'column2': 'yes', 'column3': 'yes', 'column4': 'yes', 'column5': 'yes', 'column6': 'yes', 'column7': 'yes',
                             'column10': 'yes', 'column11': 'yes', 'column12': 'yes', 'subfolder': 'yes', 'startup': 'no', 'show-progress': 'yes',
-                            'show-menubar': 'no', 'show-sidepanel': 'yes', 'rpc-port': 6801, 'notification': 'Native notification', 'after-dialog': 'yes',
-                            'tray-icon': 'yes', 'browser-persepolis': 'yes', 'hide-window': 'yes', 'max-tries': 5, 'retry-wait': 0, 'timeout': 60,
-                            'connections': 16, 'download_path': download_path, 'sound': 'yes', 'sound-volume': 100,
-                            'style': style, 'color-scheme': color_scheme, 'icons': icons, 'font': 'Ubuntu', 'font-size': 9, 'aria2_path': '',
+                            'show-menubar': 'no', 'show-sidepanel': 'yes', 'notification': 'Native notification', 'after-dialog': 'yes',
+                            'tray-icon': 'yes', 'browser-persepolis': 'yes', 'hide-window': 'yes', 'max-tries': 5, 'retry-wait': 1, 'timeout': 5,
+                            'connections': 64, 'download_path': download_path, 'sound': 'yes', 'sound-volume': 100, 'chunk-size': 100,
+                            'style': style, 'color-scheme': color_scheme, 'icons': icons, 'font': 'Ubuntu', 'font-size': 9,
                             'video_finder/max_links': '3', 'shortcuts/delete_shortcut': delete_shortcut, 'shortcuts/remove_shortcut': remove_shortcut,
                             'shortcuts/add_new_download_shortcut': add_new_download_shortcut, 'shortcuts/import_text_shortcut': import_text_shortcut,
                             'shortcuts/video_finder_shortcut': video_finder_shortcut, 'shortcuts/quit_shortcut': quit_shortcut,
                             'shortcuts/hide_window_shortcut': hide_window_shortcut, 'shortcuts/move_up_selection_shortcut': move_up_selection_shortcut,
-                            'shortcuts/move_down_selection_shortcut': move_down_selection_shortcut, 'dont-check-certificate': 'no', 'remote-time': 'no'}
+                            'shortcuts/move_down_selection_shortcut': move_down_selection_shortcut, 'dont-check-certificate': 'no'}
 
     return default_setting_dict
 
@@ -311,82 +320,8 @@ def muxer(parent, video_finder_dictionary):
 
     return result_dictionary
 
-# return version of gost
-
-
-def socks5ToHttpConvertorVersion():
-    type_of_convertor = None
-    # persepolis use gost, pproxy, sthp for converting socks5 to http
-    # try to find sthp
-    sthp_command, log_list = findExternalAppPath('sthp')
-    command_argument = [sthp_command, '--version']
-    try:
-        pipe = runApplication(command_argument)
-
-        if pipe.wait() == 0:
-            socks5_to_http_convertor_is_installed = True
-            type_of_convertor = 'sthp'
-            sthp_output, error = pipe.communicate()
-            sthp_output = sthp_output.decode('utf-8')
-
-        else:
-            socks5_to_http_convertor_is_installed = False
-    except:
-        socks5_to_http_convertor_is_installed = False
-
-    if socks5_to_http_convertor_is_installed:
-        return socks5_to_http_convertor_is_installed, sthp_output, log_list, type_of_convertor
-
-    else:
-
-        # find gost path
-        gost_command, log_list = findExternalAppPath('gost')
-
-        # Try to test gost
-        command_argument = [gost_command, '-V']
-        try:
-            pipe = runApplication(command_argument)
-
-            if pipe.wait() == 0:
-                socks5_to_http_convertor_is_installed = True
-                type_of_convertor = 'gost'
-                gost_output, error = pipe.communicate()
-                gost_output = gost_output.decode('utf-8')
-
-            else:
-                socks5_to_http_convertor_is_installed = False
-        except:
-            socks5_to_http_convertor_is_installed = False
-
-    if socks5_to_http_convertor_is_installed:
-        return socks5_to_http_convertor_is_installed, gost_output, log_list, type_of_convertor
-
-    else:
-
-        # try to find pproxy
-        pproxy_command, log_list = findExternalAppPath('pproxy')
-        command_argument = [pproxy_command, '--version']
-        try:
-            pipe = runApplication(command_argument)
-
-            if pipe.wait() == 0:
-                socks5_to_http_convertor_is_installed = True
-                type_of_convertor = 'pproxy'
-                pproxy_output, error = pipe.communicate()
-                pproxy_output = pproxy_output.decode('utf-8')
-
-            else:
-                socks5_to_http_convertor_is_installed = False
-                pproxy_output = 'No socks to http convertor found.'
-        except:
-            socks5_to_http_convertor_is_installed = False
-            pproxy_output = 'No socks to http convertor found.'
-
-    return socks5_to_http_convertor_is_installed, pproxy_output, log_list, type_of_convertor
 
 # return version of ffmpeg
-
-
 def ffmpegVersion():
 
     # find ffmpeg path
@@ -576,3 +511,10 @@ def getExecPath():
 
     # return ressults
     return exec_dictionary
+
+
+# This method returns data and time in string format
+# for example >> 2017/09/09 , 13:12:26
+def nowDate():
+    date = time.strftime("%Y/%m/%d , %H:%M:%S")
+    return date

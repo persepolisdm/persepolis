@@ -247,9 +247,8 @@ def findMountPoint(path):
 
     return path
 
+
 # move downloaded file to another destination.
-
-
 def moveFile(old_file_path, new_path, new_path_type='folder'):
 
     # new_path_type can be file or folder
