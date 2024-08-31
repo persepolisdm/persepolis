@@ -13,7 +13,7 @@
 > - [Credits](https://github.com/persepolisdm/persepolis#credits)  
 
 ### **About**
-Persepolis is a pure python download manager. Persepolis is a sample of free and open source software. It's developed for GNU/Linux distributions, BSDs, MacOS, and Microsoft Windows.  
+Persepolis is a download manager written in Python. Persepolis is a sample of free and open source software. It's developed for GNU/Linux distributions, BSDs, MacOS, and Microsoft Windows.  
 
 ### **Features**
 - Multi-segment downloading(64 connections)
@@ -84,5 +84,10 @@ It exemplifies the Achaemenid style of architecture. UNESCO declared the ruins o
 [YT-DLP project](https://github.com/yt-dlp/yt-dlp) 
 
 [FFmpeg project](https://github.com/FFmpeg/FFmpeg)
+
+[PySide project](https://wiki.qt.io/Qt_for_Python)
+
+[Python Requests project](https://github.com/psf/requests)
+
 ---
 _Is there any mistake in README.md? Report it in [issue tracker](https://github.com/persepolisdm/persepolis/issues) or correct it by yourself._
