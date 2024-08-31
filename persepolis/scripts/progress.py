@@ -123,7 +123,7 @@ class ProgressWindow(ProgressWindow_Ui):
 
         self.main_window.temp_db.updateSingleTable(dict)
 
-        if self.status == "downloading":
+        if self.status == "downloading" or self.status == "paused":
             # search gid in download_sessions_list
             for download_session_dict in self.main_window.download_sessions_list:
                 if download_session_dict['gid'] == self.gid:
