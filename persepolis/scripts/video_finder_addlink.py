@@ -49,18 +49,25 @@ class MediaListFetcherThread(QThread):
     RESULT = Signal(dict)
     cookies = '# HTTP cookie file.\n'  # We shall write it in a file when thread starts.
 
-    def __init__(self, receiver_slot, video_dict):
+    def __init__(self, receiver_slot, video_dict, main_window):
         super().__init__()
         self.RESULT.connect(receiver_slot)
         self.video_dict = video_dict
 
         self.cookie_path = os.path.join(persepolis_tmp, '.{}{}'.format(time(), random()))
 
+        # check certificate
+        if str(main_window.persepolis_setting.value('settings/dont-check-certificate')) == 'yes':
+            self.dont_check_certificate = True
+        else:
+            self.dont_check_certificate = False
+
         # youtube options must be added to youtube_dl_options_dict in dictionary format
         self.youtube_dl_options_dict = {'dump_single_json': True,
                                         'quiet': True,
                                         'noplaylist': True,
-                                        'no_warnings': True
+                                        'no_warnings': True,
+                                        'no-check-certificates': self.dont_check_certificate
                                         }
 
         # cookies
@@ -367,7 +374,7 @@ class VideoFinderAddLink(AddLinkWindow):
         dictionary_to_send['link'] = self.link_lineEdit.text()
         dictionary_to_send['socket-timeout'] = '5'
 
-        fetcher_thread = MediaListFetcherThread(self.fetchedResult, dictionary_to_send)
+        fetcher_thread = MediaListFetcherThread(self.fetchedResult, dictionary_to_send, self.parent)
         self.parent.threadPool.append(fetcher_thread)
         self.parent.threadPool[-1].start()
 
@@ -572,7 +579,8 @@ class VideoFinderAddLink(AddLinkWindow):
             item_id = self.threadPool[str(result['thread_key'])]['item_id']
             if result['file_size'] and result['file_size'] != '0':
                 text = self.media_comboBox.itemText(item_id)
-                self.media_comboBox.setItemText(item_id, '{} - {}'.format(text, result['file_size']))
+                if text != 'Best quality':
+                    self.media_comboBox.setItemText(item_id, '{} - {}'.format(text, result['file_size']))
         except Exception as ex:
             logger.sendToLog(ex, "ERROR")
 

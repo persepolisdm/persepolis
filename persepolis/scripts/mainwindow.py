@@ -1584,39 +1584,41 @@ class MainWindow(MainWindow_Ui):
                 pass
 
             # Is the link related to VideoFinder?
+            video_finder_link = False
             if gid in self.all_video_finder_gid_list:
 
                 video_finder_dictionary = self.persepolis_db.searchGidInVideoFinderTable(gid)
-
-                video_finder_thread = self.video_finder_threads_dict[video_finder_dictionary['video_gid']]
                 video_finder_link = True
 
-                # is gid related to video? or audio
-                if gid == video_finder_dictionary['video_gid']:
-                    video_finder_video_gid = True
-                else:
-                    video_finder_video_gid = False
+                if video_finder_dictionary['video_gid'] in self.video_finder_threads_dict.keys():
+                    video_finder_thread = self.video_finder_threads_dict[video_finder_dictionary['video_gid']]
 
-                # if download is completed update video finder data base
-                if status == 'complete':
-                    if video_finder_video_gid:
-                        video_finder_dictionary['video_completed'] = 'yes'
-                        video_finder_thread.video_completed = 'yes'
+                    # is gid related to video? or audio
+                    if gid == video_finder_dictionary['video_gid']:
+                        video_finder_video_gid = True
                     else:
-                        video_finder_dictionary['audio_completed'] = 'yes'
-                        video_finder_thread.audio_completed = 'yes'
+                        video_finder_video_gid = False
 
-                    # update data base
-                    self.persepolis_db.updateVideoFinderTable([video_finder_dictionary])
+                    # if download is completed update video finder data base
+                    if status == 'complete':
+                        if video_finder_video_gid:
+                            video_finder_dictionary['video_completed'] = 'yes'
+                            video_finder_thread.video_completed = 'yes'
+                        else:
+                            video_finder_dictionary['audio_completed'] = 'yes'
+                            video_finder_thread.audio_completed = 'yes'
 
-                # if download stopped, VideoFinder must be notified. so update data base.
-                if video_finder_dictionary['checking'] == 'yes' and (status == 'error' or status == 'stopped'):
+                        # update data base
+                        self.persepolis_db.updateVideoFinderTable([video_finder_dictionary])
 
-                    video_finder_dictionary['checking'] = 'no'
-                    video_finder_thread.checking = 'no'
+                    # if download stopped, VideoFinder must be notified. so update data base.
+                    if video_finder_dictionary['checking'] == 'yes' and (status == 'error' or status == 'stopped'):
 
-                    # update data base
-                    self.persepolis_db.updateVideoFinderTable([video_finder_dictionary])
+                        video_finder_dictionary['checking'] = 'no'
+                        video_finder_thread.checking = 'no'
+
+                        # update data base
+                        self.persepolis_db.updateVideoFinderTable([video_finder_dictionary])
 
             else:
                 video_finder_link = False
