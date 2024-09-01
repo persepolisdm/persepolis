@@ -462,6 +462,6 @@ class AddLinkWindow_Ui(QWidget):
 
         self.header_label.setText(QCoreApplication.translate("addlink_ui_tr", 'Header: '))
 
-        self.load_cookies_label.setText(QCoreApplication.translate("addlink_ui_tr", 'Load cookies: '))
+        self.load_cookies_label.setText(QCoreApplication.translate("addlink_ui_tr", 'Cookies: '))
 
         self.user_agent_label.setText(QCoreApplication.translate("addlink_ui_tr", 'User agent: '))
