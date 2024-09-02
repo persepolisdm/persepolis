@@ -171,7 +171,7 @@ class Download():
         # find file size
         try:
             response = self.requests_session.head(self.link, allow_redirects=True, timeout=self.timeout, verify=self.check_certificate)
-            response.raise_for_status()
+#             response.raise_for_status()
             self.file_header = response.headers
 
             self.file_size = int(self.file_header['content-length'])
@@ -186,6 +186,9 @@ class Download():
             error_message2 = str(error)
         except requests.exceptions.RequestException as error:
             error_message = 'Request error'
+            error_message2 = str(error)
+        except Exception as error:
+            error_message = 'Error'
             error_message2 = str(error)
 
         if error_message:
@@ -558,6 +561,11 @@ class Download():
 
             except requests.exceptions.RequestException as error:
                 error_message = 'Request error'
+                error_message2 = str(error)
+                self.download_infromation_list[part_number][2] = 'error'
+
+            except Exception as error:
+                error_message = 'Error'
                 error_message2 = str(error)
                 self.download_infromation_list[part_number][2] = 'error'
 
