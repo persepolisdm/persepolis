@@ -200,12 +200,21 @@ class AboutWindow_Ui(QWidget):
         self.acknowledgments_ffmpeg_label.setAlignment(Qt.AlignCenter)
         self.acknowledgments_ytdlp_label = QLabel(self.acknowledgments_tab)
         self.acknowledgments_ytdlp_label.setAlignment(Qt.AlignCenter)
+        self.acknowledgments_pyton_requests_label = QLabel(self.acknowledgments_tab)
+        self.acknowledgments_pyton_requests_label.setAlignment(Qt.AlignCenter)
+        self.acknowledgments_pyside_label = QLabel(self.acknowledgments_tab)
+        self.acknowledgments_pyside_label.setAlignment(Qt.AlignCenter)
 
         self.acknowledgments_ffmpeg_label.setFont(font)
         self.acknowledgments_ytdlp_label.setFont(font)
+        self.acknowledgments_pyside_label.setFont(font)
+        self.acknowledgments_pyton_requests_label.setFont(font)
 
         acknowledgments_verticalLayout.addWidget(self.acknowledgments_ytdlp_label)
         acknowledgments_verticalLayout.addWidget(self.acknowledgments_ffmpeg_label)
+        acknowledgments_verticalLayout.addWidget(self.acknowledgments_pyton_requests_label)
+        acknowledgments_verticalLayout.addWidget(self.acknowledgments_pyside_label)
+
         acknowledgments_verticalLayout.addStretch(1)
 
         # buttons
@@ -253,9 +262,17 @@ class AboutWindow_Ui(QWidget):
         self.acknowledgments_title_label.setText(QCoreApplication.translate('about_ui_tr', 'Acknowledgments:'))
 
         self.acknowledgments_ytdlp_label.setText(QCoreApplication.translate("about_ui_tr",
-                                                                            "<a href=https://github.com/yt-dlp/yt-dlp>YT-DLP project</a>"))
+                                                                            "<a href=https://github.com/yt-dlp/yt-dlp>YT-DLP project</a>",
+                                                                            "TRANSLATORS NOTE: YOU REALLY DON'T NEED TO TRANSLATE THIS PART!"))
         self.acknowledgments_ffmpeg_label.setText(QCoreApplication.translate("about_ui_tr",
-                                                                             "<a href=https://github.com/ffmpeg/ffmpeg>FFmpeg project</a>"))
+                                                                             "<a href=https://github.com/ffmpeg/ffmpeg>FFmpeg project</a>",
+                                                                             "TRANSLATORS NOTE: YOU REALLY DON'T NEED TO TRANSLATE THIS PART!"))
+        self.acknowledgments_pyside_label.setText(QCoreApplication.translate("about_ui_tr",
+                                                                             "<a href=https://wiki.qt.io/Qt_for_Python>Pyside project</a>",
+                                                                             "TRANSLATORS NOTE: YOU REALLY DON'T NEED TO TRANSLATE THIS PART!"))
+        self.acknowledgments_pyton_requests_label.setText(QCoreApplication.translate("about_ui_tr",
+                                                                                     "<a href=https://github.com/psf/requests>Requests project</a>",
+                                                                                     "TRANSLATORS NOTE: YOU REALLY DON'T NEED TO TRANSLATE THIS PART!"))
 
         # License
         self.license_text.setPlainText("""
