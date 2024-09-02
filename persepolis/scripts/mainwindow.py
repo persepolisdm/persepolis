@@ -117,11 +117,67 @@ plugin_ready = os.path.join(persepolis_tmp, 'persepolis-plugin-ready')
 
 show_window_file = os.path.join(persepolis_tmp, 'show-window')
 
+
+# remove item from download_sessions_list
+class RemoveItemFromSessionListThread(QThread):
+    def __init__(self, gid, main_window):
+        QThread.__init__(self)
+        self.gid = gid
+        self.main_window = main_window
+
+    def run(self):
+        self.main_window.removeItemFromSessionList(self.gid)
+
+
+# delete things that are no longer needed
+class DeleteThingsThatAreNoLongerNeededThread(QThread):
+    def __init__(self, gid, file_name, status, category, delete_download_file, main_window):
+        QThread.__init__(self)
+        self.gid = gid
+        self.file_name = file_name
+        self.status = status
+        self.category = category
+        self.delete_download_file = delete_download_file
+        self.main_window = main_window
+
+    def run(self):
+        # remove it from download_sessions_list
+        self.main_window.removeItemFromSessionList(self.gid)
+
+        # find download_path
+        dictionary = self.main_window.persepolis_db.searchGidInAddLinkTable(self.gid)
+
+        if dictionary:
+            download_path = dictionary['download_path']
+
+            # remove file of download from download folder
+            if self.file_name != '***' and self.status != 'complete':
+                file_name_path = os.path.join(
+                    download_path, str(self.file_name))
+
+                osCommands.remove(file_name_path)  # remove file
+
+                json_control_file = file_name_path + str('.persepolis')
+                osCommands.remove(json_control_file)  # remove file.persepolis
+
+            # remove downloaded file, if download is completed
+            elif self.status == 'complete' and self.delete_download_file:
+
+                # download is complete. so download_path == file_name_path
+                remove_answer = osCommands.remove(download_path)
+
+                # if file not existed, notify user
+                if remove_answer == 'no':
+                    notifySend(str(self.file_name), QCoreApplication.translate("mainwindow_src_ui_tr", 'Not Found'),
+                               5000, 'warning', parent=self.main_window)
+
+        # remove download item from data base
+        self.main_window.persepolis_db.deleteItemInDownloadTable(self.gid, self.category)
+
+
 # this thread checks ffmpeg and gost availability.
 # this thread checks ffmpeg and python and pyqt and qt versions and write them in log file.
 # this thread writes os type and desktop env. in log file.
-
-
 class CheckVersionsThread(QThread):
 
     def __init__(self, parent):
@@ -1859,23 +1915,6 @@ class MainWindow(MainWindow_Ui):
                 # lets do finishing jobs!
                 elif progress_window.status == "stopped" or progress_window.status == "error" or progress_window.status == "complete":
 
-                    # close progress_window if download status is stopped or
-                    # completed or error
-                    # if window is related to video finder and download is completed, don't close window
-                    if (video_finder_link is True and progress_window.status == 'complete'):
-
-                        # disable stop and pause and push buttons
-                        progress_window.resume_pushButton.setEnabled(False)
-                        progress_window.stop_pushButton.setEnabled(False)
-                        progress_window.pause_pushButton.setEnabled(False)
-
-                    else:
-                        progress_window.close()
-                        # remove item from download_sessions_list
-                        self.removeItemFromSessionList(gid)
-                        # eliminate window information from progress_window_list_dict
-                        del self.progress_window_list_dict[gid]
-
                     # if download stopped:
                     if progress_window.status == "stopped":
                         # write message in log
@@ -1908,6 +1947,26 @@ class MainWindow(MainWindow_Ui):
                         # show notification
                         notifySend(QCoreApplication.translate("mainwindow_src_ui_tr", "Error - ") + error, str(download_status_dict['file_name']),
                                    10000, 'fail', parent=self)
+
+                    # close progress_window if download status is stopped or
+                    # completed or error
+                    # if window is related to video finder and download is completed, don't close window
+                    if (video_finder_link is True and progress_window.status == 'complete'):
+
+                        # disable stop and pause and push buttons
+                        progress_window.resume_pushButton.setEnabled(False)
+                        progress_window.stop_pushButton.setEnabled(False)
+                        progress_window.pause_pushButton.setEnabled(False)
+
+                    else:
+                        progress_window.close()
+                        # remove item from download_sessions_list
+                        remove_item_from_session_list_thread = RemoveItemFromSessionListThread(gid, self)
+                        self.threadPool.append(remove_item_from_session_list_thread)
+                        self.threadPool[-1].start()
+
+                        # eliminate window information from progress_window_list_dict
+                        del self.progress_window_list_dict[gid]
 
                     # set "None" for start_time and end_time and after_download value
                     # in data_base, because download has finished
@@ -3081,7 +3140,6 @@ class MainWindow(MainWindow_Ui):
         active_gid_list = self.persepolis_db.findActiveDownloads('Single Downloads')
 
         for gid in active_gid_list:
-
             # search gid in download_sessions_list
             for download_session_dict in self.download_sessions_list:
                 if download_session_dict['gid'] == gid:
@@ -3317,9 +3375,6 @@ class MainWindow(MainWindow_Ui):
         gid_list = set(gid_list)
 
         for gid in gid_list:
-            # remove it from download_sessions_list
-            self.removeItemFromSessionList(gid)
-
             # find row number for specific gid
             for i in range(self.download_table.rowCount()):
                 row_gid = self.download_table.item(i, 8).text()
@@ -3339,22 +3394,11 @@ class MainWindow(MainWindow_Ui):
             # remove row from download_table
             self.download_table.removeRow(row)
 
-            # find download_path
-            dictionary = self.persepolis_db.searchGidInAddLinkTable(gid)
-            download_path = dictionary['download_path']
-
-            # remove file of download from download folder
-            if file_name != '***' and status != 'complete':
-                file_name_path = os.path.join(
-                    download_path, str(file_name))
-
-                osCommands.remove(file_name_path)  # remove file
-
-                json_control_file = file_name_path + str('.persepolis')
-                osCommands.remove(json_control_file)  # remove file.persepolis
-
-            # remove download item from data base
-            self.persepolis_db.deleteItemInDownloadTable(gid, category)
+            # remove download files, remove from data_base and remove from download_sessions_list
+            delete_download_file = False
+            delete_things_that_are_no_longer_needed_thread = DeleteThingsThatAreNoLongerNeededThread(gid, file_name, status, category, delete_download_file, self)
+            self.threadPool.append(delete_things_that_are_no_longer_needed_thread)
+            self.threadPool[-1].start()
 
         # tell the CheckDownloadInfoThread that job is done!
         global checking_flag
@@ -3482,8 +3526,6 @@ class MainWindow(MainWindow_Ui):
         gid_list = set(gid_list)
 
         for gid in gid_list:
-            # remove it from download_sessions_list
-            self.removeItemFromSessionList(gid)
             # find row number for specific gid
             for i in range(self.download_table.rowCount()):
                 row_gid = self.download_table.item(i, 8).text()
@@ -3500,40 +3542,14 @@ class MainWindow(MainWindow_Ui):
             # find status
             status = self.download_table.item(row, 1).text()
 
-            # if download is not completed,
-            # remove downloaded file form download temp folder
-            # find download path
-            dictionary = self.persepolis_db.searchGidInAddLinkTable(gid)
-            if dictionary:
-                download_path = dictionary['download_path']
-
-                if file_name != '***' and status != 'complete':
-                    file_name_path = os.path.join(
-                        download_path, str(file_name))
-
-                    # remove file : file_name_path
-                    osCommands.remove(file_name_path)
-
-                    # remove persepolis control_json_file file : json_control_file
-                    json_control_file = file_name_path + str('.persepolis')
-                    osCommands.remove(json_control_file)
-
-                # remove downloaded file, if download is completed
-                elif status == 'complete':
-
-                    # download is complete. so download_path == file_name_path
-                    remove_answer = osCommands.remove(download_path)
-
-                    # if file not existed, notify user
-                    if remove_answer == 'no':
-                        notifySend(str(file_name), QCoreApplication.translate("mainwindow_src_ui_tr", 'Not Found'),
-                                   5000, 'warning', parent=self)
-
             # remove row from download_table
             self.download_table.removeRow(row)
 
-            # remove download item from data base
-            self.persepolis_db.deleteItemInDownloadTable(gid, category)
+            # remove download files, remove from data_base and remove from download_sessions_list
+            delete_download_file = True
+            delete_things_that_are_no_longer_needed_thread = DeleteThingsThatAreNoLongerNeededThread(gid, file_name, status, category, delete_download_file, self)
+            self.threadPool.append(delete_things_that_are_no_longer_needed_thread)
+            self.threadPool[-1].start()
 
         # telling the CheckDownloadInfoThread that job is done!
         global checking_flag
@@ -3545,8 +3561,14 @@ class MainWindow(MainWindow_Ui):
         for download_session_dict in self.download_sessions_list:
             if download_session_dict['gid'] == gid:
                 # remove item
-                self.download_sessions_list.remove(download_session_dict)
-                break
+                while download_session_dict['download_session'].close_status is False and shutdown_notification == 0:
+                    sleep(0.1)
+
+                try:
+                    self.download_sessions_list.remove(download_session_dict)
+                    break
+                except:
+                    break
 
     # this method sorts download table by name
     def sortByName(self, menu=None):

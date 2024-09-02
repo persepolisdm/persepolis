@@ -73,6 +73,7 @@ class Download():
         self.not_converted_download_speed = 0
         self.download_percent = 0
         self.error_message = ''
+        self.close_status = False
         # check certificate
         if str(main_window.persepolis_setting.value('settings/dont-check-certificate')) == 'yes':
             self.check_certificate = False
@@ -821,6 +822,7 @@ class Download():
             thread.join()
 
         logger.sendToLog("persepolis_lib is closed!")
+        self.close_status = True
 
     # This method returns download status
     def tellStatus(self):
