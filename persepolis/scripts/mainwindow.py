@@ -2403,10 +2403,8 @@ class MainWindow(MainWindow_Ui):
         self.addlinkwindows_list[-1].activateWindow()
 
     # This method creates addlinkwindow when user presses plus button in MainWindow
-
     def addLinkButtonPressed(self, button=None):
-
-        addlinkwindow = AddLinkWindow(self, self.callBack, self.persepolis_setting)
+        addlinkwindow = AddLinkWindow(self, self.callBack, self.persepolis_setting, plugin_add_link_dictionary={})
         self.addlinkwindows_list.append(addlinkwindow)
         self.addlinkwindows_list[-1].show()
 
