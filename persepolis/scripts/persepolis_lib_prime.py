@@ -353,6 +353,7 @@ class Download():
             else:
                 # Calculate how many parts of one MiB we need.
                 self.number_of_parts = int(self.file_size // (1024**2)) + 1
+                self.number_of_threads = self.number_of_parts
                 for i in range(0, self.number_of_parts):
                     self.download_infromation_list[i] = [i * 1024 * 1024, 0, 'pending', -1]
 
