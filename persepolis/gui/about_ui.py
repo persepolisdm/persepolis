@@ -101,7 +101,7 @@ class AboutWindow_Ui(QWidget):
 
         self.version_label = QLabel(self.about_tab)
         self.version_label.setAlignment(Qt.AlignCenter)
-
+        self.version_label.setFont(font)
         about_tab_verticalLayout.addWidget(self.version_label)
 
         self.site2_label = QLabel(self.about_tab)
@@ -249,7 +249,7 @@ class AboutWindow_Ui(QWidget):
                                                               "TRANSLATORS NOTE: YOU REALLY DON'T NEED TO TRANSLATE THIS PART!"))
 
         # developers_tab
-        self.developers_title_label.setText(QCoreApplication.translate('about_ui_tr', 'Acknowledgments:'))
+        self.developers_title_label.setText(QCoreApplication.translate('about_ui_tr', 'Developers'))
 
         self.name_label.setText(QCoreApplication.translate("about_ui_tr",
                                                            "\nAliReza AmirSamimi\nMohammadreza Abdollahzadeh\nSadegh Alirezaie\nMostafa Asadi\nJafar Akhondali\nKia Hamedi\nH.Rostami\nEhsan Titish\nMohammadAmin Vahedinia",

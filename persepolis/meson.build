@@ -5,7 +5,8 @@ shell_sources = [
 constants_sources = [
   'constants/Browser.py',
   'constants/__init__.py',
-  'constants/Os.py'  
+  'constants/Os.py',  
+  'constants/Version.py'
   ]
 gui_sources = [
   'gui/__init__.py',
@@ -18,7 +19,6 @@ gui_sources = [
   'gui/addlink_ui.py',
   'gui/customized_widgets.py',
   'gui/log_window_ui.py',
-  'gui/palettes.py',
   'gui/setting_ui.py',
   'gui/video_finder_progress_ui.py'
   ]

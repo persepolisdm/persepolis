@@ -1142,9 +1142,6 @@ class MainWindow(MainWindow_Ui):
         icons = ':/' + \
             str(self.persepolis_setting.value('settings/icons')) + '/'
 
-        # get version
-        self.persepolis_version = self.persepolis_main.applicationVersion()
-
         # add support for other languages
         locale = str(self.persepolis_setting.value('settings/locale'))
         QLocale.setDefault(QLocale(locale))
