@@ -15,6 +15,7 @@
 
 from persepolis.scripts.useful_tools import humanReadableSize
 from requests.cookies import cookiejar_from_dict
+from persepolis.constants import VERSION
 from http.cookies import SimpleCookie
 import requests
 from pathlib import Path
@@ -39,7 +40,7 @@ def getFileNameFromLink(link):
 # spider function finds name of file and file size from header
 
 
-def spider(add_link_dictionary, main_window):
+def spider(add_link_dictionary):
 
     # get user's download request from add_link_dictionary
     link = add_link_dictionary['link']
@@ -95,7 +96,7 @@ def spider(add_link_dictionary, main_window):
     if user_agent:
         requests_session.headers.update({'user-agent': user_agent})  # setting user_agent to the session
     else:
-        user_agent = 'PersepolisDM/' + str(main_window.persepolis_version)
+        user_agent = 'PersepolisDM/' + str(VERSION.version_str)
 
         # setting user_agent to the session
         requests_session.headers.update(
@@ -151,17 +152,17 @@ def spider(add_link_dictionary, main_window):
 
 
 # this function finds and returns file name for links.
-def queueSpider(add_link_dictionary, main_window):
-    filename = addLinkSpider(add_link_dictionary, main_window)[0]
+def queueSpider(add_link_dictionary):
+    filename = addLinkSpider(add_link_dictionary)[0]
 
     return filename
 
 
-def addLinkSpider(add_link_dictionary, main_window):
+def addLinkSpider(add_link_dictionary):
     # get user's download information from add_link_dictionary
     for i in ['link', 'ip', 'port', 'proxy_user', 'proxy_passwd', 'download_user', 'download_passwd',
               'header', 'out', 'user_agent', 'proxy_type', 'load_cookies', 'referer']:
         if not (i in add_link_dictionary):
             add_link_dictionary[i] = None
 
-    return spider(add_link_dictionary, main_window)
+    return spider(add_link_dictionary)

@@ -385,7 +385,7 @@ class SpiderThread(QThread):
     def run(self):
         try:
             # get file_name and file size with spider
-            file_name, size = spider.spider(self.add_link_dictionary, self.parent)
+            file_name, size = spider.spider(self.add_link_dictionary)
 
             # update data base
             dictionary = {'file_name': file_name, 'size': size, 'gid': self.add_link_dictionary['gid']}

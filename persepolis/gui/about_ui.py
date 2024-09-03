@@ -25,6 +25,7 @@ except:
     pyside6_is_installed = False
 
 from persepolis.gui import resources
+from persepolis.constants import VERSION
 
 if pyside6_is_installed is True:
     try:
@@ -233,7 +234,7 @@ class AboutWindow_Ui(QWidget):
 
         # about_tab
         self.title_label.setText(QCoreApplication.translate("about_ui_tr", "Persepolis Download Manager"))
-        self.version_label.setText(QCoreApplication.translate("about_ui_tr", "Version 4.3.0",
+        self.version_label.setText(QCoreApplication.translate("about_ui_tr", "Version " + VERSION.version_str,
                                                               "TRANSLATORS NOTE: YOU REALLY DON'T NEED TO TRANSLATE THIS PART!"))
         self.site2_label.setText(QCoreApplication.translate("about_ui_tr",
                                                             "<a href=https://persepolisdm.github.io>https://persepolisdm.github.io</a>",

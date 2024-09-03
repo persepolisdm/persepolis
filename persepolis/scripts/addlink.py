@@ -37,15 +37,14 @@ import os
 class AddLinkSpiderThread(QThread):
     ADDLINKSPIDERSIGNAL = Signal(dict)
 
-    def __init__(self, add_link_dictionary, main_window):
+    def __init__(self, add_link_dictionary):
         QThread.__init__(self)
         self.add_link_dictionary = add_link_dictionary
-        self.main_window = main_window
 
     def run(self):
         try:
             # get file name and file size
-            file_name, file_size = spider.addLinkSpider(self.add_link_dictionary, self.main_window)
+            file_name, file_size = spider.addLinkSpider(self.add_link_dictionary)
 
             spider_dict = {'file_size': file_size, 'file_name': file_name}
 
@@ -305,7 +304,7 @@ class AddLinkWindow(AddLinkWindow_Ui):
             dict = {'link': str(self.link_lineEdit.text())}
 
             # spider is finding file size
-            new_spider = AddLinkSpiderThread(dict, self.parent)
+            new_spider = AddLinkSpiderThread(dict)
             self.parent.threadPool.append(new_spider)
             self.parent.threadPool[-1].start()
             self.parent.threadPool[-1].ADDLINKSPIDERSIGNAL.connect(

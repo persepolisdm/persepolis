@@ -159,14 +159,13 @@ class MediaListFetcherThread(QThread):
 class FileSizeFetcherThread(QThread):
     FOUND = Signal(dict)
 
-    def __init__(self, dictionary, thread_key, main_window):
+    def __init__(self, dictionary, thread_key):
         super().__init__()
         self.dictionary = dictionary
         self.key = thread_key
-        self.main_window = main_window
 
     def run(self):
-        spider_file_size = spider(self.dictionary, self.main_window)[1]
+        spider_file_size = spider(self.dictionary)[1]
         self.FOUND.emit({'thread_key': self.key,
                          'file_size': spider_file_size})
 
@@ -494,7 +493,7 @@ class VideoFinderAddLink(AddLinkWindow):
                         for key in more_options.keys():
                             input_dict[key] = more_options[key]
 
-                        size_fetcher = FileSizeFetcherThread(input_dict, i, self.parent)
+                        size_fetcher = FileSizeFetcherThread(input_dict, i)
                         self.threadPool[str(i)] = {'thread': size_fetcher, 'item_id': i}
                         self.parent.threadPool.append(size_fetcher)
                         self.parent.threadPool[-1].start()

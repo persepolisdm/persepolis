@@ -23,6 +23,7 @@ except:
 from persepolis.gui.about_ui import AboutWindow_Ui
 from persepolis.gui import resources
 
+
 class AboutWindow(AboutWindow_Ui):
     def __init__(self, persepolis_setting):
         super().__init__(persepolis_setting)
@@ -45,11 +46,8 @@ class AboutWindow(AboutWindow_Ui):
 
         self.translators_textEdit.insertPlainText(f_text)
 
-
-
         self.resize(size)
         self.move(position)
-
 
     def keyPressEvent(self, event):
         if event.key() == Qt.Key_Escape:

@@ -13,10 +13,5 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-
-# import sys
-# sys.path.insert(1, '.')
-
-from .Os import OS
-from .Browser import BROWSER
-from .Version import VERSION
+class VERSION:
+    version_str = '5.0.0'
