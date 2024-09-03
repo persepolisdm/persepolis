@@ -25,6 +25,7 @@ from persepolis.scripts.useful_tools import convertTime, humanReadableSize, free
 from persepolis.scripts.osCommands import makeDirs, moveFile
 from persepolis.scripts import logger
 from persepolis.scripts.bubble import notifySend
+from persepolis.constants import VERSION
 import json
 from urllib.parse import urlparse, unquote
 from pathlib import Path
@@ -144,7 +145,7 @@ class Download():
             self.requests_session.headers.update(
                 {'user-agent': self.user_agent})
         else:
-            self.user_agent = 'PersepolisDM/' + str(self.main_window.persepolis_version)
+            self.user_agent = 'PersepolisDM/' + str(VERSION.version_str)
             # setting user_agent to the session
             self.requests_session.headers.update(
                 {'user-agent': self.user_agent})
