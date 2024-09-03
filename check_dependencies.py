@@ -70,14 +70,6 @@ except:
     print('Warning: yt-dlp is not installed!')
     not_installed = not_installed + 'yt-dlp, '
 
-# aria2
-answer = os.system('aria2c --version 1>/dev/null')
-if answer != 0:
-    print("Error aria2 not installed!")
-    not_installed = not_installed + 'aria2c, '
-else:
-    print('aria2 is found!')
-
 # ffmpeg
 answer = os.system('ffmpeg -version 1>/dev/null')
 if answer != 0:
@@ -85,24 +77,6 @@ if answer != 0:
     not_installed = not_installed + 'ffmpeg, '
 else:
     print('ffmpeg is found!')
-
-
-# gost or sthp
-socks_to_http_convertor_is_installed = False
-answer = os.system('gost -V 1>/dev/null')
-if answer == 0:
-    socks_to_http_convertor_is_installed = True
-else:
-    answer = os.system('sthp -V 1>/dev/null')
-    if answer == 0:
-        socks_to_http_convertor_is_installed = True
-
-if socks_to_http_convertor_is_installed:
-    print("gost or sthp is found!")
-else:
-    print('socks to http convertor is not installed!')
-    not_installed = not_installed + 'socks to http convertor'
-
 
 
 # sound-theme-freedesktop
@@ -119,7 +93,6 @@ if os_type == 'Linux' or os_type == 'FreeBSD' or os_type == 'OpenBSD':
         print('Warning: sound-theme-freedesktop is not installed! you need this package for sound notifications!')
         not_installed = not_installed + 'sound-theme-freedesktop'
 
-
     # libnotify-bin
     answer = os.system('notify-send --version 1>/dev/null')
     if answer != 0:
@@ -135,8 +108,6 @@ if os_type == 'Linux' or os_type == 'FreeBSD' or os_type == 'OpenBSD':
         not_installed = not_installed + 'paplay, '
     else:
         print('paplay is found!')
-
-
 
 # show warning , if dependencies not installed!
 if not_installed != '':
