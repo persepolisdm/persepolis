@@ -257,5 +257,16 @@ if persepolis_version < 4.11:
 persepolis_setting.setValue('version/version', 4.2)
 persepolis_setting.setValue('version/version', 4.3)
 
+if persepolis_version < 5.0:
+    persepolis_setting.beginGroup('settings')
+
+    for key in default_setting_dict.keys():
+
+        setting_value = default_setting_dict[key]
+        persepolis_setting.setValue(key, setting_value)
+
+    persepolis_setting.endGroup()
+
+persepolis_setting.setValue('version/version', 5.0)
 
 persepolis_setting.sync()
