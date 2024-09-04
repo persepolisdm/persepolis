@@ -1967,6 +1967,11 @@ class MainWindow(MainWindow_Ui):
                         # eliminate window information from progress_window_list_dict
                         del self.progress_window_list_dict[gid]
 
+                    # remove item from download_sessions_list
+                    remove_item_from_session_list_thread = RemoveItemFromSessionListThread(gid, self)
+                    self.threadPool.append(remove_item_from_session_list_thread)
+                    self.threadPool[-1].start()
+
                     # set "None" for start_time and end_time and after_download value
                     # in data_base, because download has finished
                     self.persepolis_db.setDefaultGidInAddlinkTable(
