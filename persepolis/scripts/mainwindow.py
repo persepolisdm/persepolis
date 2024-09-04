@@ -1333,6 +1333,7 @@ class MainWindow(MainWindow_Ui):
         # download_sessions_list contains some dictionaries.
         # every dictionary contains GID and session of that download process.
         self.download_sessions_list = []
+
         # queue_list_dict contains queue threads >> queue_list_dict[name of queue]
         self.queue_list_dict = {}
 
@@ -1957,6 +1958,7 @@ class MainWindow(MainWindow_Ui):
 
                     else:
                         progress_window.close()
+
                         # remove item from download_sessions_list
                         remove_item_from_session_list_thread = RemoveItemFromSessionListThread(gid, self)
                         self.threadPool.append(remove_item_from_session_list_thread)
@@ -2677,6 +2679,14 @@ class MainWindow(MainWindow_Ui):
                             progress_window.activateWindow()
 
                 else:
+                    # check if last session of this gid is finished or not!
+                    for download_session_dict in self.download_sessions_list:
+                        if download_session_dict['gid'] == gid:
+                            # we already have an active tread for this download...
+                            notifySend(QCoreApplication.translate("mainwindow_src_ui_tr", "Please retry in a minute!"),
+                                       QCoreApplication.translate("mainwindow_src_ui_tr", "be patient!"),
+                                       10000, 'warning', parent=self)
+                            return
                     # get information from data_base
                     add_link_dictionary = self.persepolis_db.searchGidInAddLinkTable(gid)
 
