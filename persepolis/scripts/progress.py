@@ -77,7 +77,7 @@ class ProgressWindow(ProgressWindow_Ui):
 
         # set window size and position
         size = self.persepolis_setting.value(
-            'ProgressWindow/size', QSize(595, 274))
+            'ProgressWindow/size', QSize(617, 304))
         position = self.persepolis_setting.value(
             'ProgressWindow/position', QPoint(300, 300))
         self.resize(size)

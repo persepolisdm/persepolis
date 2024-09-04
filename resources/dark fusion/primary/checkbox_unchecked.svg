@@ -171,7 +171,7 @@
        id="rect997"
        inkscape:connector-curvature="0" />
     <rect
-       style="opacity:1;fill:#ffffff00;fill-opacity:0;stroke:#1de9b6;stroke-width:0;stroke-linecap:square;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:stroke fill markers"
+       style="opacity:1;fill:#ffffff00;fill-opacity:0;stroke:#448aff;stroke-width:0;stroke-linecap:square;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:stroke fill markers"
        id="rect5674"
        width="0.79374999"
        height="0.79374999"
@@ -179,7 +179,7 @@
        y="294.61877"
        ry="0.39687499" />
     <path
-       style="opacity:1;fill:#1de9b6;fill-opacity:1;stroke:#1de9b6;stroke-width:0;stroke-linecap:square;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:stroke fill markers"
+       style="opacity:1;fill:#448aff;fill-opacity:1;stroke:#448aff;stroke-width:0;stroke-linecap:square;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:stroke fill markers"
        d="M 4.9960938,3 C 3.8899304,3 3,3.8899304 3,4.9960938 V 15.003906 C 3,16.11007 3.8899304,17 4.9960938,17 H 15.003906 C 16.11007,17 17,16.11007 17,15.003906 V 4.9960938 C 17,3.8899304 16.11007,3 15.003906,3 Z M 5,4 h 10 c 0.553979,0 1,0.4460206 1,1 v 10 c 0,0.553979 -0.446021,1 -1,1 H 5 C 4.4460206,16 4,15.553979 4,15 V 5 C 4,4.4460206 4.4460206,4 5,4 Z"
        transform="matrix(0.26458332,0,0,0.26458332,0,291.70835)"
        id="rect1954"

@@ -1439,7 +1439,7 @@ class MainWindow(MainWindow_Ui):
 
         # finding windows_size
         size = self.persepolis_setting.value(
-            'MainWindow/size', QSize(900, 500))
+            'MainWindow/size', QSize(862, 554))
         position = self.persepolis_setting.value(
             'MainWindow/position', QPoint(300, 300))
 
@@ -1450,7 +1450,7 @@ class MainWindow(MainWindow_Ui):
         # download_table column size
         # column 0
         size = self.persepolis_setting.value(
-            'MainWindow/column0', '300')
+            'MainWindow/column0', '169')
         self.download_table.setColumnWidth(0, int(size))
         # column 1
         size = self.persepolis_setting.value(
@@ -1458,39 +1458,39 @@ class MainWindow(MainWindow_Ui):
         self.download_table.setColumnWidth(1, int(size))
         # column 2
         size = self.persepolis_setting.value(
-            'MainWindow/column2', '100')
+            'MainWindow/column2', '200')
         self.download_table.setColumnWidth(2, int(size))
         # column 3
         size = self.persepolis_setting.value(
-            'MainWindow/column3', '120')
+            'MainWindow/column3', '200')
         self.download_table.setColumnWidth(3, int(size))
         # column 4
         size = self.persepolis_setting.value(
-            'MainWindow/column4', '100')
+            'MainWindow/column4', '200')
         self.download_table.setColumnWidth(4, int(size))
         # column 5
         size = self.persepolis_setting.value(
-            'MainWindow/column5', '120')
+            'MainWindow/column5', '100')
         self.download_table.setColumnWidth(5, int(size))
         # column 6
         size = self.persepolis_setting.value(
-            'MainWindow/column6', '100')
+            'MainWindow/column6', '119')
         self.download_table.setColumnWidth(6, int(size))
         # column 7
         size = self.persepolis_setting.value(
-            'MainWindow/column7', '100')
+            'MainWindow/column7', '109')
         self.download_table.setColumnWidth(7, int(size))
         # column 10
         size = self.persepolis_setting.value(
-            'MainWindow/column10', '200')
+            'MainWindow/column10', '120')
         self.download_table.setColumnWidth(10, int(size))
         # column 11
         size = self.persepolis_setting.value(
-            'MainWindow/column11', '200')
+            'MainWindow/column11', '134')
         self.download_table.setColumnWidth(11, int(size))
         # column 12
         size = self.persepolis_setting.value(
-            'MainWindow/column11', '200')
+            'MainWindow/column11', '185')
         self.download_table.setColumnWidth(12, int(size))
 
         # check maximizing situation in persepolis_setting

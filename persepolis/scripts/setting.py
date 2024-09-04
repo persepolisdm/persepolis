@@ -404,7 +404,7 @@ class PreferencesWindow(Setting_Ui):
 
         # setting window size and position
         size = self.persepolis_setting.value(
-            'PreferencesWindow/size', QSize(578, 565))
+            'PreferencesWindow/size', QSize(578, 597))
         position = self.persepolis_setting.value(
             'PreferencesWindow/position', QPoint(300, 300))
 
