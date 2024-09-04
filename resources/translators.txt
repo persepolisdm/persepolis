@@ -1,8 +1,8 @@
 Arabic:
 Majdi Sobain MajdiSobain
 Saleh Alanazi Sal7_one
-Rayan M rayanm
-Rex_sa rex07 
+rayanm
+Rex_sa rex07
 Simo simonetworking
 明 张 zhuangsha19740612 
 
@@ -99,7 +99,6 @@ long long zql00l
 书罕 向 墨墨墨墨墨
 chuantong xu 徐传统
 00 000 敷衍伤情
-花卷 春 春花卷 
 
 
 German (de):
@@ -117,11 +116,12 @@ Simon Porte sporte
 
 
 Hungarian:
-Totya Totya 
+- Totya Totya
 
 
 Korean:
 JungHee Lee MarongHappy
+
 
 Persian (Iran):
 AliReza AmirSamimi alireza_amirsamimi
@@ -168,6 +168,12 @@ Turkish (Turkey):
 Oğuzhan Aksoy OnePage
 abc Def abcmen
 Yaşar Çiv yasarciv67 
+
+
+Turkish:
+abc Def abcmen
+Koray Biçer kbicer
+Yaşar Çiv yasarciv67
 
 
 Chinese (Taiwan):
