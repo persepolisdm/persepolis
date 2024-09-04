@@ -46,6 +46,15 @@ except:
     print('Error : requests is not installed!')
     not_installed = not_installed + 'python3-requests, '
 
+# python3-urllib3
+try:
+    import urllib3
+    print('python3-urllib3 is found!')
+except:
+    print('Error : urllib3 is not installed!')
+    not_installed = not_installed + 'python3-urllib3, '
+
+
 # python3-setproctitle
 try:
     import setproctitle
