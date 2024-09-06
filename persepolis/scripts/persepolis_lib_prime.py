@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
 #    the Free Software Foundation, either version 3 of the License, or
@@ -12,35 +10,43 @@
 #
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
 
+from __future__ import annotations
 
-import requests
-import time
+import json
+import os
 import random
 import threading
-import os
-from requests.cookies import cookiejar_from_dict
+import time
 from http.cookies import SimpleCookie
-from persepolis.scripts.useful_tools import convertTime, humanReadableSize, freeSpace
-from persepolis.scripts.osCommands import makeDirs, moveFile
-from persepolis.scripts import logger
-from persepolis.scripts.bubble import notifySend
-from persepolis.constants import VERSION
-import json
-from urllib.parse import urlparse, unquote
 from pathlib import Path
+from typing import TYPE_CHECKING, Any
+from urllib.parse import unquote, urlparse
+
+import requests
 from requests.adapters import HTTPAdapter
+from requests.cookies import cookiejar_from_dict
 from urllib3.util.retry import Retry
 
+from persepolis.constants import Version
+from persepolis.scripts import logger
+from persepolis.scripts.bubble import notifySend
+from persepolis.scripts.osCommands import makeDirs, moveFile
+from persepolis.scripts.useful_tools import convertTime, freeSpace, humanReadableSize
 
-class Download():
-    def __init__(self, add_link_dictionary, main_window, gid):
+if TYPE_CHECKING:
+    from .mainwindow import MainWindow
+
+
+class Download:
+    def __init__(self, add_link_dictionary: dict[str, Any], main_window: MainWindow, gid: str) -> None:
         self.downloaded_size = 0
         self.finished_threads = 0
-        self.eta = "0"
+        self.eta = '0'
         self.resume = False
         self.main_window = main_window
-        self.download_speed_str = "0"
+        self.download_speed_str = '0'
         self.gid = gid
 
         # download_status can be in waiting, downloading, stop, error, eaused
@@ -88,34 +94,32 @@ class Download():
         self.thread_list = []
 
     # this method get http header as string and convert it to dictionary
-    def convertHeaderToDictionary(headers):
+    def convertHeaderToDictionary(self, headers: str) -> dict[str, str]:
         dic = {}
-        for line in headers.split("\n"):
-            if line.startswith(("GET", "POST")):
+        for line in headers.split('\n'):
+            if line.startswith(('GET', 'POST')):
                 continue
-            point_index = line.find(":")
-            dic[line[:point_index].strip()] = line[point_index + 1:].strip()
+            point_index = line.find(':')
+            dic[line[:point_index].strip()] = line[point_index + 1 :].strip()
 
         return dic
 
     # create requests session
-    def createSession(self):
+    def createSession(self) -> None:
         # define a requests session
         self.requests_session = requests.Session()
 
         # check if user set proxy
         if self.ip:
-            ip_port = '://' + str(self.ip) + ":" + str(self.port)
+            ip_port = '://' + str(self.ip) + ':' + str(self.port)
             if self.proxy_user:
-                ip_port = ('://' + self.proxy_user + ':'
-                           + self.proxy_passwd + '@' + ip_port)
-            if self.proxy_type == 'socks5':
+                ip_port = '://' + self.proxy_user + ':' + self.proxy_passwd + '@' + ip_port
+            if self.proxy_type == 'socks5':  # noqa: SIM108
                 ip_port = 'socks5' + ip_port
             else:
                 ip_port = 'http' + ip_port
 
-            proxies = {'http': ip_port,
-                       'https': ip_port}
+            proxies = {'http': ip_port, 'https': ip_port}
 
             # set proxy to the session
             self.requests_session.proxies.update(proxies)
@@ -123,8 +127,7 @@ class Download():
         # check if download session needs authenthication
         if self.download_user:
             # set download user pass to the session
-            self.requests_session.auth = (self.download_user,
-                                          self.download_passwd)
+            self.requests_session.auth = (self.download_user, self.download_passwd)
 
         # set cookies
         if self.raw_cookies:
@@ -142,13 +145,11 @@ class Download():
         # set user_agent
         if self.user_agent:
             # setting user_agent to the session
-            self.requests_session.headers.update(
-                {'user-agent': self.user_agent})
+            self.requests_session.headers.update({'user-agent': self.user_agent})
         else:
-            self.user_agent = 'PersepolisDM/' + str(VERSION.version_str)
+            self.user_agent = 'PersepolisDM/' + str(Version.version_str)
             # setting user_agent to the session
-            self.requests_session.headers.update(
-                {'user-agent': self.user_agent})
+            self.requests_session.headers.update({'user-agent': self.user_agent})
 
         if self.header is not None:
             # convert header to dictionary
@@ -156,7 +157,7 @@ class Download():
             # update headers
             self.requests_session.headers.update(dict_)
 
-    def setRetry(self):
+    def setRetry(self) -> None:
         # set retry numbers.
         # backoff_factor will help to apply delays between attempts to avoid failing again
         retry = Retry(connect=self.retry, backoff_factor=self.retry_wait)
@@ -166,13 +167,15 @@ class Download():
 
     # get file size
     # if file size is not available, then download link is invalid
-    def getFileSize(self):
+    def getFileSize(self) -> int | None:
         error_message = None
         error_message2 = None
         # find file size
         try:
-            response = self.requests_session.head(self.link, allow_redirects=True, timeout=self.timeout, verify=self.check_certificate)
-#             response.raise_for_status()
+            response = self.requests_session.head(
+                self.link, allow_redirects=True, timeout=self.timeout, verify=self.check_certificate
+            )
+            #             response.raise_for_status()
             self.file_header = response.headers
 
             self.file_size = int(self.file_header['content-length'])
@@ -201,7 +204,7 @@ class Download():
 
     # get file name if available
     # if file name is not available, then set a file name
-    def getFileName(self):
+    def getFileName(self) -> None:
         # set default file name
         parsed_linkd = urlparse(self.link)
         self.file_name = Path(parsed_linkd.path).name
@@ -216,11 +219,10 @@ class Download():
             self.file_name = self.name
 
         # check if filename is available in header
-        elif 'Content-Disposition' in self.file_header.keys():
+        elif 'Content-Disposition' in self.file_header:
             content_disposition = self.file_header['Content-Disposition']
 
             if content_disposition.find('filename') != -1:
-
                 # so file name is available in header
                 filename_splited = content_disposition.split('filename=')
                 filename_splited = filename_splited[-1]
@@ -231,23 +233,22 @@ class Download():
     # this method gives etag from header
     # ETag is an HTTP response header field that helps with caching behavior by making
     # it easy to check whether a resource has changed, without having to re-download it.
-    def getFileTag(self):
-        if 'ETag' in self.file_header.keys():
+    def getFileTag(self) -> None:
+        if 'ETag' in self.file_header:  # noqa: SIM401
             self.etag = self.file_header['ETag']
         else:
             self.etag = None
 
     # Check if server supports multi threading or not
-    def multiThreadSupport(self):
-        if 'Accept-Ranges' in self.file_header.keys():
+    def multiThreadSupport(self) -> bool:
+        if 'Accept-Ranges' in self.file_header:  # noqa: RET503
             if self.file_header['Accept-Ranges'] == 'bytes':
                 logger.sendToLog('Server supports multi thread downloading!')
                 return True
-            else:
-                logger.sendToLog('Server dosn\'t support multi thread downloading!', 'ERROR')
-                return False
+            logger.sendToLog("Server dosn't support multi thread downloading!", 'ERROR')
+            return False
 
-    def createControlFile(self):
+    def createControlFile(self) -> None:
         # find file_path and control_json_file_path
         # If the file is partially downloaded, the download information is available in the control file.
         # The format of this file is Jason. the control file extension is .persepolis.
@@ -260,18 +261,16 @@ class Download():
 
         # if user set download path
         self.file_path = os.path.join(self.download_path, self.file_name)
-        self.control_json_file_path = os.path.join(
-            self.download_path, control_json_file)
+        self.control_json_file_path = os.path.join(self.download_path, control_json_file)
 
         # create json control file if not created before
         try:
             with open(self.control_json_file_path, 'x') as f:
-                f.write("")
+                f.write('')
         except Exception:
             # so the control file is already exists
             # read control file
-            with open(self.control_json_file_path, "r") as f:
-
+            with open(self.control_json_file_path) as f:
                 try:
                     # save json file information in dictionary format
                     data_dict = json.load(f)
@@ -280,7 +279,6 @@ class Download():
                     # If download item is duplicated, so resume download
                     # check ETag
                     if 'ETag' in data_dict:
-
                         if data_dict['ETag'] == self.etag:
                             self.resume = True
                         else:
@@ -288,7 +286,6 @@ class Download():
 
                     # if ETag is not available, then check file size
                     elif 'file_size' in data_dict:
-
                         if data_dict['file_size'] == self.file_size:
                             self.resume = True
                         else:
@@ -301,10 +298,7 @@ class Download():
                     self.resume = False
 
         # check if uncomplete download file exists
-        if os.path.isfile(self.file_path):
-            download_file_existance = True
-        else:
-            download_file_existance = False
+        download_file_existance = os.path.isfile(self.file_path)
 
         if self.resume and not (download_file_existance):
             self.resume = False
@@ -316,11 +310,10 @@ class Download():
 
         # create empty file
         if create_download_file:
-            fp = open(self.file_path, "wb")
-            fp.write(b'\0' * self.file_size)
-            fp.close()
+            with open(self.file_path, 'wb') as fp:
+                fp.write(b'\0' * self.file_size)
 
-    def definePartSizes(self):
+    def definePartSizes(self) -> None:
         # download_infromation_list contains 64 slists.
         # Every list contains:
         # [start byte number for this part, downloaded size, download status for this part, number of retryingfor this part]
@@ -329,7 +322,7 @@ class Download():
         # Retry number is -1, because askForNewPart method add 1 to it in the first call.
         if self.resume:
             # read control file
-            with open(self.control_json_file_path, "r") as f:
+            with open(self.control_json_file_path) as f:
                 data_dict = json.load(f)
 
             # read number of threads
@@ -339,9 +332,14 @@ class Download():
             self.number_of_parts = data_dict['number_of_parts']
 
             # set pending status for uncomplete parts
-            for i in range(0, self.number_of_parts):
+            for i in range(self.number_of_parts):
                 if self.download_infromation_list[i][2] != 'complete':
-                    self.download_infromation_list[i] = [self.download_infromation_list[i][0], self.download_infromation_list[i][1], 'pending', -1]
+                    self.download_infromation_list[i] = [
+                        self.download_infromation_list[i][0],
+                        self.download_infromation_list[i][1],
+                        'pending',
+                        -1,
+                    ]
 
                 self.downloaded_size = self.downloaded_size + self.download_infromation_list[i][1]
         else:
@@ -352,14 +350,14 @@ class Download():
             # if part_size greater than 1 MiB
             if part_size >= 1024**2:
                 self.number_of_parts = 64
-                for i in range(0, 64):
+                for i in range(64):
                     self.download_infromation_list[i] = [i * part_size, 0, 'pending', -1]
 
             else:
                 # Calculate how many parts of one MiB we need.
                 self.number_of_parts = int(self.file_size // (1024**2)) + 1
                 self.number_of_threads = self.number_of_parts
-                for i in range(0, self.number_of_parts):
+                for i in range(self.number_of_parts):
                     self.download_infromation_list[i] = [i * 1024 * 1024, 0, 'pending', -1]
 
                 # Set the starting byte number of the remaining parts equal to the size of the file.
@@ -369,26 +367,22 @@ class Download():
                     self.download_infromation_list[i] = [self.file_size, 0, 'complete', -1]
 
     # this method calculates download rate and ETA every second
-    def downloadSpeed(self):
+    def downloadSpeed(self) -> None:
         # Calculate the difference between downloaded volume and elapsed time
         # and divide them to get the download speed.
         last_download_value = self.downloaded_size
         end_time = time.perf_counter()
         # this loop repeated every 0.5 second.
-        while self.download_status == 'downloading' or self.download_status == 'paused':
+        while self.download_status in ['downloading', 'paused']:
             diffrence_time = time.perf_counter() - end_time
             diffrence_size = self.downloaded_size - last_download_value
             diffrence_size_converted, speed_unit = humanReadableSize(diffrence_size, 'speed')
-            download_speed = round(float(diffrence_size_converted) / diffrence_time,
-                                   2)
-            self.download_speed_str = (str(download_speed)
-                                       + " " + speed_unit + "/s")
+            download_speed = round(float(diffrence_size_converted) / diffrence_time, 2)
+            self.download_speed_str = str(download_speed) + ' ' + speed_unit + '/s'
             not_converted_download_speed = diffrence_size / diffrence_time
             try:
                 # estimated time the download will be completed.
-                eta_second = (self.file_size
-                              - self.downloaded_size) /\
-                    not_converted_download_speed
+                eta_second = (self.file_size - self.downloaded_size) / not_converted_download_speed
             except Exception:
                 eta_second = 0
 
@@ -400,21 +394,22 @@ class Download():
             time.sleep(2)
 
     # this method runs progress bar and speed calculator
-    def runProgressBar(self):
+    def runProgressBar(self) -> None:
         # run  a thread for calculating download speed.
-        calculate_speed_thread = threading.Thread(
-            target=self.downloadSpeed)
+        calculate_speed_thread = threading.Thread(target=self.downloadSpeed)
         calculate_speed_thread.setDaemon(True)
         calculate_speed_thread.start()
         self.thread_list.append(calculate_speed_thread)
 
     # threadHandler asks new part for download from this method.
-    def askForNewPart(self):
+    def askForNewPart(self) -> int:
         self.lock = True
-        for i in range(0, self.number_of_parts):
+        for i in range(self.number_of_parts):
             # Check that this part is not being downloaded or its download is not complete.
             # Check that the number of retries of this part has not reached the set limit.
-            if (self.download_infromation_list[i][2] not in ['complete', 'downloading']) and (self.download_infromation_list[i][3] != self.retry):
+            if (self.download_infromation_list[i][2] not in ['complete', 'downloading']) and (
+                self.download_infromation_list[i][3] != self.retry
+            ):
                 # set 'downloding' status for this part
                 self.download_infromation_list[i][2] = 'downloading'
                 # add 1 to retry number for this part
@@ -423,7 +418,7 @@ class Download():
 
             # no part found
             if i == (self.number_of_parts - 1):
-                i = None
+                i = None  # noqa: PLW2901
 
         self.lock = False
         return i
@@ -431,14 +426,13 @@ class Download():
     # The below code is used for each chunk of file handled
     # by each thread for downloading the content from specified
     # location to storage
-    def threadHandler(self, thread_number):
-        while self.download_status == 'downloading' or self.download_status == 'paused':
-
+    def threadHandler(self, _thread_number: int) -> None:
+        while self.download_status in ['downloading', 'paused']:
             # Wait for the lock to be released.
             while self.lock is True:
                 # Random sleep prevents two threads from downloading the same part at the same time.
                 # sleep random time
-                time.sleep(random.uniform(1, 3))
+                time.sleep(random.uniform(1, 3))  # noqa: S311
             part_number = self.askForNewPart()
 
             # If part_number is None, no part is available for download. So exit the loop.
@@ -449,7 +443,10 @@ class Download():
             try:
                 # calculate part size
                 if part_number != (self.number_of_parts - 1):
-                    part_size = self.download_infromation_list[part_number + 1][0] - self.download_infromation_list[part_number][0]
+                    part_size = (
+                        self.download_infromation_list[part_number + 1][0]
+                        - self.download_infromation_list[part_number][0]
+                    )
                 else:
                     part_size = self.file_size - self.download_infromation_list[part_number][0]
 
@@ -464,7 +461,7 @@ class Download():
                 else:
                     end = self.file_size
 
-#                 print(str(part_size) + ' ' + str(downloaded_part) + ' ' + str(part_number) + ' ' + str(start) + ' ' + str(end))
+                #                 print(str(part_size) + ' ' + str(downloaded_part) + ' ' + str(part_number) + ' ' + str(start) + ' ' + str(end))
                 # specify the start and end of the part for request header.
                 chunk_headers = {'Range': 'bytes=%d-%d' % (start, end)}
 
@@ -473,14 +470,13 @@ class Download():
                 # reading the content at once into memory for large responses
                 self.requests_session.headers.update(chunk_headers)
                 response = self.requests_session.get(
-                    self.link, allow_redirects=True, stream=True,
-                    timeout=self.timeout, verify=self.check_certificate)
+                    self.link, allow_redirects=True, stream=True, timeout=self.timeout, verify=self.check_certificate
+                )
 
                 # open the file and write the content of the html page
                 # into file.
                 # r+b mode is open the binary file in read or write mode.
-                with open(self.file_path, "r+b") as fp:
-
+                with open(self.file_path, 'r+b') as fp:
                     # The seek() method sets the current file position in a file stream.
                     fp.seek(start)
 
@@ -495,10 +491,8 @@ class Download():
                     # of bytes it should read into memory. This is not necessarily
                     # the length of each item returned as decoding can take place.
                     # so we divide our chunk to smaller chunks. default is 100 Kib
-                    python_request_chunk_size = (1024
-                                                 * self.python_request_chunk_size)
-                    for data in response.iter_content(
-                            chunk_size=python_request_chunk_size):
+                    python_request_chunk_size = 1024 * self.python_request_chunk_size
+                    for data in response.iter_content(chunk_size=python_request_chunk_size):
                         if self.download_status == 'downloading':
                             fp.write(data)
 
@@ -515,21 +509,18 @@ class Download():
                                     break
                             else:
                                 # so the last small chunk is equal to :
-                                update_size = (part_size - downloaded_part)
+                                update_size = part_size - downloaded_part
                                 # some times last chunks are smaller
-                                if len(data) < update_size:
-                                    update_size = len(data)
+                                update_size = min(len(data), update_size)
 
                             # update downloaded_part
-                            downloaded_part = (downloaded_part
-                                               + update_size)
+                            downloaded_part = downloaded_part + update_size
                             # save value to downloaded_size_list
                             self.download_infromation_list[part_number][1] = downloaded_part
 
                             # this variable saves amount of total downloaded size
                             # update downloaded_size
-                            self.downloaded_size = (self.downloaded_size
-                                                    + update_size)
+                            self.downloaded_size = self.downloaded_size + update_size
                             # perhaps user set limitation for download rate.
                             # downloadrate limitation
                             # "Speed limit" is whole number. The more it is, the more sleep time is given to the data
@@ -575,7 +566,7 @@ class Download():
                 logger.sendToLog(error_message + ' - ' + error_message2, 'ERROR')
 
             # so it's complete successfully.
-            if (downloaded_part == part_size):
+            if downloaded_part == part_size:
                 self.download_infromation_list[part_number][2] = 'complete'
             else:
                 self.download_infromation_list[part_number][2] = 'error'
@@ -584,56 +575,54 @@ class Download():
         self.finished_threads = self.finished_threads + 1
 
     # this method save download information in json format every 1 second
-    def saveInfo(self):
-        while self.download_status == 'downloading' or self.download_status == 'paused':
+    def saveInfo(self) -> None:
+        while self.download_status in ['downloading', 'paused']:
             control_dict = {
                 'ETag': self.etag,
                 'file_name': self.file_name,
                 'file_size': self.file_size,
                 'number_of_parts': self.number_of_parts,
-                'download_infromation_list': self.download_infromation_list}
+                'download_infromation_list': self.download_infromation_list,
+            }
 
             # write control_dict in json file
-            with open(self.control_json_file_path, "w") as outfile:
+            with open(self.control_json_file_path, 'w') as outfile:
                 json.dump(control_dict, outfile, indent=2)
             time.sleep(1)
 
     # this method runs download threads
-    def runDownloadThreads(self):
-
+    def runDownloadThreads(self) -> None:
         # check if server supports multithread downloading or not!
         if self.multiThreadSupport() is False:
             self.thread_number = 1
 
-        for i in range(0, self.number_of_threads):
-
+        for i in range(self.number_of_threads):
             # sleep between starting new thread.
             # it solves "Connection refused" error.
             time.sleep(0.1)
 
             # create threads
-            t = threading.Thread(
-                target=self.threadHandler,
-                kwargs={'thread_number': i})
+            t = threading.Thread(target=self.threadHandler, kwargs={'thread_number': i})
             t.setDaemon(True)
             t.start()
             self.thread_list.append(t)
 
         # run saveInfo thread for updating control file
-        save_control_thread = threading.Thread(
-            target=self.saveInfo)
+        save_control_thread = threading.Thread(target=self.saveInfo)
         save_control_thread.setDaemon(True)
         save_control_thread.start()
         self.thread_list.append(save_control_thread)
 
     # this method checks and manages download progress.
-    def checkDownloadProgress(self):
-        logger.sendToLog("Download starts! - GID:" + self.gid, "INFO")
+    def checkDownloadProgress(self) -> None:
+        logger.sendToLog('Download starts! - GID:' + self.gid, 'INFO')
 
         # Run this loop until the download is finished.
-        while (self.file_size != self.downloaded_size) and (self.download_status == 'downloading' or self.download_status == 'paused') and \
-              (self.finished_threads != self.number_of_threads):
-
+        while (
+            (self.file_size != self.downloaded_size)
+            and (self.download_status in ['downloading', 'paused'])
+            and (self.finished_threads != self.number_of_threads)
+        ):
             # Calculate download percent
             self.download_percent = int((self.downloaded_size / self.file_size) * 100)
 
@@ -647,39 +636,36 @@ class Download():
         self.number_of_active_connections = 0
         # If the downloaded size is the same as the file size, then the download has been completed successfully.
         if self.file_size == self.downloaded_size:
-
             self.download_status = 'complete'
             logger.sendToLog('Download complete. - GID: ' + self.gid)
 
         # If the download is not complete and the user has not stopped the download, then the download has encountered an error.
         elif self.download_status != 'stopped':
-
             self.download_status = 'error'
             logger.sendToLog('Download Error - GID: ' + self.gid)
 
         elif self.download_status == 'stopped':
-
             logger.sendToLog('Download stopped. - GID: ' + self.gid)
 
     # This method returns data and time in string format
     # for example >> 2017/09/09 , 13:12:26
-    def nowDate(self):
-        date = time.strftime("%Y/%m/%d , %H:%M:%S")
-        return date
+    def nowDate(self) -> str:
+        date = time.strftime('%Y/%m/%d , %H:%M:%S')
+        return date  # noqa: RET504
 
-    def sigmaTime(self, time):
-        hour, minute = time.split(":")
-        return (int(hour) * 60 + int(minute))
+    def sigmaTime(self, time: str) -> int:
+        hour, minute = time.split(':')
+        return int(hour) * 60 + int(minute)
 
     # nowTime returns now time in HH:MM format!
-    def nowTime(self):
-        now_time = time.strftime("%H:%M")
+    def nowTime(self) -> int:
+        now_time = time.strftime('%H:%M')
         return self.sigmaTime(now_time)
 
     # this method creates sleep time,if user sets "start time" for download.
-    def startTime(self):
+    def startTime(self) -> None:
         # write some messages
-        logger.sendToLog("Download starts at " + self.start_time + ' - GID: ' + self.gid, "INFO")
+        logger.sendToLog('Download starts at ' + self.start_time + ' - GID: ' + self.gid, 'INFO')
 
         # start_time that specified by user
         sigma_start = self.sigmaTime(self.start_time)
@@ -693,23 +679,22 @@ class Download():
             sigma_now = self.nowTime()
 
     # This method will stop the download when the end_time is reached.
-    def endTime(self):
-        logger.sendToLog("End time is activated: " + self.end_time + ' - GID: ' + self.gid, "INFO")
+    def endTime(self) -> None:
+        logger.sendToLog('End time is activated: ' + self.end_time + ' - GID: ' + self.gid, 'INFO')
         sigma_end = self.sigmaTime(self.end_time)
 
         # get current time
         sigma_now = self.nowTime()
 
         # while current time is not equal to end_time, continue the loop
-        while sigma_end != sigma_now and (self.download_status == 'downloading' or self.download_status == 'paused'):
-
+        while sigma_end != sigma_now and (self.download_status in ['downloading', 'paused']):
             # get current time
             sigma_now = self.nowTime()
             time.sleep(2.1)
 
         # Time is up!
-        if (self.download_status == 'downloading' or self.download_status == 'paused'):
-            logger.sendToLog("Time is up! - GID:" + self.gid, "INFO")
+        if self.download_status in ['downloading', 'paused']:
+            logger.sendToLog('Time is up! - GID:' + self.gid, 'INFO')
 
             # stop download
             self.downloadStop()
@@ -718,21 +703,20 @@ class Download():
             self.main_window.persepolis_db.setDefaultGidInAddlinkTable(self.gid, end_time=True)
 
     # this method runs endTime in a thread.
-    def runEndTimeThread(self):
-        end_time_thread = threading.Thread(
-            target=self.endTime)
+    def runEndTimeThread(self) -> None:
+        end_time_thread = threading.Thread(target=self.endTime)
         end_time_thread.setDaemon(True)
         end_time_thread.start()
         self.thread_list.append(end_time_thread)
 
     # this method starts download
-    def start(self):
+    def start(self) -> None:
         self.createSession()
         # update status and last_try_date in data_base
         if self.start_time:
-            self.download_status = "scheduled"
+            self.download_status = 'scheduled'
         else:
-            self.download_status = "waiting"
+            self.download_status = 'waiting'
 
         # get last_try_date
         now_date = self.nowDate()
@@ -749,7 +733,7 @@ class Download():
 
             # now startTime work is done! update data_base
             # if download stopped by user don't update data_base
-            if self.download_status == "scheduled":
+            if self.download_status == 'scheduled':
                 # set start_time value to None in data_base!
                 self.main_window.persepolis_db.setDefaultGidInAddlinkTable(self.gid, start_time=True)
 
@@ -781,19 +765,20 @@ class Download():
             self.close()
         else:
             # if start_time_status is "stopped" it means download Canceled by user
-            logger.sendToLog("Download Canceled", "INFO")
+            logger.sendToLog('Download Canceled', 'INFO')
 
-    def downloadPause(self):
+    def downloadPause(self) -> None:
         self.download_status = 'paused'
 
-    def downloadUnpause(self):
+    def downloadUnpause(self) -> None:
         self.download_status = 'downloading'
 
-    def downloadStop(self):
+    def downloadStop(self) -> None:
         self.download_status = 'stopped'
-#         self.exit_event.set()
 
-    def close(self):
+    #         self.exit_event.set()
+
+    def close(self) -> None:
         # if download complete, so delete control file
         if self.download_status == 'complete':
             os.remove(self.control_json_file_path)
@@ -804,17 +789,15 @@ class Download():
             # if user specified download_path is equal to persepolis_setting download_path,
             # then subfolder must added to download path.
             if self.main_window.persepolis_setting.value('settings/download_path') == self.download_path:
-
                 # return new download_path according to file extension.
                 new_download_path = self.findDownloadPath(
-                    self.file_name, self.download_path, self.main_window.persepolis_setting.value('settings/subfolder'))
+                    self.file_name, self.download_path, self.main_window.persepolis_setting.value('settings/subfolder')
+                )
 
             # if file is related to VideoFinder thread, don't move it from temp folder...
             video_finder_dictionary = self.main_window.persepolis_db.searchGidInVideoFinderTable(self.gid)
-            if video_finder_dictionary:
-                file_path = self.file_path
-            else:
-                file_path = self.downloadCompleteAction(new_download_path)
+
+            file_path = self.file_path if video_finder_dictionary else self.downloadCompleteAction(new_download_path)
 
             # update download_path in addlink_db_table
             # find user preferred download_path from addlink_db_table in data_base
@@ -830,11 +813,11 @@ class Download():
         for thread in self.thread_list:
             thread.join()
 
-        logger.sendToLog("persepolis_lib is closed!")
+        logger.sendToLog('persepolis_lib is closed!')
         self.close_status = True
 
     # This method returns download status
-    def tellStatus(self):
+    def tellStatus(self) -> dict[str, str]:
         downloded_size, downloaded_size_unit = humanReadableSize(self.downloaded_size)
         if self.file_size:
             file_size, file_size_unit = humanReadableSize(self.file_size)
@@ -854,21 +837,20 @@ class Download():
             'rate': self.download_speed_str,
             'estimate_time_left': self.eta,
             'link': self.link,
-            'error': self.error_message
+            'error': self.error_message,
         }
 
-        return download_info
+        return download_info  # noqa: RET504
 
     # This method limits download speed
-    def limitSpeed(self, limit_value):
+    def limitSpeed(self, limit_value: int) -> None:
         # Calculate sleep time between data receiving. It's reduce download speed.
         self.sleep_for_speed_limiting = (10 - limit_value) * 0.005 * (self.number_of_active_connections)
 
     # download complete actions!
     # this method is returning file_path of file in the user's download folder
     # and move downloaded file after download completion.
-    def downloadCompleteAction(self, new_download_path):
-
+    def downloadCompleteAction(self, new_download_path: str) -> str:
         # rename file if file already existed
         i = 1
         new_file_path = os.path.join(new_download_path, self.file_name)
@@ -877,49 +859,46 @@ class Download():
             file_name_split = self.file_name.split('.')
             extension_length = len(file_name_split[-1]) + 1
 
-            new_name = self.file_name[0:-extension_length] + \
-                '_' + str(i) + self.file_name[-extension_length:]
+            new_name = self.file_name[0:-extension_length] + '_' + str(i) + self.file_name[-extension_length:]
             new_file_path = os.path.join(new_download_path, new_name)
             i = i + 1
 
         free_space = freeSpace(new_download_path)
 
         if free_space is not None and self.file_size is not None:
-
             # compare free disk space and file_size
             if free_space >= self.file_size:
-
                 # move the file to the download folder
                 move_answer = moveFile(str(self.file_path), str(new_file_path), 'file')
 
                 if not (move_answer):
                     # write error message in log
-                    logger.sendToLog('Persepolis can not move file', "ERROR")
+                    logger.sendToLog('Persepolis can not move file', 'ERROR')
                     new_file_path = self.file_path
 
             else:
                 # notify user if we have insufficient disk space
                 # and do not move file from temp download folder to download folder
                 new_file_path = self.file_path
-                logger.sendToLog('Insufficient disk space in download folder', "ERROR")
+                logger.sendToLog('Insufficient disk space in download folder', 'ERROR')
 
                 # show notification
-                notifySend("Insufficient disk space!", 'Please change download folder',
-                           10000, 'fail', parent=self.main_window)
+                notifySend(
+                    'Insufficient disk space!', 'Please change download folder', 10000, 'fail', parent=self.main_window
+                )
 
         else:
             # move the file to the download folder
             move_answer = moveFile(str(self.file_path), str(new_file_path), 'file')
 
             if not (move_answer):
-                logger.sendToLog('Persepolis can not move file', "ERROR")
+                logger.sendToLog('Persepolis can not move file', 'ERROR')
                 new_file_path = self.file_path
 
         return str(new_file_path)
 
     # this function returns folder of download according to file extension
-    def findDownloadPath(self, file_name, download_path, subfolder):
-
+    def findDownloadPath(self, file_name: str, download_path: str, subfolder: str) -> str:
         file_name_split = file_name.split('.')
         file_extension = file_name_split[-1]
 
@@ -933,25 +912,204 @@ class Download():
             file_extension = file_extension.split('?')[0]
 
         # audio formats
-        audio = ['act', 'aiff', 'aac', 'amr', 'ape', 'au', 'awb', 'dct', 'dss', 'dvf', 'flac', 'gsm', 'iklax', 'ivs', 'm4a',
-                 'm4p', 'mmf', 'mp3', 'mpc', 'msv', 'ogg', 'oga', 'opus', 'ra', 'raw', 'sln', 'tta', 'vox', 'wav', 'wma', 'wv']
+        audio = [
+            'act',
+            'aiff',
+            'aac',
+            'amr',
+            'ape',
+            'au',
+            'awb',
+            'dct',
+            'dss',
+            'dvf',
+            'flac',
+            'gsm',
+            'iklax',
+            'ivs',
+            'm4a',
+            'm4p',
+            'mmf',
+            'mp3',
+            'mpc',
+            'msv',
+            'ogg',
+            'oga',
+            'opus',
+            'ra',
+            'raw',
+            'sln',
+            'tta',
+            'vox',
+            'wav',
+            'wma',
+            'wv',
+        ]
 
         # video formats
-        video = ['3g2', '3gp', 'asf', 'avi', 'drc', 'flv', 'm4v', 'mkv', 'mng', 'mov', 'qt', 'mp4', 'm4p', 'mpg', 'mp2',
-                 'mpeg', 'mpe', 'mpv', 'm2v', 'mxf', 'nsv', 'ogv', 'rmvb', 'roq', 'svi', 'vob', 'webm', 'wmv', 'yuv', 'rm']
+        video = [
+            '3g2',
+            '3gp',
+            'asf',
+            'avi',
+            'drc',
+            'flv',
+            'm4v',
+            'mkv',
+            'mng',
+            'mov',
+            'qt',
+            'mp4',
+            'm4p',
+            'mpg',
+            'mp2',
+            'mpeg',
+            'mpe',
+            'mpv',
+            'm2v',
+            'mxf',
+            'nsv',
+            'ogv',
+            'rmvb',
+            'roq',
+            'svi',
+            'vob',
+            'webm',
+            'wmv',
+            'yuv',
+            'rm',
+        ]
 
         # document formats
-        document = ['doc', 'docx', 'html', 'htm', 'fb2', 'odt', 'sxw', 'pdf', 'ps', 'rtf', 'tex', 'txt', 'epub', 'pub'
-                    'mobi', 'azw', 'azw3', 'azw4', 'kf8', 'chm', 'cbt', 'cbr', 'cbz', 'cb7', 'cba', 'ibooks', 'djvu', 'md']
+        document = [
+            'doc',
+            'docx',
+            'html',
+            'htm',
+            'fb2',
+            'odt',
+            'sxw',
+            'pdf',
+            'ps',
+            'rtf',
+            'tex',
+            'txt',
+            'epub',
+            'pub' 'mobi',
+            'azw',
+            'azw3',
+            'azw4',
+            'kf8',
+            'chm',
+            'cbt',
+            'cbr',
+            'cbz',
+            'cb7',
+            'cba',
+            'ibooks',
+            'djvu',
+            'md',
+        ]
 
         # compressed formats
-        compressed = ['a', 'ar', 'cpio', 'shar', 'LBR', 'iso', 'lbr', 'mar', 'tar', 'bz2', 'F', 'gz', 'lz', 'lzma', 'lzo',
-                      'rz', 'sfark', 'sz', 'xz', 'Z', 'z', 'infl', '7z', 's7z', 'ace', 'afa', 'alz', 'apk', 'arc', 'arj', 'b1',
-                      'ba', 'bh', 'cab', 'cfs', 'cpt', 'dar', 'dd', 'dgc', 'dmg', 'ear', 'gca', 'ha', 'hki', 'ice', 'jar', 'kgb',
-                      'lzh', 'lha', 'lzx', 'pac', 'partimg', 'paq6', 'paq7', 'paq8', 'pea', 'pim', 'pit', 'qda', 'rar', 'rk', 'sda',
-                      'sea', 'sen', 'sfx', 'sit', 'sitx', 'sqx', 'tar.gz', 'tgz', 'tar.Z', 'tar.bz2', 'tbz2', 'tar.lzma', 'tlz', 'uc',
-                      'uc0', 'uc2', 'ucn', 'ur2', 'ue2', 'uca', 'uha', 'war', 'wim', 'xar', 'xp3', 'yz1', 'zip', 'zipx', 'zoo', 'zpaq',
-                      'zz', 'ecc', 'par', 'par2']
+        compressed = [
+            'a',
+            'ar',
+            'cpio',
+            'shar',
+            'LBR',
+            'iso',
+            'lbr',
+            'mar',
+            'tar',
+            'bz2',
+            'F',
+            'gz',
+            'lz',
+            'lzma',
+            'lzo',
+            'rz',
+            'sfark',
+            'sz',
+            'xz',
+            'Z',
+            'z',
+            'infl',
+            '7z',
+            's7z',
+            'ace',
+            'afa',
+            'alz',
+            'apk',
+            'arc',
+            'arj',
+            'b1',
+            'ba',
+            'bh',
+            'cab',
+            'cfs',
+            'cpt',
+            'dar',
+            'dd',
+            'dgc',
+            'dmg',
+            'ear',
+            'gca',
+            'ha',
+            'hki',
+            'ice',
+            'jar',
+            'kgb',
+            'lzh',
+            'lha',
+            'lzx',
+            'pac',
+            'partimg',
+            'paq6',
+            'paq7',
+            'paq8',
+            'pea',
+            'pim',
+            'pit',
+            'qda',
+            'rar',
+            'rk',
+            'sda',
+            'sea',
+            'sen',
+            'sfx',
+            'sit',
+            'sitx',
+            'sqx',
+            'tar.gz',
+            'tgz',
+            'tar.Z',
+            'tar.bz2',
+            'tbz2',
+            'tar.lzma',
+            'tlz',
+            'uc',
+            'uc0',
+            'uc2',
+            'ucn',
+            'ur2',
+            'ue2',
+            'uca',
+            'uha',
+            'war',
+            'wim',
+            'xar',
+            'xp3',
+            'yz1',
+            'zip',
+            'zipx',
+            'zoo',
+            'zpaq',
+            'zz',
+            'ecc',
+            'par',
+            'par2',
+        ]
 
         # return download_path
         if str(subfolder) == 'yes':
@@ -959,16 +1117,14 @@ class Download():
                 return os.path.join(download_path, 'Audios')
 
             # aria2c downloads youtube links file_name with 'videoplayback' name?!
-            elif (file_extension in video) or (file_name == 'videoplayback'):
+            if (file_extension in video) or (file_name == 'videoplayback'):
                 return os.path.join(download_path, 'Videos')
 
-            elif file_extension in document:
+            if file_extension in document:
                 return os.path.join(download_path, 'Documents')
 
-            elif file_extension in compressed:
+            if file_extension in compressed:
                 return os.path.join(download_path, 'Compressed')
 
-            else:
-                return os.path.join(download_path, 'Others')
-        else:
-            return download_path
+            return os.path.join(download_path, 'Others')
+        return download_path

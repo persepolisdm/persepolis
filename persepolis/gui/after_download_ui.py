@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
 #    the Free Software Foundation, either version 3 of the License, or
@@ -12,21 +10,22 @@
 #
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
 
 try:
-    from PySide6.QtWidgets import QCheckBox, QWidget, QVBoxLayout, QHBoxLayout, QPushButton, QLabel, QLineEdit
-    from PySide6.QtCore import Qt, QTranslator, QCoreApplication, QLocale
+    from PySide6.QtCore import QCoreApplication, QLocale, QSettings, Qt, QTranslator
     from PySide6.QtGui import QIcon
+    from PySide6.QtWidgets import QCheckBox, QHBoxLayout, QLabel, QLineEdit, QPushButton, QVBoxLayout, QWidget
 except:
-    from PyQt5.QtWidgets import QCheckBox, QWidget, QVBoxLayout, QHBoxLayout, QPushButton, QLabel, QLineEdit
-    from PyQt5.QtCore import Qt, QTranslator, QCoreApplication, QLocale
+    from PyQt5.QtCore import QCoreApplication, QLocale, QSettings, Qt, QTranslator
     from PyQt5.QtGui import QIcon
+    from PyQt5.QtWidgets import QCheckBox, QHBoxLayout, QLabel, QLineEdit, QPushButton, QVBoxLayout, QWidget
 
-from persepolis.gui import resources
+from persepolis.gui import resources  # noqa: F401
 
 
-class AfterDownloadWindow_Ui(QWidget):
-    def __init__(self, persepolis_setting):
+class AfterDownloadWindowUi(QWidget):
+    def __init__(self, persepolis_setting: QSettings) -> None:
         super().__init__()
 
         self.persepolis_setting = persepolis_setting
@@ -50,7 +49,7 @@ class AfterDownloadWindow_Ui(QWidget):
         icons = ':/' + str(self.persepolis_setting.value('settings/icons')) + '/'
 
         self.setWindowIcon(QIcon.fromTheme('persepolis', QIcon(':/com.github.persepolisdm.persepolis.svg')))
-        self.setWindowTitle(QCoreApplication.translate("after_download_ui_tr", "Persepolis Download Manager"))
+        self.setWindowTitle(QCoreApplication.translate('after_download_ui_tr', 'Persepolis Download Manager'))
 
         # complete_label
         window_verticalLayout = QVBoxLayout()
@@ -110,11 +109,12 @@ class AfterDownloadWindow_Ui(QWidget):
         self.setLayout(window_verticalLayout)
 
         # labels
-        self.open_pushButtun.setText(QCoreApplication.translate("after_download_ui_tr", "  Open File  "))
-        self.open_folder_pushButtun.setText(QCoreApplication.translate("after_download_ui_tr", "Open Download Folder"))
-        self.ok_pushButton.setText(QCoreApplication.translate("after_download_ui_tr", "   OK   "))
-        self.dont_show_checkBox.setText(QCoreApplication.translate(
-            "after_download_ui_tr", "Don't show this message again."))
-        self.complete_label.setText(QCoreApplication.translate("after_download_ui_tr", "<b>Download Completed!</b>"))
-        self.save_as_label.setText(QCoreApplication.translate("after_download_ui_tr", "<b>Save as</b>: "))
-        self.link_label.setText(QCoreApplication.translate("after_download_ui_tr", "<b>Link</b>: "))
+        self.open_pushButtun.setText(QCoreApplication.translate('after_download_ui_tr', '  Open File  '))
+        self.open_folder_pushButtun.setText(QCoreApplication.translate('after_download_ui_tr', 'Open Download Folder'))
+        self.ok_pushButton.setText(QCoreApplication.translate('after_download_ui_tr', '   OK   '))
+        self.dont_show_checkBox.setText(
+            QCoreApplication.translate('after_download_ui_tr', "Don't show this message again.")
+        )
+        self.complete_label.setText(QCoreApplication.translate('after_download_ui_tr', '<b>Download Completed!</b>'))
+        self.save_as_label.setText(QCoreApplication.translate('after_download_ui_tr', '<b>Save as</b>: '))
+        self.link_label.setText(QCoreApplication.translate('after_download_ui_tr', '<b>Link</b>: '))

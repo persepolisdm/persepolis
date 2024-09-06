@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
 #    the Free Software Foundation, either version 3 of the License, or
@@ -12,38 +10,43 @@
 #
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+
+from __future__ import annotations
+
 try:
-    from PySide6.QtCore import Qt, QSize, QPoint, QThread, QTranslator, QCoreApplication, QLocale
-    from PySide6.QtWidgets import QLineEdit, QInputDialog
-    from PySide6.QtGui import QIcon
+    from PySide6.QtCore import QCoreApplication, QLocale, QPoint, QSettings, QSize, Qt, QThread, QTranslator
+    from PySide6.QtGui import QCloseEvent, QIcon, QKeyEvent
+    from PySide6.QtWidgets import QInputDialog, QLineEdit, QPushButton, QWidget
 except:
-    from PyQt5.QtCore import Qt, QSize, QPoint, QThread, QTranslator, QCoreApplication, QLocale
-    from PyQt5.QtWidgets import QLineEdit, QInputDialog
-    from PyQt5.QtGui import QIcon
+    from PyQt5.QtCore import QCoreApplication, QLocale, QPoint, QSettings, QSize, Qt, QThread, QTranslator
+    from PyQt5.QtGui import QCloseEvent, QIcon, QKeyEvent
+    from PyQt5.QtWidgets import QInputDialog, QLineEdit, QPushButton, QWidget
 
 
-from persepolis.constants import OS
-from persepolis.gui.video_finder_progress_ui import VideoFinderProgressWindow_Ui
-from persepolis.scripts.shutdown import shutDown
-import subprocess
 import platform
+import subprocess
+
+from persepolis.constants import Os
+from persepolis.gui.video_finder_progress_ui import VideoFinderProgressWindowUi
+from persepolis.scripts.shutdown import shutDown
 
 os_type = platform.system()
 
 
 class ShutDownThread(QThread):
-    def __init__(self, parent, category, password=None):
+    def __init__(self, parent: QWidget, category: str, password: str | None = None) -> None:
         QThread.__init__(self)
         self.category = category
         self.password = password
         self.main_window = parent
 
-    def run(self):
+    def run(self) -> None:
         shutDown(self.main_window, category=self.category, password=self.password)
 
 
-class VideoFinderProgressWindow(VideoFinderProgressWindow_Ui):
-    def __init__(self, parent, gid_list, persepolis_setting):
+class VideoFinderProgressWindow(VideoFinderProgressWindowUi):
+    def __init__(self, parent: QWidget, gid_list: list[str], persepolis_setting: QSettings) -> None:
         super().__init__(persepolis_setting)
         self.persepolis_setting = persepolis_setting
         self.main_window = parent
@@ -85,20 +88,17 @@ class VideoFinderProgressWindow(VideoFinderProgressWindow_Ui):
         self.limit_label.setText('Speed : Maximum')
 
         # set window size and position
-        size = self.persepolis_setting.value(
-            'ProgressWindow/size', QSize(595, 274))
-        position = self.persepolis_setting.value(
-            'ProgressWindow/position', QPoint(300, 300))
+        size = self.persepolis_setting.value('ProgressWindow/size', QSize(595, 274))
+        position = self.persepolis_setting.value('ProgressWindow/position', QPoint(300, 300))
         self.resize(size)
         self.move(position)
 
     # close window with ESC key
-    def keyPressEvent(self, event):
+    def keyPressEvent(self, event: QKeyEvent) -> None:
         if event.key() == Qt.Key_Escape:
             self.close()
 
-    def closeEvent(self, event):
-
+    def closeEvent(self, _event: QCloseEvent) -> None:
         # save window size and position
         self.persepolis_setting.setValue('ProgressWindow/size', self.size())
         self.persepolis_setting.setValue('ProgressWindow/position', self.pos())
@@ -106,8 +106,8 @@ class VideoFinderProgressWindow(VideoFinderProgressWindow_Ui):
 
         self.hide()
 
-    def resumePushButtonPressed(self, button):
-        if self.status == "paused":
+    def resumePushButtonPressed(self, _button: QPushButton) -> None:
+        if self.status == 'paused':
             # search gid in download_sessions_list
             for download_session_dict in self.main_window.download_sessions_list:
                 if download_session_dict['gid'] == self.gid:
@@ -115,9 +115,8 @@ class VideoFinderProgressWindow(VideoFinderProgressWindow_Ui):
                     download_session_dict['download_session'].downloadUnpause()
                     break
 
-    def pausePushButtonPressed(self, button):
-
-        if self.status == "downloading":
+    def pausePushButtonPressed(self, _button: QPushButton) -> None:
+        if self.status == 'downloading':
             # search gid in download_sessions_list
             for download_session_dict in self.main_window.download_sessions_list:
                 if download_session_dict['gid'] == self.gid:
@@ -125,15 +124,13 @@ class VideoFinderProgressWindow(VideoFinderProgressWindow_Ui):
                     download_session_dict['download_session'].downloadPause()
                     break
 
-    def stopPushButtonPressed(self, button):
-
+    def stopPushButtonPressed(self, _button: QPushButton) -> None:
         # cancel shut down progress
-        dictionary = {'category': self.video_finder_plus_gid,
-                      'shutdown': 'canceled'}
+        dictionary = {'category': self.video_finder_plus_gid, 'shutdown': 'canceled'}
 
         self.main_window.temp_db.updateQueueTable(dictionary)
 
-        if self.status == "downloading":
+        if self.status == 'downloading':
             # search gid in download_sessions_list
             for download_session_dict in self.main_window.download_sessions_list:
                 if download_session_dict['gid'] == self.gid:
@@ -141,43 +138,36 @@ class VideoFinderProgressWindow(VideoFinderProgressWindow_Ui):
                     download_session_dict['download_session'].downloadStop()
                     break
 
-    def afterComboBoxChanged(self, connect):
-
+    def afterComboBoxChanged(self, _connect: int) -> None:
         self.after_pushButton.setEnabled(True)
 
-    def afterCheckBoxToggled(self, checkBoxes):
-
+    def afterCheckBoxToggled(self, _checkBoxes: bool) -> None:
         if self.after_checkBox.isChecked():
-
             self.after_frame.setEnabled(True)
         else:
-
             # so user canceled shutdown after download
             # write cancel value in data_base for this gid
-            dictionary = {'category': self.video_finder_plus_gid,
-                          'shutdown': 'canceled'}
+            dictionary = {'category': self.video_finder_plus_gid, 'shutdown': 'canceled'}
 
             self.main_window.temp_db.updateQueueTable(dictionary)
 
-    def afterPushButtonPressed(self, button):
-
+    def afterPushButtonPressed(self, _button: QPushButton) -> None:
         self.after_pushButton.setEnabled(False)
 
         # For Linux and Mac OSX and FreeBSD and OpenBSD
-        if os_type != OS.WINDOWS:
-
+        if os_type != Os.WINDOWS:
             # get root password
-            passwd, ok = QInputDialog.getText(
-                self, 'PassWord', 'Please enter root password:', QLineEdit.Password)
+            passwd, ok = QInputDialog.getText(self, 'PassWord', 'Please enter root password:', QLineEdit.Password)
 
             if ok:
-
                 # check password is true or not!
-                pipe = subprocess.Popen(['sudo', '-S', 'echo', 'hello'],
-                                        stdout=subprocess.DEVNULL,
-                                        stdin=subprocess.PIPE,
-                                        stderr=subprocess.DEVNULL,
-                                        shell=False)
+                pipe = subprocess.Popen(
+                    ['sudo', '-S', 'echo', 'hello'],
+                    stdout=subprocess.DEVNULL,
+                    stdin=subprocess.PIPE,
+                    stderr=subprocess.DEVNULL,
+                    shell=False,
+                )
 
                 pipe.communicate(passwd.encode())
 
@@ -185,17 +175,18 @@ class VideoFinderProgressWindow(VideoFinderProgressWindow_Ui):
 
                 # Wrong password
                 while answer != 0:
-
                     passwd, ok = QInputDialog.getText(
-                        self, 'PassWord', 'Wrong Password!\nPlease try again.', QLineEdit.Password)
+                        self, 'PassWord', 'Wrong Password!\nPlease try again.', QLineEdit.Password
+                    )
 
                     if ok:
-
-                        pipe = subprocess.Popen(['sudo', '-S', 'echo', 'hello'],
-                                                stdout=subprocess.DEVNULL,
-                                                stdin=subprocess.PIPE,
-                                                stderr=subprocess.DEVNULL,
-                                                shell=False)
+                        pipe = subprocess.Popen(
+                            ['sudo', '-S', 'echo', 'hello'],
+                            stdout=subprocess.DEVNULL,
+                            stdin=subprocess.PIPE,
+                            stderr=subprocess.DEVNULL,
+                            shell=False,
+                        )
 
                         pipe.communicate(passwd.encode())
 
@@ -206,7 +197,6 @@ class VideoFinderProgressWindow(VideoFinderProgressWindow_Ui):
                         break
 
                 if ok is not False:
-
                     # if user selects shutdown option after download progress,
                     # value of 'shutdown' will changed in temp_db for this progress
                     # and "wait" word will be written for this value.
@@ -226,12 +216,12 @@ class VideoFinderProgressWindow(VideoFinderProgressWindow_Ui):
 
         else:
             # for Windows
-            for gid in self.gid_list:
+            for _gid in self.gid_list:
                 shutdown_enable = ShutDownThread(self.main_window, self.video_finder_plus_gid)
                 self.main_window.threadPool.append(shutdown_enable)
                 self.main_window.threadPool[-1].start()
 
-    def limitDialIsReleased(self):
+    def limitDialIsReleased(self) -> None:
         limit_value = self.limit_dial.value()
 
         # set speed limit value
@@ -241,15 +231,15 @@ class VideoFinderProgressWindow(VideoFinderProgressWindow_Ui):
                 download_session_dict['download_session'].limitSpeed(limit_value)
                 break
 
-    def limitDialIsChanged(self, button):
-        if self.limit_dial.value() == 10:
+    def limitDialIsChanged(self, _button: QPushButton) -> None:
+        if self.limit_dial.value() == 10:  # noqa: PLR2004
             self.limit_label.setText('Speed : Maximum')
         elif self.limit_dial.value() == 0:
             self.limit_label.setText('Speed : Minimum')
         else:
             self.limit_label.setText('Speed')
 
-    def changeIcon(self, icons):
+    def changeIcon(self, icons: str) -> None:
         icons = ':/' + str(icons) + '/'
 
         self.resume_pushButton.setIcon(QIcon(icons + 'play'))

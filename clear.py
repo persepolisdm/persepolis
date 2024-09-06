@@ -20,7 +20,7 @@ import warnings
 import sys
 import platform
 import shutil
-from persepolis.constants import OS
+from persepolis.constants import Os
 
 # finding os platform
 os_type = platform.system()

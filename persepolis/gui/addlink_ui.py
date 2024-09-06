@@ -1,37 +1,62 @@
-# -*- coding: utf-8 -*-
-"""
-    This program is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
-
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-"""
+#    This program is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation, either version 3 of the License, or
+#    (at your option) any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+#
+#    You should have received a copy of the GNU General Public License
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
 
 try:
-    from PySide6.QtWidgets import QTabWidget, QPushButton, QComboBox, QSpinBox, QVBoxLayout, QHBoxLayout, QLabel, QWidget, QGridLayout, QCheckBox, QFrame, QLineEdit, QRadioButton
-
-    from PySide6.QtCore import Qt, QTranslator, QCoreApplication, QLocale
     from PySide6 import QtCore
+    from PySide6.QtCore import QCoreApplication, QLocale, QSettings, Qt, QTranslator
     from PySide6.QtGui import QIcon
+    from PySide6.QtWidgets import (
+        QCheckBox,
+        QComboBox,
+        QFrame,
+        QGridLayout,
+        QHBoxLayout,
+        QLabel,
+        QLineEdit,
+        QPushButton,
+        QRadioButton,
+        QSpinBox,
+        QTabWidget,
+        QVBoxLayout,
+        QWidget,
+    )
 except:
-    from PyQt5.QtWidgets import QTabWidget, QPushButton, QComboBox, QSpinBox, QVBoxLayout, QHBoxLayout, QLabel, QWidget, QGridLayout, QCheckBox, QFrame, QLineEdit, QRadioButton
-    from PyQt5.QtCore import Qt, QTranslator, QCoreApplication, QLocale
     from PyQt5 import QtCore
+    from PyQt5.QtCore import QCoreApplication, QLocale, QSettings, Qt, QTranslator
     from PyQt5.QtGui import QIcon
+    from PyQt5.QtWidgets import (
+        QCheckBox,
+        QComboBox,
+        QFrame,
+        QGridLayout,
+        QHBoxLayout,
+        QLabel,
+        QLineEdit,
+        QPushButton,
+        QRadioButton,
+        QSpinBox,
+        QTabWidget,
+        QVBoxLayout,
+        QWidget,
+    )
 
-from persepolis.gui import resources
+from persepolis.gui import resources  # noqa: F401
 from persepolis.gui.customized_widgets import MyQDateTimeEdit
 
 
-class AddLinkWindow_Ui(QWidget):
-    def __init__(self, persepolis_setting):
+class AddLinkWindowUi(QWidget):
+    def __init__(self, persepolis_setting: QSettings) -> None:
         super().__init__()
         self.persepolis_setting = persepolis_setting
 
@@ -52,8 +77,7 @@ class AddLinkWindow_Ui(QWidget):
             self.setLayoutDirection(Qt.LeftToRight)
 
         # get icons name
-        icons = ':/' + \
-            str(self.persepolis_setting.value('settings/icons')) + '/'
+        icons = ':/' + str(self.persepolis_setting.value('settings/icons')) + '/'
 
         self.setMinimumSize(QtCore.QSize(520, 425))
         self.setWindowIcon(QIcon.fromTheme('persepolis', QIcon(':/com.github.persepolisdm.persepolis.svg')))
@@ -323,7 +347,7 @@ class AddLinkWindow_Ui(QWidget):
         self.connections_spinBox = QSpinBox(self.connections_frame)
         self.connections_spinBox.setMinimum(1)
         self.connections_spinBox.setMaximum(64)
-        self.connections_spinBox.setProperty("value", 64)
+        self.connections_spinBox.setProperty('value', 64)
         verticalLayout_4.addWidget(self.connections_spinBox)
         connections_horizontalLayout.addWidget(self.connections_frame)
         connections_horizontalLayout.addStretch(1)
@@ -409,59 +433,67 @@ class AddLinkWindow_Ui(QWidget):
         self.setLayout(window_verticalLayout)
 
         # labels ->
-        self.setWindowTitle(QCoreApplication.translate("addlink_ui_tr", "Add Download Link"))
+        self.setWindowTitle(QCoreApplication.translate('addlink_ui_tr', 'Add Download Link'))
 
-        self.link_label.setText(QCoreApplication.translate("addlink_ui_tr", "Download link: "))
+        self.link_label.setText(QCoreApplication.translate('addlink_ui_tr', 'Download link: '))
 
-        self.add_queue_label.setText(QCoreApplication.translate("addlink_ui_tr", "Add to category: "))
+        self.add_queue_label.setText(QCoreApplication.translate('addlink_ui_tr', 'Add to category: '))
 
-        self.change_name_checkBox.setText(QCoreApplication.translate("addlink_ui_tr", "Change file name: "))
+        self.change_name_checkBox.setText(QCoreApplication.translate('addlink_ui_tr', 'Change file name: '))
 
-        self.detect_proxy_pushButton.setText(QCoreApplication.translate("addlink_ui_tr", "Detect System Proxy Settings"))
-        self.proxy_checkBox.setText(QCoreApplication.translate("addlink_ui_tr", "Proxy"))
-        self.proxy_pass_label.setText(QCoreApplication.translate("addlink_ui_tr", "Proxy password: "))
-        self.ip_label.setText(QCoreApplication.translate("addlink_ui_tr", "IP: "))
-        self.proxy_user_label.setText(QCoreApplication.translate("addlink_ui_tr", "Proxy username: "))
-        self.port_label.setText(QCoreApplication.translate("addlink_ui_tr", "Port:"))
+        self.detect_proxy_pushButton.setText(
+            QCoreApplication.translate('addlink_ui_tr', 'Detect System Proxy Settings')
+        )
+        self.proxy_checkBox.setText(QCoreApplication.translate('addlink_ui_tr', 'Proxy'))
+        self.proxy_pass_label.setText(QCoreApplication.translate('addlink_ui_tr', 'Proxy password: '))
+        self.ip_label.setText(QCoreApplication.translate('addlink_ui_tr', 'IP: '))
+        self.proxy_user_label.setText(QCoreApplication.translate('addlink_ui_tr', 'Proxy username: '))
+        self.port_label.setText(QCoreApplication.translate('addlink_ui_tr', 'Port:'))
 
-        self.http_radioButton.setText(QCoreApplication.translate("addlink_ui_tr", "HTTP"))
-        self.https_radioButton.setText(QCoreApplication.translate("addlink_ui_tr", "HTTPS"))
-        self.socks5_radioButton.setText(QCoreApplication.translate("addlink_ui_tr", "SOCKS5"))
+        self.http_radioButton.setText(QCoreApplication.translate('addlink_ui_tr', 'HTTP'))
+        self.https_radioButton.setText(QCoreApplication.translate('addlink_ui_tr', 'HTTPS'))
+        self.socks5_radioButton.setText(QCoreApplication.translate('addlink_ui_tr', 'SOCKS5'))
 
-        self.download_checkBox.setText(QCoreApplication.translate("addlink_ui_tr", "Download username and password"))
-        self.download_user_label.setText(QCoreApplication.translate("addlink_ui_tr", "Download username: "))
-        self.download_pass_label.setText(QCoreApplication.translate("addlink_ui_tr", "Download password: "))
+        self.download_checkBox.setText(QCoreApplication.translate('addlink_ui_tr', 'Download username and password'))
+        self.download_user_label.setText(QCoreApplication.translate('addlink_ui_tr', 'Download username: '))
+        self.download_pass_label.setText(QCoreApplication.translate('addlink_ui_tr', 'Download password: '))
 
-        self.folder_pushButton.setText(QCoreApplication.translate("addlink_ui_tr", "Change Download Folder"))
-        self.folder_checkBox.setText(QCoreApplication.translate("addlink_ui_tr", "Remember this path"))
-        self.folder_label.setText(QCoreApplication.translate("addlink_ui_tr", "Download Folder: "))
+        self.folder_pushButton.setText(QCoreApplication.translate('addlink_ui_tr', 'Change Download Folder'))
+        self.folder_checkBox.setText(QCoreApplication.translate('addlink_ui_tr', 'Remember this path'))
+        self.folder_label.setText(QCoreApplication.translate('addlink_ui_tr', 'Download Folder: '))
 
-        self.start_checkBox.setText(QCoreApplication.translate("addlink_ui_tr", "Start time"))
-        self.end_checkBox.setText(QCoreApplication.translate("addlink_ui_tr", "End time"))
+        self.start_checkBox.setText(QCoreApplication.translate('addlink_ui_tr', 'Start time'))
+        self.end_checkBox.setText(QCoreApplication.translate('addlink_ui_tr', 'End time'))
 
-        self.connections_label.setText(QCoreApplication.translate("addlink_ui_tr", "Number of connections:"))
+        self.connections_label.setText(QCoreApplication.translate('addlink_ui_tr', 'Number of connections:'))
 
-        self.cancel_pushButton.setText(QCoreApplication.translate("addlink_ui_tr", "Cancel"))
-        self.ok_pushButton.setText(QCoreApplication.translate("addlink_ui_tr", "OK"))
+        self.cancel_pushButton.setText(QCoreApplication.translate('addlink_ui_tr', 'Cancel'))
+        self.ok_pushButton.setText(QCoreApplication.translate('addlink_ui_tr', 'OK'))
 
-        self.download_later_pushButton.setText(QCoreApplication.translate("addlink_ui_tr", "Download Later"))
+        self.download_later_pushButton.setText(QCoreApplication.translate('addlink_ui_tr', 'Download Later'))
 
-        self.add_link_tabWidget.setTabText(self.add_link_tabWidget.indexOf(
-            self.link_tab), QCoreApplication.translate("addlink_ui_tr", "Link"))
+        self.add_link_tabWidget.setTabText(
+            self.add_link_tabWidget.indexOf(self.link_tab), QCoreApplication.translate('addlink_ui_tr', 'Link')
+        )
 
-        self.add_link_tabWidget.setTabText(self.add_link_tabWidget.indexOf(
-            self.proxy_tab), QCoreApplication.translate("addlink_ui_tr", "Proxy"))
+        self.add_link_tabWidget.setTabText(
+            self.add_link_tabWidget.indexOf(self.proxy_tab), QCoreApplication.translate('addlink_ui_tr', 'Proxy')
+        )
 
-        self.add_link_tabWidget.setTabText(self.add_link_tabWidget.indexOf(
-            self.more_options_tab), QCoreApplication.translate("addlink_ui_tr", "More Options"))
+        self.add_link_tabWidget.setTabText(
+            self.add_link_tabWidget.indexOf(self.more_options_tab),
+            QCoreApplication.translate('addlink_ui_tr', 'More Options'),
+        )
 
-        self.add_link_tabWidget.setTabText(self.add_link_tabWidget.indexOf(
-            self.advance_options_tab), QCoreApplication.translate("addlink_ui_tr", "Advanced Options"))
+        self.add_link_tabWidget.setTabText(
+            self.add_link_tabWidget.indexOf(self.advance_options_tab),
+            QCoreApplication.translate('addlink_ui_tr', 'Advanced Options'),
+        )
 
-        self.referer_label.setText(QCoreApplication.translate("addlink_ui_tr", 'Referrer: '))
+        self.referer_label.setText(QCoreApplication.translate('addlink_ui_tr', 'Referrer: '))
 
-        self.header_label.setText(QCoreApplication.translate("addlink_ui_tr", 'Header: '))
+        self.header_label.setText(QCoreApplication.translate('addlink_ui_tr', 'Header: '))
 
-        self.load_cookies_label.setText(QCoreApplication.translate("addlink_ui_tr", 'Cookies: '))
+        self.load_cookies_label.setText(QCoreApplication.translate('addlink_ui_tr', 'Cookies: '))
 
-        self.user_agent_label.setText(QCoreApplication.translate("addlink_ui_tr", 'User agent: '))
+        self.user_agent_label.setText(QCoreApplication.translate('addlink_ui_tr', 'User agent: '))

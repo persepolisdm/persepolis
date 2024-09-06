@@ -1,7 +1,3 @@
-
-# -*- coding: utf-8 -*-
-
-
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
 #    the Free Software Foundation, either version 3 of the License, or
@@ -14,21 +10,46 @@
 #
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
 
 try:
-    from PySide6.QtWidgets import QDial, QCheckBox, QProgressBar, QFrame, QComboBox, QWidget, QTabWidget, QVBoxLayout, QHBoxLayout, QPushButton, QLabel
-    from PySide6.QtCore import Qt, QTranslator, QCoreApplication, QLocale, QSize
+    from PySide6.QtCore import QCoreApplication, QLocale, QSettings, QSize, Qt, QTranslator
     from PySide6.QtGui import QIcon
+    from PySide6.QtWidgets import (
+        QCheckBox,
+        QComboBox,
+        QDial,
+        QFrame,
+        QHBoxLayout,
+        QLabel,
+        QProgressBar,
+        QPushButton,
+        QTabWidget,
+        QVBoxLayout,
+        QWidget,
+    )
 except:
-    from PyQt5.QtWidgets import QDial, QCheckBox, QProgressBar, QFrame, QComboBox, QWidget, QTabWidget, QVBoxLayout, QHBoxLayout, QPushButton, QLabel
-    from PyQt5.QtCore import Qt, QTranslator, QCoreApplication, QLocale, QSize
+    from PyQt5.QtCore import QCoreApplication, QLocale, QSettings, QSize, Qt, QTranslator
     from PyQt5.QtGui import QIcon
+    from PyQt5.QtWidgets import (
+        QCheckBox,
+        QComboBox,
+        QDial,
+        QFrame,
+        QHBoxLayout,
+        QLabel,
+        QProgressBar,
+        QPushButton,
+        QTabWidget,
+        QVBoxLayout,
+        QWidget,
+    )
 
-from persepolis.gui import resources
+from persepolis.gui import resources  # noqa: F401
 
 
-class ProgressWindow_Ui(QWidget):
-    def __init__(self, persepolis_setting):
+class ProgressWindowUi(QWidget):
+    def __init__(self, persepolis_setting: QSettings) -> None:
         super().__init__()
         self.persepolis_setting = persepolis_setting
         icons = ':/' + str(persepolis_setting.value('settings/icons')) + '/'
@@ -53,7 +74,7 @@ class ProgressWindow_Ui(QWidget):
         self.setMinimumSize(QSize(595, 284))
 
         self.setWindowIcon(QIcon.fromTheme('persepolis', QIcon(':/com.github.persepolisdm.persepolis.svg')))
-        self.setWindowTitle(QCoreApplication.translate("progress_ui_tr", "Persepolis Download Manager"))
+        self.setWindowTitle(QCoreApplication.translate('progress_ui_tr', 'Persepolis Download Manager'))
 
         verticalLayout = QVBoxLayout(self)
 
@@ -91,14 +112,13 @@ class ProgressWindow_Ui(QWidget):
         information_verticalLayout.addStretch(1)
 
         # add information_tab to progress_tabWidget
-        self.progress_tabWidget.addTab(self.information_tab, "")
+        self.progress_tabWidget.addTab(self.information_tab, '')
 
         # options_tab
         self.options_tab = QWidget()
         options_tab_verticalLayout = QVBoxLayout(self.options_tab)
         options_tab_horizontalLayout = QHBoxLayout()
-#         options_tab_horizontalLayout.setContentsMargins(11, 11, 11, 11)
-
+        #         options_tab_horizontalLayout.setContentsMargins(11, 11, 11, 11)
 
         # limit speed
         limit_verticalLayout = QVBoxLayout()
@@ -145,10 +165,9 @@ class ProgressWindow_Ui(QWidget):
 
         after_frame_verticalLayout = QVBoxLayout(self.after_frame)
 
-
         # after_comboBox
         self.after_comboBox = QComboBox(self.options_tab)
-        self.after_comboBox.addItem("")
+        self.after_comboBox.addItem('')
 
         after_frame_verticalLayout.addWidget(self.after_comboBox)
 
@@ -161,10 +180,9 @@ class ProgressWindow_Ui(QWidget):
         after_verticalLayout.setContentsMargins(11, 11, 11, 11)
         options_tab_horizontalLayout.addLayout(after_verticalLayout)
 
-        self.progress_tabWidget.addTab(self.options_tab, "")
+        self.progress_tabWidget.addTab(self.options_tab, '')
 
         verticalLayout.addWidget(self.progress_tabWidget)
-
 
         # download_progressBar
         self.download_progressBar = QProgressBar(self)
@@ -194,21 +212,25 @@ class ProgressWindow_Ui(QWidget):
 
         self.progress_tabWidget.setCurrentIndex(0)
         # labels
-        self.link_label.setText(QCoreApplication.translate("progress_ui_tr", "Link: "))
-        self.status_label.setText(QCoreApplication.translate("progress_ui_tr", "Status: "))
-        self.downloaded_label.setText(QCoreApplication.translate("progress_ui_tr", "Downloaded:"))
-        self.rate_label.setText(QCoreApplication.translate("progress_ui_tr", "Transfer rate: "))
-        self.time_label.setText(QCoreApplication.translate("progress_ui_tr", "Estimated time left:"))
-        self.connections_label.setText(QCoreApplication.translate("progress_ui_tr", "Number of connections: "))
-        self.progress_tabWidget.setTabText(self.progress_tabWidget.indexOf(
-            self.information_tab), QCoreApplication.translate("progress_ui_tr", "Download Information"))
-        self.after_checkBox.setText(QCoreApplication.translate("progress_ui_tr", "After download"))
+        self.link_label.setText(QCoreApplication.translate('progress_ui_tr', 'Link: '))
+        self.status_label.setText(QCoreApplication.translate('progress_ui_tr', 'Status: '))
+        self.downloaded_label.setText(QCoreApplication.translate('progress_ui_tr', 'Downloaded:'))
+        self.rate_label.setText(QCoreApplication.translate('progress_ui_tr', 'Transfer rate: '))
+        self.time_label.setText(QCoreApplication.translate('progress_ui_tr', 'Estimated time left:'))
+        self.connections_label.setText(QCoreApplication.translate('progress_ui_tr', 'Number of connections: '))
+        self.progress_tabWidget.setTabText(
+            self.progress_tabWidget.indexOf(self.information_tab),
+            QCoreApplication.translate('progress_ui_tr', 'Download Information'),
+        )
+        self.after_checkBox.setText(QCoreApplication.translate('progress_ui_tr', 'After download'))
 
-        self.after_comboBox.setItemText(0, QCoreApplication.translate("progress_ui_tr", "Shut Down"))
+        self.after_comboBox.setItemText(0, QCoreApplication.translate('progress_ui_tr', 'Shut Down'))
 
         self.progress_tabWidget.setTabText(
-            self.progress_tabWidget.indexOf(self.options_tab), QCoreApplication.translate("progress_ui_tr", "Download Options"))
-        self.resume_pushButton.setText(QCoreApplication.translate("progress_ui_tr", "Resume"))
-        self.pause_pushButton.setText(QCoreApplication.translate("progress_ui_tr", "Pause"))
-        self.stop_pushButton.setText(QCoreApplication.translate("progress_ui_tr", "Stop"))
-        self.after_pushButton.setText(QCoreApplication.translate("progress_ui_tr", "Apply"))
+            self.progress_tabWidget.indexOf(self.options_tab),
+            QCoreApplication.translate('progress_ui_tr', 'Download Options'),
+        )
+        self.resume_pushButton.setText(QCoreApplication.translate('progress_ui_tr', 'Resume'))
+        self.pause_pushButton.setText(QCoreApplication.translate('progress_ui_tr', 'Pause'))
+        self.stop_pushButton.setText(QCoreApplication.translate('progress_ui_tr', 'Stop'))
+        self.after_pushButton.setText(QCoreApplication.translate('progress_ui_tr', 'Apply'))

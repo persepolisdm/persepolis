@@ -1,6 +1,3 @@
-# -*- coding: utf-8 -*-
-
-
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
 #    the Free Software Foundation, either version 3 of the License, or
@@ -13,19 +10,20 @@
 #
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
 
-from persepolis.gui.progress_ui import ProgressWindow_Ui
+from persepolis.gui.progress_ui import ProgressWindowUi
 
 try:
-    from PySide6.QtWidgets import QWidget, QVBoxLayout, QLabel
-    from PySide6.QtCore import QCoreApplication
+    from PySide6.QtCore import QCoreApplication, QSettings
+    from PySide6.QtWidgets import QLabel, QVBoxLayout, QWidget
 except:
-    from PyQt5.QtWidgets import QWidget, QVBoxLayout, QLabel
-    from PyQt5.QtCore import QCoreApplication
+    from PyQt5.QtCore import QCoreApplication, QSettings
+    from PyQt5.QtWidgets import QLabel, QVBoxLayout, QWidget
 
 
-class VideoFinderProgressWindow_Ui(ProgressWindow_Ui):
-    def __init__(self, persepolis_setting):
+class VideoFinderProgressWindowUi(ProgressWindowUi):
+    def __init__(self, persepolis_setting: QSettings) -> None:
         super().__init__(persepolis_setting)
 
         # status_tab
@@ -44,19 +42,22 @@ class VideoFinderProgressWindow_Ui(ProgressWindow_Ui):
         self.muxing_status_label = QLabel(self.status_tab)
         status_tab_verticalLayout.addWidget(self.muxing_status_label)
 
-        self.progress_tabWidget.addTab(self.status_tab, "")
+        self.progress_tabWidget.addTab(self.status_tab, '')
 
         # set status_tab as default tab
         self.progress_tabWidget.setCurrentIndex(2)
 
         # labels
+        self.video_status_label.setText(
+            QCoreApplication.translate('video_finder_progress_ui_tr', '<b>Video file status: </b>')
+        )
+        self.audio_status_label.setText(
+            QCoreApplication.translate('video_finder_progress_ui_tr', '<b>Audio file status: </b>')
+        )
+        self.muxing_status_label.setText(
+            QCoreApplication.translate('video_finder_progress_ui_tr', '<b>Mixing status: </b>')
+        )
 
-        self.video_status_label.setText(QCoreApplication.translate(
-            "video_finder_progress_ui_tr", "<b>Video file status: </b>"))
-        self.audio_status_label.setText(QCoreApplication.translate(
-            "video_finder_progress_ui_tr", "<b>Audio file status: </b>"))
-        self.muxing_status_label.setText(QCoreApplication.translate(
-            "video_finder_progress_ui_tr", "<b>Mixing status: </b>"))
-
-        self.progress_tabWidget.setTabText(self.progress_tabWidget.indexOf(
-            self.status_tab), QCoreApplication.translate("setting_ui_tr", "Status"))
+        self.progress_tabWidget.setTabText(
+            self.progress_tabWidget.indexOf(self.status_tab), QCoreApplication.translate('setting_ui_tr', 'Status')
+        )

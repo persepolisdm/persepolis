@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
 #    the Free Software Foundation, either version 3 of the License, or
@@ -12,27 +10,39 @@
 #
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
 
-from persepolis.constants.Os import OS
-import urllib.parse
-import subprocess
+from __future__ import annotations
+
+import os
 import platform
+import subprocess
+import sys
 import textwrap
 import time
-import sys
-import os
+import urllib.parse
+from typing import TYPE_CHECKING, Any
+
+from persepolis.constants.os import Os
 
 try:
-    from PySide6.QtCore import QThread, Signal, QProcess
+    from PySide6.QtCore import QProcess, QThread, Signal
 except:
-    from PyQt5.QtCore import QThread, QProcess
+    from PyQt5.QtCore import QProcess, QThread
     from PyQt5.QtCore import pyqtSignal as Signal
 
 try:
     from persepolis.scripts import logger
+
     logger_availability = True
 except:
     logger_availability = False
+
+if TYPE_CHECKING:
+    try:
+        from PySide6.QtWidgets import QWidget
+    except ImportError:
+        from PyQt5.QtWidgets import QWidget
 
 # find operating system
 # os_type >> Linux or Darwin(Mac osx) or Windows(Microsoft Windows) or
@@ -40,47 +50,41 @@ except:
 os_type = platform.system()
 
 # user home address
-home_address = os.path.expanduser("~")
+home_address = os.path.expanduser('~')
+
 
 # runApplication in a thread.
-
-
 class RunApplicationThread(QThread):
     RUNAPPCALLBACKSIGNAL = Signal(list)
 
-    def __init__(self, command_argument, call_back=False):
+    def __init__(self, command_argument: str, call_back: bool = False) -> None:
         QThread.__init__(self)
         self.command_argument = command_argument
         self.call_back = call_back
 
-    def run(self):
+    def run(self) -> None:
         pipe = runApplication(self.command_argument)
 
         if self.call_back:
             self.RUNAPPCALLBACKSIGNAL.emit([pipe])
 
+
 # determine the config folder path based on the operating system
-
-
-def determineConfigFolder():
-    if os_type in OS.UNIX_LIKE:
-        config_folder = os.path.join(
-            home_address, ".config/persepolis_download_manager")
-    elif os_type == OS.OSX:
-        config_folder = os.path.join(
-            home_address, "Library/Application Support/persepolis_download_manager")
-    elif os_type == OS.WINDOWS:
-        config_folder = os.path.join(
-            home_address, 'AppData', 'Local', 'persepolis_download_manager')
+def determineConfigFolder() -> str:
+    if os_type in Os.UNIX_LIKE:
+        config_folder = os.path.join(home_address, '.config/persepolis_download_manager')
+    elif os_type == Os.OSX:
+        config_folder = os.path.join(home_address, 'Library/Application Support/persepolis_download_manager')
+    elif os_type == Os.WINDOWS:
+        config_folder = os.path.join(home_address, 'AppData', 'Local', 'persepolis_download_manager')
 
     return config_folder
 
+
 # this function returns operating system and desktop environment(for linux and bsd).
-
-
-def osAndDesktopEnvironment():
+def osAndDesktopEnvironment() -> tuple[str, str]:
     desktop_env = None
-    if os_type in OS.UNIX_LIKE:
+    if os_type in Os.UNIX_LIKE:
         # find desktop environment('KDE', 'GNOME', ...)
         desktop_env = os.environ.get('XDG_CURRENT_DESKTOP')
 
@@ -88,51 +92,43 @@ def osAndDesktopEnvironment():
 
 
 # this function converts file_size to KiB or MiB or GiB
-def humanReadableSize(size, input_type='file_size'):
+def humanReadableSize(size: int, _input_type: str = 'file_size') -> tuple[float, str]:
     labels = ['KiB', 'MiB', 'GiB', 'TiB']
     i = -1
-    if size < 1024:
+    if size < 1024:  # noqa: PLR2004
         return str(size), 'B'
 
-    while size >= 1024:
+    while size >= 1024:  # noqa: PLR2004
         i += 1
         size = size / 1024
 
     if i > 1:
         return round(size, 2), labels[i]
-    elif i == 1:
+    if i == 1:
         return round(size, 1), labels[i]
-    else:
-        return round(size, None), labels[i]
+    return round(size, None), labels[i]
+
 
 # this function converts second to hour and minute
-def convertTime(time):
+def convertTime(time: int) -> str:
     minutes = int(time // 60)
     if minutes == 0:
         return str(int(time)) + 's'
-    elif minutes < 60:
+    if minutes < 60:  # noqa: PLR2004
         return str(minutes) + 'm'
-    else:
-        hours = minutes // 60
-        minutes = minutes - (hours * 60)
-        return str(hours) + 'h ' + str(minutes) + 'm'
+    hours = minutes // 60
+    minutes = minutes - (hours * 60)
+    return str(hours) + 'h ' + str(minutes) + 'm'
 
 
 # this function converts human readable size to byte
-def convertToByte(file_size):
-
+def convertToByte(file_size: str) -> int:
     # if unit is not in Byte
     if file_size[-2:] != ' B':
-
         unit = file_size[-3:]
 
         # persepolis uses float type for GiB and TiB
-        if unit == 'GiB' or unit == 'TiB':
-
-            size_value = float(file_size[:-4])
-
-        else:
-            size_value = int(float(file_size[:-4]))
+        size_value = float(file_size[:-4]) if unit in ['GiB', 'TiB'] else int(float(file_size[:-4]))
     else:
         unit = None
         size_value = int(float(file_size[:-3]))
@@ -157,29 +153,29 @@ def convertToByte(file_size):
 
 
 # this function checks free space in hard disk.
-def freeSpace(dir):
+def freeSpace(dir_: str) -> int | None:
     try:
         import psutil
     except:
         if logger_availability:
-            logger.sendToLog("psutil in not installed!", "ERROR")
+            logger.sendToLog('psutil in not installed!', 'ERROR')
 
         return None
 
     try:
-        dir_space = psutil.disk_usage(dir)
+        dir_space = psutil.disk_usage(dir_)
         free_space = dir_space.free
         return int(free_space)
 
     except Exception as e:
         # log in to the log file
         if logger_availability:
-            logger.sendToLog("persepolis couldn't find free space value:\n" + str(e), "ERROR")
+            logger.sendToLog("persepolis couldn't find free space value:\n" + str(e), 'ERROR')
 
         return None
 
 
-def returnDefaultSettings():
+def returnDefaultSettings() -> dict[str, str]:
     os_type, desktop_env = osAndDesktopEnvironment()
 
     # user download folder path
@@ -192,41 +188,74 @@ def returnDefaultSettings():
     style = 'Fusion'
 
     # keyboard shortcuts
-    delete_shortcut = "Ctrl+D"
-    remove_shortcut = "Ctrl+R"
-    add_new_download_shortcut = "Ctrl+N"
-    import_text_shortcut = "Ctrl+O"
-    video_finder_shortcut = "Ctrl+V"
-    quit_shortcut = "Ctrl+Q"
-    hide_window_shortcut = "Ctrl+W"
-    move_up_selection_shortcut = "Ctrl+Up"
-    move_down_selection_shortcut = "Ctrl+Down"
+    delete_shortcut = 'Ctrl+D'
+    remove_shortcut = 'Ctrl+R'
+    add_new_download_shortcut = 'Ctrl+N'
+    import_text_shortcut = 'Ctrl+O'
+    video_finder_shortcut = 'Ctrl+V'
+    quit_shortcut = 'Ctrl+Q'
+    hide_window_shortcut = 'Ctrl+W'
+    move_up_selection_shortcut = 'Ctrl+Up'
+    move_down_selection_shortcut = 'Ctrl+Down'
 
     # Persepolis default setting
-    default_setting_dict = {'locale': 'en_US', 'toolbar_icon_size': 32, 'wait-queue': [0, 0], 'awake': 'no', 'custom-font': 'no', 'column0': 'yes',
-                            'column1': 'yes', 'column2': 'yes', 'column3': 'yes', 'column4': 'yes', 'column5': 'yes', 'column6': 'yes', 'column7': 'yes',
-                            'column10': 'yes', 'column11': 'yes', 'column12': 'yes', 'subfolder': 'yes', 'startup': 'no', 'show-progress': 'yes',
-                            'show-menubar': 'no', 'show-sidepanel': 'yes', 'notification': 'Native notification', 'after-dialog': 'yes',
-                            'tray-icon': 'yes', 'browser-persepolis': 'yes', 'hide-window': 'yes', 'max-tries': 5, 'retry-wait': 1, 'timeout': 5,
-                            'connections': 64, 'download_path': download_path, 'sound': 'yes', 'sound-volume': 100, 'chunk-size': 100,
-                            'style': style, 'color-scheme': color_scheme, 'icons': icons, 'font': 'Ubuntu', 'font-size': 9,
-                            'video_finder/max_links': '3', 'shortcuts/delete_shortcut': delete_shortcut, 'shortcuts/remove_shortcut': remove_shortcut,
-                            'shortcuts/add_new_download_shortcut': add_new_download_shortcut, 'shortcuts/import_text_shortcut': import_text_shortcut,
-                            'shortcuts/video_finder_shortcut': video_finder_shortcut, 'shortcuts/quit_shortcut': quit_shortcut,
-                            'shortcuts/hide_window_shortcut': hide_window_shortcut, 'shortcuts/move_up_selection_shortcut': move_up_selection_shortcut,
-                            'shortcuts/move_down_selection_shortcut': move_down_selection_shortcut, 'dont-check-certificate': 'no'}
+    return {
+        'locale': 'en_US',
+        'toolbar_icon_size': 32,
+        'wait-queue': [0, 0],
+        'awake': 'no',
+        'custom-font': 'no',
+        'column0': 'yes',
+        'column1': 'yes',
+        'column2': 'yes',
+        'column3': 'yes',
+        'column4': 'yes',
+        'column5': 'yes',
+        'column6': 'yes',
+        'column7': 'yes',
+        'column10': 'yes',
+        'column11': 'yes',
+        'column12': 'yes',
+        'subfolder': 'yes',
+        'startup': 'no',
+        'show-progress': 'yes',
+        'show-menubar': 'no',
+        'show-sidepanel': 'yes',
+        'notification': 'Native notification',
+        'after-dialog': 'yes',
+        'tray-icon': 'yes',
+        'browser-persepolis': 'yes',
+        'hide-window': 'yes',
+        'max-tries': 5,
+        'retry-wait': 1,
+        'timeout': 5,
+        'connections': 64,
+        'download_path': download_path,
+        'sound': 'yes',
+        'sound-volume': 100,
+        'chunk-size': 100,
+        'style': style,
+        'color-scheme': color_scheme,
+        'icons': icons,
+        'font': 'Ubuntu',
+        'font-size': 9,
+        'video_finder/max_links': '3',
+        'shortcuts/delete_shortcut': delete_shortcut,
+        'shortcuts/remove_shortcut': remove_shortcut,
+        'shortcuts/add_new_download_shortcut': add_new_download_shortcut,
+        'shortcuts/import_text_shortcut': import_text_shortcut,
+        'shortcuts/video_finder_shortcut': video_finder_shortcut,
+        'shortcuts/quit_shortcut': quit_shortcut,
+        'shortcuts/hide_window_shortcut': hide_window_shortcut,
+        'shortcuts/move_up_selection_shortcut': move_up_selection_shortcut,
+        'shortcuts/move_down_selection_shortcut': move_down_selection_shortcut,
+        'dont-check-certificate': 'no',
+    }
 
-    return default_setting_dict
 
 # mix video and audio that downloads by video finder
-
-
-def muxer(parent, video_finder_dictionary):
-
-    result_dictionary = {'error': 'no_error',
-                         'ffmpeg_error_message': None,
-                         'final_path': None,
-                         'final_size': None}
+def muxer(parent: QWidget, video_finder_dictionary: dict[str, str]) -> dict[str, str]:
+    result_dictionary = {'error': 'no_error', 'ffmpeg_error_message': None, 'final_path': None, 'final_size': None}
 
     # find file path
     video_file_dictionary = parent.persepolis_db.searchGidInAddLinkTable(video_finder_dictionary['video_gid'])
@@ -255,7 +284,6 @@ def muxer(parent, video_finder_dictionary):
             result_dictionary['error'] = 'not enough free space'
 
         else:
-
             # find final file's name
             final_file_name = urllib.parse.unquote(os.path.basename(video_file_path))
 
@@ -270,7 +298,7 @@ def muxer(parent, video_finder_dictionary):
 
                 final_file_name = final_file_name[0:-extension_length] + '.mkv'
 
-            if parent.persepolis_setting.value('settings/download_path') == final_path:
+            if parent.persepolis_setting.value('settings/download_path') == final_path:  # noqa: SIM102
                 if parent.persepolis_setting.value('settings/subfolder') == 'yes':
                     final_path = os.path.join(final_path, 'Videos')
 
@@ -279,11 +307,9 @@ def muxer(parent, video_finder_dictionary):
             final_path_plus_name = os.path.join(final_path, final_file_name)
 
             while os.path.isfile(final_path_plus_name):
-
                 extension_length = len(file_name_split[-1]) + 1
 
-                new_name = final_file_name[0:-extension_length] + \
-                    '_' + str(i) + final_file_name[-extension_length:]
+                new_name = final_file_name[0:-extension_length] + '_' + str(i) + final_file_name[-extension_length:]
 
                 final_path_plus_name = os.path.join(final_path, new_name)
                 i = i + 1
@@ -293,15 +319,25 @@ def muxer(parent, video_finder_dictionary):
             ffmpeg_command, log_list = findExternalAppPath('ffmpeg')
 
             # run ffmpeg
-            command_argument = ['ffmpeg', '-i', video_file_path,
-                                '-i', audio_file_path,
-                                '-c', 'copy',
-                                '-shortest',
-                                '-map', '0:v:0',
-                                '-map', '1:a:0',
-                                '-loglevel', 'error',
-                                '-strict', '-2',
-                                final_path_plus_name]
+            command_argument = [
+                'ffmpeg',
+                '-i',
+                video_file_path,
+                '-i',
+                audio_file_path,
+                '-c',
+                'copy',
+                '-shortest',
+                '-map',
+                '0:v:0',
+                '-map',
+                '1:a:0',
+                '-loglevel',
+                'error',
+                '-strict',
+                '-2',
+                final_path_plus_name,
+            ]
 
             pipe = runApplication(command_argument)
 
@@ -322,8 +358,7 @@ def muxer(parent, video_finder_dictionary):
 
 
 # return version of ffmpeg
-def ffmpegVersion():
-
+def ffmpegVersion() -> tuple[bool, str, list[str]]:
     # find ffmpeg path
     ffmpeg_command, log_list = findExternalAppPath('ffmpeg')
 
@@ -348,61 +383,52 @@ def ffmpegVersion():
     wrapper = textwrap.TextWrapper()
     ffmpeg_output = wrapper.fill(ffmpeg_output)
 
-    ffmpeg_output = '\n**********\n'\
-        + str(ffmpeg_output)\
-        + '\n**********\n'
+    ffmpeg_output = '\n**********\n' + str(ffmpeg_output) + '\n**********\n'
 
     return ffmpeg_is_installed, ffmpeg_output, log_list
 
 
 # run apllication with qprocess
-def qRunApplication(command: str, command_argument: list, parent=None):
-
+def qRunApplication(command: str, command_argument: list, parent: QWidget | None = None) -> QProcess:
     process = QProcess(parent=parent)
     process.start(command, command_argument)
     return process
 
+
 # run an application
-
-
-def runApplication(command_argument):
-    if os_type == OS.WINDOWS:
-
+def runApplication(command_argument: str) -> subprocess.Popen:
+    if os_type == Os.WINDOWS:
         # NO_WINDOW option avoids opening additional CMD in MS Windows.
         NO_WINDOW = 0x08000000
-        pipe = subprocess.Popen(command_argument,
-                                stdout=subprocess.PIPE,
-                                stderr=subprocess.PIPE,
-                                stdin=subprocess.PIPE,
-                                shell=False,
-                                creationflags=NO_WINDOW)
-
-    else:
         pipe = subprocess.Popen(
             command_argument,
             stdout=subprocess.PIPE,
-            stdin=subprocess.PIPE,
             stderr=subprocess.PIPE,
-            shell=False)
+            stdin=subprocess.PIPE,
+            shell=False,
+            creationflags=NO_WINDOW,
+        )
+
+    else:
+        pipe = subprocess.Popen(
+            command_argument, stdout=subprocess.PIPE, stdin=subprocess.PIPE, stderr=subprocess.PIPE, shell=False
+        )
 
     return pipe
 
+
 # find exeternal application execution path
-
-
-def findExternalAppPath(app_name):
-
+def findExternalAppPath(app_name: str) -> tuple[str, list[str]]:
     # get Persepolis type information first.
     persepolis_path_infromation = getExecPath()
     is_bundle = persepolis_path_infromation['bundle']
     is_test = persepolis_path_infromation['test']
 
-    if os_type == OS.WINDOWS:
+    if os_type == Os.WINDOWS:
         app_name = app_name + '.exe'
 
     # If Persepolis run as a bundle.
     if is_bundle:
-
         # alongside of the bundle path
         cwd = sys.argv[0]
         current_directory = os.path.dirname(cwd)
@@ -412,63 +438,53 @@ def findExternalAppPath(app_name):
         base_path = getattr(sys, '_MEIPASS', os.path.dirname(os.path.abspath(__file__)))
         app_inside = os.path.join(base_path, app_name)
 
-        if os_type in OS.UNIX_LIKE:
+        if os_type in Os.UNIX_LIKE:
             # Check outside of the bundle first.
             if os.path.exists(app_alongside):
-
                 app_command = app_alongside
-                log_list = ["{}'s file is detected alongside of bundle.".format(app_name), "INFO"]
+                log_list = [f"{app_name}'s file is detected alongside of bundle.", 'INFO']
 
             # Check inside of the bundle.
             elif os.path.exists(app_inside):
-
                 app_command = app_inside
-                log_list = ["{}'s file is detected inside of bundle.".format(app_name), "INFO"]
+                log_list = [f"{app_name}'s file is detected inside of bundle.", 'INFO']
 
             else:
                 # use app that installed on user's system
                 app_command = app_name
-                log_list = ["Persepolis will use {} that installed on user's system.".format(app_name), "INFO"]
+                log_list = [f"Persepolis will use {app_name} that installed on user's system.", 'INFO']
 
         else:
-
             # for Mac OSX and MicroSoft Windows
             app_command = app_alongside
-            log_list = ["{}'s file is detected alongside of bundle.".format(app_name), "INFO"]
+            log_list = [f"{app_name}'s file is detected alongside of bundle.", 'INFO']
 
     # I Persepolis run from test directory.
     if is_test:
-
         # Check inside of test directory.
         cwd = sys.argv[0]
         current_directory = os.path.dirname(cwd)
         app_alongside = os.path.join(current_directory, app_name)
 
         if os.path.exists(app_alongside):
-
             app_command = app_alongside
-            log_list = ["{}'s file is detected inside of test directory.".format(app_name), "INFO"]
+            log_list = [f"{app_name}'s file is detected inside of test directory.", 'INFO']
 
         else:
             # use app that installed on user's system
             app_command = app_name
-            log_list = ["Persepolis will use {} that installed on user's system.".format(app_name), "INFO"]
+            log_list = [f"Persepolis will use {app_name} that installed on user's system.", 'INFO']
 
     if not (is_bundle) and not (is_test):
-
         app_command = app_name
-        log_list = ["Persepolis will use {} that installed on user's system.".format(app_name), "INFO"]
+        log_list = [f"Persepolis will use {app_name} that installed on user's system.", 'INFO']
 
     return app_command, log_list
 
 
 # This function returns persepolis's execution path.
-def getExecPath():
-
-    exec_dictionary = {'bundle': None,
-                       'test': False,
-                       'exec_file_path': None,
-                       'modified_exec_file_path': None}
+def getExecPath() -> dict[str, Any]:
+    exec_dictionary = {'bundle': None, 'test': False, 'exec_file_path': None, 'modified_exec_file_path': None}
 
     # check if persepolis is run as a bundle.
     if getattr(sys, 'frozen', False) and hasattr(sys, '_MEIPASS'):
@@ -491,18 +507,16 @@ def getExecPath():
         script_name = os.path.basename(sys.argv[0])
 
         if script_name == 'test.py':
-
             # persepolis is run from test directory
             exec_dictionary['test'] = True
 
         exec_file_path = os.path.join(script_path, script_name)
 
     # replace space with \+space for UNIX_LIKE and OSX
-    if os_type in OS.UNIX_LIKE or os_type == OS.OSX:
+    if os_type in Os.UNIX_LIKE or os_type == Os.OSX:
+        modified_exec_file_path = exec_file_path.replace(' ', r'\ ')
 
-        modified_exec_file_path = exec_file_path.replace(" ", r"\ ")
-
-    elif os_type == OS.WINDOWS:
+    elif os_type == Os.WINDOWS:
         modified_exec_file_path = exec_file_path.replace('\\', r'\\')
 
     # write it in dictionary
@@ -515,6 +529,6 @@ def getExecPath():
 
 # This method returns data and time in string format
 # for example >> 2017/09/09 , 13:12:26
-def nowDate():
-    date = time.strftime("%Y/%m/%d , %H:%M:%S")
-    return date
+def nowDate() -> str:
+    date = time.strftime('%Y/%m/%d , %H:%M:%S')
+    return date  # noqa: RET504

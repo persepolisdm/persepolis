@@ -1,6 +1,3 @@
-# -*- coding: utf-8 -*-
-
-
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
 #    the Free Software Foundation, either version 3 of the License, or
@@ -13,23 +10,35 @@
 #
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+
+from __future__ import annotations
 
 try:
-    from PySide6.QtCore import Qt, QSize, QPoint, QDir, QTime, QCoreApplication
-    from PySide6.QtWidgets import QLabel, QLineEdit, QFileDialog
-    from PySide6.QtGui import QIcon
+    from PySide6.QtCore import QCoreApplication, QDir, QPoint, QSettings, QSize, Qt, QTime
+    from PySide6.QtGui import QCloseEvent, QIcon, QKeyEvent
+    from PySide6.QtWidgets import QFileDialog, QLabel, QLineEdit, QPushButton, QWidget
 except:
-    from PyQt5.QtCore import Qt, QSize, QPoint, QDir, QTime, QCoreApplication
-    from PyQt5.QtWidgets import QLabel, QLineEdit, QFileDialog
-    from PyQt5.QtGui import QIcon
+    from PyQt5.QtCore import QCoreApplication, QDir, QPoint, QSettings, QSize, Qt, QTime
+    from PyQt5.QtGui import QCloseEvent, QIcon, QKeyEvent
+    from PyQt5.QtWidgets import QFileDialog, QLabel, QLineEdit, QPushButton, QWidget
 
-from persepolis.gui.addlink_ui import AddLinkWindow_Ui
-from persepolis.scripts.check_proxy import getProxy
 import os
+from typing import Callable
+
+from persepolis.gui.addlink_ui import AddLinkWindowUi
+from persepolis.scripts.check_proxy import getProxy
 
 
-class PropertiesWindow(AddLinkWindow_Ui):
-    def __init__(self, parent, callback, gid, persepolis_setting, video_finder_dictionary=None):
+class PropertiesWindow(AddLinkWindowUi):
+    def __init__(
+        self,
+        parent: QWidget,
+        callback: Callable[[dict, str, str, dict], None],
+        gid: str,
+        persepolis_setting: QSettings,
+        video_finder_dictionary: dict[str, str] | None = None,
+    ) -> None:
         super().__init__(persepolis_setting)
 
         self.parent = parent
@@ -42,7 +51,6 @@ class PropertiesWindow(AddLinkWindow_Ui):
 
         # add new QLineEdit and QLineEdit for audio link if we have video finder links
         if self.video_finder_dictionary:
-
             self.link_label_2 = QLabel(self.link_frame)
             self.link_horizontalLayout.addWidget(self.link_label_2)
 
@@ -50,22 +58,20 @@ class PropertiesWindow(AddLinkWindow_Ui):
             self.link_horizontalLayout.addWidget(self.link_lineEdit_2)
             self.link_lineEdit_2.textChanged.connect(self.linkLineChanged)
 
-            self.link_label.setText(QCoreApplication.translate("addlink_ui_tr", "Video Link: "))
-            self.link_label_2.setText(QCoreApplication.translate("addlink_ui_tr", "Audio Link: "))
+            self.link_label.setText(QCoreApplication.translate('addlink_ui_tr', 'Video Link: '))
+            self.link_label_2.setText(QCoreApplication.translate('addlink_ui_tr', 'Audio Link: '))
 
             # gid_1 >> video_gid , gid_2 >> audio_gid
             self.gid_1 = self.video_finder_dictionary['video_gid']
             self.gid_2 = self.video_finder_dictionary['audio_gid']
 
         else:
-
             self.gid_1 = gid
 
         self.callback = callback
 
         # detect_proxy_pushButton
-        self.detect_proxy_pushButton.clicked.connect(
-            self.detectProxy)
+        self.detect_proxy_pushButton.clicked.connect(self.detectProxy)
 
         # connect folder_pushButton
         self.folder_pushButton.clicked.connect(self.changeFolder)
@@ -101,22 +107,24 @@ class PropertiesWindow(AddLinkWindow_Ui):
 
         # create a copy from add_link_dictionary for checking changes finally!
         self.add_link_dictionary_1_backup = {}
-        for key in self.add_link_dictionary_1.keys():
+        for key in self.add_link_dictionary_1:
             self.add_link_dictionary_1_backup[key] = self.add_link_dictionary_1[key]
 
         if video_finder_dictionary:
             self.add_link_dictionary_2_backup = {}
-            for key in self.add_link_dictionary_2.keys():
+            for key in self.add_link_dictionary_2:
                 self.add_link_dictionary_2_backup[key] = self.add_link_dictionary_2[key]
 
         # initialization
         # disable folder_frame when download is complete
         if self.video_finder_dictionary:
-            if self.video_finder_dictionary['video_completed'] == 'yes' or self.video_finder_dictionary['audio_completed'] == 'yes':
+            if (
+                self.video_finder_dictionary['video_completed'] == 'yes'
+                or self.video_finder_dictionary['audio_completed'] == 'yes'
+            ):
                 self.folder_frame.setEnabled(False)
-        else:
-            if self.download_table_dict_1['status'] == 'complete':
-                self.folder_frame.setEnabled(False)
+        elif self.download_table_dict_1['status'] == 'complete':
+            self.folder_frame.setEnabled(False)
 
         # link
         self.link_lineEdit.setText(self.add_link_dictionary_1['link'])
@@ -129,22 +137,19 @@ class PropertiesWindow(AddLinkWindow_Ui):
             self.proxy_checkBox.setChecked(True)
             self.ip_lineEdit.setText(self.add_link_dictionary_1['ip'])
             # port_spinBox initialization
-            try:
-                self.port_spinBox.setValue(
-                    int(self.add_link_dictionary_1['port']))
-            except:
+            try:  # noqa: SIM105
+                self.port_spinBox.setValue(int(self.add_link_dictionary_1['port']))
+            except:  # noqa: S110
                 pass
             # proxy user lineEdit initialization
-            try:
-                self.proxy_user_lineEdit.setText(
-                    self.add_link_dictionary_1['proxy_user'])
-            except:
+            try:  # noqa: SIM105
+                self.proxy_user_lineEdit.setText(self.add_link_dictionary_1['proxy_user'])
+            except:  # noqa: S110
                 pass
             # proxy pass lineEdit initialization
-            try:
-                self.proxy_pass_lineEdit.setText(
-                    self.add_link_dictionary_1['proxy_passwd'])
-            except:
+            try:  # noqa: SIM105
+                self.proxy_pass_lineEdit.setText(self.add_link_dictionary_1['proxy_passwd'])
+            except:  # noqa: S110
                 pass
 
         # proxy type
@@ -152,7 +157,6 @@ class PropertiesWindow(AddLinkWindow_Ui):
 
         # default is http
         if proxy_type == 'socks5':
-
             self.socks5_radioButton.setChecked(True)
 
         elif proxy_type == 'https':
@@ -164,27 +168,23 @@ class PropertiesWindow(AddLinkWindow_Ui):
         # download UserName initialization
         if self.add_link_dictionary_1['download_user']:
             self.download_checkBox.setChecked(True)
-            self.download_user_lineEdit.setText(
-                self.add_link_dictionary_1['download_user'])
+            self.download_user_lineEdit.setText(self.add_link_dictionary_1['download_user'])
             # download PassWord initialization
-            try:
-                self.download_pass_lineEdit.setText(
-                    self.add_link_dictionary_1['download_passwd'])
-            except:
+            try:  # noqa: SIM105
+                self.download_pass_lineEdit.setText(self.add_link_dictionary_1['download_passwd'])
+            except:  # noqa: S110
                 pass
 
         # folder_path
-        try:
-            self.download_folder_lineEdit.setText(
-                self.add_link_dictionary_1['download_path'])
-        except:
+        try:  # noqa: SIM105
+            self.download_folder_lineEdit.setText(self.add_link_dictionary_1['download_path'])
+        except:  # noqa: S110
             pass
 
         # connections
-        try:
-            self.connections_spinBox.setValue(
-                int(self.add_link_dictionary_1['connections']))
-        except:
+        try:  # noqa: SIM105
+            self.connections_spinBox.setValue(int(self.add_link_dictionary_1['connections']))
+        except:  # noqa: S110
             pass
 
         # get categories name and add them to add_queue_comboBox
@@ -196,8 +196,7 @@ class PropertiesWindow(AddLinkWindow_Ui):
         # finding current queue and setting it!
         self.current_category = self.download_table_dict_1['category']
 
-        current_category_index = self.add_queue_comboBox.findText(
-            self.current_category)
+        current_category_index = self.add_queue_comboBox.findText(self.current_category)
         self.add_queue_comboBox.setCurrentIndex(current_category_index)
 
         # add_queue_comboBox event
@@ -235,30 +234,28 @@ class PropertiesWindow(AddLinkWindow_Ui):
             self.user_agent_lineEdit.setText(str(self.add_link_dictionary_1['user_agent']))
 
         if self.add_link_dictionary_1['load_cookies']:
-            self.load_cookies_lineEdit.setText((self.add_link_dictionary_1['load_cookies']))
+            self.load_cookies_lineEdit.setText(self.add_link_dictionary_1['load_cookies'])
 
         # set window size and position
-        size = self.persepolis_setting.value(
-            'PropertiesWindow/size', QSize(520, 425))
-        position = self.persepolis_setting.value(
-            'PropertiesWindow/position', QPoint(300, 300))
+        size = self.persepolis_setting.value('PropertiesWindow/size', QSize(520, 425))
+        position = self.persepolis_setting.value('PropertiesWindow/position', QPoint(300, 300))
         self.resize(size)
         self.move(position)
 
     # detect system proxy setting, and set ip_lineEdit and port_spinBox
-    def detectProxy(self, button):
+    def detectProxy(self, _button: QPushButton) -> None:
         # get system proxy information
         system_proxy_dict = getProxy()
 
         enable_proxy_frame = False
 
         # ip
-        if 'http_proxy_ip' in system_proxy_dict.keys():
+        if 'http_proxy_ip' in system_proxy_dict:
             self.ip_lineEdit.setText(str(system_proxy_dict['http_proxy_ip']))
             enable_proxy_frame = True
 
         # port
-        if 'http_proxy_port' in system_proxy_dict.keys():
+        if 'http_proxy_port' in system_proxy_dict:
             self.port_spinBox.setValue(int(system_proxy_dict['http_proxy_port']))
             enable_proxy_frame = True
 
@@ -271,36 +268,31 @@ class PropertiesWindow(AddLinkWindow_Ui):
             self.detect_proxy_label.setText('No proxy detected!')
 
     # activate frames if checkBoxes checked
-
-    def proxyFrame(self, checkBox):
-
+    def proxyFrame(self, _checkBox: bool) -> None:
         if self.proxy_checkBox.isChecked():
             self.proxy_frame.setEnabled(True)
         else:
             self.proxy_frame.setEnabled(False)
 
-    def downloadFrame(self, checkBox):
-
+    def downloadFrame(self, _checkBox: bool) -> None:
         if self.download_checkBox.isChecked():
             self.download_frame.setEnabled(True)
         else:
             self.download_frame.setEnabled(False)
 
-    def startFrame(self, checkBox):
-
+    def startFrame(self, _checkBox: bool) -> None:
         if self.start_checkBox.isChecked():
             self.start_frame.setEnabled(True)
         else:
             self.start_frame.setEnabled(False)
 
-    def endFrame(self, checkBox):
-
+    def endFrame(self, _checkBox: bool) -> None:
         if self.end_checkBox.isChecked():
             self.end_frame.setEnabled(True)
         else:
             self.end_frame.setEnabled(False)
 
-    def changeFolder(self, button):
+    def changeFolder(self, _checkBox: bool) -> None:
         fname = QFileDialog.getExistingDirectory(self, 'Open f', '/home')
 
         if fname:
@@ -312,13 +304,13 @@ class PropertiesWindow(AddLinkWindow_Ui):
         if os.path.isdir(fname):
             self.download_folder_lineEdit.setText(fname)
 
-    def linkLineChanged(self, lineEdit):
+    def linkLineChanged(self, _lineEdit: str) -> None:
         if str(self.link_lineEdit.text()) == '':
             self.ok_pushButton.setEnabled(False)
         else:
             self.ok_pushButton.setEnabled(True)
 
-    def queueChanged(self, combo):
+    def queueChanged(self, _combo: int) -> None:
         # if one of the queues selected by user , start time and end time must
         # be deactivated
         if self.add_queue_comboBox.currentIndex() != 0:
@@ -331,21 +323,17 @@ class PropertiesWindow(AddLinkWindow_Ui):
             self.start_checkBox.setEnabled(True)
             self.end_checkBox.setEnabled(True)
 
-    def okButtonPressed(self, button):
+    def okButtonPressed(self, _button: QPushButton) -> None:
         # write user's new inputs in persepolis_setting for next time if needed
         if self.folder_checkBox.isChecked() is True:
-            self.persepolis_setting.setValue(
-                'settings/download_path', self.download_folder_lineEdit.text())
+            self.persepolis_setting.setValue('settings/download_path', self.download_folder_lineEdit.text())
 
         # http, https or socks5 proxy
         if self.http_radioButton.isChecked() is True:
-
             proxy_type = 'http'
         elif self.https_radioButton.isChecked() is True:
-
             proxy_type = 'https'
         else:
-
             proxy_type = 'socks5'
 
         if not (self.proxy_checkBox.isChecked()):
@@ -372,11 +360,9 @@ class PropertiesWindow(AddLinkWindow_Ui):
                 proxy_passwd = None
 
         if not (self.download_checkBox.isChecked()):
-
             download_user = None
             download_passwd = None
         else:
-
             download_user = self.download_user_lineEdit.text()
             if not (download_user):
                 download_user = None
@@ -385,42 +371,24 @@ class PropertiesWindow(AddLinkWindow_Ui):
             if not (download_passwd):
                 download_passwd = None
 
-        if not (self.start_checkBox.isChecked()):
-            start_time = None
-        else:
-            start_time = self.start_time_qDataTimeEdit.text()
+        start_time = self.start_time_qDataTimeEdit.text() if not (self.start_checkBox.isChecked()) else None
 
-        if not (self.end_checkBox.isChecked()):
-            end_time = None
-        else:
-            end_time = self.end_time_qDateTimeEdit.text()
+        end_time = self.end_time_qDateTimeEdit.text() if self.end_checkBox.isChecked() else None
 
         connections = self.connections_spinBox.value()
         download_path = self.download_folder_lineEdit.text()
 
         # referer
-        if self.referer_lineEdit.text() != '':
-            referer = self.referer_lineEdit.text()
-        else:
-            referer = None
+        referer = self.referer_lineEdit.text() if self.referer_lineEdit.text() != '' else None
 
         # header
-        if self.header_lineEdit.text() != '':
-            header = self.header_lineEdit.text()
-        else:
-            header = None
+        header = self.header_lineEdit.text() if self.header_lineEdit.text() != '' else None
 
         # user_agent
-        if self.user_agent_lineEdit.text() != '':
-            user_agent = self.user_agent_lineEdit.text()
-        else:
-            user_agent = None
+        user_agent = self.user_agent_lineEdit.text() if self.user_agent_lineEdit.text() != '' else None
 
         # load_cookies
-        if self.load_cookies_lineEdit.text() != '':
-            load_cookies = self.load_cookies_lineEdit.text()
-        else:
-            load_cookies = None
+        load_cookies = self.load_cookies_lineEdit.text() if self.load_cookies_lineEdit.text() != '' else None
 
         self.add_link_dictionary_1['start_time'] = start_time
         self.add_link_dictionary_1['end_time'] = end_time
@@ -461,21 +429,18 @@ class PropertiesWindow(AddLinkWindow_Ui):
 
         # it means category changed and data base must be updated.
         if new_category != self.current_category:
-
             self.download_table_dict_1['category'] = new_category
             # update data base
             self.parent.persepolis_db.updateDownloadTable([self.download_table_dict_1])
 
             if self.video_finder_dictionary:
-
                 # category for audio and video must be same as each other
                 self.download_table_dict_2['category'] = new_category
                 self.parent.persepolis_db.updateDownloadTable([self.download_table_dict_2])
 
         # if any thing in add_link_dictionary_1 is changed,then update data base!
-        for key in self.add_link_dictionary_1.keys():
+        for key in self.add_link_dictionary_1:
             if self.add_link_dictionary_1[key] != self.add_link_dictionary_1_backup[key]:
-
                 # update data base
                 self.parent.persepolis_db.updateAddLinkTable([self.add_link_dictionary_1])
 
@@ -484,15 +449,13 @@ class PropertiesWindow(AddLinkWindow_Ui):
 
         # if link changed, then update download_db_table in data base
         if self.add_link_dictionary_1['link'] != self.add_link_dictionary_1_backup['link']:
-
             dictionary = {'gid': self.gid_1, 'link': self.add_link_dictionary_1['link']}
             self.parent.persepolis_db.updateDownloadTable([dictionary])
 
         # if any thing in add_link_dictionary_2 is changed,then update data base!
         if self.video_finder_dictionary:
-            for key in self.add_link_dictionary_2.keys():
+            for key in self.add_link_dictionary_2:
                 if self.add_link_dictionary_2[key] != self.add_link_dictionary_2_backup[key]:
-
                     # update data base
                     self.parent.persepolis_db.updateAddLinkTable([self.add_link_dictionary_2])
 
@@ -501,14 +464,12 @@ class PropertiesWindow(AddLinkWindow_Ui):
 
             # if link changed, then update download_db_table in data base
             if self.add_link_dictionary_2['link'] != self.add_link_dictionary_2_backup['link']:
-
                 dictionary = {'gid': self.gid_2, 'link': self.add_link_dictionary_2['link']}
                 self.parent.persepolis_db.updateDownloadTable([dictionary])
 
             # if download_path was changed, then update video_finder_db_table in data base
             if self.add_link_dictionary_1['download_path'] != self.add_link_dictionary_1_backup['download_path']:
-                dictionary = {'video_gid': self.gid_1,
-                              'download_path': download_path}
+                dictionary = {'video_gid': self.gid_1, 'download_path': download_path}
                 self.parent.persepolis_db.updateVideoFinderTable[dictionary]
 
         # callback to mainwindow
@@ -518,20 +479,19 @@ class PropertiesWindow(AddLinkWindow_Ui):
         self.close()
 
     # close window with ESC key
-    def keyPressEvent(self, event):
+    def keyPressEvent(self, event: QKeyEvent) -> None:
         if event.key() == Qt.Key_Escape:
             self.close()
 
-    def closeEvent(self, event):
+    def closeEvent(self, event: QCloseEvent) -> None:
         # save window size and position
         self.persepolis_setting.setValue('PropertiesWindow/size', self.size())
-        self.persepolis_setting.setValue(
-            'PropertiesWindow/position', self.pos())
+        self.persepolis_setting.setValue('PropertiesWindow/position', self.pos())
         self.persepolis_setting.sync()
 
         event.accept()
 
-    def changeIcon(self, icons):
+    def changeIcon(self, icons: str) -> None:
         icons = ':/' + str(icons) + '/'
 
         self.folder_pushButton.setIcon(QIcon(icons + 'folder'))

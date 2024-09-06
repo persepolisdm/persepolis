@@ -1,0 +1,39 @@
+line-length = 120
+
+[lint]
+select = ["ALL"]
+ignore = [
+    "D",
+    "E501",
+    "E722",
+    "ERA001",
+    "FBT003",
+    "N802",
+    "N806",
+    "PLR0915",
+    "RUF012",
+    "RUF005",
+    "COM812",
+    "ISC001",
+    "FBT001",
+    "N803",
+    "C901",
+    "PLR0912",
+    "BLE001",
+    "PTH",
+    "S603",
+    "S605",
+    "S607",
+    "S608",
+    "FBT002",
+]
+
+[lint.per-file-ignores]
+"resources.py" = ["ALL"]
+
+[lint.flake8-quotes]
+inline-quotes = "single"
+multiline-quotes = "single"
+
+[format]
+quote-style = "single"

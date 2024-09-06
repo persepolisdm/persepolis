@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
 #    the Free Software Foundation, either version 3 of the License, or
@@ -12,17 +10,18 @@
 #
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
 
 
 # THIS FILE CONTAINING SOME VARIABLES , ... THAT USING FOR INITIALIZING PERSEPOLIS
 
-from persepolis.scripts.data_base import PersepolisDB, PluginsDB
-from persepolis.scripts import logger
-from persepolis.scripts.useful_tools import determineConfigFolder, returnDefaultSettings
-from persepolis.scripts.browser_integration import browserIntegration
-from persepolis.scripts import osCommands
-import time
 import os
+import time
+
+from persepolis.scripts import logger, osCommands
+from persepolis.scripts.browser_integration import browserIntegration
+from persepolis.scripts.data_base import PersepolisDB, PluginsDB
+from persepolis.scripts.useful_tools import determineConfigFolder, returnDefaultSettings
 
 try:
     from PySide6.QtCore import QSettings
@@ -54,34 +53,30 @@ with open(log_file) as f:
     lines = sum(1 for _ in f)
 
 # if number of lines in log_file is more than 300, then keep last 200 lines in log_file.
-if lines < 300:
-    f = open(log_file, 'a')
-    f.writelines('===================================================\n'
-                 + 'Persepolis Download Manager, '
-                 + current_time
-                 + '\n')
-    f.close()
+if lines < 300:  # noqa: PLR2004
+    with open(log_file, 'a') as f:
+        f.writelines(
+            '===================================================\n'  # noqa: ISC003
+            + 'Persepolis Download Manager, '
+            + current_time
+            + '\n'
+        )
 else:
     # keep last 200 lines
     line_num = lines - 200
-    f = open(log_file, 'r')
-    f_lines = f.readlines()
-    f.close()
+    with open(log_file) as f:
+        f_lines = f.readlines()
 
     line_counter = 1
-    f = open(log_file, 'w')
-    for line in f_lines:
-        if line_counter > line_num:
-            f.writelines(str(line))
+    with open(log_file, 'w') as f:
+        for line in f_lines:
+            if line_counter > line_num:
+                f.writelines(str(line))
 
-        line_counter = line_counter + 1
-    f.close()
+            line_counter += 1
 
-    f = open(log_file, 'a')
-    f.writelines('Persepolis Download Manager, '
-                 + current_time
-                 + '\n')
-    f.close()
+    with open(log_file, 'a') as f:
+        f.writelines('Persepolis Download Manager, ' + current_time + '\n')
 
 
 # create an object for PersepolisDB
@@ -117,8 +112,7 @@ persepolis_setting.beginGroup('settings')
 default_setting_dict = returnDefaultSettings()
 # this loop is checking values in persepolis_setting . if value is not
 # valid then value replaced by default_setting_dict value
-for key in default_setting_dict.keys():
-
+for key in default_setting_dict:
     setting_value = persepolis_setting.value(key, default_setting_dict[key])
     persepolis_setting.setValue(key, setting_value)
 
@@ -138,7 +132,7 @@ folder_list = [download_path]
 # add subfolders to folder_list if user checked subfolders check box in setting window.
 if persepolis_setting.value('subfolder') == 'yes':
     for folder in ['Audios', 'Videos', 'Others', 'Documents', 'Compressed']:
-        folder_list.append(os.path.join(download_path, folder))
+        folder_list.append(os.path.join(download_path, folder))  # noqa: PERF401
 
 # create folders in folder_list
 for folder in folder_list:
@@ -183,12 +177,12 @@ else:
 
 # compatibility
 persepolis_version = float(persepolis_setting.value('version/version', 2.5))
-if persepolis_version < 2.6:
+if persepolis_version < 2.6:  # noqa: PLR2004
     from persepolis.scripts.compatibility import compatibility
+
     try:
         compatibility()
     except Exception as e:
-
         # create an object for PersepolisDB
         persepolis_db = PersepolisDB()
 
@@ -199,14 +193,12 @@ if persepolis_version < 2.6:
         persepolis_db.closeConnections()
 
         # write error in log
-        logger.sendToLog(
-            "compatibility ERROR!", "ERROR")
-        logger.sendToLog(
-            str(e), "ERROR")
+        logger.sendToLog('compatibility ERROR!', 'ERROR')
+        logger.sendToLog(str(e), 'ERROR')
 
     persepolis_version = 2.6
 
-if persepolis_version < 3.1:
+if persepolis_version < 3.1:  # noqa: PLR2004
     # create an object for PersepolisDB
     persepolis_db = PersepolisDB()
 
@@ -218,18 +210,17 @@ if persepolis_version < 3.1:
 
     persepolis_version = 3.1
 
-if persepolis_version < 4.0:
+if persepolis_version < 4.0:  # noqa: PLR2004
     persepolis_setting.beginGroup('settings')
 
-    for key in default_setting_dict.keys():
-
+    for key in default_setting_dict:
         setting_value = default_setting_dict[key]
         persepolis_setting.setValue(key, setting_value)
 
     persepolis_setting.endGroup()
 
 
-if persepolis_version < 4.1:
+if persepolis_version < 4.1:  # noqa: PLR2004
     # create an object for PersepolisDB
     persepolis_db = PersepolisDB()
 
@@ -242,7 +233,7 @@ if persepolis_version < 4.1:
     persepolis_setting.setValue('version/version', 4.1)
 
 
-if persepolis_version < 4.11:
+if persepolis_version < 4.11:  # noqa: PLR2004
     # create an object for PersepolisDB
     persepolis_db = PersepolisDB()
 
@@ -257,11 +248,10 @@ if persepolis_version < 4.11:
 persepolis_setting.setValue('version/version', 4.2)
 persepolis_setting.setValue('version/version', 4.3)
 
-if persepolis_version < 5.0:
+if persepolis_version < 5.0:  # noqa: PLR2004
     persepolis_setting.beginGroup('settings')
 
-    for key in default_setting_dict.keys():
-
+    for key in default_setting_dict:
         setting_value = default_setting_dict[key]
         persepolis_setting.setValue(key, setting_value)
 

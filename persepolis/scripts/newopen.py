@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
 #    the Free Software Foundation, either version 3 of the License, or
@@ -12,40 +10,37 @@
 #
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+
+from __future__ import annotations
 
 import ast
 
 
 # This function is writting a list in file_path in dictionary format
-def writeList(file_path, list):
-    dictionary = {'list': list}
-    f = open(file_path, 'w')
-    f.writelines(str(dictionary))
-    f.close()
+def writeList(file_path: str, list_: list[str]) -> None:
+    dictionary = {'list': list_}
+    with open(file_path, 'w') as f:
+        f.writelines(str(dictionary))
+
 
 # This function is reading file_path and return content of file in list format
-
-
-def readList(file_path, mode='dictionary'):
-    f = open(file_path, 'r')
-    f_string = f.readline()
-    f.close()
+def readList(file_path: str, mode: str = 'dictionary') -> list[str]:
+    with open(file_path) as f:
+        f_string = f.readline()
     dictionary = ast.literal_eval(f_string.strip())
-    list = dictionary['list']
+    list_ = dictionary['list']
 
     if mode == 'string':
-        list[9] = str(list[9])
+        list_[9] = str(list_[9])
 
-    return list
+    return list_
+
 
 # this function is reading a file that contains dictionary , and extracts
 # dictionary from it.
-
-
-def readDict(file_path):
-    f = open(file_path)
-    f_lines = f.readlines()
-    f.close()
+def readDict(file_path: str) -> dict[str, str]:
+    with open(file_path) as f:
+        f_lines = f.readlines()
     dict_str = str(f_lines[0].strip())
-    return_dict = ast.literal_eval(dict_str)
-    return return_dict
+    return ast.literal_eval(dict_str)

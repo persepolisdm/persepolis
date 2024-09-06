@@ -1,6 +1,3 @@
-# -*- coding: utf-8 -*-
-
-
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
 #    the Free Software Foundation, either version 3 of the License, or
@@ -13,26 +10,60 @@
 #
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
 
 try:
-    from PySide6.QtWidgets import QHeaderView, QPushButton, QWidget, QTabWidget, QVBoxLayout, QTableWidget, QAbstractItemView, QLabel, QLineEdit, QHBoxLayout, QSpinBox, QComboBox, QFrame, QCheckBox, QGridLayout, QRadioButton
-    from PySide6.QtCore import Qt, QTranslator, QCoreApplication, QLocale
+    from PySide6.QtCore import QCoreApplication, QLocale, QSettings, Qt, QTranslator
     from PySide6.QtGui import QIcon
+    from PySide6.QtWidgets import (
+        QAbstractItemView,
+        QCheckBox,
+        QComboBox,
+        QFrame,
+        QGridLayout,
+        QHBoxLayout,
+        QHeaderView,
+        QLabel,
+        QLineEdit,
+        QPushButton,
+        QRadioButton,
+        QSpinBox,
+        QTableWidget,
+        QTabWidget,
+        QVBoxLayout,
+        QWidget,
+    )
 except:
-    from PyQt5.QtWidgets import QHeaderView, QPushButton, QWidget, QTabWidget, QVBoxLayout, QTableWidget, QAbstractItemView, QLabel, QLineEdit, QHBoxLayout, QSpinBox, QComboBox, QFrame, QCheckBox, QGridLayout, QRadioButton
-    from PyQt5.QtCore import Qt, QTranslator, QCoreApplication, QLocale
+    from PyQt5.QtCore import QCoreApplication, QLocale, QSettings, Qt, QTranslator
     from PyQt5.QtGui import QIcon
+    from PyQt5.QtWidgets import (
+        QAbstractItemView,
+        QCheckBox,
+        QComboBox,
+        QFrame,
+        QGridLayout,
+        QHBoxLayout,
+        QHeaderView,
+        QLabel,
+        QLineEdit,
+        QPushButton,
+        QRadioButton,
+        QSpinBox,
+        QTableWidget,
+        QTabWidget,
+        QVBoxLayout,
+        QWidget,
+    )
 
-from persepolis.gui import resources
+from persepolis.gui import resources  # noqa: F401
 
 
-class TextQueue_Ui(QWidget):
-    def __init__(self, persepolis_setting):
+class TextQueueUi(QWidget):
+    def __init__(self, persepolis_setting: QSettings) -> None:
         super().__init__()
 
         self.persepolis_setting = persepolis_setting
-        icons = ':/' + \
-            str(self.persepolis_setting.value('settings/icons')) + '/'
+        icons = ':/' + str(self.persepolis_setting.value('settings/icons')) + '/'
 
         # add support for other languages
         locale = str(self.persepolis_setting.value('settings/locale'))
@@ -72,8 +103,7 @@ class TextQueue_Ui(QWidget):
         self.links_table.verticalHeader().hide()
 
         self.links_table.setColumnCount(3)
-        links_table_header_labels = [
-            'File Name', 'Download Link', 'dictionary']
+        links_table_header_labels = ['File Name', 'Download Link', 'dictionary']
         self.links_table.setHorizontalHeaderLabels(links_table_header_labels)
         self.links_table.setColumnHidden(2, True)
 
@@ -100,7 +130,7 @@ class TextQueue_Ui(QWidget):
         links_tab_verticalLayout.addLayout(add_queue_horizontalLayout)
 
         links_tab_verticalLayout.addStretch(1)
-        self.queue_tabWidget.addTab(self.links_tab, "")
+        self.queue_tabWidget.addTab(self.links_tab, '')
 
         # options_tab
         self.options_tab = QWidget()
@@ -244,7 +274,7 @@ class TextQueue_Ui(QWidget):
         self.connections_spinBox = QSpinBox(self.connections_frame)
         self.connections_spinBox.setMinimum(1)
         self.connections_spinBox.setMaximum(64)
-        self.connections_spinBox.setProperty("value", 64)
+        self.connections_spinBox.setProperty('value', 64)
 
         connections_verticaLayout.addWidget(self.connections_spinBox)
         connections_horizontalLayout.addWidget(self.connections_frame)
@@ -270,37 +300,39 @@ class TextQueue_Ui(QWidget):
         window_verticalLayout.addLayout(buttons_horizontalLayout)
 
         # labels
-        self.setWindowTitle(QCoreApplication.translate("text_ui_tr", "Persepolis Download Manager"))
+        self.setWindowTitle(QCoreApplication.translate('text_ui_tr', 'Persepolis Download Manager'))
 
         self.queue_tabWidget.setTabText(
-            self.queue_tabWidget.indexOf(self.links_tab), QCoreApplication.translate("text_ui_tr", 'Links'))
+            self.queue_tabWidget.indexOf(self.links_tab), QCoreApplication.translate('text_ui_tr', 'Links')
+        )
         self.queue_tabWidget.setTabText(
-            self.queue_tabWidget.indexOf(self.options_tab), QCoreApplication.translate("text_ui_tr", 'Download Options'))
+            self.queue_tabWidget.indexOf(self.options_tab), QCoreApplication.translate('text_ui_tr', 'Download Options')
+        )
 
-        self.select_all_pushButton.setText(QCoreApplication.translate("text_ui_tr", 'Select All'))
-        self.deselect_all_pushButton.setText(QCoreApplication.translate("text_ui_tr", 'Deselect All'))
+        self.select_all_pushButton.setText(QCoreApplication.translate('text_ui_tr', 'Select All'))
+        self.deselect_all_pushButton.setText(QCoreApplication.translate('text_ui_tr', 'Deselect All'))
 
-        self.add_queue_label.setText(QCoreApplication.translate("text_ui_tr", 'Add to queue: '))
+        self.add_queue_label.setText(QCoreApplication.translate('text_ui_tr', 'Add to queue: '))
 
-        self.proxy_checkBox.setText(QCoreApplication.translate("text_ui_tr", 'Proxy'))
-        self.proxy_pass_label.setText(QCoreApplication.translate("text_ui_tr", "Proxy password: "))
-        self.ip_label.setText(QCoreApplication.translate("text_ui_tr", "IP:"))
-        self.proxy_user_label.setText(QCoreApplication.translate("text_ui_tr", "Proxy username: "))
-        self.port_label.setText(QCoreApplication.translate("text_ui_tr", "Port:"))
+        self.proxy_checkBox.setText(QCoreApplication.translate('text_ui_tr', 'Proxy'))
+        self.proxy_pass_label.setText(QCoreApplication.translate('text_ui_tr', 'Proxy password: '))
+        self.ip_label.setText(QCoreApplication.translate('text_ui_tr', 'IP:'))
+        self.proxy_user_label.setText(QCoreApplication.translate('text_ui_tr', 'Proxy username: '))
+        self.port_label.setText(QCoreApplication.translate('text_ui_tr', 'Port:'))
 
-        self.http_radioButton.setText(QCoreApplication.translate("addlink_ui_tr", "HTTP"))
-        self.https_radioButton.setText(QCoreApplication.translate("addlink_ui_tr", "HTTPS"))
-        self.socks5_radioButton.setText(QCoreApplication.translate("addlink_ui_tr", "SOCKS5"))
+        self.http_radioButton.setText(QCoreApplication.translate('addlink_ui_tr', 'HTTP'))
+        self.https_radioButton.setText(QCoreApplication.translate('addlink_ui_tr', 'HTTPS'))
+        self.socks5_radioButton.setText(QCoreApplication.translate('addlink_ui_tr', 'SOCKS5'))
 
-        self.download_checkBox.setText(QCoreApplication.translate("text_ui_tr", "Download username and password"))
-        self.download_user_label.setText(QCoreApplication.translate("text_ui_tr", "Download username: "))
-        self.download_pass_label.setText(QCoreApplication.translate("text_ui_tr", "Download password: "))
+        self.download_checkBox.setText(QCoreApplication.translate('text_ui_tr', 'Download username and password'))
+        self.download_user_label.setText(QCoreApplication.translate('text_ui_tr', 'Download username: '))
+        self.download_pass_label.setText(QCoreApplication.translate('text_ui_tr', 'Download password: '))
 
-        self.folder_pushButton.setText(QCoreApplication.translate("text_ui_tr", "Change Download Folder"))
-        self.folder_checkBox.setText(QCoreApplication.translate("addlink_ui_tr", "Remember this path"))
-        self.folder_label.setText(QCoreApplication.translate("text_ui_tr", "Download folder: "))
+        self.folder_pushButton.setText(QCoreApplication.translate('text_ui_tr', 'Change Download Folder'))
+        self.folder_checkBox.setText(QCoreApplication.translate('addlink_ui_tr', 'Remember this path'))
+        self.folder_label.setText(QCoreApplication.translate('text_ui_tr', 'Download folder: '))
 
-        self.connections_label.setText(QCoreApplication.translate("text_ui_tr", "Number of connections:"))
+        self.connections_label.setText(QCoreApplication.translate('text_ui_tr', 'Number of connections:'))
 
-        self.ok_pushButton.setText(QCoreApplication.translate("text_ui_tr", 'OK'))
-        self.cancel_pushButton.setText(QCoreApplication.translate("text_ui_tr", 'Cancel'))
+        self.ok_pushButton.setText(QCoreApplication.translate('text_ui_tr', 'OK'))
+        self.cancel_pushButton.setText(QCoreApplication.translate('text_ui_tr', 'Cancel'))

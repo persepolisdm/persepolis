@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
 #    the Free Software Foundation, either version 3 of the License, or
@@ -14,23 +13,23 @@
 #
 
 try:
-    from PySide6.QtWidgets import QWidget, QTextEdit, QVBoxLayout, QHBoxLayout, QPushButton, QLabel
-    from PySide6.QtGui import QIcon
-    from PySide6.QtCore import Qt, QSize, QSettings
+    from PySide6.QtCore import QSettings, QSize, Qt
+    from PySide6.QtGui import QIcon, QKeyEvent
+    from PySide6.QtWidgets import QHBoxLayout, QLabel, QPushButton, QTextEdit, QVBoxLayout, QWidget
 except:
-    from PyQt5.QtWidgets import QWidget, QTextEdit, QVBoxLayout, QHBoxLayout, QPushButton, QLabel
-    from PyQt5.QtCore import Qt, QSize, QSettings
-    from PyQt5.QtGui import QIcon
+    from PyQt5.QtCore import QSettings, QSize, Qt
+    from PyQt5.QtGui import QIcon, QKeyEvent
+    from PyQt5.QtWidgets import QHBoxLayout, QLabel, QPushButton, QTextEdit, QVBoxLayout, QWidget
 
-from persepolis.scripts.data_base import PersepolisDB
+from persepolis.gui import resources  # noqa: F401
 from persepolis.scripts import osCommands
-from persepolis.gui import resources
+from persepolis.scripts.data_base import PersepolisDB
 
 
 class ErrorWindow(QWidget):
-    def __init__(self, text):
+    def __init__(self, text: str) -> None:
         super().__init__()
-# finding windows_size
+        # finding windows_size
         self.setMinimumSize(QSize(363, 300))
         self.setWindowIcon(QIcon.fromTheme('persepolis', QIcon(':/com.github.persepolisdm.persepolis.svg')))
         self.setWindowTitle('Persepolis Download Manager')
@@ -46,16 +45,17 @@ class ErrorWindow(QWidget):
         verticalLayout.addWidget(self.text_edit)
 
         self.label2 = QLabel(self)
-        self.label2.setText('Reseting persepolis may solving problem.\nDo not panic!If you add your download links again,\npersepolis will resume your downloads\nPlease copy this error message and press "Report Issue" button\nand open a new issue in Github for it.\nWe answer you as soon as possible. \nreporting this issue help us to improve persepolis.\nThank you!')
+        self.label2.setText(
+            'Reseting persepolis may solving problem.\nDo not panic!If you add your download links again,\npersepolis will resume your downloads\nPlease copy this error message and press "Report Issue" button\nand open a new issue in Github for it.\nWe answer you as soon as possible. \nreporting this issue help us to improve persepolis.\nThank you!'
+        )
         verticalLayout.addWidget(self.label2)
 
         self.report_pushButton = QPushButton(self)
-        self.report_pushButton.setText("Report Issue")
+        self.report_pushButton.setText('Report Issue')
         horizontalLayout.addWidget(self.report_pushButton)
 
         self.reset_persepolis_pushButton = QPushButton(self)
-        self.reset_persepolis_pushButton.clicked.connect(
-            self.resetPushButtonPressed)
+        self.reset_persepolis_pushButton.clicked.connect(self.resetPushButtonPressed)
         self.reset_persepolis_pushButton.setText('Reset Persepolis')
         horizontalLayout.addWidget(self.reset_persepolis_pushButton)
 
@@ -68,18 +68,18 @@ class ErrorWindow(QWidget):
         self.report_pushButton.clicked.connect(self.reportPushButtonPressed)
         self.close_pushButton.clicked.connect(self.closePushButtonPressed)
 
-    def reportPushButtonPressed(self, button):
+    def reportPushButtonPressed(self, _button: QPushButton) -> None:
         osCommands.xdgOpen('https://github.com/persepolisdm/persepolis/issues')
 
     # close window with ESC key
-    def keyPressEvent(self, event):
+    def keyPressEvent(self, event: QKeyEvent) -> None:
         if event.key() == Qt.Key_Escape:
             self.close()
 
-    def closePushButtonPressed(self, button):
+    def closePushButtonPressed(self, _button: QPushButton) -> None:
         self.close()
 
-    def resetPushButtonPressed(self, button):
+    def resetPushButtonPressed(self, _button: QPushButton) -> None:
         # create an object for PersepolisDB
         persepolis_db = PersepolisDB()
 
