@@ -19,6 +19,7 @@ import time
 import random
 import threading
 import os
+import errno
 from requests.cookies import cookiejar_from_dict
 from http.cookies import SimpleCookie
 from persepolis.scripts.useful_tools import convertTime, humanReadableSize, freeSpace
@@ -267,6 +268,46 @@ class Download():
         try:
             with open(self.control_json_file_path, 'x') as f:
                 f.write("")
+        except OSError as e:
+            # it means control_json_file_path characters is more than 256 byte
+            if e.errno == errno.ENAMETOOLONG:
+                # reduce  file_name lenght
+                reduce_bytes = len(self.control_json_file_path.encode('utf-8')) - 255
+
+                # seperate extension from file_name
+                split_file_name = self.file_name.split('.')
+
+                # check we have extension or not
+                extension = ""
+                if len(split_file_name) > 1:
+                    # remove extension
+                    extension = split_file_name.pop(-1)
+
+                # join file_name without extension
+                file_name_without_extension = ''.join(split_file_name)
+
+                if len(file_name_without_extension.encode('utf-8')) > reduce_bytes:
+
+                    # Calculate how many characters must be removed
+                    for i in range(len(file_name_without_extension)):
+                        string_ = file_name_without_extension[(-1 * i):]
+                        string_size = len(string_.encode('utf-8'))
+                        if string_size >= reduce_bytes:
+                            # reduce characters
+                            file_name_without_extension = file_name_without_extension[:(-1 * i)]
+                            break
+
+                    # create new file_name and file_path and control_json_file
+                    self.file_name = file_name_without_extension + extension
+                    self.file_path = os.path.join(self.download_path, self.file_name)
+                    control_json_file = self.file_name + '.persepolis'
+                    self.control_json_file_path = os.path.join(
+                        self.download_path, control_json_file)
+
+                # try again
+                with open(self.control_json_file_path, 'x') as f:
+                    f.write("")
+
         except Exception:
             # so the control file is already exists
             # read control file
