@@ -25,6 +25,7 @@ from persepolis.scripts.useful_tools import determineConfigFolder
 from persepolis.scripts.addlink import AddLinkWindow
 from persepolis.scripts import logger, osCommands
 from persepolis.scripts.spider import spider
+from persepolis.constants import VERSION
 from time import time
 from functools import partial
 from random import random
@@ -80,6 +81,10 @@ class MediaListFetcherThread(QThread):
         # user_agent
         if 'user_agent' in video_dict.keys() and video_dict['user_agent']:
             self.youtube_dl_options_dict['user-agent'] = str(video_dict['user_agent'])
+        else:
+            # set PersepolisDM user agent
+            video_dict['user_agent'] = 'PersepolisDM/' + str(VERSION.version_str)
+            self.youtube_dl_options_dict['user-agent'] = 'PersepolisDM/' + str(VERSION.version_str)
 
         # load_cookies
         if 'load_cookies' in video_dict.keys() and video_dict['load_cookies']:

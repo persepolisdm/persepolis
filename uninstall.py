@@ -29,7 +29,13 @@ if os_type == 'Linux':
                  '/usr/share/pixmaps/persepolis-tray.svg',
                  '/usr/share/applications/com.github.persepolisdm.persepolis.desktop',
                  '/usr/share/metainfo/com.github.persepolisdm.persepolis.appdata.xml',
-                 '/usr/bin/persepolis']
+                 '/usr/bin/persepolis',
+                 '/usr/local/share/man/man1/persepolis.1.gz',
+                 '/usr/local/share/pixmaps/com.github.persepolisdm.persepolis.svg',
+                 '/usr/local/share/pixmaps/persepolis-tray.svg',
+                 '/usr/local/share/applications/com.github.persepolisdm.persepolis.desktop',
+                 '/usr/local/share/metainfo/com.github.persepolisdm.persepolis.appdata.xml',
+                 '/usr/local/bin/persepolis']
 
 elif os_type in ('FreeBSD', 'OpenBSD'):
     path_list = ['/usr/local/share/man/man1/persepolis.1.gz',
@@ -53,13 +59,19 @@ for python_version in python_version_list:
     if os_type == 'Linux':
 
         pattern = '/usr/lib/' + python_version + '/site-packages/persepolis*'
+        for folder in glob.glob(pattern):
+            path_list.append(folder)
+        pattern2 = '/usr/local/lib/' + python_version + '/site-packages/persepolis*'
+
+        for folder in glob.glob(pattern2):
+            path_list.append(folder)
 
     elif os_type == 'FreeBSD' or os_type == 'OpenBSD':
 
         pattern = '/usr/local/lib/' + python_version + '/site-packages/persepolis*'
 
-    for folder in glob.glob(pattern):
-        path_list.append(folder)
+        for folder in glob.glob(pattern):
+            path_list.append(folder)
 
 print(path_list)
 
