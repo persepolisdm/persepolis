@@ -18,6 +18,7 @@ from requests.cookies import cookiejar_from_dict
 from persepolis.constants import VERSION
 from http.cookies import SimpleCookie
 import requests
+import os
 from pathlib import Path
 from urllib.parse import urlparse, unquote
 
@@ -37,10 +38,29 @@ def getFileNameFromLink(link):
 
     return file_name
 
+
+def readCookieJar(load_cookies):
+    jar = None
+    if os.path.isfile(load_cookies):
+        # Open cookie file
+        cookies_txt = open(load_cookies, 'r')
+
+        # Initialize RequestsCookieJar
+        jar = requests.cookies.RequestsCookieJar()
+
+        for line in cookies_txt.readlines():
+            words = line.split()
+
+            # Filter out lines that don't contain cookies
+            if (len(words) == 7) and (words[0] != "#"):
+                # Split cookies into the appropriate parameters
+                jar.set(words[5], words[6], domain=words[0], path=words[2])
+
+        return jar
+
+
 # spider function finds name of file and file size from header
-
-
-def spider(add_link_dictionary):
+def spider(add_link_dictionary):# noqa
 
     # get user's download request from add_link_dictionary
     link = add_link_dictionary['link']
@@ -54,7 +74,7 @@ def spider(add_link_dictionary):
     header = add_link_dictionary['header']
     out = add_link_dictionary['out']
     user_agent = add_link_dictionary['user_agent']
-    raw_cookies = add_link_dictionary['load_cookies']
+    load_cookies = add_link_dictionary['load_cookies']
     referer = add_link_dictionary['referer']
 
     # define a requests session
@@ -81,12 +101,10 @@ def spider(add_link_dictionary):
         requests_session.auth = (download_user, download_passwd)
 
     # set cookies
-    if raw_cookies:
-        cookie = SimpleCookie()
-        cookie.load(raw_cookies)
-
-        cookies = {key: morsel.value for key, morsel in cookie.items()}
-        requests_session.cookies = cookiejar_from_dict(cookies)
+    if load_cookies:
+        jar = readCookieJar(load_cookies)
+        if jar:
+            requests_session.cookies = jar
 
     # set referer
     if referer:

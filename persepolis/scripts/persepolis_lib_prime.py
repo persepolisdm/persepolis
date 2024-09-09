@@ -59,7 +59,7 @@ class Download():
         self.download_passwd = add_link_dictionary['download_passwd']
         self.header = add_link_dictionary['header']
         self.user_agent = add_link_dictionary['user_agent']
-        self.raw_cookies = add_link_dictionary['load_cookies']
+        self.load_cookies = add_link_dictionary['load_cookies']
         self.referer = add_link_dictionary['referer']
         self.start_time = add_link_dictionary['start_time']
         self.end_time = add_link_dictionary['end_time']
@@ -99,6 +99,25 @@ class Download():
 
         return dic
 
+    def readCookieJar(self):
+        jar = None
+        if os.path.isfile(self.load_cookies):
+            # Open cookie file
+            cookies_txt = open(self.load_cookies, 'r')
+
+            # Initialize RequestsCookieJar
+            jar = requests.cookies.RequestsCookieJar()
+
+            for line in cookies_txt.readlines():
+                words = line.split()
+
+                # Filter out lines that don't contain cookies
+                if (len(words) == 7) and (words[0] != "#"):
+                    # Split cookies into the appropriate parameters
+                    jar.set(words[5], words[6], domain=words[0], path=words[2])
+
+            return jar
+
     # create requests session
     def createSession(self):
         # define a requests session
@@ -128,12 +147,10 @@ class Download():
                                           self.download_passwd)
 
         # set cookies
-        if self.raw_cookies:
-            cookie = SimpleCookie()
-            cookie.load(self.raw_cookies)
-
-            cookies = {key: morsel.value for key, morsel in cookie.items()}
-            self.requests_session.cookies = cookiejar_from_dict(cookies)
+        if self.load_cookies:
+            jar = self.readCookieJar()
+            if jar:
+                self.requests_session.cookies = jar
 
         # set referer
         if self.referer:

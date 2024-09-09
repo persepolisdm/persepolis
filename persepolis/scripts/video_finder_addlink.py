@@ -30,6 +30,7 @@ from time import time
 from functools import partial
 from random import random
 from copy import deepcopy
+import requests
 import yt_dlp as youtube_dl
 import re
 import os
@@ -49,6 +50,7 @@ persepolis_tmp = os.path.join(config_folder, 'persepolis_tmp')
 class MediaListFetcherThread(QThread):
     RESULT = Signal(dict)
     cookies = '# HTTP cookie file.\n'  # We shall write it in a file when thread starts.
+    LOADCOOKIEFILESIGNAL = Signal(str)
 
     def __init__(self, receiver_slot, video_dict, main_window):
         super().__init__()
@@ -127,22 +129,28 @@ class MediaListFetcherThread(QThread):
                     self.youtube_link,
                     download=False
                 )
-
+            # write new cookies to cookie file
+            ydl.cookiejar.save(filename=self.cookie_path)
             error = "error"  # Or comment out this line to show full stderr.
             if result:
                 ret_val = result
             else:
                 ret_val = {'error': str(error)}
+                try:
+                    osCommands.remove(self.cookie_path)
+
+                except Exception as ex:
+                    logger.sendToLog(ex, "ERROR")
 
         except Exception as ex:
             ret_val = {'error': str(ex)}
-        finally:  # Delete cookie file
             try:
                 osCommands.remove(self.cookie_path)
 
             except Exception as ex:
                 logger.sendToLog(ex, "ERROR")
 
+        self.LOADCOOKIEFILESIGNAL.emit(self.cookie_path)
         self.RESULT.emit(ret_val)
 
     def makeHttpCookie(self, raw_cookie, host_name='.youtube.com'):
@@ -381,6 +389,11 @@ class VideoFinderAddLink(AddLinkWindow):
         fetcher_thread = MediaListFetcherThread(self.fetchedResult, dictionary_to_send, self.parent)
         self.parent.threadPool.append(fetcher_thread)
         self.parent.threadPool[-1].start()
+        self.parent.threadPool[-1].LOADCOOKIEFILESIGNAL.connect(self.setLoadCookie)
+
+    def setLoadCookie(self, str):
+        if os.path.isfile(str):
+            self.load_cookies_lineEdit.setText(str)
 
     def fileNameChanged(self, value):
         if value.strip() == '':
@@ -437,7 +450,7 @@ class VideoFinderAddLink(AddLinkWindow):
         except Exception as ex:
             logger.sendToLog(ex, "ERROR")
 
-    def fetchedResult(self, media_dict):
+    def fetchedResult(self, media_dict): # noqa
 
         self.url_submit_pushButtontton.setEnabled(True)
         if 'error' in media_dict.keys():
@@ -597,7 +610,7 @@ class VideoFinderAddLink(AddLinkWindow):
     # This method collects additional information like proxy ip, user, password etc.
     def collectMoreOptions(self):
         options = {'ip': None, 'port': None, 'proxy_user': None, 'proxy_passwd': None, 'download_user': None,
-                   'download_passwd': None, 'proxy_type': None}
+                   'download_passwd': None, 'proxy_type': None, 'load_cookies': None}
 
         if self.proxy_checkBox.isChecked():
 
@@ -624,8 +637,11 @@ class VideoFinderAddLink(AddLinkWindow):
             options['download_user'] = self.download_user_lineEdit.text()
             options['download_passwd'] = self.download_pass_lineEdit.text()
 
+        if self.load_cookies_lineEdit.text() != '':
+            options['load_cookies'] = self.load_cookies_lineEdit.text()
+
         # These info (keys) are required for spider to find file size, because spider() does not check if key exists.
-        additional_info = ['header', 'load_cookies', 'user_agent', 'referer', 'out']
+        additional_info = ['header', 'user_agent', 'referer', 'out']
         for i in additional_info:
 
             if i not in self.plugin_add_link_dictionary.keys():
@@ -635,7 +651,7 @@ class VideoFinderAddLink(AddLinkWindow):
 
     # user submitted information by pressing ok_pushButton, so get information
     # from VideoFinderAddLink window and return them to the mainwindow with callback!
-    def okButtonPressed(self, download_later, button=None):
+    def okButtonPressed(self, download_later, button=None): # noqa
 
         link_list = []
         # separate audio format and video format is selected.

@@ -17,6 +17,7 @@ import os
 import ast
 import sys
 import time
+import glob
 import random
 import requests
 import tempfile
@@ -217,6 +218,7 @@ class CheckVersionsThread(QThread):
         if desktop_env:
             logger.sendToLog('Desktop env.: '
                              + str(desktop_env))
+
 
 # check clipboard
 class CheckClipBoardThread(QThread):
@@ -2971,9 +2973,14 @@ class MainWindow(MainWindow_Ui):
         if event.key() == Qt.Key_Escape:
             self.close()
 
+    def cleanTempFolder(self):
+        temp_files_pattern = os.path.join(persepolis_tmp, '.*')
+        # delete all unwanted files
+        for filename in glob.glob(temp_files_pattern):
+            osCommands.remove(filename)
+
     # close event
     # when user closes application then this method is called
-
     def closeEvent(self, event=None):
 
         if str(self.persepolis_setting.value('settings/hide-window')) == 'yes':
@@ -3044,6 +3051,7 @@ class MainWindow(MainWindow_Ui):
             i.quit()
             i.wait()
 
+        self.cleanTempFolder()
         QCoreApplication.instance().quit
         logger.sendToLog("Persepolis closed!", "INFO")
         sys.exit(0)
