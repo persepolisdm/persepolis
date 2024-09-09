@@ -20,9 +20,7 @@ import random
 import threading
 import os
 import errno
-from requests.cookies import cookiejar_from_dict
-from http.cookies import SimpleCookie
-from persepolis.scripts.useful_tools import convertTime, humanReadableSize, freeSpace
+from persepolis.scripts.useful_tools import convertTime, humanReadableSize, freeSpace, headerToDict
 from persepolis.scripts.osCommands import makeDirs, moveFile
 from persepolis.scripts import logger
 from persepolis.scripts.bubble import notifySend
@@ -87,17 +85,6 @@ class Download():
         self.number_of_active_connections = self.number_of_threads
 
         self.thread_list = []
-
-    # this method get http header as string and convert it to dictionary
-    def convertHeaderToDictionary(headers):
-        dic = {}
-        for line in headers.split("\n"):
-            if line.startswith(("GET", "POST")):
-                continue
-            point_index = line.find(":")
-            dic[line[:point_index].strip()] = line[point_index + 1:].strip()
-
-        return dic
 
     def readCookieJar(self):
         jar = None
@@ -170,7 +157,7 @@ class Download():
 
         if self.header is not None:
             # convert header to dictionary
-            dict_ = self.convertHeaderToDictionary(self.header)
+            dict_ = headerToDict(self.header)
             # update headers
             self.requests_session.headers.update(dict_)
 
@@ -325,38 +312,38 @@ class Download():
                 with open(self.control_json_file_path, 'x') as f:
                     f.write("")
 
-        except Exception:
-            # so the control file is already exists
-            # read control file
-            with open(self.control_json_file_path, "r") as f:
+            else:
+                # so the control file is already exists
+                # read control file
+                with open(self.control_json_file_path, "r") as f:
 
-                try:
-                    # save json file information in dictionary format
-                    data_dict = json.load(f)
+                    try:
+                        # save json file information in dictionary format
+                        data_dict = json.load(f)
 
-                    # check if the download is duplicated
-                    # If download item is duplicated, so resume download
-                    # check ETag
-                    if 'ETag' in data_dict:
+                        # check if the download is duplicated
+                        # If download item is duplicated, so resume download
+                        # check ETag
+                        if 'ETag' in data_dict:
 
-                        if data_dict['ETag'] == self.etag:
-                            self.resume = True
+                            if data_dict['ETag'] == self.etag:
+                                self.resume = True
+                            else:
+                                self.resume = False
+
+                        # if ETag is not available, then check file size
+                        elif 'file_size' in data_dict:
+
+                            if data_dict['file_size'] == self.file_size:
+                                self.resume = True
+                            else:
+                                self.resume = False
                         else:
                             self.resume = False
 
-                    # if ETag is not available, then check file size
-                    elif 'file_size' in data_dict:
-
-                        if data_dict['file_size'] == self.file_size:
-                            self.resume = True
-                        else:
-                            self.resume = False
-                    else:
+                    # control file is corrupted.
+                    except Exception:
                         self.resume = False
-
-                # control file is corrupted.
-                except Exception:
-                    self.resume = False
 
         # check if uncomplete download file exists
         if os.path.isfile(self.file_path):

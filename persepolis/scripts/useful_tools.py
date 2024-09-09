@@ -106,6 +106,8 @@ def humanReadableSize(size, input_type='file_size'):
         return round(size, None), labels[i]
 
 # this function converts second to hour and minute
+
+
 def convertTime(time):
     minutes = int(time // 60)
     if minutes == 0:
@@ -518,3 +520,37 @@ def getExecPath():
 def nowDate():
     date = time.strftime("%Y/%m/%d , %H:%M:%S")
     return date
+
+
+def fold(header):
+    line = "%s: %s" % (header[0], header[1])
+    if len(line) < 998:
+        return line
+    # fold
+    else:
+        lines = [line]
+        while len(lines[-1]) > 998:
+            split_this = lines[-1]
+            # find last space in longest chunk admissible
+            split_here = split_this[:998].rfind(" ")
+            del lines[-1]
+            lines = lines + [split_this[:split_here],
+                             split_this[split_here:]]  # this may still be too long
+        # hence the while on lines[-1]
+        return "\n".join(lines)
+
+
+def dictToHeader(data):
+    return "\n".join((fold(header) for header in data.items()))
+
+
+# this method get http header as string and convert it to dictionary
+def headerToDict(headers):
+    dic = {}
+    for line in headers.split("\n"):
+        if line.startswith(("GET", "POST")):
+            continue
+        point_index = line.find(":")
+        dic[line[:point_index].strip()] = line[point_index + 1:].strip()
+
+    return dic

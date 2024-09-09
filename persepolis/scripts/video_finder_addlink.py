@@ -21,7 +21,7 @@ except:
     from PyQt5.QtCore import QThread, QCoreApplication, QTranslator, QLocale
     from PyQt5.QtCore import pyqtSignal as Signal
 
-from persepolis.scripts.useful_tools import determineConfigFolder
+from persepolis.scripts.useful_tools import determineConfigFolder, dictToHeader
 from persepolis.scripts.addlink import AddLinkWindow
 from persepolis.scripts import logger, osCommands
 from persepolis.scripts.spider import spider
@@ -30,7 +30,7 @@ from time import time
 from functools import partial
 from random import random
 from copy import deepcopy
-import requests
+import requests #noqa
 import yt_dlp as youtube_dl
 import re
 import os
@@ -477,6 +477,12 @@ class VideoFinderAddLink(AddLinkWindow):
                     no_audio = False
                     no_video = False
                     text = ''
+
+                    # set http_headers
+                    if 'http_headers' in f.keys():
+                        self.plugin_add_link_dictionary['header'] = dictToHeader(f['http_headers'])
+                        self.header_lineEdit.setText(self.plugin_add_link_dictionary['header'])
+
                     if 'acodec' in f.keys():
                         # only video, no audio
                         if f['acodec'] == 'none':

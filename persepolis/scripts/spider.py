@@ -13,10 +13,8 @@
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from persepolis.scripts.useful_tools import humanReadableSize
-from requests.cookies import cookiejar_from_dict
+from persepolis.scripts.useful_tools import humanReadableSize, headerToDict
 from persepolis.constants import VERSION
-from http.cookies import SimpleCookie
 import requests
 import os
 from pathlib import Path
@@ -105,6 +103,12 @@ def spider(add_link_dictionary):# noqa
         jar = readCookieJar(load_cookies)
         if jar:
             requests_session.cookies = jar
+
+    if header is not None:
+        # convert header to dictionary
+        dict_ = headerToDict(header)
+        # update headers
+        requests_session.headers.update(dict_)
 
     # set referer
     if referer:
