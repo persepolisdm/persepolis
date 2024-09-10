@@ -30,7 +30,6 @@ from time import time
 from functools import partial
 from random import random
 from copy import deepcopy
-import requests #noqa
 import yt_dlp as youtube_dl
 import re
 import os
@@ -196,6 +195,7 @@ class VideoFinderAddLink(AddLinkWindow):
         self.no_audio_list = []
         self.no_video_list = []
         self.video_audio_list = []
+        self.cookie_path = None
 
         self.media_title = ''
 
@@ -393,6 +393,7 @@ class VideoFinderAddLink(AddLinkWindow):
 
     def setLoadCookie(self, str):
         if os.path.isfile(str):
+            self.cookie_path = str
             self.load_cookies_lineEdit.setText(str)
 
     def fileNameChanged(self, value):
@@ -480,7 +481,19 @@ class VideoFinderAddLink(AddLinkWindow):
 
                     # set http_headers
                     if 'http_headers' in f.keys():
-                        self.plugin_add_link_dictionary['header'] = dictToHeader(f['http_headers'])
+                        header_dict = f['http_headers']
+
+                        if 'User-Agent' in header_dict.keys():
+                            self.user_agent_lineEdit.setText(header_dict['User-Agent'])
+                            self.plugin_add_link_dictionary['user-agent'] = header_dict['User-Agent']
+                            header_dict.pop('User-Agent')
+
+                        if 'Referer' in header_dict.keys():
+                            self.referer_lineEdit.setText(header_dict['Referer'])
+                            self.plugin_add_link_dictionary['referer'] = header_dict['Referer']
+                            header_dict.pop('Referer')
+
+                        self.plugin_add_link_dictionary['header'] = dictToHeader(header_dict)
                         self.header_lineEdit.setText(self.plugin_add_link_dictionary['header'])
 
                     if 'acodec' in f.keys():
