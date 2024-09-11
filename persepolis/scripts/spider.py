@@ -19,10 +19,23 @@ import requests
 import os
 from pathlib import Path
 from urllib.parse import urlparse, unquote
+try:
+    from PySide6.QtCore import QSettings
+except:
+    from PyQt5.QtCore import QSettings
 
 
 # for more information about "requests" library , please see
 # http://docs.python-requests.org/en/master/
+
+# load persepolis_settings
+persepolis_setting = QSettings('persepolis_download_manager', 'persepolis')
+# check certificate
+if str(persepolis_setting.value('settings/dont-check-certificate')) == 'yes':
+    check_certificate = False
+else:
+    check_certificate = True
+timeout = int(persepolis_setting.value('settings/timeout'))
 
 
 def getFileNameFromLink(link):
@@ -126,7 +139,7 @@ def spider(add_link_dictionary):# noqa
 
     # find headers
     try:
-        response = requests_session.head(link, timeout=2.50, allow_redirects=True)
+        response = requests_session.head(link, allow_redirects=True, timeout=timeout, verify=check_certificate)
         header = response.headers
     except:
         header = {}
@@ -169,6 +182,7 @@ def spider(add_link_dictionary):# noqa
         file_size_with_unit = 'None'
 
     requests_session.close()
+
     # return results
     return filename, file_size_with_unit
 

@@ -171,15 +171,19 @@ class MediaListFetcherThread(QThread):
 class FileSizeFetcherThread(QThread):
     FOUND = Signal(dict)
 
-    def __init__(self, dictionary, thread_key):
+    def __init__(self, dictionary, text, combobox_type, index):
         super().__init__()
         self.dictionary = dictionary
-        self.key = thread_key
+        self.text = text
+        self.combobox_type = combobox_type
+        self.index = index
 
     def run(self):
         spider_file_size = spider(self.dictionary)[1]
-        self.FOUND.emit({'thread_key': self.key,
-                         'file_size': spider_file_size})
+        self.FOUND.emit({'text': self.text,
+                         'file_size': spider_file_size,
+                         'combobox_type': self.combobox_type,
+                         'index': self.index})
 
 
 class VideoFinderAddLink(AddLinkWindow):
@@ -520,8 +524,9 @@ class VideoFinderAddLink(AddLinkWindow):
                     if 'filesize' in f.keys() and f['filesize']:
                         # Youtube api does not supply file size for some formats, so check it.
                         text = text + ' ' + '{}'.format(self.getReadableSize(f['filesize']))
-
+                        size_available = True
                     else:  # Start spider to find file size
+                        size_available = False
                         input_dict = deepcopy(self.plugin_add_link_dictionary)
 
                         input_dict['link'] = f['url']
@@ -530,24 +535,31 @@ class VideoFinderAddLink(AddLinkWindow):
                         for key in more_options.keys():
                             input_dict[key] = more_options[key]
 
-                        size_fetcher = FileSizeFetcherThread(input_dict, i)
+                    # Add current format to the related comboboxes
+                    if no_audio:
+                        combobox_type = 'video'
+                        self.no_audio_list.append(f)
+                        self.video_format_selection_comboBox.addItem(text)
+                        index = self.video_format_selection_comboBox.count() - 1
+
+                    elif no_video:
+                        combobox_type = 'audio'
+                        self.no_video_list.append(f)
+                        self.audio_format_selection_comboBox.addItem(text)
+                        index = self.audio_format_selection_comboBox.count() - 1
+
+                    else:
+                        combobox_type = 'media'
+                        self.video_audio_list.append(f)
+                        self.media_comboBox.addItem(text)
+                        index = self.media_comboBox.count() - 1
+
+                    if not (size_available):
+                        size_fetcher = FileSizeFetcherThread(input_dict, text, combobox_type, index)
                         self.threadPool[str(i)] = {'thread': size_fetcher, 'item_id': i}
                         self.parent.threadPool.append(size_fetcher)
                         self.parent.threadPool[-1].start()
                         self.parent.threadPool[-1].FOUND.connect(self.findFileSize)
-
-                    # Add current format to the related comboboxes
-                    if no_audio:
-                        self.no_audio_list.append(f)
-                        self.video_format_selection_comboBox.addItem(text)
-
-                    elif no_video:
-                        self.no_video_list.append(f)
-                        self.audio_format_selection_comboBox.addItem(text)
-
-                    else:
-                        self.video_audio_list.append(f)
-                        self.media_comboBox.addItem(text)
 
                     i = i + 1
 
@@ -612,11 +624,16 @@ class VideoFinderAddLink(AddLinkWindow):
 
     def findFileSize(self, result):
         try:
-            item_id = self.threadPool[str(result['thread_key'])]['item_id']
+            index = result['index']
+            text = result['text']
             if result['file_size'] and result['file_size'] != '0':
-                text = self.media_comboBox.itemText(item_id)
-                if text != 'Best quality':
-                    self.media_comboBox.setItemText(item_id, '{} - {}'.format(text, result['file_size']))
+                if result['combobox_type'] == 'audio':
+                    self.audio_format_selection_comboBox.setItemText(index, '{} - {}'.format(text, result['file_size']))
+                elif result['combobox_type'] == 'video':
+                    self.video_format_selection_comboBox.setItemText(index, '{} - {}'.format(text, result['file_size']))
+                else:
+                    self.media_comboBox.setItemText(index, '{} - {}'.format(text, result['file_size']))
+
         except Exception as ex:
             logger.sendToLog(ex, "ERROR")
 
