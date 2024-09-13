@@ -13,10 +13,9 @@
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from persepolis.scripts.useful_tools import humanReadableSize, headerToDict
+from persepolis.scripts.useful_tools import humanReadableSize, headerToDict, readCookieJar
 from persepolis.constants import VERSION
 import requests
-import os
 from pathlib import Path
 from urllib.parse import urlparse, unquote
 try:
@@ -48,26 +47,6 @@ def getFileNameFromLink(link):
         file_name = unquote(file_name)
 
     return file_name
-
-
-def readCookieJar(load_cookies):
-    jar = None
-    if os.path.isfile(load_cookies):
-        # Open cookie file
-        cookies_txt = open(load_cookies, 'r')
-
-        # Initialize RequestsCookieJar
-        jar = requests.cookies.RequestsCookieJar()
-
-        for line in cookies_txt.readlines():
-            words = line.split()
-
-            # Filter out lines that don't contain cookies
-            if (len(words) == 7) and (words[0] != "#"):
-                # Split cookies into the appropriate parameters
-                jar.set(words[5], words[6], domain=words[0], path=words[2])
-
-        return jar
 
 
 # spider function finds name of file and file size from header

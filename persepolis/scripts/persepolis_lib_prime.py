@@ -20,7 +20,7 @@ import random
 import threading
 import os
 import errno
-from persepolis.scripts.useful_tools import convertTime, humanReadableSize, freeSpace, headerToDict
+from persepolis.scripts.useful_tools import convertTime, humanReadableSize, freeSpace, headerToDict, readCookieJar
 from persepolis.scripts.osCommands import makeDirs, moveFile
 from persepolis.scripts import logger
 from persepolis.scripts.bubble import notifySend
@@ -86,25 +86,6 @@ class Download():
 
         self.thread_list = []
 
-    def readCookieJar(self):
-        jar = None
-        if os.path.isfile(self.load_cookies):
-            # Open cookie file
-            cookies_txt = open(self.load_cookies, 'r')
-
-            # Initialize RequestsCookieJar
-            jar = requests.cookies.RequestsCookieJar()
-
-            for line in cookies_txt.readlines():
-                words = line.split()
-
-                # Filter out lines that don't contain cookies
-                if (len(words) == 7) and (words[0] != "#"):
-                    # Split cookies into the appropriate parameters
-                    jar.set(words[5], words[6], domain=words[0], path=words[2])
-
-            return jar
-
     # create requests session
     def createSession(self):
         # define a requests session
@@ -135,7 +116,7 @@ class Download():
 
         # set cookies
         if self.load_cookies:
-            jar = self.readCookieJar()
+            jar = readCookieJar(self.load_cookies)
             if jar:
                 self.requests_session.cookies = jar
 

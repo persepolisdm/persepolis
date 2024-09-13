@@ -153,7 +153,7 @@ parser = argparse.ArgumentParser(description='Persepolis Download Manager')
 parser.add_argument('--link', action='store', nargs=1, help='Download link.(Use "" for links)')
 parser.add_argument('--referer', action='store', nargs=1,
                     help='Set an http referrer (Referer). This affects all http/https downloads.  If * is given, the download URI is also used as the referrer.')
-parser.add_argument('--cookie', action='store', nargs=1, help='Cookie')
+parser.add_argument('--load-cookies', action='store', nargs=1, help='Set cookies file path.')
 parser.add_argument('--agent', action='store', nargs=1,
                     help='Set user agent for HTTP(S) downloads.  Default: aria2/$VERSION, $VERSION is replaced by package version.')
 parser.add_argument('--headers', action='store', nargs=1, help='Append HEADER to HTTP request header. ')
@@ -239,8 +239,8 @@ if args.parent_window or unknownargs:
                     if 'useragent' in item.keys() and item['useragent'] != '':
                         copy_dict['user_agent'] = item['useragent']
 
-                    if 'cookies' in item.keys() and item['cookies'] != '':
-                        copy_dict['load_cookies'] = item['cookies']
+                    if 'load_cookies' in item.keys() and item['load_cookies'] != '':
+                        copy_dict['load_cookies'] = item['load_cookies']
 
                     plugin_list.append(copy_dict)
 
@@ -286,8 +286,8 @@ if args.referer:
 else:
     add_link_dictionary['referer'] = None
 
-if args.cookie:
-    add_link_dictionary['load_cookies'] = "".join(args.cookie)
+if args.load_cookies:
+    add_link_dictionary['load_cookies'] = "".join(args.load_cookies)
 else:
     add_link_dictionary['load_cookies'] = None
 
