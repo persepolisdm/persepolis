@@ -31,13 +31,12 @@ from persepolis.gui import resources
 from persepolis.scripts import spider
 from persepolis.scripts import logger
 from persepolis.scripts import osCommands
-from persepolis.scripts import persepolis_lib_prime
-from persepolis.scripts import ytdlp_downloader
 from persepolis.scripts.bubble import notifySend
 from persepolis.scripts.about import AboutWindow
 from persepolis.scripts.shutdown import shutDown
 from persepolis.scripts.log_window import LogWindow
 from persepolis.scripts.text_queue import TextQueue
+from persepolis.scripts import persepolis_lib_prime
 from persepolis.scripts.addlink import AddLinkWindow
 from persepolis.scripts.progress import ProgressWindow
 from persepolis.scripts.setting import PreferencesWindow
@@ -68,9 +67,8 @@ except:
 global youtube_dl_is_installed
 try:
     from persepolis.scripts.video_finder_addlink import VideoFinderAddLink
+    from persepolis.scripts import ytdlp_downloader
     youtube_dl_is_installed = True
-except Exception as e:
-    print(str(e))
 except ModuleNotFoundError:
     # if youtube_dl module is not installed:
     logger.sendToLog(
