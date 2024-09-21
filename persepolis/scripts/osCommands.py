@@ -29,7 +29,7 @@ def findFileManager():
     pipe = subprocess.check_output(['xdg-mime',
                                     'query',
                                     'default',
-                                    'inode/directory'])
+                                    'inode/directory'], shell=False)
     file_manager = pipe.decode('utf-8').strip().lower()
 
     return file_manager
