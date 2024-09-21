@@ -69,6 +69,8 @@ global youtube_dl_is_installed
 try:
     from persepolis.scripts.video_finder_addlink import VideoFinderAddLink
     youtube_dl_is_installed = True
+except Exception as e:
+    print(str(e))
 except ModuleNotFoundError:
     # if youtube_dl module is not installed:
     logger.sendToLog(

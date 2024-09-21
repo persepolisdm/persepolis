@@ -26,11 +26,12 @@ from persepolis.scripts.addlink import AddLinkWindow
 from persepolis.scripts import logger, osCommands
 from persepolis.scripts.spider import spider
 from persepolis.constants import VERSION
-from time import time
 from functools import partial
+from time import time
 from random import random
 from copy import deepcopy
 import yt_dlp as youtube_dl
+import urllib
 import re
 import os
 
@@ -455,6 +456,12 @@ class VideoFinderAddLink(AddLinkWindow):
         except Exception as ex:
             logger.sendToLog(ex, "ERROR")
 
+    # Return the filename extension from url, or ''.
+    def getFileExtension(self, url):
+        parsed = urllib.parse.urlparse(url)
+        root, ext = os.path.splitext(parsed.path)
+        return ext[1:]
+
     def fetchedResult(self, media_dict): # noqa
 
         self.url_submit_pushButtontton.setEnabled(True)
@@ -560,7 +567,9 @@ class VideoFinderAddLink(AddLinkWindow):
                         self.media_comboBox.addItem(text)
                         index = self.media_comboBox.count() - 1
 
-                    if not (size_available):
+                    url_ext = self.getFileExtension(f['url'])
+                    # we can't get size of file from m3u8 format.
+                    if not (size_available) and url_ext != 'm3u8':
                         size_fetcher = FileSizeFetcherThread(input_dict, text, combobox_type, index)
                         self.threadPool[str(i)] = {'thread': size_fetcher, 'item_id': i}
                         self.parent.threadPool.append(size_fetcher)

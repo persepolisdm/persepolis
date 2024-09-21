@@ -368,7 +368,7 @@ class Ytdp_Download():
         # If the download is not complete and the user has not stopped the download, then the download has encountered an error.
         elif self.download_status != 'stopped':
             self.download_status = 'error'
-            logger.sendToLog('Download Error - GID: ' + self.gid)
+            logger.sendToLog('Download Error - GID: ' + self.gid, 'ERROR')
 
         elif self.download_status == 'stopped':
 
