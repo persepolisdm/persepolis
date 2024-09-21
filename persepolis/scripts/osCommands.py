@@ -56,10 +56,17 @@ def xdgOpen(file_path, f_type='file', path='file'):
     # for linux and bsd
     if os_type in OS.UNIX_LIKE:
 
-        file_manager = findFileManager()
+        try:
+            file_manager = findFileManager()
+            file_manager_found = True
+        except Exception as e:
+            file_manager_found = False
+            from persepolis.scripts import logger
+            logger.sendToLog(str(e), "ERROR")
+
         # check default file manager.
         # some file managers wouldn't support highlighting.
-        if highlight:
+        if highlight and file_manager_found:
 
             # dolphin is kde plasma's file manager
             if 'dolphin' in file_manager:
@@ -121,11 +128,27 @@ def xdgOpen(file_path, f_type='file', path='file'):
 
         else:
 
-            subprocess.Popen(['xdg-open', file_path],
-                             stderr=subprocess.PIPE,
-                             stdout=subprocess.PIPE,
-                             stdin=subprocess.PIPE,
-                             shell=False)
+            if highlight:
+                # find folder path
+                file_name = os.path.basename(str(file_path))
+
+                file_path_split = file_path.split(file_name)
+
+                del file_path_split[-1]
+
+                folder_path = file_name.join(file_path_split)
+
+                subprocess.Popen(['xdg-open', folder_path],
+                                 stderr=subprocess.PIPE,
+                                 stdout=subprocess.PIPE,
+                                 stdin=subprocess.PIPE,
+                                 shell=False)
+            else:
+                subprocess.Popen(['xdg-open', file_path],
+                                 stderr=subprocess.PIPE,
+                                 stdout=subprocess.PIPE,
+                                 stdin=subprocess.PIPE,
+                                 shell=False)
 
     # for Mac OS X
     elif os_type == OS.OSX:
