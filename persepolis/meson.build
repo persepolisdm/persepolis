@@ -53,6 +53,7 @@ scripts_sources = [
   'scripts/log_window.py',
   'scripts/persepolis.py',
   'scripts/setting.py',
+  'scripts/ytdlp_downloader.py',
   ]
 
 python3.install_sources(shell_sources, subdir: 'persepolis')
