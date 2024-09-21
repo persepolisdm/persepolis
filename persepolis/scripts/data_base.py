@@ -87,7 +87,6 @@ class TempDB():
         self.lock = False
 
     # insert new item in queue_db_table
-
     def insertInQueueTable(self, category):
         # lock data base
         self.lockCursor()
@@ -100,7 +99,6 @@ class TempDB():
         self.lock = False
 
     # this method updates single_db_table
-
     def updateSingleTable(self, dict_):
         # lock data base
         self.lockCursor()
@@ -461,6 +459,23 @@ class PersepolisDB():
                                                                                 ON DELETE CASCADE
                                                                                     )""")
 
+        self.persepolis_db_connection.execute("""CREATE TABLE IF NOT EXISTS video_finder_db_table2(
+                                                                                ID INTEGER PRIMARY KEY,
+                                                                                gid TEXT,
+                                                                                download_status TEXT,
+                                                                                file_name TEXT,
+                                                                                eta TEXT,
+                                                                                download_speed_str TEXT,
+                                                                                downloaded_size REAL,
+                                                                                file_size REAL,
+                                                                                download_percent INT,
+                                                                                fragments TEXT,
+                                                                                error_message TEXT,
+                                                                                FOREIGN KEY(gid) REFERENCES download_db_table(gid)
+                                                                                ON DELETE CASCADE
+                                                                                ON UPDATE CASCADE
+                                                                                )""")
+
         self.persepolis_db_connection.commit()
 
         # job is done! open the lock
@@ -669,6 +684,53 @@ class PersepolisDB():
                       'muxing_status': tuple_[5],
                       'checking': tuple_[6],
                       'download_path': tuple_[7]}
+
+        # return the results
+        return dictionary
+
+    def insertInVideoFinderTable2(self, dict_):
+        self.lockCursor()
+        self.persepolis_db_cursor.execute("""INSERT INTO video_finder_db_table2 VALUES(NULL,
+                                                                                :gid,
+                                                                                :download_status,
+                                                                                :file_name,
+                                                                                :eta,
+                                                                                :download_speed_str,
+                                                                                :downloaded_size,
+                                                                                :file_size,
+                                                                                :download_percent,
+                                                                                :fragments,
+                                                                                :error_message
+                                                                                )""", dict_)
+        self.persepolis_db_connection.commit()
+        self.lock = False
+
+    def searchGidInVideoFinderTable2(self, gid):
+        # lock data base
+        self.lockCursor()
+
+        self.persepolis_db_cursor.execute(
+            """SELECT * FROM video_finder_db_table2 WHERE gid = '{}'""".format(str(gid)))
+        result_list = self.persepolis_db_cursor.fetchall()
+
+        # job is done
+        self.lock = False
+
+        if result_list:
+            tuple_ = result_list[0]
+        else:
+            return None
+
+        dictionary = {'gid': tuple_[1],
+                      'download_status': tuple_[2],
+                      'file_name': tuple_[3],
+                      'eta': tuple_[4],
+                      'download_speed_str': tuple_[5],
+                      'downloaded_size': tuple_[6],
+                      'file_size': tuple_[7],
+                      'download_percent': tuple_[8],
+                      'fragments': tuple_[9],
+                      'error_message': tuple_[10]}
 
         # return the results
         return dictionary
@@ -1051,6 +1113,39 @@ class PersepolisDB():
         # job is done! open the lock
         self.lock = False
 
+    def updateVideoFinderTable2(self, dict_):
+        # lock data base
+        self.lockCursor()
+        keys_list = ['gid',
+                     'download_status',
+                     'file_name',
+                     'eta',
+                     'download_speed_str',
+                     'downloaded_size',
+                     'file_size',
+                     'download_percent',
+                     'fragments',
+                     'error_message']
+
+        for key in keys_list:
+            if key not in dict_.keys():
+                dict_[key] = None
+
+        self.persepolis_db_cursor.execute("""UPDATE video_finder_db_table2 SET download_status = coalesce(:download_status, download_status),
+                                                                file_name = coalesce(:file_name, file_name),
+                                                                eta = coalesce(:eta, eta),
+                                                                download_speed_str = coalesce(:download_speed_str, download_speed_str),
+                                                                downloaded_size = coalesce(:downloaded_size, downloaded_size),
+                                                                file_size = coalesce(:file_size, file_size),
+                                                                download_percent = coalesce(:download_percent, download_percent),
+                                                                fragments = coalesce(:fragments, fragments),
+                                                                error_message = coalesce(:error_message, error_message)
+                                                                WHERE gid = :gid""", dict_)
+
+        self.persepolis_db_connection.commit()
+
+        self.lock = False
+
     def setDefaultGidInAddlinkTable(self, gid, start_time=False, end_time=False, after_download=False):
         # lock data base
         self.lockCursor()
@@ -1137,6 +1232,9 @@ class PersepolisDB():
         self.persepolis_db_cursor.execute("""UPDATE category_db_table SET start_time_enable = 'no', end_time_enable = 'no',
                                         reverse = 'no', limit_enable = 'no', after_download = 'no'""")
 
+        # change checking value to no in video_finder_db_table
+        self.persepolis_db_cursor.execute("""UPDATE video_finder_db_table SET checking = 'no'""")
+
         # change status of download to 'stopped' if status isn't 'complete' or 'error'
         self.persepolis_db_cursor.execute("""UPDATE download_db_table SET status = 'stopped'
                                         WHERE status NOT IN ('complete', 'error')""")
@@ -1147,9 +1245,6 @@ class PersepolisDB():
                                                                         end_time = NULL,
                                                                         after_download = NULL
                                                                                         """)
-
-        # change checking value to no in video_finder_db_table
-        self.persepolis_db_cursor.execute("""UPDATE video_finder_db_table SET checking = 'no'""")
 
         self.persepolis_db_connection.commit()
 

@@ -861,7 +861,7 @@ class Download():
 
     # This method returns download status
     def tellStatus(self):
-        downloded_size, downloaded_size_unit = humanReadableSize(self.downloaded_size)
+        downloaded_size, downloaded_size_unit = humanReadableSize(self.downloaded_size)
         if self.file_size:
             file_size, file_size_unit = humanReadableSize(self.file_size)
         else:
@@ -874,7 +874,7 @@ class Download():
             'file_name': self.file_name,
             'status': self.download_status,
             'size': str(file_size) + ' ' + file_size_unit,
-            'downloaded_size': str(downloded_size) + ' ' + downloaded_size_unit,
+            'downloaded_size': str(downloaded_size) + ' ' + downloaded_size_unit,
             'percent': str(self.download_percent) + '%',
             'connections': str(self.number_of_active_connections),
             'rate': self.download_speed_str,

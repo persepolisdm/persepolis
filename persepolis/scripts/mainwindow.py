@@ -32,6 +32,7 @@ from persepolis.scripts import spider
 from persepolis.scripts import logger
 from persepolis.scripts import osCommands
 from persepolis.scripts import persepolis_lib_prime
+from persepolis.scripts import ytdlp_downloader
 from persepolis.scripts.bubble import notifySend
 from persepolis.scripts.about import AboutWindow
 from persepolis.scripts.shutdown import shutDown
@@ -132,7 +133,7 @@ class RemoveItemFromSessionListThread(QThread):
 
 # delete things that are no longer needed
 class DeleteThingsThatAreNoLongerNeededThread(QThread):
-    def __init__(self, gid, file_name, status, category, delete_download_file, main_window):
+    def __init__(self, gid, file_name, status, category, delete_download_file, main_window, video_finder_link):
         QThread.__init__(self)
         self.gid = gid
         self.file_name = file_name
@@ -140,6 +141,7 @@ class DeleteThingsThatAreNoLongerNeededThread(QThread):
         self.category = category
         self.delete_download_file = delete_download_file
         self.main_window = main_window
+        self.video_finder_link = video_finder_link
 
     def run(self):
         # remove it from download_sessions_list
@@ -156,10 +158,16 @@ class DeleteThingsThatAreNoLongerNeededThread(QThread):
                 file_name_path = os.path.join(
                     download_path, str(self.file_name))
 
-                osCommands.remove(file_name_path)  # remove file
+                if self.video_finder_link:
+                    # remove all yt-dlp file
+                    yt_dlp_files_pattern = file_name_path + '*'
+                    for file in glob.glob(yt_dlp_files_pattern):
+                        osCommands.remove(file)
+                else:
+                    osCommands.remove(file_name_path)  # remove file
 
-                json_control_file = file_name_path + str('.persepolis')
-                osCommands.remove(json_control_file)  # remove file.persepolis
+                    json_control_file = file_name_path + str('.persepolis')
+                    osCommands.remove(json_control_file)  # remove file.persepolis
 
             # remove downloaded file, if download is completed
             elif self.status == 'complete' and self.delete_download_file:
@@ -478,7 +486,7 @@ class VideoFinder(QThread):
             if self.video_completed == 'no' and start_time:
 
                 # set start time only for video and cancel start time for audio.
-                # because video will downloaded first and start time must be set for first video! not second one
+                # because video will downloaded first and start time must be set for first link! not second one
                 self.main_window.persepolis_db.setDefaultGidInAddlinkTable(audio_gid, start_time=True)
 
         # update checking status in data base for starting the job!
@@ -496,7 +504,7 @@ class VideoFinder(QThread):
                 # get add_link_dictionary for video
                 add_link_dictionary = self.main_window.persepolis_db.searchGidInAddLinkTable(video_gid)
                 # create download_session
-                video_download_session = persepolis_lib_prime.Download(add_link_dictionary, self.main_window, video_gid)
+                video_download_session = ytdlp_downloader.Ytdp_Download(add_link_dictionary, self.main_window, video_gid)
 
                 # add download_session and gid to download_session_dict
                 download_session_dict = {'gid': video_gid,
@@ -512,7 +520,7 @@ class VideoFinder(QThread):
 
             # check the download status
             # continue loop and check the download status
-            # if checking == 'no' >> problem occurred and downloading canceled.
+            # if checking == 'no' >> problem has been occurred and download has been canceled.
             while self.video_completed != 'yes' and self.checking == 'yes':
 
                 sleep(1)
@@ -536,7 +544,7 @@ class VideoFinder(QThread):
                     # get add_link_dictionary for video
                     add_link_dictionary = self.main_window.persepolis_db.searchGidInAddLinkTable(audio_gid)
                     # create download_session
-                    audio_download_session = persepolis_lib_prime.Download(add_link_dictionary, self.main_window, audio_gid)
+                    audio_download_session = ytdlp_downloader.Ytdp_Download(add_link_dictionary, self.main_window, audio_gid)
 
                     # add download_session and gid to download_session_dict
                     download_session_dict = {'gid': audio_gid,
@@ -546,7 +554,7 @@ class VideoFinder(QThread):
                     self.main_window.download_sessions_list.append(download_session_dict)
 
                     # set speed limitation of video_download_session for audio_download_session
-                    audio_download_session.sleep_for_speed_limiting = video_download_session.sleep_for_speed_limiting
+                    # audio_download_session.sleep_for_speed_limiting = video_download_session.sleep_for_speed_limiting
                     # strat download in thread
                     new_download = DownloadLink(audio_gid, audio_download_session, self.main_window)
                     self.main_window.threadPool.append(new_download)
@@ -562,6 +570,22 @@ class VideoFinder(QThread):
 
         # lets start muxing!
         if self.video_completed == 'yes' and self.audio_completed == 'yes':
+
+            audio_file_exists = False
+            video_file_exists = False
+            # wait until the data_base is updated
+            while not (audio_file_exists) or not (video_file_exists):
+                sleep(0.5)
+                # checking for file existance
+                # find file path
+                video_file_dictionary = self.main_window.persepolis_db.searchGidInAddLinkTable(video_gid)
+                audio_file_dictionary = self.main_window.persepolis_db.searchGidInAddLinkTable(audio_gid)
+
+                # find inputs and output file path for ffmpeg
+                video_file_path = video_file_dictionary['download_path']
+                audio_file_path = audio_file_dictionary['download_path']
+                video_file_exists = os.path.isfile(video_file_path)
+                audio_file_exists = os.path.isfile(audio_file_path)
 
             self.video_finder_dictionary['audio_completed'] = 'yes'
             self.video_finder_dictionary['checking'] = 'no'
@@ -690,10 +714,10 @@ class Queue(QThread):
                         break
 
             for gid in gid_list:
-
                 # if gid is related to video finder, so start  Video Finder thread for checking status
                 # check video_finder_threads_dict, perhaps a thread started before for this gid
                 if (gid in self.main_window.all_video_finder_gid_list):
+                    video_finder_link = True
 
                     video_finder_dictionary = self.main_window.persepolis_db.searchGidInVideoFinderTable(gid)
 
@@ -712,6 +736,8 @@ class Queue(QThread):
                         self.main_window.video_finder_threads_dict[video_finder_dictionary['video_gid']] = new_video_finder
 
                         video_finder_list.append(video_finder_gid_list)
+                else:
+                    video_finder_link = False
 
                 add_link_dict = {'gid': gid}
 
@@ -772,11 +798,15 @@ class Queue(QThread):
                 self.main_window.persepolis_db.updateAddLinkTable([add_link_dict])
                 add_link_dict = self.main_window.persepolis_db.searchGidInAddLinkTable(gid)
 
-                # create download_session
-                download_session = persepolis_lib_prime.Download(add_link_dict, self.main_window, gid)
+                if video_finder_link:
+                    # create video download_session
+                    download_session = ytdlp_downloader.Ytdp_Download(add_link_dict, self.main_window, gid)
+                else:
+                    # create download_session
+                    download_session = persepolis_lib_prime.Download(add_link_dict, self.main_window, gid)
 
-                # check limit speed value
-                download_session.limitSpeed(self.main_window.limit_dial.value())
+                    # check limit speed value
+                    download_session.limitSpeed(self.main_window.limit_dial.value())
 
                 # add download_session and gid to download_session_dict
                 download_session_dict = {'gid': gid,
@@ -1867,8 +1897,12 @@ class MainWindow(MainWindow_Ui):
                 progress_window.time_label.setText(estimate_time_left)
 
                 # Connections
-                connections = QCoreApplication.translate("mainwindow_src_ui_tr", "<b>Connections</b>: ") \
-                    + str(download_status_dict['connections'])
+                if video_finder_link:
+                    connections = QCoreApplication.translate("mainwindow_src_ui_tr", "<b>Fragments</b>: ") \
+                        + str(download_status_dict['connections'])
+                else:
+                    connections = QCoreApplication.translate("mainwindow_src_ui_tr", "<b>Connections</b>: ") \
+                        + str(download_status_dict['connections'])
 
                 progress_window.connections_label.setText(connections)
 
@@ -1911,47 +1945,63 @@ class MainWindow(MainWindow_Ui):
                     progress_window.stop_pushButton.setEnabled(True)
                     progress_window.pause_pushButton.setEnabled(False)
 
-                # it means download has finished!
-                # lets do finishing jobs!
-                elif progress_window.status == "stopped" or progress_window.status == "error" or progress_window.status == "complete":
+                # if download stopped:
+                elif progress_window.status == "stopped":
+                    # write message in log
+                    stop_message = 'Download stopped - GID : '\
+                        + str(gid)
 
-                    # if download stopped:
-                    if progress_window.status == "stopped":
-                        # write message in log
-                        stop_message = 'Download stopped - GID : '\
-                            + str(gid)
+                    logger.sendToLog(stop_message, 'INFO')
 
-                        logger.sendToLog(stop_message, 'INFO')
+                    # show notification
+                    notifySend(QCoreApplication.translate("mainwindow_src_ui_tr", "Download Stopped"),
+                               str(download_status_dict['file_name']), 10000, 'no', parent=self)
 
-                        # show notification
-                        notifySend(QCoreApplication.translate("mainwindow_src_ui_tr", "Download Stopped"),
-                                   str(download_status_dict['file_name']), 10000, 'no', parent=self)
+                    # close progress_window
+                    progress_window.close()
+                    # remove item from download_sessions_list
+                    remove_item_from_session_list_thread = RemoveItemFromSessionListThread(gid, self)
+                    self.threadPool.append(remove_item_from_session_list_thread)
+                    self.threadPool[-1].start()
 
-                    # if download status is error!
-                    elif progress_window.status == "error":
+                    # eliminate window information from progress_window_list_dict
+                    del self.progress_window_list_dict[gid]
 
-                        # get error message from dict
-                        if 'error' in download_status_dict.keys():
-                            error = download_status_dict['error']
-                        else:
-                            error = 'Error'
+                # if download status is error!
+                elif progress_window.status == "error":
 
-                        # write error_message in log file
-                        error_message = 'Download failed - GID : '\
-                            + str(gid)\
-                            + '- Message : '\
-                            + error
+                    # get error message from dict
+                    if 'error' in download_status_dict.keys():
+                        error = download_status_dict['error']
+                    else:
+                        error = 'Error'
 
-                        logger.sendToLog(error_message, 'ERROR')
+                    # write error_message in log file
+                    error_message = 'Download failed - GID : '\
+                        + str(gid)\
+                        + '- Message : '\
+                        + error
 
-                        # show notification
-                        notifySend(QCoreApplication.translate("mainwindow_src_ui_tr", "Error - ") + error, str(download_status_dict['file_name']),
-                                   10000, 'fail', parent=self)
+                    logger.sendToLog(error_message, 'ERROR')
 
+                    # show notification
+                    notifySend(QCoreApplication.translate("mainwindow_src_ui_tr", "Error - ") + error, str(download_status_dict['file_name']),
+                               10000, 'fail', parent=self)
+                    # close progress_window
+                    progress_window.close()
+                    # remove item from download_sessions_list
+                    remove_item_from_session_list_thread = RemoveItemFromSessionListThread(gid, self)
+                    self.threadPool.append(remove_item_from_session_list_thread)
+                    self.threadPool[-1].start()
+
+                    # eliminate window information from progress_window_list_dict
+                    del self.progress_window_list_dict[gid]
+
+                elif progress_window.status == "complete":
                     # close progress_window if download status is stopped or
                     # completed or error
                     # if window is related to video finder and download is completed, don't close window
-                    if (video_finder_link is True and progress_window.status == 'complete'):
+                    if (video_finder_link is True):
 
                         # disable stop and pause and push buttons
                         progress_window.resume_pushButton.setEnabled(False)
@@ -1968,6 +2018,38 @@ class MainWindow(MainWindow_Ui):
 
                         # eliminate window information from progress_window_list_dict
                         del self.progress_window_list_dict[gid]
+
+                        # write message in log file
+                        complete_message = 'Download complete - GID : '\
+                            + str(gid)
+
+                        logger.sendToLog(complete_message, 'INFO')
+
+                        # play notification
+                        notifySend(QCoreApplication.translate("mainwindow_src_ui_tr", "Download Complete"),
+                                   download_status_dict['file_name'], 10000, 'ok', parent=self)
+
+                        # sync persepolis_setting before checking!
+                        self.persepolis_setting.sync()
+
+                        # check user's Preferences
+                        if self.persepolis_setting.value('settings/after-dialog') == 'yes':
+
+                            # show download complete dialog
+                            afterdownloadwindow = AfterDownloadWindow(
+                                self, download_status_dict, self.persepolis_setting)
+
+                            self.afterdownload_list.append(afterdownloadwindow)
+
+                            self.afterdownload_list[-1].show()
+
+                            # bringing AfterDownloadWindow on top
+                            self.afterdownload_list[-1].raise_()
+                            self.afterdownload_list[-1].activateWindow()
+
+                # it means download has finished!
+                # lets do finishing jobs!
+                if progress_window.status == "stopped" or progress_window.status == "error" or progress_window.status == "complete":
 
                     # remove item from download_sessions_list
                     remove_item_from_session_list_thread = RemoveItemFromSessionListThread(gid, self)
@@ -2003,34 +2085,6 @@ class MainWindow(MainWindow_Ui):
                         shutdown_dict = {'gid': gid, 'shutdown': 'shutdown'}
 
                         self.temp_db.updateSingleTable(shutdown_dict)
-
-                    # sync persepolis_setting before checking!
-                    self.persepolis_setting.sync()
-                    if progress_window.status == "complete" and video_finder_link is False:
-                        # write message in log file
-                        complete_message = 'Download complete - GID : '\
-                            + str(gid)
-
-                        logger.sendToLog(complete_message, 'INFO')
-
-                        # play notification
-                        notifySend(QCoreApplication.translate("mainwindow_src_ui_tr", "Download Complete"),
-                                   download_status_dict['file_name'], 10000, 'ok', parent=self)
-
-                        # check user's Preferences
-                        if self.persepolis_setting.value('settings/after-dialog') == 'yes':
-
-                            # show download complete dialog
-                            afterdownloadwindow = AfterDownloadWindow(
-                                self, download_status_dict, self.persepolis_setting)
-
-                            self.afterdownload_list.append(afterdownloadwindow)
-
-                            self.afterdownload_list[-1].show()
-
-                            # bringing AfterDownloadWindow on top
-                            self.afterdownload_list[-1].raise_()
-                            self.afterdownload_list[-1].activateWindow()
 
         # set tooltip for system_tray_icon
         self.system_tray_icon.setToolTip(systemtray_tooltip_text)
@@ -2234,6 +2288,7 @@ class MainWindow(MainWindow_Ui):
 
             # video_finder_widget
             # hide video_finder_widget if selected item is not related to video finder
+            # disable pauseAction for video finder links
             if not (self.multi_items_selected):
 
                 gid = self.download_table.item(selected_row_return, 8).text()
@@ -2242,6 +2297,9 @@ class MainWindow(MainWindow_Ui):
 
                     # show widget
                     self.video_finder_widget.show()
+
+                    # disable pauseAction
+                    self.pauseAction.setEnabled(False)
 
                     # gid is related to audio or video?!
                     if gid in self.all_video_finder_video_gid_list:
@@ -3346,10 +3404,12 @@ class MainWindow(MainWindow_Ui):
             gid = self.download_table.item(row, 8).text()
 
             # check if this link is related to video finder
+            video_finder_link = False
             if gid in self.all_video_finder_gid_list:
 
                 video_finder_dictionary = self.persepolis_db.searchGidInVideoFinderTable(gid)
 
+                video_finder_link = True
                 if gid in self.video_finder_threads_dict.keys():
                     # check the Video Finder tread status
                     video_finder_thread = self.video_finder_threads_dict[video_finder_dictionary['video_gid']]
@@ -3416,7 +3476,7 @@ class MainWindow(MainWindow_Ui):
 
             # remove download files, remove from data_base and remove from download_sessions_list
             delete_download_file = False
-            delete_things_that_are_no_longer_needed_thread = DeleteThingsThatAreNoLongerNeededThread(gid, file_name, status, category, delete_download_file, self)
+            delete_things_that_are_no_longer_needed_thread = DeleteThingsThatAreNoLongerNeededThread(gid, file_name, status, category, delete_download_file, self, video_finder_link)
             self.threadPool.append(delete_things_that_are_no_longer_needed_thread)
             self.threadPool[-1].start()
 
@@ -3496,9 +3556,11 @@ class MainWindow(MainWindow_Ui):
             gid = self.download_table.item(row, 8).text()
 
             # check if this link is related to video finder
+            video_finder_link = False
             if gid in self.all_video_finder_gid_list:
 
                 video_finder_dictionary = self.persepolis_db.searchGidInVideoFinderTable(gid)
+                video_finder_link = True
 
                 if gid in self.video_finder_threads_dict.keys():
 
@@ -3567,7 +3629,7 @@ class MainWindow(MainWindow_Ui):
 
             # remove download files, remove from data_base and remove from download_sessions_list
             delete_download_file = True
-            delete_things_that_are_no_longer_needed_thread = DeleteThingsThatAreNoLongerNeededThread(gid, file_name, status, category, delete_download_file, self)
+            delete_things_that_are_no_longer_needed_thread = DeleteThingsThatAreNoLongerNeededThread(gid, file_name, status, category, delete_download_file, self, video_finder_link)
             self.threadPool.append(delete_things_that_are_no_longer_needed_thread)
             self.threadPool[-1].start()
 
@@ -5558,6 +5620,23 @@ class MainWindow(MainWindow_Ui):
                     item = QTableWidgetItem(i)
                     self.download_table.setItem(0, j, item)
                     j = j + 1
+
+            # create an item in data_base
+            # this item will updated by yt-dlp
+            # and contains download information.
+            video_Finder2_data_base = {'gid': gid,
+                                       'download_status': status,
+                                       'file_name': file_name,
+                                       'eta': '0',
+                                       'download_speed_str': '0',
+                                       'downloaded_size': 0,
+                                       'file_size': 0,
+                                       'download_percent': 0,
+                                       'fragments': '0/0',
+                                       'error_message': ''}
+
+            # write it in data_base
+            self.persepolis_db.insertInVideoFinderTable2(video_Finder2_data_base)
 
         # add video_gid and audio_gid to data base
         dictionary = {'video_gid': add_link_dictionary_list[0]['gid'],

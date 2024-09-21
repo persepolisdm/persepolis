@@ -99,7 +99,6 @@ class ProgressWindow_Ui(QWidget):
         options_tab_horizontalLayout = QHBoxLayout()
 #         options_tab_horizontalLayout.setContentsMargins(11, 11, 11, 11)
 
-
         # limit speed
         limit_verticalLayout = QVBoxLayout()
 
@@ -144,7 +143,6 @@ class ProgressWindow_Ui(QWidget):
         self.after_frame.setFrameShadow(QFrame.Raised)
 
         after_frame_verticalLayout = QVBoxLayout(self.after_frame)
-
 
         # after_comboBox
         self.after_comboBox = QComboBox(self.options_tab)

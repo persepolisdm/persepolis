@@ -101,7 +101,7 @@ def humanReadableSize(size, input_type='file_size'):
 
     if i > 1:
         return round(size, 2), labels[i]
-    elif i == 1:
+    elif i == 1 and input_type == 'speed':
         return round(size, 1), labels[i]
     else:
         return round(size, None), labels[i]
@@ -123,7 +123,6 @@ def convertTime(time):
 
 # this function converts human readable size to byte
 def convertToByte(file_size):
-
     # if unit is not in Byte
     if file_size[-2:] != ' B':
 
@@ -240,7 +239,7 @@ def muxer(parent, video_finder_dictionary):
     audio_file_path = audio_file_dictionary['download_path']
     final_path = video_finder_dictionary['download_path']
 
-    # calculate final file's size
+    # calculate final file size
     video_file_size = parent.persepolis_db.searchGidInDownloadTable(video_finder_dictionary['video_gid'])['size']
     audio_file_size = parent.persepolis_db.searchGidInDownloadTable(video_finder_dictionary['audio_gid'])['size']
 
@@ -313,7 +312,8 @@ def muxer(parent, video_finder_dictionary):
                 result_dictionary['error'] = 'no error'
 
                 result_dictionary['final_path'] = final_path_plus_name
-                result_dictionary['final_size'] = humanReadableSize(final_file_size)
+                file_size, file_size_unit = humanReadableSize(final_file_size)
+                result_dictionary['final_size'] = str(file_size) + ' ' + str(file_size_unit)
 
             else:
                 result_dictionary['error'] = 'ffmpeg error'

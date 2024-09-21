@@ -468,7 +468,13 @@ class VideoFinderAddLink(AddLinkWindow):
             self.video_format_selection_comboBox.addItem('No video')
             self.audio_format_selection_comboBox.addItem('No audio')
 
-            self.media_title = media_dict['title']
+            # set first 20 characters of media_title for file name
+            if 'title' in media_dict.keys():
+                if len(media_dict['title']) > 20:
+                    self.media_title = media_dict['title'][0:20]
+            else:
+                self.media_title = 'Video finder'
+
             if 'formats' not in media_dict.keys() and 'entries' in media_dict.keys():
                 formats = media_dict['entries']
                 formats = formats[0]
@@ -591,6 +597,7 @@ class VideoFinderAddLink(AddLinkWindow):
                 # video and audio are not separate
                 elif len(self.video_audio_list) != 0:
                     self.media_comboBox.setCurrentIndex(len(self.video_audio_list) - 1)
+                    self.mediaSelectionChanged('video_audio', int(self.media_comboBox.currentIndex()))
 
                 if len(self.no_audio_list) != 0:
                     self.video_format_selection_comboBox.setCurrentIndex(len(self.no_audio_list))

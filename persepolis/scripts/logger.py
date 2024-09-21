@@ -55,5 +55,7 @@ def sendToLog(text="", type="INFO"):
         logObj.info(text)
     elif type == "ERROR":
         logObj.error(text)
+    elif type == 'DEBUG':
+        logObj.debug(text)
     else:
         logObj.warning(text)
