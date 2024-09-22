@@ -188,6 +188,7 @@ class AddLinkWindow(AddLinkWindow_Ui):
         self.change_name_lineEdit.setEnabled(False)
         self.change_name_checkBox.toggled.connect(self.changeName)
 
+        self.add_link_tabWidget.currentChanged.connect(self.currentTabChanged)
         # set focus to ok button
         self.ok_pushButton.setFocus()
 
@@ -214,8 +215,7 @@ class AddLinkWindow(AddLinkWindow_Ui):
         if ('load_cookies' in self.plugin_add_link_dictionary):
             self.load_cookies_lineEdit.setText((self.plugin_add_link_dictionary['load_cookies']))
 
-
-# set window size and position
+        # set window size and position
         size = self.persepolis_setting.value(
             'AddLinkWindow/size', QSize(652, 480))
         position = self.persepolis_setting.value(
@@ -223,7 +223,13 @@ class AddLinkWindow(AddLinkWindow_Ui):
         self.resize(size)
         self.move(position)
 
-# detect system proxy setting, and set ip_lineEdit and port_spinBox
+    # if user clicked on link_tab so send spider again
+    # perhaps proxy or user password , ... set!
+    def currentTabChanged(self, index):
+        if index == 0:
+            self.linkLineChanged(index)
+
+    # detect system proxy setting, and set ip_lineEdit and port_spinBox
     def detectProxy(self, button):
         # get system proxy information
         system_proxy_dict = getProxy()
@@ -248,7 +254,7 @@ class AddLinkWindow(AddLinkWindow_Ui):
             self.proxy_checkBox.setChecked(False)
             self.detect_proxy_label.setText('No proxy detected!')
 
-# active frames if checkBoxes are checked
+    # active frames if checkBoxes are checked
     def proxyFrame(self, checkBox):
 
         if self.proxy_checkBox.isChecked() is True:
@@ -294,14 +300,33 @@ class AddLinkWindow(AddLinkWindow_Ui):
         if os.path.isdir(fname):
             self.download_folder_lineEdit.setText(fname)
 
-# enable when link_lineEdit is not empty and find size of file.
+    # enable when link_lineEdit is not empty and find size of file.
     def linkLineChanged(self, lineEdit):
         if str(self.link_lineEdit.text()) == '':
             self.ok_pushButton.setEnabled(False)
             self.download_later_pushButton.setEnabled(False)
         else:  # find file size
+            # get proxy information
+            ip, port, proxy_user, proxy_passwd, proxy_type = self.getProxyInformation()
 
-            dict = {'link': str(self.link_lineEdit.text())}
+            # get download username and password information
+            download_user, download_passwd = self.getUserPass()
+
+            # get additinal information
+            referer, header, user_agent, load_cookies = self.getAdditionalInformation()
+
+            dict = {'link': str(self.link_lineEdit.text()),
+                    'ip': ip,
+                    'port': port,
+                    'proxy_user': proxy_user,
+                    'proxy_passwd': proxy_passwd,
+                    'proxy_type': proxy_type,
+                    'download_user': download_user,
+                    'download_passwd': download_passwd,
+                    'referer': referer,
+                    'header': header,
+                    'user_agent': user_agent,
+                    'load_cookies': load_cookies}
 
             # spider is finding file size
             new_spider = AddLinkSpiderThread(dict)
@@ -313,7 +338,7 @@ class AddLinkWindow(AddLinkWindow_Ui):
             self.ok_pushButton.setEnabled(True)
             self.download_later_pushButton.setEnabled(True)
 
-# enable change_name_lineEdit if change_name_checkBox is checked.
+    # enable change_name_lineEdit if change_name_checkBox is checked.
     def changeName(self, checkBoxes):
         if self.change_name_checkBox.isChecked() is True:
             self.change_name_lineEdit.setEnabled(True)
@@ -334,43 +359,20 @@ class AddLinkWindow(AddLinkWindow_Ui):
             self.start_checkBox.setEnabled(True)
             self.end_checkBox.setEnabled(True)
 
-    def okButtonPressed(self, download_later, button=None):
-        # user submitted information by pressing ok_pushButton, so get information
-        # from AddLinkWindow and return them to the mainwindow with callback!
-
-        # write user's new inputs in persepolis_setting for next time :)
-        self.persepolis_setting.setValue(
-            'add_link_initialization/ip', self.ip_lineEdit.text())
-        self.persepolis_setting.setValue(
-            'add_link_initialization/port', self.port_spinBox.value())
-        self.persepolis_setting.setValue(
-            'add_link_initialization/proxy_user', self.proxy_user_lineEdit.text())
-        self.persepolis_setting.setValue(
-            'add_link_initialization/download_user', self.download_user_lineEdit.text())
-
+    # this method returns proxy information.
+    def getProxyInformation(self):
         # http, https or socks5 proxy
         if self.http_radioButton.isChecked() is True:
 
             proxy_type = 'http'
-            self.persepolis_setting.setValue(
-                'add_link_initialization/proxy_type', 'http')
 
         elif self.https_radioButton.isChecked() is True:
 
             proxy_type = 'https'
-            self.persepolis_setting.setValue(
-                'add_link_initialization/proxy_type', 'https')
 
         else:
 
             proxy_type = 'socks5'
-            self.persepolis_setting.setValue(
-                'add_link_initialization/proxy_type', 'socks5')
-
-        # Check 'Remember path' and change default path if needed
-        if self.folder_checkBox.isChecked() is True:
-            self.persepolis_setting.setValue(
-                'settings/download_path', self.download_folder_lineEdit.text())
 
         # get proxy information
         if not (self.proxy_checkBox.isChecked()):
@@ -396,6 +398,9 @@ class AddLinkWindow(AddLinkWindow_Ui):
             if not (proxy_passwd):
                 proxy_passwd = None
 
+        return ip, port, proxy_user, proxy_passwd, proxy_type
+
+    def getUserPass(self):
         # get download username and password information
         if not (self.download_checkBox.isChecked()):
             download_user = None
@@ -407,6 +412,57 @@ class AddLinkWindow(AddLinkWindow_Ui):
             download_passwd = self.download_pass_lineEdit.text()
             if not (download_passwd):
                 download_passwd = None
+
+        return download_user, download_passwd
+
+    def getAdditionalInformation(self):
+        # referer
+        if self.referer_lineEdit.text() != '':
+            referer = self.referer_lineEdit.text()
+        else:
+            referer = None
+
+        # header
+        if self.header_lineEdit.text() != '':
+            header = self.header_lineEdit.text()
+        else:
+            header = None
+
+        # user_agent
+        if self.user_agent_lineEdit.text() != '':
+            user_agent = self.user_agent_lineEdit.text()
+        else:
+            user_agent = None
+
+        # load_cookies
+        if self.load_cookies_lineEdit.text() != '':
+            load_cookies = self.load_cookies_lineEdit.text()
+        else:
+            load_cookies = None
+
+        return referer, header, user_agent, load_cookies
+
+    def okButtonPressed(self, download_later, button=None):
+        # user submitted information by pressing ok_pushButton, so get information
+        # from AddLinkWindow and return them to the mainwindow with callback!
+
+        # write user's new inputs in persepolis_setting for next time :)
+        self.persepolis_setting.setValue(
+            'add_link_initialization/ip', self.ip_lineEdit.text())
+        self.persepolis_setting.setValue(
+            'add_link_initialization/port', self.port_spinBox.value())
+        self.persepolis_setting.setValue(
+            'add_link_initialization/proxy_user', self.proxy_user_lineEdit.text())
+        self.persepolis_setting.setValue(
+            'add_link_initialization/download_user', self.download_user_lineEdit.text())
+
+        # get proxy information
+        ip, port, proxy_user, proxy_passwd, proxy_type = self.getProxyInformation()
+        if proxy_type is not None:
+            self.persepolis_setting.setValue('add_link_initialization/proxy_type', proxy_type)
+
+        # get download username and password information
+        download_user, download_passwd = self.getUserPass()
 
         # get start time for download if user set that.
         if not (self.start_checkBox.isChecked()):
@@ -436,29 +492,9 @@ class AddLinkWindow(AddLinkWindow_Ui):
         # get download_path
         download_path = self.download_folder_lineEdit.text()
 
-        # referer
-        if self.referer_lineEdit.text() != '':
-            referer = self.referer_lineEdit.text()
-        else:
-            referer = None
+        # get additinal information
+        referer, header, user_agent, load_cookies = self.getAdditionalInformation()
 
-        # header
-        if self.header_lineEdit.text() != '':
-            header = self.header_lineEdit.text()
-        else:
-            header = None
-
-        # user_agent
-        if self.user_agent_lineEdit.text() != '':
-            user_agent = self.user_agent_lineEdit.text()
-        else:
-            user_agent = None
-
-        # load_cookies
-        if self.load_cookies_lineEdit.text() != '':
-            load_cookies = self.load_cookies_lineEdit.text()
-        else:
-            load_cookies = None
         # save information in a dictionary(add_link_dictionary).
         self.add_link_dictionary = {'referer': referer, 'header': header, 'user_agent': user_agent, 'load_cookies': load_cookies,
                                     'out': out, 'start_time': start_time, 'end_time': end_time, 'link': link, 'ip': ip,
