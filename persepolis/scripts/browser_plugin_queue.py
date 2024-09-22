@@ -36,13 +36,13 @@ import os
 class QueueSpiderThread(QThread):
     QUEUESPIDERRETURNEDFILENAME = Signal(str)
 
-    def __init__(self, dict):
+    def __init__(self, dict_):
         QThread.__init__(self)
-        self.dict = dict
+        self.dict_ = dict_
 
     def run(self):
         try:
-            filename = spider.queueSpider(self.dict)
+            filename = spider.queueSpider(self.dict_)
             if filename:
                 self.QUEUESPIDERRETURNEDFILENAME.emit(filename)
             else:
@@ -72,14 +72,14 @@ class BrowserPluginQueue(TextQueue_Ui):
         self.list_of_links.reverse()
 
         k = 1
-        for dict in self.list_of_links:
+        for dict_ in self.list_of_links:
             # add row to the links_table
             self.links_table.insertRow(0)
 
             # file_name
-            if 'out' in dict:
-                if dict['out']:
-                    file_name = dict['out']
+            if 'out' in dict_:
+                if dict_['out']:
+                    file_name = dict_['out']
                 else:
                     file_name = '***'
             else:
@@ -87,7 +87,7 @@ class BrowserPluginQueue(TextQueue_Ui):
 
             if file_name == '***':
                 # spider finds file name
-                new_spider = QueueSpiderThread(dict)
+                new_spider = QueueSpiderThread(dict_)
                 self.parent.threadPool.append(new_spider)
                 self.parent.threadPool[-1].start()
                 self.parent.threadPool[-1].QUEUESPIDERRETURNEDFILENAME.connect(
@@ -104,7 +104,7 @@ class BrowserPluginQueue(TextQueue_Ui):
             self.links_table.setItem(0, 0, item)
 
             # find link
-            link = dict['link']
+            link = dict_['link']
             item = QTableWidgetItem(str(link))
 
             # insert link
@@ -192,6 +192,8 @@ class BrowserPluginQueue(TextQueue_Ui):
         self.download_frame.setEnabled(False)
         self.download_checkBox.toggled.connect(self.downloadFrame)
 
+        self.queue_tabWidget.currentChanged.connect(self.currentTabChanged)
+
         # set focus to ok button
         self.ok_pushButton.setFocus()
 
@@ -204,6 +206,44 @@ class BrowserPluginQueue(TextQueue_Ui):
             'TextQueue/position', QPoint(300, 300))
         self.resize(size)
         self.move(position)
+
+    # if user clicked on link_tab so send spider again
+    # perhaps proxy or user password , ... set!
+    def currentTabChanged(self, index):
+        if index == 0:
+            # get proxy information
+            ip, port, proxy_user, proxy_passwd, proxy_type = self.getProxyInformation()
+
+            # get download username and password information
+            download_user, download_passwd = self.getUserPass()
+
+            k = 1
+            for dict_ in self.list_of_links:
+                # file_name
+                if 'out' in dict_.keys():
+                    if dict_['out']:
+                        file_name = dict_['out']
+                    else:
+                        file_name = '***'
+                else:
+                    file_name = '***'
+
+                if file_name == '***':
+                    dict_['ip'] = ip
+                    dict_['port'] = port
+                    dict_['proxy_user'] = proxy_user
+                    dict_['proxy_passwd'] = proxy_passwd
+                    dict_['proxy_type'] = proxy_type
+                    dict_['download_user'] = download_user
+                    dict_['download_passwd'] = download_passwd
+
+                    # spider finds file name
+                    new_spider = QueueSpiderThread(dict_)
+                    self.parent.threadPool.append(new_spider)
+                    self.parent.threadPool[-1].start()
+                    self.parent.threadPool[-1].QUEUESPIDERRETURNEDFILENAME.connect(
+                        partial(self.parent.queueSpiderCallBack, child=self, row_number=len(self.list_of_links) - k))
+                k = k + 1
 
     # this method selects all links in links_table
     def selectAll(self, button):
@@ -271,6 +311,62 @@ class BrowserPluginQueue(TextQueue_Ui):
         if os.path.isdir(fname):
             self.download_folder_lineEdit.setText(fname)
 
+    # this method returns proxy information.
+    def getProxyInformation(self):
+        # http, https or socks5 proxy
+        if self.http_radioButton.isChecked() is True:
+
+            proxy_type = 'http'
+
+        elif self.https_radioButton.isChecked() is True:
+
+            proxy_type = 'https'
+
+        else:
+
+            proxy_type = 'socks5'
+
+        # get proxy information
+        if not (self.proxy_checkBox.isChecked()):
+            ip = None
+            port = None
+            proxy_user = None
+            proxy_passwd = None
+            proxy_type = None
+        else:
+            ip = self.ip_lineEdit.text()
+            if not (ip):
+                ip = None
+
+            port = self.port_spinBox.value()
+            if not (port):
+                port = None
+
+            proxy_user = self.proxy_user_lineEdit.text()
+            if not (proxy_user):
+                proxy_user = None
+
+            proxy_passwd = self.proxy_pass_lineEdit.text()
+            if not (proxy_passwd):
+                proxy_passwd = None
+
+        return ip, port, proxy_user, proxy_passwd, proxy_type
+
+    def getUserPass(self):
+        # get download username and password information
+        if not (self.download_checkBox.isChecked()):
+            download_user = None
+            download_passwd = None
+        else:
+            download_user = self.download_user_lineEdit.text()
+            if not (download_user):
+                download_user = None
+            download_passwd = self.download_pass_lineEdit.text()
+            if not (download_passwd):
+                download_passwd = None
+
+        return download_user, download_passwd
+
     def okButtonPressed(self, button):
         # write user's input data to init file
         self.persepolis_setting.setValue(
@@ -282,55 +378,13 @@ class BrowserPluginQueue(TextQueue_Ui):
         self.persepolis_setting.setValue(
             'add_link_initialization/download_user', self.download_user_lineEdit.text())
 
-        # http, https or socks5 proxy
-        if self.http_radioButton.isChecked() is True:
+        # get proxy information
+        ip, port, proxy_user, proxy_passwd, proxy_type = self.getProxyInformation()
+        if proxy_type is not None:
+            self.persepolis_setting.setValue('add_link_initialization/proxy_type', proxy_type)
 
-            proxy_type = 'http'
-            self.persepolis_setting.setValue(
-                'add_link_initialization/proxy_type', 'http')
-
-        elif self.https_radioButton.isChecked() is True:
-
-            proxy_type = 'https'
-            self.persepolis_setting.setValue(
-                'add_link_initialization/proxy_type', 'https')
-
-        else:
-
-            proxy_type = 'socks5'
-            self.persepolis_setting.setValue(
-                'add_link_initialization/proxy_type', 'socks5')
-
-        if not (self.proxy_checkBox.isChecked()):
-            ip = None
-            port = None
-            proxy_user = None
-            proxy_passwd = None
-            proxy_type = None
-        else:
-            ip = self.ip_lineEdit.text()
-            if not (ip):
-                ip = None
-            port = self.port_spinBox.value()
-            if not (port):
-                port = None
-            proxy_user = self.proxy_user_lineEdit.text()
-            if not (proxy_user):
-                proxy_user = None
-            proxy_passwd = self.proxy_pass_lineEdit.text()
-            if not (proxy_passwd):
-                proxy_passwd = None
-
-        if not (self.download_checkBox.isChecked()):
-            download_user = None
-            download_passwd = None
-        else:
-            download_user = self.download_user_lineEdit.text()
-            if not (download_user):
-                download_user = None
-            download_passwd = self.download_pass_lineEdit.text()
-            if not (download_passwd):
-                download_passwd = None
+        # get download username and password information
+        download_user, download_passwd = self.getUserPass()
 
         category = str(self.add_queue_comboBox.currentText())
 
