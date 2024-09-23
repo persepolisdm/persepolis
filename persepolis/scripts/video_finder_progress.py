@@ -44,7 +44,7 @@ class ShutDownThread(QThread):
 
 class VideoFinderProgressWindow(VideoFinderProgressWindow_Ui):
     def __init__(self, parent, gid_list, persepolis_setting):
-        super().__init__(persepolis_setting)
+        super().__init__(persepolis_setting, parent)
         self.persepolis_setting = persepolis_setting
         self.main_window = parent
 

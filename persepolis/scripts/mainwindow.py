@@ -1917,7 +1917,7 @@ class MainWindow(MainWindow_Ui):
                     value = int(value[:-1])
                 except:
                     value = 0
-                progress_window.download_progressBar.setValue(value)
+                progress_window.download_progressBar.setValueSmoothly(value)
 
                 # status
                 progress_window.status = str(download_status_dict['status'])
@@ -5416,7 +5416,11 @@ class MainWindow(MainWindow_Ui):
 
         if file_size:
             file_size = 'Size: ' + str(file_size)
-            child.size_label.setText(file_size)
+            if child.size_label.text() == 'None' or child.size_label.text() == '':
+                child.size_label.setText(file_size)
+            else:
+                # It's updated before! dont change it.
+                return
 
         if file_name and not (child.change_name_checkBox.isChecked()):
             child.change_name_lineEdit.setText(file_name)

@@ -25,8 +25,8 @@ except:
 
 
 class VideoFinderProgressWindow_Ui(ProgressWindow_Ui):
-    def __init__(self, persepolis_setting):
-        super().__init__(persepolis_setting)
+    def __init__(self, persepolis_setting, parent):
+        super().__init__(persepolis_setting, parent)
 
         # status_tab
         self.status_tab = QWidget()

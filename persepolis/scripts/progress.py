@@ -45,7 +45,7 @@ class ShutDownThread(QThread):
 
 class ProgressWindow(ProgressWindow_Ui):
     def __init__(self, parent, gid, persepolis_setting):
-        super().__init__(persepolis_setting)
+        super().__init__(persepolis_setting, parent)
         self.persepolis_setting = persepolis_setting
         self.main_window = parent
         self.gid = gid

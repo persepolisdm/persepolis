@@ -17,18 +17,65 @@
 
 try:
     from PySide6.QtWidgets import QDial, QCheckBox, QProgressBar, QFrame, QComboBox, QWidget, QTabWidget, QVBoxLayout, QHBoxLayout, QPushButton, QLabel
-    from PySide6.QtCore import Qt, QTranslator, QCoreApplication, QLocale, QSize
+    from PySide6.QtCore import Qt, QTranslator, QCoreApplication, QLocale, QSize, QThread, Signal
     from PySide6.QtGui import QIcon
 except:
     from PyQt5.QtWidgets import QDial, QCheckBox, QProgressBar, QFrame, QComboBox, QWidget, QTabWidget, QVBoxLayout, QHBoxLayout, QPushButton, QLabel
-    from PyQt5.QtCore import Qt, QTranslator, QCoreApplication, QLocale, QSize
+    from PyQt5.QtCore import Qt, QTranslator, QCoreApplication, QLocale, QSize, QThread
+    from PyQt5.QtCore import pyqtSignal as Signal
     from PyQt5.QtGui import QIcon
 
 from persepolis.gui import resources
+import time
+
+
+class UpdateProgressBarThread(QThread):
+    UPDATEPROGRESSBAR = Signal(int)
+
+    def __init__(self, parent, new_value):
+        QThread.__init__(self)
+        self.new_value = new_value
+        self.parent = parent
+
+    def run(self):
+        dif = self.new_value - self.parent.value()
+        while self.parent.value() != self.new_value and not (self.parent.finished):
+            if dif < 0:
+                self.UPDATEPROGRESSBAR.emit((self.parent.value() - 1))
+
+                time.sleep(0.5 / (dif * -1))
+            elif dif > 0:
+                self.UPDATEPROGRESSBAR.emit((self.parent.value() + 1))
+                time.sleep(0.5 / dif)
+
+        self.parent.update_lock = False
+
+
+# This widget updated more smoothly than QProgressBar
+class MyProgressBar(QProgressBar):
+    def __init__(self, main_window):
+        super().__init__()
+        self.setValue(0)
+        self.setMaximum(100)
+        self.update_lock = False
+        self.main_window = main_window
+        self.finished = False
+
+    def setValueSmoothly(self, new_value):
+        if self.update_lock:
+            return
+        self.update_lock = True
+        update_progress_bar = UpdateProgressBarThread(self, new_value)
+        update_progress_bar.UPDATEPROGRESSBAR.connect(self.setValueSmoothly2)
+        self.main_window.threadPool.append(update_progress_bar)
+        self.main_window.threadPool[-1].start()
+
+    def setValueSmoothly2(self, value):
+        self.setValue(value)
 
 
 class ProgressWindow_Ui(QWidget):
-    def __init__(self, persepolis_setting):
+    def __init__(self, persepolis_setting, parent):
         super().__init__()
         self.persepolis_setting = persepolis_setting
         icons = ':/' + str(persepolis_setting.value('settings/icons')) + '/'
@@ -163,9 +210,8 @@ class ProgressWindow_Ui(QWidget):
 
         verticalLayout.addWidget(self.progress_tabWidget)
 
-
         # download_progressBar
-        self.download_progressBar = QProgressBar(self)
+        self.download_progressBar = MyProgressBar(parent)
         verticalLayout.addWidget(self.download_progressBar)
         self.download_progressBar.setTextVisible(True)
         # changing the alignment of progress bar
