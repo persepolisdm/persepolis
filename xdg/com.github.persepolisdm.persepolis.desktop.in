@@ -1,9 +1,10 @@
 [Desktop Entry]
 Actions=Open;Tray;
 Categories=Qt;Network;
-Comment[en_US]=Download Manager
-Comment=Download Manager
-Comment[ko]=다운로드 관리자
+Comment[en_US]=A download manager written in Python
+Comment=A download manager written in Python
+Comment[fa]=نرم افزار مدیریت بارگیری نوشته شده با پایتون
+Comment[ko]=Python으로 작성된 다운로드 관리자
 Exec=persepolis
 GenericName[en_US]=Download Manager
 GenericName=Download Manager
