@@ -39,14 +39,14 @@ class UpdateProgressBarThread(QThread):
 
     def run(self):
         dif = self.new_value - self.parent.value()
-        while self.parent.value() != self.new_value and not (self.parent.finished):
+        while self.parent.value() != self.new_value:
             if dif < 0:
                 self.UPDATEPROGRESSBAR.emit((self.parent.value() - 1))
 
-                time.sleep(0.5 / (dif * -1))
+                time.sleep(0.1 / (dif * -1))
             elif dif > 0:
                 self.UPDATEPROGRESSBAR.emit((self.parent.value() + 1))
-                time.sleep(0.5 / dif)
+                time.sleep(0.1 / dif)
 
         self.parent.update_lock = False
 
@@ -59,9 +59,11 @@ class MyProgressBar(QProgressBar):
         self.setMaximum(100)
         self.update_lock = False
         self.main_window = main_window
-        self.finished = False
 
     def setValueSmoothly(self, new_value):
+        if new_value == 100:
+            self.setValue(100)
+            return
         if self.update_lock:
             return
         self.update_lock = True

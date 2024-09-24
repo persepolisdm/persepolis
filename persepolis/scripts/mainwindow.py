@@ -1917,6 +1917,7 @@ class MainWindow(MainWindow_Ui):
                     value = int(value[:-1])
                 except:
                     value = 0
+
                 progress_window.download_progressBar.setValueSmoothly(value)
 
                 # status
