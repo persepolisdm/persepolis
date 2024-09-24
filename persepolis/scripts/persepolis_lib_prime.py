@@ -189,7 +189,6 @@ class Download():
         # set default file name
         # get file_name from link
         self.file_name = getFileNameFromLink(self.link)
-        print(self.file_name)
 
         # check if user set file name or not
         if self.name:
