@@ -13,11 +13,9 @@
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from persepolis.scripts.useful_tools import humanReadableSize, headerToDict, readCookieJar
+from persepolis.scripts.useful_tools import humanReadableSize, headerToDict, readCookieJar, getFileNameFromLink
 from persepolis.constants import VERSION
 import requests
-from pathlib import Path
-from urllib.parse import urlparse, unquote
 try:
     from PySide6.QtCore import QSettings
 except:
@@ -35,18 +33,6 @@ if str(persepolis_setting.value('settings/dont-check-certificate')) == 'yes':
 else:
     check_certificate = True
 timeout = int(persepolis_setting.value('settings/timeout'))
-
-
-def getFileNameFromLink(link):
-    parsed_linkd = urlparse(link)
-    file_name = Path(parsed_linkd.path).name
-
-    # URL might contain percent-encoded characters
-    # for example farsi characters in link
-    if file_name.find('%'):
-        file_name = unquote(file_name)
-
-    return file_name
 
 
 # spider function finds name of file and file size from header

@@ -14,6 +14,7 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from persepolis.constants.Os import OS
+from pathlib import Path
 import urllib.parse
 import subprocess
 import requests
@@ -575,3 +576,11 @@ def readCookieJar(load_cookies):
                 jar.set(words[5], words[6], domain=words[0], path=words[2])
 
         return jar
+
+
+def getFileNameFromLink(link):
+    link = requests.utils.unquote(link)
+    parsed_linkd = urllib.parse.urlparse(link)
+    file_name = Path(parsed_linkd.path).name
+
+    return file_name

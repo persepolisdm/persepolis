@@ -20,14 +20,12 @@ import random
 import threading
 import os
 import errno
-from persepolis.scripts.useful_tools import convertTime, humanReadableSize, freeSpace, headerToDict, readCookieJar
+from persepolis.scripts.useful_tools import convertTime, humanReadableSize, freeSpace, headerToDict, readCookieJar, getFileNameFromLink
 from persepolis.scripts.osCommands import makeDirs, moveFile
 from persepolis.scripts import logger
 from persepolis.scripts.bubble import notifySend
 from persepolis.constants import VERSION
 import json
-from urllib.parse import urlparse, unquote
-from pathlib import Path
 from requests.adapters import HTTPAdapter
 from urllib3.util.retry import Retry
 
@@ -189,13 +187,9 @@ class Download():
     # if file name is not available, then set a file name
     def getFileName(self):
         # set default file name
-        parsed_linkd = urlparse(self.link)
-        self.file_name = Path(parsed_linkd.path).name
-
-        # URL might contain percent-encoded characters
-        # for example farsi characters in link
-        if self.file_name.find('%'):
-            self.file_name = unquote(self.file_name)
+        # get file_name from link
+        self.file_name = getFileNameFromLink(self.link)
+        print(self.file_name)
 
         # check if user set file name or not
         if self.name:
