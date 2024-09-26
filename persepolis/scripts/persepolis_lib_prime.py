@@ -518,7 +518,7 @@ class Download():
                                                  * self.python_request_chunk_size)
                     for data in response.iter_content(
                             chunk_size=python_request_chunk_size):
-                        if self.download_status == 'downloading':
+                        if self.download_status == 'downloading' or self.download_status == 'paused':
                             fp.write(data)
 
                             # maybe the last chunk is less than default chunk size
@@ -555,10 +555,10 @@ class Download():
                             # receiving loop, which reduces the download speed.
                             time.sleep(self.sleep_for_speed_limiting)
 
-                        elif self.download_status == 'paused':
-                            # wait for unpausing
-                            while self.download_status == 'paused':
-                                time.sleep(0.2)
+                            if self.download_status == 'paused':
+                                # wait for unpausing
+                                while self.download_status == 'paused':
+                                    time.sleep(0.2)
 
                         else:
                             self.download_infromation_list[part_number][2] = 'stopped'

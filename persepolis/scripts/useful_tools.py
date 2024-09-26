@@ -578,6 +578,7 @@ def readCookieJar(load_cookies):
         return jar
 
 
+# get file name from link string
 def getFileNameFromLink(link):
     link = requests.utils.unquote(link)
     parsed_linkd = urllib.parse.urlparse(link)
