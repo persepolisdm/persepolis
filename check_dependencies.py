@@ -63,6 +63,15 @@ except:
     print("Warning: setproctitle is not installed!")
     not_installed = not_installed + 'python3-setproctitle, '
 
+# python3-PySocks
+try:
+    import socks
+    print('python3-pysocks is found!')
+except:
+    print("Warning: python3-pysocks is not installed!")
+    not_installed = not_installed + 'python3-pysocks, '
+
+
 # psutil
 try:
     import psutil

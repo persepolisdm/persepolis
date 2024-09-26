@@ -14,4 +14,4 @@
 #
 
 class VERSION:
-    version_str = '5.0.0'
+    version_str = '5.0.1'

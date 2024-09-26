@@ -23,7 +23,6 @@ except:
     from PyQt5.QtCore import Qt, QSize, QTranslator, QCoreApplication, QLocale
     from PyQt5.QtGui import QIcon, QFont
     pyside6_is_installed = False
-
 from persepolis.gui import resources
 from persepolis.constants import VERSION
 

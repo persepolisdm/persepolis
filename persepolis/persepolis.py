@@ -18,7 +18,6 @@
 
 # this file is created for running persepolis from /usr/bin/ or /usr/local/bin/.
 import sys
-import os
 
 pythonsitepackagedir = '@pythonsitepackagedir@'
 

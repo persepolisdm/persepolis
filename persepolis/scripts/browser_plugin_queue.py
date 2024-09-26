@@ -77,7 +77,7 @@ class BrowserPluginQueue(TextQueue_Ui):
             self.links_table.insertRow(0)
 
             # file_name
-            if 'out' in dict_:
+            if 'out' in dict_.keys():
                 if dict_['out']:
                     file_name = dict_['out']
                 else:
