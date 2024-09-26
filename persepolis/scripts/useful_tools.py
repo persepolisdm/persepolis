@@ -26,7 +26,9 @@ import os
 
 try:
     from PySide6.QtCore import QThread, Signal, QProcess
+    from PyQt5.QtWidgets import QStyleFactory
 except:
+    from PyQt5.QtWidgets import QStyleFactory
     from PyQt5.QtCore import QThread, QProcess
     from PyQt5.QtCore import pyqtSignal as Signal
 
@@ -194,6 +196,14 @@ def returnDefaultSettings():
     icons = 'Breeze-Dark'
     style = 'Fusion'
 
+    # find available styles(It's depends on operating system and desktop environments).
+    available_styles = QStyleFactory.keys()
+
+    if os_type == OS.OSX:
+        if 'macOS' in available_styles:
+            style = 'macOS'
+            color_scheme = 'System'
+            icons = 'Papirus'
     # keyboard shortcuts
     delete_shortcut = "Ctrl+D"
     remove_shortcut = "Ctrl+R"
