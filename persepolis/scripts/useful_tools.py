@@ -26,7 +26,7 @@ import os
 
 try:
     from PySide6.QtCore import QThread, Signal, QProcess
-    from PyQt5.QtWidgets import QStyleFactory
+    from PySide6.QtWidgets import QStyleFactory
 except:
     from PyQt5.QtWidgets import QStyleFactory
     from PyQt5.QtCore import QThread, QProcess
