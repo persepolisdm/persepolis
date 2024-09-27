@@ -86,9 +86,9 @@ def osAndDesktopEnvironment():
     desktop_env = None
     if os_type in OS.UNIX_LIKE:
         # find desktop environment('KDE', 'GNOME', ...)
-        desktop_env = os.environ.get('XDG_CURRENT_DESKTOP')
+        desktop_env = os.environ.get('XDG_CURRENT_DESKTOP').lower()
 
-    return os_type, desktop_env.lower()
+    return os_type, desktop_env
 
 
 # this function converts file_size to KiB or MiB or GiB
