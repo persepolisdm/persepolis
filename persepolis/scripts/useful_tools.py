@@ -88,7 +88,7 @@ def osAndDesktopEnvironment():
         # find desktop environment('KDE', 'GNOME', ...)
         desktop_env = os.environ.get('XDG_CURRENT_DESKTOP')
 
-    return os_type, desktop_env
+    return os_type, desktop_env.lower()
 
 
 # this function converts file_size to KiB or MiB or GiB
@@ -193,17 +193,25 @@ def returnDefaultSettings():
     # set dark fusion for default style settings.
     style = 'Fusion'
     color_scheme = 'Dark Fusion'
-    icons = 'Breeze-Dark'
+    icons = 'Papirus'
     style = 'Fusion'
 
     # find available styles(It's depends on operating system and desktop environments).
     available_styles = QStyleFactory.keys()
+    if os_type in OS.UNIX_LIKE:
+        if desktop_env in ['kde', 'lxqt', 'paperde', 'plainde', 'thedesk', 'lumina']:
+            style = 'System'
+            color_scheme = 'System'
+        else:
+            if 'Adwaita' in available_styles:
+                style = 'Adwaita'
+                color_scheme = 'System'
 
-    if os_type == OS.OSX:
+    elif os_type == OS.OSX:
         if 'macOS' in available_styles:
             style = 'macOS'
             color_scheme = 'System'
-            icons = 'Papirus'
+
     # keyboard shortcuts
     delete_shortcut = "Ctrl+D"
     remove_shortcut = "Ctrl+R"

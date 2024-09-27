@@ -50,7 +50,7 @@ def getProxy():
         logger.sendToLog(desktop_env_type, "INFO")
 
     # check if it is KDE
-    if desktop == 'KDE':
+    if desktop == 'kde':
         # creat empty list for proxies
         proxysource = {}
 
@@ -118,7 +118,7 @@ def getProxy():
             logger.sendToLog('no proxy file detected', 'INFO')
 
     # Detect proxy from GNOME Desktop
-    elif desktop == 'GNOME':
+    elif desktop == 'gnome':
         process = subprocess.run(['gsettings', 'get', 'org.gnome.system.proxy', 'mode'], stdout=subprocess.PIPE)
         mode = re.search(r'manual', process.stdout.decode('utf-8'))
         if mode is not None:
@@ -184,7 +184,7 @@ def getProxy():
         # get socks proxy
         try:
             # if it is unity
-            if desktop == 'Unity7':
+            if desktop == 'unity7':
                 socks_proxy = proxysource['all'].split(':')[1].replace('//', '')
             # if it is Mac OS
             elif os_type == OS.OSX:

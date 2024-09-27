@@ -515,14 +515,14 @@ class PreferencesWindow(Setting_Ui):
         elif selected_style == 'Adwaita-Dark':
             dark_theme = True
 
-        elif selected_style == 'Adwaita' or selected_style == 'macintosh':
+        elif selected_style == 'Adwaita':
             dark_theme = False
 
         if dark_theme is True:
             self.icon_comboBox.clear()
 
             if selected_size < 48:
-                icons = ['Breeze-Dark', 'Papirus-Dark']
+                icons = ['Breeze-Dark', 'Papirus-Dark', 'Papirus']
             else:
                 icons = ['Breeze-Dark']
 
