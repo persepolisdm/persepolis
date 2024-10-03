@@ -827,16 +827,11 @@ class Download():
                 # return new download_path according to file extension.
                 new_download_path = self.findDownloadPath(
                     self.file_name, self.download_path, self.main_window.persepolis_setting.value('settings/subfolder'))
+
+                file_path = self.downloadCompleteAction(new_download_path)
             else:
                 # keep user specified download_path
-                new_download_path = self.file_path
-
-            # if file is related to VideoFinder thread, don't move it from temp folder...
-            video_finder_dictionary = self.main_window.persepolis_db.searchGidInVideoFinderTable(self.gid)
-            if video_finder_dictionary:
                 file_path = self.file_path
-            else:
-                file_path = self.downloadCompleteAction(new_download_path)
 
             # update download_path in addlink_db_table
             # find user preferred download_path from addlink_db_table in data_base

@@ -44,7 +44,6 @@ def touch(file_path):
 
 
 def xdgOpen(file_path, f_type='file', path='file'):
-
     # we have a file path and we want to open it's directory.
     # highlit(select) file in file manager after opening.
     # it's help to find file easier :)
@@ -68,9 +67,8 @@ def xdgOpen(file_path, f_type='file', path='file'):
         # some file managers wouldn't support highlighting.
         if highlight and file_manager_found:
 
-            # dolphin is kde plasma's file manager
+            # dolphin is kde plasma file manager
             if 'dolphin' in file_manager:
-
                 subprocess.Popen(['dolphin',
                                   '--select', file_path],
                                  stderr=subprocess.PIPE,
@@ -78,7 +76,7 @@ def xdgOpen(file_path, f_type='file', path='file'):
                                  stdin=subprocess.PIPE,
                                  shell=False)
 
-            # dde-file-manager is deepin's file manager
+            # dde-file-manager is deepin file manager
             elif 'dde-file-manager' in file_manager:
 
                 subprocess.Popen(['dde-file-manager',
