@@ -1038,33 +1038,20 @@ class PersepolisDB():
                      'proxy_type']
 
         for dict_ in list_:
+            update_query_set_statements_list = []
             for key in keys_list:
-                # if a key is missed in dict_,
-                # then add this key to the dict_ and assign None value for the key.
-                if key not in dict_.keys():
-                    dict_[key] = None
+                if key in dict_.keys():
+                    update_query_set_statements_list.append(f"{key} = :{key}")
 
-            # update data base if value for the keys is not None
-            self.persepolis_db_cursor.execute("""UPDATE addlink_db_table SET out = coalesce(:out, out),
-                                                                                start_time = coalesce(:start_time, start_time),
-                                                                                end_time = coalesce(:end_time, end_time),
-                                                                                link = coalesce(:link, link),
-                                                                                ip = coalesce(:ip, ip),
-                                                                                port = coalesce(:port, port),
-                                                                                proxy_user = coalesce(:proxy_user, proxy_user),
-                                                                                proxy_passwd = coalesce(:proxy_passwd, proxy_passwd),
-                                                                                download_user = coalesce(:download_user, download_user),
-                                                                                download_passwd = coalesce(:download_passwd, download_passwd),
-                                                                                connections = coalesce(:connections, connections),
-                                                                                limit_value = coalesce(:limit_value, limit_value),
-                                                                                download_path = coalesce(:download_path, download_path),
-                                                                                referer = coalesce(:referer, referer),
-                                                                                load_cookies = coalesce(:load_cookies, load_cookies),
-                                                                                user_agent = coalesce(:user_agent, user_agent),
-                                                                                header = coalesce(:header, header),
-                                                                                after_download = coalesce(:after_download , after_download),
-                                                                                proxy_type = coalesce(:proxy_type , proxy_type)
-                                                                                WHERE gid = :gid""", dict_)
+            update_query_set_statements = ' ,\n '.join(update_query_set_statements_list)
+            update_query = f"""UPDATE addlink_db_table SET 
+                               {update_query_set_statements}
+                               WHERE gid = :gid
+            """
+            
+            if len(update_query_set_statements_list) > 0:
+                self.persepolis_db_cursor.execute(update_query, dict_)
+            
         # commit the changes!
         self.persepolis_db_connection.commit()
 
