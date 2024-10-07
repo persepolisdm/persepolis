@@ -917,7 +917,7 @@ class PersepolisDB():
 
         return addlink_dict
 
-# this method updates download_db_table
+    # this method updates download_db_table
     def updateDownloadTable(self, list_):
         # lock data base
         self.lockCursor()
@@ -965,7 +965,7 @@ class PersepolisDB():
         # job is done! open the lock
         self.lock = False
 
-# this method updates category_db_table
+    # this method updates category_db_table
     def updateCategoryTable(self, list_):
         # lock data base
         self.lockCursor()
@@ -1011,7 +1011,7 @@ class PersepolisDB():
         # job is done! open the lock
         self.lock = False
 
-# this method updates addlink_db_table
+    # this method updates addlink_db_table
     def updateAddLinkTable(self, list_):
         # lock data base
         self.lockCursor()
@@ -1044,14 +1044,12 @@ class PersepolisDB():
                     update_query_set_statements_list.append(f"{key} = :{key}")
 
             update_query_set_statements = ' ,\n '.join(update_query_set_statements_list)
-            update_query = f"""UPDATE addlink_db_table SET 
+            update_query = f"""UPDATE addlink_db_table SET
                                {update_query_set_statements}
                                WHERE gid = :gid
             """
-            
             if len(update_query_set_statements_list) > 0:
                 self.persepolis_db_cursor.execute(update_query, dict_)
-            
         # commit the changes!
         self.persepolis_db_connection.commit()
 

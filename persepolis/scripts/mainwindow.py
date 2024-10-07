@@ -2912,45 +2912,25 @@ class MainWindow(MainWindow_Ui):
 
     def propertiesCallback2(self, add_link_dictionary, gid, category,
                             video_finder_dictionary=None):
-        # current_category_tree_text is current category
-        # that highlighted by user
-        # in the left side panel
-        current_category_tree_text = str(
-            self.category_tree.currentIndex().data())
 
-        selected_row_return = self.selectedRow()  # find user's selected row
+        # highlight category of this download item
+        # find selected category in left side panel
+        for i in range(self.category_tree_model.rowCount()):
+            category_tree_item_text = str(
+                self.category_tree_model.index(i, 0).data())
+            if category_tree_item_text == category:
+                category_index = i
+                break
 
-        # find current category before changing
-        current_category = self.download_table.item(
-            selected_row_return, 12).text()
+        # highlight selected category in category_tree
+        category_tree_model_index = self.category_tree_model.index(
+            category_index, 0)
 
-        if video_finder_dictionary:
-            # add audio and video gid to the gid list
-            gid_list = [video_finder_dictionary['video_gid'],
-                        video_finder_dictionary['audio_gid']]
+        current_category_tree_text = current_category_tree_index.data()
 
-        else:
-            gid_list = [gid]
-
-        # find row of gid in gid_list!
-        for gid in gid_list:
-
-            row = None
-            for i in range(self.download_table.rowCount()):
-                row_gid = self.download_table.item(i, 8).text()
-                if gid == row_gid:
-                    row = i
-                    break
-
-            if row:
-                if current_category_tree_text == 'All Downloads':
-                    # update category in download_table
-                    item = QTableWidgetItem(str(category))
-                    self.download_table.setItem(row, 12, item)
-
-                elif (str(current_category) != str(category)):
-                    # remove row from download_table
-                    self.download_table.removeRow(row)
+        self.category_tree.setCurrentIndex(category_tree_model_index)
+        if current_category_tree_text != category:
+            self.categoryTreeSelected(category_tree_model_index)
 
         # tell the CheckDownloadInfoThread that job is done!
         global checking_flag

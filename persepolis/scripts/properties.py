@@ -331,23 +331,22 @@ class PropertiesWindow(AddLinkWindow_Ui):
             self.start_checkBox.setEnabled(True)
             self.end_checkBox.setEnabled(True)
 
-    def okButtonPressed(self, button):
-        # write user's new inputs in persepolis_setting for next time if needed
-        if self.folder_checkBox.isChecked() is True:
-            self.persepolis_setting.setValue(
-                'settings/download_path', self.download_folder_lineEdit.text())
-
+    # this method returns proxy information.
+    def getProxyInformation(self):
         # http, https or socks5 proxy
         if self.http_radioButton.isChecked() is True:
 
             proxy_type = 'http'
+
         elif self.https_radioButton.isChecked() is True:
 
             proxy_type = 'https'
+
         else:
 
             proxy_type = 'socks5'
 
+        # get proxy information
         if not (self.proxy_checkBox.isChecked()):
             ip = None
             port = None
@@ -359,7 +358,7 @@ class PropertiesWindow(AddLinkWindow_Ui):
             if not (ip):
                 ip = None
 
-            port = str(self.port_spinBox.value())
+            port = self.port_spinBox.value()
             if not (port):
                 port = None
 
@@ -371,33 +370,24 @@ class PropertiesWindow(AddLinkWindow_Ui):
             if not (proxy_passwd):
                 proxy_passwd = None
 
-        if not (self.download_checkBox.isChecked()):
+        return ip, port, proxy_user, proxy_passwd, proxy_type
 
+    def getUserPass(self):
+        # get download username and password information
+        if not (self.download_checkBox.isChecked()):
             download_user = None
             download_passwd = None
         else:
-
             download_user = self.download_user_lineEdit.text()
             if not (download_user):
                 download_user = None
-
             download_passwd = self.download_pass_lineEdit.text()
             if not (download_passwd):
                 download_passwd = None
 
-        if not (self.start_checkBox.isChecked()):
-            start_time = None
-        else:
-            start_time = self.start_time_qDataTimeEdit.text()
+        return download_user, download_passwd
 
-        if not (self.end_checkBox.isChecked()):
-            end_time = None
-        else:
-            end_time = self.end_time_qDateTimeEdit.text()
-
-        connections = self.connections_spinBox.value()
-        download_path = self.download_folder_lineEdit.text()
-
+    def getAdditionalInformation(self):
         # referer
         if self.referer_lineEdit.text() != '':
             referer = self.referer_lineEdit.text()
@@ -421,6 +411,38 @@ class PropertiesWindow(AddLinkWindow_Ui):
             load_cookies = self.load_cookies_lineEdit.text()
         else:
             load_cookies = None
+
+        return referer, header, user_agent, load_cookies
+
+    def okButtonPressed(self, button):
+        # write user's new inputs in persepolis_setting for next time if needed
+        if self.folder_checkBox.isChecked() is True:
+            self.persepolis_setting.setValue(
+                'settings/download_path', self.download_folder_lineEdit.text())
+
+        # get proxy information
+        ip, port, proxy_user, proxy_passwd, proxy_type = self.getProxyInformation()
+        if proxy_type is not None:
+            self.persepolis_setting.setValue('add_link_initialization/proxy_type', proxy_type)
+
+        # get download username and password information
+        download_user, download_passwd = self.getUserPass()
+
+        if not (self.start_checkBox.isChecked()):
+            start_time = None
+        else:
+            start_time = self.start_time_qDataTimeEdit.text()
+
+        if not (self.end_checkBox.isChecked()):
+            end_time = None
+        else:
+            end_time = self.end_time_qDateTimeEdit.text()
+
+        connections = self.connections_spinBox.value()
+        download_path = self.download_folder_lineEdit.text()
+
+        # get additinal information
+        referer, header, user_agent, load_cookies = self.getAdditionalInformation()
 
         self.add_link_dictionary_1['start_time'] = start_time
         self.add_link_dictionary_1['end_time'] = end_time
@@ -466,11 +488,38 @@ class PropertiesWindow(AddLinkWindow_Ui):
             # update data base
             self.parent.persepolis_db.updateDownloadTable([self.download_table_dict_1])
 
+            # update category_db_table
+            # remove download item from old category
+            old_category_dict = self.parent.persepolis_db.searchCategoryInCategoryTable(self.current_category)
+            old_category_gid_list = old_category_dict['gid_list']
+            old_category_gid_list.remove(self.gid_1)
+            self.parent.persepolis_db.updateCategoryTable([old_category_dict])
+
+            # add download item to new category
+            new_category_dict = self.parent.persepolis_db.searchCategoryInCategoryTable(new_category)
+            new_category_gid_list = new_category_dict['gid_list']
+            new_category_gid_list.append(self.gid_1)
+            self.parent.persepolis_db.updateCategoryTable([new_category_dict])
+
             if self.video_finder_dictionary:
 
                 # category for audio and video must be same as each other
                 self.download_table_dict_2['category'] = new_category
                 self.parent.persepolis_db.updateDownloadTable([self.download_table_dict_2])
+
+                # update category_db_table
+                # remove download item from old category
+                old_category_dict = self.parent.persepolis_db.searchCategoryInCategoryTable(self.current_category)
+                old_category_gid_list = old_category_dict['gid_list']
+                old_category_gid_list.remove(self.gid_2)
+                self.parent.persepolis_db.updateCategoryTable([old_category_dict])
+
+                # add download item to new category
+                new_category_dict = self.parent.persepolis_db.searchCategoryInCategoryTable(new_category)
+                new_category_gid_list = new_category_dict['gid_list']
+                new_category_gid_list.append(self.gid_2)
+                self.parent.persepolis_db.updateCategoryTable([new_category_dict])
+
 
         # if any thing in add_link_dictionary_1 is changed,then update data base!
         for key in self.add_link_dictionary_1.keys():
