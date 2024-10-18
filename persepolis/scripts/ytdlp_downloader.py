@@ -267,6 +267,10 @@ class Ytdp_Download():
             if data['total_bytes_estimate']:
                 self.file_size = float(data['total_bytes_estimate'])
 
+        # some times file_size is not available
+        elif 'downloaded_bytes' in data.keys():
+            self.file_size = self.downloaded_size
+
             try:
                 # Calculate download percent
                 self.download_percent = int((self.downloaded_size / self.file_size) * 100)
@@ -283,7 +287,8 @@ class Ytdp_Download():
             # download complete
             if data['status'] == 'finished':
                 self.download_status = 'complete'
-                self.downloaded_size = self.file_size
+                # some times file_size is not available
+                self.file_size = self.downloaded_size
                 self.fragments = 0
                 self.download_percent = 100
 
