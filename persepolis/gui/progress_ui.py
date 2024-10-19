@@ -60,12 +60,23 @@ class MyProgressBar(QProgressBar):
         self.update_lock = False
         self.main_window = main_window
 
+    def showBusyIndicator(self):
+        # Show busy indicator
+        self.setMaximum(0)
+        self.setMinimum(0)
+
     def setValueSmoothly(self, new_value):
+        # Show busy indicator
+        self.setMaximum(100)
+        self.setMinimum(0)
+
         if new_value == 100:
             self.setValue(100)
             return
+
         if self.update_lock:
             return
+
         self.update_lock = True
         update_progress_bar = UpdateProgressBarThread(self, new_value)
         update_progress_bar.UPDATEPROGRESSBAR.connect(self.setValueSmoothly2)

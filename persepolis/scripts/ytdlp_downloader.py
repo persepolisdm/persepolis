@@ -271,11 +271,14 @@ class Ytdp_Download():
         elif 'downloaded_bytes' in data.keys():
             self.file_size = self.downloaded_size
 
-            try:
+        try:
+            if 'total_bytes_estimate' in data.keys():
                 # Calculate download percent
                 self.download_percent = int((self.downloaded_size / self.file_size) * 100)
-            except:
-                pass
+            else:
+                self.download_percent = 0
+        except:
+            pass
 
         if ('fragment_index' in data.keys()) and ('fragment_count' in data.keys()):
             try:

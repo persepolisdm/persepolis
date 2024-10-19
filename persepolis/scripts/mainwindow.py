@@ -1659,7 +1659,7 @@ class MainWindow(MainWindow_Ui):
 
             # add download percent to the tooltip text for persepolis system tray icon
             try:
-                if status == 'downloading':
+                if status == 'downloading' and download_status_dict['percent'] != '0%':
                     system_tray_file_name = download_status_dict['file_name']
                     if len(system_tray_file_name) > 20:
                         system_tray_file_name = system_tray_file_name[0:19] + '...'
@@ -1910,15 +1910,23 @@ class MainWindow(MainWindow_Ui):
                 value = download_status_dict['percent']
                 file_name = str(download_status_dict['file_name'])
 
-                if file_name != "***":
-                    windows_title = '(' + str(value) + ')' + str(file_name)
-                    progress_window.setWindowTitle(windows_title)
                 try:
                     value = int(value[:-1])
                 except:
                     value = 0
 
-                progress_window.download_progressBar.setValueSmoothly(value)
+                if value == 0 and downloaded_size != 0:
+                    # show busy indicator
+                    progress_window.download_progressBar.showBusyIndicator()
+                    if file_name != "***":
+                        windows_title = str(file_name)
+                        progress_window.setWindowTitle(windows_title)
+
+                else:
+                    progress_window.download_progressBar.setValueSmoothly(value)
+                    if file_name != "***":
+                        windows_title = '(' + str(value) + '%)' + str(file_name)
+                        progress_window.setWindowTitle(windows_title)
 
                 # status
                 progress_window.status = str(download_status_dict['status'])
