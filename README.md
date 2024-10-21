@@ -13,20 +13,20 @@
 > - [Credits](https://github.com/persepolisdm/persepolis#credits)  
 
 ### **About**
-Persepolis is a download manager written in Python. Persepolis is a sample of free and open source software. It's developed for GNU/Linux distributions, BSDs, MacOS, and Microsoft Windows.  
+Persepolis is a download manager written in Python. Persepolis is a sample of free and open-source software. It's developed for GNU/Linux distributions, BSDs, macOS, and Microsoft Windows.  
 
 ### **Features**
-- Multi-segment downloading(64 connections)
+- Multi-segment downloading (64 connections)
 - Scheduling downloads
 - Download queuing
-- Download video from youtube and ...
+- Downloading videos from Youtube and ...
 - and many more!
 
 Demonstration clip:
 [![Demonstration video](https://img.youtube.com/vi/QHdMShFgzhQ/0.jpg)](https://www.youtube.com/watch?v=QHdMShFgzhQ)
 
 ### How to install PersepolisDM?
-> Please checkout Persepolis [wiki](https://github.com/persepolisdm/persepolis/wiki)
+> Please checkout the Persepolis [wiki](https://github.com/persepolisdm/persepolis/wiki)
 
 ### **FAQ**
 > **Where does the name come from?**
@@ -39,7 +39,7 @@ It exemplifies the Achaemenid style of architecture. UNESCO declared the ruins o
 
 > **How can I install Persepolis?**
 
-> > Read [our wiki](https://github.com/persepolisdm/persepolis/wiki) or check [Persepolis website](https://persepolisdm.github.io) for more information.
+> > Read [our wiki](https://github.com/persepolisdm/persepolis/wiki) or check the [Persepolis website](https://persepolisdm.github.io) for more information.
 
 
 ### **Screenshots**
@@ -90,4 +90,4 @@ It exemplifies the Achaemenid style of architecture. UNESCO declared the ruins o
 [Python Requests project](https://github.com/psf/requests)
 
 ---
-_Is there any mistake in README.md? Report it in [issue tracker](https://github.com/persepolisdm/persepolis/issues) or correct it by yourself._
+_Are there any mistakes in README.md? Report it in the [issue tracker](https://github.com/persepolisdm/persepolis/issues) or correct it by yourself._
