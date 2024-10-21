@@ -83,6 +83,8 @@ class Download():
         self.number_of_active_connections = self.number_of_threads
 
         self.thread_list = []
+        # this dictionary contains information about Each part is downloaded by which thread.
+        self.part_thread_dict = {}
 
     # create requests session
     def createSession(self):
@@ -340,7 +342,7 @@ class Download():
             fp.close()
 
     def definePartSizes(self):
-        # download_infromation_list contains 64 slists.
+        # download_infromation_list contains 64 lists.
         # Every list contains:
         # [start byte number for this part, downloaded size, download status for this part, number of retryingfor this part]
         # Status can be stopped, pending, downloading, error, complete
@@ -386,6 +388,9 @@ class Download():
                 # The status of these parts is complete. Because we have nothing to download.
                 for i in range(self.number_of_parts, 64):
                     self.download_infromation_list[i] = [self.file_size, 0, 'complete', -1]
+
+        for i in range(0, self.number_of_parts):
+            self.part_thread_dict[i] = None
 
     # this method calculates download rate and ETA every second
     def downloadSpeed(self):
@@ -451,7 +456,7 @@ class Download():
     # by each thread for downloading the content from specified
     # location to storage
     def threadHandler(self, thread_number):
-        while self.download_status == 'downloading' or self.download_status == 'paused':
+        while self.download_status in ['downloading', 'paused']:
 
             # Wait for the lock to be released.
             while self.lock is True:
@@ -465,6 +470,7 @@ class Download():
                 break
             error_message = None
             error_message2 = None
+            self.part_thread_dict[part_number] = thread_number
             try:
                 # calculate part size
                 if part_number != (self.number_of_parts - 1):
@@ -518,8 +524,15 @@ class Download():
                                                  * self.python_request_chunk_size)
                     for data in response.iter_content(
                             chunk_size=python_request_chunk_size):
-                        if self.download_status == 'downloading' or self.download_status == 'paused':
+                        if self.download_status in ['downloading', 'paused']:
                             fp.write(data)
+
+                            # if this part is download by another thread then exit thread
+                            if self.part_thread_dict[part_number] != thread_number:
+                                # This loop does not end due to an error in the request.
+                                # Therefore, no number should be added to the number of retries.
+                                self.download_infromation_list[part_number][3] -= 1
+                                break
 
                             # maybe the last chunk is less than default chunk size
                             if (part_size - downloaded_part) >= python_request_chunk_size:
@@ -596,8 +609,10 @@ class Download():
             # so it's complete successfully.
             if (downloaded_part == part_size):
                 self.download_infromation_list[part_number][2] = 'complete'
+                self.part_thread_dict[part_number] = None
             else:
                 self.download_infromation_list[part_number][2] = 'error'
+                self.part_thread_dict[part_number] = None
 
         # This thread is finished.
         self.finished_threads = self.finished_threads + 1
