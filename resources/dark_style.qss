@@ -5,17 +5,6 @@
 
 *{
   color: #ffffff;
-
-  font-family: Roboto;
-
-  
-    font-size: 7.0px;
-  
-
-  
-    line-height: 4px;
-  
-
   selection-background-color: #83b9ff;
   selection-color: #000000;
 }
@@ -987,7 +976,7 @@ QFrame[frameShape="5"] {
 
 QToolBar {
   background: #31363b;
-  border: 0px solid;
+  border: 10px solid #31363b;
 }
 
 QToolBar:horizontal {
