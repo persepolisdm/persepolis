@@ -1501,35 +1501,38 @@ class PersepolisDB():
             os_type = platform.system()
             home_address = os.path.expanduser("~")
 
-            if os.lstat(download_path).st_dev == os.lstat(home_address).st_dev:
+            try:
+                if os.lstat(download_path).st_dev == os.lstat(home_address).st_dev:
 
-                if os_type != 'Windows':
-                    download_path_temp = os.path.join(home_address, '.persepolis')
-                else:
-                    download_path_temp = os.path.join(
-                        home_address, 'AppData', 'Local', 'persepolis')
-
-            else:
-
-                from persepolis.scripts.osCommands import findMountPoint
-
-                # Find mount point
-                mount_point = findMountPoint(download_path)
-
-                # find download_path_temp
-                if os_type == 'Windows':
-
-                    download_path_temp = os.path.join(mount_point, 'persepolis')
+                    if os_type != 'Windows':
+                        download_path_temp = os.path.join(home_address, '.persepolis')
+                    else:
+                        download_path_temp = os.path.join(
+                            home_address, 'AppData', 'Local', 'persepolis')
 
                 else:
 
-                    download_path_temp = os.path.join(mount_point, '.persepolis')
+                    from persepolis.scripts.osCommands import findMountPoint
 
-            # set download_path_temp as download_path
-            self.persepolis_db_cursor.execute("""UPDATE addlink_db_table SET download_path = '{}'
-                                                                            WHERE gid = '{}' """.format(download_path_temp, gid))
+                    # Find mount point
+                    mount_point = findMountPoint(download_path)
 
-            self.persepolis_db_connection.commit()
+                    # find download_path_temp
+                    if os_type == 'Windows':
+
+                        download_path_temp = os.path.join(mount_point, 'persepolis')
+
+                    else:
+
+                        download_path_temp = os.path.join(mount_point, '.persepolis')
+
+                # set download_path_temp as download_path
+                self.persepolis_db_cursor.execute("""UPDATE addlink_db_table SET download_path = '{}'
+                                                                                WHERE gid = '{}' """.format(download_path_temp, gid))
+
+                self.persepolis_db_connection.commit()
+            except:
+                pass
 
         # job is done! open the lock
         self.lock = False
