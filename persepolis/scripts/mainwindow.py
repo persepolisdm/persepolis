@@ -1877,10 +1877,15 @@ class MainWindow(MainWindow_Ui):
                 if file_size is None:
                     file_size = 'None'
 
-                downloaded = QCoreApplication.translate("mainwindow_src_ui_tr", "<b>Downloaded</b>: ") \
-                    + str(downloaded_size) \
-                    + "/" \
-                    + str(file_size)
+                if file_size != ' ':
+                    downloaded = QCoreApplication.translate("mainwindow_src_ui_tr", "<b>Downloaded</b>: ") \
+                        + str(downloaded_size) \
+                        + "/" \
+                        + str(file_size)
+
+                else:
+                    downloaded = QCoreApplication.translate("mainwindow_src_ui_tr", "<b>Downloaded</b>: ") \
+                        + str(downloaded_size) \
 
                 progress_window.downloaded_label.setText(downloaded)
 
