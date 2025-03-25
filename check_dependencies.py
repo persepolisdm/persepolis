@@ -119,14 +119,6 @@ if os_type == 'Linux' or os_type == 'FreeBSD' or os_type == 'OpenBSD':
     else:
         print('libnotify-bin is found!')
 
-    # paplay
-    answer = os.system('paplay --version 1>/dev/null')
-    if answer != 0:
-        print("Warning: paplay not installed!You need pulseaudio for sound notifications!")
-        not_installed = not_installed + 'paplay, '
-    else:
-        print('paplay is found!')
-
 # show warning , if dependencies not installed!
 if not_installed != '':
     print('########################')

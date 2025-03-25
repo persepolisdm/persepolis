@@ -36,23 +36,27 @@ def playNotification(file):
     volume_percent = int(persepolis_setting.value('settings/sound-volume'))
 
 # Paplay volume value must be between 0 (silent) and 65536 (100% volume)
-    volume = int((65536 * volume_percent) / 100)
+#    volume = int((65536 * volume_percent) / 100)
 
     if enable_notification == 'yes':
         if os_type in OS.UNIX_LIKE:
 
-            pipe = subprocess.Popen(['paplay', '--volume=' + str(volume),
-                                     str(file)],
+            pipe = subprocess.Popen(['ffplay', '-volume',
+                                     str(volume_percent),
+                                     str(file),
+                                     '-autoexit',
+                                     '-nodisp'],
                                     stderr=subprocess.PIPE,
                                     stdout=subprocess.PIPE,
                                     stdin=subprocess.PIPE,
                                     shell=False)
 
             answer = pipe.wait()
+            output, error = pipe.communicate()
 
             if answer != 0:
                 logger.sendToLog(
-                    "paplay not installed!Install it for playing sound notification", "WARNING")
+                    str(error), "ERROR")
 
         elif os_type == OS.OSX:
 
