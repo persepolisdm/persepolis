@@ -1237,8 +1237,10 @@ class MainWindow(MainWindow_Ui):
             self.showMenuBarAction.setChecked(False)
             self.toolBar2.show()
 
+        # In macosx hamburger menu shoud be hidden.
         if os_type == OS.OSX:
             self.showMenuBarAction.setEnabled(False)
+            self.toolBar2.hide()
 
         # check user preferences for showing or hiding sidepanel.
         if self.persepolis_setting.value('settings/show-sidepanel') == 'yes':
