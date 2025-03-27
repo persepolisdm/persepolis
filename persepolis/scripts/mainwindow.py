@@ -3347,12 +3347,14 @@ class MainWindow(MainWindow_Ui):
             self.deleteSelectedAction.setIcon(QIcon(icons + 'multi_trash'))
             self.moveUpSelectedAction.setIcon(QIcon(icons + 'multi_up'))
             self.moveDownSelectedAction.setIcon(QIcon(icons + 'multi_down'))
+            self.propertiesAction.setVisible(False)
 
         else:
             self.removeSelectedAction.setIcon(QIcon(icons + 'remove'))
             self.deleteSelectedAction.setIcon(QIcon(icons + 'trash'))
             self.moveUpSelectedAction.setIcon(QIcon(icons + 'up'))
             self.moveDownSelectedAction.setIcon(QIcon(icons + 'down'))
+            self.propertiesAction.setVisible(True)
 
     # this method is called when user presses 'remove selected items' button
     def removeSelected(self, menu=None):
