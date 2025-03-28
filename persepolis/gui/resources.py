@@ -1,6 +1,6 @@
 # Resource object code (Python 3)
 # Created by: object code
-# Created by: The Resource Compiler for Qt version 5.15.15
+# Created by: The Resource Compiler for Qt version 5.15.16
 # WARNING! All changes made in this file will be lost!
 
 try:
