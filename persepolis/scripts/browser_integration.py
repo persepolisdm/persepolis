@@ -33,7 +33,7 @@ def browserIntegration(browser):
     exec_dictionary = getExecPath()
     exec_path = exec_dictionary['modified_exec_file_path']
 
-    logg_message = ["", "INFO"]
+    logg_message = ["", "INITIALIZATION"]
 
     # for GNU/Linux
     if os_type == OS.LINUX:

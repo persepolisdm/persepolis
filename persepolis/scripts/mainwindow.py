@@ -297,8 +297,8 @@ class CheckNewerVersionThread(QThread):
                 self.NEWVERSIONISAVAILABLESIGNAL.emit(str(server_version))
 
         except Exception as e:
-            logger.sendToLog("An error occurred while checking for a new release:")
-            logger.sendToLog("{}".format(str(e)))
+            logger.sendToLog("An error occurred while checking for a new release:", 'ERROR')
+            logger.sendToLog("{}".format(str(e)), 'ERROR')
 
 
 # This thread checking that which row in download_table highlighted by user
@@ -603,7 +603,7 @@ class VideoFinder(QThread):
             ffmpeg_error_message = result_dictionary['ffmpeg_error_message']
 
             if ffmpeg_error_message:
-                logger.sendToLog('ffmpeg error: ' + str(ffmpeg_error_message), 'ERROR')
+                logger.sendToLog('ffmpeg error: ' + str(ffmpeg_error_message), 'DOWNLOAD ERROR')
 
             if error_message == 'no error':
                 self.video_finder_dictionary['muxing_status'] = 'complete'
@@ -840,14 +840,14 @@ class Queue(QThread):
                             + '- Message : '\
                             + error
 
-                        logger.sendToLog(error_message, 'ERROR')
+                        logger.sendToLog(error_message, 'DOWNLOAD ERROR')
 
                     elif status == 'complete':
                         complete_message = 'Download complete - GID : '\
                             + str(gid)
 
                         # write in log the complete_message
-                        logger.sendToLog(complete_message, 'INFO')
+                        logger.sendToLog(complete_message, 'DOWNLOADS')
 
                         # check that is this related to video finder thread or not.
                         if gid in self.main_window.all_video_finder_gid_list:
@@ -948,7 +948,7 @@ class Queue(QThread):
                                10000, 'no', parent=self.main_window)
 
                     # write message in log
-                    logger.sendToLog('Queue stopped', 'INFO')
+                    logger.sendToLog('Queue stopped', 'DOWNLOADS')
 
                     break
 
@@ -977,7 +977,7 @@ class Queue(QThread):
                        10000, 'queue', parent=self.main_window)
 
             # write a message in log
-            logger.sendToLog('Queue completed', 'INFO')
+            logger.sendToLog('Queue completed', 'DOWNLOADS')
 
             self.stop = True
             self.limit_changed = False
@@ -1765,7 +1765,7 @@ class MainWindow(MainWindow_Ui):
                                 + '- Message : '\
                                 + error
 
-                            logger.sendToLog(error_message, 'ERROR')
+                            logger.sendToLog(error_message, 'DOWNLOAD ERROR')
 
                             # show notification
                             notifySend(QCoreApplication.translate("mainwindow_src_ui_tr", "Error: ") + error,
@@ -1801,7 +1801,7 @@ class MainWindow(MainWindow_Ui):
                         self.download_table.setItem(row, i, item)
                     except Exception as problem:
                         logger.sendToLog(
-                            "Error occurred while updating download table", "INFO")
+                            "Error occurred while updating download table", "ERROR")
                         logger.sendToLog(problem, "ERROR")
 
                 # update download_table (refreshing!)
@@ -1967,7 +1967,7 @@ class MainWindow(MainWindow_Ui):
                     stop_message = 'Download stopped - GID : '\
                         + str(gid)
 
-                    logger.sendToLog(stop_message, 'INFO')
+                    logger.sendToLog(stop_message, 'DOWNLOADS')
 
                     # show notification
                     notifySend(QCoreApplication.translate("mainwindow_src_ui_tr", "Download Stopped"),
@@ -1998,7 +1998,7 @@ class MainWindow(MainWindow_Ui):
                         + '- Message : '\
                         + error
 
-                    logger.sendToLog(error_message, 'ERROR')
+                    logger.sendToLog(error_message, 'DOWNLOAD ERROR')
 
                     # show notification
                     notifySend(QCoreApplication.translate("mainwindow_src_ui_tr", "Error - ") + error, str(download_status_dict['file_name']),
@@ -2039,7 +2039,7 @@ class MainWindow(MainWindow_Ui):
                         complete_message = 'Download complete - GID : '\
                             + str(gid)
 
-                        logger.sendToLog(complete_message, 'INFO')
+                        logger.sendToLog(complete_message, 'DOWNLOADS')
 
                         # play notification
                         notifySend(QCoreApplication.translate("mainwindow_src_ui_tr", "Download Complete"),
@@ -3079,9 +3079,6 @@ class MainWindow(MainWindow_Ui):
 
         # hide MainWindow
         self.hide()
-
-        # write message in log and console
-        logger.sendToLog("Please wait ...", "INFO")
 
         # stop all downloads
         self.stopAllDownloads(event)
@@ -5453,7 +5450,7 @@ class MainWindow(MainWindow_Ui):
                     self.download_table.setItem(row, i, item)
                 except Exception as problem:
                     logger.sendToLog(
-                        "Error occurred while updating download table", "INFO")
+                        "Error occurred while updating download table", "ERROR")
                     logger.sendToLog(problem, "ERROR")
 
     # this method deletes all items in data base

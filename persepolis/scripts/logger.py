@@ -18,6 +18,29 @@ from persepolis.scripts.osCommands import touch
 import logging
 import os
 
+
+def setUpLogger(logger_name, log_file, level):
+    # define logging object
+    logObj = logging.getLogger(logger_name)
+    logObj.setLevel(level)
+
+    # don't show log in console
+    logObj.propagate = False
+
+    # create a file handler
+    handler = logging.FileHandler(log_file)
+    handler.setLevel(logging.INFO)
+    # create a logging format
+    formatter = logging.Formatter(
+        '%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+    handler.setFormatter(formatter)
+
+    # add the handlers to the logger
+    logObj.addHandler(handler)
+
+    return logObj
+
+
 # config_folder
 config_folder = determineConfigFolder()
 
@@ -25,37 +48,29 @@ config_folder = determineConfigFolder()
 if not os.path.exists(config_folder):
     os.makedirs(config_folder)
 
-# log file address
-log_file = os.path.join(str(config_folder), 'persepolisdm.log')
+# log files address
+initialization_log_file = os.path.join(str(config_folder), 'initialization_log_file.log')
+downloads_log_file = os.path.join(str(config_folder), 'downloads_log_file.log')
+errors_log_file = os.path.join(str(config_folder), 'errors_log_file.log')
 
-if not os.path.isfile(log_file):
-    touch(log_file)
+for file in [initialization_log_file, downloads_log_file, errors_log_file]:
+    if not os.path.isfile(file):
+        touch(file)
 
-# define logging object
-logObj = logging.getLogger("Persepolis")
-logObj.setLevel(logging.INFO)
-
-# don't show log in console
-logObj.propagate = False
-
-# create a file handler
-handler = logging.FileHandler(log_file)
-handler.setLevel(logging.INFO)
-# create a logging format
-formatter = logging.Formatter(
-    '%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-handler.setFormatter(formatter)
-
-# add the handlers to the logger
-logObj.addHandler(handler)
+initialization_logger = setUpLogger('initialization', initialization_log_file, logging.INFO)
+downloads_logger = setUpLogger('downloads', downloads_log_file, logging.INFO)
+errors_logger = setUpLogger('errors', errors_log_file, logging.ERROR)
 
 
 def sendToLog(text="", type="INFO"):
-    if type == "INFO":
-        logObj.info(text)
+    if type == "INITIALIZATION":
+        initialization_logger.info(text)
     elif type == "ERROR":
-        logObj.error(text)
-    elif type == 'DEBUG':
-        logObj.debug(text)
+        errors_logger.error(text)
+    elif type == 'DOWNLOADS':
+        downloads_logger.info(text)
+    elif type == 'DOWNLOAD ERROR':
+        downloads_logger.error(text)
+        errors_logger.error(text)
     else:
-        logObj.warning(text)
+        initialization_logger.info(text)

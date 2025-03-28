@@ -39,22 +39,36 @@ class LogWindow(LogWindow_Ui):
 
         self.copy_log_pushButton.setEnabled(False)
 
-# log file address
-        self.log_file = os.path.join(str(config_folder), 'persepolisdm.log')
+        # log files address
+        self.initialization_log_file = os.path.join(str(config_folder), 'initialization_log_file.log')
+        self.downloads_log_file = os.path.join(str(config_folder), 'downloads_log_file.log')
+        self.errors_log_file = os.path.join(str(config_folder), 'errors_log_file.log')
 
-        f = open(self.log_file, 'r')
-        f_lines = f.readlines()
-        f.close()
+        # lists
+        self.log_files_list = [self.initialization_log_file, self.downloads_log_file, self.errors_log_file]
+        self.text_widgets_list = [self.initialization_text_edit, self.downloads_text_edit, self.errors_text_edit]
+        self.tabs_list = [self.initialization_tab, self.downloads_tab, self.errors_tab]
 
-        self.text = 'Log File:\n'
-        for line in f_lines:
-            self.text = self.text + str(line) + '\n'
+        # Set downloads_tab for current tab
+        self.log_tabWidget.setCurrentWidget(self.downloads_tab)
 
-        self.text_edit.insertPlainText(self.text)
+        # read logs
+        for index, file in enumerate(self.log_files_list):
 
-        self.text_edit.copyAvailable.connect(
-            self.copyAvailableSignalHandler)
+            text = ''
+            f = open(file, 'r')
+            f_lines = f.readlines()
+            f.close()
 
+            for line in f_lines:
+                text = text + str(line) + '\n'
+
+            self.text_widgets_list[index].insertPlainText(text)
+
+            self.text_widgets_list[index].copyAvailable.connect(
+                self.copyAvailableSignalHandler)
+
+        # signals and slots
         self.copy_log_pushButton.clicked.connect(
             self.copyPushButtonPressed)
 
@@ -70,7 +84,7 @@ class LogWindow(LogWindow_Ui):
         self.clear_log_pushButton.clicked.connect(
             self.clearLogPushButtonPressed)
 
-# setting window size and position
+        # setting window size and position
         size = self.persepolis_setting.value(
             'LogWindow/size', QSize(720, 300))
         position = self.persepolis_setting.value(
@@ -81,13 +95,15 @@ class LogWindow(LogWindow_Ui):
         self.minimum_height = self.height()
 
     def clearLogPushButtonPressed(self, button):
-        f = open(self.log_file, 'w')
-        f.close()
+        # Empty log files
+        for index, file in enumerate(self.log_files_list):
 
-        self.text = 'Log File:\n'
+            # erase files
+            f = open(file, 'w')
+            f.close()
 
-        self.text_edit.clear()
-        self.text_edit.insertPlainText(self.text)
+            # clear text editors
+            self.text_widgets_list[index].clear()
 
     def reportPushButtonPressed(self, button):
         osCommands.xdgOpen('https://github.com/persepolisdm/persepolis/issues')
@@ -102,22 +118,28 @@ class LogWindow(LogWindow_Ui):
             self.copy_log_pushButton.setEnabled(False)
 
     def copyPushButtonPressed(self, button):
-        #         clipboard = QApplication.clipboard()
-        #         clipboard.setText(self.text)
-        self.text_edit.copy()
+        # find current active tab
+        index = self.log_tabWidget.currentIndex()
+        for tab_index, tab in enumerate(self.tabs_list):
+            if self.log_tabWidget.indexOf(tab) == index:
+                # copy text
+                self.text_widgets_list[tab_index].copy()
 
-# this method is refresh log messages in text_edit
+    # this method is refresh log messages in text_edit
     def refreshLogPushButtonPressed(self, button):
-        f = open(self.log_file, 'r')
-        f_lines = f.readlines()
-        f.close()
+        # read logs
+        for index, file in enumerate(self.log_files_list):
 
-        self.text = 'Log File:\n'
-        for line in f_lines:
-            self.text = self.text + str(line) + '\n'
+            f = open(file, 'r')
+            f_lines = f.readlines()
+            f.close()
 
-        self.text_edit.clear()
-        self.text_edit.insertPlainText(self.text)
+            text = 'Log file:\n'
+            for line in f_lines:
+                text = text + str(line) + '\n'
+
+            self.text_widgets_list[index].clear()
+            self.text_widgets_list[index].insertPlainText(text)
 
     # close window with ESC key
     def keyPressEvent(self, event):

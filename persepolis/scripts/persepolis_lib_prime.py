@@ -179,7 +179,7 @@ class Download():
             error_message2 = str(error)
 
         if error_message:
-            logger.sendToLog(error_message + ' - ' + error_message2, 'ERROR')
+            logger.sendToLog(error_message + ' - ' + error_message2, 'DOWNLOAD ERROR')
             self.error_message = error_message
             self.file_size = None
 
@@ -223,12 +223,12 @@ class Download():
         self.resuming_suppurt = False
         if 'Accept-Ranges' in self.file_header.keys():
             if self.file_header['Accept-Ranges'] == 'bytes':
-                logger.sendToLog('Server supports multi thread downloading and resuming download!')
+                logger.sendToLog('Server supports multi thread downloading and resuming download!', 'DOWNLOADS')
                 self.resuming_suppurt = True
             else:
-                logger.sendToLog('Server dosn\'t support multi thread downloading and resuming download!', 'ERROR')
+                logger.sendToLog('Server dosn\'t support multi thread downloading and resuming download!', 'DOWNLOAD ERROR')
         else:
-            logger.sendToLog('Server dosn\'t support multi thread downloading and resuming download!', 'ERROR')
+            logger.sendToLog('Server dosn\'t support multi thread downloading and resuming download!', 'DOWNLOAD ERROR')
 
     def createControlFile(self):
         # find file_path and control_json_file_path
@@ -777,7 +777,7 @@ class Download():
 
     # this method checks and manages download progress.
     def checkDownloadProgress(self):
-        logger.sendToLog("Download starts! - GID:" + self.gid, "INFO")
+        logger.sendToLog("Download starts! - GID:" + self.gid, "DOWNLOADS")
 
         # Run this loop until the download is finished.
         while (self.file_size != self.downloaded_size) and (self.download_status == 'downloading' or self.download_status == 'paused') and \
@@ -804,17 +804,17 @@ class Download():
         if self.file_size == self.downloaded_size:
 
             self.download_status = 'complete'
-            logger.sendToLog('Download complete. - GID: ' + self.gid)
+            logger.sendToLog('Download complete. - GID: ' + self.gid, 'DOWNLOADS')
 
         # If the download is not complete and the user has not stopped the download, then the download has encountered an error.
         elif self.download_status != 'stopped':
 
             self.download_status = 'error'
-            logger.sendToLog('Download Error - GID: ' + self.gid)
+            logger.sendToLog('Download Error - GID: ' + self.gid, 'DOWNLOADS')
 
         elif self.download_status == 'stopped':
 
-            logger.sendToLog('Download stopped. - GID: ' + self.gid)
+            logger.sendToLog('Download stopped. - GID: ' + self.gid, 'DOWNLOADS')
 
     # This method returns data and time in string format
     # for example >> 2017/09/09 , 13:12:26
@@ -834,7 +834,7 @@ class Download():
     # this method creates sleep time,if user sets "start time" for download.
     def startTime(self):
         # write some messages
-        logger.sendToLog("Download starts at " + self.start_time + ' - GID: ' + self.gid, "INFO")
+        logger.sendToLog("Download starts at " + self.start_time + ' - GID: ' + self.gid, "DOWNLOADS")
 
         # start_time that specified by user
         sigma_start = self.sigmaTime(self.start_time)
@@ -849,7 +849,7 @@ class Download():
 
     # This method will stop the download when the end_time is reached.
     def endTime(self):
-        logger.sendToLog("End time is activated: " + self.end_time + ' - GID: ' + self.gid, "INFO")
+        logger.sendToLog("End time is activated: " + self.end_time + ' - GID: ' + self.gid, "DOWNLOADS")
         sigma_end = self.sigmaTime(self.end_time)
 
         # get current time
@@ -864,7 +864,7 @@ class Download():
 
         # Time is up!
         if (self.download_status == 'downloading' or self.download_status == 'paused'):
-            logger.sendToLog("Time is up! - GID:" + self.gid, "INFO")
+            logger.sendToLog("Time is up! - GID:" + self.gid, "DOWNLOADS")
 
             # stop download
             self.downloadStop()
@@ -940,7 +940,7 @@ class Download():
             self.close()
         else:
             # if start_time_status is "stopped" it means download Canceled by user
-            logger.sendToLog("Download Canceled", "INFO")
+            logger.sendToLog("Download Canceled", "DOWNLOADS")
 
     def downloadPause(self):
         self.download_status = 'paused'
@@ -987,7 +987,7 @@ class Download():
         for thread in self.thread_list:
             thread.join()
 
-        logger.sendToLog("persepolis_lib is closed!")
+        logger.sendToLog("persepolis_lib is closed!", 'DOWNLOADS')
         self.close_status = True
 
     # This method returns download status

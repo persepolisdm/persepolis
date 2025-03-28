@@ -38,7 +38,7 @@ import os
 # write youtube_dl version in log
 logger.sendToLog('yt-dlp version: '
                  + str(youtube_dl.version.__version__),
-                 'INFO')
+                 'INITIALIZATION')
 
 # download manager config folder .
 config_folder = determineConfigFolder()
@@ -140,7 +140,7 @@ class MediaListFetcherThread(QThread):
                     osCommands.remove(self.cookie_path)
 
                 except Exception as ex:
-                    logger.sendToLog(ex, "ERROR")
+                    logger.sendToLog(ex, "DOWNLOAD ERROR")
 
         except Exception as ex:
             ret_val = {'error': str(ex)}
@@ -148,7 +148,7 @@ class MediaListFetcherThread(QThread):
                 osCommands.remove(self.cookie_path)
 
             except Exception as ex:
-                logger.sendToLog(ex, "ERROR")
+                logger.sendToLog(ex, "DOWNLOAD ERROR")
 
         self.LOADCOOKIEFILESIGNAL.emit(self.cookie_path)
         self.RESULT.emit(ret_val)
@@ -454,7 +454,7 @@ class VideoFinderAddLink(AddLinkWindow):
                     self.change_name_checkBox.setChecked(False)
 
         except Exception as ex:
-            logger.sendToLog(ex, "ERROR")
+            logger.sendToLog(ex, "DOWNLOAD ERROR")
 
     # Return the filename extension from url, or ''.
     def getFileExtension(self, url):
@@ -636,7 +636,7 @@ class VideoFinderAddLink(AddLinkWindow):
                         self.mediaSelectionChanged('video_audio', int(self.media_comboBox.currentIndex()))
 
             except Exception as ex:
-                logger.sendToLog(ex, "ERROR")
+                logger.sendToLog(ex, "DOWNLOAD ERROR")
 
     def findFileSize(self, result):
         try:
@@ -651,7 +651,7 @@ class VideoFinderAddLink(AddLinkWindow):
                     self.media_comboBox.setItemText(index, '{} - {}'.format(text, result['file_size']))
 
         except Exception as ex:
-            logger.sendToLog(ex, "ERROR")
+            logger.sendToLog(ex, "DOWNLOAD ERROR")
 
     def linkLineChangedHere(self, lineEdit):
         if str(lineEdit) == '':

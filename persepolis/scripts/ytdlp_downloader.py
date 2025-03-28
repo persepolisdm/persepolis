@@ -198,7 +198,7 @@ class Ytdp_Download():
     # this method creates sleep time,if user sets "start time" for download.
     def startTime(self):
         # write some messages
-        logger.sendToLog("Download starts at " + self.start_time + ' - GID: ' + self.gid, "INFO")
+        logger.sendToLog("Download starts at " + self.start_time + ' - GID: ' + self.gid, "DOWNLOADS")
 
         # start_time that specified by user
         sigma_start = self.sigmaTime(self.start_time)
@@ -213,7 +213,7 @@ class Ytdp_Download():
 
     # This method will stop the download when the end_time is reached.
     def endTime(self):
-        logger.sendToLog("End time is activated: " + self.end_time + ' - GID: ' + self.gid, "INFO")
+        logger.sendToLog("End time is activated: " + self.end_time + ' - GID: ' + self.gid, "DOWNLOADS")
         sigma_end = self.sigmaTime(self.end_time)
 
         # get current time
@@ -228,7 +228,7 @@ class Ytdp_Download():
 
         # Time is up!
         if (self.download_status == 'downloading' or self.download_status == 'paused'):
-            logger.sendToLog("Time is up! - GID:" + self.gid, "INFO")
+            logger.sendToLog("Time is up! - GID:" + self.gid, "DOWNLOADS")
 
             # stop download
             self.downloadStop()
@@ -363,7 +363,7 @@ class Ytdp_Download():
 
     # this method checks and manages download progress.
     def checkDownloadProgress(self):
-        logger.sendToLog("Download starts! - GID:" + self.gid, "INFO")
+        logger.sendToLog("Download starts! - GID:" + self.gid, "DOWNLOADS")
 
         # Run this loop until the download is finished.
         while (self.download_status == 'downloading'):
@@ -371,16 +371,16 @@ class Ytdp_Download():
 
         # If the downloaded size is the same as the file size, then the download has been completed successfully.
         if self.download_status == 'complete':
-            logger.sendToLog('Download complete. - GID: ' + self.gid)
+            logger.sendToLog('Download complete. - GID: ' + self.gid, 'DOWNLOADS')
 
         # If the download is not complete and the user has not stopped the download, then the download has encountered an error.
         elif self.download_status != 'stopped':
             self.download_status = 'error'
-            logger.sendToLog('Download Error - GID: ' + self.gid, 'ERROR')
+            logger.sendToLog('Download Error - GID: ' + self.gid, 'DOWNLOAD ERROR')
 
         elif self.download_status == 'stopped':
 
-            logger.sendToLog('Download stopped. - GID: ' + self.gid)
+            logger.sendToLog('Download stopped. - GID: ' + self.gid, 'DOWNLOADS')
 
     def download(self):
         try:
@@ -442,7 +442,7 @@ class Ytdp_Download():
             self.close()
         else:
             # if start_time_status is "stopped" it means download Canceled by user
-            logger.sendToLog("Download Canceled", "INFO")
+            logger.sendToLog("Download Canceled", "DOWNLOADS")
 
     def close(self):
         # if download complete, so delete control file
@@ -457,7 +457,7 @@ class Ytdp_Download():
         for thread in self.thread_list:
             thread.join()
 
-        logger.sendToLog("ytdlp_downloader is closed!")
+        logger.sendToLog("ytdlp_downloader is closed!", 'DOWNLOADS')
         self.close_status = True
 
     def downloadPause(self):

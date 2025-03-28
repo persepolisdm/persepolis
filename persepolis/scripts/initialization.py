@@ -44,44 +44,50 @@ for folder in [config_folder, persepolis_tmp]:
 # persepolisdm.log file contains persepolis log.
 
 # refresh logs!
-log_file = os.path.join(str(config_folder), 'persepolisdm.log')
+# log files address
+initialization_log_file = os.path.join(str(config_folder), 'initialization_log_file.log')
+downloads_log_file = os.path.join(str(config_folder), 'downloads_log_file.log')
+errors_log_file = os.path.join(str(config_folder), 'errors_log_file.log')
+
+log_files_list = [initialization_log_file, downloads_log_file, errors_log_file]
 
 # get current time
 current_time = time.strftime('%Y/%m/%d %H:%M:%S')
 
 # find number of lines in log_file.
-with open(log_file) as f:
-    lines = sum(1 for _ in f)
+for log_file in log_files_list:
+    with open(log_file) as f:
+        lines = sum(1 for _ in f)
 
-# if number of lines in log_file is more than 300, then keep last 200 lines in log_file.
-if lines < 300:
-    f = open(log_file, 'a')
-    f.writelines('===================================================\n'
-                 + 'Persepolis Download Manager, '
-                 + current_time
-                 + '\n')
-    f.close()
-else:
-    # keep last 200 lines
-    line_num = lines - 200
-    f = open(log_file, 'r')
-    f_lines = f.readlines()
-    f.close()
+    # if number of lines in log_file is more than 300, then keep last 200 lines in log_file.
+    if lines < 300:
+        f = open(log_file, 'a')
+        f.writelines('===================================================\n'
+                     + 'Persepolis Download Manager, '
+                     + current_time
+                     + '\n')
+        f.close()
+    else:
+        # keep last 200 lines
+        line_num = lines - 200
+        f = open(log_file, 'r')
+        f_lines = f.readlines()
+        f.close()
 
-    line_counter = 1
-    f = open(log_file, 'w')
-    for line in f_lines:
-        if line_counter > line_num:
-            f.writelines(str(line))
+        line_counter = 1
+        f = open(log_file, 'w')
+        for line in f_lines:
+            if line_counter > line_num:
+                f.writelines(str(line))
 
-        line_counter = line_counter + 1
-    f.close()
+            line_counter = line_counter + 1
+        f.close()
 
-    f = open(log_file, 'a')
-    f.writelines('Persepolis Download Manager, '
-                 + current_time
-                 + '\n')
-    f.close()
+        f = open(log_file, 'a')
+        f.writelines('Persepolis Download Manager, '
+                     + current_time
+                     + '\n')
+        f.close()
 
 
 # create an object for PersepolisDB
@@ -164,7 +170,7 @@ for browser in ['chrome', 'chromium', 'opera', 'vivaldi', 'firefox', 'brave']:
     elif native_done is False:
         log_message = log_message + ': ' + 'persepolis executer file ERROR!\n'
 
-    logger.sendToLog(log_message)
+    logger.sendToLog(log_message, 'INITIALIZATION')
     logger.sendToLog(log_message2[0], log_message2[1])
 
 # get locale and set ui direction
