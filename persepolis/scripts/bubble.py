@@ -62,7 +62,7 @@ def notifySend(message1, message2, time, sound, parent=None):
         playNotification(str(file))
 
     elif sound == 'queue':
-        file = os.path.join(notifications_path, 'dialog-information.oga')
+        file = os.path.join(notifications_path, 'message.oga')
         playNotification(str(file))
 
     # load settings
