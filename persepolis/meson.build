@@ -48,6 +48,7 @@ scripts_sources = [
   'scripts/data_base.py',
   'scripts/logger.py',
   'scripts/osCommands.py',
+  'scripts/queue.py',
   'scripts/text_queue.py',
   'scripts/browser_plugin_queue.py',
   'scripts/persepolis_lib_prime.py',

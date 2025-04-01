@@ -179,7 +179,7 @@ class Download():
             error_message2 = str(error)
 
         if error_message:
-            logger.sendToLog(error_message + ' - ' + error_message2, 'DOWNLOAD ERROR')
+            logger.sendToLog(error_message + ' - ' + error_message2 + ' - GID: ' + self.gid, 'DOWNLOAD ERROR')
             self.error_message = error_message
             self.file_size = None
 
@@ -223,12 +223,12 @@ class Download():
         self.resuming_suppurt = False
         if 'Accept-Ranges' in self.file_header.keys():
             if self.file_header['Accept-Ranges'] == 'bytes':
-                logger.sendToLog('Server supports multi thread downloading and resuming download!', 'DOWNLOADS')
+                logger.sendToLog('Server supports multi thread downloading and resuming download!' + ' - GID: ' + self.gid, 'DOWNLOADS')
                 self.resuming_suppurt = True
             else:
-                logger.sendToLog('Server dosn\'t support multi thread downloading and resuming download!', 'DOWNLOAD ERROR')
+                logger.sendToLog('Server dosn\'t support multi thread downloading and resuming download!' + ' - GID: ' + self.gid, 'DOWNLOAD ERROR')
         else:
-            logger.sendToLog('Server dosn\'t support multi thread downloading and resuming download!', 'DOWNLOAD ERROR')
+            logger.sendToLog('Server dosn\'t support multi thread downloading and resuming download!' + ' - GID: ' + self.gid, 'DOWNLOAD ERROR')
 
     def createControlFile(self):
         # find file_path and control_json_file_path
@@ -711,7 +711,7 @@ class Download():
 
             if error_message:
                 self.error_message = error_message
-                logger.sendToLog(error_message + ' - ' + error_message2, 'ERROR')
+                logger.sendToLog(error_message + ' - ' + error_message2 + ' - GID: ' + self.gid, 'ERROR')
 
             # so it's complete successfully.
             if self.file_size:
@@ -1054,14 +1054,14 @@ class Download():
 
                 if not (move_answer):
                     # write error message in log
-                    logger.sendToLog('Persepolis can not move file', "ERROR")
+                    logger.sendToLog('Persepolis can not move file' + ' - GID: ' + self.gid, "ERROR")
                     new_file_path = self.file_path
 
             else:
                 # notify user if we have insufficient disk space
                 # and do not move file from temp download folder to download folder
                 new_file_path = self.file_path
-                logger.sendToLog('Insufficient disk space in download folder', "ERROR")
+                logger.sendToLog('Insufficient disk space in download folder' + ' - GID: ' + self.gid, "ERROR")
 
                 # show notification
                 notifySend("Insufficient disk space!", 'Please change download folder',
@@ -1072,7 +1072,7 @@ class Download():
             move_answer = moveFile(str(self.file_path), str(new_file_path), 'file')
 
             if not (move_answer):
-                logger.sendToLog('Persepolis can not move file', "ERROR")
+                logger.sendToLog('Persepolis can not move file' + ' - GID: ' + self.gid, "ERROR")
                 new_file_path = self.file_path
 
         return str(new_file_path)
