@@ -25,6 +25,7 @@ gui_sources = [
 scripts_sources = [
   'scripts/about.py',
   'scripts/bubble.py',
+  'scripts/download_link.py',
   'scripts/error_window.py',
   'scripts/play.py',
   'scripts/shutdown.py',
@@ -53,6 +54,7 @@ scripts_sources = [
   'scripts/log_window.py',
   'scripts/persepolis.py',
   'scripts/setting.py',
+  'scripts/video_finder.py',
   'scripts/ytdlp_downloader.py',
   ]
 

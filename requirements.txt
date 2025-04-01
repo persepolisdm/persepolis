@@ -1,0 +1,6 @@
+PySide6_Essentials;
+requests;
+urllib3;
+setproctitle;
+psutil;
+yt-dlp;
