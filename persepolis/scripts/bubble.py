@@ -19,6 +19,7 @@ from persepolis.constants import OS
 import subprocess
 import platform
 import os
+from persepolis.scripts import logger
 
 try:
     from PySide6.QtCore import QSettings
@@ -30,6 +31,15 @@ except:
 
 # platform
 os_type = platform.system()
+
+global dasbus_is_installed
+if os_type in OS.LINUX:
+    try:
+        from dasbus.connection import SessionMessageBus
+        dasbus_is_installed = True
+    except:
+        dasbus_is_installed = False
+        logger.sendToLog('python3-dasbus is not installed', 'ERROR')
 
 # notifySend use notify-send program in user's system for sending notifications
 # and use playNotification function in play.py file for playing sound
@@ -79,15 +89,16 @@ def notifySend(message1, message2, time, sound, parent=None):
         parent.system_tray_icon.showMessage(message1, message2, QIcon.fromTheme('persepolis-tray', QIcon(':/persepolis-tray.svg')), 10000)
 
     else:
-        if os_type in OS.UNIX_LIKE:
-            subprocess.Popen(['notify-send', '--icon', 'com.github.persepolisdm.persepolis',
-                              '--app-name', 'Persepolis Download Manager',
-                              '--expire-time', time,
-                              message1, message2],
-                             stderr=subprocess.PIPE,
-                             stdout=subprocess.PIPE,
-                             stdin=subprocess.PIPE,
-                             shell=False)
+        if os_type in OS.LINUX and dasbus_is_installed:
+            bus = SessionMessageBus()
 
+            proxy = bus.get_proxy(
+                "org.freedesktop.Notifications",
+                "/org/freedesktop/Notifications"
+            )
+
+            proxy.Notify(
+                "Persepolis", 0, "persepolis", message1,
+                message2, [], {}, 10000)
         else:
             parent.system_tray_icon.showMessage(message1, message2, QIcon.fromTheme('persepolis-tray', QIcon(':/persepolis-tray.svg')), 10000)
