@@ -105,21 +105,19 @@ elif os_type == 'FreeBSD' or os_type == 'OpenBSD':
 
 if os_type == 'Linux' or os_type == 'FreeBSD' or os_type == 'OpenBSD':
 
+    # python3-dasbus
     if os.path.isdir(notifications_path):
         print('sound-theme-freedesktop is found!')
     else:
         print('Warning: sound-theme-freedesktop is not installed! you need this package for sound notifications!')
         not_installed = not_installed + 'sound-theme-freedesktop'
+    try:
+        from dasbus.connection import SessionMessageBus
+        print('python3-dasbus is found!')
+    except:
+        print('python3-dasbus is not installed!')
+        not_installed = not_installed + 'python3-dasbus,'
 
-    # libnotify-bin
-    answer = os.system('notify-send --version 1>/dev/null')
-    if answer != 0:
-        print("Error libnotify-bin is not installed!")
-        not_installed = not_installed + 'libnotify-bin, '
-    else:
-        print('libnotify-bin is found!')
-
-# show warning , if dependencies not installed!
 if not_installed != '':
     print('########################')
     print('####### WARNING ########')

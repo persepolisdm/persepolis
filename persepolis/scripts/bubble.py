@@ -98,7 +98,7 @@ def notifySend(message1, message2, time, sound, parent=None):
             )
 
             proxy.Notify(
-                "Persepolis", 0, "persepolis", message1,
-                message2, [], {}, 10000)
+                "Persepolis", 0, QIcon.fromTheme('persepolis-tray', QIcon(':/persepolis-tray.svg')).name(), message1,message2, [], {}, 10000)
+
         else:
             parent.system_tray_icon.showMessage(message1, message2, QIcon.fromTheme('persepolis-tray', QIcon(':/persepolis-tray.svg')), 10000)
