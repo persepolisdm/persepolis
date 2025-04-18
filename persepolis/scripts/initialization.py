@@ -285,5 +285,6 @@ if persepolis_version < 5.01:
 
 
 persepolis_setting.setValue('version/version', 5.01)
+persepolis_setting.setValue('version/version', 5.1)
 
 persepolis_setting.sync()

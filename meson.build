@@ -1,5 +1,5 @@
 project('persepolis',
-  version: '5.0.2', 
+  version: '5.1.0', 
   meson_version: '>=0.61.2')
 
 python = import('python')
