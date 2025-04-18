@@ -2,60 +2,60 @@
 <context>
     <name>about_ui_tr</name>
     <message>
-        <location filename="../../persepolis/gui/about_ui.py" line="277"/>
+        <location filename="../../persepolis/gui/about_ui.py" line="294"/>
         <source>About Persepolis</source>
         <translation>О Persepolis</translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/about_ui.py" line="226"/>
+        <location filename="../../persepolis/gui/about_ui.py" line="235"/>
         <source>Persepolis Download Manager</source>
         <translation>Менеджер загрузок Persepolis</translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/about_ui.py" line="229"/>
+        <location filename="../../persepolis/gui/about_ui.py" line="238"/>
         <source>&lt;a href=https://persepolisdm.github.io&gt;https://persepolisdm.github.io&lt;/a&gt;</source>
         <comment>TRANSLATORS NOTE: YOU REALLY DON'T NEED TO TRANSLATE THIS PART!</comment>
         <translation>&lt;a href=https://persepolisdm.github.io&gt;https://persepolisdm.github.io&lt;/a&gt;</translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/about_ui.py" line="233"/>
+        <location filename="../../persepolis/gui/about_ui.py" line="242"/>
         <source>&lt;a href=https://telegram.me/persepolisdm&gt;https://telegram.me/persepolisdm&lt;/a&gt;</source>
         <comment>TRANSLATORS NOTE: YOU REALLY DON'T NEED TO TRANSLATE THIS PART!</comment>
         <translation>&lt;a href=https://telegram.me/persepolisdm&gt;https://telegram.me/persepolisdm&lt;/a&gt;</translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/about_ui.py" line="237"/>
+        <location filename="../../persepolis/gui/about_ui.py" line="246"/>
         <source>&lt;a href=https://twitter.com/persepolisdm&gt;https://twitter.com/persepolisdm&lt;/a&gt;</source>
         <comment>TRANSLATORS NOTE: YOU REALLY DON'T NEED TO TRANSLATE THIS PART!</comment>
         <translation>&lt;a href=https://twitter.com/persepolisdm&gt;https://twitter.com/persepolisdm&lt;/a&gt;</translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/about_ui.py" line="278"/>
+        <location filename="../../persepolis/gui/about_ui.py" line="295"/>
         <source>Developers</source>
         <translation>Разработчики</translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/about_ui.py" line="281"/>
+        <location filename="../../persepolis/gui/about_ui.py" line="298"/>
         <source>Translators</source>
         <translation>Переводчики</translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/about_ui.py" line="282"/>
+        <location filename="../../persepolis/gui/about_ui.py" line="299"/>
         <source>License</source>
         <translation>Лицензия</translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/about_ui.py" line="285"/>
+        <location filename="../../persepolis/gui/about_ui.py" line="302"/>
         <source>OK</source>
         <translation>OK</translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/about_ui.py" line="248"/>
+        <location filename="../../persepolis/gui/about_ui.py" line="257"/>
         <source>Special thanks to:</source>
         <translation>Особая благодарность:</translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/about_ui.py" line="244"/>
+        <location filename="../../persepolis/gui/about_ui.py" line="253"/>
         <source>
 AliReza AmirSamimi
 Mohammadreza Abdollahzadeh
@@ -70,30 +70,38 @@ MohammadAmin Vahedinia</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../persepolis/gui/about_ui.py" line="253"/>
+        <location filename="../../persepolis/gui/about_ui.py" line="262"/>
         <source>Acknowledgments:</source>
         <translation>Благодарность:</translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/about_ui.py" line="255"/>
-        <source>&lt;a href=https://github.com/yt-dlp/yt-dlp&gt;YT-DLP project&lt;/a&gt;</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <location filename="../../persepolis/gui/about_ui.py" line="257"/>
-        <source>&lt;a href=https://github.com/ffmpeg/ffmpeg&gt;FFmpeg project&lt;/a&gt;</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <location filename="../../persepolis/gui/about_ui.py" line="279"/>
+        <location filename="../../persepolis/gui/about_ui.py" line="296"/>
         <source>Acknowledgments</source>
-        <translation type="unfinished"/>
+        <translation>Благодарности</translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/about_ui.py" line="227"/>
-        <source>Version 4.3.0</source>
+        <location filename="../../persepolis/gui/about_ui.py" line="264"/>
+        <source>&lt;a href=https://github.com/yt-dlp/yt-dlp&gt;YT-DLP project&lt;/a&gt;</source>
         <comment>TRANSLATORS NOTE: YOU REALLY DON'T NEED TO TRANSLATE THIS PART!</comment>
-        <translation type="unfinished"/>
+        <translation>&lt;a href=https://github.com/yt-dlp/yt-dlp&gt;Проект YT-DLP&lt;/a&gt;</translation>
+    </message>
+    <message>
+        <location filename="../../persepolis/gui/about_ui.py" line="267"/>
+        <source>&lt;a href=https://github.com/ffmpeg/ffmpeg&gt;FFmpeg project&lt;/a&gt;</source>
+        <comment>TRANSLATORS NOTE: YOU REALLY DON'T NEED TO TRANSLATE THIS PART!</comment>
+        <translation>&lt;a href=https://github.com/ffmpeg/ffmpeg&gt;Проект FFmpeg&lt;/a&gt;</translation>
+    </message>
+    <message>
+        <location filename="../../persepolis/gui/about_ui.py" line="270"/>
+        <source>&lt;a href=https://wiki.qt.io/Qt_for_Python&gt;Pyside project&lt;/a&gt;</source>
+        <comment>TRANSLATORS NOTE: YOU REALLY DON'T NEED TO TRANSLATE THIS PART!</comment>
+        <translation>&lt;a href=https://wiki.qt.io/Qt_for_Python&gt;Проект Pyside&lt;/a&gt;</translation>
+    </message>
+    <message>
+        <location filename="../../persepolis/gui/about_ui.py" line="273"/>
+        <source>&lt;a href=https://github.com/psf/requests&gt;Requests project&lt;/a&gt;</source>
+        <comment>TRANSLATORS NOTE: YOU REALLY DON'T NEED TO TRANSLATE THIS PART!</comment>
+        <translation>&lt;a href=https://github.com/psf/requests&gt;Запросы проекта&lt;/a&gt;</translation>
     </message>
 </context>
 <context>
@@ -196,22 +204,22 @@ MohammadAmin Vahedinia</source>
     <message>
         <location filename="../../persepolis/gui/addlink_ui.py" line="424"/>
         <source>Proxy username: </source>
-        <translation type="unfinished"/>
+        <translation>Имя пользователя прокси:</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/addlink_ui.py" line="431"/>
         <source>Download username and password</source>
-        <translation type="unfinished"/>
+        <translation>Загрузить имя пользователя и пароль</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/addlink_ui.py" line="432"/>
         <source>Download username: </source>
-        <translation type="unfinished"/>
+        <translation>Загрузить имя пользователя</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/addlink_ui.py" line="433"/>
         <source>Download password: </source>
-        <translation type="unfinished"/>
+        <translation>Загрузить пароль</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/text_queue_ui.py" line="300"/>
@@ -255,8 +263,8 @@ MohammadAmin Vahedinia</source>
     </message>
     <message>
         <location filename="../../persepolis/gui/addlink_ui.py" line="465"/>
-        <source>Cookies: </source>
-        <translation type="unfinished"/>
+        <source>Load cookies: </source>
+        <translation>Загрузить куки:</translation>
     </message>
 </context>
 <context>
@@ -351,269 +359,279 @@ MohammadAmin Vahedinia</source>
 <context>
     <name>mainwindow_src_ui_tr</name>
     <message>
-        <location filename="../../persepolis/scripts/mainwindow.py" line="887"/>
+        <location filename="../../persepolis/scripts/mainwindow.py" line="975"/>
         <source>Persepolis</source>
         <translation>Persepolis</translation>
     </message>
     <message>
-        <location filename="../../persepolis/scripts/mainwindow.py" line="858"/>
+        <location filename="../../persepolis/scripts/mainwindow.py" line="946"/>
         <source>Queue Stopped!</source>
         <translation>Очередь остановлена!</translation>
     </message>
     <message>
-        <location filename="../../persepolis/scripts/mainwindow.py" line="1933"/>
+        <location filename="../../persepolis/scripts/mainwindow.py" line="2081"/>
         <source>Persepolis is shutting down</source>
         <translation>Persepolis выключается</translation>
     </message>
     <message>
-        <location filename="../../persepolis/scripts/mainwindow.py" line="1933"/>
+        <location filename="../../persepolis/scripts/mainwindow.py" line="2081"/>
         <source>your system in 20 seconds</source>
         <translation>ваша система через 20 секунд</translation>
     </message>
     <message>
-        <location filename="../../persepolis/scripts/mainwindow.py" line="887"/>
+        <location filename="../../persepolis/scripts/mainwindow.py" line="975"/>
         <source>Queue completed!</source>
         <translation>Очередь завершена!</translation>
     </message>
     <message>
-        <location filename="../../persepolis/scripts/mainwindow.py" line="3059"/>
+        <location filename="../../persepolis/scripts/mainwindow.py" line="3195"/>
         <source>Show main Window</source>
         <translation>Показать главное окно</translation>
     </message>
     <message>
-        <location filename="../../persepolis/scripts/mainwindow.py" line="1683"/>
+        <location filename="../../persepolis/scripts/mainwindow.py" line="1769"/>
         <source>Error: </source>
         <translation>Ошибка:</translation>
     </message>
     <message>
-        <location filename="../../persepolis/scripts/mainwindow.py" line="1780"/>
+        <location filename="../../persepolis/scripts/mainwindow.py" line="1866"/>
         <source>&lt;b&gt;Link&lt;/b&gt;: </source>
         <translation>&lt;b&gt;Ссылка&lt;/b&gt;: </translation>
     </message>
     <message>
-        <location filename="../../persepolis/scripts/mainwindow.py" line="1794"/>
+        <location filename="../../persepolis/scripts/mainwindow.py" line="1880"/>
         <source>&lt;b&gt;Downloaded&lt;/b&gt;: </source>
         <translation>&lt;b&gt;Загружено&lt;/b&gt;: </translation>
     </message>
     <message>
-        <location filename="../../persepolis/scripts/mainwindow.py" line="1802"/>
+        <location filename="../../persepolis/scripts/mainwindow.py" line="1888"/>
         <source>&lt;b&gt;Transfer rate&lt;/b&gt;: </source>
         <translation>&lt;b&gt;Скорость передачи&lt;/b&gt;: </translation>
     </message>
     <message>
-        <location filename="../../persepolis/scripts/mainwindow.py" line="1808"/>
+        <location filename="../../persepolis/scripts/mainwindow.py" line="1894"/>
         <source>&lt;b&gt;Estimated time left&lt;/b&gt;: </source>
         <translation>&lt;b&gt;Ожидаемое время&lt;/b&gt;: </translation>
     </message>
     <message>
-        <location filename="../../persepolis/scripts/mainwindow.py" line="1814"/>
+        <location filename="../../persepolis/scripts/mainwindow.py" line="1904"/>
         <source>&lt;b&gt;Connections&lt;/b&gt;: </source>
         <translation>&lt;b&gt;Соединения&lt;/b&gt;: </translation>
     </message>
     <message>
-        <location filename="../../persepolis/scripts/mainwindow.py" line="1834"/>
+        <location filename="../../persepolis/scripts/mainwindow.py" line="1925"/>
         <source>&lt;b&gt;Status&lt;/b&gt;: </source>
         <translation>&lt;b&gt;Статус&lt;/b&gt;: </translation>
     </message>
     <message>
-        <location filename="../../persepolis/scripts/mainwindow.py" line="1888"/>
+        <location filename="../../persepolis/scripts/mainwindow.py" line="1958"/>
         <source>Download Stopped</source>
         <translation>Загрузка остановлена</translation>
     </message>
     <message>
-        <location filename="../../persepolis/scripts/mainwindow.py" line="1909"/>
+        <location filename="../../persepolis/scripts/mainwindow.py" line="1989"/>
         <source>Error - </source>
         <translation>Ошибка -</translation>
     </message>
     <message>
-        <location filename="../../persepolis/scripts/mainwindow.py" line="1952"/>
+        <location filename="../../persepolis/scripts/mainwindow.py" line="2030"/>
         <source>Download Complete</source>
         <translation>Загрузка завершена</translation>
     </message>
     <message>
-        <location filename="../../persepolis/scripts/mainwindow.py" line="2419"/>
+        <location filename="../../persepolis/scripts/mainwindow.py" line="2541"/>
         <source>&lt;b&gt;&lt;center&gt;This link has been added before!                    Are you sure you want to add it again?&lt;/center&gt;&lt;/b&gt;</source>
         <translation>&lt;b&gt;&lt;center&gt;Эта ссылка была добавлена раньше! Вы уверены, что хотите добавить её ещё раз?&lt;/center&gt;&lt;/b&gt;</translation>
     </message>
     <message>
-        <location filename="../../persepolis/scripts/mainwindow.py" line="5557"/>
+        <location filename="../../persepolis/scripts/mainwindow.py" line="5681"/>
         <source>Download Starts</source>
         <translation>Загрузка началась</translation>
     </message>
     <message>
-        <location filename="../../persepolis/scripts/mainwindow.py" line="2542"/>
+        <location filename="../../persepolis/scripts/mainwindow.py" line="2664"/>
         <source>Download Scheduled</source>
         <translation>Загрузка запланирована</translation>
     </message>
     <message>
-        <location filename="../../persepolis/scripts/mainwindow.py" line="5740"/>
+        <location filename="../../persepolis/scripts/mainwindow.py" line="5864"/>
         <source>Operation was not successful.</source>
         <translation>Операция не была успешной.</translation>
     </message>
     <message>
-        <location filename="../../persepolis/scripts/mainwindow.py" line="5740"/>
+        <location filename="../../persepolis/scripts/mainwindow.py" line="5864"/>
         <source>Please resume the following category: </source>
         <translation>Пожалуйста, возобновите следующую категорию:</translation>
     </message>
     <message>
-        <location filename="../../persepolis/scripts/mainwindow.py" line="2709"/>
+        <location filename="../../persepolis/scripts/mainwindow.py" line="2839"/>
         <source>Please stop the following category: </source>
         <translation>Пожалуйста, остановите следующую категорию:</translation>
     </message>
     <message>
-        <location filename="../../persepolis/scripts/mainwindow.py" line="3070"/>
+        <location filename="../../persepolis/scripts/mainwindow.py" line="3206"/>
         <source>Minimize to system tray</source>
         <translation>Спрятать в системный трей</translation>
     </message>
     <message>
-        <location filename="../../persepolis/scripts/mainwindow.py" line="3531"/>
+        <location filename="../../persepolis/scripts/mainwindow.py" line="3339"/>
         <source>Not Found</source>
         <translation>Не найдено</translation>
     </message>
     <message>
-        <location filename="../../persepolis/scripts/mainwindow.py" line="3476"/>
+        <location filename="../../persepolis/scripts/mainwindow.py" line="3601"/>
         <source>Operation was not successful!</source>
         <translation>Операция не была успешной!</translation>
     </message>
     <message>
-        <location filename="../../persepolis/scripts/mainwindow.py" line="3262"/>
+        <location filename="../../persepolis/scripts/mainwindow.py" line="3397"/>
         <source>Operation was not successful! Please stop the following category first: </source>
         <translation>Операция не была успешной! Пожалуйста, остановите следующую категорию:</translation>
     </message>
     <message>
-        <location filename="../../persepolis/scripts/mainwindow.py" line="3313"/>
+        <location filename="../../persepolis/scripts/mainwindow.py" line="3450"/>
         <source>Please stop the following download first: </source>
         <translation>Сначала остановите следующую загрузку:</translation>
     </message>
     <message>
-        <location filename="../../persepolis/scripts/mainwindow.py" line="3376"/>
+        <location filename="../../persepolis/scripts/mainwindow.py" line="3499"/>
         <source>&lt;b&gt;&lt;center&gt;This operation will delete                     downloaded files from your hard disk&lt;br&gt;PERMANENTLY!&lt;/center&gt;&lt;/b&gt;</source>
         <translation>&lt;b&gt;&lt;center&gt;Эта операция удалит загруженные файлы с вашего жесткого диска&lt;br&gt;БЕЗВОЗВРАТНО!&lt;/center&gt;&lt;/b&gt;</translation>
     </message>
     <message>
-        <location filename="../../persepolis/scripts/mainwindow.py" line="4576"/>
+        <location filename="../../persepolis/scripts/mainwindow.py" line="4679"/>
         <source>&lt;center&gt;Do you want to continue?&lt;/center&gt;</source>
         <translation>&lt;center&gt;Вы хотите продолжить?&lt;/center&gt;</translation>
     </message>
     <message>
-        <location filename="../../persepolis/scripts/mainwindow.py" line="3426"/>
+        <location filename="../../persepolis/scripts/mainwindow.py" line="3549"/>
         <source>Please stop the following category first: </source>
         <translation>Сначала остановите следующую категорию:</translation>
     </message>
     <message>
-        <location filename="../../persepolis/scripts/mainwindow.py" line="4060"/>
+        <location filename="../../persepolis/scripts/mainwindow.py" line="4163"/>
         <source>&lt;/b&gt;&quot; already exists!</source>
         <translation>&lt;/b&gt;&quot; уже существует!</translation>
     </message>
     <message>
-        <location filename="../../persepolis/scripts/mainwindow.py" line="4422"/>
+        <location filename="../../persepolis/scripts/mainwindow.py" line="4525"/>
         <source>Send selected downloads to</source>
         <translation>Отправить выбранные загрузки в</translation>
     </message>
     <message>
-        <location filename="../../persepolis/scripts/mainwindow.py" line="4425"/>
+        <location filename="../../persepolis/scripts/mainwindow.py" line="4528"/>
         <source>Send to</source>
         <translation>Отправить</translation>
     </message>
     <message>
-        <location filename="../../persepolis/scripts/mainwindow.py" line="4551"/>
+        <location filename="../../persepolis/scripts/mainwindow.py" line="4654"/>
         <source>Sort by</source>
         <translation>Сортировать по</translation>
     </message>
     <message>
-        <location filename="../../persepolis/scripts/mainwindow.py" line="4573"/>
+        <location filename="../../persepolis/scripts/mainwindow.py" line="4676"/>
         <source>&lt;b&gt;&lt;center&gt;This operation will remove                     all download items in this queue&lt;br&gt;from &quot;All Downloads&quot; list!&lt;/center&gt;&lt;/b&gt;</source>
         <translation>&lt;b&gt;&lt;center&gt;Эта операция удалит все элементы загрузки в этой очереди&lt;br&gt;из списка «Все загрузки»!&lt;/center&gt;&lt;/b&gt;</translation>
     </message>
     <message>
-        <location filename="../../persepolis/scripts/mainwindow.py" line="4598"/>
+        <location filename="../../persepolis/scripts/mainwindow.py" line="4701"/>
         <source>&lt;b&gt;Sorry! You can&apos;t remove default queue!&lt;/b&gt;</source>
         <translation>&lt;b&gt;Извините! Вы не можете удалить очередь по умолчанию!&lt;/b&gt;</translation>
     </message>
     <message>
-        <location filename="../../persepolis/scripts/mainwindow.py" line="4819"/>
+        <location filename="../../persepolis/scripts/mainwindow.py" line="4922"/>
         <source>Some items didn&apos;t transferred successfully!</source>
         <translation>Некоторые элементы не были успешно перенесены!</translation>
     </message>
     <message>
-        <location filename="../../persepolis/scripts/mainwindow.py" line="4819"/>
+        <location filename="../../persepolis/scripts/mainwindow.py" line="4922"/>
         <source>Please stop download progress first.</source>
         <translation>Сначала остановите следующую загрузку.</translation>
     </message>
     <message>
-        <location filename="../../persepolis/scripts/mainwindow.py" line="4849"/>
+        <location filename="../../persepolis/scripts/mainwindow.py" line="4952"/>
         <source>Hide options</source>
         <translation>Скрыть параметры</translation>
     </message>
     <message>
-        <location filename="../../persepolis/scripts/mainwindow.py" line="4853"/>
+        <location filename="../../persepolis/scripts/mainwindow.py" line="4956"/>
         <source>Show options</source>
         <translation>Показать параметры</translation>
     </message>
     <message>
-        <location filename="../../persepolis/scripts/mainwindow.py" line="5375"/>
+        <location filename="../../persepolis/scripts/mainwindow.py" line="5482"/>
         <source>Stop all downloads first!</source>
         <translation>Сначала остановите все загрузки!</translation>
     </message>
     <message>
-        <location filename="../../persepolis/scripts/mainwindow.py" line="1075"/>
+        <location filename="../../persepolis/scripts/mainwindow.py" line="1163"/>
         <source>Moving is</source>
         <translation>Перемещение</translation>
     </message>
     <message>
-        <location filename="../../persepolis/scripts/mainwindow.py" line="1075"/>
+        <location filename="../../persepolis/scripts/mainwindow.py" line="1163"/>
         <source>finished!</source>
         <translation>завершено!</translation>
     </message>
     <message>
-        <location filename="../../persepolis/scripts/mainwindow.py" line="3448"/>
+        <location filename="../../persepolis/scripts/mainwindow.py" line="3573"/>
         <source>Download is in progress by video finder!</source>
         <translation>Выполняется загрузка с помощью средства поиска видео!</translation>
     </message>
     <message>
-        <location filename="../../persepolis/scripts/mainwindow.py" line="3448"/>
+        <location filename="../../persepolis/scripts/mainwindow.py" line="3573"/>
         <source>be patient!</source>
         <translation>подождите!</translation>
     </message>
     <message>
-        <location filename="../../persepolis/scripts/mainwindow.py" line="3476"/>
+        <location filename="../../persepolis/scripts/mainwindow.py" line="3601"/>
         <source>Stop the following download first: </source>
         <translation>Сначала остановите следующую загрузку:</translation>
     </message>
     <message>
-        <location filename="../../persepolis/scripts/mainwindow.py" line="5419"/>
+        <location filename="../../persepolis/scripts/mainwindow.py" line="5526"/>
         <source>ffmpeg is not installed!</source>
         <translation>ffmpeg не установлен!</translation>
     </message>
     <message>
-        <location filename="../../persepolis/scripts/mainwindow.py" line="5713"/>
+        <location filename="../../persepolis/scripts/mainwindow.py" line="5837"/>
         <source>Not enough free space in:</source>
         <translation>Недостаточно свободного места в:</translation>
     </message>
     <message>
-        <location filename="../../persepolis/scripts/mainwindow.py" line="5719"/>
+        <location filename="../../persepolis/scripts/mainwindow.py" line="5843"/>
         <source>muxing error</source>
         <translation>ошибка мультиплексирования</translation>
     </message>
     <message>
-        <location filename="../../persepolis/scripts/mainwindow.py" line="5719"/>
+        <location filename="../../persepolis/scripts/mainwindow.py" line="5843"/>
         <source>an error occurred</source>
-        <translation type="unfinished"/>
+        <translation>произошла ошибка</translation>
     </message>
     <message>
-        <location filename="../../persepolis/scripts/mainwindow.py" line="1532"/>
+        <location filename="../../persepolis/scripts/mainwindow.py" line="1618"/>
         <source>Please update Persepolis.</source>
         <translation>Пожалуйста, обновите Persepolis.</translation>
     </message>
     <message>
-        <location filename="../../persepolis/scripts/mainwindow.py" line="1683"/>
+        <location filename="../../persepolis/scripts/mainwindow.py" line="1769"/>
         <source>There is not enough disk space available at the download folder! Please choose another one or clear some space.</source>
-        <translation type="unfinished"/>
+        <translation>Недостаточно места на диске в папке загрузки! Пожалуйста, выберите другую или очистите место.</translation>
     </message>
     <message>
-        <location filename="../../persepolis/scripts/mainwindow.py" line="5414"/>
+        <location filename="../../persepolis/scripts/mainwindow.py" line="5521"/>
         <source>yt-dlp is not installed!</source>
         <translation>yt-dlp не установлен!</translation>
+    </message>
+    <message>
+        <location filename="../../persepolis/scripts/mainwindow.py" line="1901"/>
+        <source>&lt;b&gt;Fragments&lt;/b&gt;: </source>
+        <translation>&lt;b&gt;Фрагменты&lt;/b&gt;:</translation>
+    </message>
+    <message>
+        <location filename="../../persepolis/scripts/mainwindow.py" line="2752"/>
+        <source>Please retry in a minute!</source>
+        <translation>Повторите попытку через минуту!</translation>
     </message>
 </context>
 <context>
@@ -866,59 +884,59 @@ MohammadAmin Vahedinia</source>
         <translation>V&amp;ideo Finder</translation>
     </message>
     <message>
-        <location filename="../../persepolis/scripts/mainwindow.py" line="2234"/>
+        <location filename="../../persepolis/scripts/mainwindow.py" line="2358"/>
         <source>&lt;b&gt;Video file status: &lt;/b&gt;</source>
         <translation>&lt;b&gt;Состояние видеофайла: &lt;/b&gt;</translation>
     </message>
     <message>
-        <location filename="../../persepolis/scripts/mainwindow.py" line="2215"/>
+        <location filename="../../persepolis/scripts/mainwindow.py" line="2339"/>
         <source>&lt;b&gt;Audio file status: &lt;/b&gt;</source>
         <translation>&lt;b&gt;Состояние аудиофайла: &lt;/b&gt;</translation>
     </message>
     <message>
-        <location filename="../../persepolis/scripts/mainwindow.py" line="2290"/>
+        <location filename="../../persepolis/scripts/mainwindow.py" line="2414"/>
         <source>&lt;b&gt;Status: &lt;/b&gt;</source>
         <translation>&lt;b&gt;Состояние: &lt;/b&gt;</translation>
     </message>
     <message>
-        <location filename="../../persepolis/scripts/mainwindow.py" line="2293"/>
+        <location filename="../../persepolis/scripts/mainwindow.py" line="2417"/>
         <source>&lt;b&gt;Muxing status: &lt;/b&gt;</source>
         <translation>&lt;b&gt;Состояние мультиплексирования: &lt;/b&gt;</translation>
     </message>
     <message>
-        <location filename="../../persepolis/scripts/mainwindow.py" line="2234"/>
+        <location filename="../../persepolis/scripts/mainwindow.py" line="2358"/>
         <source> downloaded</source>
         <translation>загружено</translation>
     </message>
     <message>
-        <location filename="../../persepolis/scripts/mainwindow.py" line="2249"/>
+        <location filename="../../persepolis/scripts/mainwindow.py" line="2373"/>
         <source>Active</source>
         <translation>Активно</translation>
     </message>
     <message>
-        <location filename="../../persepolis/scripts/mainwindow.py" line="2279"/>
+        <location filename="../../persepolis/scripts/mainwindow.py" line="2403"/>
         <source>Not Active</source>
         <translation>Не активно</translation>
     </message>
     <message>
-        <location filename="../../persepolis/scripts/mainwindow.py" line="2269"/>
+        <location filename="../../persepolis/scripts/mainwindow.py" line="2393"/>
         <source>Started</source>
         <translation>Запущено</translation>
     </message>
     <message>
-        <location filename="../../persepolis/scripts/mainwindow.py" line="2272"/>
+        <location filename="../../persepolis/scripts/mainwindow.py" line="2396"/>
         <source>Error</source>
         <translation>Ошибка</translation>
     </message>
     <message>
-        <location filename="../../persepolis/scripts/mainwindow.py" line="2275"/>
+        <location filename="../../persepolis/scripts/mainwindow.py" line="2399"/>
         <source>Complete</source>
         <translation>Завершено</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/mainwindow_ui.py" line="401"/>
         <source>Transfer Rate</source>
-        <translation type="unfinished"/>
+        <translation>Скорость передачи</translation>
     </message>
     <message>
         <location filename="../../persepolis/gui/mainwindow_ui.py" line="401"/>
@@ -1124,77 +1142,77 @@ MohammadAmin Vahedinia</source>
 <context>
     <name>progress_ui_tr</name>
     <message>
-        <location filename="../../persepolis/gui/progress_ui.py" line="55"/>
+        <location filename="../../persepolis/gui/progress_ui.py" line="104"/>
         <source>Persepolis Download Manager</source>
         <translation>Менеджер загрузок Persepolis</translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/progress_ui.py" line="197"/>
+        <location filename="../../persepolis/gui/progress_ui.py" line="246"/>
         <source>Status: </source>
         <translation>Статус:</translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/progress_ui.py" line="198"/>
+        <location filename="../../persepolis/gui/progress_ui.py" line="247"/>
         <source>Downloaded:</source>
         <translation>Закачено:</translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/progress_ui.py" line="199"/>
+        <location filename="../../persepolis/gui/progress_ui.py" line="248"/>
         <source>Transfer rate: </source>
         <translation>Скорость передачи:</translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/progress_ui.py" line="200"/>
+        <location filename="../../persepolis/gui/progress_ui.py" line="249"/>
         <source>Estimated time left:</source>
         <translation>Ожидаемое время:</translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/progress_ui.py" line="201"/>
+        <location filename="../../persepolis/gui/progress_ui.py" line="250"/>
         <source>Number of connections: </source>
         <translation>Количество соединений:</translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/progress_ui.py" line="202"/>
+        <location filename="../../persepolis/gui/progress_ui.py" line="251"/>
         <source>Download Information</source>
         <translation>Информация о закачке</translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/progress_ui.py" line="204"/>
+        <location filename="../../persepolis/gui/progress_ui.py" line="253"/>
         <source>After download</source>
         <translation>После закачки</translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/progress_ui.py" line="213"/>
+        <location filename="../../persepolis/gui/progress_ui.py" line="262"/>
         <source>Apply</source>
         <translation>Принять</translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/progress_ui.py" line="206"/>
+        <location filename="../../persepolis/gui/progress_ui.py" line="255"/>
         <source>Shut Down</source>
         <translation>Выключить</translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/progress_ui.py" line="208"/>
+        <location filename="../../persepolis/gui/progress_ui.py" line="257"/>
         <source>Download Options</source>
         <translation>Параметры загрузки</translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/progress_ui.py" line="210"/>
+        <location filename="../../persepolis/gui/progress_ui.py" line="259"/>
         <source>Resume</source>
         <translation>Продолжить</translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/progress_ui.py" line="211"/>
+        <location filename="../../persepolis/gui/progress_ui.py" line="260"/>
         <source>Pause</source>
         <translation>Пауза</translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/progress_ui.py" line="212"/>
+        <location filename="../../persepolis/gui/progress_ui.py" line="261"/>
         <source>Stop</source>
         <translation>Остановить</translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/progress_ui.py" line="196"/>
+        <location filename="../../persepolis/gui/progress_ui.py" line="245"/>
         <source>Link: </source>
         <translation>Ссылка: </translation>
     </message>
@@ -1320,7 +1338,7 @@ MohammadAmin Vahedinia</source>
         <translation>Имя файла</translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/video_finder_progress_ui.py" line="61"/>
+        <location filename="../../persepolis/gui/video_finder_progress_ui.py" line="69"/>
         <source>Status</source>
         <translation>Статус</translation>
     </message>
@@ -1706,22 +1724,22 @@ MohammadAmin Vahedinia</source>
 <context>
     <name>video_finder_progress_ui_tr</name>
     <message>
-        <location filename="../../persepolis/scripts/mainwindow.py" line="1747"/>
+        <location filename="../../persepolis/scripts/mainwindow.py" line="1833"/>
         <source>&lt;b&gt;Video file status: &lt;/b&gt;</source>
         <translation>&lt;b&gt;Состояние видеофайла: &lt;/b&gt;</translation>
     </message>
     <message>
-        <location filename="../../persepolis/scripts/mainwindow.py" line="1761"/>
+        <location filename="../../persepolis/scripts/mainwindow.py" line="1847"/>
         <source>&lt;b&gt;Audio file status: &lt;/b&gt;</source>
         <translation>&lt;b&gt;Состояние аудиофайла: &lt;/b&gt;</translation>
     </message>
     <message>
-        <location filename="../../persepolis/scripts/mainwindow.py" line="1771"/>
+        <location filename="../../persepolis/scripts/mainwindow.py" line="1857"/>
         <source>&lt;b&gt;Muxing status: &lt;/b&gt;</source>
         <translation>&lt;b&gt;Состояние мультиплексирования: &lt;/b&gt;</translation>
     </message>
     <message>
-        <location filename="../../persepolis/gui/video_finder_progress_ui.py" line="58"/>
+        <location filename="../../persepolis/gui/video_finder_progress_ui.py" line="66"/>
         <source>&lt;b&gt;Mixing status: &lt;/b&gt;</source>
         <translation type="unfinished"/>
     </message>
@@ -1729,42 +1747,42 @@ MohammadAmin Vahedinia</source>
 <context>
     <name>ytaddlink_src_ui_tr</name>
     <message>
-        <location filename="../../persepolis/scripts/video_finder_addlink.py" line="180"/>
+        <location filename="../../persepolis/scripts/video_finder_addlink.py" line="196"/>
         <source>Video Finder</source>
         <translation>Video Finder</translation>
     </message>
     <message>
-        <location filename="../../persepolis/scripts/video_finder_addlink.py" line="255"/>
+        <location filename="../../persepolis/scripts/video_finder_addlink.py" line="272"/>
         <source>Fetch Media List</source>
         <translation>Выбор медиа-списка</translation>
     </message>
     <message>
-        <location filename="../../persepolis/scripts/video_finder_addlink.py" line="256"/>
+        <location filename="../../persepolis/scripts/video_finder_addlink.py" line="273"/>
         <source>Select a format</source>
         <translation>Выберите формат</translation>
     </message>
     <message>
-        <location filename="../../persepolis/scripts/video_finder_addlink.py" line="341"/>
+        <location filename="../../persepolis/scripts/video_finder_addlink.py" line="358"/>
         <source>Please enter a valid video link</source>
         <translation>Введите корректную ссылку для видео</translation>
     </message>
     <message>
-        <location filename="../../persepolis/scripts/video_finder_addlink.py" line="362"/>
+        <location filename="../../persepolis/scripts/video_finder_addlink.py" line="379"/>
         <source>Fetching Media Info...</source>
         <translation>Получение информации о мультимедиа...</translation>
     </message>
     <message>
-        <location filename="../../persepolis/scripts/video_finder_addlink.py" line="258"/>
+        <location filename="../../persepolis/scripts/video_finder_addlink.py" line="275"/>
         <source>Video format:</source>
         <translation>Формат видео:</translation>
     </message>
     <message>
-        <location filename="../../persepolis/scripts/video_finder_addlink.py" line="259"/>
+        <location filename="../../persepolis/scripts/video_finder_addlink.py" line="276"/>
         <source>Audio format:</source>
         <translation>Формат аудио:</translation>
     </message>
     <message>
-        <location filename="../../persepolis/scripts/video_finder_addlink.py" line="261"/>
+        <location filename="../../persepolis/scripts/video_finder_addlink.py" line="278"/>
         <source>Advanced options</source>
         <translation>Расширенные параметры</translation>
     </message>
