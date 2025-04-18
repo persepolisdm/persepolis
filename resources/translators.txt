@@ -99,6 +99,7 @@ long long zql00l
 书罕 向 墨墨墨墨墨
 chuantong xu 徐传统
 00 000 敷衍伤情
+花卷 春 春花卷 
 
 
 German (de):
@@ -154,6 +155,7 @@ Victor ViktorOnlin
 Nikita Paseka deadman1987
 Pavel irbinix
 Sergey Suhih linuxmasterclub 
+Abdolreza Taslimijalilabadi rezaxx 
 
 
 Spanish (Spain):
