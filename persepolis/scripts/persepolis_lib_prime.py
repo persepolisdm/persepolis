@@ -95,8 +95,7 @@ class Download():
         if self.ip:
             ip_port = '://' + str(self.ip) + ":" + str(self.port)
             if self.proxy_user:
-                ip_port = ('://' + self.proxy_user + ':'
-                           + self.proxy_passwd + '@' + ip_port)
+                ip_port = ('://' + self.proxy_user + ':' + self.proxy_passwd + '@' + ip_port)
             if self.proxy_type == 'socks5':
                 ip_port = 'socks5' + ip_port
             else:
@@ -157,8 +156,10 @@ class Download():
         error_message2 = None
         # find file size
         try:
+            self.file_header = {}
             response = self.requests_session.head(self.link, allow_redirects=True, timeout=self.timeout, verify=self.check_certificate)
 #             response.raise_for_status()
+            print(response.headers)
             self.file_header = response.headers
 
             self.file_size = int(self.file_header['content-length'])
@@ -183,7 +184,7 @@ class Download():
             self.error_message = error_message
             self.file_size = None
 
-        return self.file_size
+        return self.file_header
 
     # get file name if available
     # if file name is not available, then set a file name
@@ -431,14 +432,11 @@ class Download():
             diffrence_size_converted, speed_unit = humanReadableSize(diffrence_size, 'speed')
             download_speed = round(float(diffrence_size_converted) / diffrence_time,
                                    2)
-            self.download_speed_str = (str(download_speed)
-                                       + " " + speed_unit + "/s")
+            self.download_speed_str = (str(download_speed) + " " + speed_unit + "/s")
             not_converted_download_speed = diffrence_size / diffrence_time
             try:
                 # estimated time the download will be completed.
-                eta_second = (self.file_size
-                              - self.downloaded_size) /\
-                    not_converted_download_speed
+                eta_second = (self.file_size - self.downloaded_size) / not_converted_download_speed
             except Exception:
                 eta_second = 0
 
@@ -552,8 +550,7 @@ class Download():
                         # of bytes it should read into memory. This is not necessarily
                         # the length of each item returned as decoding can take place.
                         # so we divide our chunk to smaller chunks. default is 100 Kib
-                        python_request_chunk_size = (1024
-                                                     * self.python_request_chunk_size)
+                        python_request_chunk_size = (1024 * self.python_request_chunk_size)
                         for data in response.iter_content(
                                 chunk_size=python_request_chunk_size):
                             if self.download_status in ['downloading', 'paused']:
@@ -585,15 +582,13 @@ class Download():
                                         update_size = len(data)
 
                                 # update downloaded_part
-                                downloaded_part = (downloaded_part
-                                                   + update_size)
+                                downloaded_part = (downloaded_part + update_size)
                                 # save value to downloaded_size_list
                                 self.download_infromation_list[part_number][1] = downloaded_part
 
                                 # this variable saves amount of total downloaded size
                                 # update downloaded_size
-                                self.downloaded_size = (self.downloaded_size
-                                                        + update_size)
+                                self.downloaded_size = (self.downloaded_size + update_size)
                                 # perhaps user set limitation for download rate.
                                 # downloadrate limitation
                                 # "Speed limit" is whole number. The more it is, the more sleep time is given to the data
@@ -650,8 +645,7 @@ class Download():
                         # of bytes it should read into memory. This is not necessarily
                         # the length of each item returned as decoding can take place.
                         # so we divide our chunk to smaller chunks. default is 100 Kib
-                        python_request_chunk_size = (1024
-                                                     * self.python_request_chunk_size)
+                        python_request_chunk_size = (1024 * self.python_request_chunk_size)
                         for data in response.iter_content(
                                 chunk_size=python_request_chunk_size):
                             if self.download_status in ['downloading', 'paused']:
@@ -659,15 +653,13 @@ class Download():
                                 update_size = len(data)
 
                                 # update downloaded_part
-                                downloaded_part = (downloaded_part
-                                                   + update_size)
+                                downloaded_part = (downloaded_part + update_size)
                                 # save value to downloaded_size_list
                                 self.download_infromation_list[part_number][1] = downloaded_part
 
                                 # this variable saves amount of total downloaded size
                                 # update downloaded_size
-                                self.downloaded_size = (self.downloaded_size
-                                                        + update_size)
+                                self.downloaded_size = (self.downloaded_size + update_size)
                                 # perhaps user set limitation for download rate.
                                 # downloadrate limitation
                                 # "Speed limit" is whole number. The more it is, the more sleep time is given to the data
@@ -911,33 +903,40 @@ class Download():
 
         if self.download_status != 'stopped':
             # start download
-            self.getFileSize()
+            headers = self.getFileSize()
 
-            self.setRetry()
+            if headers != {}:
+                self.setRetry()
 
-            self.download_status = 'downloading'
+                self.download_status = 'downloading'
 
-            # if user set end_time
-            if self.end_time:
-                self.runEndTimeThread()
+                # if user set end_time
+                if self.end_time:
+                    self.runEndTimeThread()
 
-            self.resumingSupport()
+                self.resumingSupport()
 
-            self.getFileName()
+                self.getFileName()
 
-            self.getFileTag()
+                self.getFileTag()
 
-            self.createControlFile()
+                self.createControlFile()
 
-            self.definePartSizes()
+                self.definePartSizes()
 
-            self.runProgressBar()
+                self.runProgressBar()
 
-            self.runDownloadThreads()
+                self.runDownloadThreads()
 
-            self.checkDownloadProgress()
+                self.checkDownloadProgress()
 
-            self.close()
+                self.close()
+            else:
+                # headers is missing
+                self.download_status = 'error'
+                logger.sendToLog('Download Error - GID: ' + self.gid, 'DOWNLOADS')
+                self.close()
+
         else:
             # if start_time_status is "stopped" it means download Canceled by user
             logger.sendToLog("Download Canceled", "DOWNLOADS")

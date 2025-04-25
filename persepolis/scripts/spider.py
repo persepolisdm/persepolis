@@ -36,7 +36,7 @@ timeout = int(persepolis_setting.value('settings/timeout'))
 
 
 # spider function finds name of file and file size from header
-def spider(add_link_dictionary):# noqa
+def spider(add_link_dictionary):
 
     # get user's download request from add_link_dictionary
     link = add_link_dictionary['link']
@@ -59,8 +59,7 @@ def spider(add_link_dictionary):# noqa
     if ip:
         ip_port = '://' + str(ip) + ":" + str(port)
         if proxy_user:
-            ip_port = ('://' + proxy_user + ':'
-                       + proxy_passwd + '@' + ip_port)
+            ip_port = ('://' + proxy_user + ':' + proxy_passwd + '@' + ip_port)
         if proxy_type == 'socks5':
             ip_port = 'socks5' + ip_port
         else:
