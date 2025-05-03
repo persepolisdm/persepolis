@@ -159,7 +159,6 @@ class Download():
             self.file_header = {}
             response = self.requests_session.head(self.link, allow_redirects=True, timeout=self.timeout, verify=self.check_certificate)
 #             response.raise_for_status()
-            print(response.headers)
             self.file_header = response.headers
 
             self.file_size = int(self.file_header['content-length'])
@@ -392,7 +391,7 @@ class Download():
 
                 else:
                     # Calculate how many parts of one MiB we need.
-                    self.number_of_parts = int(self.file_size // (1024**2)) + 1
+                    self.number_of_parts = int((self.file_size - 1) // (1024**2)) + 1
                     self.number_of_threads = self.number_of_parts
                     for i in range(0, self.number_of_parts):
                         self.download_infromation_list[i] = [i * 1024 * 1024, 0, 'pending', -1]
@@ -401,7 +400,7 @@ class Download():
                     # The size of the file is equal to the last byte of the file.
                     # The status of these parts is complete. Because we have nothing to download.
                     for i in range(self.number_of_parts, 64):
-                        self.download_infromation_list[i] = [self.file_size, 0, 'complete', -1]
+                        self.download_infromation_list[i] = [self.file_size - 1, 0, 'complete', -1]
             else:
                 # create new list.
                 self.download_infromation_list = [[]] * 64
@@ -463,25 +462,29 @@ class Download():
             # Check that this part is not being downloaded or it is not complete.
             # Check that the number of retries of this part has not reached the set limit.
             if (self.download_infromation_list[i][2] not in ['complete', 'downloading']) and (self.download_infromation_list[i][3] != self.retry):
+
                 # set 'downloding' status for this part
                 self.download_infromation_list[i][2] = 'downloading'
+
                 # add 1 to retry number for this part
                 self.download_infromation_list[i][3] += 1
-                break
 
-            # no part found
-            if i == (self.number_of_parts - 1):
-                i = None
+                # number of retries can't be less than 0
+                if self.download_infromation_list[i][3] < 0:
+                    self.download_infromation_list[i][3] = 0
+
+                self.lock = False
+                return i
 
         self.lock = False
-        return i
+        return None
 
     # The below code is used for each chunk of file handled
     # by each thread for downloading the content from specified
     # location to storage
     def threadHandler(self, thread_number):
         while self.download_status in ['downloading', 'paused']:
-
+            is_break = False
             # Wait for the lock to be released.
             while self.lock is True:
                 # Random sleep prevents two threads from downloading the same part at the same time.
@@ -491,6 +494,7 @@ class Download():
 
             # If part_number is None, no part is available for download. So exit the loop.
             if part_number is None:
+                is_break = True
                 break
             error_message = None
             error_message2 = None
@@ -503,7 +507,7 @@ class Download():
                         part_size = self.download_infromation_list[part_number + 1][0] - self.download_infromation_list[part_number][0]
                     else:
                         # for last part
-                        part_size = self.file_size - self.download_infromation_list[part_number][0]
+                        part_size = self.file_size - 1 - self.download_infromation_list[part_number][0]
 
                     # get start byte number of this part and add it to downloaded size. download resume from this byte number
                     downloaded_part = self.download_infromation_list[part_number][1]
@@ -512,9 +516,9 @@ class Download():
 
                     # end of part is equal to start of the next part
                     if part_number != (self.number_of_parts - 1):
-                        end = self.download_infromation_list[part_number + 1][0]
+                        end = self.download_infromation_list[part_number + 1][0] - 1
                     else:
-                        end = self.file_size
+                        end = self.file_size - 1
 
                     # download from begining!
                     if self.resuming_suppurt is False:
@@ -561,6 +565,7 @@ class Download():
                                     # This loop does not end due to an error in the request.
                                     # Therefore, no number should be added to the number of retries.
                                     self.download_infromation_list[part_number][3] -= 1
+                                    is_break = True
                                     break
 
                                 # maybe the last chunk is less than default chunk size
@@ -602,6 +607,7 @@ class Download():
 
                             else:
                                 self.download_infromation_list[part_number][2] = 'stopped'
+                                is_break = True
                                 break
                 # If file_size is unspecified.
                 else:
@@ -673,6 +679,7 @@ class Download():
 
                             else:
                                 self.download_infromation_list[part_number][2] = 'stopped'
+                                is_break = True
                                 break
                     download_finished_successfully = True
 
@@ -710,7 +717,7 @@ class Download():
                 if (downloaded_part == part_size):
                     self.download_infromation_list[part_number][2] = 'complete'
                     self.part_thread_dict[part_number] = None
-                else:
+                elif not (is_break):
                     self.download_infromation_list[part_number][2] = 'error'
                     self.part_thread_dict[part_number] = None
             else:
@@ -718,7 +725,7 @@ class Download():
                     self.file_size = self.downloaded_size
                     self.download_infromation_list[part_number][2] = 'complete'
                     self.part_thread_dict[part_number] = None
-                else:
+                elif not (is_break):
                     self.download_infromation_list[part_number][2] = 'error'
                     self.part_thread_dict[part_number] = None
         # This thread is finished.
@@ -772,7 +779,7 @@ class Download():
         logger.sendToLog("Download starts! - GID:" + self.gid, "DOWNLOADS")
 
         # Run this loop until the download is finished.
-        while (self.file_size != self.downloaded_size) and (self.download_status == 'downloading' or self.download_status == 'paused') and \
+        while (self.download_status == 'downloading' or self.download_status == 'paused') and \
               (self.finished_threads != self.number_of_threads):
 
             # Calculate download percent
@@ -785,6 +792,15 @@ class Download():
             self.number_of_active_connections = self.number_of_threads - self.finished_threads
             time.sleep(1)
 
+            # Check if all parts downloaded completely.
+            number_of_completed_parts = 0
+            for i in range(0, self.number_of_parts):
+                if self.download_infromation_list[i][2] == 'complete':
+                    number_of_completed_parts += 1
+            if number_of_completed_parts == self.number_of_parts:
+                # Download complete!
+                self.download_status = 'complete'
+
         # Calculate download percent
         if self.file_size:
             self.download_percent = int((self.downloaded_size / self.file_size) * 100)
@@ -793,9 +809,8 @@ class Download():
 
         self.number_of_active_connections = 0
         # If the downloaded size is the same as the file size, then the download has been completed successfully.
-        if self.file_size == self.downloaded_size:
+        if self.download_status == 'complete':
 
-            self.download_status = 'complete'
             logger.sendToLog('Download complete. - GID: ' + self.gid, 'DOWNLOADS')
 
         # If the download is not complete and the user has not stopped the download, then the download has encountered an error.
