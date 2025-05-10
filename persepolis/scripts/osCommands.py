@@ -87,13 +87,13 @@ def xdgOpen(file_path, f_type='file', path='file'):
                                  shell=False)
 
             # if file manager is nautilus or nemo or pantheon-file-manager
-            elif file_manager in ['org.gnome.nautilus.desktop', 'nemo.desktop', 'io.elementary.files.desktop']:
+            elif file_manager in ['org.gnome.nautilus.desktop', 'nemo.desktop', 'io.elementary.files.desktop', 'thunar.desktop']:
 
-                # nautilus is gnome's file manager.
+                # nautilus is gnome file manager.
                 if 'nautilus' in file_manager:
                     file_manager = 'nautilus'
 
-                # pantheon-files is pantheon's file manager(elementary OS).
+                # pantheon-files is pantheon file manager(elementary OS).
                 elif 'elementary' in file_manager:
                     file_manager = 'io.elementary.files'
 
@@ -101,8 +101,20 @@ def xdgOpen(file_path, f_type='file', path='file'):
                 elif 'nemo' in file_manager:
                     file_manager = 'nemo'
 
+                # thunar is xfce file manager
+                elif 'thunar' in file_manager:
+                    file_manager = 'thunar'
+
                 subprocess.Popen([file_manager,
                                   file_path],
+                                 stderr=subprocess.PIPE,
+                                 stdout=subprocess.PIPE,
+                                 stdin=subprocess.PIPE,
+                                 shell=False)
+            # caja is mate file manager
+            elif 'caja' in file_manager:
+                subprocess.Popen(['caja',
+                                  '--select', file_path],
                                  stderr=subprocess.PIPE,
                                  stdout=subprocess.PIPE,
                                  stdin=subprocess.PIPE,
