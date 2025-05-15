@@ -399,6 +399,8 @@ class Download():
                     # Set the starting byte number of the remaining parts equal to the size of the file.
                     # The size of the file is equal to the last byte of the file.
                     # The status of these parts is complete. Because we have nothing to download.
+                    # The starting bit number of the file is 0 and the ending bit number of the file
+                    # is equal to the file size minus one.
                     for i in range(self.number_of_parts, 64):
                         self.download_infromation_list[i] = [self.file_size - 1, 0, 'complete', -1]
             else:
@@ -515,6 +517,9 @@ class Download():
                     start = self.download_infromation_list[part_number][0] + downloaded_part
 
                     # end of part is equal to start of the next part
+                    # The starting bit number of the file is 0 and the ending bit number of the file
+                    # is equal to the file size minus one.
+
                     if part_number != (self.number_of_parts - 1):
                         end = self.download_infromation_list[part_number + 1][0] - 1
                     else:
