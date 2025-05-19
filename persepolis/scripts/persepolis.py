@@ -250,21 +250,13 @@ if args.parent_window or unknownargs:
 
 # persepolis --clear >> remove config_folder
 if args.clear:
-    from persepolis.scripts.data_base import PersepolisDB
+    # get config_folder address
+    config_folder = determineConfigFolder()
 
-    # create an object for PersepolisDB
-    persepolis_db = PersepolisDB()
+    # remove config_folder
+    osCommands.removeDir(config_folder)
 
-    # Reset data base
-    persepolis_db.resetDataBase()
-
-    # close connections
-    persepolis_db.closeConnections()
-
-    # Reset persepolis_setting
-    persepolis_setting.clear()
-    persepolis_setting.sync()
-
+    # exit
     sys.exit(0)
 
 # persepolis --default >> remove persepolis setting.
