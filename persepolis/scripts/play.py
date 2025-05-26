@@ -62,7 +62,7 @@ def playNotification(file):
 
             pipe = subprocess.Popen(['osascript', '-e',
                                      'set', 'volume', 'alert',
-                                     'volume', str(volume)],
+                                     'volume', str(volume_percent)],
                                     stderr=subprocess.PIPE,
                                     stdout=subprocess.PIPE,
                                     stdin=subprocess.PIPE,
