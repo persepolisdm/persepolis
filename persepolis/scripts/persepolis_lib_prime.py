@@ -144,8 +144,13 @@ class Download():
     def setRetry(self):
         # set retry numbers.
         # backoff_factor will help to apply delays between attempts to avoid failing again
-        retry = Retry(connect=self.retry, backoff_factor=self.retry_wait)
-        adapter = HTTPAdapter(max_retries=retry)
+        retry_strategy = Retry(
+            total=self.retry,
+            backoff_factor=self.retry_wait,
+            status_forcelist=[429, 500, 502, 503, 504],
+            allowed_methods=["HEAD", "GET", "OPTIONS"]
+        )
+        adapter = HTTPAdapter(max_retries=retry_strategy)
         self.requests_session.mount('http://', adapter)
         self.requests_session.mount('https://', adapter)
 
