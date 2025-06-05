@@ -493,16 +493,16 @@ def getExecPath():
                        'modified_exec_file_path': None}
 
     # check if persepolis is run as a bundle.
-    if getattr(sys, 'frozen', False) and hasattr(sys, '_MEIPASS'):
+    if hasattr(sys, 'frozen') or (os.path.basename(sys.argv[0]) != os.path.basename(__file__)):
         exec_dictionary['bundle'] = True
 
         # get executable path
-        bundle_path = os.path.dirname(sys.executable)
+        bundle_path = os.path.abspath(sys.argv[0])
 
         # get bundle name
-        bundle_name = os.path.basename(sys.executable)
+        # bundle_name = os.path.basename(sys.argv[0])
 
-        exec_file_path = os.path.join(bundle_path, bundle_name)
+        exec_file_path = bundle_path
 
     else:
         # persepolis is run from python script
