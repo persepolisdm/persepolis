@@ -431,8 +431,14 @@ def findExternalAppPath(app_name):
         app_alongside = os.path.join(current_directory, app_name)
 
         # inside of the bundle path.
-        base_path = getattr(sys, '_MEIPASS', os.path.dirname(os.path.abspath(__file__)))
-        app_inside = os.path.join(base_path, app_name)
+        if os_type in OS.UNIX_LIKE:
+            # we use nuikita for creating bundle
+            bundle_path = os.path.dirname(sys.executable)
+            app_inside = os.path.join(bundle_path, app_name)
+        else:
+            # we use pyinstaller for creating bundle
+            base_path = getattr(sys, '_MEIPASS', os.path.dirname(os.path.abspath(__file__)))
+            app_inside = os.path.join(base_path, app_name)
 
         if os_type in OS.UNIX_LIKE:
             # Check outside of the bundle first.
@@ -443,7 +449,7 @@ def findExternalAppPath(app_name):
 
             # Check inside of the bundle.
             elif os.path.exists(app_inside):
-
+                # get executable pathAdd commentMore actions
                 app_command = app_inside
                 log_list = ["{}'s file is detected inside of bundle.".format(app_name), "INFO"]
 

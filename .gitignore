@@ -10,11 +10,10 @@ man/persepolis.1.gz
 .idea/
 .mypy_cache
 persepolis_wenv/
-test/aria2c
 test/ffmpeg
-test/gost
 dist/
 *.spec
-test/aria2c.exe
 test/ffmpeg.exe
-test/sthp.exe
+Persepolis\ Download\ Manager.build/
+Persepolis\ Download\ Manager.dist/
+Persepolis\ Download\ Manager.onefile-build/
