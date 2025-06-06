@@ -49,7 +49,7 @@ from persepolis.scripts.browser_plugin_queue import BrowserPluginQueue
 from persepolis.scripts.data_base import PluginsDB, PersepolisDB, TempDB
 from persepolis.gui.mainwindow_ui import MainWindow_Ui, QTableWidgetItem
 from persepolis.scripts.video_finder_progress import VideoFinderProgressWindow
-from persepolis.scripts.useful_tools import nowDate, muxer, freeSpace, determineConfigFolder, osAndDesktopEnvironment, getExecPath, ffmpegVersion
+from persepolis.scripts.useful_tools import nowDate, freeSpace, determineConfigFolder, osAndDesktopEnvironment, getExecPath, ffmpegVersion, findExternalAppPath
 global pyside6_is_installed
 try:
     from PySide6.QtWidgets import QCheckBox, QLineEdit, QAbstractItemView, QFileDialog, QSystemTrayIcon, QMenu, QApplication, QInputDialog, QMessageBox
@@ -205,30 +205,30 @@ class CheckVersionsThread(QThread):
         logger.sendToLog(ffmpeg_command_log_list[0], ffmpeg_command_log_list[1])
         logger.sendToLog(ffmpeg_output, "INFO")
 
+        # write ffmpeg path to log
+        ffmpeg_command, log_list = findExternalAppPath('ffmpeg')
+        ffmpeg_command_is = 'ffmpeg command is: ' + str(ffmpeg_command)
+        logger.sendToLog(ffmpeg_command_is, "INFO")
+
         # log python version
-        logger.sendToLog('python version: '
-                         + str(sys.version))
+        logger.sendToLog('python version: ' + str(sys.version))
 
         # log qt version
-        logger.sendToLog('QT version: '
-                         + str(QT_VERSION_STR))
+        logger.sendToLog('QT version: ' + str(QT_VERSION_STR))
         # log pyqt version
         if pyside6_is_installed:
             madule_str = 'PySide version: '
         else:
             madule_str = 'PyQt version: '
 
-        logger.sendToLog(madule_str
-                         + str(PYQT_VERSION_STR))
+        logger.sendToLog(madule_str + str(PYQT_VERSION_STR))
 
         # log os and desktop env.
-        logger.sendToLog('Operating system: '
-                         + os_type)
+        logger.sendToLog('Operating system: ' + os_type)
 
         # windows and mac haven't desktop_env
         if desktop_env:
-            logger.sendToLog('Desktop env.: '
-                             + str(desktop_env))
+            logger.sendToLog('Desktop env.: ' + str(desktop_env))
 
 
 # check clipboard
