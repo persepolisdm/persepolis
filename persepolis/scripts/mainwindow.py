@@ -900,7 +900,7 @@ class MainWindow(MainWindow_Ui):
 
         # finding windows_size
         size = self.persepolis_setting.value(
-            'MainWindow/size', QSize(862, 554))
+            'MainWindow/size', QSize(930, 554))
         position = self.persepolis_setting.value(
             'MainWindow/position', QPoint(300, 300))
 

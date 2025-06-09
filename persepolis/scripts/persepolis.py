@@ -118,20 +118,20 @@ class PersepolisApplication(QtWidgets.QApplication):
     def __init__(self, argv):
         super().__init__(argv)
 
+    # set style
     def setPersepolisStyle(self, style):
-        # set style
         self.persepolis_style = style
         self.setStyle(style)
 
+    # font and font_size
     def setPersepolisFont(self, font, font_size, custom_font):
-        # font and font_size
         self.persepolis_font = font
         self.persepolis_font_size = font_size
 
         if custom_font == 'yes':
             self.setFont(QFont(font, font_size))
-# color_scheme
 
+    # color_scheme
     def setPersepolisColorScheme(self, color_scheme):
         self.persepolis_color_scheme = color_scheme
         if color_scheme == 'Dark Fusion':
@@ -435,6 +435,14 @@ def main():
         ui_direction = persepolis_download_manager.setting.value('ui_direction')
 
         # set style
+        # check available style first
+        available_styles = QtWidgets.QStyleFactory.keys()
+
+        # if user selected style not available, set 'Fusion' for style
+        if style not in available_styles:
+            style = 'Fusion'
+            color_scheme = 'Dark Fusion'
+
         persepolis_download_manager.setPersepolisStyle(style)
 
         # set font
