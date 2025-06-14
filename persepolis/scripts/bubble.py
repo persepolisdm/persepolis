@@ -14,9 +14,9 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from persepolis.scripts.play import playNotification
+from persepolis.scripts.useful_tools import ffplayVersion
 from persepolis.gui import resources
 from persepolis.constants import OS
-import subprocess
 import platform
 import os
 from persepolis.scripts import logger
@@ -45,6 +45,17 @@ if os_type in OS.LINUX:
 # and use playNotification function in play.py file for playing sound
 # notifications
 
+# check is ffplay is available or not!
+# persepolis uses ffplay for playing notification sounds.
+global ffplay_is_installed
+if os_type in OS.UNIX_LIKE:
+    # check ffplay version
+    ffplay_is_installed, ffplay_output, ffplay_command_log_list = ffplayVersion()
+    logger.sendToLog(ffplay_command_log_list[0], ffplay_command_log_list[1])
+    logger.sendToLog(ffplay_output, "INFO")
+else:
+    ffplay_is_installed = True
+
 
 def notifySend(message1, message2, time, sound, parent=None):
 
@@ -55,25 +66,26 @@ def notifySend(message1, message2, time, sound, parent=None):
     else:
         notifications_path = ''
 
-    if sound == 'ok':
-        file = os.path.join(notifications_path, 'complete.oga')
-        playNotification(str(file))
+    if ffplay_is_installed:
+        if sound == 'ok':
+            file = os.path.join(notifications_path, 'complete.oga')
+            playNotification(str(file))
 
-    elif sound == 'fail':
-        file = os.path.join(notifications_path, 'dialog-error.oga')
-        playNotification(str(file))
+        elif sound == 'fail':
+            file = os.path.join(notifications_path, 'dialog-error.oga')
+            playNotification(str(file))
 
-    elif sound == 'warning':
-        file = os.path.join(notifications_path, 'bell.oga')
-        playNotification(str(file))
+        elif sound == 'warning':
+            file = os.path.join(notifications_path, 'bell.oga')
+            playNotification(str(file))
 
-    elif sound == 'critical':
-        file = os.path.join(notifications_path, 'power-plug.oga')
-        playNotification(str(file))
+        elif sound == 'critical':
+            file = os.path.join(notifications_path, 'power-plug.oga')
+            playNotification(str(file))
 
-    elif sound == 'queue':
-        file = os.path.join(notifications_path, 'message.oga')
-        playNotification(str(file))
+        elif sound == 'queue':
+            file = os.path.join(notifications_path, 'message.oga')
+            playNotification(str(file))
 
     # load settings
     persepolis_setting = QSettings('persepolis_download_manager', 'persepolis')
@@ -98,7 +110,7 @@ def notifySend(message1, message2, time, sound, parent=None):
             )
 
             proxy.Notify(
-                "Persepolis", 0, QIcon.fromTheme('persepolis-tray', QIcon(':/persepolis-tray.svg')).name(), message1,message2, [], {}, 10000)
+                "Persepolis", 0, QIcon.fromTheme('persepolis-tray', QIcon(':/persepolis-tray.svg')).name(), message1, message2, [], {}, 10000)
 
         else:
             parent.system_tray_icon.showMessage(message1, message2, QIcon.fromTheme('persepolis-tray', QIcon(':/persepolis-tray.svg')), 10000)

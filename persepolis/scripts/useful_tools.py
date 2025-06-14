@@ -377,6 +377,40 @@ def ffmpegVersion():
     return ffmpeg_is_installed, ffmpeg_output, log_list
 
 
+# return version of ffplay
+def ffplayVersion():
+
+    # find ffplay path
+    ffplay_command, log_list = findExternalAppPath('ffplay')
+
+    # Try to test ffplay
+    command_argument = [ffplay_command, '-version']
+    try:
+        pipe = runApplication(command_argument)
+
+        if pipe.wait() == 0:
+            ffplay_is_installed = True
+            ffplay_output, error = pipe.communicate()
+            ffplay_output = ffplay_output.decode('utf-8')
+
+        else:
+            ffplay_is_installed = False
+            ffplay_output = 'ffplay is not installed'
+    except:
+        ffplay_is_installed = False
+        ffplay_output = 'ffplay is not installed'
+
+    # wrap ffplay_output with width=70
+    wrapper = textwrap.TextWrapper()
+    ffplay_output = wrapper.fill(ffplay_output)
+
+    ffplay_output = '\n**********\n'\
+        + str(ffplay_output)\
+        + '\n**********\n'
+
+    return ffplay_is_installed, ffplay_output, log_list
+
+
 # run apllication with qprocess
 def qRunApplication(command: str, command_argument: list, parent=None):
 
