@@ -16,7 +16,6 @@
 import os
 import ast
 import sys
-import time
 import glob
 import random
 import requests
@@ -31,7 +30,6 @@ from persepolis.gui import resources
 from persepolis.scripts import spider
 from persepolis.scripts import logger
 from persepolis.scripts import osCommands
-from persepolis.scripts.bubble import notifySend
 from persepolis.scripts.about import AboutWindow
 from persepolis.scripts.shutdown import shutDown
 from persepolis.scripts.log_window import LogWindow
@@ -49,6 +47,7 @@ from persepolis.scripts.browser_plugin_queue import BrowserPluginQueue
 from persepolis.scripts.data_base import PluginsDB, PersepolisDB, TempDB
 from persepolis.gui.mainwindow_ui import MainWindow_Ui, QTableWidgetItem
 from persepolis.scripts.video_finder_progress import VideoFinderProgressWindow
+from persepolis.scripts.bubble import notifySend, checkNotificationSounds, createNotificationSounds
 from persepolis.scripts.useful_tools import nowDate, freeSpace, determineConfigFolder, osAndDesktopEnvironment, getExecPath, ffmpegVersion, findExternalAppPath
 global pyside6_is_installed
 try:
@@ -82,6 +81,9 @@ except ModuleNotFoundError:
 global ffmpeg_is_installed
 ffmpeg_is_installed = False
 
+# check if notification sounds are available or not
+global notification_sounds_are_available
+notification_sounds_are_available = False
 
 # shutdown_notification = 0 >> persepolis is running
 # 1 >> persepolis is ready for closing(closeEvent  is called)
@@ -199,6 +201,7 @@ class CheckVersionsThread(QThread):
     def run(self):
 
         global ffmpeg_is_installed
+        global notification_sounds_are_available
         # check ffmpeg version
         ffmpeg_is_installed, ffmpeg_output, ffmpeg_command_log_list = ffmpegVersion()
 
@@ -209,6 +212,19 @@ class CheckVersionsThread(QThread):
         ffmpeg_command, log_list = findExternalAppPath('ffmpeg')
         ffmpeg_command_is = 'ffmpeg command is: ' + str(ffmpeg_command)
         logger.sendToLog(ffmpeg_command_is, "INFO")
+
+        # if ffmpeg is available so check if notification sounds are available or not
+        # On Linux and BSD, if Persepolis is not run as bundled,
+        # the audio files in the freedesktop folder must be converted
+        # from oga format to wav format and moved to the
+        # ~/.local/share/persepolis_download_manager/sounds/ folder.
+        # ffmpeg will do this conversion.
+        # Therefore, it should be checked that ffmpeg must be
+        # installed. The reason for this format change is that QSoundEffect
+        # is not able to play oga format.
+        notification_sounds_are_available = checkNotificationSounds()
+        if not (notification_sounds_are_available):
+            notification_sounds_are_available = createNotificationSounds()
 
         # log python version
         logger.sendToLog('python version: ' + str(sys.version))

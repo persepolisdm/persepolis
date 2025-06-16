@@ -533,18 +533,44 @@ def getExecPath():
                        'modified_exec_file_path': None}
 
     # check if persepolis is run as a bundle.
-    if hasattr(sys, 'frozen') or (os.path.basename(sys.argv[0]) != os.path.basename(__file__)):
-        exec_dictionary['bundle'] = True
+    # On Windows and Mac we use pyinstaller to build the bundle,
+    # and on Linux and BSD we use nuitka.
+    # the output of this code for pyinstaller bundle is True
+    # getattr(sys, 'frozen', False) and hasattr(sys, '_MEIPASS')
+    # But this code doesn't work for nuitka!
+    # So we have to use a workaround to identify nuitka bundle.
+    # We check the inside of the bundle and look for the ok.wav
+    # file that we placed. If it was, then the bundle file
+    # generated with nuitka is running.
+    if os_type in OS.UNIX_LIKE:
+        bundle_path = os.path.dirname(sys.executable)
+        sound_file_path = os.path.join(bundle_path, 'ok.wav')
 
-        # get executable path
-        bundle_path = os.path.abspath(sys.argv[0])
+        # check availability of ok.wav
+        if os.path.exists(sound_file_path):
+            exec_dictionary['bundle'] = True
 
-        # get bundle name
-        # bundle_name = os.path.basename(sys.argv[0])
+            # for nuitka
+            # get executable path
+            bundle_path = os.path.abspath(sys.argv[0])
 
-        exec_file_path = bundle_path
+            exec_file_path = bundle_path
 
+    # for windows and osx(pyinstaller bundle)
     else:
+        # check pyinstaller bundle
+        if getattr(sys, 'frozen', False) and hasattr(sys, '_MEIPASS'):
+            exec_dictionary['bundle'] = True
+            # get executable path
+            bundle_path = os.path.dirname(sys.executable)
+
+            # get bundle name
+            bundle_name = os.path.basename(sys.executable)
+
+            exec_file_path = os.path.join(bundle_path, bundle_name)
+
+    if exec_dictionary['bundle'] is not True:
+
         # persepolis is run from python script
         exec_dictionary['bundle'] = False
 

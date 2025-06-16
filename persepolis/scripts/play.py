@@ -13,9 +13,11 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 try:
-    from PySide6.QtCore import QSettings
+    from PySide6.QtCore import QUrl, QSettings
+    from PySide6.QtMultimedia import QSoundEffect
 except:
-    from PyQt5.QtCore import QSettings
+    from PyQt5.QtCore import QUrl, QSettings
+    from PyQt5.QtMultimedia import QSoundEffect
 
 from persepolis.scripts import logger
 from persepolis.constants import OS
@@ -35,26 +37,15 @@ def playNotification(file):
     # volume of notification in persepolis_setting(an integer between 0 to 100)
     volume_percent = int(persepolis_setting.value('settings/sound-volume'))
 
-# Paplay volume value must be between 0 (silent) and 65536 (100% volume)
-#    volume = int((65536 * volume_percent) / 100)
-
     if enable_notification == 'yes':
         if os_type in OS.UNIX_LIKE:
-
-            pipe = subprocess.Popen(['ffplay', '-volume',
-                                     str(volume_percent),
-                                     str(file),
-                                     '-autoexit',
-                                     '-nodisp'],
-                                    stderr=subprocess.PIPE,
-                                    stdout=subprocess.PIPE,
-                                    stdin=subprocess.PIPE,
-                                    shell=False)
-
-            answer = pipe.wait()
-            output, error = pipe.communicate()
-
-            if answer != 0:
+            try:
+                effect = QSoundEffect()
+                effect.setSource(QUrl.fromLocalFile(file))
+                effect.setLoopCount(1)
+                effect.setVolume(volume_percent / 100)
+                effect.play()
+            except Exception as error:
                 logger.sendToLog(
                     str(error), "ERROR")
 

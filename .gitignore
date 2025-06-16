@@ -11,6 +11,7 @@ man/persepolis.1.gz
 .mypy_cache
 persepolis_wenv/
 test/ffmpeg
+resources/ffmpeg
 dist/
 *.spec
 test/ffmpeg.exe
