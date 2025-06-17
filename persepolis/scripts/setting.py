@@ -190,25 +190,6 @@ class PreferencesWindow(Setting_Ui):
         else:
             self.enable_notifications_checkBox.setChecked(False)
 
-        # In Linux and BSD ffmpeg plays notification sounds.
-        # Check if ffmpeg is installed.
-        if os_type in OS.UNIX_LIKE:
-            # check ffmpeg version
-            ffmpeg_is_installed, ffmpeg_output, ffmpeg_command_log_list = ffmpegVersion()
-
-            if not (ffmpeg_is_installed):
-                self.enable_notifications_checkBox.setChecked(False)
-                self.enable_notifications_checkBox.setEnabled(False)
-                self.enable_notifications_checkBox.setToolTip(
-                    QCoreApplication.translate("setting_ui_tr", "<html><head/><body><p>FFMPEG must be installed to play the notification sound.\
-                    </p></body></html>"))
-                self.sound_frame.setToolTip(
-                    QCoreApplication.translate("setting_ui_tr", "<html><head/><body><p>FFMPEG must be installed to play the notification sound.\
-                    </p></body></html>"))
-                self.volume_dial.setToolTip(
-                    QCoreApplication.translate("setting_ui_tr", "<html><head/><body><p>FFMPEG must be installed to play the notification sound.\
-                    </p></body></html>"))
-
         # connect folder buttons
         self.download_folder_lineEdit.setEnabled(False)
         self.download_folder_pushButton.clicked.connect(

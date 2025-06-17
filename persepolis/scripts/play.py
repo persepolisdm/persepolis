@@ -26,6 +26,11 @@ import platform
 
 os_type = platform.system()
 
+# It's weird! but effect must be global variable
+# See this issue:
+# https://stackoverflow.com/questions/64794912/
+global effect
+
 
 def playNotification(file):
     # getting user setting from persepolis_setting
@@ -37,6 +42,7 @@ def playNotification(file):
     # volume of notification in persepolis_setting(an integer between 0 to 100)
     volume_percent = int(persepolis_setting.value('settings/sound-volume'))
 
+    global effect
     if enable_notification == 'yes':
         if os_type in OS.UNIX_LIKE:
             try:
@@ -51,20 +57,20 @@ def playNotification(file):
 
         elif os_type == OS.OSX:
 
-            pipe = subprocess.Popen(['osascript', '-e',
-                                     'set', 'volume', 'alert',
-                                     'volume', str(volume_percent)],
-                                    stderr=subprocess.PIPE,
-                                    stdout=subprocess.PIPE,
-                                    stdin=subprocess.PIPE,
-                                    shell=False)
+            subprocess.Popen(['osascript', '-e',
+                              'set', 'volume', 'alert',
+                              'volume', str(volume_percent)],
+                             stderr=subprocess.PIPE,
+                             stdout=subprocess.PIPE,
+                             stdin=subprocess.PIPE,
+                             shell=False)
 
-            pipe = subprocess.Popen(['osascript', '-e',
-                                     'beep', '3'],
-                                    stderr=subprocess.PIPE,
-                                    stdout=subprocess.PIPE,
-                                    stdin=subprocess.PIPE,
-                                    shell=False)
+            subprocess.Popen(['osascript', '-e',
+                              'beep', '3'],
+                             stderr=subprocess.PIPE,
+                             stdout=subprocess.PIPE,
+                             stdin=subprocess.PIPE,
+                             shell=False)
 
         elif os_type == OS.WINDOWS:
 

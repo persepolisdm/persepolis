@@ -15,7 +15,7 @@
 
 from persepolis.scripts.play import playNotification
 from persepolis.scripts.osCommands import makeDirs
-from persepolis.scripts.useful_tools import ffplayVersion, getExecPath, findExternalAppPath, runApplication
+from persepolis.scripts.useful_tools import getExecPath, findExternalAppPath, runApplication
 from persepolis.gui import resources
 from persepolis.constants import OS
 import platform
@@ -45,17 +45,6 @@ if os_type in OS.LINUX:
 # notifySend use notify-send program in user's system for sending notifications
 # and use playNotification function in play.py file for playing sound
 # notifications
-
-# check is ffplay is available or not!
-# persepolis uses ffplay for playing notification sounds.
-global ffplay_is_installed
-if os_type in OS.UNIX_LIKE:
-    # check ffplay version
-    ffplay_is_installed, ffplay_output, ffplay_command_log_list = ffplayVersion()
-    logger.sendToLog(ffplay_command_log_list[0], ffplay_command_log_list[1])
-    logger.sendToLog(ffplay_output, "INFO")
-else:
-    ffplay_is_installed = True
 
 # user home address
 home_address = os.path.expanduser("~")
