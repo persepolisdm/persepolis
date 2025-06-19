@@ -67,7 +67,7 @@ def checkNotificationSounds():
         if not is_bundle:
             # check if notification sounds available or not!
             notification_directory = '.local/share/persepolis_download_manager/sounds'
-            notification_sounds = ['ok.wav', 'fail.wav', 'warning.wav', 'critical.wav']
+            notification_sounds = ['ok.wav', 'fail.wav', 'warning.wav', 'queue.wav']
 
             file_availability = 0
             for file in notification_sounds:
@@ -104,10 +104,10 @@ def createNotificationSounds():
     ffmpeg_command, log_list = findExternalAppPath('ffmpeg')
 
     # convert sound files
-    notification_sounds = ['ok.wav', 'fail.wav', 'warning.wav', 'critical.wav', 'queue.wav']
-    freedesktop_files = ['complete.oga', 'dialog-error.oga', 'bell.oga', 'power-plug.oga', 'message.oga']
+    notification_sounds = ['ok.wav', 'fail.wav', 'warning.wav', 'queue.wav']
+    freedesktop_files = ['complete.oga', 'dialog-error.oga', 'bell.oga', 'message.oga']
     j = 0
-    for i in range(5):
+    for i in range(4):
         notification_sound_path = os.path.join(sounds_directory, notification_sounds[i])
         freedesktop_file_path = os.path.join(freedesktop_path, freedesktop_files[i])
         command_arguments = [ffmpeg_command, '-i',
@@ -123,7 +123,7 @@ def createNotificationSounds():
         except:
             return False
 
-    if j == 5:
+    if j == 4:
         # all 4 files created successfully.
         logger.sendToLog('Notification sounds are created successfully.', "INFO")
         return True

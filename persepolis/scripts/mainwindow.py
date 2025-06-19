@@ -138,6 +138,8 @@ class RemoveItemFromSessionListThread(QThread):
 
 # delete things that are no longer needed
 class DeleteThingsThatAreNoLongerNeededThread(QThread):
+    NOTIFYSENDSIGNAL = Signal(list)
+
     def __init__(self, gid, file_name, status, category, delete_download_file, main_window, video_finder_link):
         QThread.__init__(self)
         self.gid = gid
@@ -182,8 +184,8 @@ class DeleteThingsThatAreNoLongerNeededThread(QThread):
 
                 # if file not existed, notify user
                 if remove_answer == 'no':
-                    notifySend(str(self.file_name), QCoreApplication.translate("mainwindow_src_ui_tr", 'Not Found'),
-                               5000, 'warning', parent=self.main_window)
+                    self.NOTIFYSENDSIGNAL.emit([str(self.file_name), QCoreApplication.translate("mainwindow_src_ui_tr", 'Not Found'),
+                                                5000, 'fail'])
 
         # remove download item from data base
         self.main_window.persepolis_db.deleteItemInDownloadTable(self.gid, self.category)
@@ -473,7 +475,8 @@ class CheckingThread(QThread):
                     sleep(0.5)
 
 
-# if checking_flag is equal to 1, it means that user pressed remove or delete button or ... . so checking download information must be stopped until job is done!
+# if checking_flag is equal to 1, it means that user pressed remove or delete button or ... .
+# so checking download information must be stopped until job is done!
 # this thread checks checking_flag and when checking_flag changes to 2
 # QTABLEREADY signal is emitted
 class WaitThread(QThread):
@@ -566,6 +569,8 @@ class KeepAwakeThread(QThread):
 
 
 class MoveThread(QThread):
+    NOTIFYSENDSIGNAL = Signal(list)
+
     def __init__(self, parent, gid_list, new_folder_path):
         QThread.__init__(self)
         self.new_folder_path = new_folder_path
@@ -588,8 +593,8 @@ class MoveThread(QThread):
 
             # if moving is not successful, notify user.
             if not (self.move):
-                notifySend(str(self.file_name), QCoreApplication.translate("mainwindow_src_ui_tr", 'Operation was not successful!'),
-                           5000, 'warning', parent=self.parent)
+                self.NOTIFYSENDSIGNAL.emit([str(self.file_name), QCoreApplication.translate("mainwindow_src_ui_tr", 'Operation was not successful!'),
+                                            5000, 'fail'])
             else:
                 new_file_path = os.path.join(self.new_folder_path, self.file_name)
                 add_link_dict = {'gid': gid,
@@ -598,13 +603,13 @@ class MoveThread(QThread):
                 # add add_link_dict to add_link_dict_list
                 add_link_dict_list.append(add_link_dict)
 
+                # notify user that job is done!
+                self.NOTIFYSENDSIGNAL.emit([QCoreApplication.translate("mainwindow_src_ui_tr", "Moving is"),
+                                            QCoreApplication.translate("mainwindow_src_ui_tr", 'finished!'),
+                                            5000, 'warning'])
+
         # update data base
         self.parent.persepolis_db.updateAddLinkTable(add_link_dict_list)
-
-        # notify user that job is done!
-        notifySend(QCoreApplication.translate("mainwindow_src_ui_tr", "Moving is"),
-                   QCoreApplication.translate("mainwindow_src_ui_tr", 'finished!'),
-                   5000, 'warning', parent=self.parent)
 
 
 class MainWindow(MainWindow_Ui):
@@ -1036,6 +1041,14 @@ class MainWindow(MainWindow_Ui):
 
         # check reverse_checkBox
         self.reverse_checkBox.setChecked(False)
+
+    # notifySend function uses QSoundEffect for playing notification sounds.
+    # QSoundEffect plays sound by executing a QThread.
+    # We can't run a QThread from another QThread in PyQt and PySide.
+    # So if a QThread want to send a notification,
+    # it will emit a signal to this method.
+    def notifySendFromThread(self, signal_list):
+        notifySend(signal_list[0], signal_list[1], signal_list[2], signal_list[3], parent=self)
 
     # read KeepAwakeThread for more information
     def keepAwake(self, add):
@@ -2913,9 +2926,11 @@ class MainWindow(MainWindow_Ui):
 
             # remove download files, remove from data_base and remove from download_sessions_list
             delete_download_file = False
-            delete_things_that_are_no_longer_needed_thread = DeleteThingsThatAreNoLongerNeededThread(gid, file_name, status, category, delete_download_file, self, video_finder_link)
+            delete_things_that_are_no_longer_needed_thread = DeleteThingsThatAreNoLongerNeededThread(gid, file_name, status, category,
+                                                                                                     delete_download_file, self, video_finder_link)
             self.threadPool.append(delete_things_that_are_no_longer_needed_thread)
             self.threadPool[-1].start()
+            self.threadPool[-1].NOTIFYSENDSIGNAL.connect(self.notifySendFromThread)
 
         # tell the CheckDownloadInfoThread that job is done!
         global checking_flag
@@ -3066,9 +3081,11 @@ class MainWindow(MainWindow_Ui):
 
             # remove download files, remove from data_base and remove from download_sessions_list
             delete_download_file = True
-            delete_things_that_are_no_longer_needed_thread = DeleteThingsThatAreNoLongerNeededThread(gid, file_name, status, category, delete_download_file, self, video_finder_link)
+            delete_things_that_are_no_longer_needed_thread = DeleteThingsThatAreNoLongerNeededThread(gid, file_name, status, category,
+                                                                                                     delete_download_file, self, video_finder_link)
             self.threadPool.append(delete_things_that_are_no_longer_needed_thread)
             self.threadPool[-1].start()
+            self.threadPool[-1].NOTIFYSENDSIGNAL.connect(self.notifySendFromThread)
 
         # telling the CheckDownloadInfoThread that job is done!
         global checking_flag
@@ -4155,7 +4172,6 @@ class MainWindow(MainWindow_Ui):
         self.category_tree.setCurrentIndex(all_download_index)
         self.categoryTreeSelected(all_download_index)
 
-    # TODO از اینجا ادامه بده
     # this method starts the queue that is selected in category_tree
     def startQueue(self, menu=None):
         self.startQueueAction.setEnabled(False)
@@ -4209,6 +4225,7 @@ class MainWindow(MainWindow_Ui):
         self.queue_list_dict[current_category_tree_text].start()
         self.queue_list_dict[current_category_tree_text].REFRESHTOOLBARSIGNAL.connect(
             self.toolBarAndContextMenuItems)
+        self.queue_list_dict[current_category_tree_text].NOTIFYSENDSIGNAL.connect(self.notifySendFromThread)
 
         self.toolBarAndContextMenuItems(current_category_tree_text)
 
@@ -4830,9 +4847,9 @@ class MainWindow(MainWindow_Ui):
         move_thread = MoveThread(self, gid_list, new_folder_path)
         self.threadPool.append(move_thread)
         self.threadPool[-1].start()
+        self.threadPool[-1].NOTIFYSENDSIGNAL.connect(self.notifySendFromThread)
 
     # see browser_plugin_queue.py file
-
     def queueSpiderCallBack(self, filename, child, row_number):
         item = QTableWidgetItem(str(filename))
 

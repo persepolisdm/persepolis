@@ -13,9 +13,9 @@
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import time
 from time import sleep
 from persepolis.scripts import logger
-from persepolis.scripts.bubble import notifySend
 from persepolis.scripts import persepolis_lib_prime
 from persepolis.scripts.video_finder import VideoFinder
 from persepolis.scripts.download_link import DownloadLink
@@ -37,6 +37,7 @@ except ModuleNotFoundError:
 class Queue(QThread):
     # this signal emitted when download status of queue changes to stop
     REFRESHTOOLBARSIGNAL = Signal(str)
+    NOTIFYSENDSIGNAL = Signal(list)
 
     def __init__(self, category, start_time, end_time, parent):
         QThread.__init__(self)
@@ -333,9 +334,9 @@ class Queue(QThread):
                         self.REFRESHTOOLBARSIGNAL.emit(self.category)
 
                     # show notification
-                    notifySend(QCoreApplication.translate("mainwindow_src_ui_tr", "Persepolis"),
-                               QCoreApplication.translate("mainwindow_src_ui_tr", "Queue Stopped!"),
-                               10000, 'no', parent=self.main_window)
+                    self.NOTIFYSENDSIGNAL.emit([QCoreApplication.translate("mainwindow_src_ui_tr", "Persepolis"),
+                                                QCoreApplication.translate("mainwindow_src_ui_tr", "Queue Stopped!"),
+                                                10000, 'no'])
 
                     # write message in log
                     logger.sendToLog('Queue stopped', 'DOWNLOADS')
@@ -357,14 +358,14 @@ class Queue(QThread):
                 self.main_window.temp_db.updateQueueTable(shutdown_dict)
 
                 # show a notification about system is shutting down now!
-                notifySend(QCoreApplication.translate("mainwindow_src_ui_tr", 'Persepolis is shutting down'),
-                           QCoreApplication.translate("mainwindow_src_ui_tr", 'your system in 20 seconds'),
-                           15000, 'warning', parent=self.main_window)
+                self.NOTIFYSENDSIGNAL.emit([QCoreApplication.translate("mainwindow_src_ui_tr", 'Persepolis is shutting down'),
+                                            QCoreApplication.translate("mainwindow_src_ui_tr", 'your system in 20 seconds'),
+                                            15000, 'warning'])
 
             # show notification for queue completion
-            notifySend(QCoreApplication.translate("mainwindow_src_ui_tr", "Persepolis"),
-                       QCoreApplication.translate("mainwindow_src_ui_tr", 'Queue completed!'),
-                       10000, 'queue', parent=self.main_window)
+            self.NOTIFYSENDSIGNAL.emit([QCoreApplication.translate("mainwindow_src_ui_tr", "Persepolis"),
+                                        QCoreApplication.translate("mainwindow_src_ui_tr", 'Queue completed!'),
+                                        10000, 'queue'])
 
             # write a message in log
             logger.sendToLog('Queue completed', 'DOWNLOADS')
