@@ -1,0 +1,9 @@
+<svg width="24" height="24">
+  <g transform="scale(0.9) translate(0, 5)">
+    <path fill="#eff0f1" d="M19,20H4C2.89,20 2,19.1 2,18V6C2,4.89 2.89,4 4,4H10L12,6H19A2,2 0 0,1 21,8H21L4,8V18L6.14,10H23.21L20.93,18.5C20.7,19.37 19.92,20 19,20Z"/>
+  </g>
+  <g transform="scale(0.7) translate(8, 3)">
+    <path fill="#b0b0b0" d="M13,9V3.5L18.5,9M6,2C4.89,2 4,2.89 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2H6Z" />
+  </g>
+  <polygon fill="#eff0f1" points="5,13.5 20,13.5 19.5,18.5 4,20"/>
+</svg>

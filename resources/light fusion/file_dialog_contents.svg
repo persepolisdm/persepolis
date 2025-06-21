@@ -1,0 +1,7 @@
+<svg width="24" height="24">
+  <g transform="scale(0.9) translate(2, 2)">
+    <path fill="#31363b" d="M6,2A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2H6M6,4H13V9H18V20H6V4M8,12V14H16V12H8M8,16V18H13V16H8Z"/>
+  </g>
+  <line x1="7" y1="10" x2="1" y2="13" stroke="#bab9b8" stroke-width="2"/>
+  <circle cx="9" cy="10" r="5" stroke="#bab9b8" fill="rgba(243, 73, 73, 0.6)" stroke-width="0.5"/>
+</svg>

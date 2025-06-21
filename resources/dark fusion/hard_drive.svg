@@ -1,0 +1,11 @@
+<svg width="24" height="24">
+  <rect fill="none" x="4.5" y="2" width="15" height="20" rx="1" ry="1" stroke="#eff0f1" stroke-width="1"/>
+  <line x1="6.5" y1="20" x2="17.5" y2="20" stroke="#eff0f1" stroke-width="1"/>
+  <g transform="translate(0, 1)">
+    <circle cx="12" cy="8" r="4" stroke="#eff0f1" fill="none" stroke-width="1.5"/>
+    <g transform="rotate(130) translate(-12.2, -22.8)">
+      <rect fill="none" x="12" y="7.5" width="6" height="0.5" rx="0.25" ry="0.25" stroke="#eff0f1" stroke-width="0.5"/>
+    </g>
+    <circle cx="8" cy="14" r="1.5" fill="#eff0f1"/>
+  </g>
+</svg>

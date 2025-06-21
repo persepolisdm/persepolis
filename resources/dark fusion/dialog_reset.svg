@@ -1,0 +1,9 @@
+<svg height="100" width="80">
+  <g stroke="none" stroke-width="1" transform="scale(5)">
+    <g fill="#eff0f1" fill-rule="evenodd" transform="translate(-424.000000, -463.000000)">
+      <g transform="translate(424.000000, 464.000000)">
+        <path d="M8,3 L8,-0.5 L3,4.5 L8,9.5 L8,5 C11.3,5 14,7.7 14,11 C14,14.3 11.3,17 8,17 C4.7,17 2,14.3 2,11 L0,11 C0,15.4 3.6,19 8,19 C12.4,19 16,15.4 16,11 C16,6.6 12.4,3 8,3 L8,3 Z"/>
+      </g>
+    </g>
+  </g>
+</svg>

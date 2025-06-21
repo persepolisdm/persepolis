@@ -1,0 +1,9 @@
+<svg width="90" height="90">
+  <g transform="scale(5)">
+    <path d="M2,2 h14 v14 h-0.9 v-13.1 h-13.1 z" fill="#6a6e71"/>
+    <path d="M16,16 h-14 v-14 h0.9 v13.1 h13.1 z" fill="#6a6e71"/>
+    <path d="M5,5 h8 v8 h-0.9 v-7.1 h-7.1 z" fill="#6a6e71" fill-rule="evenodd"/>
+    <path d="M13,13 h-8 v-8 h0.9 v7.1 h7.1 z" fill="#6a6e71" fill-rule="evenodd"/>
+    <path d="M13,5 L 5,13 v-8 h8 z" fill="#6a6e71" fill-rule="evenodd"/>
+  </g>
+</svg>

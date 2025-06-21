@@ -1,0 +1,8 @@
+<svg width="24" height="24">
+  <rect fill="none" x="2" y="2" width="8" height="8" stroke="#eff0f1" stroke-width="1"/>
+  <rect fill="#eff0f1" x="2" y="14" width="8" height="8" stroke="#eff0f1" stroke-width="1"/>
+  <line x1="11" y1="4.5" x2="22" y2="4.5" style="stroke:#eff0f1;stroke-width:1" />
+  <line x1="11" y1="7.5" x2="22" y2="7.5" style="stroke:#eff0f1;stroke-width:1" />
+  <line x1="11" y1="16.5" x2="18" y2="16.5" style="stroke:#eff0f1;stroke-width:1" />
+  <line x1="11" y1="19.5" x2="18" y2="19.5" style="stroke:#eff0f1;stroke-width:1" />
+</svg>

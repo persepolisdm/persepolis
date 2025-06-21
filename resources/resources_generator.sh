@@ -34,15 +34,19 @@ if [ "$resources" == "1" ];then
 #     pyrcc5 resources.qrc -o "$parent_dir/persepolis/gui/resources.py"
 
     # for pysside6
-     rcc -g python -o "$parent_dir/persepolis/gui/resources.py" resources.qrc
+    rcc -g python -o "$parent_dir/persepolis/gui/resources.py" resources.qrc
      
     #add some line to file
     sed -i '6i try:' "$parent_dir/persepolis/gui/resources.py"
-    sed -i '7i\  from PySide6 import QtCore' "$parent_dir/persepolis/gui/resources.py"
+    sed -i '7i\    from PySide6 import QtCore' "$parent_dir/persepolis/gui/resources.py"
     sed -i '8i except:' "$parent_dir/persepolis/gui/resources.py"
-    sed -i '9i\  from PyQt5 import QtCore' "$parent_dir/persepolis/gui/resources.py"
+    sed -i '9i\    from PyQt5 import QtCore' "$parent_dir/persepolis/gui/resources.py"
     sed -i '/PySide2/d' "$parent_dir/persepolis/gui/resources.py"
-
+#     sed -i '11i try:' "$parent_dir/persepolis/gui/resources.py"
+#     sed -i '12i\    import lzma' "$parent_dir/persepolis/gui/resources.py"
+#     sed -i '13i except:' "$parent_dir/persepolis/gui/resources.py"
+#     sed -i '14i\    print(\"lzma\ is\ not\ installed!\")' "$parent_dir/persepolis/gui/resources.py"
+# 
     echo  "$parent_dir/persepolis/gui/resource.py is generated!"
 
 fi
