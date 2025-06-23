@@ -33,15 +33,19 @@ if [ "$resources" == "1" ];then
     # for pyqt5
 #     pyrcc5 resources.qrc -o "$parent_dir/persepolis/gui/resources.py"
 
-    # for pysside6
-    rcc -g python -o "$parent_dir/persepolis/gui/resources.py" resources.qrc
+    # for pysside2
+#     rcc -g python -o "$parent_dir/persepolis/gui/resources.py" resources.qrc
+
+    # If you get an error in archlinux, Install pyside6-tools-wrappers from AUR
+    pyside6-rcc resources.qrc -o "$parent_dir/persepolis/gui/resources.py"
+
      
     #add some line to file
+    sed -i '/PySide6/d' "$parent_dir/persepolis/gui/resources.py"
     sed -i '6i try:' "$parent_dir/persepolis/gui/resources.py"
     sed -i '7i\    from PySide6 import QtCore' "$parent_dir/persepolis/gui/resources.py"
     sed -i '8i except:' "$parent_dir/persepolis/gui/resources.py"
     sed -i '9i\    from PyQt5 import QtCore' "$parent_dir/persepolis/gui/resources.py"
-    sed -i '/PySide2/d' "$parent_dir/persepolis/gui/resources.py"
 #     sed -i '11i try:' "$parent_dir/persepolis/gui/resources.py"
 #     sed -i '12i\    import lzma' "$parent_dir/persepolis/gui/resources.py"
 #     sed -i '13i except:' "$parent_dir/persepolis/gui/resources.py"
