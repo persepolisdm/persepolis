@@ -132,11 +132,12 @@ def createNotificationSounds():
 
 
 def getSoundPath(name):
-    if os_type in OS.UNIX_LIKE:
-        persepolis_path_infromation = getExecPath()
-        is_bundle = persepolis_path_infromation['bundle']
-        file_name = name + '.wav'
 
+    persepolis_path_infromation = getExecPath()
+    is_bundle = persepolis_path_infromation['bundle']
+    file_name = name + '.wav'
+
+    if os_type in OS.UNIX_LIKE:
         if not is_bundle:
             # check if notification sounds available or not!
             sounds_directory = os.path.join(home_address, '.local/share/persepolis_download_manager/sounds')
@@ -147,14 +148,28 @@ def getSoundPath(name):
             bundle_path = os.path.dirname(sys.executable)
             file_path = os.path.join(bundle_path, file_name)
 
-        # return file_path if it exists.
-        if os.path.exists(file_path):
-            return file_path
+
+    elif os_type == OS.OSX:
+        if is_bundle:
+            # we use pyinstaller for creating bundle
+            base_path = getattr(sys, '_MEIPASS', os.path.dirname(os.path.abspath(__file__)))
+            file_path = os.path.join(base_path, file_name)
         else:
-            return None
+            # persepolis runs from test folder
+            # Check inside of test directory.
+            cwd = sys.argv[0]
+            current_directory = os.path.dirname(cwd)
+            file_path = os.path.join(current_directory, file_name)
 
     else:
-        return True
+        # MS Windows plays notification sound, No need to play any thing!
+        return None
+ 
+    # return file_path if it exists.
+    if os.path.exists(file_path):
+        return file_path
+    else:
+        return None
 
 
 def notifySend(message1, message2, time, sound, parent=None):

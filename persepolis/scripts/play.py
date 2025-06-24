@@ -73,11 +73,21 @@ def playNotification(file):
                              shell=False)
 
         elif os_type == OS.WINDOWS:
+            try:
+                effect = QSoundEffect()
+                effect.setSource(QUrl.fromLocalFile(file))
+                effect.setLoopCount(1)
+                effect.setVolume(volume_percent / 100)
+                effect.play()
+            except Exception as error:
+                logger.sendToLog(
+                    str(error), "ERROR")
 
-            CREATE_NO_WINDOW = 0x08000000
-            subprocess.Popen(['rundll32', 'user32.dll,MessageBeep'],
-                             stderr=subprocess.PIPE,
-                             stdout=subprocess.PIPE,
-                             stdin=subprocess.PIPE,
-                             shell=False,
-                             creationflags=CREATE_NO_WINDOW)
+
+#             CREATE_NO_WINDOW = 0x08000000
+#             subprocess.Popen(['rundll32', 'user32.dll,MessageBeep'],
+#                              stderr=subprocess.PIPE,
+#                              stdout=subprocess.PIPE,
+#                              stdin=subprocess.PIPE,
+#                              shell=False,
+#                              creationflags=CREATE_NO_WINDOW)

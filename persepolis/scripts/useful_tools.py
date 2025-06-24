@@ -212,6 +212,13 @@ def returnDefaultSettings():
             style = 'macOS'
             color_scheme = 'System'
 
+
+    elif os_type == OS.WINDOWS:
+        if 'windows11' in available_styles:
+            style = 'windows11'
+            color_scheme = 'System'
+
+
     # keyboard shortcuts
     delete_shortcut = "Ctrl+D"
     remove_shortcut = "Ctrl+R"
