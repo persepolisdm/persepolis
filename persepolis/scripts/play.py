@@ -57,22 +57,6 @@ def playNotification(file):
 
         elif os_type == OS.OSX:
 
-            subprocess.Popen(['osascript', '-e',
-                              'set', 'volume', 'alert',
-                              'volume', str(volume_percent)],
-                             stderr=subprocess.PIPE,
-                             stdout=subprocess.PIPE,
-                             stdin=subprocess.PIPE,
-                             shell=False)
-
-            subprocess.Popen(['osascript', '-e',
-                              'beep', '3'],
-                             stderr=subprocess.PIPE,
-                             stdout=subprocess.PIPE,
-                             stdin=subprocess.PIPE,
-                             shell=False)
-
-        elif os_type == OS.WINDOWS:
             try:
                 effect = QSoundEffect()
                 effect.setSource(QUrl.fromLocalFile(file))
@@ -82,12 +66,3 @@ def playNotification(file):
             except Exception as error:
                 logger.sendToLog(
                     str(error), "ERROR")
-
-
-#             CREATE_NO_WINDOW = 0x08000000
-#             subprocess.Popen(['rundll32', 'user32.dll,MessageBeep'],
-#                              stderr=subprocess.PIPE,
-#                              stdout=subprocess.PIPE,
-#                              stdin=subprocess.PIPE,
-#                              shell=False,
-#                              creationflags=CREATE_NO_WINDOW)

@@ -148,7 +148,6 @@ def getSoundPath(name):
             bundle_path = os.path.dirname(sys.executable)
             file_path = os.path.join(bundle_path, file_name)
 
-
     elif os_type == OS.OSX:
         if is_bundle:
             # we use pyinstaller for creating bundle
@@ -164,7 +163,7 @@ def getSoundPath(name):
     else:
         # MS Windows plays notification sound, No need to play any thing!
         return None
- 
+
     # return file_path if it exists.
     if os.path.exists(file_path):
         return file_path
