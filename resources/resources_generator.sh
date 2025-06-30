@@ -36,7 +36,6 @@ if [ "$resources" == "1" ];then
     # for pysside2
 #     rcc -g python -o "$parent_dir/persepolis/gui/resources.py" resources.qrc
 
-    # If you get an error in archlinux, Install pyside6-tools-wrappers from AUR
     pyside6-rcc resources.qrc -o "$parent_dir/persepolis/gui/resources.py"
 
      
