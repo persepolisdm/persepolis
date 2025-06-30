@@ -42,7 +42,7 @@ class Download():
         self.download_speed_str = "0"
         self.gid = gid
 
-        # download_status can be in waiting, downloading, stop, error, paused
+        # download_status can be in waiting, downloading, stop, error, paused, creating download file
         self.download_status = 'waiting'
 
         self.link = add_link_dictionary['link']
@@ -373,7 +373,7 @@ class Download():
                         remaining = self.file_size
 
                         # continue the loop until writing ends.
-                        while remaining > 0:
+                        while remaining > 0 and self.download_status != 'stopped':
                             # determines how much data should be written in this iteration.
                             # This value can be equal to CHUNK_SIZE,
                             # but if remaining is less than CHUNK_SIZE, only the remaining amount will be written.
@@ -384,9 +384,15 @@ class Download():
                             # updates the remaining amount to indicate how much of the file still needs to be written.
                             remaining -= to_write
 
-                        logger.sendToLog('Empty file has been created!' + ' - GID: ' + self.gid, 'DOWNLOADS')
-
+                        if self.download_status != 'stopped':
+                            logger.sendToLog('Empty file has been created!' + ' - GID: ' + self.gid, 'DOWNLOADS')
+                        else:
+                            # Download canceled by user! Delete unfinished empty file.
+                            fp.close()
+                            os.remove(self.file_path)
+                            return False
                     else:
+                        fp.close()
                         return False
 
             fp.close()
@@ -908,14 +914,13 @@ class Download():
         sigma_now = self.nowTime()
 
         # while current time is not equal to end_time, continue the loop
-        while sigma_end != sigma_now and (self.download_status == 'downloading' or self.download_status == 'paused'):
-
+        while sigma_end != sigma_now and (self.download_status not in ['stopped', 'error']):
             # get current time
             sigma_now = self.nowTime()
             time.sleep(2.1)
 
         # Time is up!
-        if (self.download_status == 'downloading' or self.download_status == 'paused'):
+        if self.download_status not in ['stopped', 'error']:
             logger.sendToLog("Time is up! - GID:" + self.gid, "DOWNLOADS")
 
             # stop download
@@ -962,13 +967,12 @@ class Download():
                 self.main_window.persepolis_db.setDefaultGidInAddlinkTable(self.gid, start_time=True)
 
         if self.download_status != 'stopped':
+            self.download_status = 'creating download file'
             # start download
             headers = self.getFileSize()
 
             if headers != {}:
                 self.setRetry()
-
-                self.download_status = 'downloading'
 
                 # if user set end_time
                 if self.end_time:
@@ -981,17 +985,19 @@ class Download():
                 self.getFileTag()
 
                 enough_free_space = self.createControlFile()
+                if self.download_status != 'stopped':
+                    self.download_status = 'downloading'
 
-                if enough_free_space:
-                    self.definePartSizes()
+                    if enough_free_space:
+                        self.definePartSizes()
 
-                    self.runProgressBar()
+                        self.runProgressBar()
 
-                    self.runDownloadThreads()
+                        self.runDownloadThreads()
 
-                    self.checkDownloadProgress()
-                else:
-                    self.download_status = 'error'
+                        self.checkDownloadProgress()
+                    else:
+                        self.download_status = 'error'
 
                 self.close()
 

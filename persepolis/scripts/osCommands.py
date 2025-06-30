@@ -199,9 +199,8 @@ def xdgOpen(file_path, f_type='file', path='file'):
                              shell=False,
                              creationflags=CREATE_NO_WINDOW)
 
+
 # remove file with path of file_path
-
-
 def remove(file_path):
     if os.path.isfile(file_path):
         try:
@@ -217,9 +216,8 @@ def remove(file_path):
         # function returns this , if file is not existed
         return 'no'
 
+
 # removeDir removes folder : folder_path
-
-
 def removeDir(folder_path):
 
     # check folder_path existence
