@@ -1111,38 +1111,13 @@ class Download():
             new_file_path = os.path.join(new_download_path, new_name)
             i = i + 1
 
-        free_space = freeSpace(new_download_path)
+        # move the file to the download folder
+        move_answer = moveFile(str(self.file_path), str(new_file_path), 'file')
 
-        if free_space is not None and self.file_size is not None:
-
-            # compare free disk space and file_size
-            if free_space >= self.file_size:
-
-                # move the file to the download folder
-                move_answer = moveFile(str(self.file_path), str(new_file_path), 'file')
-
-                if not (move_answer):
-                    # write error message in log
-                    logger.sendToLog('Persepolis can not move file' + ' - GID: ' + self.gid, "ERROR")
-                    new_file_path = self.file_path
-
-            else:
-                # notify user if we have insufficient disk space
-                # and do not move file from temp download folder to download folder
-                new_file_path = self.file_path
-                logger.sendToLog('Insufficient disk space in download folder' + ' - GID: ' + self.gid, "ERROR")
-
-                # show notification
-                notifySend("Insufficient disk space!", 'Please change download folder',
-                           10000, 'fail', parent=self.main_window)
-
-        else:
-            # move the file to the download folder
-            move_answer = moveFile(str(self.file_path), str(new_file_path), 'file')
-
-            if not (move_answer):
-                logger.sendToLog('Persepolis can not move file' + ' - GID: ' + self.gid, "ERROR")
-                new_file_path = self.file_path
+        if not (move_answer):
+            # write error message in log
+            logger.sendToLog('Persepolis can not move file' + ' - GID: ' + self.gid, "ERROR")
+            new_file_path = self.file_path
 
         return str(new_file_path)
 
