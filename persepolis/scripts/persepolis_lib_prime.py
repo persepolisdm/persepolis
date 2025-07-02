@@ -20,12 +20,9 @@ import random
 import threading
 import os
 import errno
-import re
-import shutil
 from persepolis.scripts.useful_tools import convertTime, humanReadableSize, freeSpace, headerToDict, readCookieJar, getFileNameFromLink
 from persepolis.scripts.osCommands import makeDirs, moveFile
 from persepolis.scripts import logger
-from persepolis.scripts.bubble import notifySend
 from persepolis.constants import VERSION
 import json
 from requests.adapters import HTTPAdapter
