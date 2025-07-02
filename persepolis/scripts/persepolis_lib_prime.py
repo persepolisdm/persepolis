@@ -354,7 +354,6 @@ class Download():
             fp = open(self.file_path, "wb")
 
             # if file_size is specified, create an empty file with file_size
-
             if self.file_size:
                 # check for free space
                 free_space = freeSpace(self.download_path)
@@ -396,6 +395,8 @@ class Download():
                         return False
 
             fp.close()
+            return True
+        else:
             return True
 
     def definePartSizes(self):
