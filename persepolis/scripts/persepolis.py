@@ -437,7 +437,8 @@ def main():
         # set style
         # check available style first
         available_styles = QtWidgets.QStyleFactory.keys()
-
+        # add system style
+        available_styles.append('System')
         # if user selected style not available, set 'Fusion' for style
         if style not in available_styles:
             style = 'Fusion'
