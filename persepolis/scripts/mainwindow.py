@@ -2535,11 +2535,15 @@ class MainWindow(MainWindow_Ui):
         # hide MainWindow
         self.hide()
 
+        # hide system_tray_icon
+        self.system_tray_icon.hide()
+
         # stop all downloads
         self.stopAllDownloads(event)
 
-        # hide system_tray_icon
-        self.system_tray_icon.hide()
+        # Make sure all sessions have ended.
+        while self.download_sessions_list:
+            sleep(0.5)
 
         global shutdown_notification  # see start of this script and see inherited QThreads
 
