@@ -382,6 +382,8 @@ class Download():
 
                         if self.download_status != 'stopped':
                             logger.sendToLog('Empty file has been created!' + ' - GID: ' + self.gid, 'DOWNLOADS')
+                            fp.close()
+                            return True
                         else:
                             # Download canceled by user! Delete unfinished empty file.
                             fp.close()
@@ -390,9 +392,13 @@ class Download():
                     else:
                         fp.close()
                         return False
+                else:
+                    fp.close()
+                    return False
 
-            fp.close()
-            return True
+            else:
+                fp.close()
+                return True
         else:
             return True
 
