@@ -1243,10 +1243,10 @@ class PersepolisDB():
         # find download items is download_db_table with status = "downloading" or "waiting" or paused or scheduled
         if category:
             self.persepolis_db_cursor.execute("""SELECT gid FROM download_db_table WHERE (category = '{}') AND (status = 'downloading' OR status = 'waiting'
-                                            OR status = 'scheduled' OR status = 'paused')""".format(str(category)))
+                                            OR status = 'scheduled' OR status = 'paused' OR status = 'creating download file')""".format(str(category)))
         else:
             self.persepolis_db_cursor.execute("""SELECT gid FROM download_db_table WHERE (status = 'downloading' OR status = 'waiting'
-                                            OR status = 'scheduled' OR status = 'paused')""")
+                                            OR status = 'scheduled' OR status = 'paused' OR status = 'creating download file')""")
 
         # create a list for returning answer
         result = self.persepolis_db_cursor.fetchall()
@@ -1260,14 +1260,14 @@ class PersepolisDB():
 
         return gid_list
 
-# this method returns items with 'downloading' or 'waiting' status
+# this method returns items with 'downloading' or 'waiting' or 'creating download file' status
     def returnDownloadingItems(self):
         # lock data base
         self.lockCursor()
 
         # find download items is download_db_table with status = "downloading" or "waiting" or paused or scheduled
         self.persepolis_db_cursor.execute(
-            """SELECT gid FROM download_db_table WHERE (status = 'downloading' OR status = 'waiting')""")
+            """SELECT gid FROM download_db_table WHERE (status = 'downloading' OR status = 'waiting' OR status = 'creating download file')""")
 
         # create a list for returning answer
         result = self.persepolis_db_cursor.fetchall()

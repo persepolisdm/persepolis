@@ -2505,6 +2505,18 @@ class MainWindow(MainWindow_Ui):
 
     # close application actions is in this method (to close program completely this method must call)
     def closeAction(self, event=None):
+        # make sure we have no active downloads
+        # get active download list from data base
+        active_gid_list = self.persepolis_db.findActiveDownloads('Single Downloads')
+        if active_gid_list:
+            # notify user
+            self.msgBox = QMessageBox()
+            self.msgBox.setText(QCoreApplication.translate("mainwindow_src_ui_tr", "<b><center>A download or downloads are in progress.\
+                    Stop them before closing the app!</center></b>"))
+            self.msgBox.setIcon(QMessageBox.Warning)
+            self.msgBox.exec_()
+            return
+
         # save window size  and position
         self.persepolis_setting.setValue('MainWindow/size', self.size())
         self.persepolis_setting.setValue('MainWindow/position', self.pos())
@@ -2537,9 +2549,6 @@ class MainWindow(MainWindow_Ui):
 
         # hide system_tray_icon
         self.system_tray_icon.hide()
-
-        # stop all downloads
-        self.stopAllDownloads(event)
 
         # Make sure all sessions have ended.
         while self.download_sessions_list:
