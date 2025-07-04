@@ -15,13 +15,12 @@
 
 from persepolis.scripts.play import playNotification
 from persepolis.scripts.osCommands import makeDirs
-from persepolis.scripts.useful_tools import getExecPath, findExternalAppPath, runApplication
 from persepolis.gui import resources
 from persepolis.constants import OS
 import platform
 import os
 from persepolis.scripts import logger
-import sys
+from persepolis.scripts.download_link import DownloadSingleLink
 try:
     from PySide6.QtCore import QSettings
     from PySide6.QtGui import QIcon
@@ -50,119 +49,89 @@ if os_type in OS.LINUX:
 home_address = os.path.expanduser("~")
 
 
-# On Linux and BSD, if Persepolis is not run as bundled,
-# the audio files in the freedesktop folder must be converted
-# from oga format to wav format and moved to the
-# ~/.local/share/persepolis_download_manager/sounds/ folder.
-# ffmpeg will do this conversion.
-# Therefore, it should be checked that ffmpeg must be
-# installed. The reason for this format change is that QSoundEffect
-# is not able to play oga format.
-# First check if persepolis is run as bundle in linux and bsd
+# When Persepolis is running on Linux, BSD, and MacOSX operating systems,
+# the program will check for the presence of notification sound files,
+# and if there are no files, it will download them from GitHub.
+# The Windows operating system uses its own notification sounds,
+# so there is no need for notification sound files in Windows.
 def checkNotificationSounds():
     if os_type in OS.UNIX_LIKE:
-        persepolis_path_infromation = getExecPath()
-        is_bundle = persepolis_path_infromation['bundle']
-
-        if not is_bundle:
-            # check if notification sounds available or not!
-            notification_directory = '.local/share/persepolis_download_manager/sounds'
-            notification_sounds = ['ok.wav', 'fail.wav', 'warning.wav', 'queue.wav']
-
-            file_availability = 0
-            for file in notification_sounds:
-                file_path = os.path.join(home_address, notification_directory, file)
-                if os.path.exists(file_path):
-                    file_availability += 1
-
-            if file_availability == 4:
-                return True
-            else:
-                logger.sendToLog('Notification sounds are not available', 'ERROR')
-                return False
-        else:
-            return True
+        # for linux and bsd
+        # ~/.local/share/persepolis_download_manager/sounds
+        notification_directory = os.path.join(home_address, '.local/share/persepolis_download_manager/sounds')
+    elif os_type in OS.OSX:
+        # for mac
+        # ~/Library/Application Support/<YourAppName>/sounds/
+        notification_directory = os.path.join(home_address, 'Library/Application Support/persepolis_download_manager/sounds/')
     else:
+        # windows
         return True
 
+    notification_sounds = ['ok.wav', 'fail.wav', 'warning.wav', 'queue.wav']
+    file_availability = 0
+    for file in notification_sounds:
+        file_path = os.path.join(home_address, notification_directory, file)
+        if os.path.exists(file_path):
+            file_availability += 1
 
-def createNotificationSounds():
-    # check availability of freedesktop folder
-    if os_type == OS.LINUX:
-        freedesktop_path = '/usr/share/sounds/freedesktop/stereo'
-    elif os_type in OS.BSD_FAMILY:
-        freedesktop_path = '/usr/local/share/sounds/freedesktop/stereo'
-
-    if not (os.path.isdir(freedesktop_path)):
+    if file_availability == 4:
+        return True
+    else:
+        logger.sendToLog('Notification sounds are not available', 'ERROR')
         return False
 
+
+# this function downloads notification sounds from github for Linux, BSD and MacOSX
+def createNotificationSounds(main_window):
     # create a directory for sounds in:
-    # ~/.local/share/persepolis_download_manager/sounds
-    sounds_directory = os.path.join(home_address, '.local/share/persepolis_download_manager/sounds')
+    if os_type in OS.UNIX_LIKE:
+        # for linux and bsd
+        # ~/.local/share/persepolis_download_manager/sounds
+        sounds_directory = os.path.join(home_address, '.local/share/persepolis_download_manager/sounds')
+    elif os_type in OS.OSX:
+        # for mac
+        # ~/Library/Application Support/<YourAppName>/sounds/
+        sounds_directory = os.path.join(home_address, 'Library/Application Support/persepolis_download_manager/sounds/')
+
+    # create directory
     makeDirs(sounds_directory)
 
-    ffmpeg_command, log_list = findExternalAppPath('ffmpeg')
-
-    # convert sound files
+    # file names
     notification_sounds = ['ok.wav', 'fail.wav', 'warning.wav', 'queue.wav']
-    freedesktop_files = ['complete.oga', 'dialog-error.oga', 'bell.oga', 'message.oga']
-    j = 0
+
+    # download links
+    file_links = ['https://raw.githubusercontent.com/persepolisdm/persepolis/refs/heads/master/resources/notification%20sounds/ok.wav',
+                  'https://raw.githubusercontent.com/persepolisdm/persepolis/refs/heads/master/resources/notification%20sounds/fail.wav',
+                  'https://raw.githubusercontent.com/persepolisdm/persepolis/refs/heads/master/resources/notification%20sounds/warning.wav',
+                  'https://raw.githubusercontent.com/persepolisdm/persepolis/refs/heads/master/resources/notification%20sounds/queue.wav']
+
+    # download notification sound files from github.
+    # The result will be written to the log.
     for i in range(4):
-        notification_sound_path = os.path.join(sounds_directory, notification_sounds[i])
-        freedesktop_file_path = os.path.join(freedesktop_path, freedesktop_files[i])
-        command_arguments = [ffmpeg_command, '-i',
-                             freedesktop_file_path,
-                             notification_sound_path]
+        new_download = DownloadSingleLink(file_links[i], os.path.join(sounds_directory, notification_sounds[i]))
+        main_window.threadPool.append(new_download)
+        main_window.threadPool[-1].start()
 
-        try:
-            pipe = runApplication(command_arguments)
-            # conversion is successful
-            if pipe.wait() == 0:
-                j += 1
-
-        except:
-            return False
-
-    if j == 4:
-        # all 4 files created successfully.
-        logger.sendToLog('Notification sounds are created successfully.', "INFO")
-        return True
-    else:
-        return False
+    return True
 
 
 def getSoundPath(name):
+    # create a directory for sounds in:
+    if os_type in OS.UNIX_LIKE:
+        # for linux and bsd
+        # ~/.local/share/persepolis_download_manager/sounds
+        sounds_directory = os.path.join(home_address, '.local/share/persepolis_download_manager/sounds')
+    elif os_type in OS.OSX:
+        # for mac
+        # ~/Library/Application Support/<YourAppName>/sounds/
+        sounds_directory = os.path.join(home_address, 'Library/Application Support/persepolis_download_manager/sounds/')
+    # Windows
+    else:
+        return None
 
-    persepolis_path_infromation = getExecPath()
-    is_bundle = persepolis_path_infromation['bundle']
     file_name = name + '.wav'
 
-    if os_type in OS.UNIX_LIKE:
-        if not is_bundle:
-            # check if notification sounds available or not!
-            sounds_directory = os.path.join(home_address, '.local/share/persepolis_download_manager/sounds')
-            file_path = os.path.join(sounds_directory, file_name)
-
-        else:
-            # we use nuikita for creating bundle
-            bundle_path = os.path.dirname(sys.executable)
-            file_path = os.path.join(bundle_path, file_name)
-
-    elif os_type == OS.OSX:
-        if is_bundle:
-            # we use pyinstaller for creating bundle
-            base_path = getattr(sys, '_MEIPASS', os.path.dirname(os.path.abspath(__file__)))
-            file_path = os.path.join(base_path, file_name)
-        else:
-            # persepolis runs from test folder
-            # Check inside of test directory.
-            cwd = sys.argv[0]
-            current_directory = os.path.dirname(cwd)
-            file_path = os.path.join(current_directory, file_name)
-
-    else:
-        # MS Windows plays notification sound, No need to play any thing!
-        return None
+    file_path = os.path.join(sounds_directory, file_name)
 
     # return file_path if it exists.
     if os.path.exists(file_path):

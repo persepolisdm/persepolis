@@ -226,7 +226,7 @@ class CheckVersionsThread(QThread):
         # is not able to play oga format.
         notification_sounds_are_available = checkNotificationSounds()
         if not (notification_sounds_are_available):
-            notification_sounds_are_available = createNotificationSounds()
+            notification_sounds_are_available = createNotificationSounds(self.parent)
 
         # log python version
         logger.sendToLog('python version: ' + str(sys.version))

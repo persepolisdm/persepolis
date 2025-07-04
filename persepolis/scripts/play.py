@@ -21,7 +21,6 @@ except:
 
 from persepolis.scripts import logger
 from persepolis.constants import OS
-import subprocess
 import platform
 
 os_type = platform.system()

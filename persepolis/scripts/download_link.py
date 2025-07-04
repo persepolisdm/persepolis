@@ -13,11 +13,12 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
+import requests
 try:
-    from PySide6.QtCore import QThread, Signal
+    from PySide6.QtCore import QThread
 except:
     from PyQt5.QtCore import QThread
-    from PyQt5.QtCore import pyqtSignal as Signal
+from persepolis.scripts import logger
 
 
 # this thread starts download.
@@ -40,3 +41,25 @@ class DownloadLink(QThread):
             self.main_window.temp_db.updateSingleTable(dictionary)
 
         self.download_session.start()
+
+
+class DownloadSingleLink(QThread):
+    def __init__(self, download_link, file_path):
+        QThread.__init__(self)
+        self.download_link = download_link
+        self.file_path = file_path
+
+    def run(self):
+        try:
+            # download link
+            response = requests.get(self.download_link)
+            # write it to file
+            with open(self.file_path, 'wb') as f:
+                f.write(response.content)
+
+            if response.ok:
+                log_message = 'Download complete! ' + str(self.file_path)
+                logger.sendToLog(log_message, "INFO")
+        except Exception as e:
+            error_message = 'Download was unsuccessful:\n' + str(self.file_path) + '\n' + str(e)
+            logger.sendToLog(error_message, "ERROR")
