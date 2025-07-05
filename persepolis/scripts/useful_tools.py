@@ -203,9 +203,15 @@ def returnDefaultSettings():
             style = 'System'
             color_scheme = 'System'
         else:
-            if 'Adwaita' in available_styles:
+            if 'Breeze' in available_styles:
+                style = 'Breeze'
+                color_scheme = 'System'
+            elif 'Adwaita' in available_styles:
                 style = 'Adwaita'
                 color_scheme = 'System'
+            else:
+                style = 'Fusion'
+                color_scheme = 'Dark Fusion'
 
     elif os_type == OS.OSX:
         if 'macOS' in available_styles:
