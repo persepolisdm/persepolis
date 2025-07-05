@@ -24,7 +24,7 @@ except:
 
 from persepolis.constants import OS
 from persepolis.gui.setting_ui import Setting_Ui, KeyCapturingWindow_Ui
-from persepolis.scripts.useful_tools import returnDefaultSettings, ffmpegVersion
+from persepolis.scripts.useful_tools import returnDefaultSettings, getExecPath
 from persepolis.scripts import osCommands
 from persepolis.scripts import startup
 import platform
@@ -137,11 +137,16 @@ class PreferencesWindow(Setting_Ui):
 
         current_style_index = self.style_comboBox.findText(
             str(self.persepolis_setting.value('style')))
-        if current_style_index != -1:
-            self.style_comboBox.setCurrentIndex(current_style_index)
+        # If style not found, set style to Fusion
+        if current_style_index == -1:
+            current_style_index = self.style_comboBox.findText('Fusion')
+
+        self.style_comboBox.setCurrentIndex(current_style_index)
 
         # available language
-        available_language = ['en_US', 'fa_IR', 'ar', 'es_ES', 'fr_FR', 'ko', 'pl_PL', 'pt', 'ru', 'tr', 'zh_CN', 'de', 'hu', 'nl_NL', 'pt_BR', 'sv', 'tr_TR', 'zh_TW']
+        available_language = ['en_US', 'fa_IR', 'ar', 'es_ES', 'fr_FR', 'ko', 'pl_PL',
+                              'pt', 'ru', 'tr', 'zh_CN', 'de', 'hu', 'nl_NL', 'pt_BR',
+                              'sv', 'tr_TR', 'zh_TW']
         for lang in available_language:
             self.lang_comboBox.addItem(str(QLocale(lang).nativeLanguageName()), lang)
 
@@ -166,13 +171,20 @@ class PreferencesWindow(Setting_Ui):
         # set notification
         notifications = ['Native notification', 'QT notification']
         self.notification_comboBox.addItems(notifications)
-        current_notification_index = self.notification_comboBox.findText(
-            str(self.persepolis_setting.value('notification')))
-        self.notification_comboBox.setCurrentIndex(current_notification_index)
 
-        if os_type not in OS.UNIX_LIKE:
+        exec_dict = getExecPath()
+        is_bundle = exec_dict['bundle']
+
+        # If Persepolis does not run as a bundle on Linux(Only Linux), it can use the native notification system.
+        if (os_type not in OS.UNIX_LIKE) or (os_type in OS.UNIX_LIKE and is_bundle):
             self.notification_comboBox.hide()
             self.notification_label.hide()
+            current_notification_index = self.notification_comboBox.findText('QT notification')
+
+        else:
+            current_notification_index = self.notification_comboBox.findText(
+                str(self.persepolis_setting.value('notification')))
+        self.notification_comboBox.setCurrentIndex(current_notification_index)
 
         # set font
         font_setting = QFont()

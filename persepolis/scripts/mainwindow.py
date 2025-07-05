@@ -196,7 +196,6 @@ class DeleteThingsThatAreNoLongerNeededThread(QThread):
 # ffmpeg and python and pyqt and qt versions and write them in log file.
 # writes os type and desktop env. in log file.
 # checks notification sounds existance.
-# checks .desktop file existance.
 class InitializationThread(QThread):
 
     def __init__(self, parent):
