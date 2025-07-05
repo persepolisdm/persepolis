@@ -207,7 +207,6 @@ class Download():
             if content_disposition.find('filename') != -1:
 
                 # so file name is available in header
-                print('bing')
                 filename_splited = content_disposition.split('filename=')
                 filename_splited = filename_splited[-1]
 
