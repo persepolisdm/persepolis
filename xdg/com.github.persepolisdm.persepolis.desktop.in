@@ -5,7 +5,7 @@ Comment[en_US]=A download manager written in Python
 Comment=A download manager written in Python
 Comment[fa]=نرم افزار مدیریت بارگیری نوشته شده با پایتون
 Comment[ko]=Python으로 작성된 다운로드 관리자
-Exec=persepolis
+Exec=@persepolisbin@
 GenericName[en_US]=Download Manager
 GenericName=Download Manager
 GenericName[bn]=ডাউনলোড মেনেজার
@@ -34,7 +34,7 @@ Name[it]=Avvia Persepolis
 Name[ko]=Persepolis 시작
 
 [Desktop Action Tray]
-Exec=persepolis --tray
+Exec=@persepolisbin@ --tray
 Name=Start in System Tray
 Name[bn]=সিস্টেম-ট্রে-তে শুরু করুন
 Name[fa]=اجرای برنامه در سینی نمایه

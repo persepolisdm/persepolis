@@ -234,9 +234,8 @@ def removeDir(folder_path):
         # return 'no' if file didn't existed
         return 'no'
 
+
 # make directory
-
-
 def makeDirs(folder_path, hidden=False):
 
     if hidden:
@@ -268,9 +267,8 @@ def makeDirs(folder_path, hidden=False):
 
     return folder_path
 
+
 # this function returns mount point
-
-
 def findMountPoint(path):
 
     while not os.path.ismount(path):
@@ -312,4 +310,18 @@ def moveFile(old_file_path, new_path, new_path_type='folder'):
 
     else:
 
+        return False
+
+
+# copy a file to another destination
+# Warining! new_path must be a complete file path not only a directory
+def copyFile(old_path, new_path):
+    # make new directory if it's necessary
+    dir_path = os.path.dirname(new_path)
+    makeDirs(dir_path)
+
+    try:
+        shutil.copy(old_path, new_path)
+        return new_path
+    except:
         return False

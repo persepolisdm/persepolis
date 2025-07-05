@@ -77,7 +77,7 @@ except ModuleNotFoundError:
         "yt-dlp is not installed.", "ERROR")
     youtube_dl_is_installed = False
 
-# CheckVersionsThread thread can change this variables.
+# InitializationThread thread can change this variables.
 global ffmpeg_is_installed
 ffmpeg_is_installed = False
 
@@ -191,10 +191,13 @@ class DeleteThingsThatAreNoLongerNeededThread(QThread):
         self.main_window.persepolis_db.deleteItemInDownloadTable(self.gid, self.category)
 
 
-# this thread checks ffmpeg and gost availability.
-# this thread checks ffmpeg and python and pyqt and qt versions and write them in log file.
-# this thread writes os type and desktop env. in log file.
-class CheckVersionsThread(QThread):
+# this thread checks:
+# ffmpeg availability
+# ffmpeg and python and pyqt and qt versions and write them in log file.
+# writes os type and desktop env. in log file.
+# checks notification sounds existance.
+# checks .desktop file existance.
+class InitializationThread(QThread):
 
     def __init__(self, parent):
         QThread.__init__(self)
@@ -215,15 +218,7 @@ class CheckVersionsThread(QThread):
         ffmpeg_command_is = 'ffmpeg command is: ' + str(ffmpeg_command)
         logger.sendToLog(ffmpeg_command_is, "INFO")
 
-        # if ffmpeg is available so check if notification sounds are available or not
-        # On Linux and BSD, if Persepolis is not run as bundled,
-        # the audio files in the freedesktop folder must be converted
-        # from oga format to wav format and moved to the
-        # ~/.local/share/persepolis_download_manager/sounds/ folder.
-        # ffmpeg will do this conversion.
-        # Therefore, it should be checked that ffmpeg must be
-        # installed. The reason for this format change is that QSoundEffect
-        # is not able to play oga format.
+        # check notification sound files existance and create them if it's necessary.
         notification_sounds_are_available = checkNotificationSounds()
         if not (notification_sounds_are_available):
             notification_sounds_are_available = createNotificationSounds(self.parent)
@@ -862,7 +857,7 @@ class MainWindow(MainWindow_Ui):
         # this thread checks ffmpeg availability.
         # this thread checks ffmpeg and python and pyqt and qt versions and write them in log file.
         # this thread writes os type and desktop env. in log file.
-        check_version_thread = CheckVersionsThread(self)
+        check_version_thread = InitializationThread(self)
         self.threadPool.append(check_version_thread)
         self.threadPool[-1].start()
 

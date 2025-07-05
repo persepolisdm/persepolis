@@ -18,11 +18,13 @@
 
 from persepolis.scripts.data_base import PersepolisDB, PluginsDB
 from persepolis.scripts import logger
-from persepolis.scripts.useful_tools import determineConfigFolder, returnDefaultSettings
+from persepolis.scripts.useful_tools import determineConfigFolder, returnDefaultSettings, osAndDesktopEnvironment, getExecPath
 from persepolis.scripts.browser_integration import browserIntegration
 from persepolis.scripts import osCommands
+from persepolis.constants import OS
 import time
 import os
+import sys
 
 try:
     from PySide6.QtCore import QSettings
@@ -62,10 +64,7 @@ for log_file in log_files_list:
     # if number of lines in log_file is more than 300, then keep last 200 lines in log_file.
     if lines < 300:
         f = open(log_file, 'a')
-        f.writelines('===================================================\n'
-                     + 'Persepolis Download Manager, '
-                     + current_time
-                     + '\n')
+        f.writelines('===================================================\n' + 'Persepolis Download Manager, ' + current_time + '\n')
         f.close()
     else:
         # keep last 200 lines
@@ -84,9 +83,7 @@ for log_file in log_files_list:
         f.close()
 
         f = open(log_file, 'a')
-        f.writelines('Persepolis Download Manager, '
-                     + current_time
-                     + '\n')
+        f.writelines('Persepolis Download Manager, ' + current_time + '\n')
         f.close()
 
 
@@ -186,6 +183,62 @@ if locale in rtl_locale_list:
     persepolis_setting.setValue('ui_direction', 'rtl')
 else:
     persepolis_setting.setValue('ui_direction', 'ltr')
+
+# check the existance of .desktop and icons file for
+# Linux and BSD bundle and create it if it's necessary.
+# check if persepolis run as bundle first
+# find os platform
+os_type, desktop_env = osAndDesktopEnvironment()
+
+if os_type in OS.UNIX_LIKE:
+    exec_dictionary = getExecPath()
+    is_bundle = exec_dictionary['bundle']
+    if is_bundle:
+        # user home address
+        home_address = os.path.expanduser("~")
+
+        bundle_path = os.path.dirname(sys.executable)
+        # check existance of .desktop file
+        dot_desktop_path = os.path.join(home_address, '.local/share/applications/com.github.persepolisdm.persepolis.desktop')
+        icon_desktop_path = os.path.join(home_address, '.local/share/icons/hicolor/scalable/apps/com.github.persepolisdm.persepolis.svg')
+        icon_tray_path = os.path.join(home_address, '.local/share/icons/hicolor/scalable/apps/persepolis-tray.svg')
+
+        local_share_file_path = [dot_desktop_path,
+                                 icon_desktop_path,
+                                 icon_tray_path]
+
+        dot_desktop_bundle = os.path.join(bundle_path, 'com.github.persepolisdm.persepolis.desktop.in')
+        icon_desktop_bundle = os.path.join(bundle_path, 'com.github.persepolisdm.persepolis.svg')
+        icon_tray_bundle = os.path.join(bundle_path, 'persepolis-tray.svg')
+
+        in_bundle_file_path = [dot_desktop_bundle,
+                               icon_desktop_bundle,
+                               icon_tray_bundle]
+
+        for i in range(3):
+            # rewrite .desktop file every time
+            if not (os.path.exists(local_share_file_path[i])) or i == 0:
+                osCommands.copyFile(in_bundle_file_path[i], local_share_file_path[i])
+
+        # rewrite Exec path in .desktop file.
+        # perhaps user changed the place of the bundle.
+        # get exec path
+        # modify lines
+        # Because of space in file name and file path,
+        # Exec path in .desktop file must be in "".
+
+        exec_path = '"' + exec_dictionary['modified_exec_file_path'] + '"'
+
+        # get .desktop content
+        with open(dot_desktop_path, 'r') as file:
+            content = file.read()
+
+        # replace @persepolisbin@ by new exec path
+        new_content = content.replace('@persepolisbin@', exec_path)
+
+        # write it to file
+        with open(dot_desktop_path, 'w') as file:
+            file.write(new_content)
 
 # compatibility
 persepolis_version = float(persepolis_setting.value('version/version', 2.5))

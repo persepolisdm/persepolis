@@ -212,12 +212,10 @@ def returnDefaultSettings():
             style = 'macOS'
             color_scheme = 'System'
 
-
     elif os_type == OS.WINDOWS:
         if 'windows11' in available_styles:
             style = 'windows11'
             color_scheme = 'System'
-
 
     # keyboard shortcuts
     delete_shortcut = "Ctrl+D"
@@ -512,15 +510,16 @@ def getExecPath():
     # getattr(sys, 'frozen', False) and hasattr(sys, '_MEIPASS')
     # But this code doesn't work for nuitka!
     # So we have to use a workaround to identify nuitka bundle.
-    # We check the inside of the bundle and look for the ok.wav
+    # We check the inside of the bundle and look for the
+    # com.github.persepolisdm.persepolis.svg file(icon).
     # file that we placed. If it was, then the bundle file
     # generated with nuitka is running.
     if os_type in OS.UNIX_LIKE:
         bundle_path = os.path.dirname(sys.executable)
-        sound_file_path = os.path.join(bundle_path, 'ok.wav')
+        icon_file_path = os.path.join(bundle_path, 'com.github.persepolisdm.persepolis.svg')
 
-        # check availability of ok.wav
-        if os.path.exists(sound_file_path):
+        # check availability of com.github.persepolisdm.persepolis.svg
+        if os.path.exists(icon_file_path):
             exec_dictionary['bundle'] = True
 
             # for nuitka

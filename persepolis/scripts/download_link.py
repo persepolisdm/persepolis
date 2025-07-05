@@ -15,9 +15,11 @@
 """
 import requests
 try:
-    from PySide6.QtCore import QThread
+    from PySide6.QtCore import QThread, Signal
 except:
     from PyQt5.QtCore import QThread
+    from PyQt5.QtCore import pyqtSignal as Signal
+
 from persepolis.scripts import logger
 
 
@@ -44,6 +46,8 @@ class DownloadLink(QThread):
 
 
 class DownloadSingleLink(QThread):
+    DOWNLOADSTATUSSIGNAL = Signal(bool)
+
     def __init__(self, download_link, file_path):
         QThread.__init__(self)
         self.download_link = download_link
@@ -60,6 +64,8 @@ class DownloadSingleLink(QThread):
             if response.ok:
                 log_message = 'Download complete! ' + str(self.file_path)
                 logger.sendToLog(log_message, "INFO")
+                self.DOWNLOADSTATUSSIGNAL.emit(True)
         except Exception as e:
             error_message = 'Download was unsuccessful:\n' + str(self.file_path) + '\n' + str(e)
             logger.sendToLog(error_message, "ERROR")
+            self.DOWNLOADSTATUSSIGNAL.emit(False)
