@@ -121,7 +121,10 @@ def spider(add_link_dictionary):
             filename_splited = filename_splited[-1]
 
             # getting file name in desired format
-            filename = filename_splited.strip()
+            # remove "" from file namme(some times it's happend for github files).
+            filename = filename_splited.strip('"')
+            # remove any leading and trailing whitespace.
+            filename = filename.strip()
 
     if not (filename):
         filename = getFileNameFromLink(link)
