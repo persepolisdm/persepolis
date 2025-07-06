@@ -55,8 +55,31 @@ def shutDown(parent, gid=None, category=None, password=None):
 
     if shutdown_status == "shutdown":
 
-        logger.sendToLog("Shutting down in 20 seconds", "INITIALIZATION")
+        logger.sendToLog("Shutting down in a minute", "INFO")
+        # Make sure all download progresses are stopped.
+        parent.stopAllDownloads()
+
         sleep(20)
+
+        # Make sure all sessions have ended.
+        while parent.download_sessions_list:
+            sleep(0.5)
+
+        # shutdown_notification = 0 >> persepolis running , 1 >> persepolis is
+        # ready for close(closeEvent called) , 2 >> OK, let's close application!
+        parent.changeShutdownValue(1)
+        while parent.returnShutDownValue() != 2:
+            sleep(0.1)
+
+        # close data bases connections
+        for db in parent.persepolis_db, parent.plugins_db, parent.temp_db:
+            db.closeConnections()
+
+        for i in parent.threadPool:
+            i.quit()
+            i.wait()
+
+        parent.cleanTempFolder()
 
         if os_type == OS.LINUX:
 

@@ -1036,6 +1036,15 @@ class MainWindow(MainWindow_Ui):
         # check reverse_checkBox
         self.reverse_checkBox.setChecked(False)
 
+    # this method used by shutdown script for changing shutdown_notification value
+    def changeShutdownValue(self, value):
+        global shutdown_notification
+        shutdown_notification = value
+
+    # this method used by shutdown script
+    def returnShutDownValue(self):
+        return shutdown_notification
+
     # notifySend function uses QSoundEffect for playing notification sounds.
     # QSoundEffect plays sound by executing a QThread.
     # We can't run a QThread from another QThread in PyQt and PySide.
@@ -1543,8 +1552,8 @@ class MainWindow(MainWindow_Ui):
 
                         # send notification
                         notifySend(QCoreApplication.translate("mainwindow_src_ui_tr", 'Persepolis is shutting down'),
-                                   QCoreApplication.translate("mainwindow_src_ui_tr", 'your system in 20 seconds'),
-                                   15000, 'warning', parent=self)
+                                   QCoreApplication.translate("mainwindow_src_ui_tr", 'your system in a minute'),
+                                   15000, '', parent=self)
 
                         # write "shutdown" message in data base for this gid >> Shutdown system!
                         shutdown_dict = {'gid': gid, 'shutdown': 'shutdown'}
