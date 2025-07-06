@@ -137,6 +137,7 @@ class ProgressWindow(ProgressWindow_Ui):
     def afterCheckBoxToggled(self, checkBoxes):
         if self.after_checkBox.isChecked():
             self.after_frame.setEnabled(True)
+            self.after_pushButton.setEnabled(True)
         else:
             # so user canceled shutdown after download
             # write cancel value in data_base for this gid
@@ -150,7 +151,7 @@ class ProgressWindow(ProgressWindow_Ui):
     def afterPushButtonPressed(self, button):
         self.after_pushButton.setEnabled(False)
 
-        if os_type != OS.WINDOWS:  # For Linux and Mac OSX and FreeBSD and OpenBSD
+        if os_type != OS.WINDOWS:  # For Linux and Mac OSX and BSD
 
             # get root password
             passwd, ok = QInputDialog.getText(
@@ -188,6 +189,7 @@ class ProgressWindow(ProgressWindow_Ui):
 
                     else:
                         ok = False
+                        self.after_pushButton.setEnabled(True)
                         break
 
                 if ok is not False:

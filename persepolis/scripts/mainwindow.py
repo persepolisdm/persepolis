@@ -4482,6 +4482,7 @@ class MainWindow(MainWindow_Ui):
 
                     else:
                         ok = False
+                        self.after_pushButton.setEnabled(True)
                         break
 
                 if ok:
