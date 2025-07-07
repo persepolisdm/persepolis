@@ -86,7 +86,14 @@ class Ytdp_Download():
         self.not_converted_download_speed = 0
         self.download_percent = 0
         self.error_message = ''
-        self.close_status = False
+
+        # this flag notify that download finished(stopped, complete or error)
+        # in this situation download status must be written to the database
+        # None means, Download not finished yet.
+        # False meanse, Download has been finished, but download status must be written to the database
+        # True meanse, Download status has been written to the database
+        self.write_it_to_the_database = None
+
         # check certificate
         if str(main_window.persepolis_setting.value('settings/dont-check-certificate')) == 'yes':
             self.dont_check_certificate = True
@@ -457,8 +464,19 @@ class Ytdp_Download():
         for thread in self.thread_list:
             thread.join()
 
+        self.write_it_to_the_database = False
         logger.sendToLog("ytdlp_downloader is closed!", 'DOWNLOADS')
-        self.close_status = True
+
+        # remove it from download_sessions_list when download status has been written to the database.
+        for download_session_dict in self.main_window.download_sessions_list:
+            if download_session_dict['gid'] == self.gid:
+
+                # Wait until the information is written to the database.
+                while self.write_it_to_the_database is False:
+                    time.sleep(0.1)
+
+                # remove item
+                self.main_window.download_sessions_list.remove(download_session_dict)
 
     def downloadPause(self):
         pass

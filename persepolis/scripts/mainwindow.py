@@ -125,17 +125,6 @@ plugin_ready = os.path.join(persepolis_tmp, 'persepolis-plugin-ready')
 show_window_file = os.path.join(persepolis_tmp, 'show-window')
 
 
-# remove item from download_sessions_list
-class RemoveItemFromSessionListThread(QThread):
-    def __init__(self, gid, main_window):
-        QThread.__init__(self)
-        self.gid = gid
-        self.main_window = main_window
-
-    def run(self):
-        self.main_window.removeItemFromSessionList(self.gid)
-
-
 # delete things that are no longer needed
 class DeleteThingsThatAreNoLongerNeededThread(QThread):
     NOTIFYSENDSIGNAL = Signal(list)
@@ -151,9 +140,6 @@ class DeleteThingsThatAreNoLongerNeededThread(QThread):
         self.video_finder_link = video_finder_link
 
     def run(self):
-        # remove it from download_sessions_list
-        self.main_window.removeItemFromSessionList(self.gid)
-
         # find download_path
         dictionary = self.main_window.persepolis_db.searchGidInAddLinkTable(self.gid)
 
@@ -250,7 +236,6 @@ class CheckClipBoardThread(QThread):
 
     def __init__(self, parent):
         QThread.__init__(self)
-        global shutdown_notification
 
     def run(self):
         # shutdown_notification = 0 >> persepolis is running
@@ -368,10 +353,15 @@ class CheckDownloadInfoThread(QThread):
 
                 download_status_list = []
                 # get download information and append it to download_sessions_list
+                write_it = 0
                 for download_session_dict in self.main_window.download_sessions_list:
 
                     # get information
                     returned_dict = download_session_dict['download_session'].tellStatus()
+
+                    if download_session_dict['download_session'].write_it_to_the_database is False:
+                        download_session_dict['download_session'].write_it_to_the_database = True
+                        write_it += 1
 
                     # add gid to download_session_dict
                     download_status_list.append(returned_dict)
@@ -382,7 +372,7 @@ class CheckDownloadInfoThread(QThread):
                 self.DOWNLOAD_INFO_SIGNAL.emit(download_status_list)
 
                 # data base is updated 1 time in 5 times.
-                if update_data_base_counter == 4:
+                if update_data_base_counter == 4 or write_it != 0:
                     self.main_window.persepolis_db.updateDownloadTable(download_status_list)
 
                     # data base is updated 1 time in 5 times.
@@ -437,7 +427,6 @@ class CheckingThread(QThread):
         QThread.__init__(self)
 
     def run(self):
-        global shutdown_notification
         global plugin_links_checked
 
         # shutdown_notification = 0 >> persepolis is running
@@ -1433,11 +1422,6 @@ class MainWindow(MainWindow_Ui):
 
                     # close progress_window
                     progress_window.close()
-                    # remove item from download_sessions_list
-                    remove_item_from_session_list_thread = RemoveItemFromSessionListThread(gid, self)
-                    self.threadPool.append(remove_item_from_session_list_thread)
-                    self.threadPool[-1].start()
-
                     # eliminate window information from progress_window_list_dict
                     del self.progress_window_list_dict[gid]
 
@@ -1463,10 +1447,6 @@ class MainWindow(MainWindow_Ui):
                                10000, 'fail', parent=self)
                     # close progress_window
                     progress_window.close()
-                    # remove item from download_sessions_list
-                    remove_item_from_session_list_thread = RemoveItemFromSessionListThread(gid, self)
-                    self.threadPool.append(remove_item_from_session_list_thread)
-                    self.threadPool[-1].start()
 
                     # eliminate window information from progress_window_list_dict
                     del self.progress_window_list_dict[gid]
@@ -1484,11 +1464,6 @@ class MainWindow(MainWindow_Ui):
 
                     else:
                         progress_window.close()
-
-                        # remove item from download_sessions_list
-                        remove_item_from_session_list_thread = RemoveItemFromSessionListThread(gid, self)
-                        self.threadPool.append(remove_item_from_session_list_thread)
-                        self.threadPool[-1].start()
 
                         # eliminate window information from progress_window_list_dict
                         del self.progress_window_list_dict[gid]
@@ -1524,11 +1499,6 @@ class MainWindow(MainWindow_Ui):
                 # it means download has finished!
                 # lets do finishing jobs!
                 if progress_window.status == "stopped" or progress_window.status == "error" or progress_window.status == "complete":
-
-                    # remove item from download_sessions_list
-                    remove_item_from_session_list_thread = RemoveItemFromSessionListThread(gid, self)
-                    self.threadPool.append(remove_item_from_session_list_thread)
-                    self.threadPool[-1].start()
 
                     # set "None" for start_time and end_time and after_download value
                     # in data_base, because download has finished
@@ -2510,7 +2480,7 @@ class MainWindow(MainWindow_Ui):
     def closeAction(self, event=None):
         # make sure we have no active downloads
         # get active download list from data base
-        active_gid_list = self.persepolis_db.findActiveDownloads('Single Downloads')
+        active_gid_list = self.persepolis_db.findActiveDownloads()
         if active_gid_list:
             # notify user
             self.msgBox = QMessageBox()
@@ -2520,6 +2490,7 @@ class MainWindow(MainWindow_Ui):
             self.msgBox.exec_()
             return
 
+        print('Persepolis will be closing soon. Please wait a moment.')
         # save window size  and position
         self.persepolis_setting.setValue('MainWindow/size', self.size())
         self.persepolis_setting.setValue('MainWindow/position', self.pos())
@@ -3106,21 +3077,6 @@ class MainWindow(MainWindow_Ui):
         # telling the CheckDownloadInfoThread that job is done!
         global checking_flag
         checking_flag = 0
-
-    # this method removes item from download_status_list.
-    def removeItemFromSessionList(self, gid):
-        # remove it from download_sessions_list
-        for download_session_dict in self.download_sessions_list:
-            if download_session_dict['gid'] == gid:
-                # remove item
-                while download_session_dict['download_session'].close_status is False and shutdown_notification == 0:
-                    sleep(0.1)
-
-                try:
-                    self.download_sessions_list.remove(download_session_dict)
-                    break
-                except:
-                    break
 
     # this method sorts download table by name
     def sortByName(self, menu=None):
@@ -5250,6 +5206,8 @@ class MainWindow(MainWindow_Ui):
             video_download_table_dict = self.persepolis_db.searchGidInDownloadTable(complete_dictionary['video_gid'])
 
             video_download_table_dict['size'] = complete_dictionary['final_size']
+            video_download_table_dict['status'] = 'complete'
+            video_download_table_dict['percent'] = '100%'
             video_download_table_dict['downloaded_size'] = complete_dictionary['final_size']
             video_download_table_dict['file_name'] = urllib.parse.unquote(
                 os.path.basename(complete_dictionary['final_path']))
