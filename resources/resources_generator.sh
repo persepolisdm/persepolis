@@ -23,7 +23,7 @@ parent_dir=`dirname $dir`
 if [ "$translate" == "1" ];then
 
     # generate ui.ts file 
-    pylupdate5 -translate-function ui_tr "$dir/translation_files.pro"
+    lupdate "$dir/translation_files.pro"
     echo "$dir/locales/ui.ts is generated!"
 fi
 
@@ -58,6 +58,6 @@ if [ "$create_qm_files" == "1" ];then
 
     for file in $dir/locales/* ;do
         # generate qm files from ts files
-        lrelease "$file"
+        pyside6-lrelease "$file"
     done
 fi

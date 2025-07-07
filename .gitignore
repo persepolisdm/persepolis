@@ -14,6 +14,7 @@ test/ffmpeg
 resources/ffmpeg
 dist/
 *.spec
+venv_dir/
 test/ffmpeg.exe
 Persepolis\ Download\ Manager.build/
 Persepolis\ Download\ Manager.dist/
