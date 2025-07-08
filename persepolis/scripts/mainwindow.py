@@ -1976,7 +1976,7 @@ class MainWindow(MainWindow_Ui):
         self.addlinkwindows_list[-1].show()
 
     # callback of AddLinkWindow
-    def callBack(self, add_link_dictionary, download_later, category):
+    def callBack(self, add_link_dictionary, download_later, category, single_video_link=False):
         exists = self.persepolis_db.searchLinkInAddLinkTable(add_link_dictionary['link'])
 
         if exists:
@@ -2009,6 +2009,18 @@ class MainWindow(MainWindow_Ui):
         # add_link_dictionary['out']
         if add_link_dictionary['out']:
             file_name = add_link_dictionary['out']
+
+            # if file extension is m3u8 so it's single_video_link
+            file_name_split = file_name.split('.')
+            file_extension = file_name_split[-1]
+
+            # convert extension letters to lower case
+            # for example "JPG" will be converted in "jpg"
+            file_extension = file_extension.lower()
+
+            if file_extension == 'm3u8':
+                single_video_link = True
+
         else:
             file_name = '***'
 
@@ -2073,23 +2085,60 @@ class MainWindow(MainWindow_Ui):
                 self.download_table.setItem(0, j, item)
                 j = j + 1
 
+        if single_video_link:
+            # create an item in data_base
+            # this item will updated by yt-dlp
+            # and contains download information.
+            video_Finder2_data_base = {'gid': gid,
+                                       'download_status': status,
+                                       'file_name': file_name,
+                                       'eta': '0',
+                                       'download_speed_str': '0',
+                                       'downloaded_size': 0,
+                                       'file_size': 0,
+                                       'download_percent': 0,
+                                       'fragments': '0/0',
+                                       'error_message': ''}
+
+            # write it in data_base
+            self.persepolis_db.insertInVideoFinderTable2(video_Finder2_data_base)
+
         # if user didn't press download_later_pushButton in add_link window
         # then create new qthread for new download!
         if not (download_later):
-            # create download_session
-            download_session = persepolis_lib_prime.Download(add_link_dictionary, self, gid)
+            if not (single_video_link):
+                # create download_session
+                download_session = persepolis_lib_prime.Download(add_link_dictionary, self, gid)
 
-            # add download_session and gid to download_session_dict
-            download_session_dict = {'gid': gid,
-                                     'download_session': download_session}
+                # add download_session and gid to download_session_dict
+                download_session_dict = {'gid': gid,
+                                         'download_session': download_session}
 
-            # append download_session_dict to download_sessions_list
-            self.download_sessions_list.append(download_session_dict)
+                # append download_session_dict to download_sessions_list
+                self.download_sessions_list.append(download_session_dict)
 
-            # strat download in thread
-            new_download = DownloadLink(gid, download_session, self)
-            self.threadPool.append(new_download)
-            self.threadPool[-1].start()
+                # strat download in thread
+                new_download = DownloadLink(gid, download_session, self)
+                self.threadPool.append(new_download)
+                self.threadPool[-1].start()
+            else:
+                # start video downloading
+                # get add_link_dictionary for video
+                add_link_dictionary = self.persepolis_db.searchGidInAddLinkTable(gid)
+                # create download_session
+                video_download_session = ytdlp_downloader.Ytdp_Download(add_link_dictionary, self, gid, single_video_link=True)
+
+                # add download_session and gid to download_session_dict
+                download_session_dict = {'gid': gid,
+                                         'download_session': video_download_session}
+
+                # append download_session_dict to download_sessions_list
+                self.download_sessions_list.append(download_session_dict)
+
+                # strat download in thread
+                new_download = DownloadLink(gid, video_download_session, self)
+                self.threadPool.append(new_download)
+                self.threadPool[-1].start()
 
             # open progress window for download.
             self.progressBarOpen(gid)
@@ -2196,11 +2245,20 @@ class MainWindow(MainWindow_Ui):
                                        QCoreApplication.translate("mainwindow_src_ui_tr", "be patient!"),
                                        10000, 'warning', parent=self)
                             return
+
+                    # check if gid is related to single video download link or  not.
+                    result_dictionary = self.persepolis_db.searchGidInVideoFinderTable2(gid)
+
                     # get information from data_base
                     add_link_dictionary = self.persepolis_db.searchGidInAddLinkTable(gid)
 
                     # create download_session
-                    download_session = persepolis_lib_prime.Download(add_link_dictionary, self, gid)
+                    if result_dictionary is None:
+                        download_session = persepolis_lib_prime.Download(add_link_dictionary, self, gid)
+
+                    else:
+                        # single video link
+                        download_session = ytdlp_downloader.Ytdp_Download(add_link_dictionary, self, gid, single_video_link=True)
 
                     # add download_session and gid to download_session_dict
                     download_session_dict = {'gid': gid,
@@ -2426,8 +2484,15 @@ class MainWindow(MainWindow_Ui):
 
         else:
             # create an ordinary progress_window
+            # check if it's single_video_link or not
+            answer_dictionary = self.persepolis_db.searchGidInVideoFinderTable2(gid)
+            if answer_dictionary is not None:
+                single_video_link = True
+            else:
+                single_video_link = False
+
             progress_window = ProgressWindow(
-                parent=self, gid=gid, persepolis_setting=self.persepolis_setting)
+                parent=self, gid=gid, persepolis_setting=self.persepolis_setting, single_video_link=single_video_link)
 
         # add progress window to progress_window_list
         self.progress_window_list.append(progress_window)
@@ -2876,6 +2941,12 @@ class MainWindow(MainWindow_Ui):
             # only download items with "complete", "error" and "stopped" can be removed
             if (status == 'complete' or status == 'error' or status == 'stopped'):
 
+                if not (video_finder_link):
+                    # check if gid is related to a single_video_link or not
+                    answer_dictionary = self.persepolis_db.searchGidInVideoFinderTable2(gid)
+                    if answer_dictionary:
+                        video_finder_link = True
+
                 # add gid to gid_list
                 gid_list.append(gid)
             else:
@@ -3027,6 +3098,12 @@ class MainWindow(MainWindow_Ui):
 
             # only download items with "complete", "error" and "stopped" can be removed
             if (status == 'complete' or status == 'error' or status == 'stopped'):
+
+                if not (video_finder_link):
+                    # check if gid is related to a single_video_link or not
+                    answer_dictionary = self.persepolis_db.searchGidInVideoFinderTable2(gid)
+                    if answer_dictionary:
+                        video_finder_link = True
 
                 # add gid to gid_list
                 gid_list.append(gid)
@@ -4960,10 +5037,10 @@ class MainWindow(MainWindow_Ui):
     # call back of VideoFinderAddLink window.
     def videoFinderCallBack(self, add_link_dictionary_list, download_later, category):
 
-        # if we have only one link so we can download it like other ordinary links
+        # if we have only one link so we can download it as a single_video_link.
         # but if we have seperated video and audio, then we must use VideoFinder thread and ...
         if len(add_link_dictionary_list) == 1:
-            self.callBack(add_link_dictionary=add_link_dictionary_list[0], download_later=download_later, category=category)
+            self.callBack(add_link_dictionary=add_link_dictionary_list[0], download_later=download_later, category=category, single_video_link=True)
             return
 
         category = str(category)

@@ -19,6 +19,7 @@ import threading
 from persepolis.constants import VERSION
 from persepolis.scripts import logger
 from persepolis.scripts.useful_tools import humanReadableSize, convertTime
+from persepolis.scripts.osCommands import makeDirs, moveFile
 from urllib.parse import urlparse, unquote
 from pathlib import Path
 import os
@@ -49,7 +50,7 @@ class Ytdp_Logger():
 
 # This class downloads m3u8 format files.
 class Ytdp_Download():
-    def __init__(self, add_link_dictionary, main_window, gid):
+    def __init__(self, add_link_dictionary, main_window, gid, single_video_link=False):
         self.downloaded_size = 0
         self.finished_threads = 0
         self.eta = "0"
@@ -86,6 +87,7 @@ class Ytdp_Download():
         self.not_converted_download_speed = 0
         self.download_percent = 0
         self.error_message = ''
+        self.single_video_link = single_video_link
 
         # this flag notify that download finished(stopped, complete or error)
         # in this situation download status must be written to the database
@@ -402,6 +404,9 @@ class Ytdp_Download():
             self.main_window.persepolis_db.updateVideoFinderTable2(dict_)
 
     def start(self):
+        # Create download_path if not existed
+        makeDirs(self.download_path)
+
         self.createSession()
         # update status and last_try_date in data_base
         if self.start_time:
@@ -454,10 +459,23 @@ class Ytdp_Download():
     def close(self):
         # if download complete, so delete control file
         if self.download_status == 'complete':
+            # if user specified download_path is equal to persepolis_setting download_path,
+            # then subfolder must added to download path.
+            if self.main_window.persepolis_setting.value('settings/download_path') == self.download_path and self.single_video_link:
+
+                # return new download_path
+                if self.main_window.persepolis_setting.value('settings/subfolder') == 'yes':
+                    new_download_path = os.path.join(self.download_path, 'Videos')
+
+                    file_path = self.downloadCompleteAction(new_download_path)
+            else:
+                # keep user specified download_path
+                file_path = self.file_path
+
             # update download_path in addlink_db_table
             add_link_dictionary = self.main_window.persepolis_db.searchGidInAddLinkTable(self.gid)
 
-            add_link_dictionary['download_path'] = self.file_path
+            add_link_dictionary['download_path'] = file_path
             self.main_window.persepolis_db.updateAddLinkTable([add_link_dictionary])
 
         # ask threads for exiting.
@@ -477,6 +495,31 @@ class Ytdp_Download():
 
                 # remove item
                 self.main_window.download_sessions_list.remove(download_session_dict)
+
+    def downloadCompleteAction(self, new_download_path):
+
+        # rename file if file already existed
+        i = 1
+        new_file_path = os.path.join(new_download_path, self.file_name)
+
+        while os.path.isfile(new_file_path):
+            file_name_split = self.file_name.split('.')
+            extension_length = len(file_name_split[-1]) + 1
+
+            new_name = self.file_name[0:-extension_length] + \
+                '_' + str(i) + self.file_name[-extension_length:]
+            new_file_path = os.path.join(new_download_path, new_name)
+            i = i + 1
+
+        # move the file to the download folder
+        move_answer = moveFile(str(self.file_path), str(new_file_path), 'file')
+
+        if not (move_answer):
+            # write error message in log
+            logger.sendToLog('Persepolis can not move file' + ' - GID: ' + self.gid, "ERROR")
+            new_file_path = self.file_path
+
+        return str(new_file_path)
 
     def downloadPause(self):
         pass

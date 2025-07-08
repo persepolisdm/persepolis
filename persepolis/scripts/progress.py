@@ -44,12 +44,13 @@ class ShutDownThread(QThread):
 
 
 class ProgressWindow(ProgressWindow_Ui):
-    def __init__(self, parent, gid, persepolis_setting):
+    def __init__(self, parent, gid, persepolis_setting, single_video_link=False):
         super().__init__(persepolis_setting, parent)
         self.persepolis_setting = persepolis_setting
         self.main_window = parent
         self.gid = gid
         self.status = None
+        self.single_video_link = single_video_link
         self.resume_pushButton.clicked.connect(self.resumePushButtonPressed)
         self.stop_pushButton.clicked.connect(self.stopPushButtonPressed)
         self.pause_pushButton.clicked.connect(self.pausePushButtonPressed)
@@ -74,6 +75,13 @@ class ProgressWindow(ProgressWindow_Ui):
         self.limit_label.setText('Speed : Maximum')
 
         self.after_comboBox.currentIndexChanged.connect(self.afterComboBoxChanged)
+
+        if self.single_video_link:
+            # hide pause and resume button
+            # hide limit speed frame
+            self.pause_pushButton.hide()
+            self.resume_pushButton.hide()
+            self.limit_frame.hide()
 
         # set window size and position
         size = self.persepolis_setting.value(

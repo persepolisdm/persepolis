@@ -36,8 +36,7 @@ import re
 import os
 
 # write youtube_dl version in log
-logger.sendToLog('yt-dlp version: '
-                 + str(youtube_dl.version.__version__),
+logger.sendToLog('yt-dlp version: ' + str(youtube_dl.version.__version__),
                  'INITIALIZATION')
 
 # download manager config folder .
@@ -100,7 +99,8 @@ class MediaListFetcherThread(QThread):
             ip_port = '{}:{}'.format(video_dict['ip'], str(video_dict['port']))
 
             if video_dict['proxy_user']:
-                proxy_argument = '{}://{}:{}@{}'.format(video_dict['proxy_type'], video_dict['proxy_user'], video_dict['proxy_passwd'], ip_port)
+                proxy_argument = '{}://{}:{}@{}'.format(video_dict['proxy_type'],
+                                                        video_dict['proxy_user'], video_dict['proxy_passwd'], ip_port)
 
             else:
                 proxy_argument = '{}://{}'.format(video_dict['proxy_type'], ip_port)
@@ -428,8 +428,7 @@ class VideoFinderAddLink(AddLinkWindow):
 
                     if self.audio_format_selection_comboBox.currentText() != 'No audio':
                         self.change_name_lineEdit.setText(self.media_title)
-                        self.extension_label.setText('.'
-                                                     + self.no_video_list[int(self.audio_format_selection_comboBox.currentIndex()) - 1]['ext'])
+                        self.extension_label.setText('.' + self.no_video_list[int(self.audio_format_selection_comboBox.currentIndex()) - 1]['ext'])
 
                         self.change_name_checkBox.setChecked(True)
                     else:
@@ -438,15 +437,13 @@ class VideoFinderAddLink(AddLinkWindow):
             elif combobox == 'audio':
                 if self.audio_format_selection_comboBox.currentText() != 'No audio' and self.video_format_selection_comboBox.currentText() == 'No video':
                     self.change_name_lineEdit.setText(self.media_title)
-                    self.extension_label.setText('.'
-                                                 + self.no_video_list[index - 1]['ext'])
+                    self.extension_label.setText('.' + self.no_video_list[index - 1]['ext'])
 
                     self.change_name_checkBox.setChecked(True)
 
                 elif (self.audio_format_selection_comboBox.currentText() == 'No audio' and self.video_format_selection_comboBox.currentText() != 'No video') or (self.audio_format_selection_comboBox.currentText() != 'No audio' and self.video_format_selection_comboBox.currentText() != 'No video'):
                     self.change_name_lineEdit.setText(self.media_title)
-                    self.extension_label.setText('.'
-                                                 + self.no_audio_list[int(self.video_format_selection_comboBox.currentIndex()) - 1]['ext'])
+                    self.extension_label.setText('.' + self.no_audio_list[int(self.video_format_selection_comboBox.currentIndex()) - 1]['ext'])
 
                     self.change_name_checkBox.setChecked(True)
 
@@ -462,7 +459,7 @@ class VideoFinderAddLink(AddLinkWindow):
         root, ext = os.path.splitext(parsed.path)
         return ext[1:]
 
-    def fetchedResult(self, media_dict): # noqa
+    def fetchedResult(self, media_dict):
 
         self.url_submit_pushButtontton.setEnabled(True)
         if 'error' in media_dict.keys():
@@ -492,6 +489,8 @@ class VideoFinderAddLink(AddLinkWindow):
             try:
                 i = 0
                 for f in media_dict['formats']:
+
+                    url_ext = self.getFileExtension(f['url'])
                     no_audio = False
                     no_video = False
                     text = ''
@@ -548,6 +547,9 @@ class VideoFinderAddLink(AddLinkWindow):
                         for key in more_options.keys():
                             input_dict[key] = more_options[key]
 
+                    if url_ext == 'm3u8':
+                        text = text + ' m3u8'
+
                     # Add current format to the related comboboxes
                     if no_audio:
                         combobox_type = 'video'
@@ -567,7 +569,6 @@ class VideoFinderAddLink(AddLinkWindow):
                         self.media_comboBox.addItem(text)
                         index = self.media_comboBox.count() - 1
 
-                    url_ext = self.getFileExtension(f['url'])
                     # we can't get size of file from m3u8 format.
                     if not (size_available) and url_ext != 'm3u8':
                         size_fetcher = FileSizeFetcherThread(input_dict, text, combobox_type, index)
@@ -649,6 +650,7 @@ class VideoFinderAddLink(AddLinkWindow):
                     self.video_format_selection_comboBox.setItemText(index, '{} - {}'.format(text, result['file_size']))
                 else:
                     self.media_comboBox.setItemText(index, '{} - {}'.format(text, result['file_size']))
+                    self.video_audio_list[index]['file_size'] = result['file_size']
 
         except Exception as ex:
             logger.sendToLog(ex, "DOWNLOAD ERROR")
@@ -703,7 +705,7 @@ class VideoFinderAddLink(AddLinkWindow):
 
     # user submitted information by pressing ok_pushButton, so get information
     # from VideoFinderAddLink window and return them to the mainwindow with callback!
-    def okButtonPressed(self, download_later, button=None): # noqa
+    def okButtonPressed(self, download_later, button=None):  # noqa
 
         link_list = []
         # separate audio format and video format is selected.
