@@ -496,6 +496,10 @@ class Ytdp_Download():
                 # remove item
                 self.main_window.download_sessions_list.remove(download_session_dict)
 
+        # remove gid from single_video_link_gid_list
+        if self.gid in self.main_window.single_video_link_gid_list:
+            self.main_window.single_video_link_gid_list.remove(self.gid)
+
     def downloadCompleteAction(self, new_download_path):
 
         # rename file if file already existed

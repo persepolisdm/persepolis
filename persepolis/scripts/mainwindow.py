@@ -805,6 +805,9 @@ class MainWindow(MainWindow_Ui):
         # key = video_gid and value = VideoFinder thread
         self.video_finder_threads_dict = {}
 
+        # This list contains single video link gids
+        self.single_video_link_gid_list = []
+
         # CheckDownloadInfoThread
         check_download_info = CheckDownloadInfoThread(self)
         self.threadPool.append(check_download_info)
@@ -1158,6 +1161,12 @@ class MainWindow(MainWindow_Ui):
             else:
                 video_finder_link = False
 
+            # If link is single_video_link
+            if gid in self.single_video_link_gid_list:
+                single_video_link = True
+            else:
+                single_video_link = False
+
             if status == 'error':
                 # check free space in download_folder
                 # perhaps insufficient space in hard disk caused this error!
@@ -1327,10 +1336,16 @@ class MainWindow(MainWindow_Ui):
                     file_size = 'None'
 
                 if file_size != ' ':
-                    downloaded = QCoreApplication.translate("mainwindow_src_ui_tr", "<b>Downloaded</b>: ") \
-                        + str(downloaded_size) \
-                        + "/" \
-                        + str(file_size)
+                    if video_finder_link or single_video_link:
+                        downloaded = QCoreApplication.translate("mainwindow_src_ui_tr", "<b>Downloaded/Est. file size</b>: ") \
+                            + str(downloaded_size) \
+                            + "/" \
+                            + str(file_size)
+                    else:
+                        downloaded = QCoreApplication.translate("mainwindow_src_ui_tr", "<b>Downloaded</b>: ") \
+                            + str(downloaded_size) \
+                            + "/" \
+                            + str(file_size)
 
                 else:
                     downloaded = QCoreApplication.translate("mainwindow_src_ui_tr", "<b>Downloaded</b>: ") \
@@ -1351,7 +1366,7 @@ class MainWindow(MainWindow_Ui):
                 progress_window.time_label.setText(estimate_time_left)
 
                 # Connections
-                if video_finder_link:
+                if video_finder_link or single_video_link:
                     connections = QCoreApplication.translate("mainwindow_src_ui_tr", "<b>Fragments</b>: ") \
                         + str(download_status_dict['connections'])
                 else:
@@ -2128,6 +2143,9 @@ class MainWindow(MainWindow_Ui):
                 # create download_session
                 video_download_session = ytdlp_downloader.Ytdp_Download(add_link_dictionary, self, gid, single_video_link=True)
 
+                # add gid to single_video_link_gid_list
+                self.single_video_link_gid_list.append(gid)
+
                 # add download_session and gid to download_session_dict
                 download_session_dict = {'gid': gid,
                                          'download_session': video_download_session}
@@ -2259,6 +2277,9 @@ class MainWindow(MainWindow_Ui):
                     else:
                         # single video link
                         download_session = ytdlp_downloader.Ytdp_Download(add_link_dictionary, self, gid, single_video_link=True)
+
+                        # add gid to single_video_link_gid_list
+                        self.single_video_link_gid_list.append(gid)
 
                     # add download_session and gid to download_session_dict
                     download_session_dict = {'gid': gid,
