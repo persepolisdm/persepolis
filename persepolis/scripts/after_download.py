@@ -24,6 +24,7 @@ except:
 from persepolis.gui.after_download_ui import AfterDownloadWindow_Ui
 from persepolis.scripts import osCommands
 import os
+import time
 
 
 class AfterDownloadWindow(AfterDownloadWindow_Ui):
@@ -49,9 +50,17 @@ class AfterDownloadWindow(AfterDownloadWindow_Ui):
         # find gid
         gid = self.dict['gid']
 
-        # get file_path from data base
-        self.add_link_dict = self.parent.persepolis_db.searchGidInAddLinkTable(gid)
-        file_path = self.add_link_dict['download_path']
+        # If file path not valid, Wait a little and try again.
+        # The file transfer and database update process may 
+        # not be finished after the download is finished.
+        while True:
+            self.add_link_dict = self.parent.persepolis_db.searchGidInAddLinkTable(gid)
+            file_path = self.add_link_dict['download_path']
+            if os.path.isfile(file_path):
+                break
+            else:
+                # Wait a little and try again!
+                time.sleep(0.1)
 
         # save_as
         self.save_as_lineEdit.setText(file_path)
