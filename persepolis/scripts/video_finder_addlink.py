@@ -488,6 +488,7 @@ class VideoFinderAddLink(AddLinkWindow):
 
             try:
                 i = 0
+                media_dict_lenght = len(media_dict['formats'])
                 for f in media_dict['formats']:
 
                     url_ext = self.getFileExtension(f['url'])
@@ -564,6 +565,10 @@ class VideoFinderAddLink(AddLinkWindow):
                         index = self.audio_format_selection_comboBox.count() - 1
 
                     else:
+                        if i == 0:
+                            text = 'Worst quality: ' + text
+                        elif i == (media_dict_lenght - 1):
+                            text = 'Best quality: ' + text
                         combobox_type = 'media'
                         self.video_audio_list.append(f)
                         self.media_comboBox.addItem(text)
