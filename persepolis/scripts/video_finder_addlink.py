@@ -15,10 +15,12 @@
 """
 try:
     from PySide6.QtWidgets import QCheckBox, QPushButton, QTextEdit, QFrame, QLabel, QComboBox, QHBoxLayout, QApplication
-    from PySide6.QtCore import QThread, Signal, QCoreApplication, QTranslator, QLocale
+    from PySide6.QtCore import QThread, Signal, QCoreApplication, QTranslator, QLocale, QPoint, QSize
+    from PySide6.QtGui import QPixmap
 except:
     from PyQt5.QtWidgets import QCheckBox, QPushButton, QTextEdit, QFrame, QLabel, QComboBox, QHBoxLayout, QApplication
-    from PyQt5.QtCore import QThread, QCoreApplication, QTranslator, QLocale
+    from PyQt5.QtCore import QThread, QCoreApplication, QTranslator, QLocale, QPoint, QSize
+    from PyQt5.QtGui import QPixmap
     from PyQt5.QtCore import pyqtSignal as Signal
 
 from persepolis.scripts.useful_tools import determineConfigFolder, dictToHeader
@@ -26,14 +28,17 @@ from persepolis.scripts.addlink import AddLinkWindow
 from persepolis.scripts import logger, osCommands
 from persepolis.scripts.spider import spider
 from persepolis.constants import VERSION
+from persepolis.constants import OS
 from functools import partial
 from time import time
-from random import random
+from random import random, randint
 from copy import deepcopy
 import yt_dlp as youtube_dl
 import urllib
 import re
 import os
+import glob
+import platform
 
 # write youtube_dl version in log
 logger.sendToLog('yt-dlp version: ' + str(youtube_dl.version.__version__),
@@ -45,11 +50,22 @@ config_folder = determineConfigFolder()
 # persepolis tmp folder path
 persepolis_tmp = os.path.join(config_folder, 'persepolis_tmp')
 
+os_type = platform.system()
+home_address = os.path.expanduser("~")
+
+if os_type is OS.WINDOWS:
+    tmp_folder_system = os.path.join(home_address, "AppData", "Local", "Temp")
+    # make tmp folder if not exists
+    osCommands.makeDirs(tmp_folder_system)
+else:
+    tmp_folder_system = '/tmp'
+
 
 class MediaListFetcherThread(QThread):
     RESULT = Signal(dict)
     cookies = '# HTTP cookie file.\n'  # We shall write it in a file when thread starts.
     LOADCOOKIEFILESIGNAL = Signal(str)
+    THUMBNAILSIGNAL = Signal(str)
 
     def __init__(self, receiver_slot, video_dict, main_window):
         super().__init__()
@@ -71,21 +87,36 @@ class MediaListFetcherThread(QThread):
                                         'no_warnings': True,
                                         'no-check-certificates': self.dont_check_certificate
                                         }
+        # create random name for thumbnail
+        self.thumbnail_file_name = str(randint(0, 1500))
+
+        # file must be downloaded in temp folder of system
+        self.thumbnail_path = os.path.join(tmp_folder_system, self.thumbnail_file_name)
+        self.youtube_dl_options_dict_thumbnails = {'skip_download': True,
+                                                   'quiet': True,
+                                                   'writethumbnail': True,
+                                                   'outtmpl': self.thumbnail_path,
+                                                   }
 
         # cookies
         self.youtube_dl_options_dict['cookies'] = str(self.cookie_path)
+        self.youtube_dl_options_dict_thumbnails['cookies'] = str(self.cookie_path)
 
         # referer
         if 'referer' in video_dict.keys() and video_dict['referer']:
             self.youtube_dl_options_dict['referer'] = str(video_dict['referer'])
+            self.youtube_dl_options_dict_thumbnails['referer'] = str(video_dict['referer'])
 
         # user_agent
         if 'user_agent' in video_dict.keys() and video_dict['user_agent']:
             self.youtube_dl_options_dict['user-agent'] = str(video_dict['user_agent'])
+            self.youtube_dl_options_dict_thumbnails['user-agent'] = str(video_dict['user_agent'])
+
         else:
             # set PersepolisDM user agent
             video_dict['user_agent'] = 'PersepolisDM/' + str(VERSION.version_str)
             self.youtube_dl_options_dict['user-agent'] = 'PersepolisDM/' + str(VERSION.version_str)
+            self.youtube_dl_options_dict_thumbnails['user-agent'] = 'PersepolisDM/' + str(VERSION.version_str)
 
         # load_cookies
         if 'load_cookies' in video_dict.keys() and video_dict['load_cookies']:
@@ -106,11 +137,14 @@ class MediaListFetcherThread(QThread):
                 proxy_argument = '{}://{}'.format(video_dict['proxy_type'], ip_port)
 
             self.youtube_dl_options_dict['proxy'] = str(proxy_argument)
+            self.youtube_dl_options_dict_thumbnails['proxy'] = str(proxy_argument)
 
         if video_dict['download_user']:
 
             self.youtube_dl_options_dict['username'] = str(video_dict['download_user'])
             self.youtube_dl_options_dict['password'] = str(video_dict['download_passwd'])
+            self.youtube_dl_options_dict_thumbnails['username'] = str(video_dict['download_user'])
+            self.youtube_dl_options_dict_thumbnails['password'] = str(video_dict['download_passwd'])
 
         if video_dict['link']:
             self.youtube_link = str(video_dict['link'])
@@ -149,6 +183,26 @@ class MediaListFetcherThread(QThread):
 
             except Exception as ex:
                 logger.sendToLog(ex, "DOWNLOAD ERROR")
+
+        try:  # get video thumbnail
+            ydl_thumbnail = youtube_dl.YoutubeDL(self.youtube_dl_options_dict_thumbnails)
+            with ydl_thumbnail:
+                result = ydl_thumbnail.download(
+                    self.youtube_link
+                )
+
+            # find thumbnail name with file extension
+            # we know the file name but we don't know file extension.
+            # create pattern
+            file_pattern = self.thumbnail_path + '*'
+            # search for pattern and return first item in the list
+            files_list = glob.glob(file_pattern)
+
+            self.THUMBNAILSIGNAL.emit(files_list[0])
+
+        except Exception as ex:
+            ex = 'Thumbnail error:' + str(ex)
+            logger.sendToLog(ex, "DOWNLOAD ERROR")
 
         self.LOADCOOKIEFILESIGNAL.emit(self.cookie_path)
         self.RESULT.emit(ret_val)
@@ -201,6 +255,7 @@ class VideoFinderAddLink(AddLinkWindow):
         self.no_video_list = []
         self.video_audio_list = []
         self.cookie_path = None
+        self.thumbnail_path = ''
 
         self.media_title = ''
 
@@ -268,6 +323,10 @@ class VideoFinderAddLink(AddLinkWindow):
                        self.audio_format_selection_comboBox]:
             advanced_format_selection_horizontalLayout.addWidget(widget)
 
+        # thumbnail picture
+        self.thumbnail_label = QLabel(self.link_frame)
+        self.change_name_horizontalLayout.addWidget(self.thumbnail_label)
+
         # Set Texts
         self.url_submit_pushButtontton.setText(QCoreApplication.translate("ytaddlink_src_ui_tr", 'Fetch Media List'))
         self.select_format_label.setText(QCoreApplication.translate("ytaddlink_src_ui_tr", 'Select a format'))
@@ -303,6 +362,13 @@ class VideoFinderAddLink(AddLinkWindow):
         self.link_lineEdit.textChanged.connect(self.linkLineChangedHere)
 
         self.setMinimumSize(650, 480)
+        # set window size and position
+        size = self.persepolis_setting.value(
+            'VideoFinderAddLinkWindow/size', QSize(652, 480))
+        position = self.persepolis_setting.value(
+            'VideoFinderAddLinkWindow/position', QPoint(300, 300))
+        self.resize(size)
+        self.move(position)
 
         self.status_box_textEdit.hide()
         self.format_selection_frame.hide()
@@ -395,6 +461,16 @@ class VideoFinderAddLink(AddLinkWindow):
         self.parent.threadPool.append(fetcher_thread)
         self.parent.threadPool[-1].start()
         self.parent.threadPool[-1].LOADCOOKIEFILESIGNAL.connect(self.setLoadCookie)
+        self.parent.threadPool[-1].THUMBNAILSIGNAL.connect(self.showThumbnail)
+
+    # Thumbnail is available! So show it!
+    def showThumbnail(self, thumbnail_path):
+        self.thumbnail_path = thumbnail_path
+        pixmap = QPixmap(self.thumbnail_path)
+
+        # Thumbnail height must be 1/5 height of window.
+        height_of_window = self.height()
+        self.thumbnail_label.setPixmap(pixmap.scaledToHeight(height_of_window // 5))
 
     def setLoadCookie(self, str):
         if os.path.isfile(str):
@@ -565,7 +641,7 @@ class VideoFinderAddLink(AddLinkWindow):
                         index = self.audio_format_selection_comboBox.count() - 1
 
                     else:
-                        if i == 0:
+                        if i == 0 and (media_dict_lenght > 1):
                             text = 'Worst quality: ' + text
                         elif i == (media_dict_lenght - 1):
                             text = 'Best quality: ' + text
@@ -665,6 +741,13 @@ class VideoFinderAddLink(AddLinkWindow):
             self.url_submit_pushButtontton.setEnabled(False)
         else:
             self.url_submit_pushButtontton.setEnabled(True)
+
+    def closeEvent(self, event):
+        self.persepolis_setting.setValue('VideoFinderAddLinkWindow/size', self.size())
+        self.persepolis_setting.setValue('VideoFinderAddLinkWindow/position', self.pos())
+        self.persepolis_setting.sync()
+        osCommands.remove(self.thumbnail_path)
+        event.accept()
 
     # This method collects additional information like proxy ip, user, password etc.
     def collectMoreOptions(self):
