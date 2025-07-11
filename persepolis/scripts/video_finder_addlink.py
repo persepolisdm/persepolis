@@ -27,8 +27,7 @@ from persepolis.scripts.useful_tools import determineConfigFolder, dictToHeader
 from persepolis.scripts.addlink import AddLinkWindow
 from persepolis.scripts import logger, osCommands
 from persepolis.scripts.spider import spider
-from persepolis.constants import VERSION
-from persepolis.constants import OS
+from persepolis.constants import VERSION, OS
 from functools import partial
 from time import time
 from random import random, randint
@@ -537,11 +536,13 @@ class VideoFinderAddLink(AddLinkWindow):
 
     def fetchedResult(self, media_dict):
 
-        self.url_submit_pushButtontton.setEnabled(True)
         if 'error' in media_dict.keys():
 
             self.status_box_textEdit.setText('<font color="#f11">' + str(media_dict['error']) + '</font>')
             self.status_box_textEdit.show()
+
+            # enable fetch media button again
+            self.url_submit_pushButtontton.setEnabled(True)
         else:  # Show the media list
 
             # add no audio and no video options to the comboboxes
