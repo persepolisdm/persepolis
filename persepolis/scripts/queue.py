@@ -194,10 +194,22 @@ class Queue(QThread):
                     download_session = ytdlp_downloader.Ytdp_Download(add_link_dict, self.main_window, gid)
                 else:
                     # create download_session
-                    download_session = persepolis_lib_prime.Download(add_link_dict, self.main_window, gid)
+                    # check if it's single_video_link or not
+                    answer_dictionary = self.main_window.persepolis_db.searchGidInVideoFinderTable2(gid)
+                    if answer_dictionary is not None:
+                        single_video_link = True
+                    else:
+                        single_video_link = False
 
-                    # check limit speed value
-                    download_session.limitSpeed(self.main_window.limit_dial.value())
+                    if not (single_video_link):
+                        download_session = persepolis_lib_prime.Download(add_link_dict, self.main_window, gid)
+
+                        # check limit speed value
+                        download_session.limitSpeed(self.main_window.limit_dial.value())
+                    else:
+                        download_session = ytdlp_downloader.Ytdp_Download(add_link_dict, self.main_window, gid, single_video_link=True)
+                        # add gid to single_video_link_gid_list
+                        self.main_window.single_video_link_gid_list.append(gid)
 
                 # add download_session and gid to download_session_dict
                 download_session_dict = {'gid': gid,

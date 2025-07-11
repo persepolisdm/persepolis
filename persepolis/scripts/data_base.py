@@ -688,20 +688,23 @@ class PersepolisDB():
         # return the results
         return dictionary
 
-    def insertInVideoFinderTable2(self, dict_):
+    def insertInVideoFinderTable2(self, list_):
         self.lockCursor()
-        self.persepolis_db_cursor.execute("""INSERT INTO video_finder_db_table2 VALUES(NULL,
-                                                                                :gid,
-                                                                                :download_status,
-                                                                                :file_name,
-                                                                                :eta,
-                                                                                :download_speed_str,
-                                                                                :downloaded_size,
-                                                                                :file_size,
-                                                                                :download_percent,
-                                                                                :fragments,
-                                                                                :error_message
-                                                                                )""", dict_)
+
+        for dictionary in list_:
+
+            self.persepolis_db_cursor.execute("""INSERT INTO video_finder_db_table2 VALUES(NULL,
+                                                                                    :gid,
+                                                                                    :download_status,
+                                                                                    :file_name,
+                                                                                    :eta,
+                                                                                    :download_speed_str,
+                                                                                    :downloaded_size,
+                                                                                    :file_size,
+                                                                                    :download_percent,
+                                                                                    :fragments,
+                                                                                    :error_message
+                                                                                    )""", dictionary)
         self.persepolis_db_connection.commit()
         self.lock = False
 

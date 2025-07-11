@@ -2116,7 +2116,7 @@ class MainWindow(MainWindow_Ui):
                                        'error_message': ''}
 
             # write it in data_base
-            self.persepolis_db.insertInVideoFinderTable2(video_Finder2_data_base)
+            self.persepolis_db.insertInVideoFinderTable2([video_Finder2_data_base])
 
         # if user didn't press download_later_pushButton in add_link window
         # then create new qthread for new download!
@@ -3814,6 +3814,7 @@ class MainWindow(MainWindow_Ui):
     def queueCallback(self, add_link_dictionary_list, category):
 
         download_table_dict_list = []
+        video_finder_2_dict_list = []
 
         # defining path of category_file
         selected_category = str(category)
@@ -3842,6 +3843,7 @@ class MainWindow(MainWindow_Ui):
 
         # add dictionary of downloads to data base
         for add_link_dictionary in add_link_dictionary_list:
+            single_video_link = False
 
             # persepolis identifies each download by the ID called GID. The GID must
             # be hex string of 16 characters.
@@ -3858,6 +3860,18 @@ class MainWindow(MainWindow_Ui):
             # add_link_dictionary['out']
             if add_link_dictionary['out']:
                 file_name = add_link_dictionary['out']
+
+                # if file extension is m3u8 so it's single_video_link
+                file_name_split = file_name.split('.')
+                file_extension = file_name_split[-1]
+
+                # convert extension letters to lower case
+                # for example "JPG" will be converted in "jpg"
+                file_extension = file_extension.lower()
+
+                if file_extension == 'm3u8':
+                    single_video_link = True
+
             else:
                 file_name = '***'
 
@@ -3889,6 +3903,22 @@ class MainWindow(MainWindow_Ui):
                 self.download_table.setItem(0, j, item)
                 j = j + 1
 
+            if single_video_link:
+                # create an item in data_base
+                # this item will updated by yt-dlp
+                # and contains download information.
+                video_Finder2_data_base = {'gid': gid,
+                                           'download_status': 'stopped',
+                                           'file_name': file_name,
+                                           'eta': '0',
+                                           'download_speed_str': '0',
+                                           'downloaded_size': 0,
+                                           'file_size': 0,
+                                           'download_percent': 0,
+                                           'fragments': '0/0',
+                                           'error_message': ''}
+                video_finder_2_dict_list.append(video_Finder2_data_base)
+
             # spider is finding file size and file name
             new_spider = SpiderThread(add_link_dictionary, self)
             self.threadPool.append(new_spider)
@@ -3898,6 +3928,7 @@ class MainWindow(MainWindow_Ui):
         # write information in data_base
         self.persepolis_db.insertInDownloadTable(download_table_dict_list)
         self.persepolis_db.insertInAddLinkTable(add_link_dictionary_list)
+        self.persepolis_db.insertInVideoFinderTable2(video_finder_2_dict_list)
 
     # this method is called , when user clicks on an item in
     # category_tree (left side panel)
@@ -5165,7 +5196,7 @@ class MainWindow(MainWindow_Ui):
                                        'error_message': ''}
 
             # write it in data_base
-            self.persepolis_db.insertInVideoFinderTable2(video_Finder2_data_base)
+            self.persepolis_db.insertInVideoFinderTable2([video_Finder2_data_base])
 
         # add video_gid and audio_gid to data base
         dictionary = {'video_gid': add_link_dictionary_list[0]['gid'],

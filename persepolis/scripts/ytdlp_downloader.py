@@ -405,7 +405,10 @@ class Ytdp_Download():
 
     def start(self):
         # Create download_path if not existed
-        makeDirs(self.download_path)
+        try:
+            makeDirs(self.download_path)
+        except:
+            pass
 
         self.createSession()
         # update status and last_try_date in data_base
