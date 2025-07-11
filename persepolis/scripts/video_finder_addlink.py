@@ -947,7 +947,7 @@ class VideoFinderAddLink(AddLinkWindow):
         if self.referer_lineEdit.text() != '':
             referer = self.referer_lineEdit.text()
         else:
-            referer = None
+            referer = self.link_lineEdit.text()
 
         # header
         if self.header_lineEdit.text() != '':
