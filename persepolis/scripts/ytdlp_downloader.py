@@ -23,7 +23,6 @@ from persepolis.scripts.osCommands import makeDirs, moveFile
 from urllib.parse import urlparse, unquote
 from pathlib import Path
 import os
-import multiprocessing
 
 
 # This class gets yt-dlp log messages.
@@ -254,6 +253,12 @@ class Ytdp_Download():
         self.thread_list.append(end_time_thread)
 
     def getStatus(self, data):
+        # Download stopped by user!
+        # raise and exception for stopping download!
+        if self.download_status == 'stopped':
+            raise Exception('Download stopped')
+            return
+
         if 'filename' in data.keys():
             download_path_pluse_name = data['filename']
             self.file_name = Path(download_path_pluse_name).name
@@ -265,8 +270,7 @@ class Ytdp_Download():
         if 'speed' in data.keys():
             if data['speed']:
                 download_speed, speed_unit = humanReadableSize(float(data['speed']), 'speed')
-                self.download_speed_str = (str(download_speed)
-                                           + " " + speed_unit + "/s")
+                self.download_speed_str = (str(download_speed) + " " + speed_unit + "/s")
 
         if 'downloaded_bytes' in data.keys():
             if data['downloaded_bytes']:
@@ -395,13 +399,15 @@ class Ytdp_Download():
         try:
             self.ytdl_session.download([self.link])
         except Exception as e:
-            self.error_message = str(e)
-            self.download_status = 'error'
-            # update data_base
-            dict_ = {'gid': self.gid,
-                     'download_status': self.download_status,
-                     'error_message': self.error_message}
-            self.main_window.persepolis_db.updateVideoFinderTable2(dict_)
+            if self.download_status != 'stopped':
+                # So download didn't stop by user!
+                self.error_message = str(e)
+                self.download_status = 'error'
+                # update data_base
+                dict_ = {'gid': self.gid,
+                         'download_status': self.download_status,
+                         'error_message': self.error_message}
+                self.main_window.persepolis_db.updateVideoFinderTable2(dict_)
 
     def start(self):
         # Create download_path if not existed
@@ -451,8 +457,11 @@ class Ytdp_Download():
             if self.end_time:
                 self.runEndTimeThread()
 
-            self.process = multiprocessing.Process(target=self.download)
-            self.process.start()
+            # Start the download thread
+            download_thread = threading.Thread(target=self.download)
+            download_thread.setDaemon(True)
+            download_thread.start()
+
             self.checkDownloadProgress()
             self.close()
         else:
@@ -535,13 +544,13 @@ class Ytdp_Download():
         pass
 
     def downloadStop(self):
-        if self.process:
-            self.process.terminate()
-            self.download_status = 'stopped'
-            # update data_base
-            dict_ = {'gid': self.gid,
-                     'download_status': self.download_status}
-            self.main_window.persepolis_db.updateVideoFinderTable2(dict_)
+        # Change download status to stopped and infrom self.getStatus method
+        self.download_status = 'stopped'
+
+        # update data_base
+        dict_ = {'gid': self.gid,
+                 'download_status': self.download_status}
+        self.main_window.persepolis_db.updateVideoFinderTable2(dict_)
 
     # This method limits download speed
     def limitSpeed(self, limit_value):
