@@ -20,7 +20,7 @@ import random
 import threading
 import os
 import errno
-from persepolis.scripts.useful_tools import convertTime, humanReadableSize, freeSpace, headerToDict, readCookieJar, getFileNameFromLink
+from persepolis.scripts.useful_tools import convertTime, humanReadableSize, freeSpace, headerToDict, readCookieJar, getFileNameFromLink, returnNewFileName
 from persepolis.scripts.osCommands import makeDirs, moveFile
 from persepolis.scripts import logger
 from persepolis.constants import VERSION
@@ -258,6 +258,10 @@ class Download():
         self.control_json_file_path = os.path.join(
             self.download_path, control_json_file)
 
+        # If we have diffrent files but with same name, So
+        # this fle must be renamed.
+        rename = False
+
         # create json control file if not created before
         try:
             with open(self.control_json_file_path, 'x') as f:
@@ -313,13 +317,14 @@ class Download():
 
                         # check if the download is duplicated
                         # If download item is duplicated, so resume download
-                        # check ETag
+                        # check ETag. Else rename file
                         if 'ETag' in data_dict:
 
                             if data_dict['ETag'] == self.etag:
                                 self.resume = True
                             else:
                                 self.resume = False
+                                rename = True
 
                         # if ETag is not available, then check file size
                         elif 'file_size' in data_dict:
@@ -328,11 +333,14 @@ class Download():
                                 self.resume = True
                             else:
                                 self.resume = False
+                                rename = True
                         else:
                             self.resume = False
+                            rename = True
 
                     # control file is corrupted.
-                    except Exception:
+                    except Exception as e:
+                        logger.sendToLog(str(e) + ' - GID: ' + self.gid, 'DOWNLOAD ERROR')
                         self.resume = False
 
         if self.resuming_suppurt is False:
@@ -343,6 +351,31 @@ class Download():
             download_file_existance = True
         else:
             download_file_existance = False
+
+        # If download file not exists so we can rewrite .persepolis file
+        # Else download file name and json file name must be renamed.
+        if rename and download_file_existance:
+            download_file_existance = False
+            # create new file name
+            self.file_name = returnNewFileName(self.download_path, self.file_name)
+
+            # create new name for json file
+            control_json_file = self.file_name + '.persepolis'
+
+            # create new file path
+            self.file_path = os.path.join(self.download_path, self.file_name)
+
+            # create new control file path
+            self.control_json_file_path = os.path.join(
+                self.download_path, control_json_file)
+
+            # create json control file
+            try:
+                with open(self.control_json_file_path, 'x') as f:
+                    f.write("")
+            except Exception as e:
+                logger.sendToLog(str(e) + ' - GID: ' + self.gid, 'DOWNLOAD ERROR')
+                self.resume = False
 
         if self.resume and not (download_file_existance):
             self.resume = False
@@ -1122,17 +1155,8 @@ class Download():
     def downloadCompleteAction(self, new_download_path):
 
         # rename file if file already existed
-        i = 1
+        self.file_name = returnNewFileName(new_download_path, self.file_name)
         new_file_path = os.path.join(new_download_path, self.file_name)
-
-        while os.path.isfile(new_file_path):
-            file_name_split = self.file_name.split('.')
-            extension_length = len(file_name_split[-1]) + 1
-
-            new_name = self.file_name[0:-extension_length] + \
-                '_' + str(i) + self.file_name[-extension_length:]
-            new_file_path = os.path.join(new_download_path, new_name)
-            i = i + 1
 
         # move the file to the download folder
         move_answer = moveFile(str(self.file_path), str(new_file_path), 'file')

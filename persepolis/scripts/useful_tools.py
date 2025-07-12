@@ -647,3 +647,31 @@ def getFileNameFromLink(link):
     file_name = Path(parsed_linkd.path).name
 
     return file_name
+
+
+# Return a new name for the file, if a file with the current name exists.
+def returnNewFileName(folder_path, file_name):
+    i = 1
+    file_path = os.path.join(folder_path, file_name)
+
+    # If file is already exists.
+    while os.path.isfile(file_path):
+        # split file name to file_name + extension
+        file_name_split = list(os.path.splitext(file_name))
+
+        # add _i to the end of file name
+        # check the last character of file_name.
+        # If it's integer, add 1 to it.
+        j = file_name_split[0][-1]
+        try:
+            j = int(j)
+            j += 1
+            file_name = file_name_split[0][:-1] + str(j) + file_name_split[-1]
+        except:
+            file_name = file_name_split[0] + '_' + str(i) + file_name_split[-1]
+            i += 1
+
+        # create new file_path
+        file_path = os.path.join(folder_path, file_name)
+
+    return file_name
