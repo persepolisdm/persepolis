@@ -18,7 +18,7 @@ import time
 import threading
 from persepolis.constants import VERSION
 from persepolis.scripts import logger
-from persepolis.scripts.useful_tools import humanReadableSize, convertTime
+from persepolis.scripts.useful_tools import humanReadableSize, convertTime, returnNewFileName
 from persepolis.scripts.osCommands import makeDirs, moveFile
 from urllib.parse import urlparse, unquote
 from pathlib import Path
@@ -515,17 +515,8 @@ class Ytdp_Download():
     def downloadCompleteAction(self, new_download_path):
 
         # rename file if file already existed
-        i = 1
+        self.file_name = returnNewFileName(new_download_path, self.file_name)
         new_file_path = os.path.join(new_download_path, self.file_name)
-
-        while os.path.isfile(new_file_path):
-            file_name_split = self.file_name.split('.')
-            extension_length = len(file_name_split[-1]) + 1
-
-            new_name = self.file_name[0:-extension_length] + \
-                '_' + str(i) + self.file_name[-extension_length:]
-            new_file_path = os.path.join(new_download_path, new_name)
-            i = i + 1
 
         # move the file to the download folder
         move_answer = moveFile(str(self.file_path), str(new_file_path), 'file')
