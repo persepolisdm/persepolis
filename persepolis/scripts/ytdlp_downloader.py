@@ -87,6 +87,7 @@ class Ytdp_Download():
         self.download_percent = 0
         self.error_message = ''
         self.single_video_link = single_video_link
+        self.yt_dlp_exited = False
 
         # this flag notify that download finished(stopped, complete or error)
         # in this situation download status must be written to the database
@@ -409,6 +410,8 @@ class Ytdp_Download():
                          'error_message': self.error_message}
                 self.main_window.persepolis_db.updateVideoFinderTable2(dict_)
 
+        self.yt_dlp_exited = True
+
     def start(self):
         # Create download_path if not existed
         try:
@@ -518,7 +521,10 @@ class Ytdp_Download():
         self.file_name = returnNewFileName(new_download_path, self.file_name)
         new_file_path = os.path.join(new_download_path, self.file_name)
 
-        # move the file to the download folder
+        # move the file to the download folder but first make sure yt-dlp has finished.
+        while not (self.yt_dlp_exited):
+            time.sleep(0.1)
+
         move_answer = moveFile(str(self.file_path), str(new_file_path), 'file')
 
         if not (move_answer):
