@@ -97,20 +97,7 @@ else:
     print('ffmpeg is found!')
 
 
-# sound-theme-freedesktop
 if os_type == 'Linux':
-    notifications_path = '/usr/share/sounds/freedesktop/stereo/'
-elif os_type == 'FreeBSD' or os_type == 'OpenBSD':
-    notifications_path = '/usr/local/share/sounds/freedesktop/stereo/'
-
-if os_type == 'Linux' or os_type == 'FreeBSD' or os_type == 'OpenBSD':
-
-    # python3-dasbus
-    if os.path.isdir(notifications_path):
-        print('sound-theme-freedesktop is found!')
-    else:
-        print('Warning: sound-theme-freedesktop is not installed! you need this package for sound notifications!')
-        not_installed = not_installed + 'sound-theme-freedesktop'
     try:
         from dasbus.connection import SessionMessageBus
         print('python3-dasbus is found!')

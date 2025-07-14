@@ -30,6 +30,7 @@
   <url type="translate">https://www.transifex.com/persepolis/persepolis-translations/</url>
   <developer_name>AliReza AmirSamimi</developer_name>
   <releases>
+    <release version="5.2.0" date="2025-07-14"/>
     <release version="5.1.1" date="2025-04-15"/>
     <release version="5.1.0" date="2025-04-18"/>
     <release version="5.0.2" date="2025-03-25"/>
