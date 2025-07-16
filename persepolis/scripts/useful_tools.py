@@ -86,8 +86,15 @@ def osAndDesktopEnvironment():
     desktop_env = None
     if os_type in OS.UNIX_LIKE:
         # find desktop environment('KDE', 'GNOME', ...)
-        desktop_env = os.environ.get('XDG_CURRENT_DESKTOP').lower()
-
+        xdg_desktop = os.environ.get("XDG_CURRENT_DESKTOP")
+        if xdg_desktop is not None:
+            desktop_env = xdg_desktop.lower()
+        else:
+            desktop_env = "unknown"
+            if logger_availability:
+                logger.sendToLog(
+                    "XDG_CURRENT_DESKTOP environment variable not found.", "WARNING"
+                )
     return os_type, desktop_env
 
 
