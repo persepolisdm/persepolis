@@ -29,6 +29,7 @@ from persepolis.constants import OS
 from persepolis.gui import resources
 from persepolis.scripts import spider
 from persepolis.scripts import logger
+from persepolis.scripts.queue import Queue
 from persepolis.scripts import osCommands
 from persepolis.scripts.about import AboutWindow
 from persepolis.scripts.shutdown import shutDown
@@ -38,7 +39,7 @@ from persepolis.scripts import persepolis_lib_prime
 from persepolis.scripts.addlink import AddLinkWindow
 from persepolis.scripts.progress import ProgressWindow
 from persepolis.scripts.video_finder import VideoFinder
-from persepolis.scripts.queue import Queue
+from persepolis.scripts.addtorrent import AddTorrentWindow
 from persepolis.scripts.setting import PreferencesWindow
 from persepolis.scripts.download_link import DownloadLink
 from persepolis.scripts.properties import PropertiesWindow
@@ -630,6 +631,7 @@ class MainWindow(MainWindow_Ui):
         system_tray_menu = QMenu()
         system_tray_menu.addAction(self.addlinkAction)
         system_tray_menu.addAction(self.videoFinderAddLinkAction)
+        system_tray_menu.addAction(self.torrentAddLinkAction)
         system_tray_menu.addAction(self.stopAllAction)
         system_tray_menu.addAction(self.addFromClipboardAction)
         system_tray_menu.addAction(self.minimizeAction)
@@ -4098,7 +4100,7 @@ class MainWindow(MainWindow_Ui):
             self.queue_panel_widget.hide()
 
             # update toolBar
-            list = [self.addlinkAction, self.videoFinderAddLinkAction, self.resumeAction, self.pauseAction,
+            list = [self.addlinkAction, self.videoFinderAddLinkAction, self.torrentAddLinkAction, self.resumeAction, self.pauseAction,
                     self.stopAction, self.removeSelectedAction, self.deleteSelectedAction,
                     self.propertiesAction, self.progressAction, self.minimizeAction, self.exitAction]
 
@@ -4125,7 +4127,7 @@ class MainWindow(MainWindow_Ui):
             self.queuePanelWidget(category)
 
             # update toolBar
-            list = [self.addlinkAction, self.videoFinderAddLinkAction, self.resumeAction, self.pauseAction,
+            list = [self.addlinkAction, self.videoFinderAddLinkAction, self.torrentAddLinkAction, self.resumeAction, self.pauseAction,
                     self.stopAction, self.removeSelectedAction, self.deleteSelectedAction,
                     self.propertiesAction, self.progressAction, self.minimizeAction, self.exitAction]
 
@@ -4152,7 +4154,7 @@ class MainWindow(MainWindow_Ui):
             self.queuePanelWidget(category)
 
             # update toolBar
-            list = [self.addlinkAction, self.videoFinderAddLinkAction, self.removeSelectedAction, self.deleteSelectedAction,
+            list = [self.addlinkAction, self.videoFinderAddLinkAction, self.torrentAddLinkAction, self.removeSelectedAction, self.deleteSelectedAction,
                     self.propertiesAction, self.startQueueAction, self.stopQueueAction,
                     self.removeQueueAction, self.moveUpSelectedAction, self.moveDownSelectedAction,
                     self.minimizeAction, self.exitAction]
@@ -5442,13 +5444,29 @@ class MainWindow(MainWindow_Ui):
             # create new progress_window
             self.progressBarOpen(gid)
 
+    def showTorrentAddLinkWindow(self, input_dict=None, menu=None):
+        torrent_addlink_window = AddTorrentWindow(self, self.torrentCallBack, self.persepolis_setting)
+        self.addlinkwindows_list.append(torrent_addlink_window)
+        torrent_addlink_window.show()
+        torrent_addlink_window.raise_()
+        torrent_addlink_window.activateWindow()
+
+    def torrentCallBack(self):
+        print('bing')
+
     def changeIcon(self, new_icons):
 
         global icons
         icons = ':/' + str(new_icons) + '/'
 
-        action_icon_dict = {self.stopAllAction: 'stop_all', self.minimizeAction: 'minimize', self.addlinkAction: 'add', self.addtextfileAction: 'file', self.addFromClipboardAction: 'clipboard', self.resumeAction: 'play', self.pauseAction: 'pause', self.stopAction: 'stop', self.propertiesAction: 'setting', self.progressAction: 'window', self.openFileAction: 'file', self.openDownloadFolderAction: 'folder', self.openDefaultDownloadFolderAction: 'folder', self.exitAction: 'exit',
-                            self.createQueueAction: 'add_queue', self.removeQueueAction: 'remove_queue', self.startQueueAction: 'start_queue', self.stopQueueAction: 'stop_queue', self.preferencesAction: 'preferences', self.aboutAction: 'about', self.issueAction: 'about', self.videoFinderAddLinkAction: 'video_finder', self.qmenu: 'menu'}
+        action_icon_dict = {self.stopAllAction: 'stop_all', self.minimizeAction: 'minimize', self.addlinkAction: 'add', self.addtextfileAction: 'file',
+                            self.addFromClipboardAction: 'clipboard', self.resumeAction: 'play', self.pauseAction: 'pause', self.stopAction: 'stop',
+                            self.propertiesAction: 'setting', self.progressAction: 'window', self.openFileAction: 'file',
+                            self.openDownloadFolderAction: 'folder', self.openDefaultDownloadFolderAction: 'folder', self.exitAction: 'exit',
+                            self.createQueueAction: 'add_queue', self.removeQueueAction: 'remove_queue', self.startQueueAction: 'start_queue',
+                            self.stopQueueAction: 'stop_queue', self.preferencesAction: 'preferences', self.aboutAction: 'about',
+                            self.issueAction: 'about', self.videoFinderAddLinkAction: 'video_finder', self.torrentAddLinkAction: 'torrent',
+                            self.qmenu: 'menu'}
 
         for key in action_icon_dict.keys():
             key.setIcon(QIcon(icons + str(action_icon_dict[key])))

@@ -70,11 +70,15 @@ class MenuWidget(QPushButton):
         downloadMenu = self.menubar.addMenu(QCoreApplication.translate("mainwindow_ui_tr", 'Download'))
         queueMenu = self.menubar.addMenu(QCoreApplication.translate("mainwindow_ui_tr", 'Queue'))
         videoFinderMenu = self.menubar.addMenu(QCoreApplication.translate("mainwindow_ui_tr", 'Video Finder'))
+        torrentMenu = self.menubar.addMenu(QCoreApplication.translate("mainwindow_ui_tr", 'Torrent'))
+
         helpMenu = self.menubar.addMenu(QCoreApplication.translate("mainwindow_ui_tr", 'Help'))
 
         sortMenu = viewMenu.addMenu(QCoreApplication.translate("mainwindow_ui_tr", 'Sort by'))
 
         videoFinderMenu.addAction(self.parent.videoFinderAddLinkAction)
+
+        torrentMenu.addAction(self.parent.torrentAddLinkAction)
 
         downloadMenu.addAction(self.parent.stopAllAction)
 
@@ -458,6 +462,7 @@ class MainWindow_Ui(QMainWindow):
         downloadMenu = self.menubar.addMenu(QCoreApplication.translate("mainwindow_ui_tr", '&Download'))
         queueMenu = self.menubar.addMenu(QCoreApplication.translate("mainwindow_ui_tr", '&Queue'))
         videoFinderMenu = self.menubar.addMenu(QCoreApplication.translate("mainwindow_ui_tr", 'V&ideo Finder'))
+        torrentMenu = self.menubar.addMenu(QCoreApplication.translate("mainwindow_ui_tr", '&Torrent'))
         helpMenu = self.menubar.addMenu(QCoreApplication.translate("mainwindow_ui_tr", '&Help'))
 
         # viewMenu submenus
@@ -485,13 +490,24 @@ class MainWindow_Ui(QMainWindow):
         self.persepolis_setting.beginGroup('settings/shortcuts')
 
         # videoFinderAddLinkAction
-        self.videoFinderAddLinkAction = QAction(QIcon(icons + 'video_finder'), QCoreApplication.translate("mainwindow_ui_tr", 'Find Video Links...'), self, statusTip=QCoreApplication.translate("mainwindow_ui_tr", 'Download video or audio from Youtube, Vimeo, etc.'),
+        self.videoFinderAddLinkAction = QAction(QIcon(icons + 'video_finder'), QCoreApplication.translate("mainwindow_ui_tr", 'Find Video Links...'), self,
+                                                statusTip=QCoreApplication.translate("mainwindow_ui_tr", 'Download video or audio from Youtube, Vimeo, etc.'),
                                                 triggered=self.showVideoFinderAddLinkWindow)
 
         self.videoFinderAddLinkAction_shortcut = QShortcut(self.persepolis_setting.value(
             'video_finder_shortcut'), self, self.showVideoFinderAddLinkWindow)
 
         videoFinderMenu.addAction(self.videoFinderAddLinkAction)
+
+        # torrentAddLinkAction
+        self.torrentAddLinkAction = QAction(QIcon(icons + 'torrent'), QCoreApplication.translate("mainwindow_ui_tr", 'Download torrent'),
+                                            self, statusTip=QCoreApplication.translate("mainwindow_ui_tr", 'Download torrent'),
+                                            triggered=self.showTorrentAddLinkWindow)
+
+        self.torrentAddLinkAction_shortcut = QShortcut(self.persepolis_setting.value(
+            'torrent_shortcut'), self, self.showTorrentAddLinkWindow)
+
+        torrentMenu.addAction(self.torrentAddLinkAction)
 
         # stopAllAction
         self.stopAllAction = QAction(QIcon(icons + 'stop_all'), QCoreApplication.translate("mainwindow_ui_tr", 'Stop All Active Downloads'),
@@ -531,13 +547,15 @@ class MainWindow_Ui(QMainWindow):
 
         # showMenuBarAction
         self.showMenuBarAction = QAction(
-            QCoreApplication.translate("mainwindow_ui_tr", 'Show Menubar'), self, statusTip=QCoreApplication.translate("mainwindow_ui_tr", 'Show Menubar'), triggered=self.showMenuBar)
+            QCoreApplication.translate("mainwindow_ui_tr", 'Show Menubar'), self, statusTip=QCoreApplication.translate("mainwindow_ui_tr", 'Show Menubar'),
+            triggered=self.showMenuBar)
         self.showMenuBarAction.setCheckable(True)
         viewMenu.addAction(self.showMenuBarAction)
 
         # showSidePanelAction
         self.showSidePanelAction = QAction(
-            QCoreApplication.translate("mainwindow_ui_tr", 'Show Side Panel'), self, statusTip=QCoreApplication.translate("mainwindow_ui_tr", 'Show Side Panel'), triggered=self.showSidePanel)
+            QCoreApplication.translate("mainwindow_ui_tr", 'Show Side Panel'), self,
+            statusTip=QCoreApplication.translate("mainwindow_ui_tr", 'Show Side Panel'), triggered=self.showSidePanel)
         self.showSidePanelAction.setCheckable(True)
         viewMenu.addAction(self.showSidePanelAction)
 
@@ -559,7 +577,8 @@ class MainWindow_Ui(QMainWindow):
 
         # importText
         self.addtextfileAction = QAction(QIcon(icons + 'file'), QCoreApplication.translate("mainwindow_ui_tr", 'Import Links from Text File...'), self,
-                                         statusTip=QCoreApplication.translate("mainwindow_ui_tr", 'Create a text file and put links in it, line by line!'), triggered=self.importText)
+                                         statusTip=QCoreApplication.translate("mainwindow_ui_tr", 'Create a text file and put links in it, line by line!'),
+                                         triggered=self.importText)
 
         self.addtextfileAction_shortcut = QShortcut(
             self.persepolis_setting.value('import_text_shortcut'), self, self.importText)
@@ -567,8 +586,9 @@ class MainWindow_Ui(QMainWindow):
         fileMenu.addAction(self.addtextfileAction)
 
         # importText From Clipboard
-        self.addFromClipboardAction = QAction(QIcon(icons + 'clipboard'), QCoreApplication.translate("mainwindow_ui_tr", 'Import Links from Clipboard...'), self,
-                                              statusTip=QCoreApplication.translate("mainwindow_ui_tr", 'Import Links From Clipboard'), triggered=self.importLinksFromClipboard)
+        self.addFromClipboardAction = QAction(QIcon(icons + 'clipboard'), QCoreApplication.translate("mainwindow_ui_tr", 'Import Links from Clipboard...'),
+                                              self, statusTip=QCoreApplication.translate("mainwindow_ui_tr", 'Import Links From Clipboard'),
+                                              triggered=self.importLinksFromClipboard)
 
         fileMenu.addAction(self.addFromClipboardAction)
 
@@ -604,18 +624,21 @@ class MainWindow_Ui(QMainWindow):
 
         # openFileAction
         self.openFileAction = QAction(QIcon(
-            icons + 'file'), QCoreApplication.translate("mainwindow_ui_tr", 'Open File...'), self, statusTip=QCoreApplication.translate("mainwindow_ui_tr", 'Open File...'), triggered=self.openFile)
+            icons + 'file'), QCoreApplication.translate("mainwindow_ui_tr", 'Open File...'), self,
+            statusTip=QCoreApplication.translate("mainwindow_ui_tr", 'Open File...'), triggered=self.openFile)
         fileMenu.addAction(self.openFileAction)
 
         # openDownloadFolderAction
         self.openDownloadFolderAction = QAction(QIcon(
-            icons + 'folder'), QCoreApplication.translate("mainwindow_ui_tr", 'Open Download Folder'), self, statusTip=QCoreApplication.translate("mainwindow_ui_tr", 'Open Download Folder'), triggered=self.openDownloadFolder)
+            icons + 'folder'), QCoreApplication.translate("mainwindow_ui_tr", 'Open Download Folder'),
+            self, statusTip=QCoreApplication.translate("mainwindow_ui_tr", 'Open Download Folder'), triggered=self.openDownloadFolder)
 
         fileMenu.addAction(self.openDownloadFolderAction)
 
         # openDefaultDownloadFolderAction
         self.openDefaultDownloadFolderAction = QAction(QIcon(
-            icons + 'folder'), QCoreApplication.translate("mainwindow_ui_tr", 'Open Default Download Folder'), self, statusTip=QCoreApplication.translate("mainwindow_ui_tr", 'Open Default Download Folder'), triggered=self.openDefaultDownloadFolder)
+            icons + 'folder'), QCoreApplication.translate("mainwindow_ui_tr", 'Open Default Download Folder'),
+            self, statusTip=QCoreApplication.translate("mainwindow_ui_tr", 'Open Default Download Folder'), triggered=self.openDefaultDownloadFolder)
 
         fileMenu.addAction(self.openDefaultDownloadFolderAction)
 

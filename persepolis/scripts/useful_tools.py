@@ -236,6 +236,7 @@ def returnDefaultSettings():
     add_new_download_shortcut = "Ctrl+N"
     import_text_shortcut = "Ctrl+O"
     video_finder_shortcut = "Ctrl+V"
+    torrent_shortcut = "Ctrl+T"
     quit_shortcut = "Ctrl+Q"
     hide_window_shortcut = "Ctrl+W"
     move_up_selection_shortcut = "Ctrl+Up"
@@ -253,7 +254,8 @@ def returnDefaultSettings():
                             'shortcuts/add_new_download_shortcut': add_new_download_shortcut, 'shortcuts/import_text_shortcut': import_text_shortcut,
                             'shortcuts/video_finder_shortcut': video_finder_shortcut, 'shortcuts/quit_shortcut': quit_shortcut,
                             'shortcuts/hide_window_shortcut': hide_window_shortcut, 'shortcuts/move_up_selection_shortcut': move_up_selection_shortcut,
-                            'shortcuts/move_down_selection_shortcut': move_down_selection_shortcut, 'dont-check-certificate': 'no'}
+                            'shortcuts/move_down_selection_shortcut': move_down_selection_shortcut, 'shortcuts/torrent_shortcut': torrent_shortcut,
+                            'dont-check-certificate': 'no'}
 
     return default_setting_dict
 

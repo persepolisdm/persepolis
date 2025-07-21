@@ -36,6 +36,8 @@
         <file>Breeze/clipboard.svg</file>	
         <file>Breeze/refresh.svg</file>
         <file>Breeze/video_finder.svg</file>
+        <file>Breeze/torrent.svg</file>
+
 
 		<file>Breeze-Dark/about.svg</file>		
 		<file>Breeze-Dark/add.svg</file>		
@@ -69,6 +71,8 @@
         <file>Breeze-Dark/clipboard.svg</file>	
         <file>Breeze-Dark/refresh.svg</file>
         <file>Breeze-Dark/video_finder.svg</file>
+        <file>Breeze-Dark/torrent.svg</file>
+
        
         
         <file>Papirus/about.svg</file>		
@@ -103,6 +107,8 @@
         <file>Papirus/clipboard.svg</file>	
         <file>Papirus/refresh.svg</file>
         <file>Papirus/video_finder.svg</file>
+        <file>Papirus/torrent.svg</file>
+
        
         
         <file>Papirus-Dark/about.svg</file>		
@@ -137,6 +143,7 @@
         <file>Papirus-Dark/clipboard.svg</file>	
         <file>Papirus-Dark/refresh.svg</file>
         <file>Papirus-Dark/video_finder.svg</file>       
+        <file>Papirus-Dark/torrent.svg</file> 
         
         <file>Papirus-Light/about.svg</file>		
 		<file>Papirus-Light/add.svg</file>		
@@ -170,6 +177,8 @@
         <file>Papirus-Light/clipboard.svg</file>	
         <file>Papirus-Light/refresh.svg</file>
         <file>Papirus-Light/video_finder.svg</file>
+        <file>Papirus-Light/torrent.svg</file>
+
            
         <file>light_style.qss</file>
         <file>light fusion/ads_close.svg</file>
