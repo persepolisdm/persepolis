@@ -25,6 +25,8 @@ from persepolis.constants import OS
 import time
 import os
 import sys
+import shutil
+from persepolis.scripts.browser_integration import install_native_hosts, remove_manifests_for_browsers
 
 try:
     from PySide6.QtCore import QSettings
@@ -148,27 +150,62 @@ for folder in folder_list:
     osCommands.makeDirs(folder)
 
 persepolis_setting.endGroup()
+# Set default browsers for native messaging integration (only if not already set)
+persepolis_setting.beginGroup("settings/native_messaging")
+
+# A mapping from our internal browser key to possible executable names
+browser_executables = {
+    'chrome': ['google-chrome', 'google-chrome-stable'],
+    'chromium': ['chromium-browser', 'chromium'],
+    'opera': ['opera'],
+    'vivaldi': ['vivaldi-stable', 'vivaldi'],
+    'firefox': ['firefox'],
+    'brave': ['brave-browser', 'brave'],
+    'librewolf': ['librewolf']
+}
+
+default_enabled_browsers = []
+
+# Check if any of the possible executables for a browser are installed
+for browser_key, executables in browser_executables.items():
+    for executable_name in executables:
+        if shutil.which(executable_name):
+            default_enabled_browsers.append(browser_key)
+            break # Found one, move to the next browser
+
+supported_browsers = browser_executables.keys()
+for browser in supported_browsers:
+    if persepolis_setting.value(browser) is None:
+        persepolis_setting.setValue(browser, 'true' if browser in default_enabled_browsers else 'false')
+
+persepolis_setting.endGroup()
+persepolis_setting.sync()
+
+
 
 # Browser integration for Firefox and chromium and google chrome
-for browser in ['chrome', 'chromium', 'opera', 'vivaldi', 'firefox', 'brave']:
-    json_done, native_done, log_message2 = browserIntegration(browser)
 
-    log_message = browser
 
-    if json_done is True:
-        log_message = log_message + ': ' + 'Json file is created successfully.\n'
+# Load user-selected browsers from QSettings
+persepolis_setting.beginGroup('settings/native_messaging')
+enabled_browsers = []
 
-    else:
-        log_message = log_message + ': ' + 'Json ERROR!\n'
+for key in persepolis_setting.childKeys():
+    if persepolis_setting.value(key) == 'true':
+        enabled_browsers.append(key)
 
-    if native_done is True:
-        log_message = log_message + 'persepolis executer file is created successfully.\n'
+persepolis_setting.endGroup()
 
-    elif native_done is False:
-        log_message = log_message + ': ' + 'persepolis executer file ERROR!\n'
+# Install manifests only for selected browsers
+log_messages = install_native_hosts(enabled_browsers)
+for log in log_messages:
+    logger.sendToLog(log, 'INITIALIZATION')
 
-    logger.sendToLog(log_message, 'INITIALIZATION')
-    logger.sendToLog(log_message2[0], log_message2[1])
+# Optional: Clean up manifests from unselected browsers
+all_known_browsers = ['chrome', 'chromium', 'opera', 'vivaldi', 'firefox', 'brave', 'librewolf']
+disabled_browsers = list(set(all_known_browsers) - set(enabled_browsers))
+remove_manifests_for_browsers(disabled_browsers)
+
 
 # get locale and set ui direction
 locale = str(persepolis_setting.value('settings/locale'))

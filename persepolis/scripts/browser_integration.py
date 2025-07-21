@@ -28,7 +28,7 @@ home_address = str(os.path.expanduser("~"))
 config_folder = determineConfigFolder()
 
 
-def browserIntegration(browser):
+def browserIntegration(browser, custom_path=None):
     # get execution information.
     exec_dictionary = getExecPath()
     exec_path = exec_dictionary['modified_exec_file_path']
@@ -41,7 +41,9 @@ def browserIntegration(browser):
         intermediary = os.path.join(config_folder, 'persepolis_run_shell')
 
         # Native Messaging Hosts folder path for every browser
-        if browser == BROWSER.CHROMIUM:
+        if custom_path:
+            native_message_folder = os.path.expanduser(custom_path)
+        elif browser == BROWSER.CHROMIUM:
             native_message_folder = home_address + '/.config/chromium/NativeMessagingHosts'
 
         elif browser == BROWSER.CHROME:
@@ -63,6 +65,9 @@ def browserIntegration(browser):
         elif browser == BROWSER.BRAVE:
             native_message_folder = home_address + \
                 '/.config/BraveSoftware/Brave-Browser/NativeMessagingHosts'
+        elif browser == "librewolf":
+            native_message_folder = os.path.realpath(os.path.expanduser("~/.librewolf/native-messaging-hosts"))
+
 
     # for FreeBSD and OpenBSD
     elif os_type in OS.BSD_FAMILY:
@@ -70,10 +75,10 @@ def browserIntegration(browser):
         # persepolis intermediate script path
         intermediary = os.path.join(config_folder, 'persepolis_run_shell')
 
-        # Native Messaging Hosts folder path for every browser
-        if browser == BROWSER.CHROMIUM:
+        if custom_path:
+            native_message_folder = os.path.expanduser(custom_path)
+        elif browser == BROWSER.CHROMIUM:
             native_message_folder = home_address + '/.config/chromium/NativeMessagingHosts'
-
         elif browser == BROWSER.CHROME:
             native_message_folder = home_address + \
                 '/.config/google-chrome/NativeMessagingHosts'
@@ -99,11 +104,12 @@ def browserIntegration(browser):
         # persepolis execution path
         intermediary = os.path.join(config_folder, 'persepolis_run_shell')
 
-        # Native Messaging Hosts folder path for every browser
-        if browser == BROWSER.CHROMIUM:
+        if custom_path:
+            native_message_folder = os.path.expanduser(custom_path)
+
+        elif browser == BROWSER.CHROMIUM:
             native_message_folder = home_address + \
                 '/Library/Application Support/Chromium/NativeMessagingHosts'
-
         elif browser == BROWSER.CHROME:
             native_message_folder = home_address + \
                 '/Library/Application Support/Google/Chrome/NativeMessagingHosts'
@@ -123,6 +129,9 @@ def browserIntegration(browser):
         elif browser == BROWSER.BRAVE:
             native_message_folder = home_address + \
                 '/Library/Application Support/BraveSoftware/Brave-Browser/NativeMessagingHosts/'
+        elif browser == "librewolf":
+            native_message_folder = os.path.realpath(os.path.expanduser("~/Library/LibreWolf/NativeMessagingHosts"))
+
 
     # for MicroSoft Windows os (windows 7 , ...)
     elif os_type == OS.WINDOWS:
@@ -131,8 +140,11 @@ def browserIntegration(browser):
         # c:\\Users\\...\\Persepolis Download Manager.exe , so we need 2
         # "\" in address
         intermediary, logg_message = findExternalAppPath('PersepolisBI')
-
-        if browser in BROWSER.CHROME_FAMILY:
+        if custom_path:
+            native_message_folder = os.path.expanduser(custom_path)
+        elif browser == "librewolf":
+            native_message_folder = os.path.realpath(os.path.join(os.environ['APPDATA'], "librewolf", "NativeMessagingHosts"))
+        elif browser in BROWSER.CHROME_FAMILY:
             native_message_folder = os.path.join(
                 home_address, 'AppData', 'Local',
                 'persepolis_download_manager', 'chrome')
@@ -159,7 +171,8 @@ def browserIntegration(browser):
             "com.persepolis.pdmchromewrapper@persepolisdm.github.io",
             "com.persepolis.pdmchromewrapper.offline@persepolisdm.github.io"
         ]
-
+    elif browser == "librewolf":
+        webextension_json_connector["allowed_extensions"] = ["com.persepolis.pdmchromewrapper@persepolisdm.github.io","com.persepolis.pdmchromewrapper.offline@persepolisdm.github.io"]
     # Build final path
     native_message_file = os.path.join(
         native_message_folder, 'com.persepolis.pdmchromewrapper.json')
@@ -239,7 +252,7 @@ def browserIntegration(browser):
                 shebang = '#!' + shell
                 break
 
-        persepolis_run_shell_contents = shebang + '\n' + exec_path + "\t$@"
+        persepolis_run_shell_contents = shebang + '\n' + "python3 -m persepolis \"$@\""
         f = open(intermediary, 'w')
         f.writelines(persepolis_run_shell_contents)
         f.close()
@@ -258,3 +271,58 @@ def browserIntegration(browser):
             native_done = False
 
     return json_done, native_done, logg_message
+
+
+def install_native_hosts(browsers, custom_path=None):
+
+    log_messages = []
+    for browser in browsers:
+        try:
+            json_done, native_done, log = browserIntegration(browser, custom_path)
+            log_messages.append(f"[{browser}] JSON: {json_done}, Native: {native_done}")
+        except Exception as e:
+            log_messages.append(f"[{browser}] Failed: {str(e)}")
+
+    return log_messages
+def get_manifest_path_for_browser(browser, custom_path=None):
+    folder = get_native_message_folder(browser, custom_path)
+    if not folder:
+        return None
+    return os.path.join(folder, 'com.persepolis.pdmchromewrapper.json')
+
+
+def remove_manifests_for_browsers(browsers, custom_path=None):
+    for browser in browsers:
+        try:
+            if browser.strip() == "":
+                continue
+            path = get_manifest_path_for_browser(browser, custom_path)
+            if os.path.exists(path):
+                os.remove(path)
+                print(f"🗑 Removed manifest for {browser}: {path}")
+        except Exception as e:
+            print(f"⚠️ Failed to remove manifest for {browser}: {e}")
+def get_native_message_folder(browser, custom_path=None):
+    if custom_path:
+        return os.path.expanduser(custom_path)
+
+    if os_type == OS.LINUX:
+        if browser == BROWSER.CHROMIUM:
+            return os.path.join(home_address, '.config/chromium/NativeMessagingHosts')
+        elif browser == BROWSER.CHROME:
+            return os.path.join(home_address, '.config/google-chrome/NativeMessagingHosts')
+        elif browser == BROWSER.FIREFOX:
+            return os.path.join(home_address, '.mozilla/native-messaging-hosts')
+        elif browser == BROWSER.VIVALDI:
+            return os.path.join(home_address, '.config/vivaldi/NativeMessagingHosts')
+        elif browser == BROWSER.OPERA:
+            return os.path.join(home_address, '.config/opera/NativeMessagingHosts')
+        elif browser == BROWSER.BRAVE:
+            return os.path.join(home_address, '.config/BraveSoftware/Brave-Browser/NativeMessagingHosts')
+        elif browser == "librewolf":
+            return os.path.join(home_address, '.librewolf/native-messaging-hosts')
+
+    # (You can add Windows/macOS as needed)
+
+    return None
+
