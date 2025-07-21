@@ -299,9 +299,9 @@ def remove_manifests_for_browsers(browsers, custom_path=None):
             path = get_manifest_path_for_browser(browser, custom_path)
             if os.path.exists(path):
                 os.remove(path)
-                print(f"🗑 Removed manifest for {browser}: {path}")
+                print(f"Removed manifest for {browser}: {path}")
         except Exception as e:
-            print(f"⚠️ Failed to remove manifest for {browser}: {e}")
+            print(f"Failed to remove manifest for {browser}: {e}")
 def get_native_message_folder(browser, custom_path=None):
     if custom_path:
         return os.path.expanduser(custom_path)
