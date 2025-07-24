@@ -26,6 +26,8 @@ import time
 import os
 import sys
 import shutil
+import subprocess
+import plistlib
 from persepolis.scripts.browser_integration import install_native_hosts, remove_manifests_for_browsers
 
 try:
@@ -156,41 +158,20 @@ persepolis_setting.endGroup()
 # Set default browsers for native messaging integration (only if not already set)
 persepolis_setting.beginGroup("settings/native_messaging")
 
-def detect_installed_browsers():
-    """
-    Detects installed web browsers on the system.
-    For all Linux,Mac it checks for executables in the system's PATH.
-    For Windows, it checks the registry for a reliable detection.
-    """
+def detect_installed_browsers():   
     detected_browsers = set()
-
-    # PATH-based detection (for Linux,Mac)
-    executable_map = {
-        "firefox": ["firefox"],
-        "chrome": ["google-chrome", "chrome"],
-        "chromium": ["chromium", "chromium-browser"],
-        
-    }
-
-    for browser, executables in executable_map.items():
-        if any(shutil.which(name) for name in executables):
-            detected_browsers.add(browser)
-
-    # Windows-specific registry detection
     if sys.platform == "win32":
+        # Windows-specific registry detection
         registry_locations = [
             (winreg.HKEY_LOCAL_MACHINE, r"SOFTWARE\Clients\StartMenuInternet"),
             (winreg.HKEY_LOCAL_MACHINE, r"SOFTWARE\WOW6432Node\Clients\StartMenuInternet"),
             (winreg.HKEY_CURRENT_USER, r"SOFTWARE\Clients\StartMenuInternet"),
         ]
-
-        # This mapping helps translate registry names to the names Persepolis uses.
         browser_mapping = {
             "Google Chrome": "chrome",
             "Chromium": "chromium",
             "Mozilla Firefox": "firefox",
         }
-
         for root, path in registry_locations:
             try:
                 with winreg.OpenKey(root, path) as key:
@@ -202,6 +183,43 @@ def detect_installed_browsers():
                             detected_browsers.add(mapped_browser)
             except FileNotFoundError:
                 continue
+    elif sys.platform == "darwin":
+        # macOS-specific detection using Spotlight and Info.plist
+        browser_mapping = {
+            "firefox": "org.mozilla.firefox",
+            "chrome": "com.google.Chrome",
+            "chromium": "org.chromium.Chromium",
+        }
+        for name, bundle_id in browser_mapping.items():
+            try:
+                output = subprocess.check_output(
+                    ['mdfind', f'kMDItemCFBundleIdentifier=="{bundle_id}"'],
+                    text=True, stderr=subprocess.DEVNULL
+                ).strip()
+                if output:
+                    app_path = output.splitlines()[0]
+                    plist_path = os.path.join(app_path, "Contents", "Info.plist")
+                    if os.path.exists(plist_path):
+                        with open(plist_path, "rb") as f:
+                            plist = plistlib.load(f)
+                            exec_name = plist.get("CFBundleExecutable")
+                            if exec_name:
+                                exec_path = os.path.join(app_path, "Contents", "MacOS", exec_name)
+                                if os.path.exists(exec_path):
+                                    detected_browsers.add(name)
+            except (subprocess.CalledProcessError, FileNotFoundError):
+                continue
+    else:
+        # PATH-based detection for Linux and other Unix-likes
+        browser_mapping = {
+            "firefox": ["firefox"],
+            "chrome": ["google-chrome", "google-chrome-stable", "chrome"],
+            "chromium": ["chromium", "chromium-browser"],
+        }
+
+        for browser, executables in browser_mapping.items():
+            if any(shutil.which(name) for name in executables):
+                detected_browsers.add(browser)
 
     return detected_browsers
 
