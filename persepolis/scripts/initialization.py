@@ -32,6 +32,9 @@ try:
     from PySide6.QtCore import QSettings
 except:
     from PyQt5.QtCore import QSettings
+# for windows platform, we need to import winreg
+if sys.platform == "win32":
+    import winreg
 
 # initialization
 
@@ -153,27 +156,58 @@ persepolis_setting.endGroup()
 # Set default browsers for native messaging integration (only if not already set)
 persepolis_setting.beginGroup("settings/native_messaging")
 
-# A mapping from our internal browser key to possible executable names
-browser_executables = {
-    'chrome': ['google-chrome', 'google-chrome-stable'],
-    'chromium': ['chromium-browser', 'chromium'],
-    'opera': ['opera'],
-    'vivaldi': ['vivaldi-stable', 'vivaldi'],
-    'firefox': ['firefox'],
-    'brave': ['brave-browser', 'brave'],
-    'librewolf': ['librewolf']
-}
+def detect_installed_browsers():
+    """
+    Detects installed web browsers on the system.
+    For all Linux,Mac it checks for executables in the system's PATH.
+    For Windows, it checks the registry for a reliable detection.
+    """
+    detected_browsers = set()
 
-default_enabled_browsers = []
+    # PATH-based detection (for Linux,Mac)
+    executable_map = {
+        "firefox": ["firefox"],
+        "chrome": ["google-chrome", "chrome"],
+        "chromium": ["chromium", "chromium-browser"],
+        
+    }
 
-# Check if any of the possible executables for a browser are installed
-for browser_key, executables in browser_executables.items():
-    for executable_name in executables:
-        if shutil.which(executable_name):
-            default_enabled_browsers.append(browser_key)
-            break # Found one, move to the next browser
+    for browser, executables in executable_map.items():
+        if any(shutil.which(name) for name in executables):
+            detected_browsers.add(browser)
 
-supported_browsers = browser_executables.keys()
+    # Windows-specific registry detection
+    if sys.platform == "win32":
+        registry_locations = [
+            (winreg.HKEY_LOCAL_MACHINE, r"SOFTWARE\Clients\StartMenuInternet"),
+            (winreg.HKEY_LOCAL_MACHINE, r"SOFTWARE\WOW6432Node\Clients\StartMenuInternet"),
+            (winreg.HKEY_CURRENT_USER, r"SOFTWARE\Clients\StartMenuInternet"),
+        ]
+
+        # This mapping helps translate registry names to the names Persepolis uses.
+        browser_mapping = {
+            "Google Chrome": "chrome",
+            "Chromium": "chromium",
+            "Mozilla Firefox": "firefox",
+        }
+
+        for root, path in registry_locations:
+            try:
+                with winreg.OpenKey(root, path) as key:
+                    for i in range(winreg.QueryInfoKey(key)[0]):
+                        subkey_name = winreg.EnumKey(key, i)
+                        display_name = winreg.QueryValue(key, subkey_name)
+                        mapped_browser = browser_mapping.get(display_name)
+                        if mapped_browser:
+                            detected_browsers.add(mapped_browser)
+            except FileNotFoundError:
+                continue
+
+    return detected_browsers
+
+supported_browsers = ['chrome', 'chromium', 'opera', 'vivaldi', 'firefox', 'brave', 'librewolf']
+default_enabled_browsers = detect_installed_browsers()
+
 for browser in supported_browsers:
     if persepolis_setting.value(browser) is None:
         persepolis_setting.setValue(browser, 'true' if browser in default_enabled_browsers else 'false')
