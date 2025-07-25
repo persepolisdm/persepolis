@@ -297,11 +297,12 @@ def remove_manifests_for_browsers(browsers, custom_path=None):
             if browser.strip() == "":
                 continue
             path = get_manifest_path_for_browser(browser, custom_path)
-            if os.path.exists(path):
+            if path and os.path.exists(path):
                 os.remove(path)
                 print(f"Removed manifest for {browser}: {path}")
         except Exception as e:
             print(f"Failed to remove manifest for {browser}: {e}")
+
 def get_native_message_folder(browser, custom_path=None):
     if custom_path:
         return os.path.expanduser(custom_path)
@@ -322,7 +323,36 @@ def get_native_message_folder(browser, custom_path=None):
         elif browser == "librewolf":
             return os.path.join(home_address, '.librewolf/native-messaging-hosts')
 
-    # (You can add Windows/macOS as needed)
+    elif os_type == OS.OSX:
+        if browser == BROWSER.CHROMIUM:
+            return os.path.join(home_address, 'Library/Application Support/Chromium/NativeMessagingHosts')
+        elif browser == BROWSER.CHROME:
+            return os.path.join(home_address, 'Library/Application Support/Google/Chrome/NativeMessagingHosts')
+        elif browser == BROWSER.FIREFOX:
+            return os.path.join(home_address, 'Library/Application Support/Mozilla/NativeMessagingHosts')
+        elif browser == BROWSER.VIVALDI:
+            return os.path.join(home_address, 'Library/Application Support/Vivaldi/NativeMessagingHosts')
+        elif browser == BROWSER.OPERA:
+            return os.path.join(home_address, 'Library/Application Support/Opera/NativeMessagingHosts')
+        elif browser == BROWSER.BRAVE:
+            return os.path.join(home_address, 'Library/Application Support/BraveSoftware/Brave-Browser/NativeMessagingHosts')
+        elif browser == "librewolf":
+            return os.path.join(home_address, 'Library/LibreWolf/NativeMessagingHosts')
+
+    elif os_type == OS.WINDOWS:
+        if browser == "librewolf":
+            return os.path.join(os.environ['LOCALAPPDATA'], "Librewolf", "NativeMessagingHosts")
+        elif browser in BROWSER.CHROMIUM:
+            return os.path.join(os.environ['LOCALAPPDATA'], "Chromium", "User Data", "NativeMessagingHosts")
+        elif browser == BROWSER.FIREFOX:
+            return os.path.join(os.environ['LOCALAPPDATA'],  "Mozilla", "NativeMessagingHosts")
+        elif browser == BROWSER.CHROME:
+            return os.path.join(os.environ['LOCALAPPDATA'], "Google", "Chrome", "User Data", "NativeMessagingHosts")
+        elif browser == BROWSER.BRAVE:
+            return os.path.join(os.environ['LOCALAPPDATA'],  "BraveSoftware", "Brave-Browser", "User Data", "NativeMessagingHosts")
+        elif browser == BROWSER.OPERA:
+            return os.path.join(os.environ['LOCALAPPDATA'],  "Opera Software", "Opera Stable", "NativeMessagingHosts")
+        elif browser == BROWSER.VIVALDI:
+            return os.path.join(os.environ['LOCALAPPDATA'],  "Vivaldi", "User Data", "NativeMessagingHosts")
 
     return None
-
