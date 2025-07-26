@@ -19,7 +19,7 @@ from persepolis.gui.progress_ui import ProgressWindow_Ui
 try:
     from PySide6.QtWidgets import QWidget, QVBoxLayout, QLabel
     from PySide6.QtCore import QCoreApplication
-except:
+except ImportError:
     from PyQt5.QtWidgets import QWidget, QVBoxLayout, QLabel
     from PyQt5.QtCore import QCoreApplication
 

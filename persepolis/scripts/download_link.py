@@ -16,7 +16,7 @@
 import requests
 try:
     from PySide6.QtCore import QThread, Signal
-except:
+except ImportError:
     from PyQt5.QtCore import QThread
     from PyQt5.QtCore import pyqtSignal as Signal
 
@@ -36,7 +36,7 @@ class DownloadLink(QThread):
         # or update data base , if it was existed before
         try:
             self.main_window.temp_db.insertInSingleTable(self.gid)
-        except:
+        except Exception:
             # release lock
             self.main_window.temp_db.lock = False
             dictionary = {'gid': self.gid, 'status': 'active'}

@@ -16,7 +16,7 @@
 try:
     from PySide6.QtCore import Qt, QSize, QPoint, QFile, QIODevice, QTextStream
     from PySide6.QtGui import QIcon
-except:
+except ImportError:
     from PyQt5.QtCore import Qt, QSize, QPoint, QFile, QIODevice, QTextStream
     from PyQt5.QtGui import QIcon
 

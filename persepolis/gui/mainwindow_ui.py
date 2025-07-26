@@ -16,7 +16,7 @@ try:
     from PySide6.QtWidgets import QDial, QHeaderView, QPushButton, QComboBox, QMenu, QTreeView, QSplitter, QHBoxLayout, QVBoxLayout, QTableWidgetItem, QAbstractItemView, QToolBar, QMenuBar, QStatusBar, QTableWidget, QMainWindow, QWidget, QFrame, QCheckBox, QLabel
     from PySide6.QtGui import QShortcut, QAction, QCursor, QIcon, QStandardItemModel
     from PySide6.QtCore import QCoreApplication, QRect, Qt, QTranslator, QLocale
-except:
+except ImportError:
     from PyQt5.QtWidgets import QDial, QHeaderView, QShortcut, QPushButton, QComboBox, QTreeView, QSplitter, QHBoxLayout, QVBoxLayout, QMenu, QTableWidgetItem, QAbstractItemView, QToolBar, QMenuBar, QStatusBar, QTableWidget, QAction, QMainWindow, QWidget, QFrame, QCheckBox, QLabel
     from PyQt5.QtGui import QCursor, QIcon, QStandardItemModel
     from PyQt5.QtCore import QCoreApplication, QRect, Qt, QTranslator, QLocale

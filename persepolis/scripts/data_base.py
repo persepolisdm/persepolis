@@ -1534,7 +1534,7 @@ class PersepolisDB():
                                                                                 WHERE gid = '{}' """.format(download_path_temp, gid))
 
                 self.persepolis_db_connection.commit()
-            except:
+            except Exception:
                 pass
 
         # job is done! open the lock
