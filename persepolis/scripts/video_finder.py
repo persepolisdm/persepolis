@@ -20,7 +20,7 @@ from persepolis.scripts.download_link import DownloadLink
 from persepolis.scripts.useful_tools import muxer
 try:
     from PySide6.QtCore import QThread, Signal
-except:
+except ImportError:
     from PyQt5.QtCore import QThread
     from PyQt5.QtCore import pyqtSignal as Signal
 
@@ -76,7 +76,7 @@ class VideoFinder(QThread):
             try:
                 video_finder_plus_gid = 'video_finder_' + str(video_gid)
                 self.main_window.temp_db.insertInQueueTable(video_finder_plus_gid)
-            except:
+            except Exception:
                 # release lock
                 self.main_window.temp_db.lock = False
 

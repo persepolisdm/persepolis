@@ -57,7 +57,7 @@ try:
     from PySide6 import __version__ as PYQT_VERSION_STR
     from PySide6.QtCore import __version__ as QT_VERSION_STR
     pyside6_is_installed = True
-except:
+except ImportError:
     from PyQt5.QtWidgets import QCheckBox, QLineEdit, QAbstractItemView, QAction, QFileDialog, QSystemTrayIcon, QMenu, QApplication, QInputDialog, QMessageBox
     from PyQt5.QtCore import QDir, QTime, QCoreApplication, QSize, QPoint, QThread, Qt, QTranslator, QLocale, QT_VERSION_STR
     from PyQt5.QtGui import QFont, QIcon, QStandardItem, QCursor
@@ -409,7 +409,7 @@ class SpiderThread(QThread):
             # update table in MainWindow
             self.SPIDERSIGNAL.emit(dictionary)
 
-        except:
+        except Exception:
             # write ERROR message
             logger.sendToLog(
                 "Spider couldn't find download information", "ERROR")
@@ -1118,7 +1118,7 @@ class MainWindow(MainWindow_Ui):
                     systemtray_tooltip_text = systemtray_tooltip_text + '\n'\
                         + system_tray_file_name + ': '\
                         + download_status_dict['percent']
-            except:
+            except Exception:
                 pass
 
             # Is the link related to VideoFinder?
@@ -1188,14 +1188,14 @@ class MainWindow(MainWindow_Ui):
                                 size_value = float(file_size[:-4])
                             else:
                                 size_value = int(file_size[:-4])
-                        except:
+                        except ValueError:
                             size_value = None
                     else:
                         unit = None
 
                         try:
                             size_value = int(file_size)
-                        except:
+                        except ValueError:
                             size_value = None
 
                     if free_space is not None and size_value is not None:
@@ -1381,7 +1381,7 @@ class MainWindow(MainWindow_Ui):
 
                 try:
                     value = int(value[:-1])
-                except:
+                except ValueError:
                     value = 0
 
                 if value == 0 and downloaded_size != 0:
@@ -1602,7 +1602,7 @@ class MainWindow(MainWindow_Ui):
 
             # sort list by number
             rows_list.sort()
-        except:
+        except Exception:
             rows_list = []
 
         return rows_list
@@ -3297,7 +3297,7 @@ class MainWindow(MainWindow_Ui):
                     size = size_int * 1024
                 else:  # Byte
                     size = size_int
-            except:
+            except ValueError:
                 size = 0
 
             # create a dictionary from gid and size of files in Bytes
@@ -4283,7 +4283,7 @@ class MainWindow(MainWindow_Ui):
         # create an item for this category in temp_db if not exists!
         try:
             self.temp_db.insertInQueueTable(current_category_tree_text)
-        except:
+        except Exception:
             # release lock
             self.temp_db.lock = False
 

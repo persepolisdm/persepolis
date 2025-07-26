@@ -17,7 +17,7 @@ try:
     from PySide6.QtWidgets import QCheckBox, QPushButton, QTextEdit, QFrame, QLabel, QComboBox, QHBoxLayout, QApplication
     from PySide6.QtCore import QThread, Signal, QCoreApplication, QTranslator, QLocale, QPoint, QSize
     from PySide6.QtGui import QPixmap
-except:
+except ImportError:
     from PyQt5.QtWidgets import QCheckBox, QPushButton, QTextEdit, QFrame, QLabel, QComboBox, QHBoxLayout, QApplication
     from PyQt5.QtCore import QThread, QCoreApplication, QTranslator, QLocale, QPoint, QSize
     from PyQt5.QtGui import QPixmap
@@ -216,7 +216,7 @@ class MediaListFetcherThread(QThread):
                     key, val = c.split('=', 1)
                     cookies = cookies + '{}\tTRUE\t/\tFALSE\t{}\t{}\t{}\n'. \
                         format(host_name, int(time()) + 259200, key, val)  # Expires after 3 days.
-            except:
+            except Exception:
                 pass
 
         return cookies
@@ -401,7 +401,7 @@ class VideoFinderAddLink(AddLinkWindow):
     def getReadableSize(self, size):
         try:
             return '{:1.2f} MB'.format(int(size) / 1048576)
-        except:
+        except Exception:
             return str(size)
 
     def getReadableDuration(self, seconds):
@@ -412,7 +412,7 @@ class VideoFinderAddLink(AddLinkWindow):
             minutes = seconds // 60
             seconds = seconds % 60
             return '{:02d}:{:02d}:{:02d}'.format(hours, minutes, seconds)
-        except:
+        except Exception:
             return str(seconds)
 
     # Define native slots

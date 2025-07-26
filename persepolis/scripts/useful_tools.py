@@ -27,7 +27,7 @@ import os
 try:
     from PySide6.QtCore import QThread, Signal, QProcess
     from PySide6.QtWidgets import QStyleFactory
-except:
+except ImportError:
     from PyQt5.QtWidgets import QStyleFactory
     from PyQt5.QtCore import QThread, QProcess
     from PyQt5.QtCore import pyqtSignal as Signal
@@ -35,7 +35,7 @@ except:
 try:
     from persepolis.scripts import logger
     logger_availability = True
-except:
+except ImportError:
     logger_availability = False
 
 # find operating system
@@ -172,7 +172,7 @@ def convertToByte(file_size):
 def freeSpace(dir):
     try:
         import psutil
-    except:
+    except ImportError:
         if logger_availability:
             logger.sendToLog("psutil in not installed!", "ERROR")
 
@@ -380,7 +380,7 @@ def ffmpegVersion():
         else:
             ffmpeg_is_installed = False
             ffmpeg_output = 'ffmpeg is not installed'
-    except:
+    except Exception:
         ffmpeg_is_installed = False
         ffmpeg_output = 'ffmpeg is not installed'
 
@@ -677,7 +677,7 @@ def returnNewFileName(folder_path, file_name):
                 j = int(j)
                 j += 1
                 file_name = file_name_split[0][:-1] + str(j) + file_name_split[-1]
-            except:
+            except Exception:
                 file_name = file_name_split[0] + '_' + str(i) + file_name_split[-1]
                 i += 1
         else:

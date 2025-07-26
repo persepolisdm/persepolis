@@ -21,7 +21,7 @@ try:
     from PySide6.QtCore import Qt, QPoint, QSize
     from PySide6.QtGui import QIcon
     from PySide6 import QtWidgets
-except:
+except ImportError:
     from PyQt5.QtCore import Qt, QPoint, QSize
     from PyQt5.QtGui import QIcon
     from PyQt5 import QtWidgets

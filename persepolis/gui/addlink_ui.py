@@ -20,7 +20,7 @@ try:
     from PySide6.QtCore import Qt, QTranslator, QCoreApplication, QLocale
     from PySide6 import QtCore
     from PySide6.QtGui import QIcon
-except:
+except ImportError:
     from PyQt5.QtWidgets import QTabWidget, QPushButton, QComboBox, QSpinBox, QVBoxLayout, QHBoxLayout, QLabel, QWidget, QGridLayout, QCheckBox, QFrame, QLineEdit, QRadioButton
     from PyQt5.QtCore import Qt, QTranslator, QCoreApplication, QLocale
     from PyQt5 import QtCore

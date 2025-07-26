@@ -22,7 +22,7 @@ from persepolis.scripts.download_link import DownloadLink
 
 try:
     from PySide6.QtCore import QThread, Signal, QCoreApplication
-except:
+except ImportError:
     from PyQt5.QtCore import QThread, QCoreApplication
     from PyQt5.QtCore import pyqtSignal as Signal
 try:

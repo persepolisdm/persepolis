@@ -24,7 +24,7 @@ from persepolis.scripts.download_link import DownloadSingleLink
 try:
     from PySide6.QtCore import QSettings
     from PySide6.QtGui import QIcon
-except:
+except ImportError:
     from PyQt5.QtCore import QSettings
     from PyQt5.QtGui import QIcon
 
@@ -37,7 +37,7 @@ if os_type in OS.LINUX:
     try:
         from dasbus.connection import SessionMessageBus
         dasbus_is_installed = True
-    except:
+    except ImportError:
         dasbus_is_installed = False
         logger.sendToLog('python3-dasbus is not installed', 'ERROR')
 

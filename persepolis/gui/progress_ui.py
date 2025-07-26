@@ -19,7 +19,7 @@ try:
     from PySide6.QtWidgets import QDial, QCheckBox, QProgressBar, QFrame, QComboBox, QWidget, QTabWidget, QVBoxLayout, QHBoxLayout, QPushButton, QLabel
     from PySide6.QtCore import Qt, QTranslator, QCoreApplication, QLocale, QSize, QThread, Signal
     from PySide6.QtGui import QIcon
-except:
+except ImportError:
     from PyQt5.QtWidgets import QDial, QCheckBox, QProgressBar, QFrame, QComboBox, QWidget, QTabWidget, QVBoxLayout, QHBoxLayout, QPushButton, QLabel
     from PyQt5.QtCore import Qt, QTranslator, QCoreApplication, QLocale, QSize, QThread
     from PyQt5.QtCore import pyqtSignal as Signal

@@ -18,7 +18,7 @@ try:
     from PySide6.QtCore import Qt, QSize, QTranslator, QCoreApplication, QLocale
     from PySide6.QtGui import QIcon, QFont
     pyside6_is_installed = True
-except:
+except ImportError:
     from PyQt5.QtWidgets import QWidget, QTabWidget, QHBoxLayout, QVBoxLayout, QLabel, QTextEdit, QPushButton
     from PyQt5.QtCore import Qt, QSize, QTranslator, QCoreApplication, QLocale
     from PyQt5.QtGui import QIcon, QFont
@@ -30,13 +30,13 @@ if pyside6_is_installed is True:
     try:
         from PySide6 import QtSvgWidgets
         qtsvg_available = True
-    except:
+    except ImportError:
         qtsvg_available = False
 else:
     try:
         from PyQt5 import QtSvg as QtSvgWidgets
         qtsvg_available = True
-    except:
+    except ImportError:
         qtsvg_available = False
 
 

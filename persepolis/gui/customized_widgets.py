@@ -16,7 +16,7 @@
 try:
     from PySide6.QtWidgets import QDateTimeEdit
     from PySide6.QtCore import QSettings, Qt
-except:
+except ImportError:
     from PyQt5.QtWidgets import QDateTimeEdit
     from PyQt5.QtCore import QSettings, Qt
 

@@ -22,7 +22,7 @@ parent_dir=`dirname $dir`
 
 if [ "$translate" == "1" ];then
 
-    # generate ui.ts file 
+    # generate ui.ts file
     lupdate "$dir/translation_files.pro"
     echo "$dir/locales/ui.ts is generated!"
 fi
@@ -38,18 +38,18 @@ if [ "$resources" == "1" ];then
 
     pyside6-rcc resources.qrc -o "$parent_dir/persepolis/gui/resources.py"
 
-     
+
     #add some line to file
     sed -i '/PySide6/d' "$parent_dir/persepolis/gui/resources.py"
     sed -i '6i try:' "$parent_dir/persepolis/gui/resources.py"
     sed -i '7i\    from PySide6 import QtCore' "$parent_dir/persepolis/gui/resources.py"
-    sed -i '8i except:' "$parent_dir/persepolis/gui/resources.py"
+    sed -i '8i except ImportError:' "$parent_dir/persepolis/gui/resources.py"
     sed -i '9i\    from PyQt5 import QtCore' "$parent_dir/persepolis/gui/resources.py"
 #     sed -i '11i try:' "$parent_dir/persepolis/gui/resources.py"
 #     sed -i '12i\    import lzma' "$parent_dir/persepolis/gui/resources.py"
 #     sed -i '13i except:' "$parent_dir/persepolis/gui/resources.py"
 #     sed -i '14i\    print(\"lzma\ is\ not\ installed!\")' "$parent_dir/persepolis/gui/resources.py"
-# 
+#
     echo  "$parent_dir/persepolis/gui/resource.py is generated!"
 
 fi

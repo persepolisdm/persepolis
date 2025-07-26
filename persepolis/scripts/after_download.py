@@ -16,7 +16,7 @@
 try:
     from PySide6.QtCore import Qt, QSize, QPoint, QTranslator, QCoreApplication, QLocale
     from PySide6.QtGui import QIcon
-except:
+except ImportError:
     from PyQt5.QtCore import Qt, QSize, QPoint, QTranslator, QCoreApplication, QLocale
     from PyQt5.QtGui import QIcon
 
@@ -51,7 +51,7 @@ class AfterDownloadWindow(AfterDownloadWindow_Ui):
         gid = self.dict['gid']
 
         # If file path not valid, Wait a little and try again.
-        # The file transfer and database update process may 
+        # The file transfer and database update process may
         # not be finished after the download is finished.
         while True:
             self.add_link_dict = self.parent.persepolis_db.searchGidInAddLinkTable(gid)

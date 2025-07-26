@@ -208,7 +208,7 @@ def remove(file_path):
             os.remove(file_path)
             return 'ok'
 
-        except:
+        except FileNotFoundError:
             # function returns this, if operation was not successful
             return 'cant'
 
@@ -227,7 +227,7 @@ def removeDir(folder_path):
             shutil.rmtree(folder_path)
             return 'ok'
 
-        except:
+        except FileNotFoundError:
             # return 'cant' if removing was not successful
             return 'cant'
     else:
@@ -301,7 +301,7 @@ def moveFile(old_file_path, new_path, new_path_type='folder'):
                 shutil.move(old_file_path, new_path)
                 return True
 
-            except:
+            except FileNotFoundError:
 
                 return False
         else:
@@ -323,5 +323,5 @@ def copyFile(old_path, new_path):
     try:
         shutil.copy(old_path, new_path)
         return new_path
-    except:
+    except FileNotFoundError:
         return False
