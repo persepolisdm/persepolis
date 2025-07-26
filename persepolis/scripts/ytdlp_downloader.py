@@ -291,13 +291,13 @@ class Ytdp_Download():
                 self.download_percent = int((self.downloaded_size / self.file_size) * 100)
             else:
                 self.download_percent = 0
-        except:
+        except Exception:
             pass
 
         if ('fragment_index' in data.keys()) and ('fragment_count' in data.keys()):
             try:
                 self.fragments = str(data['fragment_index']) + '/' + str(data['fragment_count'])
-            except:
+            except Exception:
                 self.fragments = 0
 
         if 'status' in data.keys():
@@ -416,7 +416,7 @@ class Ytdp_Download():
         # Create download_path if not existed
         try:
             makeDirs(self.download_path)
-        except:
+        except Exception:
             pass
 
         self.createSession()

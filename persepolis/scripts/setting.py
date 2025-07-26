@@ -16,7 +16,7 @@ try:
     from PySide6.QtCore import Qt, QEvent, QTime, QSize, QPoint, QDir, QTranslator, QCoreApplication, QLocale
     from PySide6.QtWidgets import QFileDialog, QStyleFactory, QMessageBox, QTableWidgetItem
     from PySide6.QtGui import QFont, QKeySequence
-except:
+except ImportError:
     from PyQt5.QtCore import Qt, QEvent, QTime, QSize, QPoint, QDir, QTranslator, QCoreApplication, QLocale
     from PyQt5.QtWidgets import QFileDialog, QStyleFactory, QMessageBox, QTableWidgetItem
     from PyQt5.QtGui import QFont, QKeySequence
@@ -99,7 +99,7 @@ class PreferencesWindow(Setting_Ui):
         wait_queue_list = self.persepolis_setting.value('wait-queue')
         try:
             q_time = QTime(int(wait_queue_list[0]), int(wait_queue_list[1]))
-        except:
+        except Exception:
             q_time = QTime(0, 0)
 
         self.wait_queue_time.setTime(q_time)
@@ -349,7 +349,7 @@ class PreferencesWindow(Setting_Ui):
         # video_finder
         try:  # Integer casting may raise exception.
             self.max_links_spinBox.setValue(int(persepolis_setting.value('video_finder/max_links', 3)))
-        except:
+        except ValueError:
             pass
 
         # shortcuts

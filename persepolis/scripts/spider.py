@@ -18,7 +18,7 @@ from persepolis.constants import VERSION
 import requests
 try:
     from PySide6.QtCore import QSettings
-except:
+except ImportError:
     from PyQt5.QtCore import QSettings
 
 
@@ -105,7 +105,7 @@ def spider(add_link_dictionary):
     try:
         response = requests_session.head(link, allow_redirects=True, timeout=timeout, verify=check_certificate)
         header = response.headers
-    except:
+    except Exception:
         header = {}
 
     filename = None

@@ -32,7 +32,7 @@ from persepolis.scripts.browser_integration import install_native_hosts, remove_
 
 try:
     from PySide6.QtCore import QSettings
-except:
+except ImportError:
     from PyQt5.QtCore import QSettings
 # for windows platform, we need to import winreg
 if sys.platform == "win32":

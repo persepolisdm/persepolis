@@ -22,7 +22,7 @@ from persepolis.scripts.download_link import DownloadLink
 
 try:
     from PySide6.QtCore import QThread, Signal, QCoreApplication
-except:
+except ImportError:
     from PyQt5.QtCore import QThread, QCoreApplication
     from PyQt5.QtCore import pyqtSignal as Signal
 try:
@@ -44,8 +44,8 @@ class Queue():
         self.limit_enable = queue_dict['limit_enable']
         self.limit_value = queue_dict['limit_value']
         self.after_download = queue_dict['after_download']
-        self.gid_list = queue['gid_list']
+        self.gid_list = queue_dict['gid_list']
         self.main_window = main_window
 
-    def start(self):
+    def start(self):...
 

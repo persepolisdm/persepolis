@@ -17,7 +17,7 @@ try:
     from PySide6.QtWidgets import QWidget, QTextEdit, QVBoxLayout, QHBoxLayout, QPushButton, QLabel
     from PySide6.QtGui import QIcon
     from PySide6.QtCore import Qt, QSize, QSettings
-except:
+except ImportError:
     from PyQt5.QtWidgets import QWidget, QTextEdit, QVBoxLayout, QHBoxLayout, QPushButton, QLabel
     from PyQt5.QtCore import Qt, QSize, QSettings
     from PyQt5.QtGui import QIcon
