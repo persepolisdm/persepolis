@@ -27,14 +27,14 @@ try:
     import PySide6
     print('python3-pyside6 is found')
     pyside6_is_installed = True
-except:
+except ImportError:
     pyside6_is_installed = False
 
 if not(pyside6_is_installed):
     try:
         import PyQt5
         print('python3-pyqt5 is found')
-    except:
+    except ImportError:
         print('Error : python3-pyqt5 or pyside6 must be installed!')
         not_installed = not_installed + '(PyQt5 or PySide6) '
 
@@ -42,7 +42,7 @@ if not(pyside6_is_installed):
 try:
     import requests
     print('python3-requests is found!')
-except:
+except ImportError:
     print('Error : requests is not installed!')
     not_installed = not_installed + 'python3-requests, '
 
@@ -50,7 +50,7 @@ except:
 try:
     import urllib3
     print('python3-urllib3 is found!')
-except:
+except ImportError:
     print('Error : urllib3 is not installed!')
     not_installed = not_installed + 'python3-urllib3, '
 
@@ -59,7 +59,7 @@ except:
 try:
     import setproctitle
     print('python3-setproctitle is found!')
-except:
+except ImportError:
     print("Warning: setproctitle is not installed!")
     not_installed = not_installed + 'python3-setproctitle, '
 
@@ -67,7 +67,7 @@ except:
 try:
     import socks
     print('python3-pysocks is found!')
-except:
+except ImportError:
     print("Warning: python3-pysocks is not installed!")
     not_installed = not_installed + 'python3-pysocks, '
 
@@ -76,7 +76,7 @@ except:
 try:
     import psutil
     print('python3-psutil is found!')
-except:
+except ImportError:
     print("Warning: python3-psutil is not installed!")
     not_installed = not_installed + 'psutil, '
 
@@ -84,7 +84,7 @@ except:
 try:
     import yt_dlp
     print('yt-dlp is found')
-except:
+except ImportError:
     print('Warning: yt-dlp is not installed!')
     not_installed = not_installed + 'yt-dlp, '
 
@@ -101,7 +101,7 @@ if os_type == 'Linux':
     try:
         from dasbus.connection import SessionMessageBus
         print('python3-dasbus is found!')
-    except:
+    except ImportError:
         print('python3-dasbus is not installed!')
         not_installed = not_installed + 'python3-dasbus,'
 

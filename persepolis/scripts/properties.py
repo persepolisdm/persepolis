@@ -18,7 +18,7 @@ try:
     from PySide6.QtCore import Qt, QSize, QPoint, QDir, QTime, QCoreApplication
     from PySide6.QtWidgets import QLabel, QLineEdit, QFileDialog
     from PySide6.QtGui import QIcon
-except:
+except ImportError:
     from PyQt5.QtCore import Qt, QSize, QPoint, QDir, QTime, QCoreApplication
     from PyQt5.QtWidgets import QLabel, QLineEdit, QFileDialog
     from PyQt5.QtGui import QIcon
@@ -132,19 +132,19 @@ class PropertiesWindow(AddLinkWindow_Ui):
             try:
                 self.port_spinBox.setValue(
                     int(self.add_link_dictionary_1['port']))
-            except:
+            except Exception:
                 pass
             # proxy user lineEdit initialization
             try:
                 self.proxy_user_lineEdit.setText(
                     self.add_link_dictionary_1['proxy_user'])
-            except:
+            except Exception:
                 pass
             # proxy pass lineEdit initialization
             try:
                 self.proxy_pass_lineEdit.setText(
                     self.add_link_dictionary_1['proxy_passwd'])
-            except:
+            except Exception:
                 pass
 
         # proxy type
@@ -170,21 +170,21 @@ class PropertiesWindow(AddLinkWindow_Ui):
             try:
                 self.download_pass_lineEdit.setText(
                     self.add_link_dictionary_1['download_passwd'])
-            except:
+            except Exception:
                 pass
 
         # folder_path
         try:
             self.download_folder_lineEdit.setText(
                 self.add_link_dictionary_1['download_path'])
-        except:
+        except Exception:
             pass
 
         # connections
         try:
             self.connections_spinBox.setValue(
                 int(self.add_link_dictionary_1['connections']))
-        except:
+        except Exception:
             pass
 
         # get categories name and add them to add_queue_comboBox

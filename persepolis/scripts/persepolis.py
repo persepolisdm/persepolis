@@ -18,7 +18,7 @@ try:
     from PySide6.QtCore import __version__ as QT_VERSION_STR
     from PySide6.QtGui import QFont
     from PySide6.QtCore import QFile, QTextStream, QSettings, Qt
-except:
+except ImportError:
     from PyQt5 import QtWidgets, QtCore
     from PyQt5.QtGui import QFont
     from PyQt5.QtCore import QFile, QTextStream, QSettings, Qt, QT_VERSION_STR
@@ -105,7 +105,7 @@ if lock_file_validation:
         try:
             from setproctitle import setproctitle
             setproctitle("persepolisdm")
-        except:
+        except ImportError:
             from persepolis.scripts import logger
             logger.sendToLog('setproctitle is not installed!', "ERROR")
 

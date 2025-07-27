@@ -15,7 +15,7 @@
 try:
     from PySide6.QtCore import QUrl, QSettings
     from PySide6.QtMultimedia import QSoundEffect
-except:
+except ImportError:
     from PyQt5.QtCore import QUrl, QSettings
     from PyQt5.QtMultimedia import QSoundEffect
 

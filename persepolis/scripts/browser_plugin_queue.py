@@ -18,7 +18,7 @@ try:
     from PySide6.QtCore import Qt, QPoint, QSize, QThread, Signal, QDir
     from PySide6.QtWidgets import QTableWidgetItem, QFileDialog
     from PySide6.QtGui import QIcon
-except:
+except ImportError:
     from PyQt5.QtCore import Qt, QPoint, QSize, QThread, QDir
     from PyQt5.QtWidgets import QTableWidgetItem, QFileDialog
     from PyQt5.QtCore import pyqtSignal as Signal
