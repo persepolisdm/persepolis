@@ -611,7 +611,37 @@ class PreferencesWindow(Setting_Ui):
 
         if self.parent.isVisible() is False:
             self.parent.minMaxTray(event)
-        self.close()
+
+    def saveSettings(self):
+        # native messaging
+        # The group is already 'settings' from the caller (okPushButtonPressed),
+        # so we just need to enter the 'native_messaging' subgroup.
+        # Using an absolute path here would be wrong and cause nesting issues.
+        self.persepolis_setting.beginGroup("native_messaging")
+        previous_enabled = []
+        for key in self.persepolis_setting.childKeys():
+            if self.persepolis_setting.value(key) == 'true':
+                previous_enabled.append(key)
+
+        enabled_browsers = [b for b, cb in self.browser_checkboxes.items() if cb.isChecked()]
+        custom_path = self.custom_path_input.text().strip()
+
+        # Save checkbox states and custom path
+        for browser, cb in self.browser_checkboxes.items():
+            self.persepolis_setting.setValue(browser, 'true' if cb.isChecked() else 'false')
+        self.persepolis_setting.setValue("custom_manifest_path", custom_path)
+        self.persepolis_setting.endGroup()
+
+        # Remove unselected manifests
+        removed_browsers = set(previous_enabled) - set(enabled_browsers)
+        from persepolis.scripts.browser_integration import install_native_hosts, remove_manifests_for_browsers
+        remove_manifests_for_browsers(removed_browsers, custom_path or None)
+
+        # Install newly enabled manifests
+        install_native_hosts(enabled_browsers, custom_path or None)
+
+
+
 
     def soundFrame(self, checkBox):
 
@@ -794,6 +824,9 @@ class PreferencesWindow(Setting_Ui):
     def okPushButtonPressed(self, button):
 
         self.persepolis_setting.beginGroup('settings')
+
+        # Save browser integration settings
+        self.saveSettings()
 
         self.persepolis_setting.setValue(
             'max-tries', self.tries_spinBox.value())
