@@ -20,7 +20,6 @@ from persepolis.constants import OS, BROWSER
 import os
 import platform
 import subprocess
-import json
 import sys
 if sys.platform == "win32":
     import winreg
@@ -31,149 +30,210 @@ home_address = str(os.path.expanduser("~"))
 # download manager config folder .
 config_folder = determineConfigFolder()
 
-# Mapping for registry keys per browser
-windows_registry_paths = {
-    BROWSER.CHROME: r"SOFTWARE\Google\Chrome\NativeMessagingHosts\com.persepolis.chrome",
-    BROWSER.CHROMIUM: r"SOFTWARE\Chromium\NativeMessagingHosts\com.persepolis.chromium",
-    BROWSER.BRAVE: r"SOFTWARE\BraveSoftware\Brave-Browser\NativeMessagingHosts\com.persepolis.brave",
-    BROWSER.VIVALDI: r"SOFTWARE\Vivaldi\NativeMessagingHosts\com.persepolis.vivaldi",
-    BROWSER.OPERA: r"SOFTWARE\Opera Software\Opera Stable\NativeMessagingHosts\com.persepolis.opera",
-    BROWSER.FIREFOX: r"SOFTWARE\Mozilla\NativeMessagingHosts\com.persepolis.firefox",
-    "librewolf": r"SOFTWARE\Mozilla\NativeMessagingHosts\com.persepolis.librewolf"
-}
-def browserIntegration(browser, custom_path=None):
+
+def removeRegistryKey(browser):
+    logg_message = 'trying to remove registry kry for ' + str(browser) + ': '
+    if browser == BROWSER.CHROME or browser == BROWSER.CHROMIUM:
+        try:
+            # Open the parent key
+            with winreg.OpenKey(winreg.HKEY_CURRENT_USER,
+                                r"SOFTWARE\Google\Chrome\NativeMessagingHosts",
+                                0,
+                                winreg.KEY_ALL_ACCESS) as parent_key:
+                # Delete the pdmchromewrapper key
+                winreg.DeleteKey(parent_key, "com.persepolis.pdmchromewrapper")
+                logg_message = logg_message + 'Key deleted successfully.'
+
+        except FileNotFoundError:
+            logg_message = logg_message + 'The specified key does not exist.'
+        except WindowsError as e:
+            logg_message = logg_message + f'An error occurred: {e}'
+    elif browser == BROWSER.FIREFOX:
+        try:
+            # Open the parent key
+            with winreg.OpenKey(winreg.HKEY_CURRENT_USER,
+                                r"SOFTWARE\Mozilla\NativeMessagingHosts",
+                                0,
+                                winreg.KEY_ALL_ACCESS) as parent_key:
+                # Delete the pdmchromewrapper key
+                winreg.DeleteKey(parent_key, "com.persepolis.pdmchromewrapper")
+                logg_message = logg_message + 'Key deleted successfully.'
+
+        except FileNotFoundError:
+            logg_message = logg_message + 'The specified key does not exist.'
+
+        except WindowsError as e:
+            logg_message = logg_message + f'An error occurred: {e}'
+    else:
+        logg_message = logg_message + 'No need to remove registry key.'
+
+    return logg_message
+
+
+def installIntermidiary(intermediary):
+    intermediary_done = None
     exec_dictionary = getExecPath()
     exec_path = exec_dictionary['modified_exec_file_path']
-    logg_message = ["", "INITIALIZATION"]
 
-    if os_type == OS.LINUX or os_type in OS.BSD_FAMILY or os_type == OS.OSX:
-        intermediary = os.path.join(config_folder, 'persepolis_run_shell')
-        native_message_folder = get_native_message_folder(browser, custom_path)
-    elif os_type == OS.WINDOWS:
-        possible_paths = [
-            os.path.join(os.environ.get('ProgramFiles', ''), 'Persepolis Download Manager', 'PersepolisBI.exe'),
-            os.path.join(os.environ.get('ProgramFiles(x86)', ''), 'Persepolis Download Manager', 'PersepolisBI.exe'),
-        ]
-        intermediary = None
-        for path in possible_paths:
-            if os.path.isfile(path):
-                intermediary = path
-                break
-        if not intermediary:
-            intermediary, logg_message = findExternalAppPath('PersepolisBI')
-            if not os.path.isabs(intermediary):
-                intermediary = os.path.abspath(intermediary)
-        native_message_folder = get_native_message_folder(browser, custom_path)
-
-    webextension_json_connector = {
-        "name": f"com.persepolis.{browser.lower()}",
-        "type": "stdio",
-        "path": str(intermediary),
-        "description": f"Integrate Persepolis with {browser} using WebExtensions"
-    }
-
-
-    # Determine manifest file name and write JSON only once
-    if browser == BROWSER.FIREFOX:
-        webextension_json_connector["name"] = "com.persepolis.firefox"
-        webextension_json_connector["allowed_extensions"] = [
-            "com.persepolis.pdmchromewrapper@persepolisdm.github.io",
-            
-        ]
-        manifest_filename = "com.persepolis.firefox.json"
-    elif browser == "librewolf":
-        webextension_json_connector["name"] = "com.persepolis.librewolf"
-        webextension_json_connector["allowed_extensions"] = [
-            "com.persepolis.pdmchromewrapper@persepolisdm.github.io",
-        ]
-        manifest_filename = "com.persepolis.librewolf.json"
-    else:
-        if browser in BROWSER.CHROME_FAMILY:
-            webextension_json_connector["allowed_origins"] = ["chrome-extension://legimlagjjoghkoedakdjhocbeomojao/"]
-        manifest_filename = get_manifest_filename(browser)
-
-    native_message_file = os.path.join(native_message_folder, manifest_filename)
-    osCommands.makeDirs(native_message_folder)
-    with open(native_message_file, 'w') as f:
-        json.dump(webextension_json_connector, f, indent=2)
-
-    json_done = False
-    native_done = None
-
-    if os_type != OS.WINDOWS:
-        pipe_json = subprocess.Popen(['chmod', '+x', str(native_message_file)],
-                                     stderr=subprocess.PIPE,
-                                     stdout=subprocess.PIPE,
-                                     stdin=subprocess.PIPE,
-                                     shell=False)
-        if pipe_json.wait() == 0:
-            json_done = True
-        else:
-            json_done = False
-    else:
-        # Registry for Chromium-based browsers
-        reg_path = windows_registry_paths.get(browser)
-        if reg_path:
-            try:
-                winreg.CreateKey(winreg.HKEY_CURRENT_USER, reg_path)
-                gintKey = winreg.OpenKey(winreg.HKEY_CURRENT_USER, reg_path, 0, winreg.KEY_ALL_ACCESS)
-                winreg.SetValueEx(gintKey, '', 0, winreg.REG_SZ, native_message_file)
-                winreg.CloseKey(gintKey)
-                json_done = True
-            except OSError:
-                json_done = False
-        # Registry for Firefox and LibreWolf
-        elif browser == BROWSER.FIREFOX or browser == "librewolf":
-            reg_path = windows_registry_paths.get(browser)
-            try:
-                winreg.CreateKey(winreg.HKEY_CURRENT_USER, reg_path)
-                fintKey = winreg.OpenKey(
-                    winreg.HKEY_CURRENT_USER, reg_path, 0, winreg.KEY_ALL_ACCESS)
-                winreg.SetValueEx(fintKey, '', 0, winreg.REG_SZ, native_message_file)
-                winreg.CloseKey(fintKey)
-                json_done = True
-            except OSError:
-                json_done = False
-
+    # create persepolis_run_shell(intermediry script) file for gnu/linux and BSD and Mac
+    # firefox and chromium and ... call persepolis with Native Messaging system.
+    # json file calls persepolis_run_shell file.
     if os_type in OS.UNIX_LIKE or os_type == OS.OSX:
+        # find available shell
         shell_list = ['/bin/bash', '/usr/local/bin/bash', '/bin/sh', '/usr/local/bin/sh', '/bin/ksh', '/bin/tcsh']
-        shebang = ''
+
         for shell in shell_list:
             if os.path.isfile(shell):
+                # define shebang
                 shebang = '#!' + shell
                 break
-        persepolis_run_shell_contents = shebang + '\n' + "python3 -m persepolis \"$@\""
-        with open(intermediary, 'w') as f:
-            f.writelines(persepolis_run_shell_contents)
+
+        persepolis_run_shell_contents = shebang + '\n' + exec_path + "\t$@"
+        f = open(intermediary, 'w')
+        f.writelines(persepolis_run_shell_contents)
+        f.close()
+
+        # make persepolis_run_shell executable
+
         pipe_native = subprocess.Popen(['chmod', '+x', intermediary],
                                        stderr=subprocess.PIPE,
                                        stdout=subprocess.PIPE,
                                        stdin=subprocess.PIPE,
                                        shell=False)
+
         if pipe_native.wait() == 0:
-            native_done = True
+            intermediary_done = True
         else:
-            native_done = False
+            intermediary_done = False
+    else:
+        # for M.S.Windows
+        intermediary_done = True
 
-    return json_done, native_done, logg_message
-
-
-def get_manifest_filename(browser):
-    return f"com.persepolis.{browser.lower()}.json"
-
-
-def get_manifest_path_for_browser(browser, custom_path=None):
-    folder = get_native_message_folder(browser, custom_path)
-    if not folder:
-        return None
-    return os.path.join(folder, get_manifest_filename(browser))
+    return intermediary_done
 
 
-def get_native_message_folder(browser, custom_path=None):
-    if custom_path:
-        return os.path.expanduser(custom_path)
+def uninstallNativeMessageHost(browser, native_message_folder):
+    # native message host path
+    native_message_file = os.path.join(
+        native_message_folder, 'com.persepolis.pdmchromewrapper.json')
 
-    if os_type == OS.LINUX or os_type in OS.BSD_FAMILY:
+    # remove file
+    answer = osCommands.remove(native_message_file)
+
+    if answer == 'ok':
+        logg_message = 'Native message file for ' + str(browser) + ' has been deleted!'
+    elif answer == 'cant':
+        logg_message = 'Persepolis can not delete native message host file for ' + str(browser) + '.'
+
+    return logg_message
+
+
+def installNativeMessageHost(browser, native_message_folder, webextension_json_connector):
+    json_done = None
+    # native message host path
+    native_message_file = os.path.join(
+        native_message_folder, 'com.persepolis.pdmchromewrapper.json')
+
+    osCommands.makeDirs(native_message_folder)
+
+    # Write native message host file
+    f = open(native_message_file, 'w')
+    f.write(str(webextension_json_connector).replace("'", "\""))
+    f.close()
+    if os_type != OS.WINDOWS:
+
+        pipe_json = subprocess.Popen(['chmod', '+x', str(native_message_file)],
+                                     stderr=subprocess.PIPE,
+                                     stdout=subprocess.PIPE,
+                                     stdin=subprocess.PIPE,
+                                     shell=False)
+
+        if pipe_json.wait() == 0:
+            json_done = True
+        else:
+            json_done = False
+
+    else:
+        import winreg
+        # add the key to the windows registry
+        if browser in BROWSER.CHROME_FAMILY:
+            try:
+                # create pdmchromewrapper key under NativeMessagingHosts
+                winreg.CreateKey(winreg.HKEY_CURRENT_USER,
+                                 r"SOFTWARE\Google\Chrome\NativeMessagingHosts\com.persepolis.pdmchromewrapper")
+                # open a connection to pdmchromewrapper key
+                gintKey = winreg.OpenKey(
+                    winreg.HKEY_CURRENT_USER, r"SOFTWARE\Google\Chrome\NativeMessagingHosts\com.persepolis.pdmchromewrapper", 0, winreg.KEY_ALL_ACCESS)
+                # set native_message_file as key value
+                winreg.SetValueEx(gintKey, '', 0, winreg.REG_SZ, native_message_file)
+                # close connection to pdmchromewrapper
+                winreg.CloseKey(gintKey)
+
+                json_done = True
+
+            except WindowsError:
+
+                json_done = False
+
+        elif browser == BROWSER.FIREFOX_FAMILY:
+            try:
+                # create pdmchromewrapper key under NativeMessagingHosts for firefox
+                winreg.CreateKey(winreg.HKEY_CURRENT_USER,
+                                 r"SOFTWARE\Mozilla\NativeMessagingHosts\com.persepolis.pdmchromewrapper")
+                # open a connection to pdmchromewrapper key for firefox
+                fintKey = winreg.OpenKey(
+                    winreg.HKEY_CURRENT_USER, r"SOFTWARE\Mozilla\NativeMessagingHosts\com.persepolis.pdmchromewrapper", 0, winreg.KEY_ALL_ACCESS)
+                # set native_message_file as key value
+                winreg.SetValueEx(fintKey, '', 0, winreg.REG_SZ, native_message_file)
+                # close connection to pdmchromewrapper
+                winreg.CloseKey(fintKey)
+
+                json_done = True
+
+            except WindowsError:
+
+                json_done = False
+    return json_done
+
+
+def nativeMessageHostFile(browser, intermediary):
+    # WebExtension native hosts file prototype
+    webextension_json_connector = {
+        "name": "com.persepolis.pdmchromewrapper",
+        "type": "stdio",
+        "path": str(intermediary),
+        "description": "Integrate Persepolis with %s using WebExtensions" % (browser)
+    }
+
+    # Add chrom* keys
+    if browser in BROWSER.CHROME_FAMILY:
+        webextension_json_connector["allowed_origins"] = ["chrome-extension://legimlagjjoghkoedakdjhocbeomojao/"]
+
+    # Add firefox keys
+    elif browser == BROWSER.FIREFOX_FAMILY:
+        webextension_json_connector["allowed_extensions"] = [
+            "com.persepolis.pdmchromewrapper@persepolisdm.github.io",
+            "com.persepolis.pdmchromewrapper.offline@persepolisdm.github.io"
+        ]
+
+    return webextension_json_connector
+
+
+def getIntermediaryPath():
+
+    if os_type in OS.UNIX_LIKE or os_type == OS.OSX:
+        intermediary = os.path.join(config_folder, 'persepolis_run_shell')
+        logg_message = str(intermediary)
+    elif os_type == OS.WINDOWS:
+        intermediary, logg_message = findExternalAppPath('PersepolisBI')
+
+    logg_message = "Persepolis intermediary path: " + logg_message
+    return intermediary, logg_message
+
+
+def getNativeMessageFolder(browser):
+
+    if os_type in OS.UNIX_LIKE:
         if browser == BROWSER.CHROMIUM:
             return os.path.join(home_address, '.config/chromium/NativeMessagingHosts')
         elif browser == BROWSER.CHROME:
@@ -186,7 +246,7 @@ def get_native_message_folder(browser, custom_path=None):
             return os.path.join(home_address, '.config/opera/NativeMessagingHosts')
         elif browser == BROWSER.BRAVE:
             return os.path.join(home_address, '.config/BraveSoftware/Brave-Browser/NativeMessagingHosts')
-        elif browser == "librewolf":
+        elif browser == BROWSER.LIBREWOLF:
             return os.path.join(home_address, '.librewolf/native-messaging-hosts')
 
     elif os_type == OS.OSX:
@@ -202,59 +262,35 @@ def get_native_message_folder(browser, custom_path=None):
             return os.path.join(home_address, 'Library/Application Support/Opera/NativeMessagingHosts')
         elif browser == BROWSER.BRAVE:
             return os.path.join(home_address, 'Library/Application Support/BraveSoftware/Brave-Browser/NativeMessagingHosts')
-        elif browser == "librewolf":
+        elif browser == BROWSER.LIBREWOLF:
             return os.path.join(home_address, 'Library/LibreWolf/NativeMessagingHosts')
 
     elif os_type == OS.WINDOWS:
-        if browser == "librewolf":
-            return os.path.join(os.environ['LOCALAPPDATA'], "Librewolf", "NativeMessagingHosts")
-        elif browser == BROWSER.CHROMIUM:
-            return os.path.join(os.environ['LOCALAPPDATA'], "Chromium", "User Data", "NativeMessagingHosts")
-        elif browser == BROWSER.FIREFOX:
-            return os.path.join(os.environ['LOCALAPPDATA'],  "Mozilla", "NativeMessagingHosts")
-        elif browser == BROWSER.CHROME:
-            return os.path.join(os.environ['LOCALAPPDATA'], "Google", "Chrome", "User Data", "NativeMessagingHosts")
-        elif browser == BROWSER.BRAVE:
-            return os.path.join(os.environ['LOCALAPPDATA'],  "BraveSoftware", "Brave-Browser", "User Data", "NativeMessagingHosts")
-        elif browser == BROWSER.OPERA:
-            return os.path.join(os.environ['LOCALAPPDATA'],  "Opera Software", "Opera Stable", "NativeMessagingHosts")
-        elif browser == BROWSER.VIVALDI:
-            return os.path.join(os.environ['LOCALAPPDATA'],  "Vivaldi", "User Data", "NativeMessagingHosts")
-    return None
+        if browser in BROWSER.CHROME_FAMILY:
+            return os.path.join(home_address, 'AppData', 'Local', 'persepolis_download_manager', 'chrome')
+
+        elif browser in BROWSER.FIREFOX_FAMILY:
+            return os.path.join(home_address, 'AppData', 'Local', 'persepolis_download_manager', 'firefox')
+    else:
+        return None
 
 
-def remove_registry_key(browser):
-    reg_path = windows_registry_paths.get(browser)
-    if reg_path:
-        try:
-            winreg.DeleteKey(winreg.HKEY_CURRENT_USER, reg_path)
-        except FileNotFoundError:
-            pass
-        except OSError as e:
-            print(f"Failed to remove registry key for {browser}: {e}")
+def browserIntegration(browser):
+    native_message_folder = getNativeMessageFolder(browser)
+    intermediary, logg_message = getIntermediaryPath()
+    webextension_json_connector = nativeMessageHostFile(browser, intermediary)
+    json_done = installNativeMessageHost(browser, native_message_folder, webextension_json_connector)
+    intermediary_done = installIntermidiary(intermediary)
+
+    return json_done, intermediary_done, logg_message
 
 
-def remove_manifests_for_browsers(browsers, custom_path=None):
-    for browser in browsers:
-        try:
-            if browser.strip() == "":
-                continue
-            path = get_manifest_path_for_browser(browser, custom_path)
-            if path and os.path.exists(path):
-                os.remove(path)
-                print(f"Removed manifest for {browser}: {path}")
-            if os_type == OS.WINDOWS:
-                remove_registry_key(browser)
-        except Exception as e:
-            print(f"Failed to remove manifest for {browser}: {e}")
+def browserIsolation(browser):
+    native_message_folder = getNativeMessageFolder(browser)
+    logg_message = uninstallNativeMessageHost(browser, native_message_folder)
+    if os_type == OS.WINDOWS:
+        logg_message2 = removeRegistryKey(browser)
+    else:
+        logg_message2 = ''
 
-
-def install_native_hosts(browsers, custom_path=None):
-    log_messages = []
-    for browser in browsers:
-        try:
-            json_done, native_done, log = browserIntegration(browser, custom_path)
-            log_messages.append(f"[{browser}] JSON: {json_done}, Native: {native_done}")
-        except Exception as e:
-            log_messages.append(f"[{browser}] Failed: {str(e)}")
-    return log_messages
+    return logg_message, logg_message2

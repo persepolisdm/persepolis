@@ -25,18 +25,11 @@ from persepolis.constants import OS
 import time
 import os
 import sys
-import shutil
-import subprocess
-import plistlib
-from persepolis.scripts.browser_integration import install_native_hosts, remove_manifests_for_browsers
 
 try:
     from PySide6.QtCore import QSettings
 except ImportError:
     from PyQt5.QtCore import QSettings
-# for windows platform, we need to import winreg
-if sys.platform == "win32":
-    import winreg
 
 # initialization
 
@@ -155,110 +148,29 @@ for folder in folder_list:
     osCommands.makeDirs(folder)
 
 persepolis_setting.endGroup()
-# Set default browsers for native messaging integration (only if not already set)
-persepolis_setting.beginGroup("settings/native_messaging")
-
-def detect_installed_browsers():   
-    detected_browsers = set()
-    if sys.platform == "win32":
-        # Windows-specific registry detection
-        registry_locations = [
-            (winreg.HKEY_LOCAL_MACHINE, r"SOFTWARE\Clients\StartMenuInternet"),
-            (winreg.HKEY_LOCAL_MACHINE, r"SOFTWARE\WOW6432Node\Clients\StartMenuInternet"),
-            (winreg.HKEY_CURRENT_USER, r"SOFTWARE\Clients\StartMenuInternet"),
-        ]
-        browser_mapping = {
-            "Google Chrome": "chrome",
-            "Chromium": "chromium",
-            "Mozilla Firefox": "firefox",
-        }
-        for root, path in registry_locations:
-            try:
-                with winreg.OpenKey(root, path) as key:
-                    for i in range(winreg.QueryInfoKey(key)[0]):
-                        subkey_name = winreg.EnumKey(key, i)
-                        display_name = winreg.QueryValue(key, subkey_name)
-                        mapped_browser = browser_mapping.get(display_name)
-                        if mapped_browser:
-                            detected_browsers.add(mapped_browser)
-            except FileNotFoundError:
-                continue
-    elif sys.platform == "darwin":
-        # macOS-specific detection using Spotlight and Info.plist
-        browser_mapping = {
-            "firefox": "org.mozilla.firefox",
-            "chrome": "com.google.Chrome",
-            "chromium": "org.chromium.Chromium",
-        }
-        for name, bundle_id in browser_mapping.items():
-            try:
-                output = subprocess.check_output(
-                    ['mdfind', f'kMDItemCFBundleIdentifier=="{bundle_id}"'],
-                    text=True, stderr=subprocess.DEVNULL
-                ).strip()
-                if output:
-                    app_path = output.splitlines()[0]
-                    plist_path = os.path.join(app_path, "Contents", "Info.plist")
-                    if os.path.exists(plist_path):
-                        with open(plist_path, "rb") as f:
-                            plist = plistlib.load(f)
-                            exec_name = plist.get("CFBundleExecutable")
-                            if exec_name:
-                                exec_path = os.path.join(app_path, "Contents", "MacOS", exec_name)
-                                if os.path.exists(exec_path):
-                                    detected_browsers.add(name)
-            except (subprocess.CalledProcessError, FileNotFoundError):
-                continue
-    else:
-        # PATH-based detection for Linux and other Unix-likes
-        browser_mapping = {
-            "firefox": ["firefox"],
-            "chrome": ["google-chrome", "google-chrome-stable", "chrome"],
-            "chromium": ["chromium", "chromium-browser"],
-        }
-
-        for browser, executables in browser_mapping.items():
-            if any(shutil.which(name) for name in executables):
-                detected_browsers.add(browser)
-
-    return detected_browsers
-
-supported_browsers = ['chrome', 'chromium', 'opera', 'vivaldi', 'firefox', 'brave', 'librewolf']
-default_enabled_browsers = detect_installed_browsers()
-
-for browser in supported_browsers:
-    if persepolis_setting.value(browser) is None:
-        persepolis_setting.setValue(browser, 'true' if browser in default_enabled_browsers else 'false')
-
-persepolis_setting.endGroup()
-persepolis_setting.sync()
-
-
 
 # Browser integration for Firefox and chromium and google chrome
-
-
-# Load user-selected browsers from QSettings
 persepolis_setting.beginGroup('settings/native_messaging')
-enabled_browsers = []
+for browser in ['chrome', 'chromium', 'opera', 'vivaldi', 'firefox', 'brave', 'librewolf']:
+    if persepolis_setting.value(browser) == 'true':
+        json_done, intermediary_done, logg_message2 = browserIntegration(browser)
+        logg_message = browser
 
-for key in persepolis_setting.childKeys():
-    if persepolis_setting.value(key) == 'true':
-        enabled_browsers.append(key)
+        if json_done is True:
+            logg_message = logg_message + ': ' + 'Json file is created successfully.\n'
 
+        else:
+            logg_message = logg_message + ': ' + 'Json ERROR!\n'
+
+        if intermediary_done is True:
+            logg_message = logg_message + 'persepolis intermediary file is created successfully.\n'
+
+        elif intermediary_done is False:
+            logg_message = logg_message + ': ' + 'persepolis executer file ERROR!\n'
+
+        logger.sendToLog(logg_message, 'INITIALIZATION')
+        logger.sendToLog(logg_message2, 'INITIALIZATION')
 persepolis_setting.endGroup()
-
-# Install manifests only for selected browsers
-log_messages = install_native_hosts(enabled_browsers)
-for log in log_messages:
-    logger.sendToLog(log, 'INITIALIZATION')
-
-# Optional: Clean up manifests from unselected browsers
-all_known_browsers = ['chrome', 'chromium', 'opera', 'vivaldi', 'firefox', 'brave', 'librewolf']
-disabled_browsers = list(set(all_known_browsers) - set(enabled_browsers))
-remove_manifests_for_browsers(disabled_browsers)
-
-
 # get locale and set ui direction
 locale = str(persepolis_setting.value('settings/locale'))
 

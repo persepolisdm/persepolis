@@ -388,6 +388,30 @@ class Setting_Ui(QWidget):
         style_tab_verticalLayout.addWidget(self.dont_show_add_link_window_checkBox)
 
         style_tab_verticalLayout.addStretch(1)
+        # browser_integration_tab
+        self.browser_integration_tab = QWidget()
+        browser_integration_layout = QVBoxLayout(self.browser_integration_tab)
+
+        # Checkboxes for known browsers
+        self.browser_checkboxes = {
+            "firefox": QCheckBox(),
+            "brave": QCheckBox(),
+            "librewolf": QCheckBox(),
+            "chrome": QCheckBox(),
+            "chromium": QCheckBox(),
+            "opera": QCheckBox(),
+            "vivaldi": QCheckBox()
+        }
+
+        for checkbox in self.browser_checkboxes.values():
+            browser_integration_layout.addWidget(checkbox)
+
+        browser_integration_layout.addStretch(1)
+
+        self.setting_tabWidget.addTab(
+            self.browser_integration_tab,
+            QCoreApplication.translate("setting_ui_tr", "Browser Integration")
+        )
 
         # columns_tab
         self.columns_tab = QWidget()
@@ -480,55 +504,6 @@ class Setting_Ui(QWidget):
         shortcut_tab_verticalLayout.addWidget(self.shortcut_table)
 
         self.setting_tabWidget.addTab(self.shortcut_tab, QCoreApplication.translate("setting_ui_tr", "Shortcuts"))
-
-        # browser_integration_tab
-        self.browser_integration_tab = QWidget()
-        browser_integration_layout = QVBoxLayout(self.browser_integration_tab)
-
-        # Checkboxes for known browsers
-        self.browser_checkboxes = {
-            "firefox": QCheckBox("Firefox"),
-            "brave": QCheckBox("Brave"),
-            "librewolf": QCheckBox("LibreWolf"),
-            "chrome": QCheckBox("Chrome"),
-            "chromium": QCheckBox("Chromium"),
-            "opera": QCheckBox("Opera"),
-            "vivaldi": QCheckBox("Vivaldi")  
-        }
-
-        for checkbox in self.browser_checkboxes.values():
-            browser_integration_layout.addWidget(checkbox)
-
-        # Optional: custom path
-        self.custom_path_label = QLabel("Custom manifest path (optional):")
-        self.custom_path_input = QLineEdit()
-        browser_integration_layout.addWidget(self.custom_path_label)
-        browser_integration_layout.addWidget(self.custom_path_input)
-
-        browser_integration_layout.addStretch(1)
-
-        self.setting_tabWidget.addTab(
-            self.browser_integration_tab,
-            QCoreApplication.translate("setting_ui_tr", "Browser Integration")
-        )
-
-        # Load checkbox states from settings
-        self.persepolis_setting.beginGroup('settings/native_messaging')
-
-        default_enabled_browsers = ['chrome', 'chromium', 'opera', 'vivaldi', 'firefox', 'brave', 'librewolf']
-
-        for browser, checkbox in self.browser_checkboxes.items():
-            value = self.persepolis_setting.value(browser)
-            if value is None:
-                checkbox.setChecked(browser in default_enabled_browsers)
-            else:
-                checkbox.setChecked(value == 'true')
-
-        custom_path = self.persepolis_setting.value("custom_manifest_path", "")
-        self.custom_path_input.setText(custom_path)
-
-        self.persepolis_setting.endGroup()
-
 
 
         # Actions
@@ -712,6 +687,9 @@ class Setting_Ui(QWidget):
 
         self.max_links_label.setText(QCoreApplication.translate("setting_ui_tr", 'Maximum number of links to capture:<br/>'
                                                                 '<small>(If browser sends multiple video links at a time)</small>'))
+# browser_integration_tab
+        for key, checkbox in self.browser_checkboxes.items():
+            checkbox.setText(QCoreApplication.translate("setting_ui_tr", key.capitalize()))
 
 # window buttons
         self.defaults_pushButton.setText(QCoreApplication.translate("setting_ui_tr", "Defaults"))
