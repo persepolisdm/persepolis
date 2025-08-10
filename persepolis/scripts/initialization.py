@@ -150,26 +150,27 @@ for folder in folder_list:
 persepolis_setting.endGroup()
 
 # Browser integration for Firefox and chromium and google chrome
-for browser in ['chrome', 'chromium', 'opera', 'vivaldi', 'firefox', 'brave']:
-    json_done, native_done, log_message2 = browserIntegration(browser)
+persepolis_setting.beginGroup('settings/native_messaging')
+for browser in ['chrome', 'chromium', 'opera', 'vivaldi', 'firefox', 'brave', 'librewolf']:
+    if persepolis_setting.value(browser) == 'true':
+        json_done, intermediary_done, logg_message2 = browserIntegration(browser)
+        logg_message = browser
 
-    log_message = browser
+        if json_done is True:
+            logg_message = logg_message + ': ' + 'Json file is created successfully.\n'
 
-    if json_done is True:
-        log_message = log_message + ': ' + 'Json file is created successfully.\n'
+        else:
+            logg_message = logg_message + ': ' + 'Json ERROR!\n'
 
-    else:
-        log_message = log_message + ': ' + 'Json ERROR!\n'
+        if intermediary_done is True:
+            logg_message = logg_message + 'persepolis intermediary file is created successfully.\n'
 
-    if native_done is True:
-        log_message = log_message + 'persepolis executer file is created successfully.\n'
+        elif intermediary_done is False:
+            logg_message = logg_message + ': ' + 'persepolis executer file ERROR!\n'
 
-    elif native_done is False:
-        log_message = log_message + ': ' + 'persepolis executer file ERROR!\n'
-
-    logger.sendToLog(log_message, 'INITIALIZATION')
-    logger.sendToLog(log_message2[0], log_message2[1])
-
+        logger.sendToLog(logg_message, 'INITIALIZATION')
+        logger.sendToLog(logg_message2, 'INITIALIZATION')
+persepolis_setting.endGroup()
 # get locale and set ui direction
 locale = str(persepolis_setting.value('settings/locale'))
 

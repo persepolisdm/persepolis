@@ -25,8 +25,10 @@ except ImportError:
 from persepolis.constants import OS
 from persepolis.gui.setting_ui import Setting_Ui, KeyCapturingWindow_Ui
 from persepolis.scripts.useful_tools import returnDefaultSettings, getExecPath
+from persepolis.scripts.browser_integration import browserIntegration, browserIsolation
 from persepolis.scripts import osCommands
 from persepolis.scripts import startup
+from persepolis.scripts import logger
 import platform
 import os
 
@@ -414,6 +416,19 @@ class PreferencesWindow(Setting_Ui):
 
         self.persepolis_setting.endGroup()
 
+        # browser_integration_tab
+        # Load checkbox states from settings
+        self.persepolis_setting.beginGroup('settings/native_messaging')
+
+        for browser, checkbox in self.browser_checkboxes.items():
+            value = self.persepolis_setting.value(browser)
+            if value == 'true':
+                checkbox.setChecked(True)
+            else:
+                checkbox.setChecked(False)
+
+        self.persepolis_setting.endGroup()
+
         # setting window size and position
         size = self.persepolis_setting.value(
             'PreferencesWindow/size', QSize(578, 597))
@@ -424,7 +439,6 @@ class PreferencesWindow(Setting_Ui):
         self.move(position)
 
     # run this method if user doubleclicks on an item in shortcut_table
-
     def showCaptureKeyboardWindow(self):
 
         # show KeyCapturingWindow
@@ -611,7 +625,51 @@ class PreferencesWindow(Setting_Ui):
 
         if self.parent.isVisible() is False:
             self.parent.minMaxTray(event)
-        self.close()
+
+    def browserIntegrationSettings(self):
+        # native messaging
+        # The group is already 'settings' from the caller (okPushButtonPressed),
+        # so we just need to enter the 'native_messaging' subgroup.
+        # Using an absolute path here would be wrong and cause nesting issues.
+        self.persepolis_setting.beginGroup("native_messaging")
+        previous_enabled = []
+        for key in self.persepolis_setting.childKeys():
+            if self.persepolis_setting.value(key) == 'true':
+                previous_enabled.append(key)
+
+        enabled_browsers = [b for b, cb in self.browser_checkboxes.items() if cb.isChecked()]
+
+        # Save checkbox states
+        for browser, cb in self.browser_checkboxes.items():
+            self.persepolis_setting.setValue(browser, 'true' if cb.isChecked() else 'false')
+        self.persepolis_setting.endGroup()
+
+        # Remove unselected manifests
+        removed_browsers = set(previous_enabled) - set(enabled_browsers)
+        for browser in removed_browsers:
+            logg_message, logg_message2 = browserIsolation(browser)
+            logger.sendToLog(logg_message)
+            logger.sendToLog(logg_message2)
+
+        # Install newly enabled manifests
+        for browser in enabled_browsers:
+            json_done, intermediary_done, logg_message2 = browserIntegration(browser)
+            logg_message = browser
+
+            if json_done is True:
+                logg_message = logg_message + ': ' + 'Json file is created successfully.\n'
+
+            else:
+                logg_message = logg_message + ': ' + 'Json ERROR!\n'
+
+            if intermediary_done is True:
+                logg_message = logg_message + 'persepolis intermediary file is created successfully.\n'
+
+            elif intermediary_done is False:
+                logg_message = logg_message + ': ' + 'persepolis executer file ERROR!\n'
+
+            logger.sendToLog(logg_message)
+            logger.sendToLog(logg_message2)
 
     def soundFrame(self, checkBox):
 
@@ -794,6 +852,9 @@ class PreferencesWindow(Setting_Ui):
     def okPushButtonPressed(self, button):
 
         self.persepolis_setting.beginGroup('settings')
+
+        # Save browser integration settings
+        self.browserIntegrationSettings()
 
         self.persepolis_setting.setValue(
             'max-tries', self.tries_spinBox.value())

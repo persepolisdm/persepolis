@@ -253,7 +253,10 @@ def returnDefaultSettings():
                             'shortcuts/add_new_download_shortcut': add_new_download_shortcut, 'shortcuts/import_text_shortcut': import_text_shortcut,
                             'shortcuts/video_finder_shortcut': video_finder_shortcut, 'shortcuts/quit_shortcut': quit_shortcut,
                             'shortcuts/hide_window_shortcut': hide_window_shortcut, 'shortcuts/move_up_selection_shortcut': move_up_selection_shortcut,
-                            'shortcuts/move_down_selection_shortcut': move_down_selection_shortcut, 'dont-check-certificate': 'no'}
+                            'shortcuts/move_down_selection_shortcut': move_down_selection_shortcut, 'dont-check-certificate': 'no',
+                            'native_messaging/chrome': 'true', 'native_messaging/chromium': 'true', 'native_messaging/firefox': 'true',
+                            'native_messaging/brave': 'false', 'native_messaging/librewolf': 'false', 'native_messaging/opera': 'false',
+                            'native_messaging/vivaldi': 'false'}
 
     return default_setting_dict
 

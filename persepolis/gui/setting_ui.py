@@ -388,6 +388,30 @@ class Setting_Ui(QWidget):
         style_tab_verticalLayout.addWidget(self.dont_show_add_link_window_checkBox)
 
         style_tab_verticalLayout.addStretch(1)
+        # browser_integration_tab
+        self.browser_integration_tab = QWidget()
+        browser_integration_layout = QVBoxLayout(self.browser_integration_tab)
+
+        # Checkboxes for known browsers
+        self.browser_checkboxes = {
+            "firefox": QCheckBox(),
+            "brave": QCheckBox(),
+            "librewolf": QCheckBox(),
+            "chrome": QCheckBox(),
+            "chromium": QCheckBox(),
+            "opera": QCheckBox(),
+            "vivaldi": QCheckBox()
+        }
+
+        for checkbox in self.browser_checkboxes.values():
+            browser_integration_layout.addWidget(checkbox)
+
+        browser_integration_layout.addStretch(1)
+
+        self.setting_tabWidget.addTab(
+            self.browser_integration_tab,
+            QCoreApplication.translate("setting_ui_tr", "Browser Integration")
+        )
 
         # columns_tab
         self.columns_tab = QWidget()
@@ -480,6 +504,7 @@ class Setting_Ui(QWidget):
         shortcut_tab_verticalLayout.addWidget(self.shortcut_table)
 
         self.setting_tabWidget.addTab(self.shortcut_tab, QCoreApplication.translate("setting_ui_tr", "Shortcuts"))
+
 
         # Actions
         actions_list = [QCoreApplication.translate('setting_ui_tr', 'Quit'),
@@ -662,6 +687,9 @@ class Setting_Ui(QWidget):
 
         self.max_links_label.setText(QCoreApplication.translate("setting_ui_tr", 'Maximum number of links to capture:<br/>'
                                                                 '<small>(If browser sends multiple video links at a time)</small>'))
+# browser_integration_tab
+        for key, checkbox in self.browser_checkboxes.items():
+            checkbox.setText(QCoreApplication.translate("setting_ui_tr", key.capitalize()))
 
 # window buttons
         self.defaults_pushButton.setText(QCoreApplication.translate("setting_ui_tr", "Defaults"))
