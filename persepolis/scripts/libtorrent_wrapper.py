@@ -13,6 +13,8 @@
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import libtorrent
+from persepolis.scripts.useful_tools import readCookieJar
+from persepolis.scripts.osCommands import makeDirs
 
 
 class Torrent_Download():
@@ -36,3 +38,38 @@ class Torrent_Download():
         self.referer = add_link_dictionary['referer']
         self.start_time = add_link_dictionary['start_time']
         self.end_time = add_link_dictionary['end_time']
+
+    def createSession(self):
+        self.libtorrent_session = libtorrent.session()
+        self.libtorrent_session.listen_on(6881, 6891)
+        self.libtorrent_session_parameters = {}
+
+        # check if user set proxy
+        if self.ip:
+
+            if self.proxy_type == 'socks5':
+                proxy_type = libtorrent.proxy_type_t.socks5
+            elif self.proxy_type == 'http':
+                proxy_type = libtorrent.proxy_type_t.http
+
+            # set proxy to the session
+            self.libtorrent_session.set_proxy(proxy_type, self.ip, self.port, self.proxy_user, self.proxy_passwd)
+
+        # set user_agent
+        if self.user_agent:
+            # setting user_agent to the session
+            self.libtorrent_session_parameters['user_agent'] = self.user_agent
+
+        # set cookies
+        if self.load_cookies:
+            jar = readCookieJar(self.load_cookies)
+            if jar:
+                self.libtorrent_session_parameters['cookies'] = jar
+
+        # Create download_path if not existed
+        makeDirs(self.download_path)
+
+        self.libtorrent_session_parameters['save_path'] = self.download_path
+
+        # set storage mode
+        self.libtorrent_session_parameters['storage_mode'] = libtorrent.storage_mode_full
