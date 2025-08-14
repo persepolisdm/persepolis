@@ -21,6 +21,7 @@ import os
 import platform
 import subprocess
 import sys
+import json
 if sys.platform == "win32":
     import winreg
 
@@ -137,9 +138,8 @@ def installNativeMessageHost(browser, native_message_folder, webextension_json_c
     osCommands.makeDirs(native_message_folder)
 
     # Write native message host file
-    f = open(native_message_file, 'w')
-    f.write(str(webextension_json_connector).replace("'", "\""))
-    f.close()
+    with open(native_message_file, 'w') as f:
+        json.dump(webextension_json_connector, f, indent=4)
     if os_type != OS.WINDOWS:
 
         pipe_json = subprocess.Popen(['chmod', '+x', str(native_message_file)],
@@ -154,7 +154,6 @@ def installNativeMessageHost(browser, native_message_folder, webextension_json_c
             json_done = False
 
     else:
-        import winreg
         # add the key to the windows registry
         if browser in BROWSER.CHROME_FAMILY:
             try:
@@ -175,7 +174,7 @@ def installNativeMessageHost(browser, native_message_folder, webextension_json_c
 
                 json_done = False
 
-        elif browser == BROWSER.FIREFOX_FAMILY:
+        elif browser in BROWSER.FIREFOX_FAMILY:
             try:
                 # create pdmchromewrapper key under NativeMessagingHosts for firefox
                 winreg.CreateKey(winreg.HKEY_CURRENT_USER,
@@ -209,8 +208,8 @@ def nativeMessageHostFile(browser, intermediary):
     if browser in BROWSER.CHROME_FAMILY:
         webextension_json_connector["allowed_origins"] = ["chrome-extension://legimlagjjoghkoedakdjhocbeomojao/"]
 
-    # Add firefox keys
-    elif browser == BROWSER.FIREFOX_FAMILY:
+    # Add firefox family keys (includes LibreWolf)
+    elif browser in BROWSER.FIREFOX_FAMILY:
         webextension_json_connector["allowed_extensions"] = [
             "com.persepolis.pdmchromewrapper@persepolisdm.github.io",
             "com.persepolis.pdmchromewrapper.offline@persepolisdm.github.io"
