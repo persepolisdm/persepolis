@@ -36,6 +36,8 @@ from persepolis.constants import VERSION
 from copy import deepcopy
 import sys
 import os
+import platform
+import subprocess
 
 # finding os platform
 os_type, desktop_env = osAndDesktopEnvironment()
@@ -133,18 +135,62 @@ class PersepolisApplication(QtWidgets.QApplication):
 
     # color_scheme
     def setPersepolisColorScheme(self, color_scheme):
-        self.persepolis_color_scheme = color_scheme
-        if color_scheme == 'Dark Fusion':
-            file = QFile(":/dark_style.qss")
-            file.open(QFile.ReadOnly | QFile.Text)
-            stream = QTextStream(file)
-            self.setStyleSheet(stream.readAll())
-
-        elif color_scheme == 'Light Fusion':
-            file = QFile(":/light_style.qss")
-            file.open(QFile.ReadOnly | QFile.Text)
-            stream = QTextStream(file)
-            self.setStyleSheet(stream.readAll())
+            self.persepolis_color_scheme = color_scheme
+            # Detect system dark theme for Breeze style on Linux
+            is_dark = False
+            if color_scheme == 'System':
+                if platform.system() == 'Linux':
+                    # KDE Plasma
+                    kde_color_scheme = os.environ.get('KDE_COLOR_SCHEME', '').lower()
+                    if 'dark' in kde_color_scheme:
+                        is_dark = True
+                    # GTK
+                    gtk_theme = os.environ.get('GTK_THEME', '').lower()
+                    if 'dark' in gtk_theme:
+                        is_dark = True
+                    # Qt Platform Theme (for some setups)
+                    qt_platform_theme = os.environ.get('QT_QPA_PLATFORMTHEME', '').lower()
+                    if 'dark' in qt_platform_theme:
+                        is_dark = True
+                    # GNOME: check gsettings for color-scheme
+                    xdg_desktop = os.environ.get('XDG_CURRENT_DESKTOP', '').lower()
+                    if 'gnome' in xdg_desktop:
+                        try: 
+                            result = subprocess.run([
+                                'gsettings', 'get', 'org.gnome.desktop.interface', 'color-scheme'
+                            ], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+                            if 'prefer-dark' in result.stdout:
+                                is_dark = True
+                        except Exception:
+                            pass
+                    if xdg_desktop == 'kde':
+                        # KDE: try to read color scheme from config file
+                        kdeglobals = os.path.expanduser('~/.config/kdeglobals')
+                        try:
+                            with open(kdeglobals, 'r') as f:
+                                for line in f:
+                                    if 'ColorScheme=' in line and 'dark' in line.lower():
+                                        is_dark = True
+                        except Exception:
+                            pass
+                # Use dark or light style sheet
+                if is_dark:
+                    file = QFile(":/dark_style.qss")
+                else:
+                    file = QFile(":/light_style.qss")
+                file.open(QFile.ReadOnly | QFile.Text)
+                stream = QTextStream(file)
+                self.setStyleSheet(stream.readAll())
+            elif color_scheme == 'Dark Fusion':
+                file = QFile(":/dark_style.qss")
+                file.open(QFile.ReadOnly | QFile.Text)
+                stream = QTextStream(file)
+                self.setStyleSheet(stream.readAll())
+            elif color_scheme == 'Light Fusion':
+                file = QFile(":/light_style.qss")
+                file.open(QFile.ReadOnly | QFile.Text)
+                stream = QTextStream(file)
+                self.setStyleSheet(stream.readAll())
 
 
 # create  terminal arguments
