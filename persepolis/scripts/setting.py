@@ -847,6 +847,7 @@ class PreferencesWindow(Setting_Ui):
 
         icons_size = int(icons_size)
         self.parent.toolBar.setIconSize(QSize(icons_size, icons_size))
+        self.torrent_pushButton.setIconSize(QSize(icons_size, icons_size))
         self.parent.toolBar2.setIconSize(QSize(icons_size, icons_size))
 
         # style

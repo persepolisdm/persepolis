@@ -24,9 +24,8 @@ except:
 from persepolis.gui import resources
 from persepolis.gui.customized_widgets import MyQDateTimeEdit
 
+
 # align center for items in download table
-
-
 class QTableWidgetItem(QTableWidgetItem):
     def __init__(self, input):
         super().__init__(input)
@@ -78,7 +77,8 @@ class MenuWidget(QPushButton):
 
         videoFinderMenu.addAction(self.parent.videoFinderAddLinkAction)
 
-        torrentMenu.addAction(self.parent.torrentAddLinkAction)
+        torrentMenu.addAction(self.parent.magnetTorrentLinkAction)
+        torrentMenu.addAction(self.parent.openTorrentFileAction)
 
         downloadMenu.addAction(self.parent.stopAllAction)
 
@@ -499,15 +499,26 @@ class MainWindow_Ui(QMainWindow):
 
         videoFinderMenu.addAction(self.videoFinderAddLinkAction)
 
-        # torrentAddLinkAction
-        self.torrentAddLinkAction = QAction(QIcon(icons + 'torrent'), QCoreApplication.translate("mainwindow_ui_tr", 'Download torrent'),
-                                            self, statusTip=QCoreApplication.translate("mainwindow_ui_tr", 'Download torrent'),
-                                            triggered=self.showTorrentAddLinkWindow)
+        # magnet and torrent file actions
+
+        self.torrent_menu = QMenu(self)
+        # Connect the button's clicked signal to show the context menu
+        self.magnetTorrentLinkAction = QAction(QIcon(icons + 'torrent'), QCoreApplication.translate("mainwindow_ui_tr", 'Download magnet link'),
+                                               self, statusTip=QCoreApplication.translate("mainwindow_ui_tr", 'Download magnet link'),
+                                               triggered=self.showGetMagnetLinkWindow)
 
         self.torrentAddLinkAction_shortcut = QShortcut(self.persepolis_setting.value(
-            'torrent_shortcut'), self, self.showTorrentAddLinkWindow)
+            'torrent_shortcut'), self, self.showGetMagnetLinkWindow)
 
-        torrentMenu.addAction(self.torrentAddLinkAction)
+        torrentMenu.addAction(self.magnetTorrentLinkAction)
+        self.torrent_menu.addAction(self.magnetTorrentLinkAction)
+
+        self.openTorrentFileAction = QAction(QIcon(icons + 'torrent'), QCoreApplication.translate("mainwindow_ui_tr", 'Download torrent file'),
+                                             self, statusTip=QCoreApplication.translate("mainwindow_ui_tr", 'Download torrent file'),
+                                             triggered=self.showOpenTorrentFileWindow)
+
+        torrentMenu.addAction(self.openTorrentFileAction)
+        self.torrent_menu.addAction(self.openTorrentFileAction)
 
         # stopAllAction
         self.stopAllAction = QAction(QIcon(icons + 'stop_all'), QCoreApplication.translate("mainwindow_ui_tr", 'Stop All Active Downloads'),
@@ -751,6 +762,13 @@ class MainWindow_Ui(QMainWindow):
         self.qmenu = MenuWidget(self)
 
         self.toolBar2.addWidget(self.qmenu)
+
+        self.torrent_pushButton = QPushButton(self)
+        self.torrent_pushButton.setIcon(QIcon(icons + 'torrent'))
+        self.torrent_pushButton.setStyleSheet("QPushButton { border: none; }")  # Remove border to look like QAction
+
+        self.torrent_pushButton.clicked.connect(self.showTorrentButtonContextMenu)
+        self.torrent_pushButton.installEventFilter(self)
 
         # labels
         self.queue_panel_show_button.setText(QCoreApplication.translate("mainwindow_ui_tr", "Hide Options"))

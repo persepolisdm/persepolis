@@ -53,14 +53,14 @@ from persepolis.scripts.useful_tools import nowDate, freeSpace, determineConfigF
 global pyside6_is_installed
 try:
     from PySide6.QtWidgets import QCheckBox, QLineEdit, QAbstractItemView, QFileDialog, QSystemTrayIcon, QMenu, QApplication, QInputDialog, QMessageBox
-    from PySide6.QtCore import QDir, QTime, QCoreApplication, QSize, QPoint, QThread, Signal, Qt, QTranslator, QLocale
+    from PySide6.QtCore import QDir, QTime, QCoreApplication, QSize, QPoint, QThread, Signal, Qt, QTranslator, QLocale, QEvent
     from PySide6.QtGui import QFont, QIcon, QStandardItem, QCursor, QAction
     from PySide6 import __version__ as PYQT_VERSION_STR
     from PySide6.QtCore import __version__ as QT_VERSION_STR
     pyside6_is_installed = True
 except:
     from PyQt5.QtWidgets import QCheckBox, QLineEdit, QAbstractItemView, QAction, QFileDialog, QSystemTrayIcon, QMenu, QApplication, QInputDialog, QMessageBox
-    from PyQt5.QtCore import QDir, QTime, QCoreApplication, QSize, QPoint, QThread, Qt, QTranslator, QLocale, QT_VERSION_STR
+    from PyQt5.QtCore import QDir, QTime, QCoreApplication, QSize, QPoint, QThread, Qt, QTranslator, QLocale, QT_VERSION_STR, QEvent
     from PyQt5.QtGui import QFont, QIcon, QStandardItem, QCursor
     from PyQt5.Qt import PYQT_VERSION_STR
     from PyQt5.QtCore import pyqtSignal as Signal
@@ -631,7 +631,6 @@ class MainWindow(MainWindow_Ui):
         system_tray_menu = QMenu()
         system_tray_menu.addAction(self.addlinkAction)
         system_tray_menu.addAction(self.videoFinderAddLinkAction)
-        system_tray_menu.addAction(self.torrentAddLinkAction)
         system_tray_menu.addAction(self.stopAllAction)
         system_tray_menu.addAction(self.addFromClipboardAction)
         system_tray_menu.addAction(self.minimizeAction)
@@ -1025,6 +1024,7 @@ class MainWindow(MainWindow_Ui):
 
         icons_size = int(self.persepolis_setting.value('settings/toolbar_icon_size'))
         self.toolBar.setIconSize(QSize(icons_size, icons_size))
+        self.torrent_pushButton.setIconSize(QSize(icons_size, icons_size))
         self.toolBar2.setIconSize(QSize(icons_size, icons_size))
 
         # check reverse_checkBox
@@ -1566,6 +1566,15 @@ class MainWindow(MainWindow_Ui):
         link_string = droplink.mimeData().text()
         link_clipboard.setText(str(link_string), mode=link_clipboard.Clipboard)
         self.addLinkButtonPressed(button=link_clipboard)
+
+    # Show message when mouse hovers over the torrent button
+    def eventFilter(self, source, event):
+        if source == self.torrent_pushButton:
+            if event.type() == QEvent.Enter:
+                self.statusbar.showMessage(QCoreApplication.translate("mainwindow_ui_tr", "Download Torrent"))
+            elif event.type() == QEvent.Leave:
+                self.statusbar.clearMessage()
+        return super().eventFilter(source, event)
 
     # persepolis identifies each download by the ID called GID.
     # The GID must be hex string of 16 characters,
@@ -4100,12 +4109,15 @@ class MainWindow(MainWindow_Ui):
             self.queue_panel_widget.hide()
 
             # update toolBar
-            list = [self.addlinkAction, self.videoFinderAddLinkAction, self.torrentAddLinkAction, self.resumeAction, self.pauseAction,
+            list = [self.addlinkAction, self.videoFinderAddLinkAction, self.torrent_pushButton, self.resumeAction, self.pauseAction,
                     self.stopAction, self.removeSelectedAction, self.deleteSelectedAction,
                     self.propertiesAction, self.progressAction, self.minimizeAction, self.exitAction]
 
             for i in list:
-                self.toolBar.addAction(i)
+                if i != self.torrent_pushButton:
+                    self.toolBar.addAction(i)
+                else:
+                    self.toolBar.addWidget(i)
 
             self.toolBar.insertSeparator(self.resumeAction)
             self.toolBar.insertSeparator(self.removeSelectedAction)
@@ -4127,12 +4139,15 @@ class MainWindow(MainWindow_Ui):
             self.queuePanelWidget(category)
 
             # update toolBar
-            list = [self.addlinkAction, self.videoFinderAddLinkAction, self.torrentAddLinkAction, self.resumeAction, self.pauseAction,
+            list = [self.addlinkAction, self.videoFinderAddLinkAction, self.torrent_pushButton, self.resumeAction, self.pauseAction,
                     self.stopAction, self.removeSelectedAction, self.deleteSelectedAction,
                     self.propertiesAction, self.progressAction, self.minimizeAction, self.exitAction]
 
             for i in list:
-                self.toolBar.addAction(i)
+                if i != self.torrent_pushButton:
+                    self.toolBar.addAction(i)
+                else:
+                    self.toolBar.addWidget(i)
 
             self.toolBar.insertSeparator(self.resumeAction)
             self.toolBar.insertSeparator(self.removeSelectedAction)
@@ -4154,13 +4169,16 @@ class MainWindow(MainWindow_Ui):
             self.queuePanelWidget(category)
 
             # update toolBar
-            list = [self.addlinkAction, self.videoFinderAddLinkAction, self.torrentAddLinkAction, self.removeSelectedAction, self.deleteSelectedAction,
+            list = [self.addlinkAction, self.videoFinderAddLinkAction, self.torrent_pushButton, self.removeSelectedAction, self.deleteSelectedAction,
                     self.propertiesAction, self.startQueueAction, self.stopQueueAction,
                     self.removeQueueAction, self.moveUpSelectedAction, self.moveDownSelectedAction,
                     self.minimizeAction, self.exitAction]
 
             for i in list:
-                self.toolBar.addAction(i)
+                if i != self.torrent_pushButton:
+                    self.toolBar.addAction(i)
+                else:
+                    self.toolBar.addWidget(i)
 
             self.toolBar.insertSeparator(self.removeSelectedAction)
             self.toolBar.insertSeparator(self.propertiesAction)
@@ -5444,6 +5462,16 @@ class MainWindow(MainWindow_Ui):
             # create new progress_window
             self.progressBarOpen(gid)
 
+    def showGetMagnetLinkWindow(self, menu=None):
+        pass
+
+    def showOpenTorrentFileWindow(self, menu=None):
+        pass
+
+    def showTorrentButtonContextMenu(self):
+        # Show the context menu at the button's position
+        self.torrent_menu.exec(self.torrent_pushButton.mapToGlobal(self.torrent_pushButton.rect().bottomLeft()))
+
     def showTorrentAddLinkWindow(self, input_dict=None, menu=None):
         torrent_addlink_window = AddTorrentWindow(self, self.torrentCallBack, self.persepolis_setting)
         self.addlinkwindows_list.append(torrent_addlink_window)
@@ -5465,8 +5493,8 @@ class MainWindow(MainWindow_Ui):
                             self.openDownloadFolderAction: 'folder', self.openDefaultDownloadFolderAction: 'folder', self.exitAction: 'exit',
                             self.createQueueAction: 'add_queue', self.removeQueueAction: 'remove_queue', self.startQueueAction: 'start_queue',
                             self.stopQueueAction: 'stop_queue', self.preferencesAction: 'preferences', self.aboutAction: 'about',
-                            self.issueAction: 'about', self.videoFinderAddLinkAction: 'video_finder', self.torrentAddLinkAction: 'torrent',
-                            self.qmenu: 'menu'}
+                            self.issueAction: 'about', self.videoFinderAddLinkAction: 'video_finder', self.openTorrentFileAction: 'torrent',
+                            self.magnetTorrentLinkAction: 'torrent', self.torrent_pushButton: 'torrent', self.qmenu: 'menu'}
 
         for key in action_icon_dict.keys():
             key.setIcon(QIcon(icons + str(action_icon_dict[key])))
