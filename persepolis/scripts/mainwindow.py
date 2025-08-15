@@ -44,6 +44,7 @@ from persepolis.scripts.setting import PreferencesWindow
 from persepolis.scripts.download_link import DownloadLink
 from persepolis.scripts.properties import PropertiesWindow
 from persepolis.scripts.after_download import AfterDownloadWindow
+from persepolis.scripts.get_magnet_link import GetMagnetLinkWindow
 from persepolis.scripts.browser_plugin_queue import BrowserPluginQueue
 from persepolis.scripts.data_base import PluginsDB, PersepolisDB, TempDB
 from persepolis.gui.mainwindow_ui import MainWindow_Ui, QTableWidgetItem
@@ -5463,7 +5464,11 @@ class MainWindow(MainWindow_Ui):
             self.progressBarOpen(gid)
 
     def showGetMagnetLinkWindow(self, menu=None):
-        pass
+        get_magnet_link_window = GetMagnetLinkWindow(self, self.getMagnetLinkWindowCallBack, self.persepolis_setting)
+        get_magnet_link_window.exec_()
+
+    def getMagnetLinkWindowCallBack(self, magnet_link):
+        print(magnet_link)
 
     def showOpenTorrentFileWindow(self, menu=None):
         pass
