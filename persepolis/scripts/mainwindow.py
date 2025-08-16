@@ -5498,8 +5498,8 @@ class MainWindow(MainWindow_Ui):
                             self.openDownloadFolderAction: 'folder', self.openDefaultDownloadFolderAction: 'folder', self.exitAction: 'exit',
                             self.createQueueAction: 'add_queue', self.removeQueueAction: 'remove_queue', self.startQueueAction: 'start_queue',
                             self.stopQueueAction: 'stop_queue', self.preferencesAction: 'preferences', self.aboutAction: 'about',
-                            self.issueAction: 'about', self.videoFinderAddLinkAction: 'video_finder', self.openTorrentFileAction: 'torrent',
-                            self.magnetTorrentLinkAction: 'torrent', self.torrent_pushButton: 'torrent', self.qmenu: 'menu'}
+                            self.issueAction: 'about', self.videoFinderAddLinkAction: 'video_finder', self.openTorrentFileAction: 'folder',
+                            self.magnetTorrentLinkAction: 'magnet', self.torrent_pushButton: 'torrent', self.qmenu: 'menu'}
 
         for key in action_icon_dict.keys():
             key.setIcon(QIcon(icons + str(action_icon_dict[key])))

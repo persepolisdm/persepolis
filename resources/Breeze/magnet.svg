@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   viewBox="0 0 24 24"
+   version="1.1"
+   id="svg1"
+   sodipodi:docname="magnet.svg"
+   inkscape:version="1.4.2 (ebf0e940d0, 2025-05-08)"
+   xml:space="preserve"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg"><sodipodi:namedview
+     id="namedview1"
+     pagecolor="#505050"
+     bordercolor="#eeeeee"
+     borderopacity="1"
+     inkscape:showpageshadow="0"
+     inkscape:pageopacity="0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#505050"
+     inkscape:zoom="23.291667"
+     inkscape:cx="12.085867"
+     inkscape:cy="11.978533"
+     inkscape:window-width="1316"
+     inkscape:window-height="732"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg1" /><defs
+     id="defs3051"><style
+       type="text/css"
+       id="current-color-scheme">
+      .ColorScheme-Text {
+        color:#f2f2f2;
+      }
+      </style></defs><path
+     style="fill:#4d4d4d;fill-opacity:1;stroke:none;stroke-width:1.265"
+     d="M 12,1.88 C 6.39352,1.88 1.88,6.39352 1.88,12 1.88,17.60648 6.39352,22.12 12,22.12 17.60648,22.12 22.12,17.60648 22.12,12 22.12,6.39352 17.60648,1.88 12,1.88 Z m 0,1.265 c 4.90567,0 8.855,3.94933 8.855,8.855 0,4.90567 -3.94933,8.855 -8.855,8.855 C 7.09433,20.855 3.145,16.90567 3.145,12 3.145,7.09433 7.09433,3.145 12,3.145 Z"
+     class="ColorScheme-Text"
+     id="path1"
+     sodipodi:nodetypes="ssssssssss" /><g
+     id="g5-8"
+     transform="matrix(-0.02823983,0,0,-0.02823983,19.009442,19.642909)"
+     style="fill:#4d4d4d;fill-opacity:1">
+	<g
+   id="g4-9"
+   style="fill:#4d4d4d;fill-opacity:1">
+		<g
+   id="g3-2"
+   transform="rotate(-45.103715,316.22063,285.76294)"
+   style="fill:#4d4d4d;fill-opacity:1">
+			<polygon
+   points="337.98,455.937 362.488,432.154 278.016,347.683 253.509,371.457 "
+   id="polygon1-6"
+   style="fill:#4d4d4d;fill-opacity:1" />
+			<path
+   d="m 2.577,211.545 c -1.63,1.587 -2.56,3.772 -2.577,6.059 -0.017,2.27 0.888,4.471 2.5,6.084 l 72.414,72.405 c 3.302,3.311 8.644,3.336 11.989,0.077 l 34.005,-33.178 -84.48,-84.48 z"
+   id="path1-6"
+   style="fill:#4d4d4d;fill-opacity:1" />
+			<polygon
+   points="133.122,251.071 157.561,227.229 73.081,142.749 48.642,166.591 "
+   id="polygon2-4"
+   style="fill:#4d4d4d;fill-opacity:1" />
+			<path
+   d="m 447.719,59.819 c -79.42,-79.42 -208.811,-79.787 -288.691,-0.913 -0.128,0.102 -0.239,0.213 -0.358,0.333 l -73.37,71.595 84.48,84.48 72.789,-71.031 c 33.28,-33.263 87.416,-33.263 120.687,0 33.263,33.28 33.263,87.415 0.085,120.593 l -73.079,70.921 84.471,84.471 73.404,-71.228 c 0.171,-0.171 0.341,-0.341 0.495,-0.529 78.873,-79.881 78.515,-209.264 -0.913,-288.692 z"
+   id="path2-9"
+   style="fill:#4d4d4d;fill-opacity:1" />
+			<path
+   d="m 203.006,420.472 c -1.647,1.587 -2.577,3.772 -2.594,6.059 -0.017,2.287 0.879,4.48 2.5,6.093 l 72.405,72.414 c 1.672,1.664 3.849,2.5 6.033,2.5 2.142,0 4.284,-0.802 5.948,-2.415 l 38.443,-37.299 -84.48,-84.48 z"
+   id="path3-5"
+   style="fill:#4d4d4d;fill-opacity:1" />
+		</g>
+	</g>
+</g></svg>

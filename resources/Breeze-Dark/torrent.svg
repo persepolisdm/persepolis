@@ -19,12 +19,12 @@
      inkscape:pagecheckerboard="0"
      inkscape:deskcolor="#505050"
      inkscape:zoom="23.291667"
-     inkscape:cx="12.021467"
-     inkscape:cy="12"
-     inkscape:window-width="1307"
-     inkscape:window-height="741"
-     inkscape:window-x="59"
-     inkscape:window-y="27"
+     inkscape:cx="12.064401"
+     inkscape:cy="12.021467"
+     inkscape:window-width="1316"
+     inkscape:window-height="732"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
      inkscape:window-maximized="1"
      inkscape:current-layer="svg1" />
   <defs
@@ -38,20 +38,20 @@
       </style>
   </defs>
   <path
-     style="fill:currentColor;fill-opacity:1;stroke:none"
-     d="m 12,4 c -4.432,0 -8,3.568 -8,8 0,4.432 3.568,8 8,8 4.432,0 8,-3.568 8,-8 0,-4.432 -3.568,-8 -8,-8 z m 0,1 c 3.878,0 7,3.122 7,7 0,3.878 -3.122,7 -7,7 C 8.122,19 5,15.878 5,12 5,8.122 8.122,5 12,5 Z"
+     style="fill:currentColor;fill-opacity:1;stroke:none;stroke-width:1.1"
+     d="m 12,3.2 c -4.8752,0 -8.8,3.9248 -8.8,8.8 0,4.8752 3.9248,8.8 8.8,8.8 4.8752,0 8.8,-3.9248 8.8,-8.8 0,-4.8752 -3.9248,-8.8 -8.8,-8.8 z m 0,1.1 c 4.2658,0 7.7,3.4342 7.7,7.7 0,4.2658 -3.4342,7.7 -7.7,7.7 C 7.7342,19.7 4.3,16.2658 4.3,12 4.3,7.7342 7.7342,4.3 12,4.3 Z"
      class="ColorScheme-Text"
      id="path1"
      sodipodi:nodetypes="ssssssssss" />
   <text
      xml:space="preserve"
-     style="font-weight:bold;font-size:14.4px;font-family:'Noto Serif';-inkscape-font-specification:'Noto Serif Bold';text-align:center;writing-mode:lr-tb;direction:ltr;text-anchor:middle;fill:#f2f2f2;stroke-width:1.2;fill-opacity:1"
+     style="font-weight:bold;font-size:15.84px;font-family:'Noto Serif';-inkscape-font-specification:'Noto Serif Bold';text-align:center;writing-mode:lr-tb;direction:ltr;text-anchor:middle;fill:#f2f2f2;fill-opacity:1;stroke-width:1.32"
      x="12"
-     y="17.140804"
+     y="17.654884"
      id="text1"><tspan
        sodipodi:role="line"
        id="tspan1"
        x="12"
-       y="17.140804"
-       style="stroke-width:1.2;fill:#f2f2f2;fill-opacity:1">T</tspan></text>
+       y="17.654884"
+       style="fill:#f2f2f2;fill-opacity:1;stroke-width:1.32">T</tspan></text>
 </svg>

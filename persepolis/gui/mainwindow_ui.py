@@ -503,7 +503,7 @@ class MainWindow_Ui(QMainWindow):
 
         self.torrent_menu = QMenu(self)
         # Connect the button's clicked signal to show the context menu
-        self.magnetTorrentLinkAction = QAction(QIcon(icons + 'torrent'), QCoreApplication.translate("mainwindow_ui_tr", 'Download magnet link'),
+        self.magnetTorrentLinkAction = QAction(QIcon(icons + 'magnet'), QCoreApplication.translate("mainwindow_ui_tr", 'Download magnet link'),
                                                self, statusTip=QCoreApplication.translate("mainwindow_ui_tr", 'Download magnet link'),
                                                triggered=self.showGetMagnetLinkWindow)
 
@@ -513,7 +513,7 @@ class MainWindow_Ui(QMainWindow):
         torrentMenu.addAction(self.magnetTorrentLinkAction)
         self.torrent_menu.addAction(self.magnetTorrentLinkAction)
 
-        self.openTorrentFileAction = QAction(QIcon(icons + 'torrent'), QCoreApplication.translate("mainwindow_ui_tr", 'Download torrent file'),
+        self.openTorrentFileAction = QAction(QIcon(icons + 'folder'), QCoreApplication.translate("mainwindow_ui_tr", 'Download torrent file'),
                                              self, statusTip=QCoreApplication.translate("mainwindow_ui_tr", 'Download torrent file'),
                                              triggered=self.showOpenTorrentFileWindow)
 
