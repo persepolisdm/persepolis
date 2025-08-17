@@ -5463,6 +5463,7 @@ class MainWindow(MainWindow_Ui):
             # create new progress_window
             self.progressBarOpen(gid)
 
+    # Get magnet link from user.
     def showGetMagnetLinkWindow(self, menu=None):
         get_magnet_link_window = GetMagnetLinkWindow(self, self.getMagnetLinkWindowCallBack, self.persepolis_setting)
         get_magnet_link_window.exec_()
@@ -5470,8 +5471,13 @@ class MainWindow(MainWindow_Ui):
     def getMagnetLinkWindowCallBack(self, magnet_link):
         print(magnet_link)
 
+    # Get torrent file address from user.
     def showOpenTorrentFileWindow(self, menu=None):
-        pass
+        # Open a file dialog to select a .torrent file
+        options = QFileDialog.Options()
+        file_name, _ = QFileDialog.getOpenFileName(self, "Select .torrent File", "", "Torrent Files (*.torrent);;All Files (*)", options=options)
+        if os.path.isfile(file_name):
+            print(file_name)
 
     def showTorrentButtonContextMenu(self):
         # Show the context menu at the button's position
