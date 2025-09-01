@@ -116,9 +116,8 @@ def humanReadableSize(size, input_type='file_size'):
     else:
         return round(size, None), labels[i]
 
+
 # this function converts second to hour and minute
-
-
 def convertTime(time):
     minutes = int(time // 60)
     if minutes == 0:

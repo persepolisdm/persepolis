@@ -13,33 +13,298 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
-from persepolis.scripts.addlink import AddLinkWindow
+from persepolis.gui.addtorrent_ui import AddTorrentWindow_Ui
+from persepolis.scripts.useful_tools import humanReadableSize
+from pathlib import Path
+from functools import partial
+
 try:
-    from PySide6.QtCore import QCoreApplication
+    from PySide6.QtWidgets import QTableWidgetItem, QFileDialog
+    from PySide6.QtCore import QCoreApplication, Qt, QPoint, QSize, QDir
+    from PySide6.QtGui import QIcon
 except:
-    from PyQt5.QtCore import QCoreApplication
+    from PyQt5.QtWidgets import QTableWidgetItem, QFileDialog
+    from PyQt5.QtCore import QCoreApplication, Qt, QPoint, QSize, QDir
+    from PyQt5.QtGui import QIcon
 
 
-class AddTorrentWindow(AddLinkWindow):
-    def __init__(self, parent, callback, persepolis_setting):
-        super().__init__(parent, callback, persepolis_setting)
+class AddTorrentWindow(AddTorrentWindow_Ui):
+    def __init__(self, parent, callback, persepolis_setting, torrent_file_path, torrent_name, torrent_files_list):
+        super().__init__(persepolis_setting)
         self.setWindowTitle(QCoreApplication.translate("addtorrent_ui_tr", "Add  Torrent"))
+        self.persepolis_setting = persepolis_setting
+        self.callback = callback
+        self.torrent_file_path = torrent_file_path
+        self.torrent_name = torrent_name
+        self.torrent_files_list = torrent_files_list
+        self.parent = parent
 
-        self.link_label.setText(QCoreApplication.translate("addtorrent_ui_tr", "Magnet link: "))
+        global icons
+        icons = ':/' + \
+            str(self.persepolis_setting.value('settings/icons')) + '/'
 
-    def okButtonPressed(self, download_later, button=None):
-        # user submitted information by pressing ok_pushButton, so get information
-        # from AddLinkWindow and return them to the mainwindow with callback!
+        # set torrent_name
+        self.torrent_name_label2.setText(self.torrent_name)
+        # import files information to the table
+        self.torrent_files_list.reverse()
+        # file_list contains [file_path, file_size, index]
+        for file_list in self.torrent_files_list:
+            self.links_table.insertRow(0)
 
-        # write user's new inputs in persepolis_setting for next time :)
+            # file_name
+            file_path = Path(file_list[0])
+            file_name = file_path.name
+            index = file_list[2]
+            file_size_list = humanReadableSize(file_list[1])
+            file_size = str(file_size_list[0]) + ' ' + file_size_list[1]
+
+            item = QTableWidgetItem(file_name)
+
+            # add checkbox to the item
+            item.setFlags(Qt.ItemIsUserCheckable | Qt.ItemIsEnabled)
+            item.setCheckState(Qt.Checked)
+
+            # insert file_name
+            self.links_table.setItem(0, 0, item)
+
+            # insert file size
+            item = QTableWidgetItem(str(file_size))
+            self.links_table.setItem(0, 1, item)
+
+            # inser index
+            item = QTableWidgetItem(str(index))
+            self.links_table.setItem(0, 2, item)
+
+        # get categories name and add them to add_queue_comboBox
+        categories_list = self.parent.persepolis_db.categoriesList()
+
+        for queue in categories_list:
+            if queue != 'All Downloads':
+                self.add_queue_comboBox.addItem(queue)
+
+        self.add_queue_comboBox.addItem(
+            QIcon(icons + 'add_queue'), 'Create new queue')
+
+        # entry initialization
+
+        # get values from persepolis_setting
+        global download_path
+        download_path = str(
+            self.persepolis_setting.value('settings/download_path'))
+
+        self.download_folder_lineEdit.setText(download_path)
+        self.download_folder_lineEdit.setEnabled(False)
+
+        # ip_lineEdit initialization
+        settings_ip = self.persepolis_setting.value(
+            'add_link_initialization/ip', None)
+        if settings_ip:
+            self.ip_lineEdit.setText(str(settings_ip))
+
+        # proxy user lineEdit initialization
+        settings_proxy_user = self.persepolis_setting.value(
+            'add_link_initialization/proxy_user', None)
+        if settings_proxy_user:
+            self.proxy_user_lineEdit.setText(str(settings_proxy_user))
+
+        # port_spinBox initialization
+        settings_port = self.persepolis_setting.value(
+            'add_link_initialization/port', 0)
+
+        self.port_spinBox.setValue(int(int(settings_port)))
+
+        # http or socks5 initialization
+        settings_proxy_type = self.persepolis_setting.value(
+            'add_link_initialization/proxy_type', None)
+
+        # default is http
+        if settings_proxy_type == 'socks5':
+
+            self.socks5_radioButton.setChecked(True)
+
+        elif settings_proxy_type == 'https':
+            self.https_radioButton.setChecked(True)
+
+        else:
+            self.http_radioButton.setChecked(True)
+
+        # download UserName initialization
+        settings_download_user = self.persepolis_setting.value(
+            'add_link_initialization/download_user', None)
+        if settings_download_user:
+            self.download_user_lineEdit.setText(str(settings_download_user))
+
+        # connect folder_pushButton
+        self.folder_pushButton.clicked.connect(self.changeFolder)
+
+        # connect OK, cancel and download_later_pushButton button
+        self.cancel_pushButton.clicked.connect(self.close)
+        self.ok_pushButton.clicked.connect(self.okButtonPressed)
+        self.download_later_pushButton.clicked.connect(
+            partial(self.okButtonPressed, download_later=True))
+
+        # connect select_all_pushButton  deselect_all_pushButton
+        self.select_all_pushButton.clicked.connect(self.selectAll)
+
+        self.deselect_all_pushButton.clicked.connect(self.deselectAll)
+
+        # frames and checkBoxes
+        self.proxy_frame.setEnabled(False)
+        self.proxy_checkBox.toggled.connect(self.proxyFrame)
+
+        self.download_frame.setEnabled(False)
+        self.download_checkBox.toggled.connect(self.downloadFrame)
+
+        # set focus to ok button
+        self.ok_pushButton.setFocus()
+
+        # add_queue_comboBox event
+        self.add_queue_comboBox.currentIndexChanged.connect(self.queueChanged)
+
+        # setting window size and position
+        size = self.persepolis_setting.value('AddTorrentWindow/size', QSize(700, 500))
+        position = self.persepolis_setting.value(
+            'AddTorrentWindow/position', QPoint(300, 300))
+        self.resize(size)
+        self.move(position)
+
+    # this method checks all check boxes
+    def selectAll(self, button):
+        for i in range(self.links_table.rowCount()):
+            item = self.links_table.item(i, 0)
+            item.setCheckState(Qt.Checked)
+
+    # this method deselect all check boxes
+    def deselectAll(self, button):
+        for i in range(self.links_table.rowCount()):
+            item = self.links_table.item(i, 0)
+            item.setCheckState(Qt.Unchecked)
+
+    # this method is called, when user changes add_queue_comboBox
+    def queueChanged(self, combo):
+        if str(self.add_queue_comboBox.currentText()) == 'Create new queue':
+            # if user want to create new queue, then callback
+            # createQueue method from mainwindow(parent)
+            new_queue = self.parent.createQueue(combo)
+
+            if new_queue:
+                # clear comboBox
+                self.add_queue_comboBox.clear()
+
+                # load queue list again!
+                queues_list = self.parent.persepolis_db.categoriesList()
+                for queue in queues_list:
+                    if queue != 'All Downloads':
+                        self.add_queue_comboBox.addItem(queue)
+
+                self.add_queue_comboBox.addItem(
+                    QIcon(icons + 'add_queue'), 'Create new queue')
+
+                # finding index of new_queue and setting comboBox for it
+                index = self.add_queue_comboBox.findText(str(new_queue))
+                self.add_queue_comboBox.setCurrentIndex(index)
+            else:
+                self.add_queue_comboBox.setCurrentIndex(0)
+
+    # activate frames if checkBoxes checked
+    def proxyFrame(self, checkBox):
+
+        if self.proxy_checkBox.isChecked():
+            self.proxy_frame.setEnabled(True)
+        else:
+            self.proxy_frame.setEnabled(False)
+
+    def downloadFrame(self, checkBox):
+
+        if self.download_checkBox.isChecked():
+            self.download_frame.setEnabled(True)
+        else:
+            self.download_frame.setEnabled(False)
+
+    def changeFolder(self, button):
+        fname = QFileDialog.getExistingDirectory(
+            self, 'Select a directory', download_path)
+
+        if fname:
+            # Returns pathName with the '/' separators converted to
+            # separators that are appropriate for the underlying
+            # operating system.
+            # On Windows, toNativeSeparators("c:/winnt/system32") returns
+            # "c:\winnt\system32".
+            fname = QDir.toNativeSeparators(fname)
+
+            path = Path(fname)
+            if path.is_dir():
+                self.download_folder_lineEdit.setText(fname)
+
+    # this method returns proxy information.
+    def getProxyInformation(self):
+        # http, https or socks5 proxy
+        if self.http_radioButton.isChecked() is True:
+
+            proxy_type = 'http'
+
+        elif self.https_radioButton.isChecked() is True:
+
+            proxy_type = 'https'
+
+        else:
+
+            proxy_type = 'socks5'
+
+        # get proxy information
+        if not (self.proxy_checkBox.isChecked()):
+            ip = None
+            port = None
+            proxy_user = None
+            proxy_passwd = None
+            proxy_type = None
+        else:
+            ip = self.ip_lineEdit.text()
+            if not (ip):
+                ip = None
+
+            port = self.port_spinBox.value()
+            if not (port):
+                port = None
+
+            proxy_user = self.proxy_user_lineEdit.text()
+            if not (proxy_user):
+                proxy_user = None
+
+            proxy_passwd = self.proxy_pass_lineEdit.text()
+            if not (proxy_passwd):
+                proxy_passwd = None
+
+        return ip, port, proxy_user, proxy_passwd, proxy_type
+
+    def getUserPass(self):
+        # get download username and password information
+        if not (self.download_checkBox.isChecked()):
+            download_user = None
+            download_passwd = None
+        else:
+            download_user = self.download_user_lineEdit.text()
+            if not (download_user):
+                download_user = None
+            download_passwd = self.download_pass_lineEdit.text()
+            if not (download_passwd):
+                download_passwd = None
+
+        return download_user, download_passwd
+
+    def okButtonPressed(self, button=None, download_later=False):
+        # write user's input data to init file
         self.persepolis_setting.setValue(
             'add_link_initialization/ip', self.ip_lineEdit.text())
         self.persepolis_setting.setValue(
             'add_link_initialization/port', self.port_spinBox.value())
         self.persepolis_setting.setValue(
-            'add_link_initialization/proxy_user', self.proxy_user_lineEdit.text())
+            'add_link_initialization/proxy_user',
+            self.proxy_user_lineEdit.text())
         self.persepolis_setting.setValue(
-            'add_link_initialization/download_user', self.download_user_lineEdit.text())
+            'add_link_initialization/download_user',
+            self.download_user_lineEdit.text())
 
         # get proxy information
         ip, port, proxy_user, proxy_passwd, proxy_type = self.getProxyInformation()
@@ -49,51 +314,63 @@ class AddTorrentWindow(AddLinkWindow):
         # get download username and password information
         download_user, download_passwd = self.getUserPass()
 
-        # get start time for download if user set that.
-        if not (self.start_checkBox.isChecked()):
-            start_time = None
-        else:
-            start_time = self.start_time_qDataTimeEdit.text()
-
-        # get end time for download if user set that.
-        if not (self.end_checkBox.isChecked()):
-            end_time = None
-        else:
-            end_time = self.end_time_qDateTimeEdit.text()
-
-        # check that if user set new name for download file.
-        if self.change_name_checkBox.isChecked():
-            out = str(self.change_name_lineEdit.text())
-            self.plugin_add_link_dictionary['out'] = out
-        else:
-            out = None
-
-        # get download link
-        link = self.link_lineEdit.text()
-
-        # get number of connections
-        connections = self.connections_spinBox.value()
-
-        # get download_path
-        download_path = self.download_folder_lineEdit.text()
-
-        # get additinal information
-        referer, header, user_agent, load_cookies = self.getAdditionalInformation()
-
-        # save information in a dictionary(add_link_dictionary).
-        self.add_link_dictionary = {'referer': referer, 'header': header, 'user_agent': user_agent, 'load_cookies': load_cookies,
-                                    'out': out, 'start_time': start_time, 'end_time': end_time, 'link': link, 'ip': ip,
-                                    'port': port, 'proxy_user': proxy_user, 'proxy_passwd': proxy_passwd, 'proxy_type': proxy_type,
-                                    'download_user': download_user, 'download_passwd': download_passwd,
-                                    'connections': connections, 'limit_value': 10, 'download_path': download_path}
-
-        # get category of download
         category = str(self.add_queue_comboBox.currentText())
 
-        del self.plugin_add_link_dictionary
+        download_path = self.download_folder_lineEdit.text()
 
-        # return information to mainwindow
-        self.callback(self.add_link_dictionary, download_later, category)
+        dict_ = {'out': self.torrent_name,
+                 'start_time': None,
+                 'end_time': None,
+                 'link': None,
+                 'ip': ip,
+                 'port': port,
+                 'proxy_user': proxy_user,
+                 'proxy_passwd': proxy_passwd,
+                 'download_user': download_user,
+                 'download_passwd': download_passwd,
+                 'proxy_type': proxy_type,
+                 'connections': 64,
+                 'limit_value': 10,
+                 'download_path': download_path,
+                 'referer': None,
+                 'load_cookies': None,
+                 'user_agent': None,
+                 'header': None,
+                 'after_download': None
+                 }
+
+        # find checked links in links_table
+        self.checked_files_list = []
+        for row in range(self.links_table.rowCount()):
+            item = self.links_table.item(row, 0)
+
+            # if item is checked
+            if (item.checkState() == Qt.Checked):
+                # add file index to checked_files_list
+                self.checked_files_list.append(int(self.links_table.item(row, 2).text()))
+
+        parameters_dict = {'files': self.checked_files_list}
+        # Create callback for mainwindow
+        self.callback(dict_, parameters_dict, category, download_later)
 
         # close window
         self.close()
+
+    # close window with ESC key
+    def keyPressEvent(self, event):
+        if event.key() == Qt.Key_Escape:
+            self.close()
+
+    def closeEvent(self, event):
+        self.persepolis_setting.setValue('AddTorrentWindow/size', self.size())
+        self.persepolis_setting.setValue('AddTorrentWindow/position', self.pos())
+        self.persepolis_setting.sync()
+
+        event.accept()
+
+    def changeIcon(self, icons):
+        icons = ':/' + str(icons) + '/'
+
+        self.folder_pushButton.setIcon(QIcon(icons + 'folder'))
+        self.ok_pushButton.setIcon(QIcon(icons + 'ok'))
+        self.cancel_pushButton.setIcon(QIcon(icons + 'remove'))

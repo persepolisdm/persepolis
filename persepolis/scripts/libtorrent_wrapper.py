@@ -15,6 +15,39 @@
 import libtorrent
 from persepolis.scripts.useful_tools import readCookieJar
 from persepolis.scripts.osCommands import makeDirs
+from pathlib import Path
+
+
+class TorrentFile():
+    def __init__(self, torrent_file_path):
+        self.torrent_file_path = Path(torrent_file_path)
+
+    def info(self):
+        try:
+            info = libtorrent.torrent_info(self.torrent_file_path.__fspath__())
+            error = ''
+        except Exception as e:
+            info = None
+            error = str(e)
+
+        return info, error
+
+    def name(self, info):
+        torrent_name = info.name()
+        if torrent_name:
+            return torrent_name
+        else:
+            return self.filesList(info)[0]
+
+    def filesList(self, info):
+        files_list = []
+        files = info.files()
+        for idx in range(files.num_files()):
+            file_path = files.file_path(idx)
+            file_size = files.file_size(idx)
+            files_list.append([file_path, file_size, idx])
+
+        return files.name(), files_list
 
 
 class Torrent_Download():

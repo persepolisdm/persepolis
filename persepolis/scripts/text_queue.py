@@ -311,8 +311,8 @@ class TextQueue(TextQueue_Ui):
             # "c:\winnt\system32".
             fname = QDir.toNativeSeparators(fname)
 
-        if os.path.isdir(fname):
-            self.download_folder_lineEdit.setText(fname)
+            if os.path.isdir(fname):
+                self.download_folder_lineEdit.setText(fname)
 
     # this method returns proxy information.
     def getProxyInformation(self):

@@ -60,12 +60,12 @@ class TextQueue_Ui(QWidget):
 
         # links_tab
         self.links_tab = QWidget()
-        links_tab_verticalLayout = QVBoxLayout(self.links_tab)
+        self.links_tab_verticalLayout = QVBoxLayout(self.links_tab)
 
         # link table
         self.links_table = QTableWidget(self.links_tab)
         self.links_table.setSizeAdjustPolicy(QAbstractItemView.AdjustToContents)
-        links_tab_verticalLayout.addWidget(self.links_table)
+        self.links_tab_verticalLayout.addWidget(self.links_table)
 
         self.links_table.setSelectionBehavior(QAbstractItemView.SelectRows)
         self.links_table.setEditTriggers(QAbstractItemView.NoEditTriggers)
@@ -79,6 +79,10 @@ class TextQueue_Ui(QWidget):
 
         self.links_table.horizontalHeader().setSectionResizeMode(QHeaderView.ResizeMode.Stretch)
         self.links_table.horizontalHeader().setStretchLastSection(True)
+
+        self.links_table.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAsNeeded)
+        self.links_table.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAsNeeded)
+
 
         # add_queue
         add_queue_horizontalLayout = QHBoxLayout()
@@ -97,9 +101,9 @@ class TextQueue_Ui(QWidget):
         self.add_queue_comboBox = QComboBox(self.links_tab)
         add_queue_horizontalLayout.addWidget(self.add_queue_comboBox)
 
-        links_tab_verticalLayout.addLayout(add_queue_horizontalLayout)
+        self.links_tab_verticalLayout.addLayout(add_queue_horizontalLayout)
 
-        links_tab_verticalLayout.addStretch(1)
+        self.links_tab_verticalLayout.addStretch(1)
         self.queue_tabWidget.addTab(self.links_tab, "")
 
         # options_tab
@@ -256,18 +260,18 @@ class TextQueue_Ui(QWidget):
         options_tab_verticalLayout.addStretch(1)
 
         # buttons
-        buttons_horizontalLayout = QHBoxLayout()
-        buttons_horizontalLayout.addStretch(1)
+        self.buttons_horizontalLayout = QHBoxLayout()
+        self.buttons_horizontalLayout.addStretch(1)
         # ok_pushButton
         self.ok_pushButton = QPushButton(self)
         self.ok_pushButton.setIcon(QIcon(icons + 'ok'))
-        buttons_horizontalLayout.addWidget(self.ok_pushButton)
+        self.buttons_horizontalLayout.addWidget(self.ok_pushButton)
         # cancel_pushButton
         self.cancel_pushButton = QPushButton(self)
         self.cancel_pushButton.setIcon(QIcon(icons + 'remove'))
-        buttons_horizontalLayout.addWidget(self.cancel_pushButton)
+        self.buttons_horizontalLayout.addWidget(self.cancel_pushButton)
 
-        window_verticalLayout.addLayout(buttons_horizontalLayout)
+        window_verticalLayout.addLayout(self.buttons_horizontalLayout)
 
         # labels
         self.setWindowTitle(QCoreApplication.translate("text_ui_tr", "Persepolis Download Manager"))
@@ -280,7 +284,7 @@ class TextQueue_Ui(QWidget):
         self.select_all_pushButton.setText(QCoreApplication.translate("text_ui_tr", 'Select All'))
         self.deselect_all_pushButton.setText(QCoreApplication.translate("text_ui_tr", 'Deselect All'))
 
-        self.add_queue_label.setText(QCoreApplication.translate("text_ui_tr", 'Add to queue: '))
+        self.add_queue_label.setText(QCoreApplication.translate("text_ui_tr", 'Add to category: '))
 
         self.proxy_checkBox.setText(QCoreApplication.translate("text_ui_tr", 'Proxy'))
         self.proxy_pass_label.setText(QCoreApplication.translate("text_ui_tr", "Proxy password: "))

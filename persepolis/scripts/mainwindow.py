@@ -43,6 +43,7 @@ from persepolis.scripts.addtorrent import AddTorrentWindow
 from persepolis.scripts.setting import PreferencesWindow
 from persepolis.scripts.download_link import DownloadLink
 from persepolis.scripts.properties import PropertiesWindow
+from persepolis.scripts.libtorrent_wrapper import TorrentFile
 from persepolis.scripts.after_download import AfterDownloadWindow
 from persepolis.scripts.get_magnet_link import GetMagnetLinkWindow
 from persepolis.scripts.browser_plugin_queue import BrowserPluginQueue
@@ -5475,23 +5476,38 @@ class MainWindow(MainWindow_Ui):
     def showOpenTorrentFileWindow(self, menu=None):
         # Open a file dialog to select a .torrent file
         options = QFileDialog.Options()
-        file_name, _ = QFileDialog.getOpenFileName(self, "Select .torrent File", "", "Torrent Files (*.torrent);;All Files (*)", options=options)
-        if os.path.isfile(file_name):
-            print(file_name)
+        file_path, _ = QFileDialog.getOpenFileName(self, "Select .torrent File", "", "Torrent Files (*.torrent);;All Files (*)", options=options)
+        if os.path.isfile(file_path):
+            self.returnTorrentFileInfo(file_path)
+
+    def returnTorrentFileInfo(self, torrent_file_path):
+        torrent_file = TorrentFile(torrent_file_path)
+        info, error = torrent_file.info()
+        if not (info):
+            notifySend(QCoreApplication.translate("mainwindow_src_ui_tr", "Error"),
+                       QCoreApplication.translate("mainwindow_src_ui_tr",
+                                                  "The Metainfo file does not contain key information!"),
+                       10000, 'fail', parent=self)
+            logger.sendToLog(str(error), "ERROR")
+            return
+
+        torrent_name = torrent_file.name(info)
+        torrent_name, torrent_files_list = torrent_file.filesList(info)
+        self.showTorrentAddLinkWindow(torrent_file_path, torrent_name, torrent_files_list)
 
     def showTorrentButtonContextMenu(self):
         # Show the context menu at the button's position
         self.torrent_menu.exec(self.torrent_pushButton.mapToGlobal(self.torrent_pushButton.rect().bottomLeft()))
 
-    def showTorrentAddLinkWindow(self, input_dict=None, menu=None):
-        torrent_addlink_window = AddTorrentWindow(self, self.torrentCallBack, self.persepolis_setting)
+    def showTorrentAddLinkWindow(self, torrent_file_path, torrent_name, torrent_files_list, menu=None):
+        torrent_addlink_window = AddTorrentWindow(self, self.torrentCallBack, self.persepolis_setting, torrent_file_path, torrent_name, torrent_files_list)
         self.addlinkwindows_list.append(torrent_addlink_window)
         torrent_addlink_window.show()
         torrent_addlink_window.raise_()
         torrent_addlink_window.activateWindow()
 
-    def torrentCallBack(self):
-        print('bing')
+    def torrentCallBack(self, add_link_dictionary, parameters_dict, category, download_later):
+        print(parameters_dict)
 
     def changeIcon(self, new_icons):
 
