@@ -29,7 +29,7 @@ except:
 
 
 class AddTorrentWindow(AddTorrentWindow_Ui):
-    def __init__(self, parent, callback, persepolis_setting, torrent_file_path, torrent_name, torrent_files_list):
+    def __init__(self, parent, callback, persepolis_setting, torrent_file_path, torrent_name, torrent_files_list, is_folder):
         super().__init__(persepolis_setting)
         self.setWindowTitle(QCoreApplication.translate("addtorrent_ui_tr", "Add  Torrent"))
         self.persepolis_setting = persepolis_setting
@@ -38,6 +38,7 @@ class AddTorrentWindow(AddTorrentWindow_Ui):
         self.torrent_name = torrent_name
         self.torrent_files_list = torrent_files_list
         self.parent = parent
+        self.is_folder = is_folder
 
         global icons
         icons = ':/' + \
@@ -318,10 +319,11 @@ class AddTorrentWindow(AddTorrentWindow_Ui):
 
         download_path = self.download_folder_lineEdit.text()
 
+        # set torrent_file_path for link
         dict_ = {'out': self.torrent_name,
                  'start_time': None,
                  'end_time': None,
-                 'link': None,
+                 'link': self.torrent_file_path,
                  'ip': ip,
                  'port': port,
                  'proxy_user': proxy_user,
@@ -341,17 +343,23 @@ class AddTorrentWindow(AddTorrentWindow_Ui):
 
         # find checked links in links_table
         self.checked_files_list = []
+        total_size = 0
         for row in range(self.links_table.rowCount()):
             item = self.links_table.item(row, 0)
 
             # if item is checked
             if (item.checkState() == Qt.Checked):
                 # add file index to checked_files_list
-                self.checked_files_list.append(int(self.links_table.item(row, 2).text()))
+                index = int(self.links_table.item(row, 2).text())
+                self.checked_files_list.append(index)
+
+                # find file size and add it to total size
+                file_size = self.torrent_files_list[index][1]
+                total_size = file_size + total_size
 
         parameters_dict = {'files': self.checked_files_list}
         # Create callback for mainwindow
-        self.callback(dict_, parameters_dict, category, download_later)
+        self.callback(dict_, parameters_dict, total_size, category, download_later, self.is_folder)
 
         # close window
         self.close()

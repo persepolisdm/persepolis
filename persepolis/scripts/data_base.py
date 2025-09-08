@@ -476,6 +476,16 @@ class PersepolisDB():
                                                                                 ON UPDATE CASCADE
                                                                                 )""")
 
+        # torrent_db_table contains addlink window download information
+        self.persepolis_db_cursor.execute("""CREATE TABLE IF NOT EXISTS torrent_db_table(
+                                                                                ID INTEGER PRIMARY KEY,
+                                                                                gid TEXT,
+                                                                                parameters_dict TEXT,
+                                                                                is_dir TEXT,
+                                                                                FOREIGN KEY(gid) REFERENCES download_db_table(gid)
+                                                                                ON DELETE CASCADE
+                                                                                    )""")
+
         self.persepolis_db_connection.commit()
 
         # job is done! open the lock
@@ -661,6 +671,48 @@ class PersepolisDB():
         # job is done! open the lock
         self.lock = False
 
+    # Insert multiple items in torrent_db_table
+    def insertInTorrentTable(self, list_):
+        # lock data base
+        self.lockCursor()
+
+        for dictionary in list_:
+            # first column is NULL
+            self.persepolis_db_cursor.execute("""INSERT INTO torrent_db_table VALUES(NULL,
+                                                                                :gid,
+                                                                                :parameters_dict,
+                                                                                :is_dir
+                                                                                )""", dictionary)
+        self.persepolis_db_connection.commit()
+
+        # job is done! open the lock
+        self.lock = False
+
+    # Search an item by GID
+    def searchGidInTorrentTable(self, gid):
+        # lock data base
+        self.lockCursor()
+
+        self.persepolis_db_cursor.execute(
+            """SELECT * FROM torrent_db_table WHERE gid = '{}'""".format(str(gid)))
+        result_list = self.persepolis_db_cursor.fetchall()
+
+        # job is done
+        self.lock = False
+
+        if result_list:
+            tuple_ = result_list[0]
+        else:
+            return None
+
+        dictionary = {'gid': tuple_[1],
+                      'parameters_dict': tuple_[2],
+                      'is_dir': tuple_[3]}
+
+        # return the results
+        return dictionary
+
+    # Search an item by GID
     def searchGidInVideoFinderTable(self, gid):
         # lock data base
         self.lockCursor()

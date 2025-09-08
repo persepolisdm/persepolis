@@ -43,12 +43,12 @@ from persepolis.scripts.addtorrent import AddTorrentWindow
 from persepolis.scripts.setting import PreferencesWindow
 from persepolis.scripts.download_link import DownloadLink
 from persepolis.scripts.properties import PropertiesWindow
-from persepolis.scripts.libtorrent_wrapper import TorrentFile
 from persepolis.scripts.after_download import AfterDownloadWindow
 from persepolis.scripts.get_magnet_link import GetMagnetLinkWindow
 from persepolis.scripts.browser_plugin_queue import BrowserPluginQueue
 from persepolis.scripts.data_base import PluginsDB, PersepolisDB, TempDB
 from persepolis.gui.mainwindow_ui import MainWindow_Ui, QTableWidgetItem
+from persepolis.scripts.libtorrent_wrapper import TorrentFile, TorrentDownload
 from persepolis.scripts.video_finder_progress import VideoFinderProgressWindow
 from persepolis.scripts.bubble import notifySend, checkNotificationSounds, createNotificationSounds
 from persepolis.scripts.useful_tools import nowDate, freeSpace, determineConfigFolder, osAndDesktopEnvironment, getExecPath, ffmpegVersion, findExternalAppPath
@@ -811,6 +811,9 @@ class MainWindow(MainWindow_Ui):
         # This list contains single video link gids
         self.single_video_link_gid_list = []
 
+        # This list contains torrents gid
+        self.torrent_gid_list = []
+
         # CheckDownloadInfoThread
         check_download_info = CheckDownloadInfoThread(self)
         self.threadPool.append(check_download_info)
@@ -1127,6 +1130,8 @@ class MainWindow(MainWindow_Ui):
 
             # Is the link related to VideoFinder?
             video_finder_link = False
+            torrent_file = False
+            single_video_link = False
             if gid in self.all_video_finder_gid_list:
 
                 video_finder_dictionary = self.persepolis_db.searchGidInVideoFinderTable(gid)
@@ -1162,14 +1167,12 @@ class MainWindow(MainWindow_Ui):
                         # update data base
                         self.persepolis_db.updateVideoFinderTable([video_finder_dictionary])
 
-            else:
-                video_finder_link = False
+            elif gid in self.torrent_gid_list:
+                torrent_file = True
 
             # If link is single_video_link
-            if gid in self.single_video_link_gid_list:
+            elif gid in self.single_video_link_gid_list:
                 single_video_link = True
-            else:
-                single_video_link = False
 
             if status == 'error':
                 # check free space in download_folder
@@ -1324,11 +1327,6 @@ class MainWindow(MainWindow_Ui):
                     # tell to progress_window what gid is in progress
                     progress_window.gid = gid
 
-                # link
-                link = QCoreApplication.translate("mainwindow_src_ui_tr", "<b>Link</b>: ") + str(download_status_dict['link'])
-                progress_window.link_label.setText(link)
-                progress_window.link_label.setToolTip(link)
-
                 # downloaded
                 downloaded_size = download_status_dict['downloaded_size']
 
@@ -1373,9 +1371,23 @@ class MainWindow(MainWindow_Ui):
                 if video_finder_link or single_video_link:
                     connections = QCoreApplication.translate("mainwindow_src_ui_tr", "<b>Fragments</b>: ") \
                         + str(download_status_dict['connections'])
+                    # link
+                    link = QCoreApplication.translate("mainwindow_src_ui_tr", "<b>Link</b>: ") + str(download_status_dict['link'])
+
+                elif torrent_file:
+                    connections = QCoreApplication.translate("mainwindow_src_ui_tr", "<b>Peers</b>: ") \
+                        + str(download_status_dict['connections'])
+                    # link
+                    link = QCoreApplication.translate("mainwindow_src_ui_tr", "<b>Torrent file path</b>: ") + str(download_status_dict['link'])
+
                 else:
                     connections = QCoreApplication.translate("mainwindow_src_ui_tr", "<b>Connections</b>: ") \
                         + str(download_status_dict['connections'])
+                    # link
+                    link = QCoreApplication.translate("mainwindow_src_ui_tr", "<b>Link</b>: ") + str(download_status_dict['link'])
+
+                progress_window.link_label.setText(link)
+                progress_window.link_label.setToolTip(link)
 
                 progress_window.connections_label.setText(connections)
 
@@ -2277,22 +2289,27 @@ class MainWindow(MainWindow_Ui):
                                        10000, 'warning', parent=self)
                             return
 
-                    # check if gid is related to single video download link or  not.
-                    result_dictionary = self.persepolis_db.searchGidInVideoFinderTable2(gid)
-
                     # get information from data_base
                     add_link_dictionary = self.persepolis_db.searchGidInAddLinkTable(gid)
 
                     # create download_session
-                    if result_dictionary is None:
-                        download_session = persepolis_lib_prime.Download(add_link_dictionary, self, gid)
-
-                    else:
+                    if self.persepolis_db.searchGidInVideoFinderTable2(gid):
                         # single video link
                         download_session = ytdlp_downloader.Ytdp_Download(add_link_dictionary, self, gid, single_video_link=True)
 
                         # add gid to single_video_link_gid_list
                         self.single_video_link_gid_list.append(gid)
+
+                    elif self.persepolis_db.searchGidInTorrentTable(gid):
+                        # Torrent
+                        download_session = TorrentDownload(add_link_dictionary, self, gid)
+
+                        # add gid to torrent_gid_list
+                        self.torrent_gid_list.append(gid)
+
+                    else:
+
+                        download_session = persepolis_lib_prime.Download(add_link_dictionary, self, gid)
 
                     # add download_session and gid to download_session_dict
                     download_session_dict = {'gid': gid,
@@ -5492,22 +5509,152 @@ class MainWindow(MainWindow_Ui):
             return
 
         torrent_name = torrent_file.name(info)
-        torrent_name, torrent_files_list = torrent_file.filesList(info)
-        self.showTorrentAddLinkWindow(torrent_file_path, torrent_name, torrent_files_list)
+        torrent_name, torrent_files_list, is_folder = torrent_file.filesList(info)
+        self.showTorrentAddLinkWindow(torrent_file_path, torrent_name, torrent_files_list, is_folder)
 
     def showTorrentButtonContextMenu(self):
         # Show the context menu at the button's position
         self.torrent_menu.exec(self.torrent_pushButton.mapToGlobal(self.torrent_pushButton.rect().bottomLeft()))
 
-    def showTorrentAddLinkWindow(self, torrent_file_path, torrent_name, torrent_files_list, menu=None):
-        torrent_addlink_window = AddTorrentWindow(self, self.torrentCallBack, self.persepolis_setting, torrent_file_path, torrent_name, torrent_files_list)
+    def showTorrentAddLinkWindow(self, torrent_file_path, torrent_name, torrent_files_list, is_folder, menu=None):
+        torrent_addlink_window = AddTorrentWindow(self, self.torrentCallBack, self.persepolis_setting, torrent_file_path, torrent_name, torrent_files_list, is_folder)
         self.addlinkwindows_list.append(torrent_addlink_window)
         torrent_addlink_window.show()
         torrent_addlink_window.raise_()
         torrent_addlink_window.activateWindow()
 
-    def torrentCallBack(self, add_link_dictionary, parameters_dict, category, download_later):
-        print(parameters_dict)
+    # This method is callBack for showTorrentAddLinkWindow
+    def torrentCallBack(self, add_link_dictionary, parameters_dict, total_size, category, download_later, is_folder):
+        files = parameters_dict['files']
+        # We have no file for downloading.
+        if not files:
+            return
+
+        category = str(category)
+        # Persepolis identifies each download by the ID called GID. The GID must be
+        # hex string of 16 characters.
+        # if user presses ok button on add link window , a gid generates for download.
+        gid = self.gidGenerator()
+
+        # add gid to add_link_dictionary
+        add_link_dictionary['gid'] = gid
+
+        # set torrent name for file_name
+        file_name = add_link_dictionary['out']
+
+        # If user selected a queue in add_link window , then download must be
+        # added to queue and and download must be started with queue so >>
+        # download_later = True
+        if str(category) != 'Single Downloads':
+            download_later = True
+
+        if not (download_later):
+            status = 'waiting'
+        else:
+            status = 'stopped'
+
+        # get now time and date
+        date = nowDate()
+
+        # set torrent file path as link
+        download_table_dict = {'file_name': file_name,
+                               'status': status,
+                               'size': total_size,
+                               'downloaded_size': '***',
+                               'percent': '***',
+                               'connections': '***',
+                               'rate': '***',
+                               'estimate_time_left': '***',
+                               'gid': gid,
+                               'link': add_link_dictionary['link'],
+                               'first_try_date': date,
+                               'last_try_date': date,
+                               'category': category}
+
+        # write information in data_base
+        self.persepolis_db.insertInDownloadTable([download_table_dict])
+        self.persepolis_db.insertInAddLinkTable([add_link_dictionary])
+
+        # find selected category in left side panel
+        for i in range(self.category_tree_model.rowCount()):
+            category_tree_item_text = str(
+                self.category_tree_model.index(i, 0).data())
+            if category_tree_item_text == category:
+                category_index = i
+                break
+
+        # highlight selected category in category_tree
+        category_tree_model_index = self.category_tree_model.index(
+            category_index, 0)
+
+        current_category_tree_text = current_category_tree_index.data()
+
+        self.category_tree.setCurrentIndex(category_tree_model_index)
+        if current_category_tree_text != category:
+            self.categoryTreeSelected(category_tree_model_index)
+        else:
+            # create a row in download_table for new download
+            download_table_list = [file_name, status, total_size, '***', '***',
+                                   '***', '***', '***', gid, add_link_dictionary['link'], date, date, category]
+            self.download_table.insertRow(0)
+            j = 0
+            # add item in list to the row
+            for i in download_table_list:
+                item = QTableWidgetItem(i)
+                self.download_table.setItem(0, j, item)
+                j = j + 1
+
+        # create an item in data_base
+        if is_folder:
+            is_dir = 'yes'
+        else:
+            is_dir = 'no'
+
+        torrent_data_base = {'gid': gid,
+                             'parameters_dict': str(parameters_dict),
+                             'is_dir': is_dir}
+
+        # write it in data_base
+        self.persepolis_db.insertInTorrentTable([torrent_data_base])
+
+        # if user didn't press download_later_pushButton in add_link window
+        # then create new qthread for new download!
+        if not (download_later):
+            # create download_session
+            download_session = TorrentDownload(add_link_dictionary, self, gid)
+
+            # Add gid to torrent_gid_list
+            self.torrent_gid_list.append(gid)
+
+            # add download_session and gid to download_session_dict
+            download_session_dict = {'gid': gid,
+                                     'download_session': download_session}
+
+            # append download_session_dict to download_sessions_list
+            self.download_sessions_list.append(download_session_dict)
+
+            # strat download in thread
+            new_download = DownloadLink(gid, download_session, self)
+            self.threadPool.append(new_download)
+            self.threadPool[-1].start()
+
+            # open progress window for download.
+            self.progressBarOpen(gid)
+
+            # notify user
+            # check that download scheduled or not
+            if not (add_link_dictionary['start_time']):
+                message = QCoreApplication.translate("mainwindow_src_ui_tr", "Download Starts")
+            else:
+                # get download information with spider.
+                new_spider = SpiderThread(add_link_dictionary, self)
+                self.threadPool.append(new_spider)
+                self.threadPool[-1].start()
+                self.threadPool[-1].SPIDERSIGNAL.connect(self.spiderUpdate)
+                message = QCoreApplication.translate("mainwindow_src_ui_tr", "Download Scheduled")
+            notifySend(message, '', 10000, 'no', parent=self)
+
+
 
     def changeIcon(self, new_icons):
 

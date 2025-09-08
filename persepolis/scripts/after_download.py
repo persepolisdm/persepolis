@@ -50,21 +50,37 @@ class AfterDownloadWindow(AfterDownloadWindow_Ui):
         # find gid
         gid = self.dict['gid']
 
+        # Check the download path is related to torrent or not
+        torrent_dict = self.parent.persepolis_db.searchGidInTorrentTable(gid)
+        self.is_dir = False
+        if torrent_dict:
+            # Check If we have folder or file
+            is_dir_value = torrent_dict['is_dir']
+            if is_dir_value == 'yes':
+                self.is_dir = True
+                # Hide open file button
+                self.open_pushButtun.setVisible(False)
+
+            else:
+                self.is_dir = False
+
         # If file path not valid, Wait a little and try again.
         # The file transfer and database update process may 
         # not be finished after the download is finished.
         while True:
             self.add_link_dict = self.parent.persepolis_db.searchGidInAddLinkTable(gid)
-            file_path = self.add_link_dict['download_path']
-            if os.path.isfile(file_path):
+            f_path = self.add_link_dict['download_path']
+            if torrent_dict and self.is_dir:
+                break
+            elif os.path.isfile(f_path):
                 break
             else:
                 # Wait a little and try again!
                 time.sleep(0.1)
 
         # save_as
-        self.save_as_lineEdit.setText(file_path)
-        self.save_as_lineEdit.setToolTip(file_path)
+        self.save_as_lineEdit.setText(f_path)
+        self.save_as_lineEdit.setToolTip(f_path)
 
         # link
         link = str(self.dict['link'])
@@ -74,12 +90,18 @@ class AfterDownloadWindow(AfterDownloadWindow_Ui):
         # file_name
 
         window_title = str(self.dict['file_name'])
-        file_name = QCoreApplication.translate("after_download_src_ui_tr", "<b>File name</b>: ") + \
-            window_title
+
+        if self.is_dir:
+            f_name = QCoreApplication.translate("after_download_src_ui_tr", "<b>Folder name</b>: ") + \
+                window_title
+
+        else:
+            f_name = QCoreApplication.translate("after_download_src_ui_tr", "<b>File name</b>: ") + \
+                window_title
 
         self.setWindowTitle(window_title)
 
-        self.file_name_label.setText(file_name)
+        self.file_name_label.setText(f_name)
 
         # size
         size = QCoreApplication.translate("after_download_src_ui_tr", "<b>Size</b>: ") + str(self.dict['size'])
@@ -119,7 +141,9 @@ class AfterDownloadWindow(AfterDownloadWindow_Ui):
 
 #         download_path = file_name.join(file_path_split)
 
-        if os.path.isfile(download_path):
+        if self.is_dir:
+            osCommands.xdgOpen(download_path, 'folder', 'folder')
+        else:
             osCommands.xdgOpen(download_path, 'folder', 'file')
 
         # close window

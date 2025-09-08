@@ -977,7 +977,7 @@ class PreferencesWindow(Setting_Ui):
         if self.subfolder_checkBox.isChecked():
             self.persepolis_setting.setValue('subfolder', 'yes')
 
-            for folder in ['Audios', 'Videos', 'Others', 'Documents', 'Compressed']:
+            for folder in ['Audios', 'Videos', 'Others', 'Documents', 'Compressed', 'Torrent folders']:
                 folder_list.append(os.path.join(download_path, folder))
 
         else:

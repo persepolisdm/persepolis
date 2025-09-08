@@ -18,6 +18,7 @@ from persepolis.constants import OS
 import subprocess
 import platform
 import shutil
+from pathlib import Path
 import os
 
 os_type = platform.system()
@@ -44,6 +45,12 @@ def touch(file_path):
 
 
 def xdgOpen(file_path, f_type='file', path='file'):
+    # Open folder
+    if f_type == 'folder' and path == 'folder':
+        is_dir = True
+    else:
+        is_dir = False
+
     # we have a file path and we want to open it's directory.
     # highlit(select) file in file manager after opening.
     # it's help to find file easier :)
@@ -280,7 +287,7 @@ def findMountPoint(path):
 # move downloaded file to another destination.
 def moveFile(old_file_path, new_path, new_path_type='folder'):
 
-    # new_path_type can be file or folder
+    # new_path_type must created first
     # if it's folder so we have folder path
     # else we have new file path that includes file name
     if os.path.isfile(old_file_path):
@@ -312,6 +319,20 @@ def moveFile(old_file_path, new_path, new_path_type='folder'):
 
         return False
 
+
+# move downloaded folder to another destination.
+def moveFolder(old_folder_path, new_path):
+    old = Path(old_folder_path)
+    new = Path(new_path)
+
+    try:
+        # Try a fast rename/move first (works on same filesystem)
+        old.replace(new)
+    except Exception:
+        # Fall back to copytree + rmtree (works across filesystems)
+        shutil.copytree(old, new)
+        shutil.rmtree(old)
+    return True
 
 # copy a file to another destination
 # Warining! new_path must be a complete file path not only a directory
