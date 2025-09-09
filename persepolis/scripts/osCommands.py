@@ -18,7 +18,6 @@ from persepolis.constants import OS
 import subprocess
 import platform
 import shutil
-from pathlib import Path
 import os
 
 os_type = platform.system()
@@ -319,20 +318,6 @@ def moveFile(old_file_path, new_path, new_path_type='folder'):
 
         return False
 
-
-# move downloaded folder to another destination.
-def moveFolder(old_folder_path, new_path):
-    old = Path(old_folder_path)
-    new = Path(new_path)
-
-    try:
-        # Try a fast rename/move first (works on same filesystem)
-        old.replace(new)
-    except Exception:
-        # Fall back to copytree + rmtree (works across filesystems)
-        shutil.copytree(old, new)
-        shutil.rmtree(old)
-    return True
 
 # copy a file to another destination
 # Warining! new_path must be a complete file path not only a directory

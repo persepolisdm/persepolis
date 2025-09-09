@@ -64,19 +64,24 @@ class AfterDownloadWindow(AfterDownloadWindow_Ui):
             else:
                 self.is_dir = False
 
-        # If file path not valid, Wait a little and try again.
-        # The file transfer and database update process may 
-        # not be finished after the download is finished.
         while True:
-            self.add_link_dict = self.parent.persepolis_db.searchGidInAddLinkTable(gid)
-            f_path = self.add_link_dict['download_path']
-            if torrent_dict and self.is_dir:
-                break
-            elif os.path.isfile(f_path):
-                break
+            if self.is_dir:
+                # Wait until progress is done.
+                if gid not in self.parent.torrent_gid_list:
+                    # Read download path from database and exit the loop
+                    self.add_link_dict = self.parent.persepolis_db.searchGidInAddLinkTable(gid)
+                    f_path = self.add_link_dict['download_path']
+                    break
             else:
-                # Wait a little and try again!
-                time.sleep(0.1)
+                # If file path not valid, Wait a little and try again.
+                # The file transfer and database update process may
+                # not be finished after the download is finished.
+                self.add_link_dict = self.parent.persepolis_db.searchGidInAddLinkTable(gid)
+                f_path = self.add_link_dict['download_path']
+                if os.path.isfile(f_path):
+                    break
+            # Wait a little and try again!
+            time.sleep(0.1)
 
         # save_as
         self.save_as_lineEdit.setText(f_path)
@@ -94,6 +99,7 @@ class AfterDownloadWindow(AfterDownloadWindow_Ui):
         if self.is_dir:
             f_name = QCoreApplication.translate("after_download_src_ui_tr", "<b>Folder name</b>: ") + \
                 window_title
+            self.link_label.setText(QCoreApplication.translate("after_download_ui_tr", "<b>Torrent file path</b>: "))
 
         else:
             f_name = QCoreApplication.translate("after_download_src_ui_tr", "<b>File name</b>: ") + \

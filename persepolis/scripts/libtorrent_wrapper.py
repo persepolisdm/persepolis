@@ -16,9 +16,9 @@ import libtorrent
 import ast
 import threading
 from persepolis.scripts.useful_tools import readCookieJar
-from persepolis.scripts.osCommands import makeDirs, moveFile, moveFolder
+from persepolis.scripts.osCommands import makeDirs, moveFile
 from pathlib import Path
-from persepolis.scripts.useful_tools import convertTime, humanReadableSize, freeSpace, returnNewFileName, returnNewFolderName
+from persepolis.scripts.useful_tools import convertTime, humanReadableSize, freeSpace, returnNewFileName
 import time
 import os
 from persepolis.scripts import logger
@@ -484,6 +484,8 @@ class TorrentDownload():
                     self.f_path, self.download_path, self.main_window.persepolis_setting.value('settings/subfolder'))
 
                 self.f_path = self.downloadCompleteAction(new_download_path)
+            elif self.is_dir:
+                self.f_path = os.path.join(self.download_path, self.name)
 
             # update download_path in addlink_db_table
             add_link_dictionary = self.main_window.persepolis_db.searchGidInAddLinkTable(self.gid)

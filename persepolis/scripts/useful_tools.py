@@ -689,37 +689,3 @@ def returnNewFileName(folder_path, file_name):
         file_path = os.path.join(folder_path, file_name)
 
     return file_name
-
-
-# Return a new name for the folder, if a folder with the current name exists.
-def returnNewFolderName(folder_path, folder_name):
-    i = 1
-    folder_path = os.path.join(folder_path, folder_name)
-
-    # If folder is already exists.
-    while os.path.isdir(folder_path):
-        # split folder name to folder_name + extension
-        folder_name_split = list(os.path.splitext(folder_name))
-
-        # add _i to the end of folder name
-
-        if folder_name_split[0][-2] == '_':
-            try:
-                # check the last character of folder_name.
-                # If it's integer, add 1 to it.
-                j = folder_name_split[0][-1]
-
-                j = int(j)
-                j += 1
-                folder_name = folder_name_split[0][:-1] + str(j) + folder_name_split[-1]
-            except:
-                folder_name = folder_name_split[0] + '_' + str(i) + folder_name_split[-1]
-                i += 1
-        else:
-            folder_name = folder_name_split[0] + '_' + str(i) + folder_name_split[-1]
-            i += 1
-
-        # create new folder_path
-        folder_path = os.path.join(folder_path, folder_name)
-
-    return folder_name
