@@ -83,7 +83,6 @@ class TextQueue_Ui(QWidget):
         self.links_table.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAsNeeded)
         self.links_table.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAsNeeded)
 
-
         # add_queue
         add_queue_horizontalLayout = QHBoxLayout()
 

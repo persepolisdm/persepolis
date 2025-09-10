@@ -45,6 +45,7 @@ from persepolis.scripts.download_link import DownloadLink
 from persepolis.scripts.properties import PropertiesWindow
 from persepolis.scripts.after_download import AfterDownloadWindow
 from persepolis.scripts.get_magnet_link import GetMagnetLinkWindow
+from persepolis.scripts.torrent_progress import TorrentProgressWindow
 from persepolis.scripts.browser_plugin_queue import BrowserPluginQueue
 from persepolis.scripts.data_base import PluginsDB, PersepolisDB, TempDB
 from persepolis.gui.mainwindow_ui import MainWindow_Ui, QTableWidgetItem
@@ -1379,6 +1380,7 @@ class MainWindow(MainWindow_Ui):
                         + str(download_status_dict['connections'])
                     # link
                     link = QCoreApplication.translate("mainwindow_src_ui_tr", "<b>Torrent file path</b>: ") + str(download_status_dict['link'])
+                    progress_window.updateFilesTable(download_status_dict['download_progress_per_file_list'])
 
                 else:
                     connections = QCoreApplication.translate("mainwindow_src_ui_tr", "<b>Connections</b>: ") \
@@ -2532,6 +2534,11 @@ class MainWindow(MainWindow_Ui):
 
             # create a video finder progress window.
             progress_window = VideoFinderProgressWindow(self, gid_list, self.persepolis_setting)
+
+        elif gid in self.torrent_gid_list:
+            # create torrent progress window
+            progress_window = TorrentProgressWindow(
+                parent=self, gid=gid, persepolis_setting=self.persepolis_setting)
 
         else:
             # create an ordinary progress_window

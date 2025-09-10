@@ -60,16 +60,23 @@ class AddTorrentWindow(AddTorrentWindow_Ui):
             file_size = str(file_size_list[0]) + ' ' + file_size_list[1]
 
             item = QTableWidgetItem(file_name)
+            # centers horizontally and vertically
+            item.setTextAlignment(Qt.AlignCenter)
 
             # add checkbox to the item
             item.setFlags(Qt.ItemIsUserCheckable | Qt.ItemIsEnabled)
             item.setCheckState(Qt.Checked)
+            # centers horizontally and vertically
+            item.setTextAlignment(Qt.AlignCenter)
 
             # insert file_name
             self.links_table.setItem(0, 0, item)
 
             # insert file size
             item = QTableWidgetItem(str(file_size))
+            # centers horizontally and vertically
+            item.setTextAlignment(Qt.AlignCenter)
+
             self.links_table.setItem(0, 1, item)
 
             # inser index

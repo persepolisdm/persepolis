@@ -116,6 +116,7 @@ class TorrentDownload():
         self.is_dir = False
         # current file or folder path of downloaded torrent.
         self.f_path = os.path.join(self.download_path, self.name)
+        self.download_progress_per_file_list = []
 
     # Initialize session
     def createSession(self):
@@ -164,19 +165,19 @@ class TorrentDownload():
         # Get files index that must be downloaded from data base
         parameters_dict_srt = self.main_window.persepolis_db.searchGidInTorrentTable(self.gid)['parameters_dict']
         parameters_dict = ast.literal_eval(parameters_dict_srt)
-        files_index_list = parameters_dict['files']
+        self.files_index_list = parameters_dict['files']
 
         # Set priorities: 0 = do not download, 1 = normal priority
         number_of_files = info.num_files()
         priority_list = [0] * number_of_files
-        for index in files_index_list:
+        for index in self.files_index_list:
             priority_list[index] = 1
 
         session_parameters['file_priorities'] = priority_list
 
         # get files list
-        name, files_list, self.is_dir = torrent_file.filesList(info)
-        self.total_size = torrent_file.totalDownloadSize(files_list, files_index_list)
+        name, self.files_list, self.is_dir = torrent_file.filesList(info)
+        self.total_size = torrent_file.totalDownloadSize(self.files_list, self.files_index_list)
 
         # If torrent is a folder, and user selected default download path
         # change download path to ~/Downloads/Persepols/Torrent folders
@@ -305,6 +306,25 @@ class TorrentDownload():
 
             download_speed, speed_unit = humanReadableSize(dl, 'speed')
             self.download_speed_str = (str(download_speed) + " " + speed_unit + "/s")
+
+            # get downloaded size for every file.
+            file_progress = self.handler.file_progress()
+            _list = []
+            for file_list in self.files_list:
+                index = file_list[2]
+
+                # get download information JUST for file in priority_list
+                if index in self.files_index_list:
+                    downloaded_from_file = file_progress[index]
+                    file_size = file_list[1]
+
+                    # file_name
+                    file_path = Path(file_list[0])
+                    file_name = file_path.name
+                    _list.append([file_name, downloaded_from_file, file_size])
+
+            self.download_progress_per_file_list = _list
+
             time.sleep(1)
 
             # Check if download complete.
@@ -466,7 +486,8 @@ class TorrentDownload():
             'rate': self.download_speed_str,
             'estimate_time_left': self.eta,
             'link': self.torrent_file_path,
-            'error': self.error_message
+            'error': self.error_message,
+            'download_progress_per_file_list': self.download_progress_per_file_list
         }
 
         return download_info
@@ -480,6 +501,7 @@ class TorrentDownload():
             if not (self.is_dir) and self.main_window.persepolis_setting.value('settings/download_path') == self.download_path:
 
                 # return new download_path according to file extension.
+                self.f_path = os.path.join(self.download_path, self.name)
                 new_download_path = self.findDownloadPath(
                     self.f_path, self.download_path, self.main_window.persepolis_setting.value('settings/subfolder'))
 
