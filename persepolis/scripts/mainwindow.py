@@ -146,6 +146,7 @@ class DeleteThingsThatAreNoLongerNeededThread(QThread):
     def run(self):
         # find download_path
         dictionary = self.main_window.persepolis_db.searchGidInAddLinkTable(self.gid)
+        torrent_dict = self.main_window.persepolis_db.searchGidInTorrentTable(self.gid)
 
         if dictionary:
             download_path = dictionary['download_path']
@@ -160,6 +161,11 @@ class DeleteThingsThatAreNoLongerNeededThread(QThread):
                     yt_dlp_files_pattern = file_name_path + '*'
                     for file in glob.glob(yt_dlp_files_pattern):
                         osCommands.remove(file)
+                elif torrent_dict:
+                    if torrent_dict['is_dir'] == 'yes':
+                        osCommands.removeDir(file_name_path)
+                    else:
+                        osCommands.remove(file_name_path)  # remove file
                 else:
                     osCommands.remove(file_name_path)  # remove file
 
@@ -170,7 +176,10 @@ class DeleteThingsThatAreNoLongerNeededThread(QThread):
             elif self.status == 'complete' and self.delete_download_file:
 
                 # download is complete. so download_path == file_name_path
-                remove_answer = osCommands.remove(download_path)
+                if torrent_dict and torrent_dict['is_dir'] == 'yes':
+                    remove_answer = osCommands.removeDir(download_path)
+                else:
+                    remove_answer = osCommands.remove(download_path)
 
                 # if file not existed, notify user
                 if remove_answer == 'no':
