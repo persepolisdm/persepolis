@@ -16,7 +16,7 @@ import libtorrent
 import ast
 import threading
 from persepolis.scripts.useful_tools import readCookieJar
-from persepolis.scripts.osCommands import makeDirs, moveFile
+from persepolis.scripts.osCommands import makeDirs, moveFileOrFolder
 from pathlib import Path
 from persepolis.scripts.useful_tools import convertTime, humanReadableSize, freeSpace, returnNewFileName
 import time
@@ -552,7 +552,7 @@ class TorrentDownload():
         new_file_path = os.path.join(new_download_path, self.name)
 
         # move the file to the download folder
-        move_answer = moveFile(str(self.f_path), str(new_file_path), 'file')
+        move_answer = moveFileOrFolder(str(self.f_path), str(new_file_path), new_path_type='file')
 
         if not (move_answer):
             # write error message in log

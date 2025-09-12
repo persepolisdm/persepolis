@@ -19,7 +19,7 @@ import threading
 from persepolis.constants import VERSION
 from persepolis.scripts import logger
 from persepolis.scripts.useful_tools import humanReadableSize, convertTime, returnNewFileName
-from persepolis.scripts.osCommands import makeDirs, moveFile
+from persepolis.scripts.osCommands import makeDirs, moveFileOrFolder
 from urllib.parse import urlparse, unquote
 from pathlib import Path
 import os
@@ -525,7 +525,7 @@ class Ytdp_Download():
         while not (self.yt_dlp_exited):
             time.sleep(0.1)
 
-        move_answer = moveFile(str(self.file_path), str(new_file_path), 'file')
+        move_answer = moveFileOrFolder(str(self.file_path), str(new_file_path), new_path_type='file')
 
         if not (move_answer):
             # write error message in log

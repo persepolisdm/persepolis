@@ -21,7 +21,7 @@ import threading
 import os
 import errno
 from persepolis.scripts.useful_tools import convertTime, humanReadableSize, freeSpace, headerToDict, readCookieJar, getFileNameFromLink, returnNewFileName
-from persepolis.scripts.osCommands import makeDirs, moveFile
+from persepolis.scripts.osCommands import makeDirs, moveFileOrFolder
 from persepolis.scripts import logger
 from persepolis.constants import VERSION
 import json
@@ -1159,7 +1159,7 @@ class Download():
         new_file_path = os.path.join(new_download_path, self.file_name)
 
         # move the file to the download folder
-        move_answer = moveFile(str(self.file_path), str(new_file_path), 'file')
+        move_answer = moveFileOrFolder(str(self.file_path), str(new_file_path), new_path_type='file')
 
         if not (move_answer):
             # write error message in log

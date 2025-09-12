@@ -580,21 +580,28 @@ class MoveThread(QThread):
         for gid in self.gid_list:
             # find download path
             dictionary = self.parent.persepolis_db.searchGidInAddLinkTable(gid)
-            self.old_file_path = dictionary['download_path']
+            old_f_path = dictionary['download_path']
 
-            # find file_name
-            self.file_name = os.path.basename(self.old_file_path)
+            # Check if item is torrent
+            torrent_dict = self.parent.persepolis_db.searchGidInTorrentTable(gid)
 
-            self.move = osCommands.moveFile(self.old_file_path, self.new_folder_path)
+            # find file or folder name
+            f_name = os.path.basename(old_f_path)
+
+            if torrent_dict and torrent_dict['is_dir'] == 'yes':
+                move = osCommands.moveFileOrFolder(old_f_path, self.new_folder_path, 'folder', 'folder')
+            else:
+
+                move = osCommands.moveFileOrFolder(old_f_path, self.new_folder_path)
 
             # if moving is not successful, notify user.
-            if not (self.move):
-                self.NOTIFYSENDSIGNAL.emit([str(self.file_name), QCoreApplication.translate("mainwindow_src_ui_tr", 'Operation was not successful!'),
+            if not (move):
+                self.NOTIFYSENDSIGNAL.emit([str(f_name), QCoreApplication.translate("mainwindow_src_ui_tr", 'Operation was not successful!'),
                                             5000, 'fail'])
             else:
-                new_file_path = os.path.join(self.new_folder_path, self.file_name)
+                new_f_path = os.path.join(self.new_folder_path, f_name)
                 add_link_dict = {'gid': gid,
-                                 'download_path': new_file_path}
+                                 'download_path': new_f_path}
 
                 # add add_link_dict to add_link_dict_list
                 add_link_dict_list.append(add_link_dict)
@@ -2843,26 +2850,41 @@ class MainWindow(MainWindow_Ui):
                 # check if this link is related to video finder
                 # don't open download folder, if download progress for video and audio aren't completed yet.
                 video_finder_dictionary = self.persepolis_db.searchGidInVideoFinderTable(gid)
+
+                # Check If item is torrent.
+                torrent_dict = self.persepolis_db.searchGidInTorrentTable(gid)
+
+
                 if video_finder_dictionary:
 
                     notifySend(QCoreApplication.translate("mainwindow_src_ui_tr", "Download is in progress by video finder!"),
                                QCoreApplication.translate("mainwindow_src_ui_tr", "be patient!"),
                                10000, 'warning', parent=self)
 
-                    return
+                elif torrent_dict and torrent_dict['is_dir'] == 'yes':
+                    # find download path
+                    dictionary = self.persepolis_db.searchGidInAddLinkTable(gid)
+                    download_path = dictionary['download_path']
 
-                # find download path
-                dictionary = self.persepolis_db.searchGidInAddLinkTable(gid)
-                download_path = dictionary['download_path']
-
-                # check that if download_path existed
-                if os.path.isfile(download_path):
-                    # open file
-                    osCommands.xdgOpen(download_path, 'folder', 'file')
+                    if os.path.isdir(download_path):
+                        osCommands.xdgOpen(download_path, 'folder', 'folder')
+                    else:
+                        # show error message , if file was deleted or moved
+                        notifySend(str(download_path), QCoreApplication.translate("mainwindow_src_ui_tr", 'Not Found'), 5000,
+                                'warning', parent=self)
                 else:
-                    # showing error message , if folder didn't existed
-                    notifySend(str(download_path), QCoreApplication.translate("mainwindow_src_ui_tr", 'Not Found'), 5000,
-                               'warning', parent=self)
+                    # find download path
+                    dictionary = self.persepolis_db.searchGidInAddLinkTable(gid)
+                    download_path = dictionary['download_path']
+
+                    # check that if download_path existed
+                    if os.path.isfile(download_path):
+                        # open file
+                        osCommands.xdgOpen(download_path, 'folder', 'file')
+                    else:
+                        # showing error message , if folder didn't existed
+                        notifySend(str(download_path), QCoreApplication.translate("mainwindow_src_ui_tr", 'Not Found'), 5000,
+                                'warning', parent=self)
 
     # this method executes(opens) download file if download's progress was finished
     def openFile(self, menu=None):
@@ -2884,26 +2906,38 @@ class MainWindow(MainWindow_Ui):
                 # don't open download folder, if download progress for video and audio aren't completed yet.
                 video_finder_dictionary = self.persepolis_db.searchGidInVideoFinderTable(gid)
 
+                # Check if item is torrent or not
+                torrent_dict = self.persepolis_db.searchGidInTorrentTable(gid)
+
                 if video_finder_dictionary:
 
                     notifySend(QCoreApplication.translate("mainwindow_src_ui_tr", "Download is in progress by video finder!"),
                                QCoreApplication.translate("mainwindow_src_ui_tr", "be patient!"),
                                10000, 'warning', parent=self)
 
-                    return
+                elif torrent_dict and torrent_dict['is_dir'] == 'yes':
+                    dictionary = self.persepolis_db.searchGidInAddLinkTable(gid)
+                    file_path = dictionary['download_path']
 
-                # find download path
-                dictionary = self.persepolis_db.searchGidInAddLinkTable(gid)
-                file_path = dictionary['download_path']
-
-                if os.path.isfile(file_path):
-                    # open file
-                    osCommands.xdgOpen(file_path)
-
+                    if os.path.isdir(file_path):
+                        osCommands.xdgOpen(file_path, 'folder', 'folder')
+                    else:
+                        # show error message , if file was deleted or moved
+                        notifySend(str(file_path), QCoreApplication.translate("mainwindow_src_ui_tr", 'Not Found'), 5000,
+                                'warning', parent=self)
                 else:
-                    # show error message , if file was deleted or moved
-                    notifySend(str(file_path), QCoreApplication.translate("mainwindow_src_ui_tr", 'Not Found'), 5000,
-                               'warning', parent=self)
+                    # find download path
+                    dictionary = self.persepolis_db.searchGidInAddLinkTable(gid)
+                    file_path = dictionary['download_path']
+
+                    if os.path.isfile(file_path):
+                        # open file
+                        osCommands.xdgOpen(file_path)
+
+                    else:
+                        # show error message , if file was deleted or moved
+                        notifySend(str(file_path), QCoreApplication.translate("mainwindow_src_ui_tr", 'Not Found'), 5000,
+                                'warning', parent=self)
 
     # this method is called when multiple items is selected by user!
     def selectDownloads(self):

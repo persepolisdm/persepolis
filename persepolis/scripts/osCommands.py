@@ -283,37 +283,37 @@ def findMountPoint(path):
     return path
 
 
-# move downloaded file to another destination.
-def moveFile(old_file_path, new_path, new_path_type='folder'):
+# move downloaded file or folder to another destination.
+def moveFileOrFolder(old_f_path, new_f_path, old_path_type='file', new_path_type='folder'):
 
     # new_path_type must created first
     # if it's folder so we have folder path
     # else we have new file path that includes file name
-    if os.path.isfile(old_file_path):
+    source_availablity = False
+    if old_path_type == 'file':
+        source_availablity = os.path.isfile(old_f_path)
+    else:
+        source_availablity = os.path.isdir(old_f_path)
 
-        if new_path_type == 'folder':
+    if new_path_type == 'folder':
 
-            # check availability of directory
-            check_path = os.path.isdir(new_path)
+        # check availability of directory
+        destination_availability = os.path.isdir(new_f_path)
 
-        else:
+    else:
 
-            check_path = True
+        destination_availability = True
 
-        if check_path:
+    if source_availablity and destination_availability:
 
-            try:
-                # move file to new_path
-                shutil.move(old_file_path, new_path)
-                return True
+        try:
+            # move file or folder to new_path
+            shutil.move(old_f_path, new_f_path)
+            return True
 
-            except:
-
-                return False
-        else:
+        except:
 
             return False
-
     else:
 
         return False
