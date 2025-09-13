@@ -59,7 +59,8 @@ class AddTorrentWindow_Ui(TextQueue_Ui):
         self.download_later_pushButton.setIcon(QIcon(icons + 'stop'))
         self.buttons_horizontalLayout.addWidget(self.download_later_pushButton)
 
-        # Hide this widget
+        # Hide this widgets
+        self.connections_label.setVisible(False)
         self.connections_spinBox.setVisible(False)
         # set text
         self.torrent_name_label1.setText(QCoreApplication.translate("addtorrent_ui_tr", "Torrent name: "))

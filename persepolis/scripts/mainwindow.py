@@ -5662,7 +5662,8 @@ class MainWindow(MainWindow_Ui):
 
         torrent_data_base = {'gid': gid,
                              'parameters_dict': str(parameters_dict),
-                             'is_dir': is_dir}
+                             'is_dir': is_dir,
+                             'type': 'file'}
 
         # write it in data_base
         self.persepolis_db.insertInTorrentTable([torrent_data_base])

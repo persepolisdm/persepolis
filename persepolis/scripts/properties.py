@@ -29,10 +29,10 @@ import os
 
 
 class PropertiesWindow(AddLinkWindow_Ui):
-    def __init__(self, parent, callback, gid, persepolis_setting, video_finder_dictionary=None):
+    def __init__(self, main_window, callback, gid, persepolis_setting, video_finder_dictionary=None):
         super().__init__(persepolis_setting)
 
-        self.parent = parent
+        self.main_window = main_window
         self.persepolis_setting = persepolis_setting
         self.video_finder_dictionary = video_finder_dictionary
 
@@ -92,12 +92,12 @@ class PropertiesWindow(AddLinkWindow_Ui):
         self.end_checkBox.toggled.connect(self.endFrame)
 
         # get information from data base
-        self.add_link_dictionary_1 = self.parent.persepolis_db.searchGidInAddLinkTable(self.gid_1)
-        self.download_table_dict_1 = self.parent.persepolis_db.searchGidInDownloadTable(self.gid_1)
+        self.add_link_dictionary_1 = self.main_window.persepolis_db.searchGidInAddLinkTable(self.gid_1)
+        self.download_table_dict_1 = self.main_window.persepolis_db.searchGidInDownloadTable(self.gid_1)
 
         if video_finder_dictionary:
-            self.add_link_dictionary_2 = self.parent.persepolis_db.searchGidInAddLinkTable(self.gid_2)
-            self.download_table_dict_2 = self.parent.persepolis_db.searchGidInDownloadTable(self.gid_2)
+            self.add_link_dictionary_2 = self.main_window.persepolis_db.searchGidInAddLinkTable(self.gid_2)
+            self.download_table_dict_2 = self.main_window.persepolis_db.searchGidInDownloadTable(self.gid_2)
 
         # create a copy from add_link_dictionary for checking changes finally!
         self.add_link_dictionary_1_backup = {}
@@ -188,7 +188,7 @@ class PropertiesWindow(AddLinkWindow_Ui):
             pass
 
         # get categories name and add them to add_queue_comboBox
-        categories_list = self.parent.persepolis_db.categoriesList()
+        categories_list = self.main_window.persepolis_db.categoriesList()
         for queue in categories_list:
             if queue != 'All Downloads':
                 self.add_queue_comboBox.addItem(queue)
@@ -244,6 +244,17 @@ class PropertiesWindow(AddLinkWindow_Ui):
             'PropertiesWindow/position', QPoint(300, 300))
         self.resize(size)
         self.move(position)
+
+        # Torrent
+        torrent_dict = self.main_window.persepolis_db.searchGidInTorrentTable(gid)
+
+        if torrent_dict and torrent_dict['type'] == 'file':
+            self.link_label.setText(QCoreApplication.translate("addlink_ui_tr", "Torrent file path: "))
+            self.link_lineEdit.setEnabled(False)
+
+            # Hide this widgets
+            self.connections_spinBox.setVisible(False)
+            self.connections_label.setVisible(False)
 
     # detect system proxy setting, and set ip_lineEdit and port_spinBox
     def detectProxy(self, button):
@@ -486,39 +497,39 @@ class PropertiesWindow(AddLinkWindow_Ui):
 
             self.download_table_dict_1['category'] = new_category
             # update data base
-            self.parent.persepolis_db.updateDownloadTable([self.download_table_dict_1])
+            self.main_window.persepolis_db.updateDownloadTable([self.download_table_dict_1])
 
             # update category_db_table
             # remove download item from old category
-            old_category_dict = self.parent.persepolis_db.searchCategoryInCategoryTable(self.current_category)
+            old_category_dict = self.main_window.persepolis_db.searchCategoryInCategoryTable(self.current_category)
             old_category_gid_list = old_category_dict['gid_list']
             old_category_gid_list.remove(self.gid_1)
-            self.parent.persepolis_db.updateCategoryTable([old_category_dict])
+            self.main_window.persepolis_db.updateCategoryTable([old_category_dict])
 
             # add download item to new category
-            new_category_dict = self.parent.persepolis_db.searchCategoryInCategoryTable(new_category)
+            new_category_dict = self.main_window.persepolis_db.searchCategoryInCategoryTable(new_category)
             new_category_gid_list = new_category_dict['gid_list']
             new_category_gid_list.append(self.gid_1)
-            self.parent.persepolis_db.updateCategoryTable([new_category_dict])
+            self.main_window.persepolis_db.updateCategoryTable([new_category_dict])
 
             if self.video_finder_dictionary:
 
                 # category for audio and video must be same as each other
                 self.download_table_dict_2['category'] = new_category
-                self.parent.persepolis_db.updateDownloadTable([self.download_table_dict_2])
+                self.main_window.persepolis_db.updateDownloadTable([self.download_table_dict_2])
 
                 # update category_db_table
                 # remove download item from old category
-                old_category_dict = self.parent.persepolis_db.searchCategoryInCategoryTable(self.current_category)
+                old_category_dict = self.main_window.persepolis_db.searchCategoryInCategoryTable(self.current_category)
                 old_category_gid_list = old_category_dict['gid_list']
                 old_category_gid_list.remove(self.gid_2)
-                self.parent.persepolis_db.updateCategoryTable([old_category_dict])
+                self.main_window.persepolis_db.updateCategoryTable([old_category_dict])
 
                 # add download item to new category
-                new_category_dict = self.parent.persepolis_db.searchCategoryInCategoryTable(new_category)
+                new_category_dict = self.main_window.persepolis_db.searchCategoryInCategoryTable(new_category)
                 new_category_gid_list = new_category_dict['gid_list']
                 new_category_gid_list.append(self.gid_2)
-                self.parent.persepolis_db.updateCategoryTable([new_category_dict])
+                self.main_window.persepolis_db.updateCategoryTable([new_category_dict])
 
 
         # if any thing in add_link_dictionary_1 is changed,then update data base!
@@ -526,7 +537,7 @@ class PropertiesWindow(AddLinkWindow_Ui):
             if self.add_link_dictionary_1[key] != self.add_link_dictionary_1_backup[key]:
 
                 # update data base
-                self.parent.persepolis_db.updateAddLinkTable([self.add_link_dictionary_1])
+                self.main_window.persepolis_db.updateAddLinkTable([self.add_link_dictionary_1])
 
                 # break the loop
                 break
@@ -535,7 +546,7 @@ class PropertiesWindow(AddLinkWindow_Ui):
         if self.add_link_dictionary_1['link'] != self.add_link_dictionary_1_backup['link']:
 
             dictionary = {'gid': self.gid_1, 'link': self.add_link_dictionary_1['link']}
-            self.parent.persepolis_db.updateDownloadTable([dictionary])
+            self.main_window.persepolis_db.updateDownloadTable([dictionary])
 
         # if any thing in add_link_dictionary_2 is changed,then update data base!
         if self.video_finder_dictionary:
@@ -543,7 +554,7 @@ class PropertiesWindow(AddLinkWindow_Ui):
                 if self.add_link_dictionary_2[key] != self.add_link_dictionary_2_backup[key]:
 
                     # update data base
-                    self.parent.persepolis_db.updateAddLinkTable([self.add_link_dictionary_2])
+                    self.main_window.persepolis_db.updateAddLinkTable([self.add_link_dictionary_2])
 
                     # break the loop
                     break
@@ -552,13 +563,13 @@ class PropertiesWindow(AddLinkWindow_Ui):
             if self.add_link_dictionary_2['link'] != self.add_link_dictionary_2_backup['link']:
 
                 dictionary = {'gid': self.gid_2, 'link': self.add_link_dictionary_2['link']}
-                self.parent.persepolis_db.updateDownloadTable([dictionary])
+                self.main_window.persepolis_db.updateDownloadTable([dictionary])
 
             # if download_path was changed, then update video_finder_db_table in data base
             if self.add_link_dictionary_1['download_path'] != self.add_link_dictionary_1_backup['download_path']:
                 dictionary = {'video_gid': self.gid_1,
                               'download_path': download_path}
-                self.parent.persepolis_db.updateVideoFinderTable[dictionary]
+                self.main_window.persepolis_db.updateVideoFinderTable[dictionary]
 
         # callback to mainwindow
         self.callback(self.add_link_dictionary_1, self.gid_1, new_category, self.video_finder_dictionary)

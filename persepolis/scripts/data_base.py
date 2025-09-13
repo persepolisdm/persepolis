@@ -482,6 +482,7 @@ class PersepolisDB():
                                                                                 gid TEXT,
                                                                                 parameters_dict TEXT,
                                                                                 is_dir TEXT,
+                                                                                type TEXT,
                                                                                 FOREIGN KEY(gid) REFERENCES download_db_table(gid)
                                                                                 ON DELETE CASCADE
                                                                                     )""")
@@ -681,7 +682,8 @@ class PersepolisDB():
             self.persepolis_db_cursor.execute("""INSERT INTO torrent_db_table VALUES(NULL,
                                                                                 :gid,
                                                                                 :parameters_dict,
-                                                                                :is_dir
+                                                                                :is_dir,
+                                                                                :type
                                                                                 )""", dictionary)
         self.persepolis_db_connection.commit()
 
@@ -707,7 +709,8 @@ class PersepolisDB():
 
         dictionary = {'gid': tuple_[1],
                       'parameters_dict': tuple_[2],
-                      'is_dir': tuple_[3]}
+                      'is_dir': tuple_[3],
+                      'type': tuple_[4]}
 
         # return the results
         return dictionary
