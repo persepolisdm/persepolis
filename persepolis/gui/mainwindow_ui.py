@@ -368,7 +368,7 @@ class MainWindow_Ui(QMainWindow):
         self.download_table.setColumnHidden(8, True)
         self.download_table.setColumnHidden(9, True)
 
-        download_table_header = [QCoreApplication.translate("mainwindow_ui_tr", 'File Name'), QCoreApplication.translate("mainwindow_ui_tr", 'Status'), QCoreApplication.translate("mainwindow_ui_tr", 'Size'), QCoreApplication.translate("mainwindow_ui_tr", 'Downloaded'), QCoreApplication.translate("mainwindow_ui_tr", 'Percentage'), QCoreApplication.translate("mainwindow_ui_tr", 'Connections'),
+        download_table_header = [QCoreApplication.translate("mainwindow_ui_tr", 'File Name'), QCoreApplication.translate("mainwindow_ui_tr", 'Status'), QCoreApplication.translate("mainwindow_ui_tr", 'Size'), QCoreApplication.translate("mainwindow_ui_tr", 'Downloaded'), QCoreApplication.translate("mainwindow_ui_tr", 'Percentage'), QCoreApplication.translate("mainwindow_ui_tr", 'C/F/P', "TRANSLATORS NOTE: YOU REALLY DON'T NEED TO TRANSLATE THIS PART!"),
                                  QCoreApplication.translate("mainwindow_ui_tr", 'Transfer Rate'), QCoreApplication.translate("mainwindow_ui_tr", 'Estimated Time Left'), 'Gid', QCoreApplication.translate("mainwindow_ui_tr", 'Link'), QCoreApplication.translate("mainwindow_ui_tr", 'First Try Date'), QCoreApplication.translate("mainwindow_ui_tr", 'Last Try Date'), QCoreApplication.translate("mainwindow_ui_tr", 'Category')]
 
         self.download_table.setHorizontalHeaderLabels(download_table_header)

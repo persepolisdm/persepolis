@@ -1687,7 +1687,27 @@ class MainWindow(MainWindow_Ui):
             status = self.download_table.item(selected_row_return, 1).text()
             category = self.download_table.item(selected_row_return, 12).text()
             link = self.download_table.item(selected_row_return, 9).text()
+            gid = self.download_table.item(selected_row_return, 8).text()
 
+            # Check if item is video finder link
+            video_finder_dictionary = self.persepolis_db.searchGidInVideoFinderTable2(gid)
+
+            # Check if item is torrent link
+            torrent_dict = self.persepolis_db.searchGidInTorrentTable(gid)
+
+            if torrent_dict:
+                download_table_header = [QCoreApplication.translate("mainwindow_ui_tr", 'Torrent Name'), QCoreApplication.translate("mainwindow_ui_tr", 'Status'), QCoreApplication.translate("mainwindow_ui_tr", 'Size'), QCoreApplication.translate("mainwindow_ui_tr", 'Downloaded'), QCoreApplication.translate("mainwindow_ui_tr", 'Percentage'), QCoreApplication.translate("mainwindow_ui_tr", 'Peers'),
+                                         QCoreApplication.translate("mainwindow_ui_tr", 'Transfer Rate'), QCoreApplication.translate("mainwindow_ui_tr", 'Estimated Time Left'), 'Gid', QCoreApplication.translate("mainwindow_ui_tr", 'Link'), QCoreApplication.translate("mainwindow_ui_tr", 'First Try Date'), QCoreApplication.translate("mainwindow_ui_tr", 'Last Try Date'), QCoreApplication.translate("mainwindow_ui_tr", 'Category')]
+            elif video_finder_dictionary:
+                download_table_header = [QCoreApplication.translate("mainwindow_ui_tr", 'File Name'), QCoreApplication.translate("mainwindow_ui_tr", 'Status'), QCoreApplication.translate("mainwindow_ui_tr", 'Size'), QCoreApplication.translate("mainwindow_ui_tr", 'Downloaded'), QCoreApplication.translate("mainwindow_ui_tr", 'Percentage'), QCoreApplication.translate("mainwindow_ui_tr", 'Fragments'),
+                                         QCoreApplication.translate("mainwindow_ui_tr", 'Transfer Rate'), QCoreApplication.translate("mainwindow_ui_tr", 'Estimated Time Left'), 'Gid', QCoreApplication.translate("mainwindow_ui_tr", 'Link'), QCoreApplication.translate("mainwindow_ui_tr", 'First Try Date'), QCoreApplication.translate("mainwindow_ui_tr", 'Last Try Date'), QCoreApplication.translate("mainwindow_ui_tr", 'Category')]
+            else:
+                download_table_header = [QCoreApplication.translate("mainwindow_ui_tr", 'File Name'), QCoreApplication.translate("mainwindow_ui_tr", 'Status'), QCoreApplication.translate("mainwindow_ui_tr", 'Size'), QCoreApplication.translate("mainwindow_ui_tr", 'Downloaded'), QCoreApplication.translate("mainwindow_ui_tr", 'Percentage'), QCoreApplication.translate("mainwindow_ui_tr", 'Connections'),
+                                         QCoreApplication.translate("mainwindow_ui_tr", 'Transfer Rate'), QCoreApplication.translate("mainwindow_ui_tr", 'Estimated Time Left'), 'Gid', QCoreApplication.translate("mainwindow_ui_tr", 'Link'), QCoreApplication.translate("mainwindow_ui_tr", 'First Try Date'), QCoreApplication.translate("mainwindow_ui_tr", 'Last Try Date'), QCoreApplication.translate("mainwindow_ui_tr", 'Category')]
+
+            self.download_table.setHorizontalHeaderLabels(download_table_header)
+
+            # set link as statusbar message
             self.statusbar.showMessage(str(link))
 
             self.removeSelectedAction.setEnabled(True)
@@ -1927,6 +1947,10 @@ class MainWindow(MainWindow_Ui):
             else:
                 # hide video_finder_widget
                 self.video_finder_widget.hide()
+                download_table_header = [QCoreApplication.translate("mainwindow_ui_tr", 'File Name'), QCoreApplication.translate("mainwindow_ui_tr", 'Status'), QCoreApplication.translate("mainwindow_ui_tr", 'Size'), QCoreApplication.translate("mainwindow_ui_tr", 'Downloaded'), QCoreApplication.translate("mainwindow_ui_tr", 'Percentage'), QCoreApplication.translate("mainwindow_ui_tr", 'C/F/P', "TRANSLATORS NOTE: YOU REALLY DON'T NEED TO TRANSLATE THIS PART!"),
+                                        QCoreApplication.translate("mainwindow_ui_tr", 'Transfer Rate'), QCoreApplication.translate("mainwindow_ui_tr", 'Estimated Time Left'), 'Gid', QCoreApplication.translate("mainwindow_ui_tr", 'Link'), QCoreApplication.translate("mainwindow_ui_tr", 'First Try Date'), QCoreApplication.translate("mainwindow_ui_tr", 'Last Try Date'), QCoreApplication.translate("mainwindow_ui_tr", 'Category')]
+
+                self.download_table.setHorizontalHeaderLabels(download_table_header)
 
         else:
             self.progressAction.setEnabled(False)
@@ -1940,6 +1964,11 @@ class MainWindow(MainWindow_Ui):
 
             # hide video_finder_widget
             self.video_finder_widget.hide()
+
+            download_table_header = [QCoreApplication.translate("mainwindow_ui_tr", 'File Name'), QCoreApplication.translate("mainwindow_ui_tr", 'Status'), QCoreApplication.translate("mainwindow_ui_tr", 'Size'), QCoreApplication.translate("mainwindow_ui_tr", 'Downloaded'), QCoreApplication.translate("mainwindow_ui_tr", 'Percentage'), QCoreApplication.translate("mainwindow_ui_tr", 'C/F/P', "TRANSLATORS NOTE: YOU REALLY DON'T NEED TO TRANSLATE THIS PART!"),
+                                    QCoreApplication.translate("mainwindow_ui_tr", 'Transfer Rate'), QCoreApplication.translate("mainwindow_ui_tr", 'Estimated Time Left'), 'Gid', QCoreApplication.translate("mainwindow_ui_tr", 'Link'), QCoreApplication.translate("mainwindow_ui_tr", 'First Try Date'), QCoreApplication.translate("mainwindow_ui_tr", 'Last Try Date'), QCoreApplication.translate("mainwindow_ui_tr", 'Category')]
+
+            self.download_table.setHorizontalHeaderLabels(download_table_header)
 
     # Check if this link is related to video finder or not
     def checkVideoFinderSupportedSites(self, link):
