@@ -21,7 +21,7 @@
      inkscape:pagecheckerboard="0"
      inkscape:deskcolor="#505050"
      inkscape:zoom="8.734375"
-     inkscape:cx="6.2969589"
+     inkscape:cx="6.411449"
      inkscape:cy="23.012522"
      inkscape:window-width="1316"
      inkscape:window-height="732"
@@ -52,7 +52,7 @@
      d="M 16 2 C 8.244 2 2 8.244 2 16 C 2 16.168842 2.0195214 16.33264 2.0253906 16.5 C 2.2891326 8.9794325 8.4128418 3 16 3 C 23.587158 3 29.710867 8.9794325 29.974609 16.5 C 29.980479 16.33264 30 16.168842 30 16 C 30 8.244 23.756 2 16 2 z" /><g
      style="opacity:0.2;fill:#000000;fill-opacity:1"
      id="g6"
-     transform="matrix(0.04168808,0,0,0.04168808,5.1891214,5.3224943)"><g
+     transform="matrix(0.04168808,0,0,0.04168808,6.2195328,7.3833172)"><g
        id="g5"
        transform="rotate(180,253.76955,253.76964)"
        style="fill:#000000;fill-opacity:1">
@@ -64,7 +64,7 @@
    transform="rotate(-45.103715,316.22063,285.76294)"
    style="fill:#000000;fill-opacity:1">
 			<polygon
-   points="362.488,432.154 278.016,347.683 253.509,371.457 337.98,455.937 "
+   points="278.016,347.683 253.509,371.457 337.98,455.937 362.488,432.154 "
    id="polygon1"
    style="fill:#000000;fill-opacity:1" />
 			<path
@@ -72,7 +72,7 @@
    id="path1"
    style="fill:#000000;fill-opacity:1" />
 			<polygon
-   points="157.561,227.229 73.081,142.749 48.642,166.591 133.122,251.071 "
+   points="73.081,142.749 48.642,166.591 133.122,251.071 157.561,227.229 "
    id="polygon2"
    style="fill:#000000;fill-opacity:1" />
 			<path
@@ -88,7 +88,7 @@
 </g></g><g
      style="fill:#ffffff;fill-opacity:1"
      id="g6-6"
-     transform="matrix(0.04168808,0,0,0.04168808,5.5920564,5.009603)"><g
+     transform="matrix(0.04168808,0,0,0.04168808,5.1891214,6.8414456)"><g
        id="g5-8"
        transform="rotate(180,253.76955,253.76964)"
        style="fill:#ffffff;fill-opacity:1">
@@ -100,7 +100,7 @@
    transform="rotate(-45.103715,316.22063,285.76294)"
    style="fill:#ffffff;fill-opacity:1">
 			<polygon
-   points="278.016,347.683 253.509,371.457 337.98,455.937 362.488,432.154 "
+   points="337.98,455.937 362.488,432.154 278.016,347.683 253.509,371.457 "
    id="polygon1-6"
    style="fill:#ffffff;fill-opacity:1" />
 			<path
@@ -108,7 +108,7 @@
    id="path1-6"
    style="fill:#ffffff;fill-opacity:1" />
 			<polygon
-   points="73.081,142.749 48.642,166.591 133.122,251.071 157.561,227.229 "
+   points="133.122,251.071 157.561,227.229 73.081,142.749 48.642,166.591 "
    id="polygon2-4"
    style="fill:#ffffff;fill-opacity:1" />
 			<path

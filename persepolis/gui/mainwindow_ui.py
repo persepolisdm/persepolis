@@ -65,91 +65,58 @@ class MenuWidget(QPushButton):
 
         fileMenu = self.menubar.addMenu(QCoreApplication.translate("mainwindow_ui_tr", 'File'))
         editMenu = self.menubar.addMenu(QCoreApplication.translate("mainwindow_ui_tr", 'Edit'))
+        addMenu = self.menubar.addMenu(QCoreApplication.translate("mainwindow_ui_tr", 'Add'))
         viewMenu = self.menubar.addMenu(QCoreApplication.translate("mainwindow_ui_tr", 'View'))
         downloadMenu = self.menubar.addMenu(QCoreApplication.translate("mainwindow_ui_tr", 'Download'))
         queueMenu = self.menubar.addMenu(QCoreApplication.translate("mainwindow_ui_tr", 'Queue'))
-        videoFinderMenu = self.menubar.addMenu(QCoreApplication.translate("mainwindow_ui_tr", 'Video Finder'))
-        torrentMenu = self.menubar.addMenu(QCoreApplication.translate("mainwindow_ui_tr", 'Torrent'))
-
         helpMenu = self.menubar.addMenu(QCoreApplication.translate("mainwindow_ui_tr", 'Help'))
-
         sortMenu = viewMenu.addMenu(QCoreApplication.translate("mainwindow_ui_tr", 'Sort by'))
 
-        videoFinderMenu.addAction(self.parent.videoFinderAddLinkAction)
-
-        torrentMenu.addAction(self.parent.magnetTorrentLinkAction)
-        torrentMenu.addAction(self.parent.openTorrentFileAction)
+        addMenu.addAction(self.parent.addlinkAction)
+        addMenu.addAction(self.parent.videoFinderAddLinkAction)
+        addMenu.addMenu(self.parent.torrent_menu)
 
         downloadMenu.addAction(self.parent.stopAllAction)
 
         sortMenu.addAction(self.parent.sort_file_name_Action)
-
         sortMenu.addAction(self.parent.sort_file_size_Action)
-
         sortMenu.addAction(self.parent.sort_first_try_date_Action)
-
         sortMenu.addAction(self.parent.sort_last_try_date_Action)
-
         sortMenu.addAction(self.parent.sort_download_status_Action)
 
         viewMenu.addAction(self.parent.trayAction)
-
         viewMenu.addAction(self.parent.showMenuBarAction)
-
         viewMenu.addAction(self.parent.showSidePanelAction)
-
         viewMenu.addAction(self.parent.minimizeAction)
 
-        fileMenu.addAction(self.parent.addlinkAction)
-
-        fileMenu.addAction(self.parent.addtextfileAction)
-
-        fileMenu.addAction(self.parent.addFromClipboardAction)
-
         downloadMenu.addAction(self.parent.resumeAction)
-
         downloadMenu.addAction(self.parent.pauseAction)
-
         downloadMenu.addAction(self.parent.stopAction)
-
         downloadMenu.addAction(self.parent.propertiesAction)
-
         downloadMenu.addAction(self.parent.progressAction)
 
+        fileMenu.addAction(self.parent.addtextfileAction)
+        fileMenu.addAction(self.parent.addFromClipboardAction)
         fileMenu.addAction(self.parent.openFileAction)
-
         fileMenu.addAction(self.parent.openDownloadFolderAction)
-
         fileMenu.addAction(self.parent.openDefaultDownloadFolderAction)
-
         fileMenu.addAction(self.parent.exitAction)
 
         editMenu.addAction(self.parent.clearAction)
-
         editMenu.addAction(self.parent.removeSelectedAction)
-
         editMenu.addAction(self.parent.deleteSelectedAction)
-
-        queueMenu.addAction(self.parent.createQueueAction)
-
-        queueMenu.addAction(self.parent.removeQueueAction)
-
-        queueMenu.addAction(self.parent.startQueueAction)
-
-        queueMenu.addAction(self.parent.stopQueueAction)
-
-        queueMenu.addAction(self.parent.moveUpSelectedAction)
-
-        queueMenu.addAction(self.parent.moveDownSelectedAction)
-
         editMenu.addAction(self.parent.preferencesAction)
 
+        queueMenu.addAction(self.parent.createQueueAction)
+        queueMenu.addAction(self.parent.removeQueueAction)
+        queueMenu.addAction(self.parent.startQueueAction)
+        queueMenu.addAction(self.parent.stopQueueAction)
+        queueMenu.addAction(self.parent.moveUpSelectedAction)
+        queueMenu.addAction(self.parent.moveDownSelectedAction)
+
         helpMenu.addAction(self.parent.aboutAction)
-
         helpMenu.addAction(self.parent.issueAction)
-
         helpMenu.addAction(self.parent.logAction)
-
         helpMenu.addAction(self.parent.helpAction)
 
 
@@ -458,11 +425,10 @@ class MainWindow_Ui(QMainWindow):
         self.setMenuBar(self.menubar)
         fileMenu = self.menubar.addMenu(QCoreApplication.translate("mainwindow_ui_tr", '&File'))
         editMenu = self.menubar.addMenu(QCoreApplication.translate("mainwindow_ui_tr", '&Edit'))
+        addMenu = self.menubar.addMenu(QCoreApplication.translate("mainwindow_ui_tr", '&Add'))
         viewMenu = self.menubar.addMenu(QCoreApplication.translate("mainwindow_ui_tr", '&View'))
         downloadMenu = self.menubar.addMenu(QCoreApplication.translate("mainwindow_ui_tr", '&Download'))
         queueMenu = self.menubar.addMenu(QCoreApplication.translate("mainwindow_ui_tr", '&Queue'))
-        videoFinderMenu = self.menubar.addMenu(QCoreApplication.translate("mainwindow_ui_tr", 'V&ideo Finder'))
-        torrentMenu = self.menubar.addMenu(QCoreApplication.translate("mainwindow_ui_tr", '&Torrent'))
         helpMenu = self.menubar.addMenu(QCoreApplication.translate("mainwindow_ui_tr", '&Help'))
 
         # viewMenu submenus
@@ -489,19 +455,30 @@ class MainWindow_Ui(QMainWindow):
         # toolBar and menubar and actions
         self.persepolis_setting.beginGroup('settings/shortcuts')
 
+        # addlinkAction
+        self.add_item_menu = QMenu(self)
+        self.addlinkAction = QAction(QIcon(icons + 'http'), QCoreApplication.translate("mainwindow_ui_tr", 'Add New Download Link'), self,
+                                     statusTip=QCoreApplication.translate("mainwindow_ui_tr", "Add New Download Link"), triggered=self.addLinkButtonPressed)
+
+        self.addlinkAction_shortcut = QShortcut(self.persepolis_setting.value(
+            'add_new_download_shortcut'), self, self.addLinkButtonPressed)
+        addMenu.addAction(self.addlinkAction)
+        self.add_item_menu.addAction(self.addlinkAction)
+
         # videoFinderAddLinkAction
-        self.videoFinderAddLinkAction = QAction(QIcon(icons + 'video_finder'), QCoreApplication.translate("mainwindow_ui_tr", 'Find Video Links...'), self,
+        self.videoFinderAddLinkAction = QAction(QIcon(icons + 'video_finder'), QCoreApplication.translate("mainwindow_ui_tr", 'Find Video Links'), self,
                                                 statusTip=QCoreApplication.translate("mainwindow_ui_tr", 'Download video or audio from Youtube, Vimeo, etc.'),
                                                 triggered=self.showVideoFinderAddLinkWindow)
 
         self.videoFinderAddLinkAction_shortcut = QShortcut(self.persepolis_setting.value(
             'video_finder_shortcut'), self, self.showVideoFinderAddLinkWindow)
 
-        videoFinderMenu.addAction(self.videoFinderAddLinkAction)
+        addMenu.addAction(self.videoFinderAddLinkAction)
+        self.add_item_menu.addAction(self.videoFinderAddLinkAction)
 
         # magnet and torrent file actions
-
-        self.torrent_menu = QMenu(self)
+        self.torrent_menu = QMenu("Torrent")
+        self.torrent_menu.setIcon(QIcon(icons + 'torrent'))
         # Connect the button's clicked signal to show the context menu
         self.magnetTorrentLinkAction = QAction(QIcon(icons + 'magnet'), QCoreApplication.translate("mainwindow_ui_tr", 'Download magnet link'),
                                                self, statusTip=QCoreApplication.translate("mainwindow_ui_tr", 'Download magnet link'),
@@ -510,15 +487,15 @@ class MainWindow_Ui(QMainWindow):
         self.torrentAddLinkAction_shortcut = QShortcut(self.persepolis_setting.value(
             'torrent_shortcut'), self, self.showGetMagnetLinkWindow)
 
-        torrentMenu.addAction(self.magnetTorrentLinkAction)
         self.torrent_menu.addAction(self.magnetTorrentLinkAction)
 
         self.openTorrentFileAction = QAction(QIcon(icons + 'folder'), QCoreApplication.translate("mainwindow_ui_tr", 'Download torrent file'),
                                              self, statusTip=QCoreApplication.translate("mainwindow_ui_tr", 'Download torrent file'),
                                              triggered=self.showOpenTorrentFileWindow)
 
-        torrentMenu.addAction(self.openTorrentFileAction)
         self.torrent_menu.addAction(self.openTorrentFileAction)
+        self.add_item_menu.addMenu(self.torrent_menu)
+        addMenu.addMenu(self.torrent_menu)
 
         # stopAllAction
         self.stopAllAction = QAction(QIcon(icons + 'stop_all'), QCoreApplication.translate("mainwindow_ui_tr", 'Stop All Active Downloads'),
@@ -577,14 +554,6 @@ class MainWindow_Ui(QMainWindow):
         self.minimizeAction_shortcut = QShortcut(
             self.persepolis_setting.value('hide_window_shortcut'), self, self.minMaxTray)
         viewMenu.addAction(self.minimizeAction)
-
-        # addlinkAction
-        self.addlinkAction = QAction(QIcon(icons + 'add'), QCoreApplication.translate("mainwindow_ui_tr", 'Add New Download Link...'), self,
-                                     statusTip=QCoreApplication.translate("mainwindow_ui_tr", "Add New Download Link"), triggered=self.addLinkButtonPressed)
-
-        self.addlinkAction_shortcut = QShortcut(self.persepolis_setting.value(
-            'add_new_download_shortcut'), self, self.addLinkButtonPressed)
-        fileMenu.addAction(self.addlinkAction)
 
         # importText
         self.addtextfileAction = QAction(QIcon(icons + 'file'), QCoreApplication.translate("mainwindow_ui_tr", 'Import Links from Text File...'), self,
@@ -763,12 +732,12 @@ class MainWindow_Ui(QMainWindow):
 
         self.toolBar2.addWidget(self.qmenu)
 
-        self.torrent_pushButton = QPushButton(self)
-        self.torrent_pushButton.setIcon(QIcon(icons + 'torrent'))
-        self.torrent_pushButton.setStyleSheet("QPushButton { border: none; }")  # Remove border to look like QAction
+        self.add_item_pushButton = QPushButton(self)
+        self.add_item_pushButton.setIcon(QIcon(icons + 'add'))
+        self.add_item_pushButton.setStyleSheet("QPushButton { border: none; }")  # Remove border to look like QAction
 
-        self.torrent_pushButton.clicked.connect(self.showTorrentButtonContextMenu)
-        self.torrent_pushButton.installEventFilter(self)
+        self.add_item_pushButton.clicked.connect(self.showTorrentButtonContextMenu)
+        self.add_item_pushButton.installEventFilter(self)
 
         # labels
         self.queue_panel_show_button.setText(QCoreApplication.translate("mainwindow_ui_tr", "Hide Options"))
