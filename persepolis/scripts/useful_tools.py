@@ -689,3 +689,21 @@ def returnNewFileName(folder_path, file_name):
         file_path = os.path.join(folder_path, file_name)
 
     return file_name
+
+
+# Return libtorrent version
+def checkLibtorrent():
+    try:
+        import libtorrent
+        return libtorrent.version
+    except ModuleNotFoundError:
+        return False
+
+
+# Return yt-dlp version
+def checkYtDlp():
+    try:
+        import yt_dlp
+        return True
+    except ModuleNotFoundError:
+        return False

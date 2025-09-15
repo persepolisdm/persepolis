@@ -49,10 +49,9 @@ from persepolis.scripts.torrent_progress import TorrentProgressWindow
 from persepolis.scripts.browser_plugin_queue import BrowserPluginQueue
 from persepolis.scripts.data_base import PluginsDB, PersepolisDB, TempDB
 from persepolis.gui.mainwindow_ui import MainWindow_Ui, QTableWidgetItem
-from persepolis.scripts.libtorrent_wrapper import TorrentFile, TorrentDownload
 from persepolis.scripts.video_finder_progress import VideoFinderProgressWindow
 from persepolis.scripts.bubble import notifySend, checkNotificationSounds, createNotificationSounds
-from persepolis.scripts.useful_tools import nowDate, freeSpace, determineConfigFolder, osAndDesktopEnvironment, getExecPath, ffmpegVersion, findExternalAppPath
+from persepolis.scripts.useful_tools import nowDate, freeSpace, determineConfigFolder, osAndDesktopEnvironment, getExecPath, ffmpegVersion, findExternalAppPath, checkLibtorrent, checkYtDlp
 global pyside6_is_installed
 try:
     from PySide6.QtWidgets import QCheckBox, QLineEdit, QAbstractItemView, QFileDialog, QSystemTrayIcon, QMenu, QApplication, QInputDialog, QMessageBox
@@ -71,19 +70,31 @@ except:
 
 
 global youtube_dl_is_installed
-try:
+youtube_dl_is_installed = checkYtDlp()
+if youtube_dl_is_installed:
     from persepolis.scripts.video_finder_addlink import VideoFinderAddLink
     from persepolis.scripts import ytdlp_downloader
-    youtube_dl_is_installed = True
-except ModuleNotFoundError:
+else:
     # if youtube_dl module is not installed:
     logger.sendToLog(
-        "yt-dlp is not installed.", "ERROR")
-    youtube_dl_is_installed = False
+        "yt-dlp is not installed.", "INFO")
 
 # InitializationThread thread can change this variables.
 global ffmpeg_is_installed
 ffmpeg_is_installed = False
+
+# Check libtorren availability
+global libtorren_version
+libtorren_version = checkLibtorrent()
+
+if libtorren_version:
+    from persepolis.scripts.libtorrent_wrapper import TorrentFile, TorrentDownload
+    logger.sendToLog(
+        "Libtorren version: {}".format(libtorren_version), "INFO")
+else:
+    # if youtube_dl module is not installed:
+    logger.sendToLog(
+        "libtorrent is not installed.", "INFO")
 
 # check if notification sounds are available or not
 global notification_sounds_are_available
@@ -5570,6 +5581,14 @@ class MainWindow(MainWindow_Ui):
 
     # Get magnet link from user.
     def showGetMagnetLinkWindow(self, menu=None):
+        # Notify user about libtorren installation
+        if not (libtorren_version):
+            error_messageBox = QMessageBox()
+            error_messageBox.setText(QCoreApplication.translate("mainwindow_src_ui_tr", 'libtorrent is not installed!'))
+            error_messageBox.setWindowTitle('Error!')
+            error_messageBox.exec_()
+            return
+
         get_magnet_link_window = GetMagnetLinkWindow(self, self.getMagnetLinkWindowCallBack, self.persepolis_setting)
         get_magnet_link_window.exec_()
 
@@ -5578,6 +5597,14 @@ class MainWindow(MainWindow_Ui):
 
     # Get torrent file address from user.
     def showOpenTorrentFileWindow(self, menu=None):
+        # Notify user about libtorren installation
+        if not (libtorren_version):
+            error_messageBox = QMessageBox()
+            error_messageBox.setText(QCoreApplication.translate("mainwindow_src_ui_tr", 'libtorrent is not installed!'))
+            error_messageBox.setWindowTitle('Error!')
+            error_messageBox.exec_()
+            return
+
         # Open a file dialog to select a .torrent file
         options = QFileDialog.Options()
         file_path, _ = QFileDialog.getOpenFileName(self, "Select .torrent File", "", "Torrent Files (*.torrent);;All Files (*)", options=options)
