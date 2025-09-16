@@ -19,9 +19,137 @@ from persepolis.scripts.useful_tools import readCookieJar
 from persepolis.scripts.osCommands import makeDirs, moveFileOrFolder
 from pathlib import Path
 from persepolis.scripts.useful_tools import convertTime, humanReadableSize, freeSpace, returnNewFileName
+from persepolis.constants import OS
 import time
 import os
 from persepolis.scripts import logger
+import platform
+
+
+class MagnetLink():
+    def __init__(self, magnet_link, options_dict):
+        self.magnet_link = magnet_link
+        self.options_dict = options_dict
+        self.ip = options_dict['ip']
+        self.port = options_dict['port']
+        self.proxy_user = options_dict['proxy_user']
+        self.proxy_passwd = options_dict['proxy_passwd']
+        self.proxy_type = options_dict['proxy_type']
+        self.download_user = options_dict['download_user']
+        self.download_passwd = options_dict['download_passwd']
+        self.header = options_dict['header']
+        self.user_agent = options_dict['user_agent']
+        self.load_cookies = options_dict['load_cookies']
+        self.referer = options_dict['referer']
+        self.listening_interface = '0.0.0.0:6890'
+
+    # Initialize session
+    def createSession(self):
+        # Create a session and add settings
+        session_settings = {'listen_interfaces': self.listening_interface}
+        self.libtorrent_session = libtorrent.session(session_settings)
+        session_parameters = libtorrent.parse_magnet_uri(self.magnet_link)
+
+        # check if user set proxy
+        if self.ip:
+
+            if self.proxy_type == 'socks5':
+                proxy_type = libtorrent.proxy_type_t.socks5
+            elif self.proxy_type == 'http':
+                proxy_type = libtorrent.proxy_type_t.http
+
+            # set proxy to the session
+            self.libtorrent_session.set_proxy(proxy_type, self.ip, self.port, self.proxy_user, self.proxy_passwd)
+
+        # set user_agent
+        if self.user_agent:
+            # setting user_agent to the session
+            session_parameters['user_agent'] = self.user_agent
+
+        # set cookies
+        if self.load_cookies:
+            jar = readCookieJar(self.load_cookies)
+            if jar:
+                session_parameters['cookies'] = jar
+        # Set flags
+        session_parameters['flags'] = (
+            libtorrent.torrent_flags.default_flags |
+            libtorrent.torrent_flags.default_dont_download |
+            libtorrent.torrent_flags.upload_mode |
+            libtorrent.torrent_flags.auto_managed
+        )
+        # Set tmp as download path
+        os_type = platform.system()
+        home_address = os.path.expanduser("~")
+
+        if os_type is OS.WINDOWS:
+            tmp_folder_system = os.path.join(home_address, "AppData", "Local", "Temp")
+            # make tmp folder if not exists
+            makeDirs(tmp_folder_system)
+        else:
+            tmp_folder_system = '/tmp'
+
+        # set storage mode
+        session_parameters['storage_mode'] = libtorrent.storage_mode_t.storage_mode_allocate
+
+        # set download path
+        session_parameters['save_path'] = tmp_folder_system
+
+        return session_parameters
+
+    def createHandler(self, parameters):
+        self.handler = self.libtorrent_session.add_torrent(parameters)
+
+    def info(self):
+        timeout = 10.0
+        interval = 1.0
+        start = time.time()
+        status = self.handler.status()
+
+        while not status.has_metadata and (time.time() - start) < timeout:
+            time.sleep(interval)
+            status = self.handler.status()
+
+        # after loop: check whether metadata arrived
+        if status.has_metadata:
+            # return torrent info
+            return self.handler.torrent_file()
+        else:
+            return None
+
+    def name(self, info):
+        torrent_name = info.name()
+        if torrent_name:
+            return torrent_name
+        else:
+            return self.filesList(info)[0]
+
+    def filesList(self, info):
+        files_list = []
+        files = info.files()
+        for idx in range(files.num_files()):
+            file_path = files.file_path(idx)
+            file_size = files.file_size(idx)
+            files_list.append([file_path, file_size, idx])
+
+        # Check if we have a file or a folder
+        is_in_folder = False
+        for i in range(files.num_files()):
+            rel = files.file_path(i)
+            is_in_folder = bool(os.path.dirname(rel))
+            if is_in_folder:
+                break
+
+        return files.name(), files_list, is_in_folder
+
+    # Calculate total size of selected files.
+    def totalDownloadSize(self, files_list, selected_files_index):
+        total_size = 0
+        for file in files_list:
+            if file[2] in selected_files_index:
+                total_size = total_size + file[1]
+
+        return total_size
 
 
 class TorrentFile():
