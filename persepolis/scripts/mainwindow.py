@@ -44,7 +44,7 @@ from persepolis.scripts.setting import PreferencesWindow
 from persepolis.scripts.download_link import DownloadLink
 from persepolis.scripts.properties import PropertiesWindow
 from persepolis.scripts.after_download import AfterDownloadWindow
-from persepolis.scripts.get_magnet_link import GetMagnetLinkWindow
+from persepolis.scripts.addmagnet import AddMagnetWindow
 from persepolis.scripts.torrent_progress import TorrentProgressWindow
 from persepolis.scripts.browser_plugin_queue import BrowserPluginQueue
 from persepolis.scripts.data_base import PluginsDB, PersepolisDB, TempDB
@@ -5589,8 +5589,11 @@ class MainWindow(MainWindow_Ui):
             error_messageBox.exec_()
             return
 
-        get_magnet_link_window = GetMagnetLinkWindow(self, self.getMagnetLinkWindowCallBack, self.persepolis_setting)
-        get_magnet_link_window.exec_()
+        get_magnet_link_window = AddMagnetWindow(self, self.getMagnetLinkWindowCallBack, self.persepolis_setting)
+        self.addlinkwindows_list.append(get_magnet_link_window)
+        get_magnet_link_window.show()
+        get_magnet_link_window.raise_()
+        get_magnet_link_window.activateWindow()
 
     def getMagnetLinkWindowCallBack(self, magnet_link):
         print(magnet_link)

@@ -62,7 +62,9 @@ class AddTorrentWindow_Ui(TextQueue_Ui):
         # Hide this widgets
         self.connections_label.setVisible(False)
         self.connections_spinBox.setVisible(False)
+
         # set text
+        self.setWindowTitle(QCoreApplication.translate("addtorrent_ui_tr", "Add  Torrent"))
         self.torrent_name_label1.setText(QCoreApplication.translate("addtorrent_ui_tr", "Torrent name: "))
         self.queue_tabWidget.setTabText(
             self.queue_tabWidget.indexOf(self.links_tab), QCoreApplication.translate("addtorrent_ui_tr", 'Files'))
