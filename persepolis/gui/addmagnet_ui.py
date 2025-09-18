@@ -17,10 +17,10 @@
 from persepolis.gui.addtorrent_ui import AddTorrentWindow_Ui
 try:
     from PySide6.QtWidgets import QWidget, QVBoxLayout, QLineEdit, QLabel, QFrame, QHBoxLayout, QPushButton, QTextEdit
-    from PySide6.QtCore import QCoreApplication
+    from PySide6.QtCore import QCoreApplication, Qt
 except:
     from PyQt5.QtWidgets import QWidget, QVBoxLayout, QLineEdit, QLabel, QFrame, QHBoxLayout, QPushButton, QTextEdit
-    from PySide6.QtCore import QCoreApplication
+    from PySide6.QtCore import QCoreApplication, Qt
 
 
 class AddMagnetWindow_ui(AddTorrentWindow_Ui):
@@ -63,7 +63,11 @@ class AddMagnetWindow_ui(AddTorrentWindow_Ui):
 
         # Status Box
         self.status_box_textEdit = QTextEdit(self.link_frame)
+        self.status_box_textEdit.setReadOnly(True)
         self.status_box_textEdit.setMaximumHeight(150)
+        self.status_box_textEdit.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAsNeeded)
+        self.status_box_textEdit.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAsNeeded)
+
         self.link_verticalLayout.addWidget(self.status_box_textEdit)
 
         # Set texts

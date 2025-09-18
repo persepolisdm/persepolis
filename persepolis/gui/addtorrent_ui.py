@@ -18,12 +18,12 @@ from persepolis.gui.text_queue_ui import TextQueue_Ui
 from persepolis.gui import resources
 
 try:
-    from PySide6.QtWidgets import QLabel, QHBoxLayout, QPushButton
+    from PySide6.QtWidgets import QLabel, QHBoxLayout, QPushButton, QWidget, QLineEdit, QVBoxLayout
     from PySide6.QtCore import QCoreApplication
     from PySide6.QtGui import QIcon
 
 except:
-    from PyQt5.QtWidgets import QLabel, QHBoxLayout, QPushButton
+    from PyQt5.QtWidgets import QLabel, QHBoxLayout, QPushButton, QWidget, QLineEdit, QVBoxLayout
     from PyQt5.QtCore import QCoreApplication
     from PyQt5.QtGui import QIcon
 
@@ -59,6 +59,59 @@ class AddTorrentWindow_Ui(TextQueue_Ui):
         self.download_later_pushButton.setIcon(QIcon(icons + 'stop'))
         self.buttons_horizontalLayout.addWidget(self.download_later_pushButton)
 
+        # advance options
+        self.advance_options_tab = QWidget(self)
+
+        advance_options_tab_verticalLayout = QVBoxLayout(self.advance_options_tab)
+
+        # referer
+        referer_horizontalLayout = QHBoxLayout()
+
+        self.referer_label = QLabel(self.advance_options_tab)
+        referer_horizontalLayout.addWidget(self.referer_label)
+
+        self.referer_lineEdit = QLineEdit(self.advance_options_tab)
+        referer_horizontalLayout.addWidget(self.referer_lineEdit)
+
+        advance_options_tab_verticalLayout.addLayout(referer_horizontalLayout)
+
+        # header
+        header_horizontalLayout = QHBoxLayout()
+
+        self.header_label = QLabel(self.advance_options_tab)
+        header_horizontalLayout.addWidget(self.header_label)
+
+        self.header_lineEdit = QLineEdit(self.advance_options_tab)
+        header_horizontalLayout.addWidget(self.header_lineEdit)
+
+        advance_options_tab_verticalLayout.addLayout(header_horizontalLayout)
+
+        # user_agent
+        user_agent_horizontalLayout = QHBoxLayout()
+
+        self.user_agent_label = QLabel(self.advance_options_tab)
+        user_agent_horizontalLayout.addWidget(self.user_agent_label)
+
+        self.user_agent_lineEdit = QLineEdit(self.advance_options_tab)
+        user_agent_horizontalLayout.addWidget(self.user_agent_lineEdit)
+
+        advance_options_tab_verticalLayout.addLayout(user_agent_horizontalLayout)
+
+        # load_cookies
+        load_cookies_horizontalLayout = QHBoxLayout()
+
+        self.load_cookies_label = QLabel(self.advance_options_tab)
+        load_cookies_horizontalLayout.addWidget(self.load_cookies_label)
+
+        self.load_cookies_lineEdit = QLineEdit(self.advance_options_tab)
+        load_cookies_horizontalLayout.addWidget(self.load_cookies_lineEdit)
+
+        advance_options_tab_verticalLayout.addLayout(load_cookies_horizontalLayout)
+
+        advance_options_tab_verticalLayout.addStretch(1)
+
+        self.queue_tabWidget.addTab(self.advance_options_tab, '')
+
         # Hide this widgets
         self.connections_label.setVisible(False)
         self.connections_spinBox.setVisible(False)
@@ -69,3 +122,15 @@ class AddTorrentWindow_Ui(TextQueue_Ui):
         self.queue_tabWidget.setTabText(
             self.queue_tabWidget.indexOf(self.links_tab), QCoreApplication.translate("addtorrent_ui_tr", 'Files'))
         self.download_later_pushButton.setText(QCoreApplication.translate("addtorrent.py", "Download Later"))
+
+        self.queue_tabWidget.setTabText(self.queue_tabWidget.indexOf(
+            self.advance_options_tab), QCoreApplication.translate("addtorrent_ui_tr", "Advanced Options"))
+
+        self.referer_label.setText(QCoreApplication.translate("addtorrent_ui_tr", 'Referrer: '))
+
+        self.header_label.setText(QCoreApplication.translate("addtorrent_ui_tr", 'Header: '))
+
+        self.load_cookies_label.setText(QCoreApplication.translate("addtorrent_ui_tr", 'Load cookies: '))
+
+        self.user_agent_label.setText(QCoreApplication.translate("addtorrent_ui_tr", 'User agent: '))
+

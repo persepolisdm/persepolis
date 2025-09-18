@@ -27,9 +27,9 @@ import platform
 
 
 class MagnetLink():
-    def __init__(self, magnet_link, options_dict):
-        self.magnet_link = magnet_link
+    def __init__(self, options_dict):
         self.options_dict = options_dict
+        self.magnet_link = self.options_dict['link']
         self.ip = options_dict['ip']
         self.port = options_dict['port']
         self.proxy_user = options_dict['proxy_user']
@@ -64,15 +64,18 @@ class MagnetLink():
         # set user_agent
         if self.user_agent:
             # setting user_agent to the session
-            session_parameters['user_agent'] = self.user_agent
+            # session_parameters['user_agent'] = self.user_agent
+            session_parameters.user_agent = self.user_agent
 
         # set cookies
         if self.load_cookies:
             jar = readCookieJar(self.load_cookies)
             if jar:
-                session_parameters['cookies'] = jar
+                # session_parameters['cookies'] = jar
+                session_parameters.cookies = jar
         # Set flags
-        session_parameters['flags'] = (
+        # session_parameters['flags'] = (
+        session_parameters.flags = (
             libtorrent.torrent_flags.default_flags |
             libtorrent.torrent_flags.default_dont_download |
             libtorrent.torrent_flags.upload_mode |
@@ -90,10 +93,12 @@ class MagnetLink():
             tmp_folder_system = '/tmp'
 
         # set storage mode
-        session_parameters['storage_mode'] = libtorrent.storage_mode_t.storage_mode_allocate
+        # session_parameters['storage_mode'] = libtorrent.storage_mode_t.storage_mode_allocate
+        session_parameters.storage_mode = libtorrent.storage_mode_t.storage_mode_allocate
 
         # set download path
-        session_parameters['save_path'] = tmp_folder_system
+        # session_parameters['save_path'] = tmp_folder_system
+        session_parameters.save_path = tmp_folder_system
 
         return session_parameters
 
@@ -115,7 +120,8 @@ class MagnetLink():
             # return torrent info
             return self.handler.torrent_file()
         else:
-            return None
+            # timed out
+            raise TimeoutError("metadata not available after 10 seconds")
 
     def name(self, info):
         torrent_name = info.name()

@@ -20,18 +20,17 @@ from functools import partial
 
 try:
     from PySide6.QtWidgets import QTableWidgetItem, QFileDialog
-    from PySide6.QtCore import QCoreApplication, Qt, QPoint, QSize, QDir
+    from PySide6.QtCore import Qt, QPoint, QSize, QDir
     from PySide6.QtGui import QIcon
 except:
     from PyQt5.QtWidgets import QTableWidgetItem, QFileDialog
-    from PyQt5.QtCore import QCoreApplication, Qt, QPoint, QSize, QDir
+    from PyQt5.QtCore import Qt, QPoint, QSize, QDir
     from PyQt5.QtGui import QIcon
 
 
 class AddTorrentWindow(AddTorrentWindow_Ui):
     def __init__(self, parent, callback, persepolis_setting, torrent_file_path, torrent_name, torrent_files_list, is_folder):
         super().__init__(persepolis_setting)
-        self.setWindowTitle(QCoreApplication.translate("addtorrent_ui_tr", "Add  Torrent"))
         self.persepolis_setting = persepolis_setting
         self.callback = callback
         self.torrent_file_path = torrent_file_path
@@ -301,6 +300,33 @@ class AddTorrentWindow(AddTorrentWindow_Ui):
 
         return download_user, download_passwd
 
+    def getAdditionalInformation(self):
+        # referer
+        if self.referer_lineEdit.text() != '':
+            referer = self.referer_lineEdit.text()
+        else:
+            referer = None
+
+        # header
+        if self.header_lineEdit.text() != '':
+            header = self.header_lineEdit.text()
+        else:
+            header = None
+
+        # user_agent
+        if self.user_agent_lineEdit.text() != '':
+            user_agent = self.user_agent_lineEdit.text()
+        else:
+            user_agent = None
+
+        # load_cookies
+        if self.load_cookies_lineEdit.text() != '':
+            load_cookies = self.load_cookies_lineEdit.text()
+        else:
+            load_cookies = None
+
+        return referer, header, user_agent, load_cookies
+
     def okButtonPressed(self, button=None, download_later=False):
         # write user's input data to init file
         self.persepolis_setting.setValue(
@@ -326,6 +352,9 @@ class AddTorrentWindow(AddTorrentWindow_Ui):
 
         download_path = self.download_folder_lineEdit.text()
 
+        # get additinal information
+        referer, header, user_agent, load_cookies = self.getAdditionalInformation()
+
         # set torrent_file_path for link
         dict_ = {'out': self.torrent_name,
                  'start_time': None,
@@ -341,10 +370,10 @@ class AddTorrentWindow(AddTorrentWindow_Ui):
                  'connections': 64,
                  'limit_value': 10,
                  'download_path': download_path,
-                 'referer': None,
-                 'load_cookies': None,
-                 'user_agent': None,
-                 'header': None,
+                 'referer': referer,
+                 'load_cookies': load_cookies,
+                 'user_agent': user_agent,
+                 'header': header,
                  'after_download': None
                  }
 
