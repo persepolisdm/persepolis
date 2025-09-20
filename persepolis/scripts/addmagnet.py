@@ -16,7 +16,7 @@
 
 from persepolis.gui.addmagnet_ui import AddMagnetWindow_ui
 from persepolis.scripts.useful_tools import humanReadableSize
-from persepolis.scripts.libtorrent_wrapper import MagnetLink
+from persepolis.scripts import libtorrent_wrapper
 from persepolis.scripts import logger
 from functools import partial
 from pathlib import Path
@@ -37,7 +37,7 @@ class GetMetaDataThread(QThread):
 
     def __init__(self, options_dict):
         super().__init__()
-        self.magnet_link = MagnetLink(options_dict)
+        self.magnet_link = libtorrent_wrapper.MagnetLink(options_dict)
 
     def run(self):
         try:
@@ -48,7 +48,7 @@ class GetMetaDataThread(QThread):
             self.NOMETADATASIGNAL.emit(str(e))
             return
 
-        torrent_name, torrent_files_list, is_folder = self.magnet_link.filesList(info)
+        torrent_name, torrent_files_list, is_folder = libtorrent_wrapper.filesList(info)
         self.TORRENTINFORMATIONSIGNAL.emit([torrent_name, torrent_files_list, is_folder])
 
 
@@ -149,8 +149,9 @@ class AddMagnetWindow(AddMagnetWindow_ui):
         self.download_frame.setEnabled(False)
         self.download_checkBox.toggled.connect(self.downloadFrame)
 
-        # disable ok_pushButton
+        # disable ok_pushButton and download_later_pushButton
         self.ok_pushButton.setEnabled(False)
+        self.download_later_pushButton.setEnabled(False)
 
         # add_queue_comboBox event
         self.add_queue_comboBox.currentIndexChanged.connect(self.queueChanged)
@@ -164,7 +165,7 @@ class AddMagnetWindow(AddMagnetWindow_ui):
 
         # Set status
         self.status_box_textEdit.setText(
-            QCoreApplication.translate("addmagnet_ui_tr", "Please enter a valid magnet link and press \"Fetch information\" button"))
+            QCoreApplication.translate("addmagnet_ui_tr", "Please enter a valid magnet link and press fetch information button"))
 
     # This method fetchs metadata
     def fetchMetaData(self, button):
@@ -172,7 +173,7 @@ class AddMagnetWindow(AddMagnetWindow_ui):
         self.status_box_textEdit.setStyleSheet("color: Green;")
 
         # change status
-        self.status_box_textEdit.setText("Please Wait...")
+        self.status_box_textEdit.setText(QCoreApplication.translate("addtorrent_ui_tr", "Please Wait..."))
 
         # Disable fetch_metadata_pushButtontton
         self.fetch_metadata_pushButtontton.setEnabled(False)
@@ -256,14 +257,15 @@ class AddMagnetWindow(AddMagnetWindow_ui):
             item = QTableWidgetItem(str(index))
             self.links_table.setItem(0, 2, item)
 
-        # Enable ok_pushButton
+        # Enable ok_pushButton and download_later_pushButton
         self.ok_pushButton.setEnabled(True)
+        self.download_later_pushButton.setEnabled(True)
 
         # Disable link_lineEdit
         self.link_lineEdit.setEnabled(False)
 
         # Update status
-        self.status_box_textEdit.setText("The operation was successful.")
+        self.status_box_textEdit.setText(QCoreApplication.translate("addtorrent_ui_tr", "The operation was successful."))
 
     # Get and show error in status_box_textEdit
     def metaDataIsNotFound(self, error):
@@ -460,7 +462,7 @@ class AddMagnetWindow(AddMagnetWindow_ui):
         dict_ = {'out': self.torrent_name,
                  'start_time': None,
                  'end_time': None,
-                 'link': self.torrent_file_path,
+                 'link': self.link_lineEdit.text(),
                  'ip': ip,
                  'port': port,
                  'proxy_user': proxy_user,
@@ -494,9 +496,8 @@ class AddMagnetWindow(AddMagnetWindow_ui):
                 file_size = self.torrent_files_list[index][1]
                 total_size = file_size + total_size
 
-        parameters_dict = {'files': self.checked_files_list}
         # Create callback for mainwindow
-        self.callback(dict_, parameters_dict, total_size, category, download_later, self.is_folder)
+        self.callback(dict_, self.torrent_files_list, self.checked_files_list, total_size, category, download_later, self.is_folder, "magnet")
 
         # close window
         self.close()

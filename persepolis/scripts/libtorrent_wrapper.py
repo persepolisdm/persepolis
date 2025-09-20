@@ -26,6 +26,43 @@ from persepolis.scripts import logger
 import platform
 
 
+def filesList(info):
+    files_list = []
+    files = info.files()
+    for idx in range(files.num_files()):
+        file_path = files.file_path(idx)
+        file_size = files.file_size(idx)
+        files_list.append([file_path, file_size, idx])
+
+    # Check if we have a file or a folder
+    is_in_folder = False
+    for i in range(files.num_files()):
+        rel = files.file_path(i)
+        is_in_folder = bool(os.path.dirname(rel))
+        if is_in_folder:
+            break
+
+    return files.name(), files_list, is_in_folder
+
+
+def name(info):
+    torrent_name = info.name()
+    if torrent_name:
+        return torrent_name
+    else:
+        return filesList(info)[0]
+
+
+# Calculate total size of selected files.
+def totalDownloadSize(files_list, selected_files_index):
+    total_size = 0
+    for file in files_list:
+        if file[2] in selected_files_index:
+            total_size = total_size + file[1]
+
+    return total_size
+
+
 class MagnetLink():
     def __init__(self, options_dict):
         self.options_dict = options_dict
@@ -123,40 +160,6 @@ class MagnetLink():
             # timed out
             raise TimeoutError("metadata not available after 10 seconds")
 
-    def name(self, info):
-        torrent_name = info.name()
-        if torrent_name:
-            return torrent_name
-        else:
-            return self.filesList(info)[0]
-
-    def filesList(self, info):
-        files_list = []
-        files = info.files()
-        for idx in range(files.num_files()):
-            file_path = files.file_path(idx)
-            file_size = files.file_size(idx)
-            files_list.append([file_path, file_size, idx])
-
-        # Check if we have a file or a folder
-        is_in_folder = False
-        for i in range(files.num_files()):
-            rel = files.file_path(i)
-            is_in_folder = bool(os.path.dirname(rel))
-            if is_in_folder:
-                break
-
-        return files.name(), files_list, is_in_folder
-
-    # Calculate total size of selected files.
-    def totalDownloadSize(self, files_list, selected_files_index):
-        total_size = 0
-        for file in files_list:
-            if file[2] in selected_files_index:
-                total_size = total_size + file[1]
-
-        return total_size
-
 
 class TorrentFile():
     def __init__(self, torrent_file_path):
@@ -172,40 +175,6 @@ class TorrentFile():
 
         return info, error
 
-    def name(self, info):
-        torrent_name = info.name()
-        if torrent_name:
-            return torrent_name
-        else:
-            return self.filesList(info)[0]
-
-    def filesList(self, info):
-        files_list = []
-        files = info.files()
-        for idx in range(files.num_files()):
-            file_path = files.file_path(idx)
-            file_size = files.file_size(idx)
-            files_list.append([file_path, file_size, idx])
-
-        # Check if we have a file or a folder
-        is_in_folder = False
-        for i in range(files.num_files()):
-            rel = files.file_path(i)
-            is_in_folder = bool(os.path.dirname(rel))
-            if is_in_folder:
-                break
-
-        return files.name(), files_list, is_in_folder
-
-    # Calculate total size of selected files.
-    def totalDownloadSize(self, files_list, selected_files_index):
-        total_size = 0
-        for file in files_list:
-            if file[2] in selected_files_index:
-                total_size = total_size + file[1]
-
-        return total_size
-
 
 class TorrentDownload():
     def __init__(self, add_link_dictionary, main_window, gid):
@@ -213,7 +182,7 @@ class TorrentDownload():
         self.main_window = main_window
         self.gid = gid
         # torrent file path has been saved as link key in add_link_dictionary
-        self.torrent_file_path = add_link_dictionary['link']
+        self.link = add_link_dictionary['link']
         self.name = add_link_dictionary['out']
         self.download_path = add_link_dictionary['download_path']
         self.ip = add_link_dictionary['ip']
@@ -254,16 +223,34 @@ class TorrentDownload():
 
     # Initialize session
     def createSession(self):
+        # get torrent dictionary from data base
+        torrent_dict = self.main_window.persepolis_db.searchGidInTorrentTable(self.gid)
+
+        # Find torrent type, index of selected file, files list and
+        # if we have single file or folder
+        torrent_type = torrent_dict['type']
+        self.files_index_list = torrent_dict['selected_files_list']
+        self.files_list = torrent_dict['files_list']
+        number_of_files = len(self.files_list)
+        if torrent_dict['is_dir'] == 'yes':
+            self.is_dir = True
+        else:
+            self.is_dir = False
+
         # Create a session and add settings
         session_settings = {'listen_interfaces': self.listening_interface}
         self.libtorrent_session = libtorrent.session(session_settings)
 
-        torrent_file = TorrentFile(self.torrent_file_path)
-        info, error = torrent_file.info()
-
-        # Create a dictionary for session parameters.
-        # This dictionary will be passe to torrent handle.
-        session_parameters = {'ti': info}
+        # Set session parameters
+        session_parameters = libtorrent.add_torrent_params()
+        if torrent_type == 'file':
+            # self.link contains torrent_file_path
+            torrent_file = TorrentFile(self.link)
+            info, error = torrent_file.info()
+            session_parameters.ti = info
+        else:
+            # Magnet
+            session_parameters = libtorrent.parse_magnet_uri(self.link)
 
         # check if user set proxy
         if self.ip:
@@ -279,13 +266,13 @@ class TorrentDownload():
         # set user_agent
         if self.user_agent:
             # setting user_agent to the session
-            session_parameters['user_agent'] = self.user_agent
+            session_parameters.user_agent = self.user_agent
 
         # set cookies
         if self.load_cookies:
             jar = readCookieJar(self.load_cookies)
             if jar:
-                session_parameters['cookies'] = jar
+                session_parameters.cookies = jar
 
         # Create download_path if not existed
         try:
@@ -294,24 +281,17 @@ class TorrentDownload():
             pass
 
         # set storage mode
-        session_parameters['storage_mode'] = libtorrent.storage_mode_t.storage_mode_allocate
-
-        # Get files index that must be downloaded from data base
-        parameters_dict_srt = self.main_window.persepolis_db.searchGidInTorrentTable(self.gid)['parameters_dict']
-        parameters_dict = ast.literal_eval(parameters_dict_srt)
-        self.files_index_list = parameters_dict['files']
+        session_parameters.storage_mode = libtorrent.storage_mode_t.storage_mode_allocate
 
         # Set priorities: 0 = do not download, 1 = normal priority
-        number_of_files = info.num_files()
         priority_list = [0] * number_of_files
         for index in self.files_index_list:
             priority_list[index] = 1
 
-        session_parameters['file_priorities'] = priority_list
+        session_parameters.file_priorities = priority_list
 
-        # get files list
-        name, self.files_list, self.is_dir = torrent_file.filesList(info)
-        self.total_size = torrent_file.totalDownloadSize(self.files_list, self.files_index_list)
+        # get total size
+        self.total_size = totalDownloadSize(self.files_list, self.files_index_list)
 
         # If torrent is a folder, and user selected default download path
         # change download path to ~/Downloads/Persepols/Torrent folders
@@ -325,7 +305,7 @@ class TorrentDownload():
             self.main_window.persepolis_db.updateAddLinkTable([add_link_dictionary])
 
         # set download path
-        session_parameters['save_path'] = self.download_path
+        session_parameters.save_path = self.download_path
 
         return session_parameters
 
@@ -411,6 +391,23 @@ class TorrentDownload():
     def checkDownloadProgress(self):
         logger.sendToLog("Download starts! - GID:" + self.gid, "DOWNLOADS")
         stalled = False
+
+        # Wait for magnet link metadata
+        timeout = 10.0
+        interval = 1.0
+        start = time.time()
+        status = self.handler.status()
+
+        while not status.has_metadata and (time.time() - start) < timeout:
+            time.sleep(interval)
+            status = self.handler.status()
+
+        # after loop: check whether metadata arrived
+        if not (status.has_metadata):
+            # change download status to error
+            self.download_status = 'error'
+            logger.sendToLog("meta data not available.", 'DOWNLOAD ERROR')
+
         # Run this loop until the download is finished.
         while (self.download_status == 'downloading' or self.download_status == 'paused'):
             # get download status
@@ -619,7 +616,7 @@ class TorrentDownload():
             'connections': str(self.number_of_peers),
             'rate': self.download_speed_str,
             'estimate_time_left': self.eta,
-            'link': self.torrent_file_path,
+            'link': self.link,
             'error': self.error_message,
             'download_progress_per_file_list': self.download_progress_per_file_list
         }

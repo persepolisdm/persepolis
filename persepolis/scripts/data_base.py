@@ -480,7 +480,8 @@ class PersepolisDB():
         self.persepolis_db_cursor.execute("""CREATE TABLE IF NOT EXISTS torrent_db_table(
                                                                                 ID INTEGER PRIMARY KEY,
                                                                                 gid TEXT,
-                                                                                parameters_dict TEXT,
+                                                                                files_list TEXT,
+                                                                                selected_files_list TEXT,
                                                                                 is_dir TEXT,
                                                                                 type TEXT,
                                                                                 FOREIGN KEY(gid) REFERENCES download_db_table(gid)
@@ -681,7 +682,8 @@ class PersepolisDB():
             # first column is NULL
             self.persepolis_db_cursor.execute("""INSERT INTO torrent_db_table VALUES(NULL,
                                                                                 :gid,
-                                                                                :parameters_dict,
+                                                                                :files_list,
+                                                                                :selected_files_list,
                                                                                 :is_dir,
                                                                                 :type
                                                                                 )""", dictionary)
@@ -708,9 +710,10 @@ class PersepolisDB():
             return None
 
         dictionary = {'gid': tuple_[1],
-                      'parameters_dict': tuple_[2],
-                      'is_dir': tuple_[3],
-                      'type': tuple_[4]}
+                      'files_list': ast.literal_eval(tuple_[2]),
+                      'selected_files_list': ast.literal_eval(tuple_[3]),
+                      'is_dir': tuple_[4],
+                      'type': tuple_[5]}
 
         # return the results
         return dictionary

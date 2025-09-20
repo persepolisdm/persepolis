@@ -393,9 +393,8 @@ class AddTorrentWindow(AddTorrentWindow_Ui):
                 file_size = self.torrent_files_list[index][1]
                 total_size = file_size + total_size
 
-        parameters_dict = {'files': self.checked_files_list}
         # Create callback for mainwindow
-        self.callback(dict_, parameters_dict, total_size, category, download_later, self.is_folder)
+        self.callback(dict_, self.torrent_files_list, self.checked_files_list, total_size, category, download_later, self.is_folder, "file")
 
         # close window
         self.close()

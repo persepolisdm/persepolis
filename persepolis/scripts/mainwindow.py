@@ -88,7 +88,7 @@ global libtorren_version
 libtorren_version = checkLibtorrent()
 
 if libtorren_version:
-    from persepolis.scripts.libtorrent_wrapper import TorrentFile, TorrentDownload
+    from persepolis.scripts import libtorrent_wrapper
     logger.sendToLog(
         "Libtorren version: {}".format(libtorren_version), "INFO")
 else:
@@ -2362,7 +2362,7 @@ class MainWindow(MainWindow_Ui):
 
                     elif self.persepolis_db.searchGidInTorrentTable(gid):
                         # Torrent
-                        download_session = TorrentDownload(add_link_dictionary, self, gid)
+                        download_session = libtorrent_wrapper.TorrentDownload(add_link_dictionary, self, gid)
 
                         # add gid to torrent_gid_list
                         self.torrent_gid_list.append(gid)
@@ -5589,14 +5589,11 @@ class MainWindow(MainWindow_Ui):
             error_messageBox.exec_()
             return
 
-        get_magnet_link_window = AddMagnetWindow(self, self.getMagnetLinkWindowCallBack, self.persepolis_setting)
+        get_magnet_link_window = AddMagnetWindow(self, self.torrentCallBack, self.persepolis_setting)
         self.addlinkwindows_list.append(get_magnet_link_window)
         get_magnet_link_window.show()
         get_magnet_link_window.raise_()
         get_magnet_link_window.activateWindow()
-
-    def getMagnetLinkWindowCallBack(self, magnet_link):
-        print(magnet_link)
 
     # Get torrent file address from user.
     def showOpenTorrentFileWindow(self, menu=None):
@@ -5615,7 +5612,7 @@ class MainWindow(MainWindow_Ui):
             self.returnTorrentFileInfo(file_path)
 
     def returnTorrentFileInfo(self, torrent_file_path):
-        torrent_file = TorrentFile(torrent_file_path)
+        torrent_file = libtorrent_wrapper.TorrentFile(torrent_file_path)
         info, error = torrent_file.info()
         if not (info):
             notifySend(QCoreApplication.translate("mainwindow_src_ui_tr", "Error"),
@@ -5625,8 +5622,8 @@ class MainWindow(MainWindow_Ui):
             logger.sendToLog(str(error), "ERROR")
             return
 
-        torrent_name = torrent_file.name(info)
-        torrent_name, torrent_files_list, is_folder = torrent_file.filesList(info)
+        torrent_name = libtorrent_wrapper.name(info)
+        torrent_name, torrent_files_list, is_folder = libtorrent_wrapper.filesList(info)
         self.showTorrentAddLinkWindow(torrent_file_path, torrent_name, torrent_files_list, is_folder)
 
     def showTorrentButtonContextMenu(self):
@@ -5641,10 +5638,9 @@ class MainWindow(MainWindow_Ui):
         torrent_addlink_window.activateWindow()
 
     # This method is callBack for showTorrentAddLinkWindow
-    def torrentCallBack(self, add_link_dictionary, parameters_dict, total_size, category, download_later, is_folder):
-        files = parameters_dict['files']
+    def torrentCallBack(self, add_link_dictionary, files_list, selected_files_list, total_size, category, download_later, is_folder, torrent_type):
         # We have no file for downloading.
-        if not files:
+        if not selected_files_list:
             return
 
         category = str(category)
@@ -5728,9 +5724,10 @@ class MainWindow(MainWindow_Ui):
             is_dir = 'no'
 
         torrent_data_base = {'gid': gid,
-                             'parameters_dict': str(parameters_dict),
+                             'files_list': str(files_list),
+                             'selected_files_list': str(selected_files_list),
                              'is_dir': is_dir,
-                             'type': 'file'}
+                             'type': torrent_type}
 
         # write it in data_base
         self.persepolis_db.insertInTorrentTable([torrent_data_base])
@@ -5739,7 +5736,7 @@ class MainWindow(MainWindow_Ui):
         # then create new qthread for new download!
         if not (download_later):
             # create download_session
-            download_session = TorrentDownload(add_link_dictionary, self, gid)
+            download_session = libtorrent_wrapper.TorrentDownload(add_link_dictionary, self, gid)
 
             # Add gid to torrent_gid_list
             self.torrent_gid_list.append(gid)
@@ -5771,8 +5768,6 @@ class MainWindow(MainWindow_Ui):
                 self.threadPool[-1].SPIDERSIGNAL.connect(self.spiderUpdate)
                 message = QCoreApplication.translate("mainwindow_src_ui_tr", "Download Scheduled")
             notifySend(message, '', 10000, 'no', parent=self)
-
-
 
     def changeIcon(self, new_icons):
 
