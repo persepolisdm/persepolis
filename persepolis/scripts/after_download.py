@@ -53,6 +53,7 @@ class AfterDownloadWindow(AfterDownloadWindow_Ui):
         # Check the download path is related to torrent or not
         torrent_dict = self.parent.persepolis_db.searchGidInTorrentTable(gid)
         self.is_dir = False
+        self.torrent_type = None
         if torrent_dict:
             # Check If we have folder or file
             is_dir_value = torrent_dict['is_dir']
@@ -63,6 +64,8 @@ class AfterDownloadWindow(AfterDownloadWindow_Ui):
 
             else:
                 self.is_dir = False
+
+            self.torrent_type = torrent_dict['type']
 
         while True:
             if self.is_dir:
@@ -99,7 +102,8 @@ class AfterDownloadWindow(AfterDownloadWindow_Ui):
         if self.is_dir:
             f_name = QCoreApplication.translate("after_download_src_ui_tr", "<b>Folder name</b>: ") + \
                 window_title
-            self.link_label.setText(QCoreApplication.translate("after_download_ui_tr", "<b>Torrent file path</b>: "))
+            if self.torrent_type == 'file':
+                self.link_label.setText(QCoreApplication.translate("after_download_ui_tr", "<b>Torrent file path</b>: "))
 
         else:
             f_name = QCoreApplication.translate("after_download_src_ui_tr", "<b>File name</b>: ") + \

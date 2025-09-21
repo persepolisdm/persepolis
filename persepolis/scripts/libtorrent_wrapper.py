@@ -13,9 +13,8 @@
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import libtorrent
-import ast
 import threading
-from persepolis.scripts.useful_tools import readCookieJar
+from persepolis.constants import VERSION
 from persepolis.scripts.osCommands import makeDirs, moveFileOrFolder
 from pathlib import Path
 from persepolis.scripts.useful_tools import convertTime, humanReadableSize, freeSpace, returnNewFileName
@@ -74,42 +73,43 @@ class MagnetLink():
         self.proxy_type = options_dict['proxy_type']
         self.download_user = options_dict['download_user']
         self.download_passwd = options_dict['download_passwd']
-        self.header = options_dict['header']
         self.user_agent = options_dict['user_agent']
-        self.load_cookies = options_dict['load_cookies']
-        self.referer = options_dict['referer']
         self.listening_interface = '0.0.0.0:6890'
 
     # Initialize session
     def createSession(self):
         # Create a session and add settings
         session_settings = {'listen_interfaces': self.listening_interface}
-        self.libtorrent_session = libtorrent.session(session_settings)
         session_parameters = libtorrent.parse_magnet_uri(self.magnet_link)
 
         # check if user set proxy
         if self.ip:
+            session_settings['proxy_hostname'] = self.ip
+            if self.port:
+                session_settings['proxy_port'] = int(self.port)
+            if self.proxy_user:
+                session_settings['proxy_username'] = self.proxy_user
+            if self.proxy_passwd:
+                session_settings['proxy_password'] = self.proxy_passwd
 
             if self.proxy_type == 'socks5':
-                proxy_type = libtorrent.proxy_type_t.socks5
+                if self.proxy_user:
+                    session_settings['proxy_type'] = libtorrent.proxy_type_t.socks5_pw
+                else:
+                    session_settings['proxy_type'] = libtorrent.proxy_type_t.socks5
             elif self.proxy_type == 'http':
-                proxy_type = libtorrent.proxy_type_t.http
-
-            # set proxy to the session
-            self.libtorrent_session.set_proxy(proxy_type, self.ip, self.port, self.proxy_user, self.proxy_passwd)
+                if self.proxy_user:
+                    session_settings['proxy_type'] = libtorrent.proxy_type_t.http_pw
+                else:
+                    session_settings['proxy_type'] = libtorrent.proxy_type_t.http
 
         # set user_agent
         if self.user_agent:
             # setting user_agent to the session
-            # session_parameters['user_agent'] = self.user_agent
-            session_parameters.user_agent = self.user_agent
+            session_settings['user_agent'] = self.user_agent
+        else:
+            session_settings['user_agent'] = 'PersepolisDM/' + str(VERSION.version_str)
 
-        # set cookies
-        if self.load_cookies:
-            jar = readCookieJar(self.load_cookies)
-            if jar:
-                # session_parameters['cookies'] = jar
-                session_parameters.cookies = jar
         # Set flags
         # session_parameters['flags'] = (
         session_parameters.flags = (
@@ -130,20 +130,20 @@ class MagnetLink():
             tmp_folder_system = '/tmp'
 
         # set storage mode
-        # session_parameters['storage_mode'] = libtorrent.storage_mode_t.storage_mode_allocate
         session_parameters.storage_mode = libtorrent.storage_mode_t.storage_mode_allocate
 
         # set download path
-        # session_parameters['save_path'] = tmp_folder_system
         session_parameters.save_path = tmp_folder_system
 
+        # apply setting
+        self.libtorrent_session = libtorrent.session(session_settings)
         return session_parameters
 
     def createHandler(self, parameters):
         self.handler = self.libtorrent_session.add_torrent(parameters)
 
     def info(self):
-        timeout = 10.0
+        timeout = 60.0
         interval = 1.0
         start = time.time()
         status = self.handler.status()
@@ -158,7 +158,7 @@ class MagnetLink():
             return self.handler.torrent_file()
         else:
             # timed out
-            raise TimeoutError("metadata not available after 10 seconds")
+            raise TimeoutError("metadata not available after 60 seconds")
 
 
 class TorrentFile():
@@ -192,10 +192,7 @@ class TorrentDownload():
         self.proxy_type = add_link_dictionary['proxy_type']
         self.download_user = add_link_dictionary['download_user']
         self.download_passwd = add_link_dictionary['download_passwd']
-        self.header = add_link_dictionary['header']
         self.user_agent = add_link_dictionary['user_agent']
-        self.load_cookies = add_link_dictionary['load_cookies']
-        self.referer = add_link_dictionary['referer']
         self.start_time = add_link_dictionary['start_time']
         self.end_time = add_link_dictionary['end_time']
         self.listening_interface = '0.0.0.0:6890'
@@ -239,7 +236,6 @@ class TorrentDownload():
 
         # Create a session and add settings
         session_settings = {'listen_interfaces': self.listening_interface}
-        self.libtorrent_session = libtorrent.session(session_settings)
 
         # Set session parameters
         session_parameters = libtorrent.add_torrent_params()
@@ -254,25 +250,31 @@ class TorrentDownload():
 
         # check if user set proxy
         if self.ip:
+            session_settings['proxy_hostname'] = self.ip
+            if self.port:
+                session_settings['proxy_port'] = int(self.port)
+            if self.proxy_user:
+                session_settings['proxy_username'] = self.proxy_user
+            if self.proxy_passwd:
+                session_settings['proxy_password'] = self.proxy_passwd
 
             if self.proxy_type == 'socks5':
-                proxy_type = libtorrent.proxy_type_t.socks5
+                if self.proxy_user:
+                    session_settings['proxy_type'] = libtorrent.proxy_type_t.socks5_pw
+                else:
+                    session_settings['proxy_type'] = libtorrent.proxy_type_t.socks5
             elif self.proxy_type == 'http':
-                proxy_type = libtorrent.proxy_type_t.http
-
-            # set proxy to the session
-            self.libtorrent_session.set_proxy(proxy_type, self.ip, self.port, self.proxy_user, self.proxy_passwd)
+                if self.proxy_user:
+                    session_settings['proxy_type'] = libtorrent.proxy_type_t.http_pw
+                else:
+                    session_settings['proxy_type'] = libtorrent.proxy_type_t.http
 
         # set user_agent
         if self.user_agent:
             # setting user_agent to the session
-            session_parameters.user_agent = self.user_agent
-
-        # set cookies
-        if self.load_cookies:
-            jar = readCookieJar(self.load_cookies)
-            if jar:
-                session_parameters.cookies = jar
+            session_settings['user_agent'] = self.user_agent
+        else:
+            session_settings['user_agent'] = 'PersepolisDM/' + str(VERSION.version_str)
 
         # Create download_path if not existed
         try:
@@ -307,6 +309,8 @@ class TorrentDownload():
         # set download path
         session_parameters.save_path = self.download_path
 
+        # apply settings
+        self.libtorrent_session = libtorrent.session(session_settings)
         return session_parameters
 
     # Check if enough free space is available or not

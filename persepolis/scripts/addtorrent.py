@@ -301,31 +301,13 @@ class AddTorrentWindow(AddTorrentWindow_Ui):
         return download_user, download_passwd
 
     def getAdditionalInformation(self):
-        # referer
-        if self.referer_lineEdit.text() != '':
-            referer = self.referer_lineEdit.text()
-        else:
-            referer = None
-
-        # header
-        if self.header_lineEdit.text() != '':
-            header = self.header_lineEdit.text()
-        else:
-            header = None
-
         # user_agent
         if self.user_agent_lineEdit.text() != '':
             user_agent = self.user_agent_lineEdit.text()
         else:
             user_agent = None
 
-        # load_cookies
-        if self.load_cookies_lineEdit.text() != '':
-            load_cookies = self.load_cookies_lineEdit.text()
-        else:
-            load_cookies = None
-
-        return referer, header, user_agent, load_cookies
+        return user_agent
 
     def okButtonPressed(self, button=None, download_later=False):
         # write user's input data to init file
@@ -353,7 +335,7 @@ class AddTorrentWindow(AddTorrentWindow_Ui):
         download_path = self.download_folder_lineEdit.text()
 
         # get additinal information
-        referer, header, user_agent, load_cookies = self.getAdditionalInformation()
+        user_agent = self.getAdditionalInformation()
 
         # set torrent_file_path for link
         dict_ = {'out': self.torrent_name,
@@ -370,10 +352,10 @@ class AddTorrentWindow(AddTorrentWindow_Ui):
                  'connections': 64,
                  'limit_value': 10,
                  'download_path': download_path,
-                 'referer': referer,
-                 'load_cookies': load_cookies,
+                 'referer': None,
+                 'load_cookies': None,
                  'user_agent': user_agent,
-                 'header': header,
+                 'header': None,
                  'after_download': None
                  }
 
