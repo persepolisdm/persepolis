@@ -234,6 +234,9 @@ class TorrentDownload():
         else:
             self.is_dir = False
 
+        download_limit = torrent_dict['download_limit']
+        upload_limit = torrent_dict['upload_limit']
+
         # Create a session and add settings
         session_settings = {'listen_interfaces': self.listening_interface}
 
@@ -268,6 +271,13 @@ class TorrentDownload():
                     session_settings['proxy_type'] = libtorrent.proxy_type_t.http_pw
                 else:
                     session_settings['proxy_type'] = libtorrent.proxy_type_t.http
+
+        # download and upload speed limit
+        if download_limit:
+            session_settings['download_rate_limit'] = download_limit
+
+        if upload_limit:
+            session_settings['upload_rate_limit'] = upload_limit
 
         # set user_agent
         if self.user_agent:

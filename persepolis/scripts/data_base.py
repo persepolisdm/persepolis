@@ -484,6 +484,8 @@ class PersepolisDB():
                                                                                 selected_files_list TEXT,
                                                                                 is_dir TEXT,
                                                                                 type TEXT,
+                                                                                download_limit INT,
+                                                                                upload_limit INT,
                                                                                 FOREIGN KEY(gid) REFERENCES download_db_table(gid)
                                                                                 ON DELETE CASCADE
                                                                                     )""")
@@ -685,7 +687,9 @@ class PersepolisDB():
                                                                                 :files_list,
                                                                                 :selected_files_list,
                                                                                 :is_dir,
-                                                                                :type
+                                                                                :type,
+                                                                                :download_limit,
+                                                                                :upload_limit
                                                                                 )""", dictionary)
         self.persepolis_db_connection.commit()
 
@@ -713,7 +717,9 @@ class PersepolisDB():
                       'files_list': ast.literal_eval(tuple_[2]),
                       'selected_files_list': ast.literal_eval(tuple_[3]),
                       'is_dir': tuple_[4],
-                      'type': tuple_[5]}
+                      'type': tuple_[5],
+                      'download_limit': tuple_[6],
+                      'upload_limit': tuple_[7]}
 
         # return the results
         return dictionary

@@ -149,6 +149,12 @@ class AddMagnetWindow(AddMagnetWindow_ui):
         self.download_frame.setEnabled(False)
         self.download_checkBox.toggled.connect(self.downloadFrame)
 
+        self.limit_upload_frame.setEnabled(False)
+        self.limit_upload_checkBox.toggled.connect(self.limitUploadFrame)
+
+        self.limit_download_frame.setEnabled(False)
+        self.limit_download_checkBox.toggled.connect(self.limitDownloadFrame)
+
         # disable ok_pushButton and download_later_pushButton
         self.ok_pushButton.setEnabled(False)
         self.download_later_pushButton.setEnabled(False)
@@ -328,6 +334,19 @@ class AddMagnetWindow(AddMagnetWindow_ui):
         else:
             self.download_frame.setEnabled(False)
 
+    def limitDownloadFrame(self, checkBox):
+
+        if self.limit_download_checkBox.isChecked():
+            self.limit_download_frame.setEnabled(True)
+        else:
+            self.limit_download_frame.setEnabled(False)
+
+    def limitUploadFrame(self, checkBox):
+        if self.limit_upload_checkBox.isChecked():
+            self.limit_upload_frame.setEnabled(True)
+        else:
+            self.limit_upload_frame.setEnabled(False)
+
     def changeFolder(self, button):
         fname = QFileDialog.getExistingDirectory(
             self, 'Select a directory', download_path)
@@ -343,6 +362,22 @@ class AddMagnetWindow(AddMagnetWindow_ui):
             path = Path(fname)
             if path.is_dir():
                 self.download_folder_lineEdit.setText(fname)
+
+    # this method returns upload and download limit speed
+    def getLimitSpeedInformation(self):
+        if self.limit_download_checkBox.isChecked() is True:
+            download_limit = self.limit_download_spinBox.value()
+            download_limit *= 1024
+        else:
+            download_limit = None
+
+        if self.limit_upload_checkBox.isChecked() is True:
+            upload_limit = self.limit_upload_spinBox.value()
+            upload_limit *= 1024
+        else:
+            upload_limit = None
+
+        return download_limit, upload_limit
 
     # this method returns proxy information.
     def getProxyInformation(self):
@@ -427,6 +462,9 @@ class AddMagnetWindow(AddMagnetWindow_ui):
         if proxy_type is not None:
             self.persepolis_setting.setValue('add_link_initialization/proxy_type', proxy_type)
 
+        # get download and upload limit speed
+        download_limit, upload_limit = self.getLimitSpeedInformation()
+
         # get download username and password information
         download_user, download_passwd = self.getUserPass()
 
@@ -456,7 +494,9 @@ class AddMagnetWindow(AddMagnetWindow_ui):
                  'load_cookies': None,
                  'user_agent': user_agent,
                  'header': None,
-                 'after_download': None
+                 'after_download': None,
+                 'download_limit': download_limit,
+                 'upload_limit': upload_limit
                  }
 
         # find checked links in links_table

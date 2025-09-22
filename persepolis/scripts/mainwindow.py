@@ -5727,7 +5727,9 @@ class MainWindow(MainWindow_Ui):
                              'files_list': str(files_list),
                              'selected_files_list': str(selected_files_list),
                              'is_dir': is_dir,
-                             'type': torrent_type}
+                             'type': torrent_type,
+                             'download_limit': add_link_dictionary['download_limit'],
+                             'upload_limit': add_link_dictionary['upload_limit']}
 
         # write it in data_base
         self.persepolis_db.insertInTorrentTable([torrent_data_base])
@@ -5774,14 +5776,14 @@ class MainWindow(MainWindow_Ui):
         global icons
         icons = ':/' + str(new_icons) + '/'
 
-        action_icon_dict = {self.stopAllAction: 'stop_all', self.minimizeAction: 'minimize', self.addlinkAction: 'add', self.addtextfileAction: 'file',
+        action_icon_dict = {self.stopAllAction: 'stop_all', self.minimizeAction: 'minimize', self.addlinkAction: 'http', self.addtextfileAction: 'file',
                             self.addFromClipboardAction: 'clipboard', self.resumeAction: 'play', self.pauseAction: 'pause', self.stopAction: 'stop',
                             self.propertiesAction: 'setting', self.progressAction: 'window', self.openFileAction: 'file',
                             self.openDownloadFolderAction: 'folder', self.openDefaultDownloadFolderAction: 'folder', self.exitAction: 'exit',
                             self.createQueueAction: 'add_queue', self.removeQueueAction: 'remove_queue', self.startQueueAction: 'start_queue',
                             self.stopQueueAction: 'stop_queue', self.preferencesAction: 'preferences', self.aboutAction: 'about',
                             self.issueAction: 'about', self.videoFinderAddLinkAction: 'video_finder', self.openTorrentFileAction: 'folder',
-                            self.magnetTorrentLinkAction: 'magnet', self.add_item_pushButton: 'torrent', self.qmenu: 'menu'}
+                            self.magnetTorrentLinkAction: 'magnet', self.add_item_pushButton: 'add', self.qmenu: 'menu', self.torrent_menu: 'torrent'}
 
         for key in action_icon_dict.keys():
             key.setIcon(QIcon(icons + str(action_icon_dict[key])))

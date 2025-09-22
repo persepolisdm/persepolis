@@ -18,12 +18,12 @@ from persepolis.gui.text_queue_ui import TextQueue_Ui
 from persepolis.gui import resources
 
 try:
-    from PySide6.QtWidgets import QLabel, QHBoxLayout, QPushButton, QWidget, QLineEdit, QVBoxLayout
+    from PySide6.QtWidgets import QLabel, QHBoxLayout, QPushButton, QWidget, QLineEdit, QVBoxLayout, QSpinBox, QCheckBox, QFrame, QSizePolicy
     from PySide6.QtCore import QCoreApplication
     from PySide6.QtGui import QIcon
 
 except:
-    from PyQt5.QtWidgets import QLabel, QHBoxLayout, QPushButton, QWidget, QLineEdit, QVBoxLayout
+    from PyQt5.QtWidgets import QLabel, QHBoxLayout, QPushButton, QWidget, QLineEdit, QVBoxLayout, QSpinBox, QCheckBox, QFrame, QSizePolicy
     from PyQt5.QtCore import QCoreApplication
     from PyQt5.QtGui import QIcon
 
@@ -79,6 +79,55 @@ class AddTorrentWindow_Ui(TextQueue_Ui):
 
         self.queue_tabWidget.addTab(self.advance_options_tab, '')
 
+        # Limit speed
+        limit_speed_horizontalLayout = QHBoxLayout()
+        # limit download speed
+        limit_download_speed_verticalLayout = QVBoxLayout()
+
+        self.limit_download_checkBox = QCheckBox(self.options_tab)
+        limit_download_speed_verticalLayout.addWidget(self.limit_download_checkBox)
+
+        self.limit_download_frame = QFrame(self.options_tab)
+        self.limit_download_frame.setFrameShape(QFrame.StyledPanel)
+        self.limit_download_frame.setFrameShadow(QFrame.Raised)
+        limit_download_speed_verticalLayout.addWidget(self.limit_download_frame)
+
+        limit_download_speed_horizontlLayout = QHBoxLayout(self.limit_download_frame)
+        self.limit_download_spinBox = QSpinBox(self.limit_download_frame)
+        self.limit_download_spinBox.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Preferred)
+        self.limit_download_spinBox.setMinimum(1)
+        limit_download_speed_horizontlLayout.addWidget(self.limit_download_spinBox, 1)
+
+        self.limit_download_label = QLabel(self.limit_download_frame)
+        self.limit_download_label.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Preferred)
+        limit_download_speed_horizontlLayout.addWidget(self.limit_download_label, 1)
+
+        limit_speed_horizontalLayout.addLayout(limit_download_speed_verticalLayout)
+
+        # limit upload speed
+        limit_upload_speed_verticalLayout = QVBoxLayout()
+
+        self.limit_upload_checkBox = QCheckBox(self.options_tab)
+        limit_upload_speed_verticalLayout.addWidget(self.limit_upload_checkBox)
+
+        self.limit_upload_frame = QFrame(self.options_tab)
+        self.limit_upload_frame.setFrameShape(QFrame.StyledPanel)
+        self.limit_upload_frame.setFrameShadow(QFrame.Raised)
+        limit_upload_speed_verticalLayout.addWidget(self.limit_upload_frame)
+
+        limit_upload_speed_horizontlLayout = QHBoxLayout(self.limit_upload_frame)
+        self.limit_upload_spinBox = QSpinBox(self.limit_upload_frame)
+        self.limit_download_spinBox.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Preferred)
+        self.limit_upload_spinBox.setMinimum(1)
+        limit_upload_speed_horizontlLayout.addWidget(self.limit_upload_spinBox, 1)
+
+        self.limit_upload_label = QLabel(self.limit_upload_frame)
+        self.limit_download_label.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Preferred)
+        limit_upload_speed_horizontlLayout.addWidget(self.limit_upload_label, 1)
+
+        limit_speed_horizontalLayout.addLayout(limit_upload_speed_verticalLayout)
+        self.options_tab_verticalLayout.addLayout(limit_speed_horizontalLayout)
+
         # Hide this widgets
         self.connections_label.setVisible(False)
         self.connections_spinBox.setVisible(False)
@@ -95,3 +144,8 @@ class AddTorrentWindow_Ui(TextQueue_Ui):
 
         self.user_agent_label.setText(QCoreApplication.translate("addtorrent_ui_tr", 'User agent: '))
 
+        self.limit_download_checkBox.setText(QCoreApplication.translate("addtorrent_ui_tr", 'Limit download speed'))
+        self.limit_upload_checkBox.setText(QCoreApplication.translate("addtorrent_ui_tr", 'Limit upload speed'))
+
+        self.limit_download_label.setText(QCoreApplication.translate("addtorrent_ui_tr", 'KiB/s'))
+        self.limit_upload_label.setText(QCoreApplication.translate("addtorrent_ui_tr", 'KiB/s'))

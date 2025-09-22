@@ -107,7 +107,7 @@ class TextQueue_Ui(QWidget):
 
         # options_tab
         self.options_tab = QWidget()
-        options_tab_verticalLayout = QVBoxLayout(self.options_tab)
+        self.options_tab_verticalLayout = QVBoxLayout(self.options_tab)
 
         # proxy
         proxy_verticalLayout = QVBoxLayout()
@@ -163,7 +163,7 @@ class TextQueue_Ui(QWidget):
         self.socks5_radioButton = QRadioButton(self.proxy_frame)
         proxy_gridLayout.addWidget(self.socks5_radioButton, 6, 0, 1, 1)
 
-        options_tab_verticalLayout.addLayout(proxy_verticalLayout)
+        self.options_tab_verticalLayout.addLayout(proxy_verticalLayout)
 
         # download Username & Password
         download_horizontalLayout = QHBoxLayout()
@@ -215,7 +215,7 @@ class TextQueue_Ui(QWidget):
         self.folder_label.setAlignment(Qt.AlignCenter)
         folder_gridLayout.addWidget(self.folder_label, 1, 0, 1, 1)
         download_horizontalLayout.addWidget(self.folder_frame)
-        options_tab_verticalLayout.addLayout(download_horizontalLayout)
+        self.options_tab_verticalLayout.addLayout(download_horizontalLayout)
 
         self.queue_tabWidget.addTab(self.options_tab, '')
 
@@ -254,9 +254,9 @@ class TextQueue_Ui(QWidget):
 
         limit_connections_horizontalLayout.addLayout(connections_horizontalLayout)
 
-        options_tab_verticalLayout.addLayout(limit_connections_horizontalLayout)
+        self.options_tab_verticalLayout.addLayout(limit_connections_horizontalLayout)
 
-        options_tab_verticalLayout.addStretch(1)
+        self.options_tab_verticalLayout.addStretch(1)
 
         # buttons
         self.buttons_horizontalLayout = QHBoxLayout()
