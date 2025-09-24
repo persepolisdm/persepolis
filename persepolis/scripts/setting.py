@@ -104,6 +104,10 @@ class PreferencesWindow(Setting_Ui):
 
         self.wait_queue_time.setTime(q_time)
 
+        # Torrent tab
+        self.torrent_listen_interfaces_lineEdit.setText(
+            str(self.persepolis_setting.value('listen_interface')))
+
         # save_as_tab
         self.download_folder_lineEdit.setText(
             str(self.persepolis_setting.value('download_path')))
@@ -346,12 +350,6 @@ class PreferencesWindow(Setting_Ui):
         else:
             self.column12_checkBox.setChecked(False)
 
-        # video_finder
-        try:  # Integer casting may raise exception.
-            self.max_links_spinBox.setValue(int(persepolis_setting.value('video_finder/max_links', 3)))
-        except:
-            pass
-
         # shortcuts
         self.qshortcuts_list = [self.parent.exitAction_shortcut,
                                 self.parent.minimizeAction_shortcut,
@@ -424,7 +422,6 @@ class PreferencesWindow(Setting_Ui):
         self.move(position)
 
     # run this method if user doubleclicks on an item in shortcut_table
-
     def showCaptureKeyboardWindow(self):
 
         # show KeyCapturingWindow
@@ -653,6 +650,10 @@ class PreferencesWindow(Setting_Ui):
         self.connections_spinBox.setValue(
             int(self.setting_dict['connections']))
 
+        # Torrent tab
+        self.torrent_listen_interfaces_lineEdit.setValue(
+            str(self.setting_dict['listen_interface']))
+
         # wait-queue
         wait_queue_list = self.setting_dict['wait-queue']
         q_time = QTime(wait_queue_list[0], wait_queue_list[1])
@@ -762,9 +763,6 @@ class PreferencesWindow(Setting_Ui):
         self.column11_checkBox.setChecked(True)
         self.column12_checkBox.setChecked(True)
 
-        # video finder
-        self.max_links_spinBox.setValue(3)
-
         # shortcuts
         self.shortcuts_list = [self.setting_dict['shortcuts/quit_shortcut'],
                                self.setting_dict['shortcuts/hide_window_shortcut'],
@@ -826,6 +824,9 @@ class PreferencesWindow(Setting_Ui):
         else:
             self.persepolis_setting.setValue('dont-show-addlinkwindow', 'no')
 
+        # Torrent tab
+        self.persepolis_setting.setValue(
+            'listen_interface', self.torrent_listen_interfaces_lineEdit.text())
         # changing icons
         icons = self.icon_comboBox.currentText()
         self.persepolis_setting.setValue('icons', icons)
@@ -1121,9 +1122,6 @@ class PreferencesWindow(Setting_Ui):
             qshortcut.setKey(self.shortcuts_list[i])
 
             i = i + 1
-
-        # video_finder
-        self.persepolis_setting.setValue('video_finder/max_links', self.max_links_spinBox.value())
 
         # saving value of persepolis_setting in second_key_value_dict.
         self.second_key_value_dict = {}

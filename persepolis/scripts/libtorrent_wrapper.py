@@ -195,7 +195,8 @@ class TorrentDownload():
         self.user_agent = add_link_dictionary['user_agent']
         self.start_time = add_link_dictionary['start_time']
         self.end_time = add_link_dictionary['end_time']
-        self.listening_interface = '0.0.0.0:6890'
+        self.listening_interface = main_window.persepolis_setting.value('settings/listen_interface')
+
         # download_status can be in waiting, downloading, stop, error, paused
         self.download_status = 'waiting'
         # this flag notify that download finished(stopped, complete or error)

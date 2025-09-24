@@ -202,6 +202,22 @@ class Setting_Ui(QWidget):
 
         self.setting_tabWidget.addTab(self.download_options_tab, "")
 
+        # Torrent tab
+        self.torrent_tab = QWidget()
+        torrent_tab_verticalLayout = QVBoxLayout(self.torrent_tab)
+
+        listen_horizontalLayout = QHBoxLayout()
+        self.torrent_listen_interfaces_label = QLabel(self.torrent_tab)
+        listen_horizontalLayout.addWidget(self.torrent_listen_interfaces_label)
+
+        self.torrent_listen_interfaces_lineEdit = QLineEdit(self.torrent_tab)
+        listen_horizontalLayout.addWidget(self.torrent_listen_interfaces_lineEdit)
+        listen_horizontalLayout.setContentsMargins(21, 21, 0, 0)
+        torrent_tab_verticalLayout.addLayout(listen_horizontalLayout)
+        torrent_tab_verticalLayout.addStretch(1)
+
+        self.setting_tabWidget.addTab(self.torrent_tab, '')
+
         # save_as_tab
         self.save_as_tab = QWidget()
 
@@ -426,39 +442,6 @@ class Setting_Ui(QWidget):
 
         self.setting_tabWidget.addTab(self.columns_tab, '')
 
-        # video_finder_tab
-        self.video_finder_tab = QWidget()
-
-        video_finder_layout = QVBoxLayout(self.video_finder_tab)
-        video_finder_layout.setContentsMargins(21, 21, 0, 0)
-
-        video_finder_tab_verticalLayout = QVBoxLayout()
-
-        max_links_horizontalLayout = QHBoxLayout()
-
-        # max_links_label
-        self.max_links_label = QLabel(self.video_finder_tab)
-
-        max_links_horizontalLayout.addWidget(self.max_links_label)
-
-        # max_links_spinBox
-        self.max_links_spinBox = QSpinBox(self.video_finder_tab)
-        self.max_links_spinBox.setMinimum(1)
-        self.max_links_spinBox.setMaximum(16)
-        max_links_horizontalLayout.addWidget(self.max_links_spinBox)
-        video_finder_tab_verticalLayout.addLayout(max_links_horizontalLayout)
-
-        self.video_finder_dl_path_horizontalLayout = QHBoxLayout()
-
-        self.video_finder_frame = QFrame(self.video_finder_tab)
-        self.video_finder_frame.setLayout(video_finder_tab_verticalLayout)
-
-        video_finder_tab_verticalLayout.addStretch(1)
-
-        video_finder_layout.addWidget(self.video_finder_frame)
-
-        self.setting_tabWidget.addTab(self.video_finder_tab, "")
-
         # shortcut tab
         self.shortcut_tab = QWidget()
         shortcut_tab_verticalLayout = QVBoxLayout(self.shortcut_tab)
@@ -526,7 +509,7 @@ class Setting_Ui(QWidget):
         window_verticalLayout.addLayout(buttons_horizontalLayout)
 
         # set style_tab for default
-        self.setting_tabWidget.setCurrentIndex(3)
+        self.setting_tabWidget.setCurrentIndex(self.setting_tabWidget.indexOf(self.style_tab))
 
         # labels and translations
         self.setWindowTitle(QCoreApplication.translate("setting_ui_tr", "Preferences"))
@@ -639,7 +622,7 @@ class Setting_Ui(QWidget):
         self.setting_tabWidget.setTabText(
             self.setting_tabWidget.indexOf(self.style_tab), QCoreApplication.translate("setting_ui_tr", "Preferences"))
 
-# columns_tab
+        # columns_tab
         self.show_column_label.setText(QCoreApplication.translate("setting_ui_tr", 'Show these columns:'))
         self.column0_checkBox.setText(QCoreApplication.translate("setting_ui_tr", 'File Name'))
         self.column1_checkBox.setText(QCoreApplication.translate("setting_ui_tr", 'Status'))
@@ -656,14 +639,16 @@ class Setting_Ui(QWidget):
         self.setting_tabWidget.setTabText(
             self.setting_tabWidget.indexOf(self.columns_tab), QCoreApplication.translate("setting_ui_tr", "Columns Customization"))
 
-# Video Finder options tab
+        # torrent tab
         self.setting_tabWidget.setTabText(self.setting_tabWidget.indexOf(
-            self.video_finder_tab), QCoreApplication.translate("setting_ui_tr", "Video Finder Options"))
+            self.torrent_tab), QCoreApplication.translate("setting_ui_tr", "Torrent Options"))
+        self.torrent_listen_interfaces_label.setText(QCoreApplication.translate("setting_ui_tr", "Listen interface: "))
+        self.torrent_listen_interfaces_lineEdit.setToolTip(
+            QCoreApplication.translate("setting_ui_tr", "Do not change this If you are not familiar with it."))
+        self.torrent_listen_interfaces_label.setToolTip(
+            QCoreApplication.translate("setting_ui_tr", "Do not change this If you are not familiar with it."))
 
-        self.max_links_label.setText(QCoreApplication.translate("setting_ui_tr", 'Maximum number of links to capture:<br/>'
-                                                                '<small>(If browser sends multiple video links at a time)</small>'))
-
-# window buttons
+        # window buttons
         self.defaults_pushButton.setText(QCoreApplication.translate("setting_ui_tr", "Defaults"))
         self.cancel_pushButton.setText(QCoreApplication.translate("setting_ui_tr", "Cancel"))
         self.ok_pushButton.setText(QCoreApplication.translate("setting_ui_tr", "OK"))

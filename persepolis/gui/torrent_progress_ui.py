@@ -17,15 +17,15 @@
 from persepolis.gui.progress_ui import ProgressWindow_Ui
 from persepolis.gui import resources
 try:
-    from PySide6.QtWidgets import QWidget, QVBoxLayout, QLabel, QTableWidget, QAbstractItemView, QHeaderView
+    from PySide6.QtWidgets import QWidget, QVBoxLayout, QTableWidget, QAbstractItemView, QHeaderView
     from PySide6.QtCore import QCoreApplication, Qt
 except:
-    from PyQt5.QtWidgets import QWidget, QVBoxLayout, QLabel, QTableWidget, QAbstractItemView, QHeaderView
+    from PyQt5.QtWidgets import QWidget, QVBoxLayout, QTableWidget, QAbstractItemView, QHeaderView
     from PyQt5.QtCore import QCoreApplication, Qt
 
 
 class TorrentProgressWindow_Ui(ProgressWindow_Ui):
-    def __init__(self, persepolis_setting ,parent):
+    def __init__(self, persepolis_setting, parent):
         super().__init__(persepolis_setting, parent)
 
         # status_tab
@@ -52,6 +52,11 @@ class TorrentProgressWindow_Ui(ProgressWindow_Ui):
 
         self.files_table.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAsNeeded)
         self.files_table.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAsNeeded)
+
+        # Hide limit frame
+        self.limit_frame.setVisible(False)
+
+        # Set text
         self.progress_tabWidget.setTabText(self.progress_tabWidget.indexOf(
             self.status_tab), QCoreApplication.translate("torrentprogresswindow_ui_tr", "Files Status"))
 

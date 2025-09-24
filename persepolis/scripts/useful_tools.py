@@ -249,12 +249,12 @@ def returnDefaultSettings():
                             'tray-icon': 'yes', 'browser-persepolis': 'yes', 'hide-window': 'yes', 'max-tries': 5, 'retry-wait': 5, 'timeout': 10,
                             'connections': 64, 'download_path': download_path, 'sound': 'yes', 'sound-volume': 100, 'chunk-size': 100,
                             'style': style, 'color-scheme': color_scheme, 'icons': icons, 'font': 'Ubuntu', 'font-size': 9,
-                            'video_finder/max_links': '3', 'shortcuts/delete_shortcut': delete_shortcut, 'shortcuts/remove_shortcut': remove_shortcut,
+                            'shortcuts/delete_shortcut': delete_shortcut, 'shortcuts/remove_shortcut': remove_shortcut,
                             'shortcuts/add_new_download_shortcut': add_new_download_shortcut, 'shortcuts/import_text_shortcut': import_text_shortcut,
                             'shortcuts/video_finder_shortcut': video_finder_shortcut, 'shortcuts/quit_shortcut': quit_shortcut,
                             'shortcuts/hide_window_shortcut': hide_window_shortcut, 'shortcuts/move_up_selection_shortcut': move_up_selection_shortcut,
                             'shortcuts/move_down_selection_shortcut': move_down_selection_shortcut, 'shortcuts/torrent_shortcut': torrent_shortcut,
-                            'dont-check-certificate': 'no'}
+                            'dont-check-certificate': 'no', 'listen_interface': '0.0.0.0:6890'}
 
     return default_setting_dict
 
