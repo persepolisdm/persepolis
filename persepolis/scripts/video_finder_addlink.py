@@ -275,6 +275,7 @@ class VideoFinderAddLink(AddLinkWindow):
 
         # Status Box
         self.status_box_textEdit = QTextEdit(self.link_frame)
+        self.status_box_textEdit.setReadOnly(True)
         self.status_box_textEdit.setMaximumHeight(150)
         self.link_verticalLayout.addWidget(self.status_box_textEdit)
 
@@ -327,7 +328,7 @@ class VideoFinderAddLink(AddLinkWindow):
         self.change_name_horizontalLayout.addWidget(self.thumbnail_label)
 
         # Set Texts
-        self.url_submit_pushButtontton.setText(QCoreApplication.translate("ytaddlink_src_ui_tr", 'Fetch Media List'))
+        self.url_submit_pushButtontton.setText(QCoreApplication.translate("ytaddlink_src_ui_tr", 'Fetch media information'))
         self.select_format_label.setText(QCoreApplication.translate("ytaddlink_src_ui_tr", 'Select a format'))
 
         self.video_format_selection_label.setText(QCoreApplication.translate("ytaddlink_src_ui_tr", 'Video format:'))
@@ -369,7 +370,9 @@ class VideoFinderAddLink(AddLinkWindow):
         self.resize(size)
         self.move(position)
 
-        self.status_box_textEdit.hide()
+        self.status_box_textEdit.setText(QCoreApplication.translate(
+                "ytaddlink_src_ui_tr", 'Please enter a valid video link and press fetch media information.'))
+
         self.format_selection_frame.hide()
         self.advanced_format_selection_frame.hide()
         self.advanced_format_selection_checkBox.hide()
@@ -441,8 +444,7 @@ class VideoFinderAddLink(AddLinkWindow):
         self.no_video_list.clear()
         self.no_audio_list.clear()
         self.url_submit_pushButtontton.setEnabled(False)
-        self.status_box_textEdit.setText(QCoreApplication.translate("ytaddlink_src_ui_tr", 'Fetching Media Info...'))
-        self.status_box_textEdit.show()
+        self.status_box_textEdit.setText(QCoreApplication.translate("ytaddlink_src_ui_tr", 'Fetching media information...'))
         self.ok_pushButton.setEnabled(False)
         self.download_later_pushButton.setEnabled(False)
 

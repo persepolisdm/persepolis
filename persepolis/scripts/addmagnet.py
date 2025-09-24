@@ -171,13 +171,10 @@ class AddMagnetWindow(AddMagnetWindow_ui):
 
         # Set status
         self.status_box_textEdit.setText(
-            QCoreApplication.translate("addmagnet_ui_tr", "Please enter a valid magnet link and press fetch information button"))
+            QCoreApplication.translate("addmagnet_ui_tr", "Please enter a valid magnet link and press fetch information button."))
 
     # This method fetchs metadata
     def fetchMetaData(self, button):
-        # Change status color to white for next status
-        self.status_box_textEdit.setStyleSheet("color: Green;")
-
         # change status
         self.status_box_textEdit.setText(QCoreApplication.translate("addtorrent_ui_tr", "Please Wait..."))
 
@@ -277,8 +274,7 @@ class AddMagnetWindow(AddMagnetWindow_ui):
 
         # Update status with red color
         error = "ERROR:\n{}".format(error)
-        self.status_box_textEdit.setStyleSheet("color: red;")
-        self.status_box_textEdit.setText(error)
+        self.status_box_textEdit.setText('<font color="#f11">' + error + '</font>')
         logger.sendToLog(error, "ERROR")
 
     # this method checks all check boxes
