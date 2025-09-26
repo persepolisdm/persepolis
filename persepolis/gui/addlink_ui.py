@@ -202,7 +202,7 @@ class AddLinkWindow_Ui(QWidget):
         # more options tab
         self.more_options_tab = QWidget(self)
 
-        more_options_tab_verticalLayout = QVBoxLayout(self.more_options_tab)
+        self.more_options_tab_verticalLayout = QVBoxLayout(self.more_options_tab)
 
         # download Username & Password ->
         download_horizontalLayout = QHBoxLayout()
@@ -254,7 +254,7 @@ class AddLinkWindow_Ui(QWidget):
         self.folder_label.setAlignment(QtCore.Qt.AlignCenter)
         gridLayout_3.addWidget(self.folder_label, 1, 0, 1, 1)
         download_horizontalLayout.addWidget(self.folder_frame)
-        more_options_tab_verticalLayout.addLayout(download_horizontalLayout)
+        self.more_options_tab_verticalLayout.addLayout(download_horizontalLayout)
 
         # start time ->
         time_limit_horizontalLayout = QHBoxLayout()
@@ -307,7 +307,7 @@ class AddLinkWindow_Ui(QWidget):
 
         limit_verticalLayout.addWidget(self.limit_frame)
         time_limit_horizontalLayout.addLayout(limit_verticalLayout)
-        more_options_tab_verticalLayout.addLayout(time_limit_horizontalLayout)
+        self.more_options_tab_verticalLayout.addLayout(time_limit_horizontalLayout)
 
         # number of connections ->
         connections_horizontalLayout = QHBoxLayout()
@@ -328,9 +328,9 @@ class AddLinkWindow_Ui(QWidget):
         connections_horizontalLayout.addWidget(self.connections_frame)
         connections_horizontalLayout.addStretch(1)
 
-        more_options_tab_verticalLayout.addLayout(connections_horizontalLayout)
+        self.more_options_tab_verticalLayout.addLayout(connections_horizontalLayout)
 
-        more_options_tab_verticalLayout.addStretch(1)
+        self.more_options_tab_verticalLayout.addStretch(1)
 
         self.add_link_tabWidget.addTab(self.more_options_tab, '')
 

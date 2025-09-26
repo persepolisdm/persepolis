@@ -724,6 +724,41 @@ class PersepolisDB():
         # return the results
         return dictionary
 
+    # this method updates torrent_db_table
+    def updateTorrentTable(self, list_):
+        # lock data base
+        self.lockCursor()
+
+        keys_list = ['files_list',
+                     'selected_files_list',
+                     'is_dir',
+                     'type',
+                     'download_limit',
+                     'upload_limit'
+                     ]
+
+        for dict_ in list_:
+            for key in keys_list:
+                # if a key is missed in dict_,
+                # then add this key to the dict_ and assign None value for the key.
+                if key not in dict_.keys():
+                    dict_[key] = None
+
+            # update data base if value for the keys is not None
+            self.persepolis_db_cursor.execute("""UPDATE torrent_db_table SET   files_list = coalesce(:files_list, files_list),
+                                                                                    selected_files_list = coalesce(:selected_files_list, selected_files_list),
+                                                                                    is_dir = coalesce(:is_dir, is_dir),
+                                                                                    type = coalesce(:type, type),
+                                                                                    download_limit = coalesce(:download_limit, download_limit),
+                                                                                    upload_limit = coalesce(:upload_limit, upload_limit)
+                                                                                    WHERE gid = :gid""", dict_)
+
+        # commit the changes
+        self.persepolis_db_connection.commit()
+
+        # job is done! open the lock
+        self.lock = False
+
     # Search an item by GID
     def searchGidInVideoFinderTable(self, gid):
         # lock data base

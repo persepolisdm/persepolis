@@ -266,17 +266,18 @@ class AddTorrentWindow(AddTorrentWindow_Ui):
 
     # this method returns upload and download limit speed
     def getLimitSpeedInformation(self):
+        # -1 means no limit
         if self.limit_download_checkBox.isChecked() is True:
             download_limit = self.limit_download_spinBox.value()
             download_limit *= 1024
         else:
-            download_limit = None
+            download_limit = -1
 
         if self.limit_upload_checkBox.isChecked() is True:
             upload_limit = self.limit_upload_spinBox.value()
             upload_limit *= 1024
         else:
-            upload_limit = None
+            upload_limit = -1
 
         return download_limit, upload_limit
 

@@ -274,10 +274,11 @@ class TorrentDownload():
                     session_settings['proxy_type'] = libtorrent.proxy_type_t.http
 
         # download and upload speed limit
-        if download_limit:
+        # -1 means no limit
+        if download_limit != -1:
             session_settings['download_rate_limit'] = download_limit
 
-        if upload_limit:
+        if upload_limit != -1:
             session_settings['upload_rate_limit'] = upload_limit
 
         # set user_agent

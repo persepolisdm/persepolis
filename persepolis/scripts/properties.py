@@ -16,56 +16,98 @@
 
 try:
     from PySide6.QtCore import Qt, QSize, QPoint, QDir, QTime, QCoreApplication
-    from PySide6.QtWidgets import QLabel, QLineEdit, QFileDialog
+    from PySide6.QtWidgets import QFileDialog
     from PySide6.QtGui import QIcon
 except:
     from PyQt5.QtCore import Qt, QSize, QPoint, QDir, QTime, QCoreApplication
-    from PyQt5.QtWidgets import QLabel, QLineEdit, QFileDialog
+    from PyQt5.QtWidgets import QFileDialog
     from PyQt5.QtGui import QIcon
 
-from persepolis.gui.addlink_ui import AddLinkWindow_Ui
+from persepolis.gui.properties_ui import PropertiesWindow_Ui
 from persepolis.scripts.check_proxy import getProxy
 import os
 
 
-class PropertiesWindow(AddLinkWindow_Ui):
+class PropertiesWindow(PropertiesWindow_Ui):
     def __init__(self, main_window, callback, gid, persepolis_setting, video_finder_dictionary=None):
         super().__init__(persepolis_setting)
 
         self.main_window = main_window
         self.persepolis_setting = persepolis_setting
         self.video_finder_dictionary = video_finder_dictionary
-
-        self.download_later_pushButton.hide()  # hide download_later_pushButton
-        self.change_name_checkBox.hide()  # hide change_name_checkBox
-        self.change_name_lineEdit.hide()  # hide change_name_lineEdit
+        self.torrent_dict = None
 
         # add new QLineEdit and QLineEdit for audio link if we have video finder links
         if self.video_finder_dictionary:
+            # show widgets
+            self.link_label_2.show()
+            self.link_lineEdit_2.show()
 
-            self.link_label_2 = QLabel(self.link_frame)
-            self.link_horizontalLayout.addWidget(self.link_label_2)
-
-            self.link_lineEdit_2 = QLineEdit(self.link_frame)
-            self.link_horizontalLayout.addWidget(self.link_lineEdit_2)
             self.link_lineEdit_2.textChanged.connect(self.linkLineChanged)
-
-            self.link_label.setText(QCoreApplication.translate("addlink_ui_tr", "Video Link: "))
-            self.link_label_2.setText(QCoreApplication.translate("addlink_ui_tr", "Audio Link: "))
 
             # gid_1 >> video_gid , gid_2 >> audio_gid
             self.gid_1 = self.video_finder_dictionary['video_gid']
             self.gid_2 = self.video_finder_dictionary['audio_gid']
 
+            # Correct labels
+            self.link_label.setText(QCoreApplication.translate("properties_ui_tr", "Video Link: "))
+            self.link_label_2.setText(QCoreApplication.translate("properties_ui_tr", "Audio Link: "))
+
         else:
 
             self.gid_1 = gid
+            # Check if gid is belong to torrent
+            torrent_dict = self.main_window.persepolis_db.searchGidInTorrentTable(self.gid_1)
+            if torrent_dict:
+                # Show widgets
+                self.limit_upload_checkBox.show()
+                self.limit_download_checkBox.show()
+                self.limit_download_frame.show()
+                self.limit_upload_frame.show()
+
+                self.limit_upload_frame.setEnabled(False)
+                self.limit_upload_checkBox.toggled.connect(self.limitUploadFrame)
+
+                self.limit_download_frame.setEnabled(False)
+                self.limit_download_checkBox.toggled.connect(self.limitDownloadFrame)
+                download_limit = torrent_dict['download_limit']
+                upload_limit = torrent_dict['upload_limit']
+
+                # -1 means no limit
+                if download_limit != -1:
+                    self.limit_download_spinBox.setValue(download_limit // 1024)
+                    self.limit_download_checkBox.setChecked(True)
+                else:
+                    self.download_checkBox.setChecked(False)
+
+                if upload_limit != -1:
+                    self.limit_upload_spinBox.setValue(upload_limit // 1024)
+                    self.limit_upload_checkBox.setChecked(True)
+                else:
+                    self.limit_upload_checkBox.setChecked(False)
+
+                # Hide this widgets
+                self.referer_label.hide()
+                self.referer_lineEdit.hide()
+                self.load_cookies_label.hide()
+                self.load_cookies_lineEdit.hide()
+                self.header_label.hide()
+                self.header_lineEdit.hide()
+                self.connections_label.hide()
+                self.connections_spinBox.hide()
+
+                # disable link lineEdit
+                self.link_lineEdit.setEnabled(False)
+
+                torrent_type = torrent_dict['type']
+                # Correct label for torrent files
+                if torrent_type == 'file':
+                    self.link_label.setText(QCoreApplication.translate("properties_ui_tr", "Torrent file: "))
 
         self.callback = callback
 
         # detect_proxy_pushButton
-        self.detect_proxy_pushButton.clicked.connect(
-            self.detectProxy)
+        self.detect_proxy_pushButton.clicked.connect(self.detectProxy)
 
         # connect folder_pushButton
         self.folder_pushButton.clicked.connect(self.changeFolder)
@@ -311,6 +353,20 @@ class PropertiesWindow(AddLinkWindow_Ui):
         else:
             self.end_frame.setEnabled(False)
 
+    def limitDownloadFrame(self, checkBox):
+
+        if self.limit_download_checkBox.isChecked():
+            self.limit_download_frame.setEnabled(True)
+        else:
+            self.limit_download_frame.setEnabled(False)
+
+    def limitUploadFrame(self, checkBox):
+
+        if self.limit_upload_checkBox.isChecked():
+            self.limit_upload_frame.setEnabled(True)
+        else:
+            self.limit_upload_frame.setEnabled(False)
+
     def changeFolder(self, button):
         fname = QFileDialog.getExistingDirectory(self, 'Open f', '/home')
 
@@ -425,6 +481,23 @@ class PropertiesWindow(AddLinkWindow_Ui):
 
         return referer, header, user_agent, load_cookies
 
+    # this method returns upload and download limit speed
+    def getLimitSpeedInformation(self):
+        # -1 means no limit
+        if self.limit_download_checkBox.isChecked() is True:
+            download_limit = self.limit_download_spinBox.value()
+            download_limit *= 1024
+        else:
+            download_limit = -1
+
+        if self.limit_upload_checkBox.isChecked() is True:
+            upload_limit = self.limit_upload_spinBox.value()
+            upload_limit *= 1024
+        else:
+            upload_limit = -1
+
+        return download_limit, upload_limit
+
     def okButtonPressed(self, button):
         # write user's new inputs in persepolis_setting for next time if needed
         if self.folder_checkBox.isChecked() is True:
@@ -531,7 +604,6 @@ class PropertiesWindow(AddLinkWindow_Ui):
                 new_category_gid_list.append(self.gid_2)
                 self.main_window.persepolis_db.updateCategoryTable([new_category_dict])
 
-
         # if any thing in add_link_dictionary_1 is changed,then update data base!
         for key in self.add_link_dictionary_1.keys():
             if self.add_link_dictionary_1[key] != self.add_link_dictionary_1_backup[key]:
@@ -570,6 +642,15 @@ class PropertiesWindow(AddLinkWindow_Ui):
                 dictionary = {'video_gid': self.gid_1,
                               'download_path': download_path}
                 self.main_window.persepolis_db.updateVideoFinderTable[dictionary]
+
+        # get download and upload limit speed (It's for torrent)
+        if self.torrent_dict:
+            # get new values and update database
+            torrent_dict = {'gid': self.gid_1}
+            download_limit, upload_limit = self.getLimitSpeedInformation()
+            torrent_dict['download_limit'] = download_limit
+            torrent_dict['upload_limit'] = upload_limit
+            self.main_window.persepolis_db.updateTorrentTable([torrent_dict])
 
         # callback to mainwindow
         self.callback(self.add_link_dictionary_1, self.gid_1, new_category, self.video_finder_dictionary)
