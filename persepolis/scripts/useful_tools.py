@@ -254,7 +254,7 @@ def returnDefaultSettings():
                             'shortcuts/video_finder_shortcut': video_finder_shortcut, 'shortcuts/quit_shortcut': quit_shortcut,
                             'shortcuts/hide_window_shortcut': hide_window_shortcut, 'shortcuts/move_up_selection_shortcut': move_up_selection_shortcut,
                             'shortcuts/move_down_selection_shortcut': move_down_selection_shortcut, 'shortcuts/torrent_shortcut': torrent_shortcut,
-                            'dont-check-certificate': 'no', 'listen_interface': '0.0.0.0:6890'}
+                            'dont-check-certificate': 'no', 'listen_interface': '0.0.0.0:6890', 'magnet_timeout': 30}
 
     return default_setting_dict
 

@@ -213,7 +213,17 @@ class Setting_Ui(QWidget):
         self.torrent_listen_interfaces_lineEdit = QLineEdit(self.torrent_tab)
         listen_horizontalLayout.addWidget(self.torrent_listen_interfaces_lineEdit)
         listen_horizontalLayout.setContentsMargins(21, 21, 0, 0)
+
+        magnet_info_timeout_horizontalLayout = QHBoxLayout()
+        self.magnet_info_timeout_label = QLabel(self.torrent_tab)
+        magnet_info_timeout_horizontalLayout.addWidget(self.magnet_info_timeout_label)
         torrent_tab_verticalLayout.addLayout(listen_horizontalLayout)
+
+        self.magnet_info_timeout_spinBox = QSpinBox(self.torrent_tab)
+        magnet_info_timeout_horizontalLayout.addWidget(self.magnet_info_timeout_spinBox)
+        magnet_info_timeout_horizontalLayout.setContentsMargins(21, 21, 0, 0)
+        torrent_tab_verticalLayout.addLayout(magnet_info_timeout_horizontalLayout)
+
         torrent_tab_verticalLayout.addStretch(1)
 
         self.setting_tabWidget.addTab(self.torrent_tab, '')
@@ -647,6 +657,9 @@ class Setting_Ui(QWidget):
             QCoreApplication.translate("setting_ui_tr", "Do not change this If you are not familiar with it."))
         self.torrent_listen_interfaces_label.setToolTip(
             QCoreApplication.translate("setting_ui_tr", "Do not change this If you are not familiar with it."))
+        self.magnet_info_timeout_label.setText(QCoreApplication.translate("setting_ui_tr", "Magnet info timeout(in seconds): "))
+        self.magnet_info_timeout_label.setToolTip(QCoreApplication.translate("setting_ui_tr", "Set the timeout (in seconds) for receiving magnet metadata."))
+        self.magnet_info_timeout_spinBox.setToolTip(QCoreApplication.translate("setting_ui_tr", "Set the timeout (in seconds) for receiving magnet metadata."))
 
         # window buttons
         self.defaults_pushButton.setText(QCoreApplication.translate("setting_ui_tr", "Defaults"))

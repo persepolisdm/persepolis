@@ -63,7 +63,7 @@ def totalDownloadSize(files_list, selected_files_index):
 
 
 class MagnetLink():
-    def __init__(self, options_dict):
+    def __init__(self, options_dict, persepolis_setting):
         self.options_dict = options_dict
         self.magnet_link = self.options_dict['link']
         self.ip = options_dict['ip']
@@ -74,7 +74,8 @@ class MagnetLink():
         self.download_user = options_dict['download_user']
         self.download_passwd = options_dict['download_passwd']
         self.user_agent = options_dict['user_agent']
-        self.listening_interface = '0.0.0.0:6890'
+        self.listening_interface = persepolis_setting.value('settings/listen_interface')
+        self.magnet_info_timeout = persepolis_setting.value('settings/magnet_timeout')
 
     # Initialize session
     def createSession(self):
@@ -143,12 +144,11 @@ class MagnetLink():
         self.handler = self.libtorrent_session.add_torrent(parameters)
 
     def info(self):
-        timeout = 60.0
         interval = 1.0
         start = time.time()
         status = self.handler.status()
 
-        while not status.has_metadata and (time.time() - start) < timeout:
+        while not status.has_metadata and (time.time() - start) < self.magnet_info_timeout:
             time.sleep(interval)
             status = self.handler.status()
 
@@ -158,7 +158,7 @@ class MagnetLink():
             return self.handler.torrent_file()
         else:
             # timed out
-            raise TimeoutError("metadata not available after 60 seconds")
+            raise TimeoutError("Metadata retrieval operation failed.")
 
 
 class TorrentFile():
@@ -196,7 +196,7 @@ class TorrentDownload():
         self.start_time = add_link_dictionary['start_time']
         self.end_time = add_link_dictionary['end_time']
         self.listening_interface = main_window.persepolis_setting.value('settings/listen_interface')
-
+        self.magnet_info_timeout = main_window.persepolis_setting.value('settings/magnet_timeout')
         # download_status can be in waiting, downloading, stop, error, paused
         self.download_status = 'waiting'
         # this flag notify that download finished(stopped, complete or error)
@@ -409,12 +409,11 @@ class TorrentDownload():
         stalled = False
 
         # Wait for magnet link metadata
-        timeout = 10.0
         interval = 1.0
         start = time.time()
         status = self.handler.status()
 
-        while not status.has_metadata and (time.time() - start) < timeout:
+        while not status.has_metadata and (time.time() - start) < self.magnet_info_timeout:
             time.sleep(interval)
             status = self.handler.status()
 
@@ -422,7 +421,7 @@ class TorrentDownload():
         if not (status.has_metadata):
             # change download status to error
             self.download_status = 'error'
-            logger.sendToLog("meta data not available.", 'DOWNLOAD ERROR')
+            logger.sendToLog("Metadata retrieval operation failed.", 'DOWNLOAD ERROR')
 
         # Run this loop until the download is finished.
         while (self.download_status == 'downloading' or self.download_status == 'paused'):

@@ -35,9 +35,9 @@ class GetMetaDataThread(QThread):
     NOMETADATASIGNAL = Signal(str)
     TORRENTINFORMATIONSIGNAL = Signal(list)
 
-    def __init__(self, options_dict):
+    def __init__(self, options_dict, persepolis_setting):
         super().__init__()
-        self.magnet_link = libtorrent_wrapper.MagnetLink(options_dict)
+        self.magnet_link = libtorrent_wrapper.MagnetLink(options_dict, persepolis_setting)
 
     def run(self):
         try:
@@ -204,7 +204,7 @@ class AddMagnetWindow(AddMagnetWindow_ui):
                        'user_agent': user_agent,
                        }
 
-        fetcher_thread = GetMetaDataThread(magnet_dict)
+        fetcher_thread = GetMetaDataThread(magnet_dict, self.parent.persepolis_setting)
         self.parent.threadPool.append(fetcher_thread)
         self.parent.threadPool[-1].start()
         self.parent.threadPool[-1].TORRENTINFORMATIONSIGNAL.connect(self.metaDataIsReady)

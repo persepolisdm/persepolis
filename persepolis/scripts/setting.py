@@ -107,6 +107,8 @@ class PreferencesWindow(Setting_Ui):
         # Torrent tab
         self.torrent_listen_interfaces_lineEdit.setText(
             str(self.persepolis_setting.value('listen_interface')))
+        self.magnet_info_timeout_spinBox.setValue(
+            int(self.persepolis_setting.value('magnet_timeout')))
 
         # save_as_tab
         self.download_folder_lineEdit.setText(
@@ -651,8 +653,10 @@ class PreferencesWindow(Setting_Ui):
             int(self.setting_dict['connections']))
 
         # Torrent tab
-        self.torrent_listen_interfaces_lineEdit.setValue(
+        self.torrent_listen_interfaces_lineEdit.setText(
             str(self.setting_dict['listen_interface']))
+        self.magnet_info_timeout_spinBox.setValue(
+            int(self.setting_dict['magnet_timeout']))
 
         # wait-queue
         wait_queue_list = self.setting_dict['wait-queue']
@@ -827,6 +831,9 @@ class PreferencesWindow(Setting_Ui):
         # Torrent tab
         self.persepolis_setting.setValue(
             'listen_interface', self.torrent_listen_interfaces_lineEdit.text())
+        self.persepolis_setting.setValue(
+            'magnet_timeout', self.magnet_info_timeout_spinBox.value())
+
         # changing icons
         icons = self.icon_comboBox.currentText()
         self.persepolis_setting.setValue('icons', icons)

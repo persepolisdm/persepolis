@@ -118,7 +118,7 @@ class AddTorrentWindow_Ui(TextQueue_Ui):
         limit_upload_speed_horizontlLayout = QHBoxLayout(self.limit_upload_frame)
         self.limit_upload_spinBox = QSpinBox(self.limit_upload_frame)
         self.limit_download_spinBox.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Preferred)
-        self.limit_upload_spinBox.setMinimum(1)
+        self.limit_upload_spinBox.setMinimum(0)
         limit_upload_speed_horizontlLayout.addWidget(self.limit_upload_spinBox, 1)
 
         self.limit_upload_label = QLabel(self.limit_upload_frame)
