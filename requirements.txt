@@ -4,3 +4,4 @@ urllib3;
 setproctitle;
 psutil;
 yt-dlp;
+libtorrent;

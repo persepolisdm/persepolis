@@ -88,6 +88,14 @@ except:
     print('Warning: yt-dlp is not installed!')
     not_installed = not_installed + 'yt-dlp, '
 
+# libtorrent
+try:
+    import libtorrent
+    print('libtorrent is found')
+except:
+    print('Warning: libtorrent is not installed!')
+    not_installed = not_installed + 'libtorrent, '
+
 # ffmpeg
 answer = os.system('ffmpeg -version 1>/dev/null')
 if answer != 0:
