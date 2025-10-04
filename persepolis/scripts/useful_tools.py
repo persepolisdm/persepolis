@@ -587,13 +587,6 @@ def getExecPath():
     return exec_dictionary
 
 
-# This method returns data and time in string format
-# for example >> 2017/09/09 , 13:12:26
-def nowDate():
-    date = time.strftime("%Y/%m/%d , %H:%M:%S")
-    return date
-
-
 def fold(header):
     line = "%s: %s" % (header[0], header[1])
     if len(line) < 998:
@@ -707,3 +700,21 @@ def checkYtDlp():
         return True
     except ModuleNotFoundError:
         return False
+
+
+# This function returns data and time in string format
+# for example >> 2017/09/09 , 13:12:26
+def nowDate():
+    date = time.strftime("%Y/%m/%d , %H:%M:%S")
+    return date
+
+
+def sigmaTime(time):
+    hour, minute = time.split(":")
+    return (int(hour) * 60 + int(minute))
+
+
+# nowTime returns now time in HH:MM format!
+def nowTime():
+    now_time = time.strftime("%H:%M")
+    return sigmaTime(now_time)

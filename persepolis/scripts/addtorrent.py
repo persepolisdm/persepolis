@@ -417,6 +417,9 @@ class AddTorrentWindow(AddTorrentWindow_Ui):
                 file_size = self.torrent_files_list[index][1]
                 total_size = file_size + total_size
 
+        # reverse torrent_files_list again
+        self.torrent_files_list.reverse()
+
         # Create callback for mainwindow
         self.callback(dict_, self.torrent_files_list, self.checked_files_list, total_size, category, download_later, self.is_folder, "file")
 

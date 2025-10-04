@@ -17,7 +17,7 @@ import threading
 from persepolis.constants import VERSION
 from persepolis.scripts.osCommands import makeDirs, moveFileOrFolder
 from pathlib import Path
-from persepolis.scripts.useful_tools import convertTime, humanReadableSize, freeSpace, returnNewFileName
+from persepolis.scripts.useful_tools import convertTime, humanReadableSize, freeSpace, returnNewFileName, nowDate, sigmaTime, nowTime
 from persepolis.constants import OS
 import time
 import os
@@ -40,7 +40,6 @@ def filesList(info):
         is_in_folder = bool(os.path.dirname(rel))
         if is_in_folder:
             break
-
     return files.name(), files_list, is_in_folder
 
 
@@ -197,7 +196,7 @@ class TorrentDownload():
         self.end_time = add_link_dictionary['end_time']
         self.listening_interface = main_window.persepolis_setting.value('settings/listen_interface')
         self.magnet_info_timeout = main_window.persepolis_setting.value('settings/magnet_timeout')
-        # download_status can be in waiting, downloading, stop, error, paused
+        # download_status can be in waiting, scheduled, downloading, stop, error, paused
         self.download_status = 'waiting'
         # this flag notify that download finished(stopped, complete or error)
         # in this situation download status must be written to the database
@@ -337,49 +336,34 @@ class TorrentDownload():
 
         return enough_free_space
 
-    # This method returns data and time in string format
-    # for example >> 2017/09/09 , 13:12:26
-    def nowDate(self):
-        date = time.strftime("%Y/%m/%d , %H:%M:%S")
-        return date
-
-    def sigmaTime(self, time):
-        hour, minute = time.split(":")
-        return (int(hour) * 60 + int(minute))
-
-    # nowTime returns now time in HH:MM format!
-    def nowTime(self):
-        now_time = time.strftime("%H:%M")
-        return self.sigmaTime(now_time)
-
     # this method creates sleep time,if user sets "start time" for download.
     def startTime(self):
         # write some messages
         logger.sendToLog("Download starts at " + self.start_time + ' - GID: ' + self.gid, "DOWNLOADS")
 
         # start_time that specified by user
-        sigma_start = self.sigmaTime(self.start_time)
+        sigma_start = sigmaTime(self.start_time)
 
         # get current time
-        sigma_now = self.nowTime()
+        sigma_now = nowTime()
 
         # this loop is continuing until download time arrival!
         while sigma_start != sigma_now and self.download_status == 'scheduled':
             time.sleep(2.1)
-            sigma_now = self.nowTime()
+            sigma_now = nowTime()
 
     # This method will stop the download when the end_time is reached.
     def endTime(self):
         logger.sendToLog("End time is activated: " + self.end_time + ' - GID: ' + self.gid, "DOWNLOADS")
-        sigma_end = self.sigmaTime(self.end_time)
+        sigma_end = sigmaTime(self.end_time)
 
         # get current time
-        sigma_now = self.nowTime()
+        sigma_now = nowTime()
 
         # while current time is not equal to end_time, continue the loop
         while sigma_end != sigma_now and (self.download_status not in ['stopped', 'error']):
             # get current time
-            sigma_now = self.nowTime()
+            sigma_now = nowTime()
             time.sleep(2.1)
 
         # Time is up!
@@ -479,13 +463,6 @@ class TorrentDownload():
                 # Download complete!
                 self.download_status = 'complete'
 
-            # if download_status == libtorrent.torrent_status.paused:
-            #     self.download_status = 'paused'
-            #
-            # if download_status == libtorrent.torrent_status.downloading and status.download_rate > 0:
-            #     self.download_status = 'downloading'
-            #
-            # Handle alerts (async messages, including errors)
             alerts = self.libtorrent_session.pop_alerts()
             for a in alerts:
                 # error-category alerts
@@ -559,7 +536,7 @@ class TorrentDownload():
             self.download_status = "waiting"
 
         # get last_try_date
-        now_date = self.nowDate()
+        now_date = nowDate()
 
         # update data_base
         dict_ = {'gid': self.gid, 'status': self.download_status, 'last_try_date': now_date}
@@ -679,7 +656,7 @@ class TorrentDownload():
                 # remove item
                 self.main_window.download_sessions_list.remove(download_session_dict)
 
-        # remove gid from single_video_link_gid_list
+        # remove gid from torrent_gid_list
         if self.gid in self.main_window.torrent_gid_list:
             self.main_window.torrent_gid_list.remove(self.gid)
 
@@ -766,3 +743,314 @@ class TorrentDownload():
     # This method limits download speed
     def limitSpeed(self, limit_value):
         pass
+
+
+# This class will be used for seeding
+class TorrentSeed():
+    def __init__(self, add_link_dictionary, main_window, gid):
+        self.add_link_dictionary = add_link_dictionary
+        self.main_window = main_window
+        self.gid = gid
+        # torrent file path has been saved as link key in add_link_dictionary
+        self.link = add_link_dictionary['link']
+        self.name = add_link_dictionary['out']
+        self.download_path = add_link_dictionary['download_path']
+        self.ip = add_link_dictionary['ip']
+        self.port = add_link_dictionary['port']
+        self.proxy_user = add_link_dictionary['proxy_user']
+        self.proxy_passwd = add_link_dictionary['proxy_passwd']
+        self.proxy_type = add_link_dictionary['proxy_type']
+        self.download_user = add_link_dictionary['download_user']
+        self.download_passwd = add_link_dictionary['download_passwd']
+        self.user_agent = add_link_dictionary['user_agent']
+        self.start_time = add_link_dictionary['start_time']
+        self.end_time = add_link_dictionary['end_time']
+        self.listening_interface = main_window.persepolis_setting.value('settings/listen_interface')
+        self.magnet_info_timeout = main_window.persepolis_setting.value('settings/magnet_timeout')
+
+        # seeding_status can be in complete, seeding
+        # The status is either in the seeding state or in the complete state.
+        # When the download finishes, seeding begins. When seeding stops, the status reverts
+        # to the previous state, that is, complete.
+        self.seeding_status = 'complete'
+
+        # this flag notify that seeding stopped
+        # in this situation status must be written to the database
+        # None means, seeding not finished yet.
+        # False meanse, seeding has been finished, but status must be written to the database
+        # True meanse, status has been written to the database
+        self.write_it_to_the_database = None
+        self.handler = None
+        self.thread_list = []
+        self.error_message = ''
+        self.upload_speed_str = '0'
+        self.is_dir = False
+        # current file or folder path of downloaded torrent.
+        self.f_path = os.path.join(self.download_path, self.name)
+        self.download_progress_per_file_list = []
+
+    # Initialize session
+    def createSession(self):
+        # get torrent dictionary from data base
+        torrent_dict = self.main_window.persepolis_db.searchGidInTorrentTable(self.gid)
+
+        # Find torrent type, index of selected file, files list and
+        # if we have single file or folder
+        torrent_type = torrent_dict['type']
+        self.files_index_list = torrent_dict['selected_files_list']
+        self.files_list = torrent_dict['files_list']
+        self.seeding_ability = torrent_dict['seeding']
+        number_of_files = len(self.files_list)
+
+        download_limit = torrent_dict['download_limit']
+        upload_limit = torrent_dict['upload_limit']
+
+        # Create a session and add settings
+        session_settings = {'listen_interfaces': self.listening_interface}
+
+        # Set session parameters
+        session_parameters = libtorrent.add_torrent_params()
+        if torrent_type == 'file':
+            # self.link contains torrent_file_path
+            torrent_file = TorrentFile(self.link)
+            info, error = torrent_file.info()
+            session_parameters.ti = info
+        else:
+            # Magnet
+            session_parameters = libtorrent.parse_magnet_uri(self.link)
+
+        # check if user set proxy
+        if self.ip:
+            session_settings['proxy_hostname'] = self.ip
+            if self.port:
+                session_settings['proxy_port'] = int(self.port)
+            if self.proxy_user:
+                session_settings['proxy_username'] = self.proxy_user
+            if self.proxy_passwd:
+                session_settings['proxy_password'] = self.proxy_passwd
+
+            if self.proxy_type == 'socks5':
+                if self.proxy_user:
+                    session_settings['proxy_type'] = libtorrent.proxy_type_t.socks5_pw
+                else:
+                    session_settings['proxy_type'] = libtorrent.proxy_type_t.socks5
+            elif self.proxy_type == 'http':
+                if self.proxy_user:
+                    session_settings['proxy_type'] = libtorrent.proxy_type_t.http_pw
+                else:
+                    session_settings['proxy_type'] = libtorrent.proxy_type_t.http
+
+        # download and upload speed limit
+        # -1 means no limit
+        if download_limit != -1:
+            session_settings['download_rate_limit'] = download_limit
+
+        if upload_limit != -1:
+            session_settings['upload_rate_limit'] = upload_limit
+
+        # set user_agent
+        if self.user_agent:
+            # setting user_agent to the session
+            session_settings['user_agent'] = self.user_agent
+        else:
+            session_settings['user_agent'] = 'PersepolisDM/' + str(VERSION.version_str)
+
+        # set storage mode
+        session_parameters.storage_mode = libtorrent.storage_mode_t.storage_mode_allocate
+
+        # Set priorities: 0 = do not seed, 1 = normal priority
+        priority_list = [0] * number_of_files
+        for index in self.files_index_list:
+            file = self.files_list[index]
+            file_size = file[1]
+            file_path = file[0]
+            download_path = Path(self.download_path)
+            parent_dir = download_path.parent
+            complete_file_path = os.path.join(parent_dir, file_path)
+
+            # Check existance of file
+            if os.path.isfile(complete_file_path):
+                # check file size
+                if os.path.getsize(complete_file_path) == file_size:
+                    # So file is valid. Add it to sedding list
+                    priority_list[index] = 1
+
+        # set download path
+        session_parameters.save_path = self.download_path
+
+        # Force seeding
+        session_parameters.flags = (libtorrent.add_torrent_params_flags_t.flag_seed_mode)
+        # apply settings
+        self.libtorrent_session = libtorrent.session(session_settings)
+        return session_parameters
+
+    # this method creates sleep time,if user sets "start time" for download.
+    def startTime(self):
+        # write some messages
+        logger.sendToLog("Seeding starts at " + self.start_time + ' - GID: ' + self.gid, "DOWNLOADS")
+
+        # start_time that specified by user
+        sigma_start = sigmaTime(self.start_time)
+
+        # get current time
+        sigma_now = nowTime()
+
+        # this loop is continuing until seeding time arrival!
+        while sigma_start != sigma_now and self.seeding_ability == 'enable':
+            time.sleep(2.1)
+            sigma_now = nowTime()
+
+            # check data_base perhaps seeding disabled by user
+            torrent_dict = self.main_window.persepolis_db.searchGidInTorrentTable(self.gid)
+            self.seeding_ability = torrent_dict['seeding']
+
+    # This method will stop the download when the end_time is reached.
+    def endTime(self):
+        logger.sendToLog("End time is activated: " + self.end_time + ' - GID: ' + self.gid, "DOWNLOADS")
+        sigma_end = sigmaTime(self.end_time)
+
+        # get current time
+        sigma_now = nowTime()
+
+        # while current time is not equal to end_time, continue the loop
+        while sigma_end != sigma_now and (self.seeding_status not in ['stopped', 'error']):
+            # get current time
+            sigma_now = nowTime()
+            time.sleep(2.1)
+
+        # Time is up!
+        if self.seeding_status != 'complete':
+            logger.sendToLog("Time is up! - GID:" + self.gid, "DOWNLOADS")
+
+            # stop seeding
+            self.seedStop()
+
+            # job is done so change end_time value to None in data_base
+            self.main_window.persepolis_db.setDefaultGidInAddlinkTable(self.gid, end_time=True)
+
+    # this method runs endTime in a thread.
+    def runEndTimeThread(self):
+        end_time_thread = threading.Thread(
+            target=self.endTime)
+        end_time_thread.setDaemon(True)
+        end_time_thread.start()
+        self.thread_list.append(end_time_thread)
+
+    def createHandler(self, parameters):
+        self.handler = self.libtorrent_session.add_torrent(parameters)
+
+    # this method checks and manages seeding progress.
+    def checkSeedingProgress(self):
+        logger.sendToLog("Seeding starts! - GID:" + self.gid, "DOWNLOADS")
+
+        # Wait for magnet link metadata
+        interval = 1.0
+        start = time.time()
+        status = self.handler.status()
+
+        while not status.has_metadata and (time.time() - start) < self.magnet_info_timeout:
+            time.sleep(interval)
+            status = self.handler.status()
+
+        # after loop: check whether metadata arrived
+        if not (status.has_metadata):
+            # change seeding status
+            self.seeding_status = 'complete'
+            logger.sendToLog("Metadata retrieval operation failed.", 'DOWNLOAD ERROR')
+
+        # Continue this loop until the user stops seeding.
+        while (self.seeding_status == 'seeding' and self.seeding_ability == 'enable'):
+            # get seeding status
+            status = self.handler.status()
+            seeding_status = status.state
+            print(str(seeding_status))
+
+            # upload_rate in bytes/sec
+            upload_rate = max(0.0001, status.upload_rate)   # avoid division by zero
+
+            upload_speed, speed_unit = humanReadableSize(upload_rate, 'speed')
+            self.upload_speed_str = (str(upload_speed) + " " + speed_unit + "/s")
+
+            time.sleep(1)
+
+            # check data_base perhaps seeding disabled by user
+            torrent_dict = self.main_window.persepolis_db.searchGidInTorrentTable(self.gid)
+            self.seeding_ability = torrent_dict['seeding']
+
+        logger.sendToLog('seeding stopped. - GID: ' + self.gid, 'DOWNLOADS')
+
+    # this method starts seeding
+    def start(self):
+        # create new seeding session.
+        session_parameters = self.createSession()
+
+        # call startTime if start_time is available
+        # startTime creates sleep loop if user set start_time
+        # see startTime method for more information.
+        if self.start_time:
+            self.startTime()
+
+            # Done!
+
+        if self.seeding_ability == 'enable':
+            # if user set end_time
+            if self.end_time:
+                self.runEndTimeThread()
+
+            self.download_status = 'seeding'
+
+            self.createHandler(session_parameters)
+            self.checkSeedingProgress()
+
+            self.close()
+
+        else:
+            logger.sendToLog("Seeding canceled", "DOWNLOADS")
+
+    # Stop seeding
+    def seedStop(self):
+        self.libtorrent_session.remove_torrent(self.handler)
+        # seeding_status can be in complete, seeding
+        # The status is either in the seeding state or in the complete state.
+        # When the download finishes, seeding begins. When seeding stops, the status reverts
+        # to the previous state, that is, complete.
+        self.seeding_status = 'complete'
+
+    # This method returns seeding status
+    def tellStatus(self):
+        # return information in dictionary format
+        seeding_info = {
+            'gid': self.gid,
+            'status': self.seeding_status,
+            'rate': self.upload_speed_str,
+        }
+
+        return seeding_info
+
+    def close(self):
+        # ask threads for exiting.
+        for thread in self.thread_list:
+            thread.join()
+
+        self.write_it_to_the_database = False
+        logger.sendToLog("libtorrent_seeder is closed!", 'DOWNLOADS')
+
+        # remove it from download_sessions_list when download status has been written to the database.
+        for seeding_session_dict in self.main_window.seeding_sessions_list:
+            if seeding_session_dict['gid'] == self.gid:
+
+                # Wait until the information is written to the database.
+                while self.write_it_to_the_database is False:
+                    time.sleep(0.1)
+
+                # remove item
+                self.main_window.seeding_sessions_list.remove(seeding_session_dict)
+
+        # remove gid from torrent_seeding_gid_list
+        if self.gid in self.main_window.torrent_seeding_gid_list:
+            self.main_window.torrent_seeding_gid_list.remove(self.gid)
+
+        try:
+            self.libtorrent_session.remove_torrent(self.handler)
+        except Exception as e:
+            print(str(e))

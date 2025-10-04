@@ -18,7 +18,7 @@ import time
 import threading
 from persepolis.constants import VERSION
 from persepolis.scripts import logger
-from persepolis.scripts.useful_tools import humanReadableSize, convertTime, returnNewFileName
+from persepolis.scripts.useful_tools import humanReadableSize, convertTime, returnNewFileName, nowDate, sigmaTime, nowTime
 from persepolis.scripts.osCommands import makeDirs, moveFileOrFolder
 from urllib.parse import urlparse, unquote
 from pathlib import Path
@@ -107,7 +107,7 @@ class Ytdp_Download():
         self.fragments = '0/0'
 
         self.thread_list = []
-        # download_status can be in waiting, downloading, stop, error, eaused
+        # download_status can be in waiting, scheduled, downloading, stop, error, eaused
         self.download_status = 'waiting'
         # update data_base
         dict_ = {'gid': self.gid,
@@ -189,50 +189,35 @@ class Ytdp_Download():
         # crete yt_dlp session
         self.ytdl_session = yt_dlp.YoutubeDL(self.youtube_dl_options_dict)
 
-    # This method returns data and time in string format
-    # for example >> 2017/09/09 , 13:12:26
-    def nowDate(self):
-        date = time.strftime("%Y/%m/%d , %H:%M:%S")
-        return date
-
-    def sigmaTime(self, time):
-        hour, minute = time.split(":")
-        return (int(hour) * 60 + int(minute))
-
-    # nowTime returns now time in HH:MM format!
-    def nowTime(self):
-        now_time = time.strftime("%H:%M")
-        return self.sigmaTime(now_time)
-
     # this method creates sleep time,if user sets "start time" for download.
     def startTime(self):
         # write some messages
         logger.sendToLog("Download starts at " + self.start_time + ' - GID: ' + self.gid, "DOWNLOADS")
 
         # start_time that specified by user
-        sigma_start = self.sigmaTime(self.start_time)
+        sigma_start = sigmaTime(self.start_time)
 
         # get current time
-        sigma_now = self.nowTime()
+        sigma_now = nowTime()
 
         # this loop is continuing until download time arrival!
         while sigma_start != sigma_now and self.download_status == 'scheduled':
             time.sleep(2.1)
-            sigma_now = self.nowTime()
+            sigma_now = nowTime()
 
     # This method will stop the download when the end_time is reached.
     def endTime(self):
         logger.sendToLog("End time is activated: " + self.end_time + ' - GID: ' + self.gid, "DOWNLOADS")
-        sigma_end = self.sigmaTime(self.end_time)
+        sigma_end = sigmaTime(self.end_time)
 
         # get current time
-        sigma_now = self.nowTime()
+        sigma_now = nowTime()
 
         # while current time is not equal to end_time, continue the loop
         while sigma_end != sigma_now and (self.download_status == 'downloading' or self.download_status == 'paused'):
 
             # get current time
-            sigma_now = self.nowTime()
+            sigma_now = nowTime()
             time.sleep(2.1)
 
         # Time is up!
@@ -431,7 +416,7 @@ class Ytdp_Download():
                  'download_status': self.download_status}
         self.main_window.persepolis_db.updateVideoFinderTable2(dict_)
         # get last_try_date
-        now_date = self.nowDate()
+        now_date = nowDate()
 
         # update data_base
         dict_ = {'gid': self.gid, 'status': self.download_status, 'last_try_date': now_date}

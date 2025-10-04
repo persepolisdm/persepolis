@@ -486,6 +486,7 @@ class PersepolisDB():
                                                                                 type TEXT,
                                                                                 download_limit INT,
                                                                                 upload_limit INT,
+                                                                                seeding TEXT,
                                                                                 FOREIGN KEY(gid) REFERENCES download_db_table(gid)
                                                                                 ON DELETE CASCADE
                                                                                     )""")
@@ -689,7 +690,8 @@ class PersepolisDB():
                                                                                 :is_dir,
                                                                                 :type,
                                                                                 :download_limit,
-                                                                                :upload_limit
+                                                                                :upload_limit,
+                                                                                :seeding
                                                                                 )""", dictionary)
         self.persepolis_db_connection.commit()
 
@@ -719,7 +721,8 @@ class PersepolisDB():
                       'is_dir': tuple_[4],
                       'type': tuple_[5],
                       'download_limit': tuple_[6],
-                      'upload_limit': tuple_[7]}
+                      'upload_limit': tuple_[7],
+                      'seeding': tuple_[8]}
 
         # return the results
         return dictionary
@@ -734,7 +737,8 @@ class PersepolisDB():
                      'is_dir',
                      'type',
                      'download_limit',
-                     'upload_limit'
+                     'upload_limit',
+                     'seeding'
                      ]
 
         for dict_ in list_:
@@ -750,7 +754,8 @@ class PersepolisDB():
                                                                                     is_dir = coalesce(:is_dir, is_dir),
                                                                                     type = coalesce(:type, type),
                                                                                     download_limit = coalesce(:download_limit, download_limit),
-                                                                                    upload_limit = coalesce(:upload_limit, upload_limit)
+                                                                                    upload_limit = coalesce(:upload_limit, upload_limit),
+                                                                                    seeding = coalesce(:seeding, seeding)
                                                                                     WHERE gid = :gid""", dict_)
 
         # commit the changes
