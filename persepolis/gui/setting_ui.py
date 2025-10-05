@@ -224,6 +224,54 @@ class Setting_Ui(QWidget):
         magnet_info_timeout_horizontalLayout.setContentsMargins(21, 21, 0, 0)
         torrent_tab_verticalLayout.addLayout(magnet_info_timeout_horizontalLayout)
 
+        self.allow_seeding_frame = QFrame(self.torrent_tab)
+        self.allow_seeding_checkBox = QCheckBox(self.torrent_tab)
+        allow_seeding_horizontalLayout = QHBoxLayout()
+        allow_seeding_horizontalLayout.addWidget(self.allow_seeding_checkBox)
+        allow_seeding_horizontalLayout.setContentsMargins(21, 21, 0, 0)
+        torrent_tab_verticalLayout.addLayout(allow_seeding_horizontalLayout)
+
+        # start time
+        time_limit_horizontalLayout = QHBoxLayout()
+
+        start_verticalLayout = QVBoxLayout()
+        self.start_checkBox = QCheckBox(self.torrent_tab)
+        start_verticalLayout.addWidget(self.start_checkBox)
+
+        self.start_frame = QFrame(self.allow_seeding_frame)
+        self.start_frame.setFrameShape(QFrame.StyledPanel)
+        self.start_frame.setFrameShadow(QFrame.Raised)
+
+        start_frame_horizontalLayout = QHBoxLayout(self.start_frame)
+
+        self.start_time_qDataTimeEdit = MyQDateTimeEdit(self.start_frame)
+        self.start_time_qDataTimeEdit.setDisplayFormat('H:mm')
+        start_frame_horizontalLayout.addWidget(self.start_time_qDataTimeEdit)
+
+        start_verticalLayout.addWidget(self.start_frame)
+        time_limit_horizontalLayout.addLayout(start_verticalLayout)
+
+        # end time ->
+        end_verticalLayout = QVBoxLayout()
+
+        self.end_checkBox = QCheckBox(self.torrent_tab)
+        end_verticalLayout.addWidget(self.end_checkBox)
+
+        self.end_frame = QFrame(self.allow_seeding_frame)
+        self.end_frame.setFrameShape(QFrame.StyledPanel)
+        self.end_frame.setFrameShadow(QFrame.Raised)
+
+        end_frame_horizontalLayout = QHBoxLayout(self.end_frame)
+
+        self.end_time_qDateTimeEdit = MyQDateTimeEdit(self.end_frame)
+        self.end_time_qDateTimeEdit.setDisplayFormat('H:mm')
+        end_frame_horizontalLayout.addWidget(self.end_time_qDateTimeEdit)
+
+        end_verticalLayout.addWidget(self.end_frame)
+        time_limit_horizontalLayout.addLayout(end_verticalLayout)
+        time_limit_horizontalLayout.setContentsMargins(21, 21, 0, 0)
+        torrent_tab_verticalLayout.addLayout(time_limit_horizontalLayout)
+
         torrent_tab_verticalLayout.addStretch(1)
 
         self.setting_tabWidget.addTab(self.torrent_tab, '')
@@ -660,6 +708,9 @@ class Setting_Ui(QWidget):
         self.magnet_info_timeout_label.setText(QCoreApplication.translate("setting_ui_tr", "Magnet info timeout(in seconds): "))
         self.magnet_info_timeout_label.setToolTip(QCoreApplication.translate("setting_ui_tr", "Set the timeout (in seconds) for receiving magnet metadata."))
         self.magnet_info_timeout_spinBox.setToolTip(QCoreApplication.translate("setting_ui_tr", "Set the timeout (in seconds) for receiving magnet metadata."))
+        self.allow_seeding_checkBox.setText(QCoreApplication.translate("setting_ui_tr", "After the download completes, Persepols should begin seeding."))
+        self.start_checkBox.setText(QCoreApplication.translate("setting_ui_tr", "Seeding strat time:"))
+        self.end_checkBox.setText(QCoreApplication.translate("setting_ui_tr", "Seeding end time:"))
 
         # window buttons
         self.defaults_pushButton.setText(QCoreApplication.translate("setting_ui_tr", "Defaults"))
