@@ -265,6 +265,28 @@ class Setting_Ui(QWidget):
         time_limit_horizontalLayout.setContentsMargins(21, 21, 0, 0)
         torrent_tab_verticalLayout.addLayout(time_limit_horizontalLayout)
 
+        # limit upload speed
+        limit_upload_speed_verticalLayout = QVBoxLayout()
+        limit_upload_speed_verticalLayout.setContentsMargins(21, 21, 0, 0)
+
+        self.limit_upload_checkBox = QCheckBox(self.allow_seeding_frame)
+        limit_upload_speed_verticalLayout.addWidget(self.limit_upload_checkBox)
+
+        self.limit_upload_frame = QFrame(self.allow_seeding_frame)
+        self.limit_upload_frame.setFrameShape(QFrame.StyledPanel)
+        self.limit_upload_frame.setFrameShadow(QFrame.Raised)
+        limit_upload_speed_verticalLayout.addWidget(self.limit_upload_frame)
+
+        limit_upload_speed_horizontlLayout = QHBoxLayout(self.limit_upload_frame)
+        self.limit_upload_spinBox = QSpinBox(self.limit_upload_frame)
+        self.limit_upload_spinBox.setMinimum(1)
+        limit_upload_speed_horizontlLayout.addWidget(self.limit_upload_spinBox, 1)
+
+        self.limit_upload_label = QLabel(self.limit_upload_frame)
+        limit_upload_speed_horizontlLayout.addWidget(self.limit_upload_label, 1)
+
+        torrent_tab_verticalLayout.addLayout(limit_upload_speed_verticalLayout)
+
         torrent_tab_verticalLayout.addStretch(1)
 
         self.setting_tabWidget.addTab(self.torrent_tab, '')
@@ -705,6 +727,9 @@ class Setting_Ui(QWidget):
         self.start_end_checkBox.setText(QCoreApplication.translate("setting_ui_tr", "Seeding should occur between these hours:"))
         self.from_label.setText(QCoreApplication.translate("setting_ui_tr", "From"))
         self.to_label.setText(QCoreApplication.translate("setting_ui_tr", "to"))
+
+        self.limit_upload_checkBox.setText(QCoreApplication.translate("addtorrent_ui_tr", 'Limit upload speed'))
+        self.limit_upload_label.setText(QCoreApplication.translate("addtorrent_ui_tr", 'KiB/s'))
 
         # window buttons
         self.defaults_pushButton.setText(QCoreApplication.translate("setting_ui_tr", "Defaults"))
