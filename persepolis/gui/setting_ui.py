@@ -14,11 +14,11 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 try:
-    from PySide6.QtWidgets import QAbstractItemView, QTableWidget, QTableWidgetItem, QCheckBox, QVBoxLayout, QHBoxLayout, QFrame, QWidget, QLabel, QLineEdit, QTabWidget, QSpinBox, QPushButton, QDial, QComboBox, QFontComboBox
+    from PySide6.QtWidgets import QAbstractItemView, QTableWidget, QTableWidgetItem, QCheckBox, QVBoxLayout, QHBoxLayout, QFrame, QWidget, QLabel, QLineEdit, QTabWidget, QSpinBox, QPushButton, QDial, QComboBox, QFontComboBox, QSizePolicy
     from PySide6.QtCore import Qt, QTranslator, QCoreApplication, QLocale
     from PySide6.QtGui import QIcon
 except:
-    from PyQt5.QtWidgets import QAbstractItemView, QTableWidget, QTableWidgetItem, QCheckBox, QVBoxLayout, QHBoxLayout, QFrame, QWidget, QLabel, QLineEdit, QTabWidget, QSpinBox, QPushButton, QDial, QComboBox, QFontComboBox
+    from PyQt5.QtWidgets import QAbstractItemView, QTableWidget, QTableWidgetItem, QCheckBox, QVBoxLayout, QHBoxLayout, QFrame, QWidget, QLabel, QLineEdit, QTabWidget, QSpinBox, QPushButton, QDial, QComboBox, QFontComboBox, QSizePolicy
     from PyQt5.QtCore import Qt, QTranslator, QCoreApplication, QLocale
     from PyQt5.QtGui import QIcon
 
@@ -234,41 +234,34 @@ class Setting_Ui(QWidget):
         # start time
         time_limit_horizontalLayout = QHBoxLayout()
 
-        start_verticalLayout = QVBoxLayout()
-        self.start_checkBox = QCheckBox(self.torrent_tab)
-        start_verticalLayout.addWidget(self.start_checkBox)
+        start_end_verticalLayout = QVBoxLayout()
+        self.start_end_checkBox = QCheckBox(self.allow_seeding_frame)
+        start_end_verticalLayout.addWidget(self.start_end_checkBox)
 
-        self.start_frame = QFrame(self.allow_seeding_frame)
-        self.start_frame.setFrameShape(QFrame.StyledPanel)
-        self.start_frame.setFrameShadow(QFrame.Raised)
+        self.start_end_frame = QFrame(self.allow_seeding_frame)
+        self.start_end_frame.setFrameShape(QFrame.StyledPanel)
+        self.start_end_frame.setFrameShadow(QFrame.Raised)
 
-        start_frame_horizontalLayout = QHBoxLayout(self.start_frame)
+        start_end_frame_horizontalLayout = QHBoxLayout(self.start_end_frame)
 
-        self.start_time_qDataTimeEdit = MyQDateTimeEdit(self.start_frame)
+        self.from_label = QLabel(self.start_end_frame)
+        start_end_frame_horizontalLayout.addWidget(self.from_label)
+
+        self.start_time_qDataTimeEdit = MyQDateTimeEdit(self.start_end_frame)
         self.start_time_qDataTimeEdit.setDisplayFormat('H:mm')
-        start_frame_horizontalLayout.addWidget(self.start_time_qDataTimeEdit)
+        start_end_frame_horizontalLayout.addWidget(self.start_time_qDataTimeEdit, 1)
 
-        start_verticalLayout.addWidget(self.start_frame)
-        time_limit_horizontalLayout.addLayout(start_verticalLayout)
+        start_end_verticalLayout.addWidget(self.start_end_frame)
 
         # end time ->
-        end_verticalLayout = QVBoxLayout()
+        self.to_label = QLabel(self.start_end_frame)
+        start_end_frame_horizontalLayout.addWidget(self.to_label)
 
-        self.end_checkBox = QCheckBox(self.torrent_tab)
-        end_verticalLayout.addWidget(self.end_checkBox)
-
-        self.end_frame = QFrame(self.allow_seeding_frame)
-        self.end_frame.setFrameShape(QFrame.StyledPanel)
-        self.end_frame.setFrameShadow(QFrame.Raised)
-
-        end_frame_horizontalLayout = QHBoxLayout(self.end_frame)
-
-        self.end_time_qDateTimeEdit = MyQDateTimeEdit(self.end_frame)
+        self.end_time_qDateTimeEdit = MyQDateTimeEdit(self.start_end_frame)
         self.end_time_qDateTimeEdit.setDisplayFormat('H:mm')
-        end_frame_horizontalLayout.addWidget(self.end_time_qDateTimeEdit)
+        start_end_frame_horizontalLayout.addWidget(self.end_time_qDateTimeEdit, 1)
 
-        end_verticalLayout.addWidget(self.end_frame)
-        time_limit_horizontalLayout.addLayout(end_verticalLayout)
+        time_limit_horizontalLayout.addLayout(start_end_verticalLayout)
         time_limit_horizontalLayout.setContentsMargins(21, 21, 0, 0)
         torrent_tab_verticalLayout.addLayout(time_limit_horizontalLayout)
 
@@ -709,8 +702,9 @@ class Setting_Ui(QWidget):
         self.magnet_info_timeout_label.setToolTip(QCoreApplication.translate("setting_ui_tr", "Set the timeout (in seconds) for receiving magnet metadata."))
         self.magnet_info_timeout_spinBox.setToolTip(QCoreApplication.translate("setting_ui_tr", "Set the timeout (in seconds) for receiving magnet metadata."))
         self.allow_seeding_checkBox.setText(QCoreApplication.translate("setting_ui_tr", "After the download completes, Persepols should begin seeding."))
-        self.start_checkBox.setText(QCoreApplication.translate("setting_ui_tr", "Seeding strat time:"))
-        self.end_checkBox.setText(QCoreApplication.translate("setting_ui_tr", "Seeding end time:"))
+        self.start_end_checkBox.setText(QCoreApplication.translate("setting_ui_tr", "Seeding should occur between these hours:"))
+        self.from_label.setText(QCoreApplication.translate("setting_ui_tr", "From"))
+        self.to_label.setText(QCoreApplication.translate("setting_ui_tr", "to"))
 
         # window buttons
         self.defaults_pushButton.setText(QCoreApplication.translate("setting_ui_tr", "Defaults"))
