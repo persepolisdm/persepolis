@@ -631,6 +631,10 @@ class MainWindow_Ui(QMainWindow):
         self.clearAction = QAction(QIcon(icons + 'multi_remove'), QCoreApplication.translate("mainwindow_ui_tr", 'Clear Download List'),
                                    self, statusTip=QCoreApplication.translate("mainwindow_ui_tr", 'Clear all items in download list'), triggered=self.clearDownloadList)
         editMenu.addAction(self.clearAction)
+        # clearCompletedAction
+        self.clearCompletedAction = QAction(QIcon(icons + 'multi_remove'), QCoreApplication.translate("mainwindow_ui_tr", 'Clear Completed Downloads'),
+                       self, statusTip=QCoreApplication.translate("mainwindow_ui_tr", 'Clear completed downloads from list'), triggered=self.clearCompletedDownloads)
+        editMenu.addAction(self.clearCompletedAction)
 
         # removeSelectedAction
         self.removeSelectedAction = QAction(QIcon(icons + 'remove'), QCoreApplication.translate("mainwindow_ui_tr", 'Remove Selected Downloads from List'),

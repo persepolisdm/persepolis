@@ -1,3 +1,25 @@
+    def clearCompletedDownloads(self):
+        # Remove only completed downloads from the table and database
+        rows_to_remove = []
+        for row in range(self.download_table.rowCount()):
+            status_item = self.download_table.item(row, 1)
+            if status_item and status_item.text() == 'complete':
+                rows_to_remove.append(row)
+
+        # Remove from bottom to top to avoid row index issues
+        for row in reversed(rows_to_remove):
+            gid_item = self.download_table.item(row, 8)
+            category_item = self.download_table.item(row, 12)
+            gid = gid_item.text() if gid_item else None
+            category = category_item.text() if category_item else None
+            self.download_table.removeRow(row)
+            if gid and category:
+                self.persepolis_db.deleteItemInDownloadTable(gid, category)
+
+        # (Optional) Refreshes category selection
+        all_download_index = self.category_tree_model.index(0, 0)
+        self.category_tree.setCurrentIndex(all_download_index)
+        self.categoryTreeSelected(all_download_index)
 # -*- coding: utf-8 -*-
 
 #    This program is free software: you can redistribute it and/or modify
