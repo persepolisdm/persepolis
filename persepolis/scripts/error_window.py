@@ -90,6 +90,7 @@ class ErrorWindow(QWidget):
         persepolis_db.closeConnections()
 
         # Reset persepolis_setting
-        persepolis_setting = QSettings('persepolis_download_manager', 'persepolis')
+        from persepolis.scripts.useful_tools import createQSettings
+        persepolis_setting = createQSettings()
         persepolis_setting.clear()
         persepolis_setting.sync()

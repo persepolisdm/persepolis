@@ -18,7 +18,7 @@
 
 from persepolis.scripts.data_base import PersepolisDB, PluginsDB
 from persepolis.scripts import logger
-from persepolis.scripts.useful_tools import determineConfigFolder, returnDefaultSettings, osAndDesktopEnvironment, getExecPath
+from persepolis.scripts.useful_tools import determineConfigFolder, returnDefaultSettings, osAndDesktopEnvironment, getExecPath, isPortableMode, createQSettings
 from persepolis.scripts.browser_integration import browserIntegration
 from persepolis.scripts import osCommands
 from persepolis.constants import OS
@@ -113,7 +113,7 @@ plugins_db.closeConnections()
 # persepolis is using QSettings for saving windows size and windows
 # position and program settings.
 
-persepolis_setting = QSettings('persepolis_download_manager', 'persepolis')
+persepolis_setting = createQSettings()
 
 persepolis_setting.beginGroup('settings')
 
@@ -150,27 +150,30 @@ for folder in folder_list:
 persepolis_setting.endGroup()
 
 # Browser integration for Firefox and chromium and google chrome
-persepolis_setting.beginGroup('settings/native_messaging')
-for browser in ['chrome', 'chromium', 'opera', 'vivaldi', 'firefox', 'brave', 'librewolf']:
-    if persepolis_setting.value(browser) == 'true':
-        json_done, intermediary_done, logg_message2 = browserIntegration(browser)
-        logg_message = browser
+if isPortableMode():
+    logger.sendToLog("Browser integration is disabled in portable mode.", 'INITIALIZATION')
+else:
+    persepolis_setting.beginGroup('settings/native_messaging')
+    for browser in ['chrome', 'chromium', 'opera', 'vivaldi', 'firefox', 'brave', 'librewolf']:
+        if persepolis_setting.value(browser) == 'true':
+            json_done, intermediary_done, logg_message2 = browserIntegration(browser)
+            logg_message = browser
 
-        if json_done is True:
-            logg_message = logg_message + ': ' + 'Json file is created successfully.\n'
+            if json_done is True:
+                logg_message = logg_message + ': ' + 'Json file is created successfully.\n'
 
-        else:
-            logg_message = logg_message + ': ' + 'Json ERROR!\n'
+            else:
+                logg_message = logg_message + ': ' + 'Json ERROR!\n'
 
-        if intermediary_done is True:
-            logg_message = logg_message + 'persepolis intermediary file is created successfully.\n'
+            if intermediary_done is True:
+                logg_message = logg_message + 'persepolis intermediary file is created successfully.\n'
 
-        elif intermediary_done is False:
-            logg_message = logg_message + ': ' + 'persepolis executer file ERROR!\n'
+            elif intermediary_done is False:
+                logg_message = logg_message + ': ' + 'persepolis executer file ERROR!\n'
 
-        logger.sendToLog(logg_message, 'INITIALIZATION')
-        logger.sendToLog(logg_message2, 'INITIALIZATION')
-persepolis_setting.endGroup()
+            logger.sendToLog(logg_message, 'INITIALIZATION')
+            logger.sendToLog(logg_message2, 'INITIALIZATION')
+    persepolis_setting.endGroup()
 # get locale and set ui direction
 locale = str(persepolis_setting.value('settings/locale'))
 

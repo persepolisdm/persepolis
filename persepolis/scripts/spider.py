@@ -13,7 +13,7 @@
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from persepolis.scripts.useful_tools import humanReadableSize, headerToDict, readCookieJar, getFileNameFromLink
+from persepolis.scripts.useful_tools import humanReadableSize, headerToDict, readCookieJar, getFileNameFromLink, createQSettings
 from persepolis.constants import VERSION
 import requests
 try:
@@ -26,7 +26,7 @@ except ImportError:
 # http://docs.python-requests.org/en/master/
 
 # load persepolis_settings
-persepolis_setting = QSettings('persepolis_download_manager', 'persepolis')
+persepolis_setting = createQSettings()
 # check certificate
 if str(persepolis_setting.value('settings/dont-check-certificate')) == 'yes':
     check_certificate = False

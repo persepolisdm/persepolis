@@ -147,7 +147,8 @@ def notifySend(message1, message2, time, sound, parent=None):
         playNotification(file)
 
     # load settings
-    persepolis_setting = QSettings('persepolis_download_manager', 'persepolis')
+    from persepolis.scripts.useful_tools import createQSettings
+    persepolis_setting = createQSettings()
 
     enable_notification = persepolis_setting.value('settings/notification')
 
