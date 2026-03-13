@@ -30,7 +30,7 @@ import json
 import struct
 import argparse
 from persepolis.scripts import osCommands
-from persepolis.scripts.useful_tools import osAndDesktopEnvironment, determineConfigFolder
+from persepolis.scripts.useful_tools import osAndDesktopEnvironment, determineConfigFolder, isPortableMode, setForcePortableMode, getPortableBaseDir, createQSettings
 from persepolis.constants import OS
 from persepolis.constants import VERSION
 from copy import deepcopy
@@ -47,6 +47,19 @@ if os_type in (OS.UNIX_LIKE + [OS.OSX]):
         print('Do not run persepolis as root.')
         sys.exit(1)
 
+
+# Early check for --portable flag before any config folder is computed.
+# This must happen before determineConfigFolder() is called.
+if '--portable' in sys.argv:
+    setForcePortableMode(True)
+    # Create the portable marker file if it doesn't already exist
+    _portable_base = getPortableBaseDir()
+    if _portable_base is not None:
+        _marker_path = os.path.join(_portable_base, 'portable')
+        if not os.path.isfile(_marker_path):
+            os.makedirs(_portable_base, exist_ok=True)
+            with open(_marker_path, 'w') as f:
+                f.write('# Portable mode marker file for Persepolis Download Manager\n')
 
 # initialization
 # find home address
@@ -86,7 +99,14 @@ else:  # for windows
     from win32api import GetLastError
     from winerror import ERROR_ALREADY_EXISTS
 
-    handle = CreateMutex(None, 1, 'persepolis_download_manager')
+    if isPortableMode():
+        import hashlib
+        path_hash = hashlib.md5(config_folder.encode()).hexdigest()[:8]
+        mutex_name = 'persepolis_download_manager_portable_' + path_hash
+    else:
+        mutex_name = 'persepolis_download_manager'
+
+    handle = CreateMutex(None, 1, mutex_name)
 
     if GetLastError() == ERROR_ALREADY_EXISTS:
         lock_file_validation = False
@@ -111,7 +131,7 @@ if lock_file_validation:
 
 
 # load persepolis_settings
-persepolis_setting = QSettings('persepolis_download_manager', 'persepolis')
+persepolis_setting = createQSettings()
 
 
 class PersepolisApplication(QtWidgets.QApplication):
@@ -164,12 +184,15 @@ parser.add_argument('--tray', action='store_true',
                     help="Persepolis is starting in tray icon. It's useful when you want to put persepolis in system's startup.")
 parser.add_argument('--parent-window', action='store', nargs=1,
                     help='this switch is used for chrome native messaging in Windows')
+parser.add_argument('--portable', action='store_true',
+                    help='Run in portable mode: store all data in the application directory.')
 parser.add_argument('--version', action='version', version='Persepolis Download Manager ' + VERSION.version_str)
 
 
 # Clears unwanted args ( like args from Browers via NHM )
 # unknown arguments (may sent by browser) will save in unknownargs.
 args, unknownargs = parser.parse_known_args()
+
 
 # if --execute >> yes  >>> persepolis main window  will start.
 # if --execute >> no >>> persepolis started before!
@@ -424,7 +447,7 @@ def main():
         persepolis_download_manager.setApplicationVersion(VERSION.version_str)
 
         # Persepolis setting
-        persepolis_download_manager.setting = QSettings('persepolis_download_manager', 'persepolis')
+        persepolis_download_manager.setting = createQSettings()
 
         # get user's desired font and style , ... from setting
         custom_font = persepolis_download_manager.setting.value('settings/custom-font')

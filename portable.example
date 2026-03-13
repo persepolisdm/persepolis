@@ -1,0 +1,3 @@
+# Rename this file to 'portable' (remove the .example suffix) to enable portable mode.
+# When active, all Persepolis data (settings, database, downloads) will be stored
+# in the 'persepolis_data' folder next to this file instead of your home directory.

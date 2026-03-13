@@ -24,6 +24,9 @@ import time
 import sys
 import os
 
+# Global flag that can be set by --portable CLI argument before modules are imported.
+_force_portable_mode = False
+
 try:
     from PySide6.QtCore import QThread, Signal, QProcess
     from PySide6.QtWidgets import QStyleFactory
@@ -63,10 +66,162 @@ class RunApplicationThread(QThread):
         if self.call_back:
             self.RUNAPPCALLBACKSIGNAL.emit([pipe])
 
+# This function returns persepolis's execution path.
+def getExecPath():
+
+    exec_dictionary = {'bundle': None,
+                       'test': False,
+                       'exec_file_path': None,
+                       'modified_exec_file_path': None}
+
+    # check if persepolis is run as a bundle.
+    # On Windows and Mac we use pyinstaller to build the bundle,
+    # and on Linux and BSD we use nuitka.
+    # the output of this code for pyinstaller bundle is True
+    # getattr(sys, 'frozen', False) and hasattr(sys, '_MEIPASS')
+    # But this code doesn't work for nuitka!
+    # So we have to use a workaround to identify nuitka bundle.
+    # We check the inside of the bundle and look for the
+    # com.github.persepolisdm.persepolis.svg file(icon).
+    # file that we placed. If it was, then the bundle file
+    # generated with nuitka is running.
+    if os_type in OS.UNIX_LIKE:
+        bundle_path = os.path.dirname(sys.executable)
+        icon_file_path = os.path.join(bundle_path, 'com.github.persepolisdm.persepolis.svg')
+
+        # check availability of com.github.persepolisdm.persepolis.svg
+        if os.path.exists(icon_file_path):
+            exec_dictionary['bundle'] = True
+
+            # for nuitka
+            # get executable path
+            bundle_path = os.path.abspath(sys.argv[0])
+
+            exec_file_path = bundle_path
+
+    # for windows and osx(pyinstaller bundle)
+    else:
+        # check pyinstaller bundle
+        if getattr(sys, 'frozen', False) and hasattr(sys, '_MEIPASS'):
+            exec_dictionary['bundle'] = True
+            # get executable path
+            bundle_path = os.path.dirname(sys.executable)
+
+            # get bundle name
+            bundle_name = os.path.basename(sys.executable)
+
+            exec_file_path = os.path.join(bundle_path, bundle_name)
+
+    if exec_dictionary['bundle'] is not True:
+
+        # persepolis is run from python script
+        exec_dictionary['bundle'] = False
+
+        # get execution path
+        script_path = os.path.dirname(os.path.abspath(sys.modules['__main__'].__file__))
+        script_name = os.path.basename(sys.argv[0])
+
+        if script_name == 'test.py':
+
+            # persepolis is run from test directory
+            exec_dictionary['test'] = True
+
+        exec_file_path = os.path.join(script_path, script_name)
+
+    # replace space with \+space for UNIX_LIKE and OSX
+    if os_type in OS.UNIX_LIKE or os_type == OS.OSX:
+
+        modified_exec_file_path = exec_file_path.replace(" ", r"\ ")
+
+    elif os_type == OS.WINDOWS:
+        modified_exec_file_path = exec_file_path.replace('\\', r'\\')
+
+    # write it in dictionary
+    exec_dictionary['exec_file_path'] = exec_file_path
+    exec_dictionary['modified_exec_file_path'] = modified_exec_file_path
+
+    # return ressults
+    return exec_dictionary
+
+
+def _getPortableMarkerDir():
+    """
+    Returns the directory containing the 'portable' marker file if portable mode
+    is active, otherwise returns None.
+
+    Portable mode is active when:
+    - The global _force_portable_mode flag is set (via --portable CLI arg), OR
+    - A file named 'portable' exists in the same directory as the running
+      executable (bundle) or the top-level package directory (development mode).
+    """
+    global _force_portable_mode
+
+    exec_info = getExecPath()
+
+    # Determine candidate directories to check for the 'portable' marker
+    candidate_dirs = []
+
+    if exec_info['bundle']:
+        # Running as a compiled bundle — check alongside the executable
+        candidate_dirs.append(os.path.dirname(exec_info['exec_file_path']))
+    else:
+        # Running from source or installed — check alongside the top-level
+        # persepolis package directory (i.e., the repo root)
+        package_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        candidate_dirs.append(package_dir)
+
+    for directory in candidate_dirs:
+        marker = os.path.join(directory, 'portable')
+        if os.path.isfile(marker) or _force_portable_mode:
+            return directory
+
+    return None
+
+
+def isPortableMode():
+    """Returns True if the application is running in portable mode."""
+    return _getPortableMarkerDir() is not None
+
+
+def setForcePortableMode(enabled=True):
+    """Set by --portable CLI argument to force portable mode."""
+    global _force_portable_mode
+    _force_portable_mode = enabled
+
+
+def getPortableBaseDir():
+    """Returns the base directory for portable mode, or None if not in portable mode."""
+    return _getPortableMarkerDir()
+
+
+def createQSettings():
+    """Create and return the application QSettings object.
+
+    In portable mode, uses an INI file in the portable data directory.
+    In normal mode, uses the platform default (registry on Windows, etc.).
+    """
+    try:
+        from PySide6.QtCore import QSettings
+    except ImportError:
+        from PyQt5.QtCore import QSettings
+
+    if isPortableMode():
+        settings_file = os.path.join(determineConfigFolder(), 'settings.ini')
+        return QSettings(settings_file, QSettings.Format.IniFormat)
+    else:
+        return QSettings('persepolis_download_manager', 'persepolis')
+
+
 # determine the config folder path based on the operating system
 
 
 def determineConfigFolder():
+    # Check for portable mode first
+    portable_dir = _getPortableMarkerDir()
+    if portable_dir is not None:
+        return os.path.join(portable_dir, 'persepolis_data')
+
+    # Standard (non-portable) paths
     if os_type in OS.UNIX_LIKE:
         config_folder = os.path.join(
             home_address, ".config/persepolis_download_manager")
@@ -195,7 +350,10 @@ def returnDefaultSettings():
     os_type, desktop_env = osAndDesktopEnvironment()
 
     # user download folder path
-    download_path = os.path.join(home_address, 'Downloads', 'Persepolis')
+    if isPortableMode():
+        download_path = os.path.join(determineConfigFolder(), 'Downloads')
+    else:
+        download_path = os.path.join(home_address, 'Downloads', 'Persepolis')
 
     # set dark fusion for default style settings.
     style = 'Fusion'
@@ -509,84 +667,6 @@ def findExternalAppPath(app_name):
         log_list = ["Persepolis will use {} that installed on user's system.".format(app_name), "INFO"]
 
     return app_command, log_list
-
-
-# This function returns persepolis's execution path.
-def getExecPath():
-
-    exec_dictionary = {'bundle': None,
-                       'test': False,
-                       'exec_file_path': None,
-                       'modified_exec_file_path': None}
-
-    # check if persepolis is run as a bundle.
-    # On Windows and Mac we use pyinstaller to build the bundle,
-    # and on Linux and BSD we use nuitka.
-    # the output of this code for pyinstaller bundle is True
-    # getattr(sys, 'frozen', False) and hasattr(sys, '_MEIPASS')
-    # But this code doesn't work for nuitka!
-    # So we have to use a workaround to identify nuitka bundle.
-    # We check the inside of the bundle and look for the
-    # com.github.persepolisdm.persepolis.svg file(icon).
-    # file that we placed. If it was, then the bundle file
-    # generated with nuitka is running.
-    if os_type in OS.UNIX_LIKE:
-        bundle_path = os.path.dirname(sys.executable)
-        icon_file_path = os.path.join(bundle_path, 'com.github.persepolisdm.persepolis.svg')
-
-        # check availability of com.github.persepolisdm.persepolis.svg
-        if os.path.exists(icon_file_path):
-            exec_dictionary['bundle'] = True
-
-            # for nuitka
-            # get executable path
-            bundle_path = os.path.abspath(sys.argv[0])
-
-            exec_file_path = bundle_path
-
-    # for windows and osx(pyinstaller bundle)
-    else:
-        # check pyinstaller bundle
-        if getattr(sys, 'frozen', False) and hasattr(sys, '_MEIPASS'):
-            exec_dictionary['bundle'] = True
-            # get executable path
-            bundle_path = os.path.dirname(sys.executable)
-
-            # get bundle name
-            bundle_name = os.path.basename(sys.executable)
-
-            exec_file_path = os.path.join(bundle_path, bundle_name)
-
-    if exec_dictionary['bundle'] is not True:
-
-        # persepolis is run from python script
-        exec_dictionary['bundle'] = False
-
-        # get execution path
-        script_path = os.path.dirname(os.path.abspath(sys.modules['__main__'].__file__))
-        script_name = os.path.basename(sys.argv[0])
-
-        if script_name == 'test.py':
-
-            # persepolis is run from test directory
-            exec_dictionary['test'] = True
-
-        exec_file_path = os.path.join(script_path, script_name)
-
-    # replace space with \+space for UNIX_LIKE and OSX
-    if os_type in OS.UNIX_LIKE or os_type == OS.OSX:
-
-        modified_exec_file_path = exec_file_path.replace(" ", r"\ ")
-
-    elif os_type == OS.WINDOWS:
-        modified_exec_file_path = exec_file_path.replace('\\', r'\\')
-
-    # write it in dictionary
-    exec_dictionary['exec_file_path'] = exec_file_path
-    exec_dictionary['modified_exec_file_path'] = modified_exec_file_path
-
-    # return ressults
-    return exec_dictionary
 
 
 # This method returns data and time in string format

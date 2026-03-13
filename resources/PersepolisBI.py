@@ -37,9 +37,20 @@ os_type = platform.system()
 # user home address
 home_address = os.path.expanduser("~")
 
-# persepolis config folder in M.S Windows
-config_folder = os.path.join(
-    home_address, 'AppData', 'Local', 'persepolis_download_manager')
+# Check for portable mode: look for 'portable' marker file alongside the executable
+_portable_dir = None
+if getattr(sys, 'frozen', False):
+    _exe_dir = os.path.dirname(sys.executable)
+else:
+    _exe_dir = os.path.dirname(os.path.abspath(__file__))
+
+if os.path.isfile(os.path.join(_exe_dir, 'portable')):
+    _portable_dir = _exe_dir
+    config_folder = os.path.join(_portable_dir, 'persepolis_data')
+else:
+    # persepolis config folder in M.S Windows
+    config_folder = os.path.join(
+        home_address, 'AppData', 'Local', 'persepolis_download_manager')
 
 # create folder if it's not exist.
 os.makedirs(config_folder, exist_ok=True)
@@ -48,7 +59,11 @@ os.makedirs(config_folder, exist_ok=True)
 persepolis_tmp = os.path.join(config_folder, 'persepolis_tmp')
 
 # load persepolis_settings
-persepolis_setting = QSettings('persepolis_download_manager', 'persepolis')
+if _portable_dir is not None:
+    _settings_file = os.path.join(config_folder, 'settings.ini')
+    persepolis_setting = QSettings(_settings_file, QSettings.Format.IniFormat)
+else:
+    persepolis_setting = QSettings('persepolis_download_manager', 'persepolis')
 
 
 # plugins.db is store links, when browser plugins are send new links.

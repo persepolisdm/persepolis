@@ -19,6 +19,7 @@ except ImportError:
     from PyQt5.QtCore import QUrl, QSettings
     from PyQt5.QtMultimedia import QSoundEffect
 
+from persepolis.scripts.useful_tools import createQSettings
 from persepolis.scripts import logger
 from persepolis.constants import OS
 import platform
@@ -33,7 +34,7 @@ global effect
 
 def playNotification(file):
     # getting user setting from persepolis_setting
-    persepolis_setting = QSettings('persepolis_download_manager', 'persepolis')
+    persepolis_setting = createQSettings()
 
     # enabling or disabling notification sound in persepolis_setting
     enable_notification = str(persepolis_setting.value('settings/sound'))
