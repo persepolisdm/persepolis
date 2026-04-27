@@ -20,7 +20,7 @@ Persepolis is a download manager written in Python. Persepolis is a sample of fr
 - Scheduling downloads
 - Download queuing
 - Downloading videos from Youtube and ...
-- and many more!
+- and many more!.
 
 Demonstration clip:
 [![Demonstration video](https://img.youtube.com/vi/QHdMShFgzhQ/0.jpg)](https://www.youtube.com/watch?v=QHdMShFgzhQ)
