@@ -167,11 +167,29 @@ class Download():
         # find file size
         try:
             self.file_header = {}
-            response = self.requests_session.head(self.link, allow_redirects=True, timeout=self.timeout, verify=self.check_certificate)
+            try:
+                response = self.requests_session.head(self.link, allow_redirects=True, timeout=self.timeout, verify=self.check_certificate)
+            except requests.exceptions.RequestException:
+                range_headers = {'Range': 'bytes=0-0'}
+                if self.user_agent and not str(self.user_agent).startswith('PersepolisDM/'):
+                    range_headers['User-Agent'] = self.user_agent
+                else:
+                    range_headers['User-Agent'] = 'Mozilla/5.0'
+                response = self.requests_session.get(
+                    self.link,
+                    headers=range_headers,
+                    allow_redirects=True,
+                    stream=True,
+                    timeout=self.timeout,
+                    verify=self.check_certificate)
+                response.close()
 #             response.raise_for_status()
             self.file_header = response.headers
 
-            self.file_size = int(self.file_header['content-length'])
+            if 'content-range' in self.file_header:
+                self.file_size = int(self.file_header['content-range'].split('/')[-1])
+            else:
+                self.file_size = int(self.file_header['content-length'])
         except requests.exceptions.HTTPError as error:
             error_message = 'HTTP error'
             error_message2 = str(error)
