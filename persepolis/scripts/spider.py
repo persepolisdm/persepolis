@@ -103,7 +103,22 @@ def spider(add_link_dictionary):
 
     # find headers
     try:
-        response = requests_session.head(link, allow_redirects=True, timeout=timeout, verify=check_certificate)
+        try:
+            response = requests_session.head(link, allow_redirects=True, timeout=timeout, verify=check_certificate)
+        except requests.exceptions.RequestException:
+            range_headers = {'Range': 'bytes=0-0'}
+            if user_agent and not str(user_agent).startswith('PersepolisDM/'):
+                range_headers['User-Agent'] = user_agent
+            else:
+                range_headers['User-Agent'] = 'Mozilla/5.0'
+            response = requests_session.get(
+                link,
+                headers=range_headers,
+                allow_redirects=True,
+                stream=True,
+                timeout=timeout,
+                verify=check_certificate)
+            response.close()
         header = response.headers
     except Exception:
         header = {}
