@@ -615,6 +615,7 @@ class MainWindow(MainWindow_Ui):
         # if user highlights multiple items in download_table
         self.multi_items_selected = False
 
+        self.sort_desc = False
         # this variable is changed to False when
         # user clicks on 'hide options' button in
         # side panel.
@@ -858,6 +859,9 @@ class MainWindow(MainWindow_Ui):
         # if user  doubleclicks on an item in download_table , then openFile
         # function  executes
         self.download_table.itemDoubleClicked.connect(self.openFile)
+
+        # add click event on headers menu
+        self.download_table.horizontalHeader().sectionClicked.connect(self.downloadTableHeaderClicked)
 
         # connecting queue_panel_show_button to showQueuePanelOptions
         self.queue_panel_show_button.clicked.connect(
@@ -3176,6 +3180,48 @@ class MainWindow(MainWindow_Ui):
         global checking_flag
         checking_flag = 0
 
+    # sort by clickable headers in download table
+    def downloadTableHeaderClicked(self, column):
+
+        self.sort_desc = not self.sort_desc
+
+        if column == 0:
+            self.sortByName()
+        elif column == 1:
+            self.sortByStatus()
+        elif column == 2:
+            self.sortBySize()
+        elif column == 3:
+            self.sortByDownloaded()
+        elif column == 4:
+            self.sortByPercent()
+        elif column == 10:
+            self.sortByFirstTry()
+        elif column == 11:
+            self.sortByLastTry()
+
+    def findColumnByHeaderText(self, header_text):
+        for col in range(self.download_table.columnCount()):
+            item = self.download_table.horizontalHeaderItem(col)
+            if item and item.text() == header_text:
+                return col
+        return -1
+
+    def resetColumnByHeaderText(self):
+        for col in range(self.download_table.columnCount()):
+            item = self.download_table.horizontalHeaderItem(col)
+            title = item.text().replace(" ▼","").replace(" ▲","")
+            item.setText(title)
+        return -1
+
+    def updateSortHeaderIndicator(self, active_key=None, descending=False):
+        self.resetColumnByHeaderText()
+        selected = self.findColumnByHeaderText(active_key)
+
+        header = self.download_table.horizontalHeaderItem(selected)
+        title = header.text()+ (' ▼' if descending else ' ▲')
+        header.setText(title)
+
     # this method sorts download table by name
     def sortByName(self, menu=None):
 
@@ -3200,7 +3246,7 @@ class MainWindow(MainWindow_Ui):
             gid_name_dict[gid] = name
 
         # sort names
-        gid_sorted_list = sorted(gid_name_dict, key=gid_name_dict.get)
+        gid_sorted_list = sorted(gid_name_dict, key=gid_name_dict.get, reverse=self.sort_desc)
 
         # clear download_table and add sorted items
         self.download_table.clearContents()
@@ -3256,6 +3302,8 @@ class MainWindow(MainWindow_Ui):
         # update category_db_table
         self.persepolis_db.updateCategoryTable([category_dict])
 
+        self.updateSortHeaderIndicator('File Name', descending=self.sort_desc)
+
         # tell the CheckDownloadInfoThread that job is done!
         global checking_flag
         checking_flag = 0
@@ -3306,7 +3354,7 @@ class MainWindow(MainWindow_Ui):
 
         # sort gid_size_dict
         gid_sorted_list = sorted(
-            gid_size_dict, key=gid_size_dict.get, reverse=True)
+            gid_size_dict, key=gid_size_dict.get, reverse=self.sort_desc)
 
         # clear download_table by size
         self.download_table.clearContents()
@@ -3360,7 +3408,194 @@ class MainWindow(MainWindow_Ui):
         # update category_db_table
         self.persepolis_db.updateCategoryTable([category_dict])
 
+        self.updateSortHeaderIndicator('Size', descending=self.sort_desc)
+
         # tell the CheckDownloadInfoThread that job is done!
+        global checking_flag
+        checking_flag = 0
+
+    def sortByDownloaded(self, menu=None):
+
+        # if checking_flag is equal to 1, it means that user pressed remove or
+        # delete button or ... . so checking download information must be
+        # stopped until job is done!
+        if checking_flag != 2:
+            wait_check = WaitThread()
+            self.threadPool.append(wait_check)
+            self.threadPool[-1].start()
+            self.threadPool[-1].QTABLEREADY.connect(self.sortByDownloaded2)
+        else:
+            self.sortByDownloaded2()
+
+    def sortByDownloaded2(self):
+
+        current_category_tree_text = str(current_category_tree_index.data())
+
+        # gid → downloaded size
+        gid_downloaded_dict = {}
+
+        for row in range(self.download_table.rowCount()):
+            downloaded_str = self.download_table.item(row, 3).text()
+            gid = self.download_table.item(row, 8).text()
+
+            # convert to bytes
+            try:
+                downloaded_int = float(downloaded_str[:-3])
+                downloaded_symbol = str(downloaded_str[-2])
+
+                if downloaded_symbol == 'G':
+                    downloaded = downloaded_int * 1073741824
+                elif downloaded_symbol == 'M':
+                    downloaded = downloaded_int * 1048576
+                elif downloaded_symbol == 'K':
+                    downloaded = downloaded_int * 1024
+                else:
+                    downloaded = downloaded_int
+            except ValueError:
+                downloaded = 0
+
+            gid_downloaded_dict[gid] = downloaded
+
+        # sort
+        gid_sorted_list = sorted(
+            gid_downloaded_dict,
+            key=gid_downloaded_dict.get,
+            reverse=self.sort_desc
+        )
+
+        # clear table
+        self.download_table.clearContents()
+
+        # get data again
+        if current_category_tree_text == 'All Downloads':
+            downloads_dict = self.persepolis_db.returnItemsInDownloadTable()
+        else:
+            downloads_dict = self.persepolis_db.returnItemsInDownloadTable(current_category_tree_text)
+
+        j = 0
+
+        for gid in gid_sorted_list:
+            download_info = downloads_dict[gid]
+
+            keys_list = [
+                'file_name',
+                'status',
+                'size',
+                'downloaded_size',
+                'percent',
+                'connections',
+                'rate',
+                'estimate_time_left',
+                'gid',
+                'link',
+                'first_try_date',
+                'last_try_date',
+                'category'
+            ]
+
+            for i, key in enumerate(keys_list):
+                item = QTableWidgetItem(download_info[key])
+                self.download_table.setItem(j, i, item)
+
+            j += 1
+
+        # save order in DB
+        category_dict = {'category': current_category_tree_text}
+
+        gid_sorted_list.reverse()
+        category_dict['gid_list'] = gid_sorted_list
+
+        self.persepolis_db.updateCategoryTable([category_dict])
+
+        self.updateSortHeaderIndicator('Downloaded', descending=self.sort_desc)
+
+        global checking_flag
+        checking_flag = 0
+
+    def sortByPercent(self, menu=None):
+
+        # if checking_flag is equal to 1, it means that user pressed remove or
+        # delete button or ... . so checking download information must be
+        # stopped until job is done!
+        if checking_flag != 2:
+            wait_check = WaitThread()
+            self.threadPool.append(wait_check)
+            self.threadPool[-1].start()
+            self.threadPool[-1].QTABLEREADY.connect(self.sortByPercent2)
+        else:
+            self.sortByPercent2()
+
+    def sortByPercent2(self):
+
+        current_category_tree_text = str(current_category_tree_index.data())
+
+        gid_percent_dict = {}
+
+        for row in range(self.download_table.rowCount()):
+            percent_str = self.download_table.item(row, 4).text()
+            gid = self.download_table.item(row, 8).text()
+
+            # convert "45%" → 45
+            try:
+                percent = float(percent_str.replace('%', ''))
+            except ValueError:
+                percent = 0
+
+            gid_percent_dict[gid] = percent
+
+        # sort
+        gid_sorted_list = sorted(
+            gid_percent_dict,
+            key=gid_percent_dict.get,
+            reverse=self.sort_desc
+        )
+
+        # clear table
+        self.download_table.clearContents()
+
+        # reload data
+        if current_category_tree_text == 'All Downloads':
+            downloads_dict = self.persepolis_db.returnItemsInDownloadTable()
+        else:
+            downloads_dict = self.persepolis_db.returnItemsInDownloadTable(current_category_tree_text)
+
+        j = 0
+
+        for gid in gid_sorted_list:
+            download_info = downloads_dict[gid]
+
+            keys_list = [
+                'file_name',
+                'status',
+                'size',
+                'downloaded_size',
+                'percent',
+                'connections',
+                'rate',
+                'estimate_time_left',
+                'gid',
+                'link',
+                'first_try_date',
+                'last_try_date',
+                'category'
+            ]
+
+            for i, key in enumerate(keys_list):
+                item = QTableWidgetItem(download_info[key])
+                self.download_table.setItem(j, i, item)
+
+            j += 1
+
+        # save order
+        category_dict = {'category': current_category_tree_text}
+
+        gid_sorted_list.reverse()
+        category_dict['gid_list'] = gid_sorted_list
+
+        self.persepolis_db.updateCategoryTable([category_dict])
+
+        self.updateSortHeaderIndicator('Percentage', descending=self.sort_desc)
+
         global checking_flag
         checking_flag = 0
 
@@ -3406,7 +3641,7 @@ class MainWindow(MainWindow_Ui):
             gid_status_dict[gid] = status_int
 
         # sort gid_status_dict
-        gid_sorted_list = sorted(gid_status_dict, key=gid_status_dict.get)
+        gid_sorted_list = sorted(gid_status_dict, key=gid_status_dict.get, reverse=self.sort_desc)
 
         # get download information from data base
         if current_category_tree_text == 'All Downloads':
@@ -3460,6 +3695,8 @@ class MainWindow(MainWindow_Ui):
         # update category_db_table
         self.persepolis_db.updateCategoryTable([category_dict])
 
+        self.updateSortHeaderIndicator('Status', descending=self.sort_desc)
+
         # tell the CheckDownloadInfoThread that job is done!
         global checking_flag
         checking_flag = 0
@@ -3502,7 +3739,7 @@ class MainWindow(MainWindow_Ui):
 
         # sort
         gid_sorted_list = sorted(
-            gid_try_dict, key=gid_try_dict.get, reverse=True)
+            gid_try_dict, key=gid_try_dict.get, reverse=self.sort_desc)
 
         # clear download_table
         self.download_table.clearContents()
@@ -3558,6 +3795,8 @@ class MainWindow(MainWindow_Ui):
 
         # update category_db_table
         self.persepolis_db.updateCategoryTable([category_dict])
+
+        self.updateSortHeaderIndicator('First Try Date', descending=self.sort_desc)
 
         # tell the CheckDownloadInfoThread that job is done!
         global checking_flag
@@ -3604,7 +3843,7 @@ class MainWindow(MainWindow_Ui):
 
         # sort
         gid_sorted_list = sorted(
-            gid_try_dict, key=gid_try_dict.get, reverse=True)
+            gid_try_dict, key=gid_try_dict.get, reverse=self.sort_desc)
 
         # clear download_table
         self.download_table.clearContents()
@@ -3660,6 +3899,8 @@ class MainWindow(MainWindow_Ui):
 
         # update category_db_table
         self.persepolis_db.updateCategoryTable([category_dict])
+
+        self.updateSortHeaderIndicator('Last Try Date', descending=self.sort_desc)
 
         # tell the CheckDownloadInfoThread that job is done!
         global checking_flag
