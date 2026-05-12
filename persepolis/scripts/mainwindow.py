@@ -1032,6 +1032,9 @@ class MainWindow(MainWindow_Ui):
         # check reverse_checkBox
         self.reverse_checkBox.setChecked(False)
 
+        # restore sort
+        self.restoreLastSort()
+
     # this method used by shutdown script for changing shutdown_notification value
     def changeShutdownValue(self, value):
         global shutdown_notification
@@ -3222,6 +3225,35 @@ class MainWindow(MainWindow_Ui):
         title = header.text()+ (' ▼' if descending else ' ▲')
         header.setText(title)
 
+        # save the sort to setting to reuse it when app opens next time
+        self.persepolis_setting.setValue('sort/column', active_key)
+        self.persepolis_setting.setValue('sort/descending', self.sort_desc)
+
+    def restoreLastSort(self):
+        column = self.persepolis_setting.value('sort/column')
+        descending = self.persepolis_setting.value('sort/descending', False, type=bool)
+
+        if not column:
+            return
+
+        self.sort_desc = descending
+
+        if column == 'File Name':
+            self.sortByName()
+        elif column == 'Status':
+            self.sortByStatus()
+        elif column == 'Size':
+            self.sortBySize()
+        elif column == 'Downloaded':
+            self.sortByDownloaded()
+        elif column == 'Percentage':
+            self.sortByPercent()
+        elif column == 'First Try Date':
+            self.sortByFirstTry()
+        elif column == 'Last Try Date':
+            self.sortByLastTry()
+
+
     # this method sorts download table by name
     def sortByName(self, menu=None):
 
@@ -3336,7 +3368,8 @@ class MainWindow(MainWindow_Ui):
             # convert file size to the Byte
             try:
                 size_int = float(size_str[:-3])
-                size_symbol = str(size_str[-2])
+                size_symbol = str(size_str[-3])
+                print("symbol:" + size_symbol + " int:" + str(size_int))
                 if size_symbol == 'G':
                     size = size_int * 1073741824
                 elif size_symbol == 'M':
@@ -3414,6 +3447,7 @@ class MainWindow(MainWindow_Ui):
         global checking_flag
         checking_flag = 0
 
+    # this method sorts items in download_table by downloaded
     def sortByDownloaded(self, menu=None):
 
         # if checking_flag is equal to 1, it means that user pressed remove or
@@ -3441,8 +3475,7 @@ class MainWindow(MainWindow_Ui):
             # convert to bytes
             try:
                 downloaded_int = float(downloaded_str[:-3])
-                downloaded_symbol = str(downloaded_str[-2])
-
+                downloaded_symbol = str(downloaded_str[-3])
                 if downloaded_symbol == 'G':
                     downloaded = downloaded_int * 1073741824
                 elif downloaded_symbol == 'M':
@@ -3512,6 +3545,7 @@ class MainWindow(MainWindow_Ui):
         global checking_flag
         checking_flag = 0
 
+    # this method sorts items in download_table by percentage
     def sortByPercent(self, menu=None):
 
         # if checking_flag is equal to 1, it means that user pressed remove or
