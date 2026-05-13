@@ -14,16 +14,17 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 try:
-    from PySide6.QtWidgets import QAbstractItemView, QTableWidget, QTableWidgetItem, QCheckBox, QVBoxLayout, QHBoxLayout, QFrame, QWidget, QLabel, QLineEdit, QTabWidget, QSpinBox, QPushButton, QDial, QComboBox, QFontComboBox
+    from PySide6.QtWidgets import QAbstractItemView, QTableWidget, QTableWidgetItem, QCheckBox, QVBoxLayout, QHBoxLayout, QGridLayout, QFrame, QWidget, QLabel, QLineEdit, QTabWidget, QSpinBox, QPushButton, QDial, QComboBox, QFontComboBox, QButtonGroup, QRadioButton
     from PySide6.QtCore import Qt, QTranslator, QCoreApplication, QLocale
     from PySide6.QtGui import QIcon
 except ImportError:
-    from PyQt5.QtWidgets import QAbstractItemView, QTableWidget, QTableWidgetItem, QCheckBox, QVBoxLayout, QHBoxLayout, QFrame, QWidget, QLabel, QLineEdit, QTabWidget, QSpinBox, QPushButton, QDial, QComboBox, QFontComboBox
+    from PyQt5.QtWidgets import QAbstractItemView, QTableWidget, QTableWidgetItem, QCheckBox, QVBoxLayout, QHBoxLayout, QGridLayout, QFrame, QWidget, QLabel, QLineEdit, QTabWidget, QSpinBox, QPushButton, QDial, QComboBox, QFontComboBox, QButtonGroup, QRadioButton
     from PyQt5.QtCore import Qt, QTranslator, QCoreApplication, QLocale
     from PyQt5.QtGui import QIcon
 
 from persepolis.gui.customized_widgets import MyQDateTimeEdit
 from persepolis.gui import resources
+from typing import Tuple
 
 
 class KeyCapturingWindow_Ui(QWidget):
@@ -505,6 +506,19 @@ class Setting_Ui(QWidget):
 
         self.setting_tabWidget.addTab(self.shortcut_tab, QCoreApplication.translate("setting_ui_tr", "Shortcuts"))
 
+        # Global proxy settings tab
+        self.global_proxy_tab: QWidget
+        self.global_proxy_layout: QVBoxLayout
+        self.global_proxy_tab, self.global_proxy_layout = self.createTab(
+            "global_proxy_tab",
+            self.setting_tabWidget,
+            "Global Proxy Settings",
+            (21, 21, 0, 0)
+        )
+
+        self.setupGlobalProxyTab()
+
+
 
         # Actions
         actions_list = [QCoreApplication.translate('setting_ui_tr', 'Quit'),
@@ -695,3 +709,88 @@ class Setting_Ui(QWidget):
         self.defaults_pushButton.setText(QCoreApplication.translate("setting_ui_tr", "Defaults"))
         self.cancel_pushButton.setText(QCoreApplication.translate("setting_ui_tr", "Cancel"))
         self.ok_pushButton.setText(QCoreApplication.translate("setting_ui_tr", "OK"))
+
+    def createTab(self,
+                  objectName: str,
+                  tabWidget: QTabWidget,
+                  tabTitle: str,
+                  margins: Tuple[int, int, int, int] = (21, 21, 0, 0)) -> Tuple[QWidget, QVBoxLayout]:
+
+        newTab: QWidget = QWidget()
+        newTab.setObjectName(objectName)
+        newTab_layout: QVBoxLayout = QVBoxLayout(newTab)
+        newTab_layout.setContentsMargins(*margins)
+        tabWidget.addTab(newTab, tabTitle)
+
+        return newTab, newTab_layout
+
+    def setupGlobalProxyTab(self) -> None:
+        proxy_layout: QVBoxLayout = self.global_proxy_layout
+
+        # Enable proxy
+        self.enable_proxy_checkbox: QCheckBox = QCheckBox(self.global_proxy_tab)
+        self.enable_proxy_checkbox.setText("Enable proxy")
+        proxy_layout.addWidget(self.enable_proxy_checkbox)
+
+        # Frame with vertical layout
+        self.proxy_form_widget: QFrame = QFrame(self.global_proxy_tab)
+        self.proxy_form_widget.setFrameShape(QFrame.StyledPanel)
+        self.proxy_form_widget.setFrameShadow(QFrame.Raised)
+
+        form_vertical_layout: QVBoxLayout = QVBoxLayout(self.proxy_form_widget)  # ← frame layout
+
+        grid_layout: QGridLayout = QGridLayout()
+
+        # Host
+        self.proxy_host_label: QLabel = QLabel("IP:", self.proxy_form_widget)
+        self.proxy_host_label.setAlignment(Qt.AlignRight | Qt.AlignVCenter)
+        self.proxy_host_input: QLineEdit = QLineEdit(self.proxy_form_widget)
+        grid_layout.addWidget(self.proxy_host_label, 0, 0)
+        grid_layout.addWidget(self.proxy_host_input, 0, 1)
+
+        # Port
+        self.proxy_port_label: QLabel = QLabel("Port:", self.proxy_form_widget)
+        self.proxy_port_label.setAlignment(Qt.AlignRight | Qt.AlignVCenter)
+        self.proxy_port_input: QSpinBox = QSpinBox(self.proxy_form_widget)
+        self.proxy_port_input.setRange(1, 65535)
+        grid_layout.addWidget(self.proxy_port_label, 0, 2)
+        grid_layout.addWidget(self.proxy_port_input, 0, 3)
+
+        # Username
+        self.proxy_user_label: QLabel = QLabel("Proxy username:", self.proxy_form_widget)
+        self.proxy_user_label.setAlignment(Qt.AlignRight | Qt.AlignVCenter)
+        self.proxy_user_input: QLineEdit = QLineEdit(self.proxy_form_widget)
+        grid_layout.addWidget(self.proxy_user_label, 1, 0)
+        grid_layout.addWidget(self.proxy_user_input, 1, 1)
+
+        # Password
+        self.proxy_pass_label: QLabel = QLabel("Proxy password:", self.proxy_form_widget)
+        self.proxy_pass_label.setAlignment(Qt.AlignRight | Qt.AlignVCenter)
+        self.proxy_pass_input: QLineEdit = QLineEdit(self.proxy_form_widget)
+        self.proxy_pass_input.setEchoMode(QLineEdit.Password)
+        grid_layout.addWidget(self.proxy_pass_label, 1, 2)
+        grid_layout.addWidget(self.proxy_pass_input, 1, 3)
+
+        grid_layout.setColumnStretch(1, 1)
+        grid_layout.setColumnStretch(3, 1)
+
+        form_vertical_layout.addLayout(grid_layout)
+
+        # Proxy type radio buttons
+        self.proxy_type_group: QButtonGroup = QButtonGroup(self.proxy_form_widget)
+        self.proxy_http_radiobutton: QRadioButton = QRadioButton("HTTP", self.proxy_form_widget)
+        self.proxy_socks5_radiobutton: QRadioButton = QRadioButton("SOCKS5", self.proxy_form_widget)
+        self.proxy_http_radiobutton.setChecked(True)
+        self.proxy_type_group.addButton(self.proxy_http_radiobutton)
+        self.proxy_type_group.addButton(self.proxy_socks5_radiobutton)
+
+        form_vertical_layout.addWidget(self.proxy_http_radiobutton)
+        form_vertical_layout.addWidget(self.proxy_socks5_radiobutton)
+
+        proxy_layout.addWidget(self.proxy_form_widget)
+        proxy_layout.addStretch(1)
+
+        # Initial state integrated with checkbox
+        self.proxy_form_widget.setEnabled(False)
+        self.enable_proxy_checkbox.toggled.connect(self.proxy_form_widget.setEnabled)
+

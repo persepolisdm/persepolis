@@ -354,6 +354,9 @@ class PreferencesWindow(Setting_Ui):
         except ValueError:
             pass
 
+        # Global Proxy Settings
+        self.loadGlobalProxySettings()
+
         # shortcuts
         self.qshortcuts_list = [self.parent.exitAction_shortcut,
                                 self.parent.minimizeAction_shortcut,
@@ -823,6 +826,9 @@ class PreferencesWindow(Setting_Ui):
         # video finder
         self.max_links_spinBox.setValue(3)
 
+        # Global Proxy Settings
+        self.loadDefaultGlobalProxySettings()
+
         # shortcuts
         self.shortcuts_list = [self.setting_dict['shortcuts/quit_shortcut'],
                                self.setting_dict['shortcuts/hide_window_shortcut'],
@@ -1185,13 +1191,16 @@ class PreferencesWindow(Setting_Ui):
         # video_finder
         self.persepolis_setting.setValue('video_finder/max_links', self.max_links_spinBox.value())
 
+        # Invoking modularized proxy persistence
+        isSavedGlobalProxySettings: bool = self.saveGlobalProxySettings()
+
         # saving value of persepolis_setting in second_key_value_dict.
         self.second_key_value_dict = {}
         for member in self.persepolis_setting.allKeys():
             self.second_key_value_dict[member] = str(self.persepolis_setting.value(member))
 
         # comparing first_key_value_dict with second_key_value_dict
-        show_message_box = False
+        show_message_box = isSavedGlobalProxySettings
         for key in self.first_key_value_dict.keys():
             if self.first_key_value_dict[key] != self.second_key_value_dict[key]:
                 if key in ['locale', 'download_path',
@@ -1215,3 +1224,99 @@ class PreferencesWindow(Setting_Ui):
         self.persepolis_setting.sync()
 
         self.close()
+
+    def saveGlobalProxySettings(self) -> bool:
+        """
+        Retrieves global proxy configuration from the UI components and
+        persists them into the application settings.
+
+        This method follows a modular approach to separate network configuration
+        logic from the general settings persistence flow.
+        """
+        result: bool = self._hasProxySettingsChanged()
+
+        if result:
+            # 1. Capture the enabled state (Checkbox)
+            # Using 'yes'/'no' string format for consistency with Persepolis settings
+            is_proxy_selected: bool = self.enable_proxy_checkbox.isChecked()
+            is_proxy_enabled: str = 'yes' if is_proxy_selected else 'no'
+
+            # 2. Capture Host, Port, Username, and Password
+            # We use strict typing to ensure the retrieved values match the expected types
+            proxy_host: str | None = self.proxy_host_input.text().strip() if is_proxy_selected else None
+            proxy_port: int = int(self.proxy_port_input.text().strip()) if is_proxy_selected else 0
+            proxy_username: str | None = self.proxy_user_input.text().strip() if is_proxy_selected else None
+            proxy_password: str | None = self.proxy_pass_input.text().strip() if is_proxy_selected else None
+            proxy_protocol: str = "SOCKS5" if (is_proxy_selected and self.proxy_socks5_radiobutton.isChecked()) else "HTTP"
+
+            # Persistence of network identity and credentials
+            self.persepolis_setting.beginGroup('proxy')
+            self.persepolis_setting.setValue('proxy_enabled', is_proxy_enabled)
+            self.persepolis_setting.setValue('proxy_host', proxy_host)
+            self.persepolis_setting.setValue('proxy_port', proxy_port)
+            self.persepolis_setting.setValue('proxy_username', proxy_username)
+            self.persepolis_setting.setValue('proxy_password', proxy_password)
+            self.persepolis_setting.setValue('proxy_protocol', proxy_protocol)
+            self.persepolis_setting.endGroup()
+
+        return result
+
+    def loadGlobalProxySettings(self) -> None:
+        self.persepolis_setting.beginGroup('proxy')
+
+        is_proxy_selected: bool = self.persepolis_setting.value('proxy_enabled', 'no') == 'yes'
+        self.enable_proxy_checkbox.setChecked(is_proxy_selected)
+
+        if is_proxy_selected:
+            self.proxy_host_input.setText(str(self.persepolis_setting.value('proxy_host', '')))
+            port = self.persepolis_setting.value('proxy_port', 0)
+            self.proxy_port_input.setValue(int(port) if port else 0)
+
+            self.proxy_user_input.setText(str(self.persepolis_setting.value('proxy_username', '')))
+            self.proxy_pass_input.setText(str(self.persepolis_setting.value('proxy_password', '')))
+
+            proxy_protocol: str = str(self.persepolis_setting.value('proxy_protocol', 'HTTP'))
+            self.proxy_http_radiobutton.setChecked(proxy_protocol == 'HTTP')
+            self.proxy_socks5_radiobutton.setChecked(proxy_protocol == 'SOCKS5')
+
+        self.persepolis_setting.endGroup()
+
+
+    def loadDefaultGlobalProxySettings(self) -> None:
+        self.enable_proxy_checkbox.setChecked(False)
+        self.proxy_host_input.setText(None)
+        self.proxy_port_input.setValue(0)
+        self.proxy_user_input.setText(None)
+        self.proxy_pass_input.setText(None)
+        self.proxy_http_radiobutton.setChecked(True)
+        self.proxy_socks5_radiobutton.setChecked(False)
+
+    def _hasProxySettingsChanged(self) -> bool:
+        """
+        Compares current proxy UI values against the persisted settings.
+        Returns True if any value has changed.
+        """
+        self.persepolis_setting.beginGroup('proxy')
+        old_values: dict[str, object] = {
+            'proxy/enabled': self.persepolis_setting.value('proxy/enabled'),
+            'proxy/host': self.persepolis_setting.value('proxy/host'),
+            'proxy/port': self.persepolis_setting.value('proxy/port'),
+            'proxy/username': self.persepolis_setting.value('proxy/username'),
+            'proxy/password': self.persepolis_setting.value('proxy/password'),
+            'proxy/protocol': self.persepolis_setting.value('proxy/protocol'),
+        }
+        self.persepolis_setting.endGroup()
+
+        is_proxy_selected: bool = self.enable_proxy_checkbox.isChecked()
+        port_text: str = self.proxy_port_input.text().strip()
+
+        new_values: dict[str, object] = {
+            'enabled': 'yes' if is_proxy_selected else 'no',
+            'host': self.proxy_host_input.text().strip() if is_proxy_selected else None,
+            'port': int(port_text) if (is_proxy_selected and bool(port_text)) else 0,
+            'username': self.proxy_user_input.text().strip() if is_proxy_selected else None,
+            'password': self.proxy_pass_input.text().strip() if is_proxy_selected else None,
+            'protocol': 'SOCKS5' if (is_proxy_selected and self.proxy_socks5_radiobutton.isChecked()) else 'HTTP',
+        }
+
+        return old_values != new_values
