@@ -73,153 +73,88 @@ class AddLinkWindow(AddLinkWindow_Ui):
         self.persepolis_setting = persepolis_setting
         self.parent = parent
 
-        # entry initialization
-        # read values from persepolis_setting
         # connections
-        connections = int(
-            self.persepolis_setting.value('settings/connections'))
-
+        connections = int(self.persepolis_setting.value('settings/connections'))
         self.connections_spinBox.setValue(connections)
 
         # download_path
-        download_path = str(
-            self.persepolis_setting.value('settings/download_path'))
-
+        download_path = str(self.persepolis_setting.value('settings/download_path'))
         self.download_folder_lineEdit.setText(download_path)
         self.download_folder_lineEdit.setEnabled(False)
 
-        # enable ok button only if link_lineEdit is not empty!
-        # see linkLineChanged method.
+        # ok/download_later only enabled when link is filled
         self.ok_pushButton.setEnabled(False)
         self.download_later_pushButton.setEnabled(False)
         self.link_lineEdit.textChanged.connect(self.linkLineChanged)
 
-        # if browsers plugin didn't send any links
-        # then check clipboard for link!
-        if ('link' in self.plugin_add_link_dictionary.keys()):
-            # check plugin_add_link_dictionary for link!
-            # "link" key-value must be checked
-            self.link_lineEdit.setText(
-                str(self.plugin_add_link_dictionary['link']))
-
+        # check plugin or clipboard for link
+        if 'link' in self.plugin_add_link_dictionary.keys():
+            self.link_lineEdit.setText(str(self.plugin_add_link_dictionary['link']))
         else:
-            # check clipboard
             clipboard = QApplication.clipboard()
             text = clipboard.text()
-            if (("tp:/" in text[2:6]) or ("tps:/" in text[2:7])):
+            if ("tp:/" in text[2:6]) or ("tps:/" in text[2:7]):
                 self.link_lineEdit.setText(str(text))
 
-        # detect_proxy_pushButton
-        self.detect_proxy_pushButton.clicked.connect(
-            self.detectProxy)
-
-        # ip_lineEdit initialization ->
-        settings_ip = self.persepolis_setting.value(
-            'add_link_initialization/ip', None)
-        if (settings_ip):
-            self.ip_lineEdit.setText(str(settings_ip))
-
-        # proxy user lineEdit initialization ->
-        settings_proxy_user = self.persepolis_setting.value(
-            'add_link_initialization/proxy_user', None)
-        if (settings_proxy_user):
-            self.proxy_user_lineEdit.setText(str(settings_proxy_user))
-
-        # port_spinBox initialization ->
-        settings_port = self.persepolis_setting.value(
-            'add_link_initialization/port', 0)
-
-        self.port_spinBox.setValue(int(int(settings_port)))
-
-        # download UserName initialization ->
+        # download username initialization
         settings_download_user = self.persepolis_setting.value(
             'add_link_initialization/download_user', None)
-        if (settings_download_user):
+        if settings_download_user:
             self.download_user_lineEdit.setText(str(settings_download_user))
 
-        # http or socks5 initialization
-        settings_proxy_type = self.persepolis_setting.value(
-            'add_link_initialization/proxy_type', None)
-
-        if settings_proxy_type == 'socks5':
-
-            self.socks5_radioButton.setChecked(True)
-
-        elif settings_proxy_type == 'https':
-            self.https_radioButton.setChecked(True)
-
-        else:
-            self.http_radioButton.setChecked(True)
-
-        # get categories name and add them to add_queue_comboBox
+        # categories
         categories_list = self.parent.persepolis_db.categoriesList()
         for queue in categories_list:
             if queue != 'All Downloads':
                 self.add_queue_comboBox.addItem(queue)
-
         self.add_queue_comboBox.setCurrentIndex(0)
-
-        # add_queue_comboBox event
         self.add_queue_comboBox.currentIndexChanged.connect(self.queueChanged)
 
-        # connect folder_pushButton
+        # signals
+        self.detect_proxy_pushButton.clicked.connect(self.detectProxy)
         self.folder_pushButton.clicked.connect(self.changeFolder)
-
-        # connect OK and cancel download_later button ->
         self.cancel_pushButton.clicked.connect(self.close)
-        self.ok_pushButton.clicked.connect(partial(
-            self.okButtonPressed, download_later=False))
-        self.download_later_pushButton.clicked.connect(
-            partial(self.okButtonPressed, download_later=True))
+        self.ok_pushButton.clicked.connect(partial(self.okButtonPressed, download_later=False))
+        self.download_later_pushButton.clicked.connect(partial(self.okButtonPressed, download_later=True))
 
-        # frames and checkBoxes ->
-        self.proxy_frame.setEnabled(False)
-        self.proxy_checkBox.toggled.connect(self.proxyFrame)
-
+        # frames enable/disable wired to their controls
+        self.custom_proxy_radioButton.toggled.connect(self.proxyFrame)
         self.download_frame.setEnabled(False)
         self.download_checkBox.toggled.connect(self.downloadFrame)
-
         self.start_frame.setEnabled(False)
         self.start_checkBox.toggled.connect(self.startFrame)
-
         self.end_frame.setEnabled(False)
         self.end_checkBox.toggled.connect(self.endFrame)
-
         self.change_name_lineEdit.setEnabled(False)
         self.change_name_checkBox.toggled.connect(self.changeName)
 
         self.add_link_tabWidget.currentChanged.connect(self.currentTabChanged)
-        # set focus to ok button
         self.ok_pushButton.setFocus()
 
-        # check plugin_add_link_dictionary for finding file name
-        # perhaps plugin sended file name in plugin_add_link_dictionary
-        # for finding file name "out" key must be checked
-        if ('out' in self.plugin_add_link_dictionary.keys()):
+        # plugin fields
+        if 'out' in self.plugin_add_link_dictionary.keys():
             if self.plugin_add_link_dictionary['out']:
-                self.change_name_lineEdit.setText(
-                    str(self.plugin_add_link_dictionary['out']))
+                self.change_name_lineEdit.setText(str(self.plugin_add_link_dictionary['out']))
                 self.change_name_checkBox.setChecked(True)
 
-        # get referer and header and user_agent and load_cookies in plugin_add_link_dictionary if exits.
-        if ('referer' in self.plugin_add_link_dictionary):
+        if 'referer' in self.plugin_add_link_dictionary:
             self.referer_lineEdit.setText(str(self.plugin_add_link_dictionary['referer']))
 
-        if ('header' in self.plugin_add_link_dictionary):
+        if 'header' in self.plugin_add_link_dictionary:
             if str(self.plugin_add_link_dictionary['header']) != 'None':
                 self.header_lineEdit.setText(str(self.plugin_add_link_dictionary['header']))
 
-        if ('user_agent' in self.plugin_add_link_dictionary):
+        if 'user_agent' in self.plugin_add_link_dictionary:
             self.user_agent_lineEdit.setText(str(self.plugin_add_link_dictionary['user_agent']))
 
-        if ('load_cookies' in self.plugin_add_link_dictionary):
-            self.load_cookies_lineEdit.setText((self.plugin_add_link_dictionary['load_cookies']))
+        if 'load_cookies' in self.plugin_add_link_dictionary:
+            self.load_cookies_lineEdit.setText(self.plugin_add_link_dictionary['load_cookies'])
 
-        # set window size and position
-        size = self.persepolis_setting.value(
-            'AddLinkWindow/size', QSize(652, 480))
-        position = self.persepolis_setting.value(
-            'AddLinkWindow/position', QPoint(300, 300))
+        self.__load_app_proxy_settings()
+
+        # window size and position
+        size = self.persepolis_setting.value('AddLinkWindow/size', QSize(652, 480))
+        position = self.persepolis_setting.value('AddLinkWindow/position', QPoint(300, 300))
         self.resize(size)
         self.move(position)
 
@@ -248,19 +183,15 @@ class AddLinkWindow(AddLinkWindow_Ui):
 
         # enable proxy frame if http_proxy_ip or http_proxy_port is valid.
         if enable_proxy_frame:
-            self.proxy_checkBox.setChecked(True)
+            self.custom_proxy_radioButton.setChecked(True)
             self.detect_proxy_label.setText('')
         else:
-            self.proxy_checkBox.setChecked(False)
+            self.use_app_proxy_radioButton.setChecked(True)
             self.detect_proxy_label.setText('No proxy detected!')
 
     # active frames if checkBoxes are checked
-    def proxyFrame(self, checkBox):
-
-        if self.proxy_checkBox.isChecked() is True:
-            self.proxy_frame.setEnabled(True)
-        else:
-            self.proxy_frame.setEnabled(False)
+    def proxyFrame(self, checked: bool):
+        self.proxy_frame.setEnabled(self.custom_proxy_radioButton.isChecked())
 
     def downloadFrame(self, checkBox):
 
@@ -375,7 +306,7 @@ class AddLinkWindow(AddLinkWindow_Ui):
             proxy_type = 'socks5'
 
         # get proxy information
-        if not (self.proxy_checkBox.isChecked()):
+        if not self.custom_proxy_radioButton.isChecked():
             ip = None
             port = None
             proxy_user = None
@@ -533,3 +464,22 @@ class AddLinkWindow(AddLinkWindow_Ui):
         self.download_later_pushButton.setIcon(QIcon(icons + 'stop'))
         self.cancel_pushButton.setIcon(QIcon(icons + 'remove'))
         self.ok_pushButton.setIcon(QIcon(icons + 'ok'))
+
+    def __load_app_proxy_settings(self) -> None:
+        """Populates the proxy fields with the application-wide proxy settings."""
+        is_application_proxy_defined: bool = self.persepolis_setting.value('settings/proxy/proxy_enabled') == 'yes'
+
+        host: str = str(self.persepolis_setting.value('settings/proxy/proxy_host', ''))
+        port: int = int(self.persepolis_setting.value('settings/proxy/proxy_port', 0))
+        username: str = str(self.persepolis_setting.value('settings/proxy/proxy_username', ''))
+        password: str = str(self.persepolis_setting.value('settings/proxy/proxy_password', ''))
+        protocol: str = str(self.persepolis_setting.value('settings/proxy/proxy_protocol', 'HTTP'))
+
+        self.ip_lineEdit.setText(host)
+        self.port_spinBox.setValue(port)
+        self.proxy_user_lineEdit.setText(username)
+        self.proxy_pass_lineEdit.setText(password)
+        self.socks5_radioButton.setChecked(protocol == 'SOCKS5')
+        self.http_radioButton.setChecked(protocol == 'HTTP')
+
+        self.proxy_frame.setEnabled(not is_application_proxy_defined)
