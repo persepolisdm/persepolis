@@ -342,6 +342,10 @@ class Download():
                     except Exception as e:
                         logger.sendToLog(str(e) + ' - GID: ' + self.gid, 'DOWNLOAD ERROR')
                         self.resume = False
+                        try:
+                            os.remove(self.control_json_file_path)
+                        except:
+                            pass
 
         if self.resuming_suppurt is False:
             self.resume = False
