@@ -1546,7 +1546,11 @@ class MainWindow(MainWindow_Ui):
                         self.temp_db.updateSingleTable(shutdown_dict)
 
         # set tooltip for system_tray_icon
-        self.system_tray_icon.setToolTip(systemtray_tooltip_text)
+        # # Only update when the text actually changes to avoid spamming
+        # org.kde.StatusNotifierItem.NewToolTip D-Bus signals.
+        if getattr(self, '_last_systemtray_tooltip', None) != systemtray_tooltip_text:
+            self.system_tray_icon.setToolTip(systemtray_tooltip_text)
+            self._last_systemtray_tooltip = systemtray_tooltip_text
 
     # drag and drop for links
     def dragEnterEvent(self, droplink):
